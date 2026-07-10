@@ -1,0 +1,567 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "ai_generated_daily_plan_sections",
+        "label": "AI\u751f\u6210\u7684\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u5185\u5bb9",
+        "nodes": [
+          "templates_teacherplan__morning_activity",
+          "templates_teacherplan__morning_conversation",
+          "templates_teacherplan__group_activity",
+          "templates_teacherplan__indoor_area_game",
+          "templates_teacherplan__afternoon_outdoor_game",
+          "templates_teacherplan__daily_activity_reflection",
+          "templates_teacherplan__ai_content_generation"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md"
+      },
+      {
+        "id": "configured_plan_context",
+        "label": "\u914d\u7f6e\u9a71\u52a8\u7684\u8ba1\u5212\u4e0a\u4e0b\u6587",
+        "nodes": [
+          "templates_teacherplan__semester_configuration",
+          "templates_teacherplan__class_and_teacher_configuration",
+          "templates_teacherplan__local_and_cloud_settings",
+          "templates_teacherplan__date_selection_and_validation"
+        ],
+        "relation": "form",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "child-manager",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_child_manager",
+      "community": 4,
+      "norm_label": "child-manager"
+    },
+    {
+      "label": "\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e",
+      "file_type": "document",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__daily_activity_plan_specification",
+      "community": 0,
+      "norm_label": "\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e"
+    },
+    {
+      "label": "\u5b66\u671f\u914d\u7f6e",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__semester_configuration",
+      "community": 0,
+      "norm_label": "\u5b66\u671f\u914d\u7f6e"
+    },
+    {
+      "label": "\u73ed\u7ea7\u4e0e\u6559\u5e08\u914d\u7f6e",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__class_and_teacher_configuration",
+      "community": 0,
+      "norm_label": "\u73ed\u7ea7\u4e0e\u6559\u5e08\u914d\u7f6e"
+    },
+    {
+      "label": "\u65e5\u671f\u9009\u62e9\u4e0e\u6821\u9a8c",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__date_selection_and_validation",
+      "community": 0,
+      "norm_label": "\u65e5\u671f\u9009\u62e9\u4e0e\u6821\u9a8c"
+    },
+    {
+      "label": "chinesecalendar\u5e93",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__chinesecalendar",
+      "community": 0,
+      "norm_label": "chinesecalendar\u5e93"
+    },
+    {
+      "label": "Timor\u8282\u5047\u65e5API",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__timor_holiday_api",
+      "community": 0,
+      "norm_label": "timor\u8282\u5047\u65e5api"
+    },
+    {
+      "label": "\u65e2\u6709\u8ba1\u5212\u8c03\u53d6",
+      "file_type": "rationale",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__existing_plan_retrieval",
+      "community": 0,
+      "norm_label": "\u65e2\u6709\u8ba1\u5212\u8c03\u53d6"
+    },
+    {
+      "label": "AI\u5185\u5bb9\u751f\u6210",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__ai_content_generation",
+      "community": 1,
+      "norm_label": "ai\u5185\u5bb9\u751f\u6210"
+    },
+    {
+      "label": "\u6668\u95f4\u6d3b\u52a8",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__morning_activity",
+      "community": 1,
+      "norm_label": "\u6668\u95f4\u6d3b\u52a8"
+    },
+    {
+      "label": "\u6668\u95f4\u8c08\u8bdd",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__morning_conversation",
+      "community": 1,
+      "norm_label": "\u6668\u95f4\u8c08\u8bdd"
+    },
+    {
+      "label": "\u96c6\u4f53\u6d3b\u52a8",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__group_activity",
+      "community": 2,
+      "norm_label": "\u96c6\u4f53\u6d3b\u52a8"
+    },
+    {
+      "label": "\u6559\u6848\u7ed3\u6784\u5316",
+      "file_type": "rationale",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__lesson_plan_structuring",
+      "community": 2,
+      "norm_label": "\u6559\u6848\u7ed3\u6784\u5316"
+    },
+    {
+      "label": "AI\u65b0\u589e\u6d3b\u52a8\u73af\u8282",
+      "file_type": "rationale",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__ai_added_activity_stage",
+      "community": 2,
+      "norm_label": "ai\u65b0\u589e\u6d3b\u52a8\u73af\u8282"
+    },
+    {
+      "label": "\u5ba4\u5185\u533a\u57df\u6e38\u620f",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__indoor_area_game",
+      "community": 3,
+      "norm_label": "\u5ba4\u5185\u533a\u57df\u6e38\u620f"
+    },
+    {
+      "label": "\u4e0b\u5348\u6237\u5916\u6e38\u620f",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__afternoon_outdoor_game",
+      "community": 3,
+      "norm_label": "\u4e0b\u5348\u6237\u5916\u6e38\u620f"
+    },
+    {
+      "label": "\u4e00\u65e5\u6d3b\u52a8\u53cd\u601d",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__daily_activity_reflection",
+      "community": 0,
+      "norm_label": "\u4e00\u65e5\u6d3b\u52a8\u53cd\u601d"
+    },
+    {
+      "label": "Word\u5bfc\u51fa\u683c\u5f0f\u63a7\u5236",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__word_export_formatting",
+      "community": 2,
+      "norm_label": "word\u5bfc\u51fa\u683c\u5f0f\u63a7\u5236"
+    },
+    {
+      "label": "\u5e7c\u513f\u5e74\u9f84\u9002\u914d\u5185\u5bb9",
+      "file_type": "rationale",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__age_appropriate_content",
+      "community": 1,
+      "norm_label": "\u5e7c\u513f\u5e74\u9f84\u9002\u914d\u5185\u5bb9"
+    },
+    {
+      "label": "\u672c\u5730\u7248\u4e0eCloud\u7248\u8bbe\u7f6e",
+      "file_type": "concept",
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "templates_teacherplan__local_and_cloud_settings",
+      "community": 3,
+      "norm_label": "\u672c\u5730\u7248\u4e0ecloud\u7248\u8bbe\u7f6e"
+    }
+  ],
+  "links": [
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__daily_activity_plan_specification",
+      "target": "templates_teacherplan__class_and_teacher_configuration"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__daily_activity_plan_specification",
+      "target": "templates_teacherplan__semester_configuration"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__daily_activity_reflection",
+      "target": "templates_teacherplan__daily_activity_plan_specification"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__existing_plan_retrieval",
+      "target": "templates_teacherplan__daily_activity_plan_specification"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__date_selection_and_validation",
+      "target": "templates_teacherplan__semester_configuration"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__semester_configuration",
+      "target": "templates_teacherplan__local_and_cloud_settings"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__class_and_teacher_configuration",
+      "target": "templates_teacherplan__local_and_cloud_settings"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__date_selection_and_validation",
+      "target": "templates_teacherplan__chinesecalendar"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__date_selection_and_validation",
+      "target": "templates_teacherplan__existing_plan_retrieval"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__date_selection_and_validation",
+      "target": "templates_teacherplan__timor_holiday_api"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__afternoon_outdoor_game",
+      "target": "templates_teacherplan__ai_content_generation"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__age_appropriate_content",
+      "target": "templates_teacherplan__ai_content_generation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__daily_activity_reflection",
+      "target": "templates_teacherplan__ai_content_generation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__indoor_area_game",
+      "target": "templates_teacherplan__ai_content_generation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__lesson_plan_structuring",
+      "target": "templates_teacherplan__ai_content_generation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__morning_activity",
+      "target": "templates_teacherplan__ai_content_generation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__morning_conversation",
+      "target": "templates_teacherplan__ai_content_generation"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__group_activity",
+      "target": "templates_teacherplan__lesson_plan_structuring"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__ai_added_activity_stage",
+      "target": "templates_teacherplan__lesson_plan_structuring"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__ai_added_activity_stage",
+      "target": "templates_teacherplan__word_export_formatting"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__indoor_area_game",
+      "target": "templates_teacherplan__afternoon_outdoor_game"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__indoor_area_game",
+      "target": "templates_teacherplan__local_and_cloud_settings"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "templates_teacherplan__afternoon_outdoor_game",
+      "target": "templates_teacherplan__local_and_cloud_settings"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "ai_generated_daily_plan_sections",
+      "label": "AI\u751f\u6210\u7684\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u5185\u5bb9",
+      "nodes": [
+        "templates_teacherplan__morning_activity",
+        "templates_teacherplan__morning_conversation",
+        "templates_teacherplan__group_activity",
+        "templates_teacherplan__indoor_area_game",
+        "templates_teacherplan__afternoon_outdoor_game",
+        "templates_teacherplan__daily_activity_reflection",
+        "templates_teacherplan__ai_content_generation"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md"
+    },
+    {
+      "id": "configured_plan_context",
+      "label": "\u914d\u7f6e\u9a71\u52a8\u7684\u8ba1\u5212\u4e0a\u4e0b\u6587",
+      "nodes": [
+        "templates_teacherplan__semester_configuration",
+        "templates_teacherplan__class_and_teacher_configuration",
+        "templates_teacherplan__local_and_cloud_settings",
+        "templates_teacherplan__date_selection_and_validation"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md"
+    }
+  ],
+  "built_at_commit": "179e72722bc68af1db7870b5fb783e48802007cf"
+}
