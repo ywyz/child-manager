@@ -1,6 +1,54 @@
 {
-  "generated_at": "2026-07-11T01:13:38.278652+00:00",
+  "generated_at": "2026-07-11T02:18:59.030173+00:00",
   "nodes": {
+    "agents_ai_generation_rules": {
+      "code_fingerprint": "bb52fe05348fd18ac1d01b500441bb49276a477b91b00f002e62a39043d9243c",
+      "label": "AI 生成与提示词规则",
+      "last": "2026-07-11T02:07:08.074638+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        }
+      ],
+      "score": 0.999809896,
+      "source_file": "AGENTS.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "agents_kindergarten_data_isolation": {
+      "code_fingerprint": "bb52fe05348fd18ac1d01b500441bb49276a477b91b00f002e62a39043d9243c",
+      "label": "园所数据隔离",
+      "last": "2026-07-11T02:07:08.074638+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        }
+      ],
+      "score": 0.999809896,
+      "source_file": "AGENTS.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "agents_word_template_protection": {
+      "code_fingerprint": "bb52fe05348fd18ac1d01b500441bb49276a477b91b00f002e62a39043d9243c",
+      "label": "Word 模板保护与导出验证",
+      "last": "2026-07-11T02:07:08.074638+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        }
+      ],
+      "score": 0.999809896,
+      "source_file": "AGENTS.md",
+      "status": "tentative",
+      "uses": 1
+    },
     "graphify_out_memory_query_20260710_131311_agents_md_ywyz_kindergartenmanager_gi_class_teacher_configuration": {
       "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
       "label": "班级与教师配置",
@@ -17,10 +65,26 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 1.977355794,
+      "score": 1.975283664,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2
+    },
+    "readme_daily_activity_plan": {
+      "code_fingerprint": "72e269b7a9e6a18e1c7081d075f2f376e735366a09949d88d7e8a5b723189950",
+      "label": "一日活动计划",
+      "last": "2026-07-11T02:07:08.074638+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        }
+      ],
+      "score": 0.999809896,
+      "source_file": "README.md",
+      "status": "tentative",
+      "uses": 1
     }
   },
   "version": 1
