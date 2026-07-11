@@ -1,5 +1,54 @@
 {
-  "generated_at": "2026-07-10T13:12:39.545735+00:00",
-  "nodes": {},
+  "generated_at": "2026-07-10T13:32:26.371022+00:00",
+  "nodes": {
+    "templates_teacherplan__class_and_teacher_configuration": {
+      "code_fingerprint": "e45601cf4f0692d2ea17da5057828df9230c1afdcf0b0296e13e8540e79445fd",
+      "label": "班级与教师配置",
+      "last": "2026-07-10T13:13:11.768287+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-10T13:13:11.768287+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
+        }
+      ],
+      "score": 0.999691286,
+      "source_file": "templates/teacherplan/一日活动计划系统说明.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "templates_teacherplan__date_selection_and_validation": {
+      "code_fingerprint": "e45601cf4f0692d2ea17da5057828df9230c1afdcf0b0296e13e8540e79445fd",
+      "label": "日期选择与校验",
+      "last": "2026-07-10T13:13:11.768287+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-10T13:13:11.768287+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
+        }
+      ],
+      "score": 0.999691286,
+      "source_file": "templates/teacherplan/一日活动计划系统说明.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "templates_teacherplan__lesson_plan_structuring": {
+      "code_fingerprint": "e45601cf4f0692d2ea17da5057828df9230c1afdcf0b0296e13e8540e79445fd",
+      "label": "教案结构化",
+      "last": "2026-07-10T13:13:11.768287+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-10T13:13:11.768287+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
+        }
+      ],
+      "score": 0.999691286,
+      "source_file": "templates/teacherplan/一日活动计划系统说明.md",
+      "status": "tentative",
+      "uses": 1
+    }
+  },
   "version": 1
 }
