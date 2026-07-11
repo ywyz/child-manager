@@ -1,53 +1,26 @@
 {
-  "generated_at": "2026-07-10T13:32:26.371022+00:00",
+  "generated_at": "2026-07-11T01:13:38.278652+00:00",
   "nodes": {
-    "templates_teacherplan__class_and_teacher_configuration": {
-      "code_fingerprint": "e45601cf4f0692d2ea17da5057828df9230c1afdcf0b0296e13e8540e79445fd",
+    "graphify_out_memory_query_20260710_131311_agents_md_ywyz_kindergartenmanager_gi_class_teacher_configuration": {
+      "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
       "label": "班级与教师配置",
-      "last": "2026-07-10T13:13:11.768287+00:00",
+      "last": "2026-07-10T13:34:44.437455+00:00",
       "provenance": [
+        {
+          "date": "2026-07-10T13:34:44.437455+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的README.md,AGENTS.md,还有ywyz/kindergartenManager.git的文档，你认为CONTEXT.md需要再加入点什么？"
+        },
         {
           "date": "2026-07-10T13:13:11.768287+00:00",
           "outcome": "useful",
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 0.999691286,
-      "source_file": "templates/teacherplan/一日活动计划系统说明.md",
-      "status": "tentative",
-      "uses": 1
-    },
-    "templates_teacherplan__date_selection_and_validation": {
-      "code_fingerprint": "e45601cf4f0692d2ea17da5057828df9230c1afdcf0b0296e13e8540e79445fd",
-      "label": "日期选择与校验",
-      "last": "2026-07-10T13:13:11.768287+00:00",
-      "provenance": [
-        {
-          "date": "2026-07-10T13:13:11.768287+00:00",
-          "outcome": "useful",
-          "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
-        }
-      ],
-      "score": 0.999691286,
-      "source_file": "templates/teacherplan/一日活动计划系统说明.md",
-      "status": "tentative",
-      "uses": 1
-    },
-    "templates_teacherplan__lesson_plan_structuring": {
-      "code_fingerprint": "e45601cf4f0692d2ea17da5057828df9230c1afdcf0b0296e13e8540e79445fd",
-      "label": "教案结构化",
-      "last": "2026-07-10T13:13:11.768287+00:00",
-      "provenance": [
-        {
-          "date": "2026-07-10T13:13:11.768287+00:00",
-          "outcome": "useful",
-          "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
-        }
-      ],
-      "score": 0.999691286,
-      "source_file": "templates/teacherplan/一日活动计划系统说明.md",
-      "status": "tentative",
-      "uses": 1
+      "score": 1.977355794,
+      "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
+      "status": "preferred",
+      "uses": 2
     }
   },
   "version": 1
