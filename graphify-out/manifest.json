@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1783845101.9791775,
-    "ast_hash": "c4dce860ca4c265ed13261e234cc67ec",
+    "mtime": 1783847667.5050745,
+    "ast_hash": "3ca9c11843aed959335e81fc6038eb45",
     "semantic_hash": ""
   },
   "CONTEXT.md": {
@@ -45,8 +45,8 @@
     "semantic_hash": ""
   },
   "docs/ADR/ADR-0004-same-origin-cookie-authentication.md": {
-    "mtime": 1783845001.0199125,
-    "ast_hash": "032671f823001c3e0e6a764d510d4aee",
+    "mtime": 1783847667.5040746,
+    "ast_hash": "7651d75c698c914cc1a4494364158226",
     "semantic_hash": ""
   },
   "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "docs/design/system-architecture.md": {
-    "mtime": 1783845001.0199125,
-    "ast_hash": "41ffd4a1bb71d2c262e8f109c4370887",
+    "mtime": 1783847667.5040746,
+    "ast_hash": "c92f3a2c1116f2e37195b12e483fad6a",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260711_020708_\u8bf7\u6839\u636e\u73b0\u6709\u6587\u6863_\u548c\u65e7\u4ed3\u5e93\u7684\u6587\u4ef6\u601d\u8003\u5982\u4f55\u64b0\u5199_docs_prd_lesson_management_m.md": {
