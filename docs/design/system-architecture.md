@@ -250,7 +250,7 @@ trace_id
 
 ### 8.1 数据所有权
 
-PostgreSQL 是业务数据的唯一权威存储。API 与 Worker 可以通过同一后端 Repository 访问数据库；NiceGUI Web 不能访问数据库。API 负责同步事务，Worker 负责其后台任务结果的独立短事务。
+PostgreSQL 是业务数据的唯一权威存储。API 与 Worker 可以通过同一后端 Repository 访问数据库；NiceGUI Web 不能访问数据库。API 负责同步事务，Worker 负责其后台任务结果的独立短事务。完整 PostgreSQL 表、列、组合园所外键、检查约束、索引和 Alembic 顺序见 [`database-schema.md`](database-schema.md)。
 
 所有园所范围业务表至少包含：
 

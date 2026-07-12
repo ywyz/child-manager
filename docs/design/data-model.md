@@ -12,7 +12,7 @@
 
 本文定义 Child Manager 首期数据模型、实体关系、字段职责、数据库约束、园所隔离、历史快照、异步任务、数据保留和迁移原则。本文应足以指导 SQLAlchemy 2.x 模型、Alembic 迁移、Repository 和 PostgreSQL 集成测试的实现。
 
-本文不定义 API 字段、页面表单或具体 Python 类名。用户行为和验收标准以 [`docs/PRD/lesson-management.md`](../PRD/lesson-management.md) 为准，整体服务边界以 [`docs/design/system-architecture.md`](system-architecture.md) 为准，关键取舍以 [`docs/ADR/`](../ADR/README.md) 为准。
+本文不定义 API 字段、页面表单或具体 Python 类名。用户行为和验收标准以 [`docs/PRD/lesson-management.md`](../PRD/lesson-management.md) 为准，整体服务边界以 [`docs/design/system-architecture.md`](system-architecture.md) 为准，PostgreSQL 物理列、约束、索引和迁移顺序以 [`docs/design/database-schema.md`](database-schema.md) 为准，关键取舍以 [`docs/ADR/`](../ADR/README.md) 为准。
 
 本文描述目标模型，不表示当前 `main` 已经存在数据库或迁移。
 

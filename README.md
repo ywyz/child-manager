@@ -54,7 +54,7 @@ packages/
 └── backend/      # API 与 Worker 复用的后端业务实现
 ```
 
-详细服务边界、任务可靠性和部署拓扑见 [`docs/design/system-architecture.md`](docs/design/system-architecture.md)。
+详细服务边界与任务可靠性见 [`docs/design/system-architecture.md`](docs/design/system-architecture.md)，领域数据模型与 PostgreSQL 物理 Schema 分别见 [`docs/design/data-model.md`](docs/design/data-model.md) 和 [`docs/design/database-schema.md`](docs/design/database-schema.md)。
 
 ## 用户与权限
 

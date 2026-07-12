@@ -1,7 +1,7 @@
 {
   "README.md": {
-    "mtime": 1783845114.6606996,
-    "ast_hash": "2daaefa9ea582f7fde939f706e618094",
+    "mtime": 1783848832.6920044,
+    "ast_hash": "55326f47061829e6181c92079805e6d3",
     "semantic_hash": ""
   },
   "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md": {
@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "CONTEXT.md": {
-    "mtime": 1783845063.8255744,
-    "ast_hash": "cc3d089ae1cd35a1b9db8c5ce3cab82e",
+    "mtime": 1783848832.6910043,
+    "ast_hash": "f41eabafd8a682af75e0dee0d74f37bf",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260710_131311_\u8bf7\u9605\u8bfb\u4ee5\u4e0a\u5185\u5bb9\u548c\u73b0\u6709\u7684agents_md_\u8fd8\u6709ywyz_kindergartenmanager_gi.md": {
@@ -75,13 +75,13 @@
     "semantic_hash": ""
   },
   "docs/design/data-model.md": {
-    "mtime": 1783845063.8265746,
-    "ast_hash": "11067f6be1d2f88bd8acf96f9f0fe72d",
+    "mtime": 1783848832.6900043,
+    "ast_hash": "a5c5313a6160675047aeed7f66599fbe",
     "semantic_hash": ""
   },
   "docs/design/system-architecture.md": {
-    "mtime": 1783847667.5040746,
-    "ast_hash": "c92f3a2c1116f2e37195b12e483fad6a",
+    "mtime": 1783848832.6910043,
+    "ast_hash": "22bdacf8c1fc66d12ad4112b60d2b29d",
     "semantic_hash": ""
   },
   "graphify-out/memory/query_20260711_020708_\u8bf7\u6839\u636e\u73b0\u6709\u6587\u6863_\u548c\u65e7\u4ed3\u5e93\u7684\u6587\u4ef6\u601d\u8003\u5982\u4f55\u64b0\u5199_docs_prd_lesson_management_m.md": {
@@ -112,6 +112,11 @@
   "docs/ADR/ADR-0009-defer-production-deployment-until-feature-complete.md": {
     "mtime": 1783844847.247412,
     "ast_hash": "441486716ced71a13eea2c41e773b6ca",
+    "semantic_hash": ""
+  },
+  "docs/design/database-schema.md": {
+    "mtime": 1783848891.9644985,
+    "ast_hash": "b4f3537dcb9d9f4f52f220b7280bc79f",
     "semantic_hash": ""
   }
 }
