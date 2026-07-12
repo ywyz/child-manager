@@ -21,8 +21,9 @@
 | [ADR-0004](ADR-0004-same-origin-cookie-authentication.md) | 采用同源入口、HttpOnly Cookie 与 API 统一授权 | 已接受 |
 | [ADR-0005](ADR-0005-provider-neutral-ai-and-central-prompts.md) | AI 供应商中立，并建立管理员专用提示词系统 | 已接受 |
 | [ADR-0006](ADR-0006-fixed-word-template-export-boundary.md) | 一日活动计划采用固定 Word 模板导出边界 | 已接受 |
-| [ADR-0007](ADR-0007-caddy-compose-and-file-secrets.md) | 采用 Caddy、Docker Compose 与文件挂载 Secrets | 已接受 |
+| [ADR-0007](ADR-0007-caddy-compose-and-file-secrets.md) | 采用 Caddy、Docker Compose 与文件挂载 Secrets | 部分已取代 |
 | [ADR-0008](ADR-0008-degradable-calendar-and-external-services.md) | 日期与外部服务采用本地优先和软降级 | 已接受 |
+| [ADR-0009](ADR-0009-defer-production-deployment-until-feature-complete.md) | 功能完成前延后生产部署与访问网络决策 | 已接受 |
 
 ## 与旧仓库 ADR 的关系
 
