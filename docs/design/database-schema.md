@@ -798,15 +798,14 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 
 不要在单个迁移中一次创建全部 24 张表。建议使用下列可独立验证的迁移序列：
 
-1. 启用 `btree_gist`，创建 `kindergartens`、`users`、`roles`、`user_roles`、`refresh_tokens`，幂等种子角色。
-2. 创建 `age_groups`、`classes`、`class_teachers`、`semesters`、`class_areas`，种子四个年龄段。
+1. 启用 `btree_gist`，创建 `kindergartens`、`users`、`roles`、`user_roles`、`refresh_tokens` 和 `audit_events`，幂等种子角色。审计表必须从首位管理员初始化与首次登录开始可用。
+2. 创建 `age_groups`、`classes`、`class_teachers`、`semesters`、`class_areas` 和 `workday_cache`，种子四个年龄段。工作日缓存必须在日期规则与手工教案闭环之前可用。
 3. 创建 `ai_model_profiles` 与能力关联表。
 4. 创建提示词定义、版本与测试表，然后增加 `active_custom_version_id` 外键并幂等种子 7 个系统定义/默认版本。
 5. 创建教案、作者、快照与原始教案来源表。
 6. 创建 `background_jobs` 与 `ai_generation_results`。
 7. 创建 Word 导出记录。
-8. 创建工作日缓存与审计事件表。
-9. 在空库和包含典型种子数据的 PostgreSQL 库上分别运行完整 `upgrade head`。
+8. 在空库和包含典型种子数据的 PostgreSQL 库上分别运行完整 `upgrade head`。
 
 每个迁移必须同时包含本次表的组合外键、检查约束、部分索引与回归测试，不先创建弱约束表再长期拖延补强。
 
