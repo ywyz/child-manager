@@ -318,3 +318,33 @@ uv run pytest
 - 未解决风险、兼容性问题和后续工作清楚列出。
 
 这些规则有效的表现是：Agent 在编码前暴露歧义，以最少代码完成目标，保持服务与数据边界，并用可复现的证据证明结果。
+
+
+## 工具优先级
+
+- 文件名搜索：`fdfind`。
+- 文本/内容搜索：`rg`（ripgrep）。
+- AST/结构化搜索：`sg`（ast-grep）——适用于代码感知查询（导入、调用表达式、JSX/TSX 节点）。
+
+### AST-grep 使用
+
+- 在运行复杂模式前，需说明意图并展示确切的命令。
+- 常见查询：
+  - 查找从 `node:path` 的导入（TypeScript/TSX）：
+    - `ast-grep -p "import $ from 'node:path'" src --lang ts,tsx,mts,cts`
+  - 查找 CommonJS 的 `node:path` 的 require：
+    - `ast-grep -p "require('node:path')" src --lang js,cjs,mjs,ts,tsx`
+  - 建议重写（除非获批，否则不要在代码中自动应用）：
+    - 搜索：`ast-grep -p "import $ from 'node:path'" src --lang ts,tsx`
+    - 建议的替换：`import $ from 'pathe'`
+
+### 搜索规范（fdfind/rg/sg）
+
+- 排除大文件夹以保持搜索快速和相关性：`.git`、`node_modules`、`coverage`、`out`、`dist`。
+- 优先对特定路径（如 `src`）进行搜索，以隐式避开供应商和版本控制目录。
+- 示例：
+  - `rg -n "pattern" -g "!{.git,node_modules,coverage,out,dist}" src`
+  - `fdfind --hidden --exclude .git --exclude node_modules --exclude coverage --exclude out --exclude dist --type f ".tsx?$" src`
+- ast-grep 通常遵守 `.gitignore`；指定 `src` 以避免扫描供应商文件夹：
+  - `ast-grep -p "import $ from '@shared/$'" src --lang ts,tsx,mts,cts`
+  - 如需添加忽略模式，请将其添加到您的忽略文件中，而非禁用忽略功能。

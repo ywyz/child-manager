@@ -1,0 +1,2862 @@
+openapi: 3.1.0
+info:
+  title: Child Manager 一日活动计划 API
+  version: 1.0.0
+  description: |
+    首期 M1-M8 的稳定 HTTP 契约。园所、角色和班级权限只能来自服务端会话；
+    Redis/Dramatiq 不作为任务事实来源。浏览器只访问 NiceGUI Web 8080，同源 BFF 在
+    服务端转发本契约到回环 API 8000，并剥离浏览器伪造的代理地址头。API 只信任显式
+    回环 BFF 重建的内部客户端来源。所有用户可见消息使用简体中文。
+servers:
+  - url: http://127.0.0.1:8000
+    description: 仅供本地 NiceGUI BFF 服务端访问的回环 API；不是浏览器或生产入口
+tags:
+  - name: Health
+  - name: Auth
+  - name: Users
+  - name: Settings
+  - name: Prompts
+  - name: Plans
+  - name: Jobs
+  - name: Exports
+  - name: Audit
+security:
+  - accessCookie: []
+
+paths:
+  /health/live:
+    get:
+      tags: [Health]
+      summary: API 进程存活检查
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/HealthOk"
+  /health/ready:
+    get:
+      tags: [Health]
+      summary: 数据库与必要配置就绪检查
+      description: |
+        外部 AI 或在线节假日不可用不得令整体就绪失败。PostgreSQL 不可用返回
+        `database.unavailable`；只有 JWT/CSRF 等所有核心请求共同依赖的全局安全配置缺失/无效
+        才返回 `configuration.unavailable`。Redis、AI、日历、模板和导出存储只令分项
+        degraded，整体仍返回 200。
+      security: []
+      responses:
+        "200":
+          $ref: "#/components/responses/HealthOk"
+        "503":
+          $ref: "#/components/responses/Unavailable"
+
+  /api/v1/auth/csrf:
+    get:
+      tags: [Auth]
+      summary: 签发签名双提交 CSRF Cookie
+      security: []
+      responses:
+        "200":
+          description: CSRF Cookie 已签发
+          headers:
+            Set-Cookie:
+              $ref: "#/components/headers/CsrfSetCookie"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CsrfResponse"
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: 用户名或手机号登录
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: 登录成功并设置 access/refresh Cookie
+          headers:
+            Set-Cookie:
+              $ref: "#/components/headers/AuthSetCookies"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentUser"
+        "401":
+          $ref: "#/components/responses/LoginFailed"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+  /api/v1/auth/refresh:
+    post:
+      tags: [Auth]
+      summary: 轮换 Access 与 Refresh Token
+      security:
+        - refreshCookie: []
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "200":
+          description: 轮换成功；旧 Refresh Token 已撤销
+          headers:
+            Set-Cookie:
+              $ref: "#/components/headers/AuthSetCookies"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentUser"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/v1/auth/logout:
+    post:
+      tags: [Auth]
+      summary: 撤销当前令牌族并清除 Cookie
+      security:
+        - refreshCookie: []
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "204":
+          description: 已退出；重复调用保持幂等
+          headers:
+            Set-Cookie:
+              $ref: "#/components/headers/ClearAuthCookies"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /api/v1/auth/me:
+    get:
+      tags: [Auth]
+      summary: 当前账号、角色与能力
+      responses:
+        "200":
+          description: 当前会话
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentUser"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/v1/auth/change-password:
+    post:
+      tags: [Auth]
+      summary: 修改本人密码并撤销全部 Refresh Token
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+      responses:
+        "204":
+          description: 密码已修改；全部会话已撤销
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /api/v1/users:
+    get:
+      tags: [Users]
+      summary: 分页查询账号
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          $ref: "#/components/responses/UserPage"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [Users]
+      summary: 创建管理员或教师账号
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          $ref: "#/components/responses/UserCreated"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+  /api/v1/users/{user_id}:
+    parameters:
+      - $ref: "#/components/parameters/UserId"
+    get:
+      tags: [Users]
+      summary: 查看账号
+      responses:
+        "200":
+          $ref: "#/components/responses/UserOk"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [Users]
+      summary: 修改账号非凭证字段
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPatch"
+      responses:
+        "200":
+          $ref: "#/components/responses/UserOk"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+  /api/v1/users/{user_id}/roles:
+    put:
+      tags: [Users]
+      summary: 设置账号角色并保护最后一个管理员
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [role_codes]
+              properties:
+                role_codes:
+                  type: array
+                  minItems: 1
+                  uniqueItems: true
+                  items: { type: string, enum: [admin, teacher] }
+      responses:
+        "200":
+          $ref: "#/components/responses/UserOk"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /api/v1/users/{user_id}/activate:
+    post:
+      tags: [Users]
+      summary: 启用账号
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "200":
+          $ref: "#/components/responses/UserOk"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/v1/users/{user_id}/deactivate:
+    post:
+      tags: [Users]
+      summary: 停用账号并撤销会话
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "200":
+          $ref: "#/components/responses/UserOk"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /api/v1/users/{user_id}/reset-password:
+    post:
+      tags: [Users]
+      summary: 管理员重置密码并撤销会话
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [new_password]
+              properties:
+                new_password:
+                  $ref: "#/components/schemas/Password"
+      responses:
+        "204":
+          description: 已重置
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /api/v1/settings/kindergarten:
+    get:
+      tags: [Settings]
+      summary: 查看园所直接设置
+      responses:
+        "200": { $ref: "#/components/responses/KindergartenOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    patch:
+      tags: [Settings]
+      summary: 修改园所名称；时区固定为 Asia/Shanghai
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/KindergartenPatch" }
+      responses:
+        "200": { $ref: "#/components/responses/KindergartenOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/settings/age-groups:
+    get:
+      tags: [Settings]
+      summary: 查看完整有序的四个系统年龄段
+      responses:
+        "200": { $ref: "#/components/responses/AgeGroupList" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/settings/semesters:
+    get:
+      tags: [Settings]
+      summary: 分页查询学期
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/SemesterPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      tags: [Settings]
+      summary: 创建学期
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SemesterWrite" }
+      responses:
+        "201": { $ref: "#/components/responses/SemesterCreated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/settings/semesters/{semester_id}:
+    parameters:
+      - $ref: "#/components/parameters/SemesterId"
+    get:
+      tags: [Settings]
+      summary: 查看学期
+      responses:
+        "200": { $ref: "#/components/responses/SemesterOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      tags: [Settings]
+      summary: 修改学期
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SemesterWrite" }
+      responses:
+        "200": { $ref: "#/components/responses/SemesterOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/settings/semesters/{semester_id}/make-current:
+    post:
+      tags: [Settings]
+      summary: 原子设置唯一当前学期
+      parameters:
+        - $ref: "#/components/parameters/SemesterId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "200": { $ref: "#/components/responses/SemesterOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  /api/v1/settings/classes:
+    get:
+      tags: [Settings]
+      summary: 分页查询班级
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/ClassPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      tags: [Settings]
+      summary: 创建班级；允许区域暂不完整
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ClassWrite" }
+      responses:
+        "201": { $ref: "#/components/responses/ClassCreated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/settings/classes/{class_id}:
+    parameters:
+      - $ref: "#/components/parameters/ClassId"
+    get:
+      tags: [Settings]
+      summary: 查看班级
+      responses:
+        "200": { $ref: "#/components/responses/ClassOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      tags: [Settings]
+      summary: 修改班级
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ClassWrite" }
+      responses:
+        "200": { $ref: "#/components/responses/ClassOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/settings/classes/{class_id}/teachers:
+    put:
+      tags: [Settings]
+      summary: 整体保存班级教师关系和唯一主班教师
+      parameters:
+        - $ref: "#/components/parameters/ClassId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [teachers]
+              properties:
+                teachers:
+                  type: array
+                  uniqueItems: true
+                  items:
+                    type: object
+                    additionalProperties: false
+                    required: [user_id, is_lead_teacher]
+                    properties:
+                      user_id: { type: string, format: uuid }
+                      is_lead_teacher: { type: boolean }
+      responses:
+        "200": { $ref: "#/components/responses/ClassOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/settings/classes/{class_id}/areas/{area_type}:
+    parameters:
+      - $ref: "#/components/parameters/ClassId"
+      - $ref: "#/components/parameters/AreaType"
+    get:
+      tags: [Settings]
+      summary: 分页查看目标类别有序区域
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/AreaPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [Settings]
+      summary: 整体保存目标类别区域；允许空数组
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [areas]
+              properties:
+                areas:
+                  type: array
+                  items: { $ref: "#/components/schemas/AreaWrite" }
+      responses:
+        "204": { description: 目标类别区域已整体保存；客户端重新分页读取最新顺序 }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+
+  /api/v1/settings/ai-model-profiles:
+    get:
+      tags: [Settings]
+      summary: 分页查询 AI 模型档案
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/AiModelProfilePage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      tags: [Settings]
+      summary: 创建 AI 模型档案；Key 只写
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AiModelProfileWrite" }
+      responses:
+        "201": { $ref: "#/components/responses/AiModelProfileCreated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/settings/ai-model-profiles/{profile_id}:
+    parameters:
+      - $ref: "#/components/parameters/ProfileId"
+    get:
+      tags: [Settings]
+      summary: 查看脱敏 AI 模型档案
+      responses:
+        "200": { $ref: "#/components/responses/AiModelProfileOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      tags: [Settings]
+      summary: 修改 AI 模型档案；新 Key 只写
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AiModelProfileWrite" }
+      responses:
+        "200": { $ref: "#/components/responses/AiModelProfileOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/settings/ai-model-profiles/{profile_id}/enable:
+    post:
+      tags: [Settings]
+      summary: 验证密钥、能力、地址并启用；首次记录风险确认
+      parameters:
+        - $ref: "#/components/parameters/ProfileId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [confirm_external_data_risk]
+              properties:
+                confirm_external_data_risk: { type: boolean, const: true }
+      responses:
+        "200": { $ref: "#/components/responses/AiModelProfileOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/settings/ai-model-profiles/{profile_id}/disable:
+    post:
+      tags: [Settings]
+      summary: 停用模型档案并保留历史引用
+      parameters:
+        - $ref: "#/components/parameters/ProfileId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "200": { $ref: "#/components/responses/AiModelProfileOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/prompts:
+    get:
+      tags: [Prompts]
+      summary: 分页查看七个稳定提示词定义
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/PromptDefinitionPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/prompts/{code}:
+    get:
+      tags: [Prompts]
+      summary: 查看定义、白名单、固定 Schema、生效版本和草稿
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+      responses:
+        "200": { $ref: "#/components/responses/PromptDefinitionOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/prompts/{code}/draft:
+    put:
+      tags: [Prompts]
+      summary: 创建或更新唯一自定义草稿
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PromptDraftWrite" }
+      responses:
+        "200": { $ref: "#/components/responses/PromptVersionOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/prompts/{code}/publish:
+    post:
+      tags: [Prompts]
+      summary: 发布当前草稿为不可变新版本
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "201": { $ref: "#/components/responses/PromptVersionCreated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/prompts/{code}/versions:
+    get:
+      tags: [Prompts]
+      summary: 分页查看系统和自定义版本历史
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/PromptVersionPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/prompts/{code}/versions/{version_id}:
+    get:
+      tags: [Prompts]
+      summary: 查看单一不可变提示词版本
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+        - $ref: "#/components/parameters/VersionId"
+      responses:
+        "200": { $ref: "#/components/responses/PromptVersionOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/prompts/{code}/versions/{version_id}/restore:
+    post:
+      tags: [Prompts]
+      summary: 复制历史内容并发布为新版本
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+        - $ref: "#/components/parameters/VersionId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "201": { $ref: "#/components/responses/PromptVersionCreated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/prompts/{code}/tests:
+    get:
+      tags: [Prompts]
+      summary: 分页查看最近二十条提示词测试
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/PromptTestPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    post:
+      tags: [Prompts]
+      summary: 创建异步提示词测试任务
+      description: |
+        先按路径 prompt code 的固定输入 Schema 校验 variables，再在同一数据库事务中创建
+        `prompt.test` 任务和 `pending` 测试运行，并冻结不可变 input context/hash、提示词正文/
+        哈希、结果 Schema 及所选模型的 profile/base_url/model_name/capabilities/
+        call_config_revision 非密钥调用快照；不保存密钥副本。地址、模型名、能力或密钥变化
+        必须递增 revision。Worker 只按 job_id 从 PostgreSQL 读取；当前 revision 与冻结值不同时，
+        以 `prompt.configuration_changed` 零调用失败；一致时才读取当前密钥并实时复核权限、
+        模型启用和当前地址安全。幂等命中先于最近 20 条清理；原 run 已清理时仍返回原 job、
+        `related_resource_id=null`，不得重建。`503` 只使用 `database.unavailable` 或
+        `configuration.unavailable`；事务提交后 Redis 投递失败仍返回 `202 pending_dispatch`。
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+        - $ref: "#/components/parameters/CsrfHeader"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PromptTestRequest" }
+      responses:
+        "202": { $ref: "#/components/responses/JobAccepted" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "503": { $ref: "#/components/responses/Unavailable" }
+    delete:
+      tags: [Prompts]
+      summary: 清空已完成提示词测试并写审计
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "204": { description: 已清空；未完成运行不删除 }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/prompts/{code}/tests/{run_id}:
+    get:
+      tags: [Prompts]
+      summary: 查看单条提示词测试运行
+      parameters:
+        - $ref: "#/components/parameters/PromptCode"
+        - $ref: "#/components/parameters/RunId"
+      responses:
+        "200":
+          description: 测试运行
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PromptTestRun" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  /api/v1/plans:
+    get:
+      tags: [Plans]
+      summary: 按班级、日期、作者和归档状态分页查询教案
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - in: query
+          name: class_id
+          schema: { type: string, format: uuid }
+        - in: query
+          name: date_from
+          schema: { type: string, format: date }
+        - in: query
+          name: date_to
+          schema: { type: string, format: date }
+        - in: query
+          name: author_id
+          schema: { type: string, format: uuid }
+        - in: query
+          name: archived
+          schema: { type: boolean }
+      responses:
+        "200": { $ref: "#/components/responses/PlanPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/plans/open:
+    post:
+      tags: [Plans]
+      summary: 创建或打开同班同日唯一教案
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PlanOpenRequest" }
+      responses:
+        "200":
+          description: 已存在并打开
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Plan" }
+        "201":
+          description: 已创建
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Plan" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/plans/{plan_id}:
+    get:
+      tags: [Plans]
+      summary: 查看结构化教案、能力与软提示
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+      responses:
+        "200":
+          description: 教案
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Plan" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/plans/{plan_id}/autosave:
+    put:
+      tags: [Plans]
+      summary: 乐观锁自动保存；不创建快照
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PlanSaveRequest" }
+      responses:
+        "200": { $ref: "#/components/responses/PlanOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/plans/{plan_id}/save:
+    put:
+      tags: [Plans]
+      summary: 显式保存正文和作者并创建手动快照
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PlanSaveRequest" }
+      responses:
+        "200": { $ref: "#/components/responses/PlanOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/plans/{plan_id}/archive:
+    post:
+      tags: [Plans]
+      summary: 归档并创建快照
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/VersionRequest" }
+      responses:
+        "200": { $ref: "#/components/responses/PlanOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/plans/{plan_id}/unarchive:
+    post:
+      tags: [Plans]
+      summary: 恢复归档并创建快照
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/VersionRequest" }
+      responses:
+        "200": { $ref: "#/components/responses/PlanOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/plans/{plan_id}/snapshots:
+    get:
+      tags: [Plans]
+      summary: 分页查看不可变教案历史
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/PlanSnapshotPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/plans/{plan_id}/snapshots/{snapshot_id}/restore:
+    post:
+      tags: [Plans]
+      summary: 保存恢复前内容并恢复所选历史
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/SnapshotId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/VersionRequest" }
+      responses:
+        "200": { $ref: "#/components/responses/PlanOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/plans/{plan_id}/group-activity-sources:
+    get:
+      tags: [Plans]
+      summary: 分页查看集体活动来源元数据
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/LessonPlanSourcePage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/plans/{plan_id}/group-activity-sources/text:
+    post:
+      tags: [Plans]
+      summary: 保存教师确认的粘贴来源文本
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [text]
+              properties:
+                text: { type: string, minLength: 1, maxLength: 200000 }
+      responses:
+        "201": { $ref: "#/components/responses/LessonPlanSourceCreated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/plans/{plan_id}/group-activity-sources/docx:
+    post:
+      tags: [Plans]
+      summary: 安全提取 DOCX 文本并立即清理临时文件
+      description: |
+        压缩文件不超过 10 MiB，展开不超过 50 MiB，ZIP 条目不超过 1000，
+        提取文本不超过 200000 字符；拒绝宏、外部关系、路径穿越和嵌套压缩。
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  maxLength: 10485760
+      responses:
+        "201": { $ref: "#/components/responses/LessonPlanSourceCreated" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "413": { $ref: "#/components/responses/ValidationError" }
+        "415": { $ref: "#/components/responses/ValidationError" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/plans/{plan_id}/ai/batch:
+    post:
+      tags: [Plans]
+      summary: 一键创建晨间、晨谈、室内、户外四个子任务
+      description: |
+        页面须先完成版本校验保存，再创建非执行 `ai.batch` 父任务及四个执行子任务。父任务
+        的数据库 execution/attempt/租约字段均为 NULL，不投递、不租约；响应 attempt 字段固定
+        投影为 0/0，status/has_partial_failure 从四个子任务派生。
+        `503` 只使用 `database.unavailable` 或 `configuration.unavailable`；数据库提交后 Redis
+        投递失败仍返回 `202`，子任务保持 `pending_dispatch` 并由扫描器自动重投。
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AiBatchRequest" }
+      responses:
+        "202": { $ref: "#/components/responses/JobAccepted" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "503": { $ref: "#/components/responses/Unavailable" }
+  /api/v1/plans/{plan_id}/ai/generations:
+    post:
+      tags: [Plans]
+      summary: 保存必要内容后创建一个稳定 AI 任务
+      description: |
+        页面须先完成待保存内容的版本校验保存。`daily_reflection` 在保存、五栏完整性校验与
+        任务插入的同一数据库事务中处理，并创建唯一 pending AI 结果占位，冻结五栏输入/哈希、
+        目标基线、模型、提示词和 Schema；该预保存递增版本但不建快照，任一步失败或冲突均
+        回滚正文、任务和结果。反思 `current_plan` 排除当前旧反思。`503` 只使用
+        `database.unavailable` 或 `configuration.unavailable`；数据库提交后 Redis 投递失败仍
+        返回 `202 pending_dispatch`。`group_activity_add_step` 只允许在拆分预览采用并保存后
+        创建，并只读取受理时已保存的当前集体活动；采用拆分前请求必须拒绝。
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AiGenerationRequest" }
+      responses:
+        "202": { $ref: "#/components/responses/JobAccepted" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "503": { $ref: "#/components/responses/Unavailable" }
+  /api/v1/plans/{plan_id}/jobs:
+    get:
+      tags: [Jobs]
+      summary: 分页恢复教案任务历史和未完成任务
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/JobPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/jobs/{job_id}:
+    get:
+      tags: [Jobs]
+      summary: 查看 PostgreSQL 权威任务状态
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: 任务；父任务可含有界子任务
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Job" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/jobs/{job_id}/preview:
+    get:
+      tags: [Jobs]
+      summary: 查看待确认结构化 AI 预览
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: 预览
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/JobPreview" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/jobs/{job_id}/adopt:
+    post:
+      tags: [Jobs]
+      summary: 复核权限、栏目、输入和版本后采用一次
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/VersionRequest" }
+      responses:
+        "200": { $ref: "#/components/responses/PlanOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/jobs/{job_id}/reject:
+    post:
+      tags: [Jobs]
+      summary: 明确保留原内容；不创建教案快照
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "200":
+          description: 已拒绝；重复请求返回原状态
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Job" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/jobs/{job_id}/retry:
+    post:
+      tags: [Jobs]
+      summary: 以新幂等 Key 重试最终失败的 AI 栏目任务
+      description: |
+        只接受存在 AI result 的 failed 执行型栏目任务；`ai.batch`、`prompt.test`、
+        `word.export` 或其他状态返回 `409 job.retry_not_allowed`。同一事务创建新根任务和
+        pending result，并从原 result 精确复制栏目基线、实际输入、模型、提示词和 Schema；
+        不按当前 plan/settings 重建。job_id 实际路径参数必须进入请求 fingerprint。提交前
+        PostgreSQL/必要本地配置失败返回 503，提交后 Redis 失败仍返回 `202 pending_dispatch`。
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+        - $ref: "#/components/parameters/CsrfHeader"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "202": { $ref: "#/components/responses/JobAccepted" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "503": { $ref: "#/components/responses/Unavailable" }
+
+  /api/v1/plans/{plan_id}/exports:
+    get:
+      tags: [Exports]
+      summary: 分页查看教案导出历史
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200": { $ref: "#/components/responses/ExportPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    post:
+      tags: [Exports]
+      summary: 保存校验后创建独立 Word 导出任务
+      description: |
+        缺失确认只检查晨间、晨谈、集体、室内和户外五栏；`daily_reflection` 为空不触发确认，
+        但 Word 仍保留三行固定位置。`confirm_incomplete=false` 且五栏存在缺失时先返回 409，
+        不保存或消耗幂等 Key。
+        其余请求在同一事务完成版本 CAS、无快照保存、不可变导出输入复制、记录和任务创建；
+        Worker 不重读后来变化的当前教案。`503` 仅表示 PostgreSQL、模板或创建任务所需本地
+        配置不可用；数据库提交后 Redis 投递失败仍返回 `202 pending_dispatch`。
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ExportRequest" }
+      responses:
+        "202":
+          description: 导出已受理
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ExportAccepted" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "503": { $ref: "#/components/responses/Unavailable" }
+  /api/v1/exports/{export_id}:
+    get:
+      tags: [Exports]
+      summary: 查看导出状态、哈希和文件名
+      parameters:
+        - $ref: "#/components/parameters/ExportId"
+      responses:
+        "200":
+          description: 导出记录
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Export" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/exports/{export_id}/download:
+    get:
+      tags: [Exports]
+      summary: 再次授权后流式下载历史 Word
+      parameters:
+        - $ref: "#/components/parameters/ExportId"
+      responses:
+        "200":
+          description: DOCX 文件；写入下载审计
+          headers:
+            Content-Disposition:
+              schema: { type: string }
+          content:
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema: { type: string, format: binary }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "410": { $ref: "#/components/responses/Gone" }
+
+  /api/v1/audit-events:
+    get:
+      tags: [Audit]
+      summary: 管理员分页筛选审计事件
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - in: query
+          name: event_code
+          schema: { type: string }
+        - in: query
+          name: actor_user_id
+          schema: { type: string, format: uuid }
+        - in: query
+          name: resource_type
+          schema: { type: string }
+        - in: query
+          name: outcome
+          schema: { type: string, enum: [success, failure] }
+        - in: query
+          name: occurred_from
+          schema: { type: string, format: date-time }
+        - in: query
+          name: occurred_to
+          schema: { type: string, format: date-time }
+      responses:
+        "200": { $ref: "#/components/responses/AuditEventPage" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/audit-events/{event_id}:
+    get:
+      tags: [Audit]
+      summary: 查看事件白名单元数据
+      parameters:
+        - $ref: "#/components/parameters/EventId"
+      responses:
+        "200": { $ref: "#/components/responses/AuditEventOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+components:
+  securitySchemes:
+    accessCookie:
+      type: apiKey
+      in: cookie
+      name: child_manager_access
+      description: 15 分钟 HS256 JWT；Secure、HttpOnly、SameSite=Lax、Path=/
+    refreshCookie:
+      type: apiKey
+      in: cookie
+      name: child_manager_refresh
+      description: 7 天绝对期限的随机 opaque token；只保存强哈希并每次轮换
+
+  headers:
+    CsrfSetCookie:
+      description: 单独一条 child_manager_csrf Set-Cookie；Secure（回环开发例外）、SameSite=Lax、Path=/
+      schema: { type: string }
+    AuthSetCookies:
+      description: >-
+        两条独立 Set-Cookie 字段，依次设置 child_manager_access 与 child_manager_refresh；
+        raw HTTP/BFF 不得用逗号折叠
+      schema:
+        type: array
+        minItems: 2
+        maxItems: 2
+        items: { type: string }
+    ClearAuthCookies:
+      description: >-
+        两条独立 Set-Cookie 字段，分别以 Max-Age=0/过期时间清除 access 与 refresh；
+        raw HTTP/BFF 不得用逗号折叠
+      schema:
+        type: array
+        minItems: 2
+        maxItems: 2
+        items: { type: string }
+
+  parameters:
+    CsrfHeader:
+      in: header
+      name: X-CSRF-Token
+      required: true
+      description: 必须与签名 child_manager_csrf Cookie 匹配；同时校验 Origin/Referer
+      schema: { type: string, minLength: 32, maxLength: 512 }
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      description: |
+        唯一 scope 使用 HTTP 方法和规范化路由模板；请求 fingerprint 还必须包含规范化后的
+        实际 path 参数、有语义 query 参数及 canonical JSON body。
+      schema: { type: string, minLength: 1, maxLength: 200 }
+    Page:
+      in: query
+      name: page
+      schema: { type: integer, minimum: 1, default: 1 }
+    PageSize:
+      in: query
+      name: page_size
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    UserId: { in: path, name: user_id, required: true, schema: { type: string, format: uuid } }
+    SemesterId: { in: path, name: semester_id, required: true, schema: { type: string, format: uuid } }
+    ClassId: { in: path, name: class_id, required: true, schema: { type: string, format: uuid } }
+    ProfileId: { in: path, name: profile_id, required: true, schema: { type: string, format: uuid } }
+    VersionId: { in: path, name: version_id, required: true, schema: { type: string, format: uuid } }
+    RunId: { in: path, name: run_id, required: true, schema: { type: string, format: uuid } }
+    PlanId: { in: path, name: plan_id, required: true, schema: { type: string, format: uuid } }
+    SnapshotId: { in: path, name: snapshot_id, required: true, schema: { type: string, format: uuid } }
+    JobId: { in: path, name: job_id, required: true, schema: { type: string, format: uuid } }
+    ExportId: { in: path, name: export_id, required: true, schema: { type: string, format: uuid } }
+    EventId: { in: path, name: event_id, required: true, schema: { type: string, format: uuid } }
+    AreaType:
+      in: path
+      name: area_type
+      required: true
+      schema: { type: string, enum: [indoor, outdoor] }
+    PromptCode:
+      in: path
+      name: code
+      required: true
+      schema: { $ref: "#/components/schemas/PromptCode" }
+
+  responses:
+    HealthOk:
+      description: 健康状态
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Health" }
+    UserOk:
+      description: 脱敏账号
+      content: { application/json: { schema: { $ref: "#/components/schemas/User" } } }
+    UserCreated:
+      description: 脱敏账号已创建
+      content: { application/json: { schema: { $ref: "#/components/schemas/User" } } }
+    UserPage:
+      description: 分页账号
+      content: { application/json: { schema: { $ref: "#/components/schemas/UserPage" } } }
+    KindergartenOk:
+      description: 园所设置
+      content: { application/json: { schema: { $ref: "#/components/schemas/Kindergarten" } } }
+    AgeGroupList:
+      description: 完整有序的四个系统年龄段
+      content: { application/json: { schema: { $ref: "#/components/schemas/AgeGroupList" } } }
+    SemesterOk:
+      description: 学期
+      content: { application/json: { schema: { $ref: "#/components/schemas/Semester" } } }
+    SemesterCreated:
+      description: 学期已创建
+      content: { application/json: { schema: { $ref: "#/components/schemas/Semester" } } }
+    SemesterPage:
+      description: 分页学期
+      content: { application/json: { schema: { $ref: "#/components/schemas/SemesterPage" } } }
+    ClassOk:
+      description: 班级
+      content: { application/json: { schema: { $ref: "#/components/schemas/Class" } } }
+    ClassCreated:
+      description: 班级已创建
+      content: { application/json: { schema: { $ref: "#/components/schemas/Class" } } }
+    ClassPage:
+      description: 分页班级
+      content: { application/json: { schema: { $ref: "#/components/schemas/ClassPage" } } }
+    AreaPage:
+      description: 分页班级区域，按 sort_order 和 id 稳定排序
+      content: { application/json: { schema: { $ref: "#/components/schemas/AreaPage" } } }
+    AiModelProfileOk:
+      description: 脱敏 AI 模型档案
+      content: { application/json: { schema: { $ref: "#/components/schemas/AiModelProfile" } } }
+    AiModelProfileCreated:
+      description: 脱敏 AI 模型档案已创建
+      content: { application/json: { schema: { $ref: "#/components/schemas/AiModelProfile" } } }
+    AiModelProfilePage:
+      description: 分页脱敏 AI 模型档案
+      content: { application/json: { schema: { $ref: "#/components/schemas/AiModelProfilePage" } } }
+    PromptDefinitionOk:
+      description: 提示词定义详情
+      content: { application/json: { schema: { $ref: "#/components/schemas/PromptDefinition" } } }
+    PromptDefinitionPage:
+      description: 分页提示词定义
+      content: { application/json: { schema: { $ref: "#/components/schemas/PromptDefinitionPage" } } }
+    PromptVersionOk:
+      description: 提示词版本
+      content: { application/json: { schema: { $ref: "#/components/schemas/PromptVersion" } } }
+    PromptVersionCreated:
+      description: 提示词版本已创建
+      content: { application/json: { schema: { $ref: "#/components/schemas/PromptVersion" } } }
+    PromptVersionPage:
+      description: 分页提示词版本
+      content: { application/json: { schema: { $ref: "#/components/schemas/PromptVersionPage" } } }
+    PlanSnapshotPage:
+      description: 分页不可变教案快照
+      content: { application/json: { schema: { $ref: "#/components/schemas/PlanSnapshotPage" } } }
+    LessonPlanSourceCreated:
+      description: 已确认来源文本
+      content: { application/json: { schema: { $ref: "#/components/schemas/LessonPlanSource" } } }
+    LessonPlanSourcePage:
+      description: 分页来源文本
+      content: { application/json: { schema: { $ref: "#/components/schemas/LessonPlanSourcePage" } } }
+    AuditEventOk:
+      description: 脱敏审计事件
+      content: { application/json: { schema: { $ref: "#/components/schemas/AuditEvent" } } }
+    AuditEventPage:
+      description: 分页脱敏审计事件
+      content: { application/json: { schema: { $ref: "#/components/schemas/AuditEventPage" } } }
+    PlanOk:
+      description: 当前教案
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Plan" }
+    PlanPage:
+      description: 分页教案
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/PlanPage" }
+    JobAccepted:
+      description: PostgreSQL 已受理；Redis 故障时 status 为 pending_dispatch
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/JobAccepted" }
+    JobPage:
+      description: 分页任务
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/JobPage" }
+    PromptTestPage:
+      description: 最近二十条提示词测试
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/PromptTestPage" }
+    ExportPage:
+      description: 分页导出
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ExportPage" }
+    LoginFailed:
+      description: 通用登录失败，不暴露账号是否存在或停用
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: 未认证或会话无效
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: CSRF/来源错误或无权限
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: 资源不存在或不应向当前用户暴露
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Conflict:
+      description: 版本、幂等、预览有效性或业务不变量冲突
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Gone:
+      description: 历史导出记录存在但服务器副本缺失
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    ValidationError:
+      description: 请求字段或业务前置条件无效
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    TooManyRequests:
+      description: 登录来源限流
+      headers:
+        Retry-After:
+          schema: { type: integer, minimum: 1, maximum: 60 }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unavailable:
+      description: PostgreSQL 或必要服务端本地配置/固定资源在请求受理前不可用
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/UnavailableError" }
+
+  schemas:
+    Uuid:
+      type: string
+      format: uuid
+    Password:
+      type: string
+      minLength: 15
+      maxLength: 128
+      writeOnly: true
+      description: 允许 Unicode、空格与粘贴；无字符组合规则；不得在日志或响应出现
+    ErrorField:
+      type: object
+      additionalProperties: false
+      required: [field, code, message]
+      properties:
+        field: { type: string }
+        code: { type: string }
+        message: { type: string }
+    Error:
+      type: object
+      additionalProperties: false
+      required: [code, message, request_id, field_errors]
+      properties:
+        code: { type: string, pattern: "^[a-z][a-z0-9_.-]+$" }
+        message: { type: string }
+        request_id: { type: string, format: uuid }
+        field_errors:
+          type: array
+          items: { $ref: "#/components/schemas/ErrorField" }
+    UnavailableError:
+      type: object
+      additionalProperties: false
+      required: [code, message, request_id, field_errors]
+      properties:
+        code:
+          type: string
+          enum: [database.unavailable, configuration.unavailable]
+        message: { type: string }
+        request_id: { type: string, format: uuid }
+        field_errors:
+          type: array
+          maxItems: 0
+          items: { $ref: "#/components/schemas/ErrorField" }
+    Health:
+      type: object
+      additionalProperties: false
+      required: [status, checks]
+      properties:
+        status: { type: string, enum: [ok, degraded, unavailable] }
+        checks:
+          type: object
+          additionalProperties:
+            type: string
+            enum: [ok, degraded, unavailable, not_required]
+    CsrfResponse:
+      type: object
+      additionalProperties: false
+      required: [csrf_token]
+      properties:
+        csrf_token: { type: string, minLength: 32, maxLength: 512 }
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required: [login, password]
+      properties:
+        login: { type: string, minLength: 1, maxLength: 120 }
+        password: { type: string, minLength: 1, maxLength: 128, writeOnly: true }
+    ChangePasswordRequest:
+      type: object
+      additionalProperties: false
+      required: [current_password, new_password]
+      properties:
+        current_password: { type: string, minLength: 1, maxLength: 128, writeOnly: true }
+        new_password: { $ref: "#/components/schemas/Password" }
+    CurrentUser:
+      type: object
+      additionalProperties: false
+      required: [id, display_name, kindergarten, role_codes, capabilities]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        username: { type: string }
+        display_name: { type: string }
+        kindergarten:
+          type: object
+          additionalProperties: false
+          required: [id, name, timezone]
+          properties:
+            id: { $ref: "#/components/schemas/Uuid" }
+            name: { type: string }
+            timezone: { type: string, const: Asia/Shanghai }
+        role_codes:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [admin, teacher] }
+        capabilities:
+          type: array
+          uniqueItems: true
+          items: { type: string }
+    CreateUserRequest:
+      type: object
+      additionalProperties: false
+      required: [username, display_name, password, role_codes]
+      properties:
+        username: { type: string, minLength: 1, maxLength: 120 }
+        phone_e164: { type: [string, "null"], maxLength: 32 }
+        display_name: { type: string, minLength: 1, maxLength: 120 }
+        password: { $ref: "#/components/schemas/Password" }
+        role_codes:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: string, enum: [admin, teacher] }
+    User:
+      type: object
+      additionalProperties: false
+      required: [id, username, phone_e164, display_name, role_codes, is_active, created_at, updated_at]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        username: { type: string, maxLength: 120 }
+        phone_e164: { type: [string, "null"], maxLength: 32 }
+        display_name: { type: string, maxLength: 120 }
+        role_codes:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [admin, teacher] }
+        is_active: { type: boolean }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    UserPatch:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        username: { type: string, minLength: 1, maxLength: 120 }
+        phone_e164: { type: [string, "null"], maxLength: 32 }
+        display_name: { type: string, minLength: 1, maxLength: 120 }
+    UserPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/User" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    Kindergarten:
+      type: object
+      additionalProperties: false
+      required: [id, name, timezone, is_active]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        name: { type: string, maxLength: 200 }
+        timezone: { type: string, const: Asia/Shanghai }
+        is_active: { type: boolean }
+    KindergartenPatch:
+      type: object
+      additionalProperties: false
+      required: [name]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 200 }
+    AgeGroup:
+      type: object
+      additionalProperties: false
+      required: [id, code, name, sort_order, is_active]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        code: { type: string, enum: [toddler, small, middle, large] }
+        name: { type: string, maxLength: 120 }
+        sort_order: { type: integer, minimum: 0 }
+        is_active: { type: boolean }
+    AgeGroupList:
+      type: array
+      minItems: 4
+      maxItems: 4
+      items: { $ref: "#/components/schemas/AgeGroup" }
+    Semester:
+      type: object
+      additionalProperties: false
+      required: [id, name, start_date, end_date, is_current, is_active]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        name: { type: string, maxLength: 160 }
+        start_date: { type: string, format: date }
+        end_date: { type: string, format: date }
+        is_current: { type: boolean }
+        is_active: { type: boolean }
+    SemesterPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Semester" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    ClassTeacher:
+      type: object
+      additionalProperties: false
+      required: [user_id, display_name, is_lead_teacher]
+      properties:
+        user_id: { $ref: "#/components/schemas/Uuid" }
+        display_name: { type: string, maxLength: 120 }
+        is_lead_teacher: { type: boolean }
+    Class:
+      type: object
+      additionalProperties: false
+      required: [id, name, age_group_id, age_group_name, is_active, teachers, indoor_areas_configured, outdoor_areas_configured]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        name: { type: string, maxLength: 120 }
+        age_group_id: { $ref: "#/components/schemas/Uuid" }
+        age_group_name: { type: string, maxLength: 120 }
+        is_active: { type: boolean }
+        teachers: { type: array, items: { $ref: "#/components/schemas/ClassTeacher" } }
+        indoor_areas_configured: { type: boolean }
+        outdoor_areas_configured: { type: boolean }
+    ClassPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Class" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    Area:
+      type: object
+      additionalProperties: false
+      required: [id, class_id, area_type, name, sort_order, is_active]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        class_id: { $ref: "#/components/schemas/Uuid" }
+        area_type: { type: string, enum: [indoor, outdoor] }
+        name: { type: string, maxLength: 120 }
+        sort_order: { type: integer, minimum: 0 }
+        is_active: { type: boolean }
+    AreaPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Area" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    AiModelProfile:
+      type: object
+      additionalProperties: false
+      required: [id, name, api_base_url, model_name, api_key_masked, capability_codes, call_config_revision, max_concurrency, rate_limit_per_minute, is_default, is_active, risk_confirmed_at]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        name: { type: string, maxLength: 120 }
+        api_base_url: { type: string, format: uri, maxLength: 500 }
+        model_name: { type: string, maxLength: 200 }
+        api_key_masked: { type: [string, "null"], maxLength: 16, description: 仅固定掩码和末四位 }
+        capability_codes:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [text, vision, structured_output] }
+        call_config_revision:
+          type: integer
+          minimum: 1
+          readOnly: true
+          description: 地址、模型名、能力或 API Key 变化时单调递增
+        max_concurrency: { type: integer, minimum: 1 }
+        rate_limit_per_minute: { type: [integer, "null"], minimum: 1 }
+        is_default: { type: boolean }
+        is_active: { type: boolean }
+        risk_confirmed_at: { type: [string, "null"], format: date-time }
+    AiModelProfilePage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/AiModelProfile" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    TeacherContext:
+      type: string
+      maxLength: 5000
+      description: 教师主动填写的教学上下文，不得包含账号、手机号或身份信息
+    AiBatchRequest:
+      type: object
+      additionalProperties: false
+      required: [expected_version, teacher_context]
+      properties:
+        expected_version: { type: integer, minimum: 1 }
+        teacher_context: { $ref: "#/components/schemas/TeacherContext" }
+    AiTaskCode:
+      type: string
+      enum:
+        - morning_activity
+        - morning_talk
+        - group_activity_split
+        - group_activity_add_step
+        - indoor_area_game
+        - afternoon_outdoor_game
+        - daily_reflection
+    AiGenerationRequest:
+      type: object
+      additionalProperties: false
+      required: [task_code, expected_version]
+      properties:
+        task_code: { $ref: "#/components/schemas/AiTaskCode" }
+        expected_version: { type: integer, minimum: 1 }
+        teacher_context: { $ref: "#/components/schemas/TeacherContext" }
+        source_id:
+          type: [string, "null"]
+          format: uuid
+          description: 集体拆分任务必填，其他任务为空
+        content:
+          $ref: "#/components/schemas/PlanContent"
+          description: 仅反思请求携带的页面当前正文；事务内预保存后只取五个上游栏目构造输入
+      allOf:
+        - if:
+            required: [task_code]
+            properties:
+              task_code: { const: daily_reflection }
+          then:
+            required: [content]
+            not: { required: [teacher_context] }
+          else:
+            required: [teacher_context]
+            not: { required: [content] }
+        - if:
+            required: [task_code]
+            properties:
+              task_code: { const: group_activity_split }
+          then:
+            required: [source_id]
+            properties:
+              source_id: { type: string, format: uuid }
+          else:
+            not: { required: [source_id] }
+    JobType:
+      type: string
+      enum:
+        - ai.batch
+        - ai.morning_activity
+        - ai.morning_talk
+        - ai.group_activity_split
+        - ai.group_activity_add_step
+        - ai.indoor_area_game
+        - ai.afternoon_outdoor_game
+        - ai.daily_reflection
+        - prompt.test
+        - word.export
+    JobStatus:
+      type: string
+      enum:
+        - pending_dispatch
+        - queued
+        - running
+        - retrying
+        - awaiting_confirmation
+        - succeeded
+        - failed
+        - adopted
+        - rejected
+        - expired
+    Job:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - job_type
+        - status
+        - attempt_count
+        - max_attempts
+        - trace_id
+        - created_at
+        - poll_after_ms
+        - children
+      allOf:
+        - if:
+            properties:
+              job_type: { const: ai.batch }
+            required: [job_type]
+          then:
+            properties:
+              attempt_count: { const: 0 }
+              max_attempts: { const: 0 }
+              children: { minItems: 4, maxItems: 4 }
+          else:
+            properties:
+              max_attempts: { minimum: 1, maximum: 3 }
+              children: { maxItems: 0 }
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        parent_job_id: { type: [string, "null"], format: uuid }
+        retry_of_job_id: { type: [string, "null"], format: uuid }
+        job_type: { $ref: "#/components/schemas/JobType" }
+        status:
+          allOf: [{ $ref: "#/components/schemas/JobStatus" }]
+          description: ai.batch 时由恰好四个子任务实时派生；其他任务映射 PostgreSQL execution_status
+        plan_id: { type: [string, "null"], format: uuid }
+        target_section: { type: [string, "null"] }
+        requested_resource_version: { type: [integer, "null"], minimum: 1 }
+        attempt_count:
+          type: integer
+          minimum: 0
+          maximum: 3
+          description: ai.batch 数据库值为 NULL，API 投影为 0
+        max_attempts:
+          type: integer
+          minimum: 0
+          maximum: 3
+          description: ai.batch 数据库值为 NULL，API 投影为 0；执行型 AI 固定为 3
+        trace_id: { $ref: "#/components/schemas/Uuid" }
+        created_at: { type: string, format: date-time }
+        queued_at: { type: [string, "null"], format: date-time }
+        started_at: { type: [string, "null"], format: date-time }
+        finished_at: { type: [string, "null"], format: date-time }
+        error_code: { type: [string, "null"] }
+        error_message: { type: [string, "null"], maxLength: 1000 }
+        has_partial_failure: { type: boolean, default: false }
+        poll_after_ms: { type: integer, minimum: 1000, maximum: 2000 }
+        children:
+          type: array
+          maxItems: 4
+          items:
+            type: object
+            additionalProperties: false
+            required: [id, job_type, status]
+            properties:
+              id: { $ref: "#/components/schemas/Uuid" }
+              job_type: { $ref: "#/components/schemas/JobType" }
+              status: { $ref: "#/components/schemas/JobStatus" }
+              target_section: { type: [string, "null"] }
+              error_code: { type: [string, "null"] }
+    JobAccepted:
+      type: object
+      additionalProperties: false
+      required: [job]
+      properties:
+        job: { $ref: "#/components/schemas/Job" }
+        related_resource_id:
+          type: [string, "null"]
+          format: uuid
+          description: 提示词测试 run 被最近 20 条策略清理后，幂等重放返回原 job 且本字段为空
+    JobPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Job" }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    GroupActivityAddStepResult:
+      type: object
+      additionalProperties: false
+      required: [step, suggested_insert_index]
+      properties:
+        step: { $ref: "#/components/schemas/GroupActivityStepCandidate" }
+        suggested_insert_index:
+          type: integer
+          minimum: 0
+          description: 不得大于生成输入中 group_activity.process 的长度；越界按结构错误重试
+      description: Worker 返回的 step 不拥有最终 is_ai_added 值；采用时 API 强制设为 true
+    GroupActivityStepCandidate:
+      type: object
+      additionalProperties: false
+      required: [heading, lines]
+      properties:
+        heading: { type: string, minLength: 1, maxLength: 1000 }
+        lines:
+          type: array
+          minItems: 1
+          items: { type: string, minLength: 1, maxLength: 5000 }
+    JobPreview:
+      type: object
+      additionalProperties: false
+      required: [job_id, target_section, result_schema_code, result_schema_version, output_content, expires_at]
+      properties:
+        job_id: { $ref: "#/components/schemas/Uuid" }
+        target_section: { type: string }
+        result_schema_code: { type: string }
+        result_schema_version: { type: integer, minimum: 1 }
+        output_content:
+          $ref: "#/components/schemas/PromptResult"
+        expires_at: { type: string, format: date-time }
+        warnings:
+          type: array
+          items: { $ref: "#/components/schemas/SoftWarning" }
+    ExportRequest:
+      type: object
+      additionalProperties: false
+      required: [expected_version, content, authors, confirm_incomplete]
+      properties:
+        expected_version: { type: integer, minimum: 1 }
+        content: { $ref: "#/components/schemas/PlanContent" }
+        authors:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/AuthorWrite" }
+        confirm_incomplete: { type: boolean, default: false }
+    ExportStatus:
+      type: string
+      enum: [pending, succeeded, failed]
+    Export:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - plan_id
+        - plan_version
+        - content_schema_version
+        - content_sha256
+        - job_id
+        - status
+        - display_filename
+        - template_sha256
+        - created_at
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        plan_id: { $ref: "#/components/schemas/Uuid" }
+        plan_version: { type: integer, minimum: 1 }
+        content_schema_version: { type: integer, const: 1 }
+        content_sha256: { type: string, pattern: "^[0-9a-f]{64}$" }
+        job_id: { $ref: "#/components/schemas/Uuid" }
+        status: { $ref: "#/components/schemas/ExportStatus" }
+        display_filename: { type: string, maxLength: 255 }
+        file_size: { type: [integer, "null"], minimum: 0 }
+        file_sha256: { type: [string, "null"], pattern: "^[0-9a-f]{64}$" }
+        template_sha256:
+          type: string
+          const: 63b50694a330c32ccae768286db3f63988773bd1fe03e167bb79910ff9bd7894
+        exported_at: { type: [string, "null"], format: date-time }
+        file_missing_at: { type: [string, "null"], format: date-time }
+        error_code: { type: [string, "null"] }
+        error_summary: { type: [string, "null"], maxLength: 1000 }
+        created_at: { type: string, format: date-time }
+    ExportAccepted:
+      type: object
+      additionalProperties: false
+      required: [job, export]
+      properties:
+        job: { $ref: "#/components/schemas/Job" }
+        export: { $ref: "#/components/schemas/Export" }
+    ExportPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Export" }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    SemesterWrite:
+      type: object
+      additionalProperties: false
+      required: [name, start_date, end_date, is_active]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 160 }
+        start_date: { type: string, format: date }
+        end_date: { type: string, format: date }
+        is_active: { type: boolean }
+    ClassWrite:
+      type: object
+      additionalProperties: false
+      required: [name, age_group_id, is_active]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 120 }
+        age_group_id: { $ref: "#/components/schemas/Uuid" }
+        is_active: { type: boolean }
+    AreaWrite:
+      type: object
+      additionalProperties: false
+      required: [name, sort_order, is_active]
+      properties:
+        id: { type: [string, "null"], format: uuid }
+        name: { type: string, minLength: 1, maxLength: 120 }
+        sort_order: { type: integer, minimum: 0 }
+        is_active: { type: boolean }
+    AiModelProfileWrite:
+      type: object
+      additionalProperties: false
+      description: 地址、模型名、能力或 API Key 的业务变化会原子递增 call_config_revision
+      required: [name, api_base_url, model_name, capability_codes, max_concurrency]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 120 }
+        api_base_url: { type: string, format: uri, maxLength: 500 }
+        model_name: { type: string, minLength: 1, maxLength: 200 }
+        api_key: { type: [string, "null"], writeOnly: true }
+        capability_codes:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [text, vision, structured_output] }
+        max_concurrency: { type: integer, minimum: 1, default: 2 }
+        rate_limit_per_minute: { type: [integer, "null"], minimum: 1 }
+        is_default: { type: boolean, default: false }
+    PromptCode:
+      type: string
+      enum:
+        - daily_activity_plan.morning_activity
+        - daily_activity_plan.morning_talk
+        - daily_activity_plan.group_activity_split
+        - daily_activity_plan.group_activity_add_step
+        - daily_activity_plan.indoor_area_game
+        - daily_activity_plan.afternoon_outdoor_game
+        - daily_activity_plan.daily_reflection
+    PromptDefinition:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - code
+        - name
+        - variable_whitelist
+        - required_capabilities
+        - result_schema_code
+        - result_schema_version
+        - model_profile_id
+        - effective_version_id
+        - draft_version_id
+        - is_active
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        code: { $ref: "#/components/schemas/PromptCode" }
+        name: { type: string, maxLength: 160 }
+        variable_whitelist:
+          type: array
+          uniqueItems: true
+          items: { type: string, maxLength: 80 }
+        required_capabilities:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [text, vision, structured_output] }
+        result_schema_code: { type: string, maxLength: 120 }
+        result_schema_version: { type: integer, const: 1 }
+        model_profile_id: { type: [string, "null"], format: uuid }
+        effective_version_id: { type: [string, "null"], format: uuid }
+        draft_version_id: { type: [string, "null"], format: uuid }
+        is_active: { type: boolean }
+    PromptDefinitionPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, maxItems: 7, items: { $ref: "#/components/schemas/PromptDefinition" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0, maximum: 7 }
+    PromptVersion:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - prompt_definition_id
+        - prompt_code
+        - version_number
+        - source_type
+        - lifecycle_state
+        - content
+        - content_sha256
+        - based_on_version_id
+        - created_by
+        - created_at
+        - published_by
+        - published_at
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        prompt_definition_id: { $ref: "#/components/schemas/Uuid" }
+        prompt_code: { $ref: "#/components/schemas/PromptCode" }
+        version_number: { type: integer, minimum: 1 }
+        source_type: { type: string, enum: [system, custom] }
+        lifecycle_state: { type: string, enum: [draft, published] }
+        content: { type: string, minLength: 1, maxLength: 50000 }
+        content_sha256: { type: string, pattern: "^[0-9a-f]{64}$" }
+        based_on_version_id: { type: [string, "null"], format: uuid }
+        created_by: { type: [string, "null"], format: uuid }
+        created_at: { type: string, format: date-time }
+        published_by: { type: [string, "null"], format: uuid }
+        published_at: { type: [string, "null"], format: date-time }
+    PromptVersionPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/PromptVersion" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    PromptDraftWrite:
+      type: object
+      additionalProperties: false
+      required: [content]
+      properties:
+        content:
+          type: string
+          minLength: 1
+          maxLength: 50000
+          description: >-
+            模板解析器只接受 \{\{[ \t]*([a-z][a-z0-9_]*)[ \t]*\}\} 白名单纯替换；
+            花括号内不接受换行或其他 Unicode 空白，禁止表达式、过滤器、循环、函数和嵌套访问
+        based_on_version_id: { type: [string, "null"], format: uuid }
+    CommonPlanPromptVariables:
+      type: object
+      additionalProperties: false
+      required:
+        - plan_date
+        - weekday_text
+        - teaching_week_text
+        - season
+        - class_name
+        - age_group_name
+        - teacher_context
+      properties:
+        plan_date: { type: string, format: date }
+        weekday_text: { type: string, minLength: 1, maxLength: 20 }
+        teaching_week_text: { type: [string, "null"], maxLength: 40 }
+        season: { type: string, enum: [spring, summer, autumn, winter] }
+        class_name: { type: string, minLength: 1, maxLength: 120 }
+        age_group_name: { type: string, minLength: 1, maxLength: 120 }
+        teacher_context: { $ref: "#/components/schemas/TeacherContext" }
+    IndoorAreaPromptVariables:
+      type: object
+      additionalProperties: false
+      required:
+        - plan_date
+        - weekday_text
+        - teaching_week_text
+        - season
+        - class_name
+        - age_group_name
+        - teacher_context
+        - indoor_areas
+      properties:
+        plan_date: { type: string, format: date }
+        weekday_text: { type: string, minLength: 1, maxLength: 20 }
+        teaching_week_text: { type: [string, "null"], maxLength: 40 }
+        season: { type: string, enum: [spring, summer, autumn, winter] }
+        class_name: { type: string, minLength: 1, maxLength: 120 }
+        age_group_name: { type: string, minLength: 1, maxLength: 120 }
+        teacher_context: { $ref: "#/components/schemas/TeacherContext" }
+        indoor_areas:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: string, minLength: 1, maxLength: 120 }
+    OutdoorAreaPromptVariables:
+      type: object
+      additionalProperties: false
+      required:
+        - plan_date
+        - weekday_text
+        - teaching_week_text
+        - season
+        - class_name
+        - age_group_name
+        - teacher_context
+        - outdoor_areas
+      properties:
+        plan_date: { type: string, format: date }
+        weekday_text: { type: string, minLength: 1, maxLength: 20 }
+        teaching_week_text: { type: [string, "null"], maxLength: 40 }
+        season: { type: string, enum: [spring, summer, autumn, winter] }
+        class_name: { type: string, minLength: 1, maxLength: 120 }
+        age_group_name: { type: string, minLength: 1, maxLength: 120 }
+        teacher_context: { $ref: "#/components/schemas/TeacherContext" }
+        outdoor_areas:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { type: string, minLength: 1, maxLength: 120 }
+    GroupSplitPromptVariables:
+      type: object
+      additionalProperties: false
+      required: [source_text, age_group_name, teacher_context]
+      properties:
+        source_text: { type: string, minLength: 1, maxLength: 200000 }
+        age_group_name: { type: string, minLength: 1, maxLength: 120 }
+        teacher_context: { $ref: "#/components/schemas/TeacherContext" }
+    GroupAddStepPromptVariables:
+      type: object
+      additionalProperties: false
+      required: [group_activity, age_group_name, teacher_context]
+      properties:
+        group_activity: { $ref: "#/components/schemas/GroupActivity" }
+        age_group_name: { type: string, minLength: 1, maxLength: 120 }
+        teacher_context: { $ref: "#/components/schemas/TeacherContext" }
+    ReflectionCurrentPlan:
+      type: object
+      additionalProperties: false
+      required:
+        - morning_activity
+        - morning_talk
+        - group_activity
+        - indoor_area_game
+        - afternoon_outdoor_game
+      properties:
+        morning_activity: { $ref: "#/components/schemas/MorningActivity" }
+        morning_talk: { $ref: "#/components/schemas/MorningTalk" }
+        group_activity: { $ref: "#/components/schemas/GroupActivity" }
+        indoor_area_game: { $ref: "#/components/schemas/AreaGame" }
+        afternoon_outdoor_game: { $ref: "#/components/schemas/AreaGame" }
+      description: 明确不包含现有 daily_reflection
+    ReflectionPromptVariables:
+      type: object
+      additionalProperties: false
+      required: [plan_date, class_name, age_group_name, current_plan]
+      properties:
+        plan_date: { type: string, format: date }
+        class_name: { type: string, minLength: 1, maxLength: 120 }
+        age_group_name: { type: string, minLength: 1, maxLength: 120 }
+        current_plan: { $ref: "#/components/schemas/ReflectionCurrentPlan" }
+    PromptTestVariables:
+      oneOf:
+        - $ref: "#/components/schemas/CommonPlanPromptVariables"
+        - $ref: "#/components/schemas/IndoorAreaPromptVariables"
+        - $ref: "#/components/schemas/OutdoorAreaPromptVariables"
+        - $ref: "#/components/schemas/GroupSplitPromptVariables"
+        - $ref: "#/components/schemas/GroupAddStepPromptVariables"
+        - $ref: "#/components/schemas/ReflectionPromptVariables"
+      description: 路径 prompt code 决定必须命中的唯一固定输入 Schema
+    PromptTestRequest:
+      type: object
+      additionalProperties: false
+      required: [version_id, model_profile_id, variables]
+      properties:
+        version_id: { $ref: "#/components/schemas/Uuid" }
+        model_profile_id: { $ref: "#/components/schemas/Uuid" }
+        variables:
+          $ref: "#/components/schemas/PromptTestVariables"
+          description: >-
+            必须与路径中的提示词代码对应并使用脱敏示例值；受理事务会同时冻结规范化实际输入/
+            SHA-256、提示词正文/哈希、结果 Schema 和模型非密钥调用配置，公开响应不回传完整上下文
+    PromptTestInputSummary:
+      type: object
+      additionalProperties: false
+      required: [provided_variable_names, all_values_redacted]
+      properties:
+        provided_variable_names:
+          type: array
+          uniqueItems: true
+          maxItems: 10
+          description: 按 ASCII 字典序排列；只显示变量名
+          items: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+        all_values_redacted: { const: true }
+    PromptTestRun:
+      type: object
+      additionalProperties: false
+      required: [id, job_id, prompt_code, input_summary, status, created_at]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        job_id: { $ref: "#/components/schemas/Uuid" }
+        prompt_code: { $ref: "#/components/schemas/PromptCode" }
+        input_summary: { $ref: "#/components/schemas/PromptTestInputSummary" }
+        status: { type: string, enum: [pending, succeeded, failed] }
+        output_content:
+          oneOf:
+            - $ref: "#/components/schemas/PromptResult"
+            - type: "null"
+        elapsed_ms: { type: [integer, "null"], minimum: 0 }
+        error_code:
+          type: [string, "null"]
+          description: 模型调用配置 revision 变化时固定为 prompt.configuration_changed，且外部调用数为 0
+        error_summary: { type: [string, "null"], maxLength: 1000 }
+        created_at: { type: string, format: date-time }
+    PromptTestPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items:
+          type: array
+          maxItems: 20
+          items: { $ref: "#/components/schemas/PromptTestRun" }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 20 }
+        total: { type: integer, minimum: 0, maximum: 20 }
+    ThreeSentences:
+      type: array
+      minItems: 0
+      maxItems: 3
+      items: { type: string, maxLength: 1000 }
+      description: 完整状态必须恰好三项；编辑中的空对象允许少于三项
+    ExactlyThreeStatements:
+      type: array
+      minItems: 3
+      maxItems: 3
+      items: { type: string, minLength: 1, maxLength: 1000, pattern: "。$" }
+      description: AI 固定陈述结果使用恰好三项，每项以中文句号结束
+    ExactlyThreeQuestions:
+      type: array
+      minItems: 3
+      maxItems: 3
+      items: { type: string, minLength: 1, maxLength: 1000, pattern: "？$" }
+      description: AI 晨谈问题使用恰好三项，每项以中文问号结束
+    MorningActivity:
+      type: object
+      additionalProperties: false
+      required: [physical_cycle, group_game, free_game, focus_guidance, objectives, guidance_points]
+      properties:
+        physical_cycle: { type: string, const: 体能大循环 }
+        group_game: { type: string, maxLength: 500 }
+        free_game: { type: string, maxLength: 500 }
+        focus_guidance: { type: string, maxLength: 500 }
+        objectives: { $ref: "#/components/schemas/ThreeSentences" }
+        guidance_points: { $ref: "#/components/schemas/ThreeSentences" }
+    MorningTalk:
+      type: object
+      additionalProperties: false
+      required: [topic, questions]
+      properties:
+        topic: { type: string, maxLength: 500 }
+        questions: { $ref: "#/components/schemas/ThreeSentences" }
+    GroupActivityStep:
+      type: object
+      additionalProperties: false
+      required: [heading, lines, is_ai_added]
+      properties:
+        heading: { type: string, maxLength: 1000 }
+        lines:
+          type: array
+          items: { type: string, maxLength: 5000 }
+        is_ai_added: { type: boolean, default: false }
+    GroupActivity:
+      type: object
+      additionalProperties: false
+      required: [theme, objectives, preparation, focus, difficulty, process]
+      properties:
+        theme: { type: string, maxLength: 1000 }
+        objectives:
+          type: array
+          items: { type: string, maxLength: 5000 }
+        preparation:
+          type: array
+          items: { type: string, maxLength: 5000 }
+        focus: { type: string, maxLength: 5000 }
+        difficulty: { type: string, maxLength: 5000 }
+        process:
+          type: array
+          items: { $ref: "#/components/schemas/GroupActivityStep" }
+    AreaGame:
+      type: object
+      additionalProperties: false
+      required: [areas, focus_guidance, objectives, guidance_points, support_strategies]
+      properties:
+        areas:
+          type: array
+          uniqueItems: true
+          items: { type: string, maxLength: 120 }
+        focus_guidance: { type: string, maxLength: 500 }
+        objectives: { $ref: "#/components/schemas/ThreeSentences" }
+        guidance_points: { $ref: "#/components/schemas/ThreeSentences" }
+        support_strategies: { $ref: "#/components/schemas/ThreeSentences" }
+    DailyReflection:
+      type: object
+      additionalProperties: false
+      required: [highlights, issues, adjustments]
+      description: 三字段先做 NFKC 规范化，再按 Unicode code point（含标点、空白与 emoji）合计不超过 200；Word 按三行输出
+      properties:
+        highlights: { type: string, maxLength: 200 }
+        issues: { type: string, maxLength: 200 }
+        adjustments: { type: string, maxLength: 200 }
+    AiMorningActivity:
+      type: object
+      additionalProperties: false
+      required: [physical_cycle, group_game, free_game, focus_guidance, objectives, guidance_points]
+      properties:
+        physical_cycle: { type: string, const: 体能大循环 }
+        group_game: { type: string, minLength: 1, maxLength: 500 }
+        free_game: { type: string, minLength: 1, maxLength: 500 }
+        focus_guidance: { type: string, minLength: 1, maxLength: 500 }
+        objectives: { $ref: "#/components/schemas/ExactlyThreeStatements" }
+        guidance_points: { $ref: "#/components/schemas/ExactlyThreeStatements" }
+    AiMorningTalk:
+      type: object
+      additionalProperties: false
+      required: [topic, questions]
+      properties:
+        topic: { type: string, minLength: 1, maxLength: 500 }
+        questions: { $ref: "#/components/schemas/ExactlyThreeQuestions" }
+    AiGroupActivityStep:
+      type: object
+      additionalProperties: false
+      required: [heading, lines]
+      properties:
+        heading: { type: string, minLength: 1, maxLength: 1000 }
+        lines:
+          type: array
+          minItems: 1
+          items: { type: string, minLength: 1, maxLength: 5000 }
+    AiGroupActivity:
+      type: object
+      additionalProperties: false
+      required: [theme, objectives, preparation, focus, difficulty, process]
+      properties:
+        theme: { type: string, minLength: 1, maxLength: 1000 }
+        objectives:
+          type: array
+          minItems: 1
+          items: { type: string, minLength: 1, maxLength: 5000 }
+        preparation:
+          type: array
+          minItems: 1
+          items: { type: string, minLength: 1, maxLength: 5000 }
+        focus: { type: string, minLength: 1, maxLength: 5000 }
+        difficulty: { type: string, minLength: 1, maxLength: 5000 }
+        process:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/AiGroupActivityStep" }
+      description: 拆分结果不接受来源标记；API 采用时将既有拆分步骤设为 false，新增环节由独立任务返回
+    AiAreaGame:
+      type: object
+      additionalProperties: false
+      required: [focus_guidance, objectives, guidance_points, support_strategies]
+      properties:
+        focus_guidance: { type: string, minLength: 1, maxLength: 500 }
+        objectives: { $ref: "#/components/schemas/ExactlyThreeStatements" }
+        guidance_points: { $ref: "#/components/schemas/ExactlyThreeStatements" }
+        support_strategies: { $ref: "#/components/schemas/ExactlyThreeStatements" }
+      description: AI 不得回传或改写区域列表；API 采用时使用生成输入中的当前有效区域
+    AiDailyReflection:
+      type: object
+      additionalProperties: false
+      required: [highlights, issues, adjustments]
+      description: 三字段都非空，并执行 DailyReflection 的 NFKC 后合计 200 code point 规则
+      properties:
+        highlights: { type: string, minLength: 1, maxLength: 200 }
+        issues: { type: string, minLength: 1, maxLength: 200 }
+        adjustments: { type: string, minLength: 1, maxLength: 200 }
+    PromptResult:
+      oneOf:
+        - $ref: "#/components/schemas/AiMorningActivity"
+        - $ref: "#/components/schemas/AiMorningTalk"
+        - $ref: "#/components/schemas/AiGroupActivity"
+        - $ref: "#/components/schemas/GroupActivityAddStepResult"
+        - $ref: "#/components/schemas/AiAreaGame"
+        - $ref: "#/components/schemas/AiDailyReflection"
+      description: 必须与提示词定义中的 result_schema_code 和版本严格匹配
+    PlanContent:
+      type: object
+      additionalProperties: false
+      required:
+        - morning_activity
+        - morning_talk
+        - group_activity
+        - indoor_area_game
+        - afternoon_outdoor_game
+        - daily_reflection
+      properties:
+        morning_activity: { $ref: "#/components/schemas/MorningActivity" }
+        morning_talk: { $ref: "#/components/schemas/MorningTalk" }
+        group_activity: { $ref: "#/components/schemas/GroupActivity" }
+        indoor_area_game: { $ref: "#/components/schemas/AreaGame" }
+        afternoon_outdoor_game: { $ref: "#/components/schemas/AreaGame" }
+        daily_reflection: { $ref: "#/components/schemas/DailyReflection" }
+    AuthorWrite:
+      type: object
+      additionalProperties: false
+      required: [user_id, sort_order]
+      properties:
+        user_id: { $ref: "#/components/schemas/Uuid" }
+        sort_order: { type: integer, minimum: 0 }
+    Author:
+      type: object
+      additionalProperties: false
+      required: [user_id, sort_order, display_name_snapshot]
+      properties:
+        user_id: { $ref: "#/components/schemas/Uuid" }
+        sort_order: { type: integer, minimum: 0 }
+        display_name_snapshot: { type: string, maxLength: 120 }
+    SoftWarning:
+      type: object
+      additionalProperties: false
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum:
+            - semester.out_of_range
+            - calendar.non_workday
+            - calendar.unknown
+            - calendar.source_conflict
+            - group_activity.ai_step_missing
+        message: { type: string }
+        detail:
+          type: object
+          additionalProperties: false
+          properties:
+            calendar_date: { type: string, format: date }
+            source_code: { type: string, enum: [local, online, combined, unavailable] }
+            local_result: { type: [string, "null"], enum: [workday, non_workday, unknown, null] }
+            online_result: { type: [string, "null"], enum: [workday, non_workday, unknown, null] }
+            missing_sections:
+              type: array
+              uniqueItems: true
+              description: 只含五个关键栏目，有意排除 daily_reflection；空反思不触发导出确认
+              items:
+                type: string
+                enum: [morning_activity, morning_talk, group_activity, indoor_area_game, afternoon_outdoor_game]
+            missing_area_type: { type: string, enum: [indoor, outdoor] }
+          description: 最小、脱敏、不可包含完整正文
+    Plan:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - class_id
+        - semester_id
+        - plan_date
+        - kindergarten_name_snapshot
+        - class_name_snapshot
+        - age_group_name_snapshot
+        - semester_name_snapshot
+        - teaching_week_number
+        - teaching_week_text
+        - content
+        - content_schema_version
+        - version
+        - authors
+        - soft_warnings
+        - capabilities
+        - archived_at
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        class_id: { $ref: "#/components/schemas/Uuid" }
+        semester_id: { $ref: "#/components/schemas/Uuid" }
+        plan_date: { type: string, format: date }
+        kindergarten_name_snapshot: { type: string }
+        class_name_snapshot: { type: string }
+        age_group_name_snapshot: { type: string }
+        semester_name_snapshot: { type: string }
+        semester_start_date_snapshot: { type: string, format: date }
+        semester_end_date_snapshot: { type: string, format: date }
+        teaching_week_number: { type: [integer, "null"], minimum: 1 }
+        teaching_week_text: { type: [string, "null"] }
+        activity_date_text: { type: string }
+        season: { type: string, enum: [spring, summer, autumn, winter] }
+        content: { $ref: "#/components/schemas/PlanContent" }
+        content_schema_version: { type: integer, const: 1 }
+        version: { type: integer, minimum: 1 }
+        authors:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/Author" }
+        archived_at: { type: [string, "null"], format: date-time }
+        soft_warnings:
+          type: array
+          items: { $ref: "#/components/schemas/SoftWarning" }
+        capabilities:
+          type: array
+          uniqueItems: true
+          items: { type: string }
+    PlanOpenRequest:
+      type: object
+      additionalProperties: false
+      required: [class_id, plan_date]
+      properties:
+        class_id: { $ref: "#/components/schemas/Uuid" }
+        plan_date: { type: string, format: date }
+    PlanSaveRequest:
+      type: object
+      additionalProperties: false
+      required: [expected_version, content, authors]
+      properties:
+        expected_version: { type: integer, minimum: 1 }
+        content: { $ref: "#/components/schemas/PlanContent" }
+        authors:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/AuthorWrite" }
+    VersionRequest:
+      type: object
+      additionalProperties: false
+      required: [expected_version]
+      properties:
+        expected_version: { type: integer, minimum: 1 }
+    PlanPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Plan" }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    PlanSnapshotContext:
+      type: object
+      additionalProperties: false
+      required:
+        - kindergarten_name
+        - class_name
+        - age_group_name
+        - semester_name
+        - semester_start_date
+        - semester_end_date
+        - teaching_week_number
+        - teaching_week_text
+        - activity_date_text
+        - season
+        - authors
+      properties:
+        kindergarten_name: { type: string, maxLength: 200 }
+        class_name: { type: string, maxLength: 120 }
+        age_group_name: { type: string, maxLength: 120 }
+        semester_name: { type: string, maxLength: 160 }
+        semester_start_date: { type: string, format: date }
+        semester_end_date: { type: string, format: date }
+        teaching_week_number: { type: [integer, "null"], minimum: 1 }
+        teaching_week_text: { type: [string, "null"], maxLength: 40 }
+        activity_date_text: { type: string, maxLength: 40 }
+        season: { type: string, enum: [spring, summer, autumn, winter] }
+        authors:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/Author" }
+    PlanSnapshot:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - plan_id
+        - plan_version
+        - reason_code
+        - context_snapshot
+        - content
+        - content_schema_version
+        - content_sha256
+        - created_by
+        - created_at
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        plan_id: { $ref: "#/components/schemas/Uuid" }
+        plan_version: { type: integer, minimum: 1 }
+        reason_code:
+          type: string
+          enum: [manual_save, ai_adopted, archive, unarchive, before_restore, restored]
+        context_snapshot: { $ref: "#/components/schemas/PlanSnapshotContext" }
+        content: { $ref: "#/components/schemas/PlanContent" }
+        content_schema_version: { type: integer, const: 1 }
+        content_sha256: { type: string, pattern: "^[0-9a-f]{64}$" }
+        created_by: { type: [string, "null"], format: uuid }
+        created_at: { type: string, format: date-time }
+    PlanSnapshotPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/PlanSnapshot" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    LessonPlanSource:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - plan_id
+        - source_type
+        - original_filename
+        - source_sha256
+        - extracted_character_count
+        - uploaded_by
+        - created_at
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        plan_id: { $ref: "#/components/schemas/Uuid" }
+        source_type: { type: string, enum: [pasted_text, docx] }
+        original_filename: { type: [string, "null"], maxLength: 255 }
+        source_sha256: { type: string, pattern: "^[0-9a-f]{64}$" }
+        extracted_character_count: { type: integer, minimum: 1, maximum: 200000 }
+        uploaded_by: { $ref: "#/components/schemas/Uuid" }
+        created_at: { type: string, format: date-time }
+    LessonPlanSourcePage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/LessonPlanSource" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    AuditMetadata:
+      type: object
+      additionalProperties: false
+      description: 事件专用白名单字段的安全并集；禁止密码、令牌、密钥和完整业务正文
+      properties:
+        changed_fields:
+          type: array
+          uniqueItems: true
+          items: { type: string, maxLength: 120 }
+        role_codes_before:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [admin, teacher] }
+        role_codes_after:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [admin, teacher] }
+        prompt_code: { $ref: "#/components/schemas/PromptCode" }
+        prompt_version_id: { type: string, format: uuid }
+        model_profile_id: { type: string, format: uuid }
+        plan_id: { type: string, format: uuid }
+        plan_version: { type: integer, minimum: 1 }
+        target_section: { type: string, maxLength: 80 }
+        job_type: { $ref: "#/components/schemas/JobType" }
+        job_status: { $ref: "#/components/schemas/JobStatus" }
+        attempt_count: { type: integer, minimum: 0, maximum: 3 }
+        export_id: { type: string, format: uuid }
+        display_filename: { type: string, maxLength: 255 }
+        failure_code: { type: string, maxLength: 120 }
+        risk_confirmed: { type: boolean }
+    AuditEvent:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - event_code
+        - actor_user_id
+        - actor_role_codes
+        - resource_type
+        - resource_id
+        - request_id
+        - trace_id
+        - job_id
+        - outcome
+        - metadata
+        - occurred_at
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        event_code: { type: string, pattern: "^[a-z][a-z0-9_.-]+$", maxLength: 120 }
+        actor_user_id: { type: [string, "null"], format: uuid }
+        actor_role_codes:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [admin, teacher] }
+        resource_type: { type: string, maxLength: 80 }
+        resource_id: { type: [string, "null"], format: uuid }
+        request_id: { type: [string, "null"], format: uuid }
+        trace_id: { type: [string, "null"], format: uuid }
+        job_id: { type: [string, "null"], format: uuid }
+        outcome: { type: string, enum: [success, failure] }
+        metadata: { $ref: "#/components/schemas/AuditMetadata" }
+        occurred_at: { type: string, format: date-time }
+    AuditEventPage:
+      type: object
+      additionalProperties: false
+      required: [items, page, page_size, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/AuditEvent" } }
+        page: { type: integer, minimum: 1 }
+        page_size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
