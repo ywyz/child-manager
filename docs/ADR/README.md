@@ -15,7 +15,7 @@
 
 | ADR | 决策 | 状态 |
 | --- | --- | --- |
-| [ADR-0001](ADR-0001-cloud-only-single-kindergarten-boundary.md) | 只交付 Cloud 版本，首期单园部署并保留园所边界 | 已接受 |
+| [ADR-0001](0001-cloud-only.md) | 只交付 Cloud 版本，首期单园运行并保留园所隔离边界 | 已接受 |
 | [ADR-0002](ADR-0002-separate-web-api-worker-modular-monolith.md) | 采用独立 Web、API、Worker 运行单元的模块化单体 | 已接受 |
 | [ADR-0003](ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md) | PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行 | 已接受 |
 | [ADR-0004](ADR-0004-same-origin-cookie-authentication.md) | 采用同源入口、HttpOnly Cookie 与 API 统一授权 | 已接受 |

@@ -29,11 +29,6 @@
     "ast_hash": "3920bfdbab87af55353524eac70015be",
     "semantic_hash": "3920bfdbab87af55353524eac70015be"
   },
-  "docs/ADR/ADR-0001-cloud-only-single-kindergarten-boundary.md": {
-    "mtime": 1783845063.8255744,
-    "ast_hash": "96a84cf781252e91ca861b9fd6df0cd3",
-    "semantic_hash": ""
-  },
   "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md": {
     "mtime": 1783738443.0044267,
     "ast_hash": "ba4e069796129515a768283f97e1077b",
@@ -65,8 +60,8 @@
     "semantic_hash": ""
   },
   "docs/ADR/README.md": {
-    "mtime": 1783845063.8255744,
-    "ast_hash": "5690fff501ddd8ad489ea025177597e0",
+    "mtime": 1783851805.0099528,
+    "ast_hash": "269b3363e552e58ad8212b40118c8034",
     "semantic_hash": ""
   },
   "docs/PRD/lesson-management.md": {
@@ -125,8 +120,13 @@
     "semantic_hash": ""
   },
   "docs/development/dual-agent-development.md": {
-    "mtime": 1783851203.7260535,
-    "ast_hash": "cd3029885cfef66ac4b25351c8e861de",
+    "mtime": 1783851231.2611878,
+    "ast_hash": "3a05fda1fd051387059275421db42d2f",
+    "semantic_hash": ""
+  },
+  "docs/ADR/0001-cloud-only.md": {
+    "mtime": 1783851815.3953848,
+    "ast_hash": "adc610d98aab1a74887937d1b7ae9b5a",
     "semantic_hash": ""
   }
 }
