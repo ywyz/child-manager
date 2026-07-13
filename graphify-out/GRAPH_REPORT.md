@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-07-13)
+# Graph Report - child-manager  (2026-07-13)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 69 files · ~71,750 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1489 nodes · 1170 edges · 480 communities (108 shown, 372 thin omitted)
+- 1610 nodes · 1256 edges · 488 communities (116 shown, 372 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `41a5f6c2`
+- Built from commit: `f976f41d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -494,6 +495,14 @@
 - [[_COMMUNITY_一日活动计划 Word 系统说明|一日活动计划 Word 系统说明]]
 - [[_COMMUNITY_表格第一行：教学周次|表格第一行：教学周次]]
 - [[_COMMUNITY_文件第一行：园所与学期月份范围|文件第一行：园所与学期月份范围]]
+- [[_COMMUNITY_右侧列|右侧列]]
+- [[_COMMUNITY_右侧列|右侧列]]
+- [[_COMMUNITY_右侧列|右侧列]]
+- [[_COMMUNITY_右侧列|右侧列]]
+- [[_COMMUNITY_右侧列为两行：|右侧列为两行：]]
+- [[_COMMUNITY_右侧列为两行：|右侧列为两行：]]
+- [[_COMMUNITY_M0 阻塞项统一修复执行方案（Codex + Trae）|M0 阻塞项统一修复执行方案（Codex + Trae）]]
+- [[_COMMUNITY_3.4 加密与密钥|3.4 加密与密钥]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Child Manager 数据模型设计` - 24 edges
@@ -534,7 +543,7 @@
 - **Web API Worker 独立运行单元** — docs_design_system_architecture_nicegui_web, docs_design_system_architecture_fastapi_api, docs_design_system_architecture_dramatiq_worker [EXTRACTED 1.00]
 - **Word 六大教案栏目** — templates_teacherplan____________morning_activity, templates_teacherplan____________morning_talk, templates_teacherplan____________group_activity, templates_teacherplan____________indoor_area_game, templates_teacherplan____________afternoon_outdoor_game, templates_teacherplan____________daily_reflection [EXTRACTED 1.00]
 
-## Communities (480 total, 372 thin omitted)
+## Communities (488 total, 372 thin omitted)
 
 ### Community 0 - "Implementation Plan: 首期一日活动计划完整闭环"
 Cohesion: 0.04
@@ -561,8 +570,8 @@ Cohesion: 0.06
 Nodes (32): 10. Web 轮询契约, 1. 任务类型, 2. 状态定义, 3. 受理、投递与租约, 4. 模型调用与重试分类, 5. 幂等契约, 6. AI 预览有效性, 7. 各任务输入快照 (+24 more)
 
 ### Community 6 - "Child Manager 产品与工程路线图"
-Cohesion: 0.09
-Nodes (32): 10. M4：AI 模型与提示词基础, 11. M5：无 AI 教案手工闭环, 12. M6：AI 异步生成与人工采用, 13. M7：固定 Word 导出与历史, 14. M8：首期功能验收, 15. M9：生产安全与部署复审, 16. 当前状态快照, 17. Roadmap 更新规则 (+24 more)
+Cohesion: 0.04
+Nodes (48): 10. M4：AI 模型与提示词基础, 11. M5：无 AI 教案手工闭环, 12. M6：AI 异步生成与人工采用, 13. M7：固定 Word 导出与历史, 14. M8：首期功能验收, 15. M9：生产安全与部署复审, 16. 当前状态快照, 17. Roadmap 更新规则 (+40 more)
 
 ### Community 7 - "Child Manager 项目上下文"
 Cohesion: 0.06
@@ -585,8 +594,8 @@ Cohesion: 0.09
 Nodes (23): AI 提示词管理子系统, AI 生成规则, Child Manager 幼儿园教育管理系统, Word 导出, 一键生成与分栏目生成, 分支协作规范, 后续子系统, 基本规则 (+15 more)
 
 ### Community 12 - "右侧列"
-Cohesion: 0.17
-Nodes (22): 右侧列, 右侧列为两行：, 填写说明, 左侧列, 文件第一行, 文件第二行, 注意事项：, 第一行： (+14 more)
+Cohesion: 0.20
+Nodes (10): 填写说明, 填写说明：, 填写说明：, 填写说明：, 文件第一行, 文件第二行, 注意事项：, 表格第一行 (+2 more)
 
 ### Community 13 - "README.md"
 Cohesion: 0.31
@@ -613,8 +622,8 @@ Cohesion: 0.12
 Nodes (15): 1. Initialize Convergence Context, 2. Load Artifacts (Progressive Disclosure), 3. Build the Intent Inventory, 4. Assess the Codebase and Classify Findings, 5. Assign Severity, 6. Present the In-Session Findings Summary, 7. Append Convergence Tasks (or report converged), 8. Provide Next Actions (Handoff) (+7 more)
 
 ### Community 19 - "Child Manager 编码前联合审查报告（Codex + Trae）"
-Cohesion: 0.13
-Nodes (14): 1. 联合结论, 2.1 文档状态, 2.2 已确认满足的规则, 2. 当前文档与已满足规则, 3.1 模型与契约, 3.2 模板说明, 3.3 状态、证据与分支流程, 3.4 静态验证、图谱、历史与最终基线 (+6 more)
+Cohesion: 0.07
+Nodes (27): 1. 联合结论, 2.1 文档状态, 2.2 已确认满足的规则, 2. 当前文档与已满足规则, 3.1 模型与契约, 3.2 模板说明, 3.3 状态、证据与分支流程, 3.4 静态验证、图谱、历史与最终基线 (+19 more)
 
 ### Community 20 - "Child Manager 一日活动计划 OpenAPI 3.1"
 Cohesion: 0.13
@@ -949,8 +958,8 @@ Cohesion: 0.67
 Nodes (3): 7.1 API 原则, 7.2 跨进程任务契约, 7. API 与契约
 
 ### Community 104 - "3.4 加密与密钥"
-Cohesion: 0.67
-Nodes (3): 3.4 加密与密钥, Q10：AI Key 加密算法, Q11：主加密密钥来源
+Cohesion: 0.06
+Nodes (32): 1. 阶段 0：修复前基线确认, 2.1 A1：修订模板说明, 2.2 A2：补充 FR-031, 2.3 A3：补充 Q13 架构摘要, 2.4 A4：修复 README 链接, 2. 阶段 1：任务 A——修复内容缺口, 3. 阶段 2：任务 B——同步状态与 T002/T003, 4.1 C1：静态文档和模板检查 (+24 more)
 
 ### Community 105 - "3.6 测试与可访问性"
 Cohesion: 0.67
@@ -968,8 +977,40 @@ Nodes (3): 15.1 敏感数据, 15.2 审计事件, 15. 安全、隐私与审计
 Cohesion: 0.67
 Nodes (3): 4.1 首期目标, 4.2 成功标准, 4. 产品目标
 
+### Community 480 - "右侧列"
+Cohesion: 0.20
+Nodes (10): 右侧列, 填写说明, 左侧列, 第一行, 第三行：, 第二行：, 第五行：, 第六行： (+2 more)
+
+### Community 481 - "右侧列"
+Cohesion: 0.29
+Nodes (7): 右侧列, 填写说明, 左侧列, 第一行, 第三行, 第二行, 表格第六行
+
+### Community 482 - "右侧列"
+Cohesion: 0.29
+Nodes (7): 右侧列, 填写说明, 左侧列, 第一行, 第三行, 第二行, 表格第七行
+
+### Community 483 - "右侧列"
+Cohesion: 0.29
+Nodes (7): 右侧列, 填写说明：, 左侧列, 第一行, 第三行, 第二行, 表格第八行
+
+### Community 484 - "右侧列为两行："
+Cohesion: 0.29
+Nodes (7): 右侧列为两行：, 填写说明, 填写说明：, 左侧列, 第一行：, 第二行：, 表格第三大行
+
+### Community 485 - "右侧列为两行："
+Cohesion: 0.29
+Nodes (7): 右侧列为两行：, 填写说明：, 填写说明：, 左侧列, 第一行：, 第二行：, 表格第四行：
+
+### Community 486 - "M0 阻塞项统一修复执行方案（Codex + Trae）"
+Cohesion: 0.09
+Nodes (23): 10. 授权边界, 11. 停止条件, 12. 最终完成定义, 1. 阶段 0：修复前基线确认, 2.1 A1：修订模板说明, 2.2 A2：补充 FR-031, 2.3 A3：补充 Q13 架构摘要, 2.4 A4：修复 README 链接 (+15 more)
+
+### Community 487 - "3.4 加密与密钥"
+Cohesion: 0.67
+Nodes (3): 3.4 加密与密钥, Q10：AI Key 加密算法, Q11：主加密密钥来源
+
 ## Knowledge Gaps
-- **1077 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1072 more)
+- **1182 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1177 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **372 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -985,13 +1026,13 @@ Nodes (3): 4.1 首期目标, 4.2 成功标准, 4. 产品目标
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `教案管理 PRD（首期：一日活动计划）` connect `教案管理 PRD（首期：一日活动计划）` to `5. 用户与权限`, `11. 计划管理流程`, `14. Word 导出`, `17. 非功能要求`, `18. 验收标准`, `8. 核心业务对象`, `15. 安全、隐私与审计`, `4. 产品目标`, `README.md`, `10. 教案栏目与格式`, `13. AI 生成流程`, `12. AI 模型与提示词管理`, `7. 首期必要设置`, `9. 日期与上下文规则`?**
-  _High betweenness centrality (0.065) - this node is a cross-community bridge._
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
 - **Why does `Child Manager 数据模型设计` connect `Child Manager 数据模型设计` to `3. 总体建模原则`, `9. 一日活动计划模型`, `README.md`, `15. 数据快照边界`, `22. 后续扩展边界`, `2. 设计来源与旧系统取舍`, `5. 园所与身份模型`, `6. 教学设置模型`, `8. 提示词模型`, `7. AI 模型档案`, `11. 后台任务与 AI 结果`, `16. 外键与删除行为`, `4. 模型总览`, `21. 测试与验收`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
+  _High betweenness centrality (0.047) - this node is a cross-community bridge._
 - **Why does `Child Manager 文档交叉审计合并结论` connect `Child Manager 文档交叉审计合并结论` to `4. 项目文档更新矩阵`, `3. 二十六项问题的最终结论`, `README.md`?**
-  _High betweenness centrality (0.048) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
-  _1184 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1289 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Implementation Plan: 首期一日活动计划完整闭环` be split into smaller, more focused modules?**
   _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._
 - **Should `Tasks: 首期一日活动计划完整闭环` be split into smaller, more focused modules?**
