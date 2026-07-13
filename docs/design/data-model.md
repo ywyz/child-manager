@@ -354,7 +354,7 @@ erDiagram
 | `api_key_encryption_version` | SMALLINT | 可空，密文格式版本 |
 | `api_key_key_id` | VARCHAR(64) | 可空，主密钥版本标识 |
 | `api_key_last_four` | VARCHAR(8) | 可空，仅用于脱敏展示 |
-| `max_concurrency` | INTEGER | 大于 0 |
+| `max_concurrency` | INTEGER | 大于 0，默认 2 |
 | `rate_limit_per_minute` | INTEGER | 可空，大于 0 |
 | `is_default` | BOOLEAN | 是否园所默认档案 |
 | `is_active` | BOOLEAN | 非空 |
@@ -483,8 +483,8 @@ erDiagram
 | `semester_name_snapshot` | VARCHAR(160) | 学期名称快照 |
 | `semester_start_date_snapshot` | DATE | 学期起始快照 |
 | `semester_end_date_snapshot` | DATE | 学期结束快照 |
-| `teaching_week_number` | INTEGER | 大于 0 |
-| `teaching_week_text` | VARCHAR(64) | 例如 `第（一）周` |
+| `teaching_week_number` | INTEGER | 可空；当前学期内大于 0，学期外为空 |
+| `teaching_week_text` | VARCHAR(64) | 可空；当前学期内例如 `第（一）周`，学期外为空 |
 | `activity_date_text` | VARCHAR(64) | 例如 `周（四）3月4日` |
 | `season_code` | VARCHAR(16) | `spring/summer/autumn/winter` |
 | `content` | JSONB | 当前完整结构化正文 |
@@ -539,7 +539,7 @@ daily_reflection
 | `created_at` | TIMESTAMPTZ | 非空 |
 | `updated_at` | TIMESTAMPTZ | 非空 |
 
-组合主键 `(kindergarten_id, plan_id, user_id)`；唯一 `(kindergarten_id, plan_id, sort_order)`。作者必须是当前班级关联教师；管理员只有同时是该班教师时才能成为作者或编辑正文。
+组合主键 `(kindergarten_id, plan_id, user_id)`；唯一 `(kindergarten_id, plan_id, sort_order)`。新增作者必须是当前班级关联教师；解除关联后立即撤销访问权，但保留既有署名快照，历史署名不授予权限。管理员只有同时是该班教师时才能成为作者或编辑正文。
 
 修改作者属于教案内容变更，必须经过乐观锁，并按手动保存规则创建快照。
 
@@ -736,14 +736,14 @@ expired
 | `kindergarten_id` | UUID | 园所外键 |
 | `calendar_date` | DATE | 查询日期 |
 | `result_code` | VARCHAR(16) | `workday/non_workday/unknown` |
-| `source_code` | VARCHAR(32) | `local/online/combined` |
+| `source_code` | VARCHAR(32) | `local/online/combined/unavailable` |
 | `source_version` | VARCHAR(120) | 库或 API 数据版本，可空 |
 | `detail` | JSONB | 不含密钥的最小来源元数据 |
 | `expires_at` | TIMESTAMPTZ | 缓存过期时间 |
 | `checked_at` | TIMESTAMPTZ | 非空 |
 | `created_at`、`updated_at` | TIMESTAMPTZ | 非空 |
 
-唯一 `(kindergarten_id, calendar_date)`。未知结果可以短期缓存以防故障放大，但有效期应短于已确认的工作日结果。该表不是教案事实；教案历史展示依赖其创建时保存的日期文本，而不是重新解释旧缓存。
+唯一 `(kindergarten_id, calendar_date)`。两种来源均不可用时保存 `result_code=unknown`、`source_code=unavailable`。未知结果可以短期缓存以防故障放大，但有效期应短于已确认的工作日结果。该表不是教案事实；教案历史展示依赖其创建时保存的日期文本，而不是重新解释旧缓存。
 
 ## 14. 审计模型
 

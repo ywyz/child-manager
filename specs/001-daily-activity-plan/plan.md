@@ -51,23 +51,18 @@ WCAG 2.2 AA 可验证要求
 
 ## Constitution Check
 
-*GATE: 本轮 Spec Kit 内部设计已经完成一致性检查，但 canonical 文档仍有已知漂移，且用户
-尚未授权 T001–T003 所需的 `main` docs-only 修改、提交、实现分支同步或分支操作。因此当前
-只允许保留设计产物，不得开始任何实现。*
+*GATE: 2026-07-13 已完成 T001 类型的 `main` docs-only 同步并消除已确认的 canonical 漂移。本轮仍未获得实现分支指定、分支操作或代码实现授权；因此设计可进入实现准备，但不得在 `main` 或未指定的实现分支开始实现。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
-| I. 事实来源与范围忠实 | PASS | **BLOCKED** | `research.md` 已记录冲突，但 canonical 文档尚未按 T001 同步并评审 |
-| II. 服务边界与单向依赖 | PASS | **PENDING** | BFF/API/Worker 边界已设计；等待 Pre-M1 文档门禁和授权完成 |
-| III. 园所隔离与服务端授权 | PASS | **PENDING** | 24 实体、组合外键、Repository 参数和 API 权限矩阵已设计；尚无获准实现 |
-| IV. 权威状态、事务与可恢复性 | PASS | **PENDING** | PostgreSQL 权威任务、幂等键、租约、恢复扫描和文件补偿已设计；尚无获准实现 |
-| V. 教师控制、AI 与 Word 保真 | PASS | **PENDING** | 固定 Schema、栏目级预览、采用事务、模板副本/哈希和红字边界已设计；尚无获准实现 |
-| VI. 可执行验证与真实证据 | PASS | **PENDING** | 用户故事测试与 quickstart 验收合同已定义，但当前 `main` 无可执行实现 |
+| I. 事实来源与范围忠实 | PASS | **PASS（文档）** | canonical 文档已按 T001 类型同步；实现仍需在指定分支开始 |
+| II. 服务边界与单向依赖 | PASS | **PENDING（授权）** | BFF/API/Worker 边界已设计，等待用户指定实现分支 |
+| III. 园所隔离与服务端授权 | PASS | **PENDING（授权）** | 24 实体、组合外键、Repository 参数和 API 权限矩阵已设计；尚无获准实现 |
+| IV. 权威状态、事务与可恢复性 | PASS | **PENDING（授权）** | PostgreSQL 权威任务、幂等键、租约、恢复扫描和文件补偿已设计；尚无获准实现 |
+| V. 教师控制、AI 与 Word 保真 | PASS | **PENDING（授权）** | 固定 Schema、栏目级预览、采用事务、模板副本/哈希和红字边界已设计；尚无获准实现 |
+| VI. 可执行验证与真实证据 | PASS | **PENDING（实现）** | 用户故事测试与 quickstart 验收合同已定义，但当前 `main` 无可执行实现 |
 
-**前置冲突与授权处理**: 本轮答案已明确解决产品行为，但 `AGENTS.md`、README、PRD、设计
-与 Schema 中仍有旧表述。T001–T003 必须在用户后续明确授权 `main` docs-only 修改、必要提交、
-指定实现分支及相应分支操作后才可执行；当前未获得这些授权。完成同步和复查前，后续任务
-保持 PENDING，任何业务迁移或代码实现都被 BLOCKED。见 [research.md](./research.md) 第 9 节。
+**前置同步与授权处理**: 本轮已完成并复查 T001 类型的 docs-only 同步，详情见 [research.md](./research.md) 第 9 节。T003 仍要求用户明确指定 `codex` 或 `trae` 并授权分支操作与 cherry-pick；在此之前，任何业务迁移或代码实现仍不得开始。
 
 **Complexity result**: 无需宪章例外；Web/API/Worker 是已接受的三个运行单元，不属于新增
 复杂度。24 张表沿用已确认数据模型，不增加反思表、环节表或事务消息系统。
@@ -194,7 +189,7 @@ uv run python -m apps.web --host 127.0.0.1 --port 8080 --api-base-url http://127
 - 将所有逐项确认转化为 Decision / Rationale / Alternatives。
 - 核对依赖的 Python 3.14 可用性和许可；对声明不完整的 Word/日历库执行隔离冒烟。
 - 固定旧提示词参考提交，禁止继承旧协议。
-- 记录共享文档漂移和实现前同步门禁。
+- 记录共享文档同步事实和实现前复核门禁。
 
 **Exit verification**:
 
@@ -269,8 +264,7 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 - 覆盖初始化、认证、园所隔离、手工教案、并发、任务恢复、AI 采用、集体部分成功、
   Word 样式与审计，并明确生产部署和未来子系统反目标。
 
-**Post-design Constitution Check**: 内部设计复查为 PASS；当前 Pre-M1 实现门禁仍为
-BLOCKED/PENDING，只有 T001–T003 在后续明确授权下完成并再次分析通过后才能转为 PASS。
+**Post-design Constitution Check**: 内部设计及 canonical 文档复查为 PASS；实现门禁仅剩用户指定实现分支及授权 T003，未获授权前不得开始代码任务。
 
 ## Phase 2: Task Generation Strategy
 
@@ -308,7 +302,7 @@ US1–US7 建立可独立验收的纵向切片：
 
 | 风险 | 控制 |
 | --- | --- |
-| canonical 文档与新答案漂移 | Pre-M1 单独同步并评审，任务和测试引用稳定 FR/契约 |
+| canonical 文档与新答案再次漂移 | 更新 PRD/设计后同步入口文档，并在实现前复跑 Spec Kit 一致性审查 |
 | 园所/班级越权 | 组合外键、Repository 必填园所、API 每请求实时授权、负向测试 |
 | DB/Redis 双写窗口 | `pending_dispatch`、幂等 key、DB 锁扫描、租约与重复消息测试 |
 | AI 覆盖教师内容 | 结构化预览、栏目/输入哈希、采用事务和乐观锁 |
@@ -319,5 +313,4 @@ US1–US7 建立可独立验收的纵向切片：
 
 ## Complexity Tracking
 
-无内部设计复杂度例外；当前存在已显式记录的 Pre-M1 事实来源/授权阻断，不得将其解释为
-已通过实现门禁或授权开始编码。
+无内部设计复杂度例外；canonical 同步不等同于实现授权，必须由用户指定实现分支并授权后才能开始编码。

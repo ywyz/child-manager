@@ -6,7 +6,7 @@
 
 **Created**: 2026-07-12
 
-**Status**: Ready for Implementation — blocked by Pre-M1 canonical sync authorization
+**Status**: Ready for Implementation — canonical 文档已同步；仍等待用户指定实现分支及相应分支操作授权
 
 **Input**: 将 Child Manager 首期 M1–M8 作为一个完整 feature，交付工程与安全基础、
 认证授权、必要设置、AI 模型与提示词、手工教案、异步 AI、固定 Word 导出和功能验收。

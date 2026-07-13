@@ -328,7 +328,7 @@ api_key_ciphertext BYTEA NULL
 api_key_encryption_version SMALLINT NULL
 api_key_key_id VARCHAR(64) NULL
 api_key_last_four VARCHAR(8) NULL
-max_concurrency INTEGER NOT NULL DEFAULT 1
+max_concurrency INTEGER NOT NULL DEFAULT 2
 rate_limit_per_minute INTEGER NULL
 is_default BOOLEAN NOT NULL DEFAULT false
 is_active BOOLEAN NOT NULL DEFAULT false
@@ -456,8 +456,8 @@ age_group_name_snapshot VARCHAR(120) NOT NULL
 semester_name_snapshot VARCHAR(160) NOT NULL
 semester_start_date_snapshot DATE NOT NULL
 semester_end_date_snapshot DATE NOT NULL
-teaching_week_number INTEGER NOT NULL
-teaching_week_text VARCHAR(64) NOT NULL
+teaching_week_number INTEGER NULL
+teaching_week_text VARCHAR(64) NULL
 activity_date_text VARCHAR(64) NOT NULL
 season_code VARCHAR(16) NOT NULL
 content JSONB NOT NULL
@@ -475,7 +475,7 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 
 - `UNIQUE (kindergarten_id, id)` 和核心唯一 `UNIQUE (kindergarten_id, class_id, plan_date)`，归档记录不例外。
 - 组合外键指向同园 `classes`、`semesters` 和 `users(archived_by/created_by/updated_by)`。
-- `CHECK (semester_start_date_snapshot <= semester_end_date_snapshot)`、`CHECK (teaching_week_number > 0)`、`CHECK (content_schema_version > 0)`、`CHECK (version > 0)`。
+- `CHECK (semester_start_date_snapshot <= semester_end_date_snapshot)`、`CHECK ((teaching_week_number IS NULL) = (teaching_week_text IS NULL))`、`CHECK (teaching_week_number IS NULL OR teaching_week_number > 0)`、`CHECK (content_schema_version > 0)`、`CHECK (version > 0)`。活动日期在学期外时两个周次字段必须同时为空。
 - `CHECK (season_code IN ('spring', 'summer', 'autumn', 'winter'))`。
 - `CHECK (jsonb_typeof(content) = 'object')`。
 - `CHECK ((archived_at IS NULL) = (archived_by IS NULL))`。
@@ -514,7 +514,7 @@ PK (kindergarten_id, plan_id, user_id)
 - `UNIQUE (kindergarten_id, plan_id, sort_order)` 和 `CHECK (sort_order >= 0)`。
 - 组合外键指向同园教案、作者用户和 `added_by`。
 - 索引 `(kindergarten_id, user_id, plan_id)` 支持按编写教师筛选。
-- 作者必须是当前班级关联教师、至少一名作者等跨表规则由教案保存事务校验。
+- 新增作者必须是当前班级关联教师，且教案至少一名作者；解除关联后保留既有署名快照但立即撤销访问权。这些跨表规则由教案保存与授权事务校验。
 
 ### 9.3 `daily_activity_plan_snapshots`
 
@@ -719,7 +719,7 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 ```
 
 - `UNIQUE (kindergarten_id, id)` 和 `UNIQUE (kindergarten_id, calendar_date)`。
-- `CHECK (result_code IN ('workday', 'non_workday', 'unknown'))`、`CHECK (source_code IN ('local', 'online', 'combined'))`、`CHECK (jsonb_typeof(detail) = 'object')`、`CHECK (expires_at > checked_at)`。
+- `CHECK (result_code IN ('workday', 'non_workday', 'unknown'))`、`CHECK (source_code IN ('local', 'online', 'combined', 'unavailable'))`、`CHECK (jsonb_typeof(detail) = 'object')`、`CHECK (expires_at > checked_at)`。两种来源均不可用时保存 `unknown/unavailable`。
 - 索引 `(kindergarten_id, expires_at)`。
 
 未知结果的过期时间必须短于已确认结果，由日历模块定义；缓存不是历史教案的权威来源。
