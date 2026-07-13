@@ -56,7 +56,7 @@ packages/
 └── backend/      # API 与 Worker 复用的后端业务实现
 ```
 
-详细服务边界与任务可靠性见 [`docs/design/system-architecture.md`](docs/design/system-architecture.md)，领域数据模型与 PostgreSQL 物理 Schema 分别见 [`docs/design/data-model.md`](docs/design/data-model.md) 和 [`docs/design/database-schema.md`](docs/design/database-schema.md)。
+详细服务边界与任务可靠性见 [`docs/design/system-architecture.md`](docs/design/system-architecture.md)，领域数据模型与 PostgreSQL 物理 Schema 分别见 [`docs/design/data-model.md`](docs/design/data-model.md) 和 [`docs/design/database-schema.md`](docs/design/database-schema.md)。API 契约见 [`contracts/openapi.yaml`](contracts/openapi.yaml) 和 [`contracts/README.md`](contracts/README.md)，前端页面信息架构见 [`specs/001-daily-activity-plan/research.md`](specs/001-daily-activity-plan/research.md)。
 
 ## 用户与权限
 
@@ -94,7 +94,7 @@ packages/
 ### 学期、周次与班级
 
 - 管理员设置学期起止日期。
-- 学期开始日期所在的自然周为第一周，此后每到下一个周一递增一周。
+- 学期开始日期所在的自然周为第一周（自然周从周一开始，到周日结束）。如果学期周三开始，周三至周日属于第一周；此前周一、周二仍在学期外，教学周次及显示文本为空。此后每到下一个周一递增一周。
 - 系统判断所选日期是否在当前学期内；超出时软提示，但不阻止继续填写。
 - 创建教案前必须存在当前学期；学期外日期仍绑定当前学期快照，但教学周次及其文本为空。
 - 班级必须设置年龄段，首期内置托班、小班、中班和大班，并允许后续扩展。

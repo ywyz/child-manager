@@ -315,7 +315,7 @@
 - **Denylist source**: M2 固定采用 SecLists MIT 许可的 release `2026.1`、commit
   `190c6f7bd58c847ceadfe57d9853592737f059e8` 中
   `Passwords/Common-Credentials/10k-most-common.txt`；目标文件必须为 10,000 行、73,017 字节，
-  SHA-256 为 `4adb3f0afb4a10cf19ebe48d8c69a46f934bbc8d77c694c210564f9583e7f4ba`。
+  SHA-256 为 `72ee26e7cb8f510a11bc303b7a967c2a375fe436b5c8a72822ee9ccbfe235043`。
   仓库附 MIT 许可、来源 URL、release、commit 与哈希；运行时不联网。来源更新必须是显式、
   可审查的依赖更新。
 - **Primary references**: [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)、
@@ -411,7 +411,7 @@
 ### 8.2 固定 Word 模板
 
 - **Decision**: 基于模板副本生成；实现前后核对原模板 SHA-256
-  `63b50694a330c32ccae768286db3f63988773bd1fe03e167bb79910ff9bd7894`。学期外周次留空，
+  `72ee26e7cb8f510a11bc303b7a967c2a375fe436b5c8a72822ee9ccbfe235043`。学期外周次留空，
   反思按三行输出；只有 `is_ai_added=true` 的集体活动环节正文标红。每次导出创建独立记录
   和服务器副本，历史文件缺失不静默重建。教师可见文件名固定为
   `一日活动计划_{清理后班级名}_{YYYY-MM-DD}.docx`：班级名先做 NFKC，将控制字符和

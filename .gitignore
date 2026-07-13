@@ -1,0 +1,14 @@
+graphify-out/cache/
+graphify-out/*.json
+graphify-out/*.html
+graphify-out/*.md
+graphify-out/[0-9]*/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+.env
+*.tmp
+*.bak
+.DS_Store

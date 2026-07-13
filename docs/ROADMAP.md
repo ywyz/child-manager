@@ -364,11 +364,11 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 
 ## 16. 当前状态快照
 
-状态日期：2026-07-12
+状态日期：2026-07-13
 
 | 里程碑 | 状态 | 当前证据 | 下一个解锁动作 |
 | --- | --- | --- | --- |
-| M0 共享基线 | `in_progress` | `main` 已同步 Spec Kit 的已确认澄清至 canonical 文档；本地/远程仅有 `main` | 完成一致性复核，经授权后提交 docs-only 基线并从同一提交创建实现分支 |
+| M0 共享基线 | `in_progress` | `main` 已同步 Spec Kit 的已确认澄清至 canonical 文档；文档交叉审计已完成并收敛至 `combined-audit.md`；审计结论正在同步至事实来源（模板脱敏、哈希更新、数据模型与架构同步、时区固定、对象存储清理、生产备份时态修正）；本地/远程仅有 `main` | 完成全部同步与验证（M0-G1～M0-G8）；经明确授权后形成最终 docs-only `main` 基线提交；从同一提交创建 `codex` 与 `trae` |
 | M1–M8 | `pending` | 当前无 `pyproject.toml`、`uv.lock`、业务代码、迁移或自动化测试 | 等待 M0 `complete` |
 | M9 生产复审 | `pending` | ADR-0009 明确延后 | 等待 M8 `complete` |
 

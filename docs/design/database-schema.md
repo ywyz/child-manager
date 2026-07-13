@@ -587,6 +587,7 @@ daily_reflection
 id UUID PK
 kindergarten_id UUID NOT NULL
 parent_job_id UUID NULL
+retry_of_job_id UUID NULL
 job_type VARCHAR(64) NOT NULL
 status VARCHAR(32) NOT NULL
 plan_id UUID NULL
@@ -612,7 +613,10 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 约束：
 
 - `UNIQUE (kindergarten_id, id)` 和 `UNIQUE (kindergarten_id, idempotency_key)`。
-- 组合自外键指向同园父任务；可空组合外键指向同园教案；请求人指向同园用户。
+- `UNIQUE (kindergarten_id, parent_job_id, target_section)` 防止同一批次重复栏目子任务。
+- 组合自外键 `(kindergarten_id, parent_job_id) -> background_jobs(kindergarten_id, id)`，删除策略为 `RESTRICT`；禁止自引用。
+- 组合自外键 `(kindergarten_id, retry_of_job_id) -> background_jobs(kindergarten_id, id)`，删除策略为 `RESTRICT`；禁止自引用。
+- 可空组合外键指向同园教案；请求人指向同园用户。
 - `CHECK (status IN ('pending_dispatch', 'queued', 'running', 'retrying', 'awaiting_confirmation', 'succeeded', 'failed', 'adopted', 'rejected', 'expired'))`。
 - `CHECK (attempt_count >= 0 AND max_attempts > 0 AND attempt_count <= max_attempts)`。
 - `CHECK (requested_resource_version IS NULL OR requested_resource_version > 0)`。

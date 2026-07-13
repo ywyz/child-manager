@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-07-13)
+# Graph Report - child-manager  (2026-07-13)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 65 files · ~69,085 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 779 nodes · 777 edges · 111 communities (49 shown, 62 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.91)
+- 1543 nodes · 1196 edges · 471 communities (105 shown, 366 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `56cc5e29`
+- Built from commit: `89fc81a1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -125,30 +126,390 @@
 - [[_COMMUNITY_契约演进|契约演进]]
 - [[_COMMUNITY_稳定错误码|稳定错误码]]
 - [[_COMMUNITY_快照创建与不可变规则|快照创建与不可变规则]]
+- [[_COMMUNITY_Child Manager 项目上下文|Child Manager 项目上下文]]
+- [[_COMMUNITY_5. Codex 与 Trae 问题的最终结论|5. Codex 与 Trae 问题的最终结论]]
+- [[_COMMUNITY_Tasks FEATURE NAME|Tasks: [FEATURE NAME]]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_Child Manager 幼儿园教育管理系统|Child Manager 幼儿园教育管理系统]]
+- [[_COMMUNITY_README|README.md]]
+- [[_COMMUNITY_ADR-0001：只交付 Cloud 版本，首期单园运行并保留园所隔离边界|ADR-0001：只交付 Cloud 版本，首期单园运行并保留园所隔离边界]]
+- [[_COMMUNITY_Child Manager 双 Agent 独立开发协议|Child Manager 双 Agent 独立开发协议]]
+- [[_COMMUNITY_Execution Steps|Execution Steps]]
+- [[_COMMUNITY_Child Manager 数据模型设计|Child Manager 数据模型设计]]
+- [[_COMMUNITY_ADR-0005：AI 供应商中立，并建立管理员专用提示词系统|ADR-0005：AI 供应商中立，并建立管理员专用提示词系统]]
+- [[_COMMUNITY_Child Manager 系统架构设计|Child Manager 系统架构设计]]
+- [[_COMMUNITY_Feature Specification FEATURE NAME|Feature Specification: [FEATURE NAME]]]
+- [[_COMMUNITY_ADR-0006：一日活动计划采用固定 Word 模板导出边界|ADR-0006：一日活动计划采用固定 Word 模板导出边界]]
+- [[_COMMUNITY_ADR-0008：日期与外部服务采用本地优先和软降级|ADR-0008：日期与外部服务采用本地优先和软降级]]
+- [[_COMMUNITY_Core Principles|Core Principles]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体|ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体]]
+- [[_COMMUNITY_ADR-0004：采用同源入口、HttpOnly Cookie 与 API 统一授权|ADR-0004：采用同源入口、HttpOnly Cookie 与 API 统一授权]]
+- [[_COMMUNITY_Child Manager PostgreSQL 数据库 Schema|Child Manager PostgreSQL 数据库 Schema]]
+- [[_COMMUNITY_教案管理 PRD（首期：一日活动计划）|教案管理 PRD（首期：一日活动计划）]]
+- [[_COMMUNITY_Core Principles|Core Principles]]
+- [[_COMMUNITY_右侧列|右侧列]]
+- [[_COMMUNITY_这是一份word表格|这是一份word表格]]
+- [[_COMMUNITY_18. 验收标准|18. 验收标准]]
+- [[_COMMUNITY_Implementation Plan FEATURE|Implementation Plan: [FEATURE]]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_3. 总体建模原则|3. 总体建模原则]]
+- [[_COMMUNITY_9. 一日活动计划模型|9. 一日活动计划模型]]
+- [[_COMMUNITY_10. 教案栏目与格式|10. 教案栏目与格式]]
+- [[_COMMUNITY_13. AI 生成流程|13. AI 生成流程]]
+- [[_COMMUNITY_右侧列|右侧列]]
+- [[_COMMUNITY_右侧列|右侧列]]
+- [[_COMMUNITY_右侧列为两行：|右侧列为两行：]]
+- [[_COMMUNITY_右侧列为两行：|右侧列为两行：]]
+- [[_COMMUNITY_5. 园所与身份模型|5. 园所与身份模型]]
+- [[_COMMUNITY_6. 教学设置模型|6. 教学设置模型]]
+- [[_COMMUNITY_3. PostgreSQL 物理约定|3. PostgreSQL 物理约定]]
+- [[_COMMUNITY_5. 园所与身份 Schema|5. 园所与身份 Schema]]
+- [[_COMMUNITY_6. 教学设置 Schema|6. 教学设置 Schema]]
+- [[_COMMUNITY_9. 一日活动计划 Schema|9. 一日活动计划 Schema]]
+- [[_COMMUNITY_9. 后台任务架构|9. 后台任务架构]]
+- [[_COMMUNITY_12. AI 模型与提示词管理|12. AI 模型与提示词管理]]
+- [[_COMMUNITY_7. 首期必要设置|7. 首期必要设置]]
+- [[_COMMUNITY_9. 日期与上下文规则|9. 日期与上下文规则]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_SKILL|SKILL.md]]
+- [[_COMMUNITY_21. 测试与验收|21. 测试与验收]]
+- [[_COMMUNITY_5. 代码组织与依赖方向|5. 代码组织与依赖方向]]
+- [[_COMMUNITY_8. 数据架构|8. 数据架构]]
+- [[_COMMUNITY_11. 计划管理流程|11. 计划管理流程]]
+- [[_COMMUNITY_14. Word 导出|14. Word 导出]]
+- [[_COMMUNITY_17. 非功能要求|17. 非功能要求]]
+- [[_COMMUNITY_Q 请根据现有文档，和旧仓库的文件思考如何撰写 docsPRDlesson-management|Q: 请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md]]
+- [[_COMMUNITY_Q 接下来需要生成什么文件呢|Q: 接下来需要生成什么文件呢]]
+- [[_COMMUNITY_Q 系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？|Q: 系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？]]
+- [[_COMMUNITY_Q 哪些关键架构决策需要独立 ADR，哪些已经确认，决策之间有什么依赖？|Q: 哪些关键架构决策需要独立 ADR，哪些已经确认，决策之间有什么依赖？]]
+- [[_COMMUNITY_Q 一日活动计划系统的数据实体、关系、唯一约束、历史版本、异步任务和安全边界是什么？|Q: 一日活动计划系统的数据实体、关系、唯一约束、历史版本、异步任务和安全边界是什么？]]
+- [[_COMMUNITY_Q 请使用graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务|Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务]]
+- [[_COMMUNITY_CHECKLIST TYPE Checklist FEATURE NAME|[CHECKLIST TYPE] Checklist: [FEATURE NAME]]]
+- [[_COMMUNITY_15. 数据快照边界|15. 数据快照边界]]
+- [[_COMMUNITY_22. 后续扩展边界|22. 后续扩展边界]]
+- [[_COMMUNITY_2. 设计来源与旧系统取舍|2. 设计来源与旧系统取舍]]
+- [[_COMMUNITY_8. 提示词模型|8. 提示词模型]]
+- [[_COMMUNITY_8. 提示词 Schema|8. 提示词 Schema]]
+- [[_COMMUNITY_10. AI 与提示词架构|10. AI 与提示词架构]]
+- [[_COMMUNITY_6. 请求、认证与授权|6. 请求、认证与授权]]
+- [[_COMMUNITY_5. 用户与权限|5. 用户与权限]]
+- [[_COMMUNITY_8. 核心业务对象|8. 核心业务对象]]
+- [[_COMMUNITY_表格第八行|表格第八行]]
+- [[_COMMUNITY_11. 后台任务与 AI 结果|11. 后台任务与 AI 结果]]
+- [[_COMMUNITY_16. 外键与删除行为|16. 外键与删除行为]]
+- [[_COMMUNITY_4. 模型总览|4. 模型总览]]
+- [[_COMMUNITY_7. AI 模型档案|7. AI 模型档案]]
+- [[_COMMUNITY_10. 后台任务与 AI 结果 Schema|10. 后台任务与 AI 结果 Schema]]
+- [[_COMMUNITY_12. 系统支撑 Schema|12. 系统支撑 Schema]]
+- [[_COMMUNITY_2. 事实来源与旧仓库取舍|2. 事实来源与旧仓库取舍]]
+- [[_COMMUNITY_7. AI 模型档案 Schema|7. AI 模型档案 Schema]]
+- [[_COMMUNITY_11. Word 与文件架构|11. Word 与文件架构]]
+- [[_COMMUNITY_13. 配置、密钥与安全|13. 配置、密钥与安全]]
+- [[_COMMUNITY_15. 生产部署延后边界|15. 生产部署延后边界]]
+- [[_COMMUNITY_4. 架构总览|4. 架构总览]]
+- [[_COMMUNITY_7. API 与契约|7. API 与契约]]
+- [[_COMMUNITY_15. 安全、隐私与审计|15. 安全、隐私与审计]]
+- [[_COMMUNITY_4. 产品目标|4. 产品目标]]
+- [[_COMMUNITY_需求与任务语义清单|需求与任务语义清单]]
+- [[_COMMUNITY_Spec Kit 跨制品分析|Spec Kit 跨制品分析]]
+- [[_COMMUNITY_需求写作的单元测试|需求写作的单元测试]]
+- [[_COMMUNITY_Spec Kit 需求检查清单|Spec Kit 需求检查清单]]
+- [[_COMMUNITY_逐问逐答与增量回写|逐问逐答与增量回写]]
+- [[_COMMUNITY_Spec Kit 规格澄清|Spec Kit 规格澄清]]
+- [[_COMMUNITY_宪章同步影响报告|宪章同步影响报告]]
+- [[_COMMUNITY_语义版本与依赖模板同步|语义版本与依赖模板同步]]
+- [[_COMMUNITY_意图清单与代码差距评估|意图清单与代码差距评估]]
+- [[_COMMUNITY_Spec Kit 实现收敛|Spec Kit 实现收敛]]
+- [[_COMMUNITY_实施前检查清单门禁|实施前检查清单门禁]]
+- [[_COMMUNITY_分阶段任务执行与验证|分阶段任务执行与验证]]
+- [[_COMMUNITY_阶段一数据模型、契约与验证指南|阶段一数据模型、契约与验证指南]]
+- [[_COMMUNITY_阶段零研究与消歧|阶段零研究与消歧]]
+- [[_COMMUNITY_规格质量清单迭代验证|规格质量清单迭代验证]]
+- [[_COMMUNITY_功能目录与可测试规格生成|功能目录与可测试规格生成]]
+- [[_COMMUNITY_依赖、并行与独立验收校验|依赖、并行与独立验收校验]]
+- [[_COMMUNITY_按用户故事生成可执行任务|按用户故事生成可执行任务]]
+- [[_COMMUNITY_GitHub 远端匹配与任务去重门禁|GitHub 远端匹配与任务去重门禁]]
+- [[_COMMUNITY_Spec Kit 任务转 GitHub Issue|Spec Kit 任务转 GitHub Issue]]
+- [[_COMMUNITY_服务、园所与事务边界|服务、园所与事务边界]]
+- [[_COMMUNITY_教师控制、AI 与 Word 保真|教师控制、AI 与 Word 保真]]
+- [[_COMMUNITY_检查清单模板|检查清单模板]]
+- [[_COMMUNITY_项目宪章模板|项目宪章模板]]
+- [[_COMMUNITY_宪章检查与两阶段设计门禁|宪章检查与两阶段设计门禁]]
+- [[_COMMUNITY_实施计划模板|实施计划模板]]
+- [[_COMMUNITY_功能规格模板|功能规格模板]]
+- [[_COMMUNITY_用户故事、需求与可度量结果|用户故事、需求与可度量结果]]
+- [[_COMMUNITY_设置、基础、故事与收尾阶段|设置、基础、故事与收尾阶段]]
+- [[_COMMUNITY_用户故事任务模板|用户故事任务模板]]
+- [[_COMMUNITY_同班同日唯一当前教案|同班同日唯一当前教案]]
+- [[_COMMUNITY_日期校验只软提示|日期校验只软提示]]
+- [[_COMMUNITY_确定性与风险相称测试|确定性与风险相称测试]]
+- [[_COMMUNITY_AI Key 加密与数据最小化|AI Key 加密与数据最小化]]
+- [[_COMMUNITY_事实来源冲突时停止固化实现|事实来源冲突时停止固化实现]]
+- [[_COMMUNITY_graphify、Spec Kit 与工程技能规则|graphify、Spec Kit 与工程技能规则]]
+- [[_COMMUNITY_Repository 园所隔离|Repository 园所隔离]]
+- [[_COMMUNITY_最小实现边界|最小实现边界]]
+- [[_COMMUNITY_一键生成四栏目|一键生成四栏目]]
+- [[_COMMUNITY_乐观锁禁止静默覆盖|乐观锁禁止静默覆盖]]
+- [[_COMMUNITY_生产部署延后至功能验收后|生产部署延后至功能验收后]]
+- [[_COMMUNITY_提示词白名单与发布版本|提示词白名单与发布版本]]
+- [[_COMMUNITY_历史快照触发边界|历史快照触发边界]]
+- [[_COMMUNITY_教师班级权限与管理员全园访问|教师班级权限与管理员全园访问]]
+- [[_COMMUNITY_教学周按周一递增|教学周按周一递增]]
+- [[_COMMUNITY_仅允许本地开发与测试最小依赖|仅允许本地开发与测试最小依赖]]
+- [[_COMMUNITY_继续有效的安全结果|继续有效的安全结果]]
+- [[_COMMUNITY_ai_generation_results|ai_generation_results]]
+- [[_COMMUNITY_ai_model_profile_capabilities|ai_model_profile_capabilities]]
+- [[_COMMUNITY_ai_model_profiles|ai_model_profiles]]
+- [[_COMMUNITY_audit_events|audit_events]]
+- [[_COMMUNITY_background_jobs|background_jobs]]
+- [[_COMMUNITY_class_areas|class_areas]]
+- [[_COMMUNITY_class_teachers|class_teachers]]
+- [[_COMMUNITY_classes|classes]]
+- [[_COMMUNITY_daily_activity_plan_snapshots|daily_activity_plan_snapshots]]
+- [[_COMMUNITY_daily_activity_plans|daily_activity_plans]]
+- [[_COMMUNITY_PostgreSQL 权威后台任务|PostgreSQL 权威后台任务]]
+- [[_COMMUNITY_kindergartens|kindergartens]]
+- [[_COMMUNITY_lesson_plan_sources|lesson_plan_sources]]
+- [[_COMMUNITY_Alembic 迁移顺序|Alembic 迁移顺序]]
+- [[_COMMUNITY_总体建模原则|总体建模原则]]
+- [[_COMMUNITY_学期外教学周次双空|学期外教学周次双空]]
+- [[_COMMUNITY_教案六大正文栏目|教案六大正文栏目]]
+- [[_COMMUNITY_AI 结构化预览与采用|AI 结构化预览与采用]]
+- [[_COMMUNITY_prompt_definitions|prompt_definitions]]
+- [[_COMMUNITY_prompt_test_runs|prompt_test_runs]]
+- [[_COMMUNITY_prompt_versions|prompt_versions]]
+- [[_COMMUNITY_refresh_tokens|refresh_tokens]]
+- [[_COMMUNITY_roles|roles]]
+- [[_COMMUNITY_semesters|semesters]]
+- [[_COMMUNITY_教案、AI、审计与日志快照边界|教案、AI、审计与日志快照边界]]
+- [[_COMMUNITY_首期 24 张表总览|首期 24 张表总览]]
+- [[_COMMUNITY_园所隔离与组合外键|园所隔离与组合外键]]
+- [[_COMMUNITY_user_roles|user_roles]]
+- [[_COMMUNITY_users|users]]
+- [[_COMMUNITY_Word 导出模型|Word 导出模型]]
+- [[_COMMUNITY_workday_cache|workday_cache]]
+- [[_COMMUNITY_ai_generation_results|ai_generation_results]]
+- [[_COMMUNITY_ai_model_profile_capabilities|ai_model_profile_capabilities]]
+- [[_COMMUNITY_ai_model_profiles|ai_model_profiles]]
+- [[_COMMUNITY_Alembic 迁移序列|Alembic 迁移序列]]
+- [[_COMMUNITY_审计只插入约束|审计只插入约束]]
+- [[_COMMUNITY_audit_events|audit_events]]
+- [[_COMMUNITY_background_jobs|background_jobs]]
+- [[_COMMUNITY_class_areas|class_areas]]
+- [[_COMMUNITY_class_teachers|class_teachers]]
+- [[_COMMUNITY_classes|classes]]
+- [[_COMMUNITY_daily_activity_plan_authors|daily_activity_plan_authors]]
+- [[_COMMUNITY_daily_activity_plan_exports|daily_activity_plan_exports]]
+- [[_COMMUNITY_daily_activity_plan_snapshots|daily_activity_plan_snapshots]]
+- [[_COMMUNITY_daily_activity_plans|daily_activity_plans]]
+- [[_COMMUNITY_导出快照、文件与状态约束|导出快照、文件与状态约束]]
+- [[_COMMUNITY_园所组合外键矩阵|园所组合外键矩阵]]
+- [[_COMMUNITY_后台任务状态、幂等与租约约束|后台任务状态、幂等与租约约束]]
+- [[_COMMUNITY_kindergartens|kindergartens]]
+- [[_COMMUNITY_lesson_plan_sources|lesson_plan_sources]]
+- [[_COMMUNITY_学期外周次双空检查约束|学期外周次双空检查约束]]
+- [[_COMMUNITY_PostgreSQL 物理约定|PostgreSQL 物理约定]]
+- [[_COMMUNITY_教案乐观锁更新|教案乐观锁更新]]
+- [[_COMMUNITY_PostgreSQL 与 SQLite 验证矩阵|PostgreSQL 与 SQLite 验证矩阵]]
+- [[_COMMUNITY_AI 结果采用、拒绝与清理约束|AI 结果采用、拒绝与清理约束]]
+- [[_COMMUNITY_prompt_definitions|prompt_definitions]]
+- [[_COMMUNITY_prompt_test_runs|prompt_test_runs]]
+- [[_COMMUNITY_prompt_versions|prompt_versions]]
+- [[_COMMUNITY_refresh_tokens|refresh_tokens]]
+- [[_COMMUNITY_roles|roles]]
+- [[_COMMUNITY_24 表 Schema 总览|24 表 Schema 总览]]
+- [[_COMMUNITY_semesters|semesters]]
+- [[_COMMUNITY_园所组合外键规则|园所组合外键规则]]
+- [[_COMMUNITY_user_roles|user_roles]]
+- [[_COMMUNITY_users|users]]
+- [[_COMMUNITY_workday_cache|workday_cache]]
+- [[_COMMUNITY_DOCX 上传与立即清理|DOCX 上传与立即清理]]
+- [[_COMMUNITY_Dramatiq Worker 运行单元|Dramatiq Worker 运行单元]]
+- [[_COMMUNITY_FastAPI API 运行单元|FastAPI API 运行单元]]
+- [[_COMMUNITY_最小跨进程任务契约|最小跨进程任务契约]]
+- [[_COMMUNITY_后台任务状态机|后台任务状态机]]
+- [[_COMMUNITY_逻辑架构视图|逻辑架构视图]]
+- [[_COMMUNITY_NiceGUI Web 运行单元|NiceGUI Web 运行单元]]
+- [[_COMMUNITY_PostgreSQL 权威存储|PostgreSQL 权威存储]]
+- [[_COMMUNITY_提示词服务与确定性渲染|提示词服务与确定性渲染]]
+- [[_COMMUNITY_Redis 投递协调|Redis 投递协调]]
+- [[_COMMUNITY_配置、密钥与安全边界|配置、密钥与安全边界]]
+- [[_COMMUNITY_1–2 秒短轮询|1–2 秒短轮询]]
+- [[_COMMUNITY_事务所有权|事务所有权]]
+- [[_COMMUNITY_Word 模板、临时文件与原子输出|Word 模板、临时文件与原子输出]]
+- [[_COMMUNITY_只读交叉评审|只读交叉评审]]
+- [[_COMMUNITY_独立实现子 Issue|独立实现子 Issue]]
+- [[_COMMUNITY_共享文档独立提交同步|共享文档独立提交同步]]
+- [[_COMMUNITY_共享父 Issue|共享父 Issue]]
+- [[_COMMUNITY_AI 重试分类与三次上限|AI 重试分类与三次上限]]
+- [[_COMMUNITY_归档教案仍占唯一键|归档教案仍占唯一键]]
+- [[_COMMUNITY_集体活动先拆分后新增|集体活动先拆分后新增]]
+- [[_COMMUNITY_首期容量与响应目标|首期容量与响应目标]]
+- [[_COMMUNITY_历史恢复保留恢复前内容|历史恢复保留恢复前内容]]
+- [[_COMMUNITY_独立导出历史与私有副本|独立导出历史与私有副本]]
+- [[_COMMUNITY_预览仅随实际输入变化失效|预览仅随实际输入变化失效]]
+- [[_COMMUNITY_生产恢复指标延后验收|生产恢复指标延后验收]]
+- [[_COMMUNITY_管理员与教师权限矩阵|管理员与教师权限矩阵]]
+- [[_COMMUNITY_交付范围|交付范围]]
+- [[_COMMUNITY_出口门禁|出口门禁]]
+- [[_COMMUNITY_一日活动计划 PRD 查询记录|一日活动计划 PRD 查询记录]]
+- [[_COMMUNITY_系统架构文档作为下一步|系统架构文档作为下一步]]
+- [[_COMMUNITY_系统架构定义查询记录|系统架构定义查询记录]]
+- [[_COMMUNITY_Web API Worker 架构与实施顺序|Web API Worker 架构与实施顺序]]
+- [[_COMMUNITY_ADR 划分查询记录|ADR 划分查询记录]]
+- [[_COMMUNITY_修正后的一日活动计划数据模型结论|修正后的一日活动计划数据模型结论]]
+- [[_COMMUNITY_数据模型边界查询记录|数据模型边界查询记录]]
+- [[_COMMUNITY_五轮一致性验证记录|五轮一致性验证记录]]
+- [[_COMMUNITY_受理、投递、租约与恢复|受理、投递、租约与恢复]]
+- [[_COMMUNITY_执行状态机|执行状态机]]
+- [[_COMMUNITY_集体活动部分成功|集体活动部分成功]]
+- [[_COMMUNITY_任务幂等契约|任务幂等契约]]
+- [[_COMMUNITY_各任务输入快照|各任务输入快照]]
+- [[_COMMUNITY_任务类型|任务类型]]
+- [[_COMMUNITY_AI 预览有效性|AI 预览有效性]]
+- [[_COMMUNITY_模型调用与重试分类|模型调用与重试分类]]
+- [[_COMMUNITY_Web 轮询契约|Web 轮询契约]]
+- [[_COMMUNITY_认证与用户端点|认证与用户端点]]
+- [[_COMMUNITY_BFF 与可信上下文|BFF 与可信上下文]]
+- [[_COMMUNITY_分页、错误与 Request ID|分页、错误与 Request ID]]
+- [[_COMMUNITY_Cookie、令牌与 CSRF|Cookie、令牌与 CSRF]]
+- [[_COMMUNITY_Word 导出端点|Word 导出端点]]
+- [[_COMMUNITY_Idempotency-Key 契约|Idempotency-Key 契约]]
+- [[_COMMUNITY_任务与 AI 预览端点|任务与 AI 预览端点]]
+- [[_COMMUNITY_乐观锁契约|乐观锁契约]]
+- [[_COMMUNITY_权限矩阵|权限矩阵]]
+- [[_COMMUNITY_教案端点|教案端点]]
+- [[_COMMUNITY_提示词端点|提示词端点]]
+- [[_COMMUNITY_设置端点|设置端点]]
+- [[_COMMUNITY_AI 模型与提示词实体组|AI 模型与提示词实体组]]
+- [[_COMMUNITY_audit_events 白名单元数据|audit_events 白名单元数据]]
+- [[_COMMUNITY_background_jobs 任务头|background_jobs 任务头]]
+- [[_COMMUNITY_通用数据规则|通用数据规则]]
+- [[_COMMUNITY_daily_activity_plan_exports 导出快照|daily_activity_plan_exports 导出快照]]
+- [[_COMMUNITY_必测数据行为|必测数据行为]]
+- [[_COMMUNITY_园所与身份实体组|园所与身份实体组]]
+- [[_COMMUNITY_六阶段迁移顺序|六阶段迁移顺序]]
+- [[_COMMUNITY_学期外周次双空|学期外周次双空]]
+- [[_COMMUNITY_PlanContentV1 六栏目|PlanContentV1 六栏目]]
+- [[_COMMUNITY_24 表关系总览|24 表关系总览]]
+- [[_COMMUNITY_Phase 1 数据模型|Phase 1 数据模型]]
+- [[_COMMUNITY_教学设置实体组|教学设置实体组]]
+- [[_COMMUNITY_关键事务不变量|关键事务不变量]]
+- [[_COMMUNITY_workday_cache 三类 TTL|workday_cache 三类 TTL]]
+- [[_COMMUNITY_Constitution 实现授权门禁|Constitution 实现授权门禁]]
+- [[_COMMUNITY_实现分支授权边界|实现分支授权边界]]
+- [[_COMMUNITY_Phase 2 任务生成策略|Phase 2 任务生成策略]]
+- [[_COMMUNITY_首期一日活动计划 Implementation Plan|首期一日活动计划 Implementation Plan]]
+- [[_COMMUNITY_API 契约快速检查|API 契约快速检查]]
+- [[_COMMUNITY_数据库迁移与首次初始化|数据库迁移与首次初始化]]
+- [[_COMMUNITY_工作日、审计与降级验收|工作日、审计与降级验收]]
+- [[_COMMUNITY_集体活动与安全 DOCX 验收|集体活动与安全 DOCX 验收]]
+- [[_COMMUNITY_锁定安装与本地依赖|锁定安装与本地依赖]]
+- [[_COMMUNITY_M8 完整验收记录|M8 完整验收记录]]
+- [[_COMMUNITY_纯手工教案浏览器验收|纯手工教案浏览器验收]]
+- [[_COMMUNITY_前提与反目标|前提与反目标]]
+- [[_COMMUNITY_自动化质量门禁|自动化质量门禁]]
+- [[_COMMUNITY_反思事务验收|反思事务验收]]
+- [[_COMMUNITY_Phase 1 Quickstart 与验收合同|Phase 1 Quickstart 与验收合同]]
+- [[_COMMUNITY_Web API Worker 三进程启动|Web API Worker 三进程启动]]
+- [[_COMMUNITY_Word 导出与历史验收|Word 导出与历史验收]]
+- [[_COMMUNITY_区域按目标栏目校验|区域按目标栏目校验]]
+- [[_COMMUNITY_密码、Token、CSRF 与 BFF 来源|密码、Token、CSRF 与 BFF 来源]]
+- [[_COMMUNITY_作者署名与当前授权分离|作者署名与当前授权分离]]
+- [[_COMMUNITY_一键、反思与集体部分成功|一键、反思与集体部分成功]]
+- [[_COMMUNITY_Pre-M1 canonical 文档同步|Pre-M1 canonical 文档同步]]
+- [[_COMMUNITY_研究方法与决策优先级|研究方法与决策优先级]]
+- [[_COMMUNITY_生产部署与未来子系统排除|生产部署与未来子系统排除]]
+- [[_COMMUNITY_故障隔离矩阵|故障隔离矩阵]]
+- [[_COMMUNITY_PostgreSQL 权威任务与恢复|PostgreSQL 权威任务与恢复]]
+- [[_COMMUNITY_白名单确定性渲染|白名单确定性渲染]]
+- [[_COMMUNITY_栏目级预览有效性|栏目级预览有效性]]
+- [[_COMMUNITY_异步提示词测试冻结配置|异步提示词测试冻结配置]]
+- [[_COMMUNITY_Phase 0 研究决策|Phase 0 研究决策]]
+- [[_COMMUNITY_当前学期与学期外日期|当前学期与学期外日期]]
+- [[_COMMUNITY_七个稳定提示词|七个稳定提示词]]
+- [[_COMMUNITY_M1–M8 单一 Feature|M1–M8 单一 Feature]]
+- [[_COMMUNITY_快照只表达可恢复变化|快照只表达可恢复变化]]
+- [[_COMMUNITY_固定结构化 AI 结果|固定结构化 AI 结果]]
+- [[_COMMUNITY_Python 3.14 技术基线|Python 3.14 技术基线]]
+- [[_COMMUNITY_独立运行单元与模块化单体|独立运行单元与模块化单体]]
+- [[_COMMUNITY_固定 Word 模板与导出快照|固定 Word 模板与导出快照]]
+- [[_COMMUNITY_工作日来源与三类缓存 TTL|工作日来源与三类缓存 TTL]]
+- [[_COMMUNITY_FR 异步 AI、预览与采用主题|FR 异步 AI、预览与采用主题]]
+- [[_COMMUNITY_FR 安全、审计与降级主题|FR 安全、审计与降级主题]]
+- [[_COMMUNITY_FR 集体活动导入与部分成功主题|FR 集体活动导入与部分成功主题]]
+- [[_COMMUNITY_FR 身份、认证与班级授权主题|FR 身份、认证与班级授权主题]]
+- [[_COMMUNITY_FR 手工教案、周次与快照主题|FR 手工教案、周次与快照主题]]
+- [[_COMMUNITY_FR 模型档案与提示词主题|FR 模型档案与提示词主题]]
+- [[_COMMUNITY_FR 首期必要设置主题|FR 首期必要设置主题]]
+- [[_COMMUNITY_FR 固定 Word 导出主题|FR 固定 Word 导出主题]]
+- [[_COMMUNITY_首期一日活动计划完整闭环 Feature Specification|首期一日活动计划完整闭环 Feature Specification]]
+- [[_COMMUNITY_SC AI 教师控制成果|SC AI 教师控制成果]]
+- [[_COMMUNITY_SC 性能与可访问性成果|SC 性能与可访问性成果]]
+- [[_COMMUNITY_SC 幂等、并发与任务恢复成果|SC 幂等、并发与任务恢复成果]]
+- [[_COMMUNITY_SC 权限与敏感信息成果|SC 权限与敏感信息成果]]
+- [[_COMMUNITY_SC Word 保真成果|SC Word 保真成果]]
+- [[_COMMUNITY_US1 安全初始化与必要设置|US1 安全初始化与必要设置]]
+- [[_COMMUNITY_US2 纯手工教案闭环|US2 纯手工教案闭环]]
+- [[_COMMUNITY_US3 模型与提示词管理|US3 模型与提示词管理]]
+- [[_COMMUNITY_US4 栏目级 AI 与教师决定权|US4 栏目级 AI 与教师决定权]]
+- [[_COMMUNITY_US5 集体活动原始教案|US5 集体活动原始教案]]
+- [[_COMMUNITY_US6 固定 Word 导出与历史|US6 固定 Word 导出与历史]]
+- [[_COMMUNITY_US7 审计与可降级服务|US7 审计与可降级服务]]
+- [[_COMMUNITY_Phase 10 Polish T155–T165|Phase 10 Polish T155–T165]]
+- [[_COMMUNITY_Phase 1 Setup T001–T008|Phase 1 Setup T001–T008]]
+- [[_COMMUNITY_Phase 2 Foundational T009–T020|Phase 2 Foundational T009–T020]]
+- [[_COMMUNITY_Phase 3 US1 T021–T041|Phase 3 US1 T021–T041]]
+- [[_COMMUNITY_Phase 4 US2 T042–T057|Phase 4 US2 T042–T057]]
+- [[_COMMUNITY_Phase 5 US3 T058–T082|Phase 5 US3 T058–T082]]
+- [[_COMMUNITY_Phase 6 US4 T083–T106|Phase 6 US4 T083–T106]]
+- [[_COMMUNITY_Phase 7 US5 T107–T122|Phase 7 US5 T107–T122]]
+- [[_COMMUNITY_Phase 8 US6 T123–T137|Phase 8 US6 T123–T137]]
+- [[_COMMUNITY_Phase 9 US7 T138–T154|Phase 9 US7 T138–T154]]
+- [[_COMMUNITY_可收集且业务断言失败的 RED 门禁|可收集且业务断言失败的 RED 门禁]]
+- [[_COMMUNITY_首期一日活动计划实现任务清单|首期一日活动计划实现任务清单]]
+- [[_COMMUNITY_用户故事专项回归与 graphify 门禁|用户故事专项回归与 graphify 门禁]]
+- [[_COMMUNITY_表格第七行：下午户外游戏|表格第七行：下午户外游戏]]
+- [[_COMMUNITY_文件第二行：班级与教师|文件第二行：班级与教师]]
+- [[_COMMUNITY_表格第八行：一日活动反思|表格第八行：一日活动反思]]
+- [[_COMMUNITY_表格第五行：集体活动|表格第五行：集体活动]]
+- [[_COMMUNITY_表格第六行：室内区域游戏|表格第六行：室内区域游戏]]
+- [[_COMMUNITY_编号、句号、问号与换行格式|编号、句号、问号与换行格式]]
+- [[_COMMUNITY_表格第三大行：晨间活动|表格第三大行：晨间活动]]
+- [[_COMMUNITY_表格第四行：晨间谈话|表格第四行：晨间谈话]]
+- [[_COMMUNITY_仅 AI 新增集体环节标红|仅 AI 新增集体环节标红]]
+- [[_COMMUNITY_一日活动计划 Word 系统说明|一日活动计划 Word 系统说明]]
+- [[_COMMUNITY_表格第一行：教学周次|表格第一行：教学周次]]
+- [[_COMMUNITY_文件第一行：园所与学期月份范围|文件第一行：园所与学期月份范围]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `24 表 Schema 总览` - 26 edges
-2. `首期一日活动计划完整闭环 Feature Specification` - 25 edges
-3. `首期 24 张表总览` - 24 edges
-4. `教案管理 PRD（首期：一日活动计划）` - 23 edges
-5. `Child Manager 产品与工程路线图` - 22 edges
-6. `Phase 0 研究决策` - 22 edges
-7. `Child Manager Agent 开发规则` - 21 edges
-8. `Child Manager 幼儿园教育管理系统` - 18 edges
-9. `Child Manager 项目上下文` - 17 edges
-10. `Phase 1 数据模型` - 14 edges
+1. `Child Manager 数据模型设计` - 24 edges
+2. `教案管理 PRD（首期：一日活动计划）` - 22 edges
+3. `Child Manager 系统架构设计` - 22 edges
+4. `Child Manager Agent 开发规则` - 20 edges
+5. `Child Manager PostgreSQL 数据库 Schema` - 19 edges
+6. `Child Manager 产品与工程路线图` - 18 edges
+7. `Tasks: 首期一日活动计划完整闭环` - 17 edges
+8. `Child Manager 项目上下文` - 15 edges
+9. `Child Manager 幼儿园教育管理系统` - 15 edges
+10. `Tasks: [FEATURE NAME]` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `归档教案仍占唯一键` --semantically_similar_to--> `同班同日唯一当前教案`  [INFERRED] [semantically similar]
-  docs/PRD/lesson-management.md → AGENTS.md
-- `预览仅随实际输入变化失效` --semantically_similar_to--> `AI 预览显式采用`  [INFERRED] [semantically similar]
-  docs/PRD/lesson-management.md → AGENTS.md
 - `完整 SDD 工作流` --references--> `Spec Kit 任务实施`  [EXTRACTED]
   .specify/workflows/speckit/workflow.yml → .agents/skills/speckit-implement/SKILL.md
-- `Web API Worker 架构与实施顺序` --conceptually_related_to--> `服务、园所与事务边界`  [INFERRED]
-  graphify-out/memory/query_20260711_024218_系统架构文档应如何定义目标服务架构_服务边界_共享契约_部署拓扑与首期实施顺序.md → .specify/memory/constitution.md
-- `修正后的一日活动计划数据模型结论` --conceptually_related_to--> `服务、园所与事务边界`  [INFERRED]
-  graphify-out/memory/query_20260712_071357_一日活动计划系统的数据实体_关系_唯一约束_历史版本_异步任务和安全边界是什么.md → .specify/memory/constitution.md
+- `完整 SDD 工作流` --references--> `Spec Kit 实施规划`  [EXTRACTED]
+  .specify/workflows/speckit/workflow.yml → .agents/skills/speckit-plan/SKILL.md
+- `完整 SDD 工作流` --references--> `Spec Kit 功能规格生成`  [EXTRACTED]
+  .specify/workflows/speckit/workflow.yml → .agents/skills/speckit-specify/SKILL.md
+- `完整 SDD 工作流` --references--> `Spec Kit 任务生成`  [EXTRACTED]
+  .specify/workflows/speckit/workflow.yml → .agents/skills/speckit-tasks/SKILL.md
+- `状态：已被 ADR-0009 取代` --superseded_by--> `ADR-0009：功能完成前延后生产部署与访问网络决策`  [EXTRACTED]
+  docs/ADR/ADR-0007-caddy-compose-and-file-secrets.md → docs/ADR/ADR-0009-defer-production-deployment-until-feature-complete.md
 
 ## Import Cycles
 - None detected.
@@ -164,151 +525,51 @@
 - **Web API Worker 独立运行单元** — docs_design_system_architecture_nicegui_web, docs_design_system_architecture_fastapi_api, docs_design_system_architecture_dramatiq_worker [EXTRACTED 1.00]
 - **Word 六大教案栏目** — templates_teacherplan____________morning_activity, templates_teacherplan____________morning_talk, templates_teacherplan____________group_activity, templates_teacherplan____________indoor_area_game, templates_teacherplan____________afternoon_outdoor_game, templates_teacherplan____________daily_reflection [EXTRACTED 1.00]
 
-## Communities (111 total, 62 thin omitted)
-
-### Community 0 - "Child Manager 幼儿园教育管理系统"
-Cohesion: 0.04
-Nodes (48): 冲突与高影响歧义共同冻结, Child Manager 双 Agent 独立开发协议, 只读交叉评审, 1. 文档目的, 10. 禁止事项, 11. 启动前检查清单, 2. 事实来源与优先级, 3. 分支模型与所有权 (+40 more)
-
-### Community 1 - "24 表 Schema 总览"
-Cohesion: 0.06
-Nodes (36): age_groups, ai_generation_results, ai_model_profile_capabilities, ai_model_profiles, Alembic 迁移序列, 审计只插入约束, audit_events, background_jobs (+28 more)
+## Communities (471 total, 366 thin omitted)
 
 ### Community 2 - "ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets"
-Cohesion: 0.07
-Nodes (33): 生产部署延后至功能验收后, 6. 技术与依赖基线, 6.1 生产部署延后, 备选方案, 背景, 首期接入云厂商密钥管理服务, 后果, 决策 (+25 more)
-
-### Community 3 - "首期 24 张表总览"
-Cohesion: 0.08
-Nodes (33): age_groups, ai_generation_results, ai_model_profile_capabilities, ai_model_profiles, audit_events, background_jobs, class_areas, class_teachers (+25 more)
-
-### Community 4 - "Child Manager 产品与工程路线图"
-Cohesion: 0.11
-Nodes (32): Child Manager 产品与工程路线图, 6. M0：共享设计基线, 已具备, 明确不做, 目标, 7. M1：工程骨架与质量基线, 8. M2：认证、授权与身份审计, 9. M3：首期必要设置 (+24 more)
+Cohesion: 0.10
+Nodes (21): 备选方案, 背景, 首期接入云厂商密钥管理服务, 后果, 决策, ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets, 将所有 Secrets 放入 .env, 实施约束 (+13 more)
 
 ### Community 5 - "Child Manager 项目上下文"
-Cohesion: 0.06
-Nodes (31): Child Manager 项目上下文, 1. 本文档的用途, 10. 当前共同下一步, 11. 高风险点, 11.1 文档职责与工具基线, 12. 系统架构基线, 13. 验证基线, 14. CONTEXT 更新规则 (+23 more)
-
-### Community 6 - "13. AI 生成流程"
-Cohesion: 0.07
-Nodes (29): AI 预览显式采用, 一键生成四栏目, 提示词白名单与发布版本, 11. AI 与提示词规则, 11.1 模型访问, 11.2 提示词管理, 11.3 生成行为, AI 直接写入教案当前内容 (+21 more)
+Cohesion: 0.04
+Nodes (48): 10. M4：AI 模型与提示词基础, 11. M5：无 AI 教案手工闭环, 12. M6：AI 异步生成与人工采用, 13. M7：固定 Word 导出与历史, 14. M8：首期功能验收, 15. M9：生产安全与部署复审, 16. 当前状态快照, 17. Roadmap 更新规则 (+40 more)
 
 ### Community 7 - "Child Manager 架构决策记录"
-Cohesion: 0.07
-Nodes (29): 备选方案, 背景, Celery + Redis, 后果, 决策, ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行, 首期使用 SSE 或 WebSocket 推送, 实施约束 (+21 more)
-
-### Community 8 - "Child Manager Agent 开发规则"
-Cohesion: 0.07
-Nodes (28): AST-grep 使用, 审计只记录必要元数据, 确定性与风险相称测试, Child Manager Agent 开发规则, AI Key 加密与数据最小化, 事实来源冲突时停止固化实现, graphify、Spec Kit 与工程技能规则, 已安装工具与技能 (+20 more)
+Cohesion: 0.14
+Nodes (13): ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行, API 同步执行 AI 和 Word, Celery + Redis, PostgreSQL 直接充当轮询任务队列, Redis 作为任务最终状态存储, 决策, 后果, 备选方案 (+5 more)
 
 ### Community 9 - "首期一日活动计划完整闭环 Feature Specification"
-Cohesion: 0.09
-Nodes (26): 假设, 2026-07-12 与 2026-07-13 澄清结论, 依赖, FR 异步 AI、预览与采用主题, FR 安全、审计与降级主题, FR 集体活动导入与部分成功主题, FR 身份、认证与班级授权主题, FR 手工教案、周次与快照主题 (+18 more)
-
-### Community 10 - "10. 一日活动计划业务不变量"
-Cohesion: 0.08
-Nodes (25): 归档只读与恢复编辑, 同班同日唯一当前教案, 日期校验只软提示, 乐观锁禁止静默覆盖, 10. 一日活动计划业务不变量, 历史快照触发边界, 教师班级权限与管理员全园访问, 教学周按周一递增 (+17 more)
-
-### Community 11 - "Phase 0 研究决策"
-Cohesion: 0.09
-Nodes (23): AI Key Envelope 与 SSRF 防护, 区域按目标栏目校验, 密码、Token、CSRF 与 BFF 来源, 作者署名与当前授权分离, 一键、反思与集体部分成功, Pre-M1 canonical 文档同步, 研究方法与决策优先级, 生产部署与未来子系统排除 (+15 more)
+Cohesion: 0.07
+Nodes (29): AI 模型与提示词, Assumptions, Clarifications, Dependencies, Edge Cases, Feature Specification: 首期一日活动计划完整闭环, Functional Requirements, Key Entities (+21 more)
 
 ### Community 12 - "ADR-0001：只交付 Cloud 版本，首期单园运行并保留园所隔离边界"
-Cohesion: 0.10
-Nodes (21): 备选方案, 背景, Cloud 版本必须直接开放公网, 后果, 代价与风险, 决策, ADR-0001：只交付 Cloud 版本，首期单园运行并保留园所隔离边界, 决策范围 (+13 more)
+Cohesion: 0.04
+Nodes (47): 1. 合并范围与事实来源, 2. 状态与操作类别, 3.1 文档命名与 ADR 状态, 3.2 模板说明与业务规则, 3.3 数据模型、保留与任务关系, 3.4 加密与密钥, 3.5 API、任务状态与幂等, 3.6 测试与可访问性 (+39 more)
 
 ### Community 13 - "完整 SDD 工作流"
-Cohesion: 0.10
-Nodes (20): 实施前检查清单门禁, 分阶段任务执行与验证, Spec Kit 任务实施, 阶段一数据模型、契约与验证指南, 阶段零研究与消歧, Spec Kit 实施规划, 规格质量清单迭代验证, 功能目录与可测试规格生成 (+12 more)
-
-### Community 14 - "ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体"
-Cohesion: 0.11
-Nodes (18): 7. 服务边界与依赖方向, 7.1 NiceGUI Web, 7.2 FastAPI API, 7.3 后台 Worker, 7.4 共享契约, 7.5 外部集成, Web、API、Worker 依赖方向, 备选方案 (+10 more)
+Cohesion: 0.33
+Nodes (6): Spec Kit 任务实施, Spec Kit 实施规划, Spec Kit 功能规格生成, Spec Kit 任务生成, 规格与计划评审门禁, 完整 SDD 工作流
 
 ### Community 15 - "common.sh"
 Cohesion: 0.13
 Nodes (5): get_feature_paths(), get_repo_root(), _persist_feature_json(), resolve_specify_init_dir(), common.sh script
 
-### Community 16 - "Phase 1 数据模型"
-Cohesion: 0.14
-Nodes (16): ai_generation_results 预览, AI 模型与提示词实体组, audit_events 白名单元数据, background_jobs 任务头, 通用数据规则, daily_activity_plan_exports 导出快照, 必测数据行为, 园所与身份实体组 (+8 more)
-
 ### Community 17 - "Child Manager 一日活动计划 OpenAPI 3.1"
 Cohesion: 0.13
 Nodes (15): Audit API, 脱敏审计 Schema, Auth API, 不可变导出输入与文件 Schema, Exports API, Health API, Job 与 batch 投影 Schema, Jobs API (+7 more)
 
-### Community 18 - "API v1 契约总则与端点目录"
-Cohesion: 0.16
-Nodes (14): 审计端点, 认证与用户端点, BFF 与可信上下文, 分页、错误与 Request ID, Cookie、令牌与 CSRF, Word 导出端点, Idempotency-Key 契约, 任务与 AI 预览端点 (+6 more)
-
-### Community 19 - "Phase 1 Quickstart 与验收合同"
-Cohesion: 0.14
-Nodes (14): 可靠 AI 任务与栏目采用验收, API 契约快速检查, 数据库迁移与首次初始化, 工作日、审计与降级验收, 集体活动与安全 DOCX 验收, 锁定安装与本地依赖, M8 完整验收记录, 纯手工教案浏览器验收 (+6 more)
-
-### Community 20 - "首期一日活动计划实现任务清单"
-Cohesion: 0.24
-Nodes (14): 执行授权边界与 RED seam 门禁, Phase 10 Polish T155–T165, Phase 1 Setup T001–T008, Phase 2 Foundational T009–T020, Phase 3 US1 T021–T041, Phase 4 US2 T042–T057, Phase 5 US3 T058–T082, Phase 6 US4 T083–T106 (+6 more)
-
-### Community 21 - "ADR-0006：一日活动计划采用固定 Word 模板导出边界"
-Cohesion: 0.15
-Nodes (13): 固定 Word 模板完整性, 12. Word 模板与导出, 备选方案, 背景, 后果, 决策, ADR-0006：一日活动计划采用固定 Word 模板导出边界, 通用模板平台 (+5 more)
-
-### Community 22 - "一日活动计划 Word 系统说明"
-Cohesion: 0.19
-Nodes (13): 表格第二行：星期与日期, 表格第七行：下午户外游戏, 文件第二行：班级与教师, 表格第八行：一日活动反思, 表格第五行：集体活动, 表格第六行：室内区域游戏, 编号、句号、问号与换行格式, 表格第三大行：晨间活动 (+5 more)
-
-### Community 23 - "后台任务状态机与 AI 采用契约"
-Cohesion: 0.22
-Nodes (11): ai.batch 父任务聚合, 受理、投递、租约与恢复, 执行状态机, 集体活动部分成功, 任务幂等契约, 各任务输入快照, 任务类型, AI 预览有效性 (+3 more)
-
 ### Community 24 - "首期一日活动计划 Implementation Plan"
-Cohesion: 0.20
-Nodes (11): Constitution 实现授权门禁, 实现分支授权边界, M1–M8 里程碑门禁, Phase 0 Research, Phase 1 Design and Contracts, Phase 2 任务生成策略, Monorepo 项目结构, 风险控制 (+3 more)
-
-### Community 25 - "逻辑架构视图"
-Cohesion: 0.29
-Nodes (10): 同源 Web BFF, DOCX 上传与立即清理, Dramatiq Worker 运行单元, FastAPI API 运行单元, 逻辑架构视图, NiceGUI Web 运行单元, PostgreSQL 权威存储, Redis 投递协调 (+2 more)
-
-### Community 26 - "教案管理 PRD（首期：一日活动计划）"
-Cohesion: 0.22
-Nodes (9): 教案管理 PRD（首期：一日活动计划）, Redis 故障时保留 pending_dispatch, 1. 文档目的, 16. 异常与降级, 19. 风险与缓解, 2. 事实来源, 20. 实施依赖, 21. 架构设计引用 (+1 more)
+Cohesion: 0.04
+Nodes (39): Content Quality, Feature Readiness, Notes, Requirement Completeness, Specification Quality Checklist: 首期一日活动计划完整闭环, API 与任务契约, Complexity Tracking, Constitution Check (+31 more)
 
 ### Community 27 - "18. 验收标准"
-Cohesion: 0.22
-Nodes (9): 18. 验收标准, 18.1 账号与权限, 18.2 设置, 18.3 教案管理, 18.4 日期规则, 18.5 提示词与 AI, 18.6 集体活动, 18.7 Word 导出 (+1 more)
-
-### Community 28 - "Child Manager 项目宪章"
-Cohesion: 0.25
-Nodes (8): Child Manager 项目宪章, 真实验证证据与生产部署延后, 服务、园所与事务边界, 教师控制、AI 与 Word 保真, 系统架构定义查询记录, Web API Worker 架构与实施顺序, 修正后的一日活动计划数据模型结论, 数据模型边界查询记录
-
-### Community 29 - "10. 教案栏目与格式"
-Cohesion: 0.25
-Nodes (8): 反思三字段与 200 码点限制, 10. 教案栏目与格式, 10.1 晨间活动, 10.2 晨间谈话, 10.3 集体活动, 10.4 室内区域游戏, 10.5 下午户外游戏, 10.6 一日活动反思
-
-### Community 30 - "14. Word 导出"
-Cohesion: 0.29
-Nodes (7): 导出前必须成功保存, 独立导出历史与私有副本, 14. Word 导出, 14.1 导出前检查, 14.2 模板规则, 14.3 文件名与存储, 14.4 导出历史
-
-### Community 31 - "7. 首期必要设置"
-Cohesion: 0.29
-Nodes (7): 班级区域有序且分类校验, 7. 首期必要设置, 7.1 幼儿园信息, 7.2 学期管理, 7.3 班级与教师, 7.4 班级区域, 7.5 AI 模型档案
-
-### Community 32 - "9. 日期与上下文规则"
-Cohesion: 0.29
-Nodes (7): 创建后活动日期不可修改, 9. 日期与上下文规则, 9.1 活动日期, 9.2 学期与周次, 9.3 星期与日期格式, 9.4 季节, 9.5 工作日
-
-### Community 33 - "12. AI 模型与提示词管理"
-Cohesion: 0.29
-Nodes (7): 12. AI 模型与提示词管理, 12.1 七个任务级提示词, 12.2 系统默认提示词, 12.3 自定义提示词生命周期, 12.4 变量白名单, 12.5 提示词测试运行, 七个稳定任务级提示词
-
-### Community 34 - "5. 用户与权限"
-Cohesion: 0.33
-Nodes (6): 最后一个有效管理员不可停用, 管理员与教师权限矩阵, 5. 用户与权限, 5.1 角色, 5.2 账号规则, 5.3 教师与班级
+Cohesion: 0.05
+Nodes (37): 10. 迁移顺序, 11. 必测数据行为, 1. 通用规则, 2. 关系总览, 3.1 `kindergartens`, 3.2 `users`, 3.3 `roles`, 3.4 `user_roles` (+29 more)
 
 ### Community 35 - "11. 计划管理流程"
-Cohesion: 0.40
-Nodes (5): 11. 计划管理流程, 11.1 首页与查询, 11.2 创建或打开计划, 11.3 保存, 11.4 归档
+Cohesion: 0.05
+Nodes (37): 10. 已排除范围, 1. 研究方法与决策优先级, 2.1 首期使用一套 Spec Kit 文档, 2.2 独立运行单元与模块化单体, 2.3 技术基线与依赖, 2. Feature 与架构, 3.1 当前学期和学期外日期, 3.2 区域按目标栏目校验 (+29 more)
 
 ### Community 36 - "Q: 请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
 Cohesion: 0.40
@@ -318,54 +579,378 @@ Nodes (4): Answer, Outcome, Q: 请阅读以上内容和现有的AGENTS.MD,还有
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 请阅读以上内容和现有的README.md,AGENTS.md,还有ywyz/kindergartenManager.git的文档，你认为CONTEXT.md需要再加入点什么？, Source Nodes
 
-### Community 39 - "规格质量检查清单"
-Cohesion: 0.40
-Nodes (5): 内容质量, Feature 就绪性, 需求完整性, 规格质量检查清单, 五轮一致性验证记录
-
-### Community 40 - "澄清焦点与生成清单"
-Cohesion: 0.50
-Nodes (4): 澄清焦点与生成清单, 需求写作的单元测试, Spec Kit 需求检查清单, 检查清单模板
-
-### Community 41 - "Spec Kit 宪章维护"
-Cohesion: 0.50
-Nodes (4): Spec Kit 宪章维护, 宪章同步影响报告, 语义版本与依赖模板同步, 项目宪章模板
-
-### Community 42 - "投递、租约、幂等与恢复扫描"
-Cohesion: 0.50
-Nodes (4): 投递、租约、幂等与恢复扫描, 最小跨进程任务契约, 后台任务状态机, 1–2 秒短轮询
-
-### Community 43 - "15. 安全、隐私与审计"
-Cohesion: 0.50
-Nodes (4): 审计至少保留一年, 15. 安全、隐私与审计, 15.1 敏感数据, 15.2 审计事件
-
-### Community 44 - "需求与任务语义清单"
-Cohesion: 0.67
-Nodes (3): 检测与分析报告, 需求与任务语义清单, Spec Kit 跨制品分析
-
-### Community 45 - "歧义与覆盖扫描"
-Cohesion: 0.67
-Nodes (3): 歧义与覆盖扫描, 逐问逐答与增量回写, Spec Kit 规格澄清
-
-### Community 46 - "意图清单与代码差距评估"
-Cohesion: 0.67
-Nodes (3): 只追加收敛任务, 意图清单与代码差距评估, Spec Kit 实现收敛
-
-### Community 47 - "GitHub 远端匹配与任务去重门禁"
-Cohesion: 0.67
-Nodes (3): 规范化 Issue 创建, GitHub 远端匹配与任务去重门禁, Spec Kit 任务转 GitHub Issue
-
 ### Community 48 - "4. 产品目标"
-Cohesion: 0.67
-Nodes (3): 4. 产品目标, 4.1 首期目标, 4.2 成功标准
+Cohesion: 0.06
+Nodes (35): 10. 一日活动计划业务不变量, 11.1 模型访问, 11.2 提示词管理, 11.3 生成行为, 11. AI 与提示词规则, 12. Word 模板与导出, 13. 安全与隐私硬性规则, 14. 审计、日志与错误处理 (+27 more)
 
 ### Community 49 - "6. 首期范围"
+Cohesion: 0.06
+Nodes (32): 10. Web 轮询契约, 1. 任务类型, 2. 状态定义, 3. 受理、投递与租约, 4. 模型调用与重试分类, 5. 幂等契约, 6. AI 预览有效性, 7. 各任务输入快照 (+24 more)
+
+### Community 60 - "增量交付策略"
+Cohesion: 0.05
+Nodes (43): Dependencies & Execution Order, Foundation, Implementation for User Story 1, Implementation for User Story 2, Implementation for User Story 3, Implementation for User Story 4, Implementation for User Story 5, Implementation for User Story 6 (+35 more)
+
+### Community 111 - "Child Manager 项目上下文"
+Cohesion: 0.06
+Nodes (31): 10. 当前共同下一步, 11.1 文档职责与工具基线, 11. 高风险点, 12. 系统架构基线, 13. 验证基线, 14. CONTEXT 更新规则, 1. 本文档的用途, 2. 固定阅读顺序 (+23 more)
+
+### Community 112 - "5. Codex 与 Trae 问题的最终结论"
+Cohesion: 0.07
+Nodes (29): 10. 禁止事项, 1. 用途, 2. 当前状态, 3. 应直接阅读的事实来源, 4. Codex 审计结论与用户确认, 5.10 API 与前端信息架构, 5.11 集体活动新增环节插入位置, 5.1 ADR-0001 文件命名 (+21 more)
+
+### Community 113 - "Tasks: [FEATURE NAME]"
+Cohesion: 0.07
+Nodes (26): Dependencies & Execution Order, Format: `[ID] [P?] [Story] Description`, Implementation for User Story 1, Implementation for User Story 2, Implementation for User Story 3, Implementation Strategy, Incremental Delivery, MVP First (User Story 1 Only) (+18 more)
+
+### Community 114 - "SKILL.md"
+Cohesion: 0.08
+Nodes (25): 1. Initialize Analysis Context, 2. Load Artifacts (Progressive Disclosure), 3. Build Semantic Models, 4. Detection Passes (Token-Efficient Analysis), 5. Severity Assignment, 6. Produce Compact Analysis Report, 7. Provide Next Actions, 8. Offer Remediation (+17 more)
+
+### Community 115 - "Child Manager 幼儿园教育管理系统"
+Cohesion: 0.09
+Nodes (23): AI 提示词管理子系统, AI 生成规则, Child Manager 幼儿园教育管理系统, Word 导出, 一键生成与分栏目生成, 分支协作规范, 后续子系统, 基本规则 (+15 more)
+
+### Community 116 - "README.md"
+Cohesion: 0.31
+Nodes (5): Child Manager 架构决策记录, 与旧仓库 ADR 的关系, 决策索引, 新增 ADR 的判断标准, 状态约定
+
+### Community 117 - "ADR-0001：只交付 Cloud 版本，首期单园运行并保留园所隔离边界"
+Cohesion: 0.10
+Nodes (21): 1. 产品只交付 Cloud 版本, 2. 首期一个运行实例只服务一所幼儿园, 3. 从首期保留园所隔离边界, 4. Cloud 不等于公网开放, 5. 生产数据语义统一采用 PostgreSQL, ADR-0001：只交付 Cloud 版本，首期单园运行并保留园所隔离边界, Cloud 版本必须直接开放公网, 代价与风险 (+13 more)
+
+### Community 118 - "Child Manager 双 Agent 独立开发协议"
+Cohesion: 0.10
+Nodes (20): 10. 禁止事项, 11. 启动前检查清单, 1. 文档目的, 2. 事实来源与优先级, 3. 分支模型与所有权, 4.1 共享父 Issue, 4.2 实现子 Issue, 4.3 纵向拆分 (+12 more)
+
+### Community 119 - "Execution Steps"
+Cohesion: 0.12
+Nodes (15): 1. Initialize Convergence Context, 2. Load Artifacts (Progressive Disclosure), 3. Build the Intent Inventory, 4. Assess the Codebase and Classify Findings, 5. Assign Severity, 6. Present the In-Session Findings Summary, 7. Append Convergence Tasks (or report converged), 8. Provide Next Actions (Handoff) (+7 more)
+
+### Community 120 - "Child Manager 数据模型设计"
+Cohesion: 0.14
+Nodes (14): 10. JSONB Schema 演进, 12.1 `daily_activity_plan_exports`, 12. Word 导出模型, 13.1 `workday_cache`, 13. 工作日缓存, 14.1 `audit_events`, 14. 审计模型, 17. 索引原则 (+6 more)
+
+### Community 121 - "ADR-0005：AI 供应商中立，并建立管理员专用提示词系统"
+Cohesion: 0.15
+Nodes (12): ADR-0005：AI 供应商中立，并建立管理员专用提示词系统, AI 直接写入教案当前内容, 允许提示词定义输出 Schema, 决策, 只配置一个全局模型, 后果, 备选方案, 复审触发条件 (+4 more)
+
+### Community 122 - "Child Manager 系统架构设计"
+Cohesion: 0.15
+Nodes (13): 12. 节假日与日期服务, 14. 可观测性与审计, 16. 性能与扩展, 17. 故障与降级, 18. 测试与架构验证, 19. 关键架构决策摘要, 1. 文档目的, 20. 实施顺序 (+5 more)
+
+### Community 123 - "Feature Specification: [FEATURE NAME]"
+Cohesion: 0.15
+Nodes (12): Assumptions, Edge Cases, Feature Specification: [FEATURE NAME], Functional Requirements, Key Entities *(include if feature involves data)*, Measurable Outcomes, Requirements *(mandatory)*, Success Criteria *(mandatory)* (+4 more)
+
+### Community 124 - "ADR-0006：一日活动计划采用固定 Word 模板导出边界"
+Cohesion: 0.17
+Nodes (11): ADR-0006：一日活动计划采用固定 Word 模板导出边界, UI 直接修改模板并下载, 从零生成 Word 排版, 决策, 只向浏览器返回临时文件, 后果, 备选方案, 复审触发条件 (+3 more)
+
+### Community 125 - "ADR-0008：日期与外部服务采用本地优先和软降级"
+Cohesion: 0.17
+Nodes (11): ADR-0008：日期与外部服务采用本地优先和软降级, 决策, 后果, 在线节假日 API 优先, 备选方案, 复审触发条件, 外部服务失败时默认普通工作日, 实施约束 (+3 more)
+
+### Community 126 - "Core Principles"
+Cohesion: 0.17
+Nodes (11): Child Manager 项目宪章, Core Principles, Governance, I. 事实来源与范围忠实, II. 服务边界与单向依赖, III. 园所隔离与服务端授权（NON-NEGOTIABLE）, IV. 权威状态、事务与可恢复性, V. 教师控制、AI 与 Word 保真 (+3 more)
+
+### Community 127 - "SKILL.md"
+Cohesion: 0.18
+Nodes (10): Completion Report, Done When, Key rules, Mandatory Post-Execution Hooks, Outline, Phase 0: Outline & Research, Phase 1: Design & Contracts, Phases (+2 more)
+
+### Community 128 - "SKILL.md"
+Cohesion: 0.18
+Nodes (10): Completion Report, Done When, For AI Generation, Mandatory Post-Execution Hooks, Outline, Pre-Execution Checks, Quick Guidelines, Section Requirements (+2 more)
+
+### Community 129 - "SKILL.md"
+Cohesion: 0.18
+Nodes (10): Checklist Format (REQUIRED), Completion Report, Done When, Mandatory Post-Execution Hooks, Outline, Phase Structure, Pre-Execution Checks, Task Generation Rules (+2 more)
+
+### Community 130 - "ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体"
+Cohesion: 0.18
+Nodes (11): ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体, NiceGUI 一体化进程, React/TypeScript 独立前端, 从首期开始全面微服务化, 决策, 前端直接访问数据库或共享 Repository, 后果, 备选方案 (+3 more)
+
+### Community 131 - "ADR-0004：采用同源入口、HttpOnly Cookie 与 API 统一授权"
+Cohesion: 0.18
+Nodes (11): ADR-0004：采用同源入口、HttpOnly Cookie 与 API 统一授权, Web 自行维护独立权限系统, 决策, 后果, 备选方案, 复审触发条件, 实施约束, 浏览器使用 localStorage 保存 Bearer Token (+3 more)
+
+### Community 132 - "Child Manager PostgreSQL 数据库 Schema"
+Cohesion: 0.18
+Nodes (11): 11.1 `daily_activity_plan_exports`, 11. Word 导出 Schema, 13. 组合外键矩阵, 14. 应用事务不变量, 15. Alembic 迁移顺序, 16. PostgreSQL 与 SQLite 验证矩阵, 17. 必须实现的 Schema 验收测试, 18. 实现时禁止的捷径 (+3 more)
+
+### Community 133 - "教案管理 PRD（首期：一日活动计划）"
+Cohesion: 0.18
+Nodes (11): 16. 异常与降级, 19. 风险与缓解, 1. 文档目的, 20. 实施依赖, 21. 架构设计引用, 2. 事实来源, 3. 产品背景, 6.1 包含范围 (+3 more)
+
+### Community 134 - "Core Principles"
+Cohesion: 0.18
+Nodes (10): Core Principles, Governance, [PRINCIPLE_1_NAME], [PRINCIPLE_2_NAME], [PRINCIPLE_3_NAME], [PRINCIPLE_4_NAME], [PRINCIPLE_5_NAME], [PROJECT_NAME] Constitution (+2 more)
+
+### Community 135 - "右侧列"
+Cohesion: 0.20
+Nodes (10): 右侧列, 填写说明, 左侧列, 第一行, 第三行：, 第二行：, 第五行：, 第六行： (+2 more)
+
+### Community 136 - "这是一份word表格"
+Cohesion: 0.20
+Nodes (10): 填写说明, 填写说明：, 填写说明：, 填写说明：, 文件第一行, 文件第二行, 注意事项：, 表格第一行 (+2 more)
+
+### Community 137 - "18. 验收标准"
+Cohesion: 0.22
+Nodes (9): 18.1 账号与权限, 18.2 设置, 18.3 教案管理, 18.4 日期规则, 18.5 提示词与 AI, 18.6 集体活动, 18.7 Word 导出, 18.8 运维与安全 (+1 more)
+
+### Community 138 - "Implementation Plan: [FEATURE]"
+Cohesion: 0.22
+Nodes (8): Complexity Tracking, Constitution Check, Documentation (this feature), Implementation Plan: [FEATURE], Project Structure, Source Code (repository root), Summary, Technical Context
+
+### Community 139 - "SKILL.md"
+Cohesion: 0.25
+Nodes (7): Anti-Examples: What NOT To Do, Checklist Purpose: "Unit Tests for English", Example Checklist Types & Sample Items, Execution Steps, Post-Execution Checks, Pre-Execution Checks, User Input
+
+### Community 140 - "SKILL.md"
+Cohesion: 0.29
+Nodes (6): Completion Report, Done When, Mandatory Post-Execution Hooks, Outline, Pre-Execution Checks, User Input
+
+### Community 141 - "SKILL.md"
+Cohesion: 0.29
+Nodes (6): Completion Report, Done When, Mandatory Post-Execution Hooks, Outline, Pre-Execution Checks, User Input
+
+### Community 142 - "3. 总体建模原则"
+Cohesion: 0.29
+Nodes (7): 3.1 PostgreSQL 是生产事实来源, 3.2 UUIDv7 主键, 3.3 园所隔离, 3.4 时间与日期, 3.5 字符串、枚举和规范化, 3.6 停用、归档与不可变历史, 3. 总体建模原则
+
+### Community 143 - "9. 一日活动计划模型"
+Cohesion: 0.29
+Nodes (7): 9.1 关系表头与 JSONB 正文, 9.2 `daily_activity_plans`, 9.3 `content` 结构边界, 9.4 `daily_activity_plan_authors`, 9.5 `daily_activity_plan_snapshots`, 9.6 `lesson_plan_sources`, 9. 一日活动计划模型
+
+### Community 144 - "10. 教案栏目与格式"
+Cohesion: 0.29
+Nodes (7): 10.1 晨间活动, 10.2 晨间谈话, 10.3 集体活动, 10.4 室内区域游戏, 10.5 下午户外游戏, 10.6 一日活动反思, 10. 教案栏目与格式
+
+### Community 145 - "13. AI 生成流程"
+Cohesion: 0.29
+Nodes (7): 13.1 一键生成, 13.2 分栏目生成, 13.3 集体活动, 13.4 输入上下文, 13.5 异步状态, 13.6 重试策略, 13. AI 生成流程
+
+### Community 146 - "右侧列"
+Cohesion: 0.29
+Nodes (7): 右侧列, 填写说明, 左侧列, 第一行, 第三行, 第二行, 表格第六行
+
+### Community 147 - "右侧列"
+Cohesion: 0.29
+Nodes (7): 右侧列, 填写说明, 左侧列, 第一行, 第三行, 第二行, 表格第七行
+
+### Community 148 - "右侧列为两行："
+Cohesion: 0.29
+Nodes (7): 右侧列为两行：, 填写说明, 填写说明：, 左侧列, 第一行：, 第二行：, 表格第三大行
+
+### Community 149 - "右侧列为两行："
+Cohesion: 0.29
+Nodes (7): 右侧列为两行：, 填写说明：, 填写说明：, 左侧列, 第一行：, 第二行：, 表格第四行：
+
+### Community 150 - "5. 园所与身份模型"
+Cohesion: 0.33
+Nodes (6): 5.1 `kindergartens`, 5.2 `users`, 5.3 `roles`, 5.4 `user_roles`, 5.5 `refresh_tokens`, 5. 园所与身份模型
+
+### Community 151 - "6. 教学设置模型"
+Cohesion: 0.33
+Nodes (6): 6.1 `age_groups`, 6.2 `classes`, 6.3 `class_teachers`, 6.4 `semesters`, 6.5 `class_areas`, 6. 教学设置模型
+
+### Community 152 - "3. PostgreSQL 物理约定"
+Cohesion: 0.33
+Nodes (6): 3.1 Schema、扩展与命名, 3.2 通用类型与默认值, 3.3 园所隔离与组合外键, 3.4 规范化列与状态代码, 3.5 不可变与不使用触发器, 3. PostgreSQL 物理约定
+
+### Community 153 - "5. 园所与身份 Schema"
+Cohesion: 0.33
+Nodes (6): 5.1 `kindergartens`, 5.2 `users`, 5.3 `roles`, 5.4 `user_roles`, 5.5 `refresh_tokens`, 5. 园所与身份 Schema
+
+### Community 154 - "6. 教学设置 Schema"
+Cohesion: 0.33
+Nodes (6): 6.1 `age_groups`, 6.2 `classes`, 6.3 `class_teachers`, 6.4 `semesters`, 6.5 `class_areas`, 6. 教学设置 Schema
+
+### Community 155 - "9. 一日活动计划 Schema"
+Cohesion: 0.33
+Nodes (6): 9.1 `daily_activity_plans`, 9.2 `daily_activity_plan_authors`, 9.3 `daily_activity_plan_snapshots`, 9.4 `lesson_plan_sources`, 9.5 `content` JSONB 物理边界, 9. 一日活动计划 Schema
+
+### Community 156 - "9. 后台任务架构"
+Cohesion: 0.33
+Nodes (6): 9.1 选型与用途, 9.2 状态机, 9.3 投递、幂等与恢复, 9.4 AI 重试与反馈, 9.5 状态获取, 9. 后台任务架构
+
+### Community 157 - "12. AI 模型与提示词管理"
+Cohesion: 0.33
+Nodes (6): 12.1 七个任务级提示词, 12.2 系统默认提示词, 12.3 自定义提示词生命周期, 12.4 变量白名单, 12.5 提示词测试运行, 12. AI 模型与提示词管理
+
+### Community 158 - "7. 首期必要设置"
+Cohesion: 0.33
+Nodes (6): 7.1 幼儿园信息, 7.2 学期管理, 7.3 班级与教师, 7.4 班级区域, 7.5 AI 模型档案, 7. 首期必要设置
+
+### Community 159 - "9. 日期与上下文规则"
+Cohesion: 0.33
+Nodes (6): 9.1 活动日期, 9.2 学期与周次, 9.3 星期与日期格式, 9.4 季节, 9.5 工作日, 9. 日期与上下文规则
+
+### Community 160 - "SKILL.md"
+Cohesion: 0.40
+Nodes (4): Outline, Post-Execution Checks, Pre-Execution Checks, User Input
+
+### Community 161 - "SKILL.md"
+Cohesion: 0.40
+Nodes (4): Outline, Post-Execution Checks, Pre-Execution Checks, User Input
+
+### Community 162 - "21. 测试与验收"
+Cohesion: 0.40
+Nodes (5): 21.1 单元测试, 21.2 Repository 与 PostgreSQL 集成测试, 21.3 迁移测试, 21.4 安全测试, 21. 测试与验收
+
+### Community 163 - "5. 代码组织与依赖方向"
+Cohesion: 0.40
+Nodes (5): 5.1 建议目录, 5.2 后端模块内部方向, 5.3 模块边界, 5.4 深模块接口, 5. 代码组织与依赖方向
+
+### Community 164 - "8. 数据架构"
+Cohesion: 0.40
+Nodes (5): 8.1 数据所有权, 8.2 一致性边界, 8.3 事务所有权, 8.4 SQLite 使用边界, 8. 数据架构
+
+### Community 165 - "11. 计划管理流程"
+Cohesion: 0.40
+Nodes (5): 11.1 首页与查询, 11.2 创建或打开计划, 11.3 保存, 11.4 归档, 11. 计划管理流程
+
+### Community 166 - "14. Word 导出"
+Cohesion: 0.40
+Nodes (5): 14.1 导出前检查, 14.2 模板规则, 14.3 文件名与存储, 14.4 导出历史, 14. Word 导出
+
+### Community 167 - "17. 非功能要求"
+Cohesion: 0.40
+Nodes (5): 17.1 容量与性能, 17.2 生产可用性与恢复（延后验收）, 17.3 兼容性, 17.4 可测试性, 17. 非功能要求
+
+### Community 168 - "Q: 请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: 请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md, Source Nodes
+
+### Community 169 - "Q: 接下来需要生成什么文件呢"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: 接下来需要生成什么文件呢, Source Nodes
+
+### Community 170 - "Q: 系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: 系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？, Source Nodes
+
+### Community 171 - "Q: 哪些关键架构决策需要独立 ADR，哪些已经确认，决策之间有什么依赖？"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: 哪些关键架构决策需要独立 ADR，哪些已经确认，决策之间有什么依赖？, Source Nodes
+
+### Community 172 - "Q: 一日活动计划系统的数据实体、关系、唯一约束、历史版本、异步任务和安全边界是什么？"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: 一日活动计划系统的数据实体、关系、唯一约束、历史版本、异步任务和安全边界是什么？, Source Nodes
+
+### Community 173 - "Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务, Source Nodes
+
+### Community 174 - "[CHECKLIST TYPE] Checklist: [FEATURE NAME]"
+Cohesion: 0.40
+Nodes (4): [Category 1], [Category 2], [CHECKLIST TYPE] Checklist: [FEATURE NAME], Notes
+
+### Community 175 - "15. 数据快照边界"
+Cohesion: 0.50
+Nodes (4): 15.1 教案展示快照, 15.2 AI 输入快照, 15.3 快照不是重复日志, 15. 数据快照边界
+
+### Community 176 - "22. 后续扩展边界"
+Cohesion: 0.50
+Nodes (4): 22.1 年级组长和园级检查, 22.2 照片与视觉子系统, 22.3 多园 SaaS, 22. 后续扩展边界
+
+### Community 177 - "2. 设计来源与旧系统取舍"
+Cohesion: 0.50
+Nodes (4): 2.1 事实来源, 2.2 从旧系统吸收的经验, 2.3 明确不继承的旧模型, 2. 设计来源与旧系统取舍
+
+### Community 178 - "8. 提示词模型"
+Cohesion: 0.50
+Nodes (4): 8.1 `prompt_definitions`, 8.2 `prompt_versions`, 8.3 `prompt_test_runs`, 8. 提示词模型
+
+### Community 179 - "8. 提示词 Schema"
+Cohesion: 0.50
+Nodes (4): 8.1 `prompt_definitions`, 8.2 `prompt_versions`, 8.3 `prompt_test_runs`, 8. 提示词 Schema
+
+### Community 180 - "10. AI 与提示词架构"
+Cohesion: 0.50
+Nodes (4): 10.1 AI 适配器, 10.2 提示词服务, 10.3 结果采用边界, 10. AI 与提示词架构
+
+### Community 181 - "6. 请求、认证与授权"
+Cohesion: 0.50
+Nodes (4): 6.1 同源访问, 6.2 会话链路, 6.3 园所与班级隔离, 6. 请求、认证与授权
+
+### Community 182 - "5. 用户与权限"
+Cohesion: 0.50
+Nodes (4): 5.1 角色, 5.2 账号规则, 5.3 教师与班级, 5. 用户与权限
+
+### Community 183 - "8. 核心业务对象"
+Cohesion: 0.50
+Nodes (4): 8.1 一日活动计划, 8.2 历史快照, 8.3 导出记录, 8. 核心业务对象
+
+### Community 184 - "表格第八行"
+Cohesion: 0.29
+Nodes (7): 右侧列, 填写说明：, 左侧列, 第一行, 第三行, 第二行, 表格第八行
+
+### Community 185 - "11. 后台任务与 AI 结果"
 Cohesion: 0.67
-Nodes (3): 6. 首期范围, 6.1 包含范围, 6.2 不包含范围
+Nodes (3): 11.1 `background_jobs`, 11.2 `ai_generation_results`, 11. 后台任务与 AI 结果
+
+### Community 186 - "16. 外键与删除行为"
+Cohesion: 0.67
+Nodes (3): 16.1 数据库删除规则, 16.2 跨行事务不变量, 16. 外键与删除行为
+
+### Community 187 - "4. 模型总览"
+Cohesion: 0.67
+Nodes (3): 4.1 首期表清单, 4.2 核心关系图, 4. 模型总览
+
+### Community 188 - "7. AI 模型档案"
+Cohesion: 0.67
+Nodes (3): 7.1 `ai_model_profiles`, 7.2 `ai_model_profile_capabilities`, 7. AI 模型档案
+
+### Community 189 - "10. 后台任务与 AI 结果 Schema"
+Cohesion: 0.67
+Nodes (3): 10.1 `background_jobs`, 10.2 `ai_generation_results`, 10. 后台任务与 AI 结果 Schema
+
+### Community 190 - "12. 系统支撑 Schema"
+Cohesion: 0.67
+Nodes (3): 12.1 `workday_cache`, 12.2 `audit_events`, 12. 系统支撑 Schema
+
+### Community 191 - "2. 事实来源与旧仓库取舍"
+Cohesion: 0.67
+Nodes (3): 2.1 事实来源, 2.2 旧仓库经验, 2. 事实来源与旧仓库取舍
+
+### Community 192 - "7. AI 模型档案 Schema"
+Cohesion: 0.67
+Nodes (3): 7.1 `ai_model_profiles`, 7.2 `ai_model_profile_capabilities`, 7. AI 模型档案 Schema
+
+### Community 193 - "11. Word 与文件架构"
+Cohesion: 0.67
+Nodes (3): 11.1 导出流程, 11.2 上传 `.docx`, 11. Word 与文件架构
+
+### Community 194 - "13. 配置、密钥与安全"
+Cohesion: 0.67
+Nodes (3): 13.1 配置分级, 13.2 安全边界, 13. 配置、密钥与安全
+
+### Community 195 - "15. 生产部署延后边界"
+Cohesion: 0.67
+Nodes (3): 15.1 当前阶段, 15.2 功能完成后的复审, 15. 生产部署延后边界
+
+### Community 196 - "4. 架构总览"
+Cohesion: 0.67
+Nodes (3): 4.1 逻辑视图, 4.2 运行单元, 4. 架构总览
+
+### Community 197 - "7. API 与契约"
+Cohesion: 0.67
+Nodes (3): 7.1 API 原则, 7.2 跨进程任务契约, 7. API 与契约
+
+### Community 198 - "15. 安全、隐私与审计"
+Cohesion: 0.67
+Nodes (3): 15.1 敏感数据, 15.2 审计事件, 15. 安全、隐私与审计
+
+### Community 199 - "4. 产品目标"
+Cohesion: 0.67
+Nodes (3): 4.1 首期目标, 4.2 成功标准, 4. 产品目标
 
 ## Knowledge Gaps
-- **415 isolated node(s):** `Answer`, `Outcome`, `Source Nodes`, `Answer`, `Outcome` (+410 more)
+- **1132 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1127 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **62 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **366 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
@@ -378,17 +963,17 @@ Nodes (3): 6. 首期范围, 6.1 包含范围, 6.2 不包含范围
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Child Manager Agent 开发规则` connect `Child Manager Agent 开发规则` to `ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets`, `Child Manager 产品与工程路线图`, `Child Manager 项目上下文`, `13. AI 生成流程`, `10. 一日活动计划业务不变量`, `ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体`, `ADR-0006：一日活动计划采用固定 Word 模板导出边界`?**
-  _High betweenness centrality (0.108) - this node is a cross-community bridge._
-- **Why does `教案管理 PRD（首期：一日活动计划）` connect `教案管理 PRD（首期：一日活动计划）` to `9. 日期与上下文规则`, `12. AI 模型与提示词管理`, `ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets`, `11. 计划管理流程`, `5. 用户与权限`, `Child Manager 产品与工程路线图`, `13. AI 生成流程`, `Child Manager 幼儿园教育管理系统`, `10. 一日活动计划业务不变量`, `15. 安全、隐私与审计`, `4. 产品目标`, `6. 首期范围`, `18. 验收标准`, `10. 教案栏目与格式`, `14. Word 导出`, `7. 首期必要设置`?**
-  _High betweenness centrality (0.100) - this node is a cross-community bridge._
-- **Why does `Child Manager 产品与工程路线图` connect `Child Manager 产品与工程路线图` to `Child Manager 幼儿园教育管理系统`, `Child Manager Agent 开发规则`, `教案管理 PRD（首期：一日活动计划）`, `Child Manager 项目上下文`?**
-  _High betweenness centrality (0.096) - this node is a cross-community bridge._
-- **What connects `Answer`, `Outcome`, `Source Nodes` to the rest of the system?**
-  _543 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Child Manager 幼儿园教育管理系统` be split into smaller, more focused modules?**
-  _Cohesion score 0.0425531914893617 - nodes in this community are weakly interconnected._
-- **Should `24 表 Schema 总览` be split into smaller, more focused modules?**
-  _Cohesion score 0.06190476190476191 - nodes in this community are weakly interconnected._
+- **Why does `教案管理 PRD（首期：一日活动计划）` connect `教案管理 PRD（首期：一日活动计划）` to `11. 计划管理流程`, `14. Word 导出`, `15. 安全、隐私与审计`, `17. 非功能要求`, `18. 验收标准`, `4. 产品目标`, `10. 教案栏目与格式`, `13. AI 生成流程`, `README.md`, `5. 用户与权限`, `8. 核心业务对象`, `12. AI 模型与提示词管理`, `7. 首期必要设置`, `9. 日期与上下文规则`?**
+  _High betweenness centrality (0.065) - this node is a cross-community bridge._
+- **Why does `Child Manager 数据模型设计` connect `Child Manager 数据模型设计` to `21. 测试与验收`, `3. 总体建模原则`, `15. 数据快照边界`, `22. 后续扩展边界`, `2. 设计来源与旧系统取舍`, `8. 提示词模型`, `9. 一日活动计划模型`, `README.md`, `5. 园所与身份模型`, `6. 教学设置模型`, `11. 后台任务与 AI 结果`, `16. 外键与删除行为`, `4. 模型总览`, `7. AI 模型档案`?**
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
+- **Why does `这是一份word表格` connect `这是一份word表格` to `右侧列`, `右侧列`, `右侧列`, `右侧列为两行：`, `README.md`, `右侧列为两行：`, `表格第八行`?**
+  _High betweenness centrality (0.042) - this node is a cross-community bridge._
+- **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
+  _1237 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets` be split into smaller, more focused modules?**
-  _Cohesion score 0.06628787878787878 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
+- **Should `Child Manager 项目上下文` be split into smaller, more focused modules?**
+  _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._
+- **Should `Child Manager 架构决策记录` be split into smaller, more focused modules?**
+  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._

@@ -609,7 +609,8 @@ PostgreSQL 中的任务记录是权威状态，Redis 只投递 `job_id`。
 | --- | --- | --- |
 | `id` | UUID | UUIDv7 主键 |
 | `kindergarten_id` | UUID | 园所外键 |
-| `parent_job_id` | UUID | 可空，一键生成父任务 |
+| `parent_job_id` | UUID | 可空，一键生成父任务；组合自外键 `(kindergarten_id, parent_job_id) -> background_jobs(kindergarten_id, id)`，删除策略为 `RESTRICT` |
+| `retry_of_job_id` | UUID | 可空，显式重试谱系；独立组合自外键 `(kindergarten_id, retry_of_job_id) -> background_jobs(kindergarten_id, id)`，删除策略为 `RESTRICT` |
 | `job_type` | VARCHAR(64) | 稳定任务类型 |
 | `status` | VARCHAR(32) | 权威状态 |
 | `plan_id` | UUID | 首期教案任务可空外键 |
@@ -937,7 +938,7 @@ expired
 
 ### 22.2 照片与视觉子系统
 
-首期只保留模型能力标签和集成边界，不创建照片表。新增照片业务前必须先设计私有对象存储、对象元数据、授权、短时签名地址、访问审计、保留期限和彻底删除。
+首期不创建照片表、对象存储接口、适配器、配置、页面或服务。新增照片业务前必须先设计私有存储、授权、短时签名地址、访问审计、保留期限和彻底删除。
 
 ### 22.3 多园 SaaS
 

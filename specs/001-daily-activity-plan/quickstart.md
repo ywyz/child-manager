@@ -129,7 +129,7 @@ git status --short -- templates/teacherplan/teacherplan.docx
 预期哈希：
 
 ```text
-63b50694a330c32ccae768286db3f63988773bd1fe03e167bb79910ff9bd7894
+72ee26e7cb8f510a11bc303b7a967c2a375fe436b5c8a72822ee9ccbfe235043
 ```
 
 预期 `git status` 对模板无输出。
