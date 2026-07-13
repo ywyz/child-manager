@@ -56,7 +56,7 @@ packages/
 └── backend/      # API 与 Worker 复用的后端业务实现
 ```
 
-详细服务边界与任务可靠性见 [`docs/design/system-architecture.md`](docs/design/system-architecture.md)，领域数据模型与 PostgreSQL 物理 Schema 分别见 [`docs/design/data-model.md`](docs/design/data-model.md) 和 [`docs/design/database-schema.md`](docs/design/database-schema.md)。API 契约见 [`contracts/openapi.yaml`](contracts/openapi.yaml) 和 [`contracts/README.md`](contracts/README.md)，前端页面信息架构见 [`specs/001-daily-activity-plan/research.md`](specs/001-daily-activity-plan/research.md)。
+详细服务边界与任务可靠性见 [`docs/design/system-architecture.md`](docs/design/system-architecture.md)，领域数据模型与 PostgreSQL 物理 Schema 分别见 [`docs/design/data-model.md`](docs/design/data-model.md) 和 [`docs/design/database-schema.md`](docs/design/database-schema.md)。API 契约见 [`specs/001-daily-activity-plan/contracts/openapi.yaml`](specs/001-daily-activity-plan/contracts/openapi.yaml) 和 [`specs/001-daily-activity-plan/contracts/README.md`](specs/001-daily-activity-plan/contracts/README.md)，前端页面信息架构见 [`specs/001-daily-activity-plan/research.md`](specs/001-daily-activity-plan/research.md)。
 
 ## 用户与权限
 

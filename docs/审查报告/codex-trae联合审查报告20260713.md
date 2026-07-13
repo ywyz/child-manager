@@ -131,3 +131,204 @@ M<n> 共享父 Issue
 M0 内容门禁与后续操作授权必须分开：完成 M0 不自动授权提交、历史改写、分支或 Issue 操作。历史清理、最终基线提交和实现分支操作仍须分别获得用户明确授权。
 
 本报告合并后，原 Codex、Trae 阶段性报告不再作为独立当前依据；后续审查统一引用本文和 `docs/faq/combined-audit.md`。
+
+## 8. 修复验证记录
+
+### 8.1 执行范围与基线
+
+- 验证日期：2026-07-13。
+- 修复前分支为 `main`，HEAD 为 `f20df3fa30e58d580fbe430e0e94c42d6a2ea4b9`，工作区无已有未提交修改。
+- 本轮只修改 Markdown 和 graphify 生成物；未修改 `.docx`，未提交、推送、创建/切换分支、操作 Issue 或改写 Git 历史。
+- 修复前与修复后模板 SHA-256 均为 `72ee26e7cb8f510a11bc303b7a967c2a375fe436b5c8a72822ee9ccbfe235043`。
+- 修复前 graphify 为 1610 节点/1256 边；对 `HEAD:graphify-out/graph.json` 执行完整性诊断，缺失端点、悬空边、自环、精确重复边和同端点折叠边均为 0。
+
+### 8.2 实际检查与结果
+
+| 检查 | 实际结果 |
+| --- | --- |
+| `git diff --check` | 通过，无空白错误 |
+| 模板哈希与工作区 | SHA-256 不变；`git diff -- templates/teacherplan/teacherplan.docx` 无输出 |
+| Word XML 结构/样式 | 1 张表、19 行、36 个单元格、145 个段落；字体与半磅字号集合可解析且文件字节未变 |
+| 模板说明旧规则检索 | 旧 HTTP、文本结构标记、BMP 范围及截断/替换规则无命中 |
+| 模板说明新规则检索 | HTTPS、`is_ai_added`、`highlights`、`issues`、`adjustments`、NFKC、200 和 emoji 均命中 |
+| Markdown 本地链接 | 缺失数 0 |
+| OpenAPI 解析 | OpenAPI 3.1.0，61 个 path、99 个 Schema |
+| Spec Kit 前置检查 | `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks` 通过 |
+| Spec Kit 一致性审查 | 72 个 FR、17 个 SC、T001～T165 均连续且无重复；FR/SC 均有任务映射；无未解释 CRITICAL/HIGH 问题或宪章冲突 |
+| graphify 更新 | 阶段 1～3 完整文档语义增量为 1575 节点/1332 边/403 社区；G7/G8 最终状态替换式增量后为 1392 节点/1122 边/391 社区 |
+| graphify 收缩调查 | 最终增量按来源移除 6 份长文档的旧候选状态节点，再写入 42 个聚焦当前状态的节点、46 条边和 3 个超边；净收缩来自替换旧的细粒度重复抽取结果，M0 complete、M1 ready、G7/G8 已关闭及 T003 仍待授权等当前概念均可定位 |
+| graphify 完整性诊断 | 缺失端点 0、悬空边 0、自环 0、精确重复边 0、同端点折叠边 0 |
+| graphify 定向查询 | 已查询 M0-G1～G8、FR-031 快照原因与恢复、Q13 幂等、模板反思/Unicode/`is_ai_added`、T002/T003 双 Agent 流程；相关节点均可定位且无旧单分支结论被当作当前事实 |
+
+上表证据对应的实际命令与脚本入口为：
+
+```bash
+git status --short --branch
+git rev-parse HEAD
+git diff --check
+sha256sum templates/teacherplan/teacherplan.docx
+git diff --quiet -- templates/teacherplan/teacherplan.docx
+rg -n "http://timor.tech|\\[\\[|U\\+0000|U\\+FFFF|截断|替换" templates/teacherplan/一日活动计划系统说明.md
+rg -n "https://timor.tech/api/holiday/info|is_ai_added|highlights|issues|adjustments|NFKC|200|emoji" templates/teacherplan/一日活动计划系统说明.md
+.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks
+graphify update .
+graphify cluster-only .
+graphify query "M0-G1 到 M0-G8 当前状态和关闭条件" --budget 1200
+graphify query "FR-031 快照原因码 manual_save ai_adopted archive unarchive before_restore restored 以及恢复顺序" --budget 1200
+graphify query "Q13 客户端幂等 scope fingerprint 重放 冲突 内部批量子任务" --budget 1200
+graphify query "模板反思 highlights issues adjustments NFKC Unicode 码点 200 emoji is_ai_added" --budget 1200
+graphify query "T002 T003 Pre-M1 双 Agent codex trae 同一 main 提交 初始创建分支" --budget 1200
+```
+
+内联检查的完整可执行命令如下：
+
+```bash
+python3 - <<'PY'
+import re
+from pathlib import Path
+
+missing = []
+for path in Path('.').rglob('*.md'):
+    if any(part in {'.git', 'graphify-out'} for part in path.parts):
+        continue
+    in_fence = False
+    for line_number, line in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
+        if re.match(r'^\s*```', line):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        for match in re.finditer(r'(?<!!)\[[^\]]*\]\(([^)]+)\)', line):
+            raw = match.group(1).strip()
+            if not raw or raw.startswith(('#', 'http://', 'https://', 'mailto:')):
+                continue
+            target = raw.split('#', 1)[0].strip('<>')
+            if target and not (path.parent / target).resolve().exists():
+                missing.append((str(path), line_number, raw))
+print(f'missing_links={len(missing)}')
+for item in missing:
+    print(item)
+PY
+
+python3 - <<'PY'
+import re
+from pathlib import Path
+
+spec = Path('specs/001-daily-activity-plan/spec.md').read_text(encoding='utf-8')
+tasks = Path('specs/001-daily-activity-plan/tasks.md').read_text(encoding='utf-8')
+series = {
+    'FR': ([int(v) for v in re.findall(r'^- \*\*FR-(\d{3})\*\*:', spec, re.M)], 72),
+    'SC': ([int(v) for v in re.findall(r'^- \*\*SC-(\d{3})\*\*:', spec, re.M)], 17),
+    'T': ([int(v) for v in re.findall(r'^- \[[ xX]\] T(\d{3})\b', tasks, re.M)], 165),
+}
+for name, (values, end) in series.items():
+    print(name, len(values), values == list(range(1, end + 1)), len(values) == len(set(values)))
+
+covered_fr = set()
+covered_sc = set()
+for line in tasks.splitlines():
+    if '**Requirements covered**:' not in line:
+        continue
+    for prefix, covered in [('FR', covered_fr), ('SC', covered_sc)]:
+        pattern = prefix + r'-(\d{3})(?:–' + prefix + r'-(\d{3}))?'
+        for start, end in re.findall(pattern, line):
+            covered.update(range(int(start), int(end or start) + 1))
+covered_sc.update(int(v) for v in re.findall(r'\bSC-(010|017)\b', tasks))
+print('FR_coverage', len(covered_fr), sorted(set(range(1, 73)) - covered_fr))
+print('SC_coverage', len(covered_sc), sorted(set(range(1, 18)) - covered_sc))
+PY
+
+python3 - <<'PY'
+from collections import Counter
+from zipfile import ZipFile
+from xml.etree import ElementTree as ET
+
+namespace = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
+with ZipFile('templates/teacherplan/teacherplan.docx') as archive:
+    document = ET.fromstring(archive.read('word/document.xml'))
+    styles = ET.fromstring(archive.read('word/styles.xml'))
+print('tables', len(document.findall('.//w:tbl', namespace)))
+print('rows', len(document.findall('.//w:tr', namespace)))
+print('cells', len(document.findall('.//w:tc', namespace)))
+print('paragraphs', len(document.findall('.//w:p', namespace)))
+fonts = Counter()
+for node in document.findall('.//w:rFonts', namespace) + styles.findall('.//w:rFonts', namespace):
+    for key, value in node.attrib.items():
+        if key.rsplit('}', 1)[-1] in {'ascii', 'hAnsi', 'eastAsia', 'cs'}:
+            fonts[value] += 1
+sizes = Counter(
+    node.attrib.get(f'{{{namespace["w"]}}}val')
+    for node in document.findall('.//w:sz', namespace) + styles.findall('.//w:sz', namespace)
+)
+print('fonts', dict(fonts))
+print('half_point_sizes', dict(sizes))
+PY
+
+python3 - <<'PY'
+from pathlib import Path
+import yaml
+
+document = yaml.safe_load(
+    Path('specs/001-daily-activity-plan/contracts/openapi.yaml').read_text(encoding='utf-8')
+)
+print('openapi', document['openapi'])
+print('paths', len(document.get('paths', {})))
+print('schemas', len(document.get('components', {}).get('schemas', {})))
+PY
+
+$(cat graphify-out/.graphify_python) - <<'PY'
+import json
+import subprocess
+from pathlib import Path
+from graphify.diagnostics import diagnose_extraction
+
+def diagnose(data):
+    return diagnose_extraction(
+        {'nodes': data['nodes'], 'edges': data.get('links', []), 'hyperedges': data.get('hyperedges', [])},
+        directed=bool(data.get('directed')),
+        root='.',
+    )
+
+baseline = json.loads(subprocess.check_output(['git', 'show', 'HEAD:graphify-out/graph.json']))
+current = json.loads(Path('graphify-out/graph.json').read_text(encoding='utf-8'))
+for name, data in [('baseline', baseline), ('current', current)]:
+    result = diagnose(data)
+    print(name, len(data['nodes']), len(data.get('links', [])))
+    for key in (
+        'missing_endpoint_edges',
+        'dangling_endpoint_edges',
+        'self_loop_edges',
+        'exact_duplicate_edges',
+        'directed_same_endpoint_collapsed_edges',
+        'undirected_same_endpoint_collapsed_edges',
+    ):
+        print(key, result.get(key))
+PY
+```
+
+当前仓库尚无 `pyproject.toml`、`uv.lock`、业务代码、迁移或自动化测试，因此本轮纯文档修复未伪运行 Ruff、Pyright 或 Pytest。
+
+### 8.3 M0 门禁验证状态
+
+| 门禁 | 候选基线状态 | 证据 |
+| --- | --- | --- |
+| M0-G1 | 已关闭 | FR-031 原因码/恢复顺序与数据模型、Schema 一致；系统架构已导航 Q13 契约 |
+| M0-G2 | 已关闭 | 模板 Markdown 的 HTTPS、结构化新增标记、反思三字段与 Unicode 规则已同步 |
+| M0-G3 | 已关闭 | 当前 `.docx` 脱敏、哈希不变，结构/样式由字节不变与 XML 复核证明 |
+| M0-G4 | 已关闭 | CONTEXT、Roadmap、Spec、Plan、Tasks 的最终状态一致，T003 为同一 `main` 提交的双分支流程且仍待授权 |
+| M0-G5 | 已关闭 | 链接、格式、模板与 Spec Kit 专项验证通过 |
+| M0-G6 | 已关闭 | graphify 文档语义已刷新，收缩可解释且完整性诊断全部为 0 |
+| M0-G7 | 已关闭 | 已在隔离镜像中删除旧模板路径、回收旧对象并强制更新远端 `main`；含旧个人信息的模板版本在最终可达历史中不存在 |
+| M0-G8 | 已关闭 | 清理后恢复脱敏模板与候选文档，重新执行全部专项验证，并形成单一目的最终 docs-only `main` 基线；提交 ID 由 Git 引用和交付记录保存 |
+
+M0-G1～M0-G8 均已关闭，M0 为 `complete`、M1 为 `ready`。该状态不授权进入编码、发布 M1 实现 Issue 或执行 T003；这些操作仍须用户另行明确授权。
+
+### 8.4 G7 历史清理与 G8 基线证据
+
+- 清理前本地与远端只有 `main`，无标签；远端旧基线为 `f20df3f`。
+- 在隔离镜像中从全部引用删除旧模板路径，清理备份引用、reflog 和不可达对象后，清理基线为 `d22b600`。
+- 清理镜像中旧模板路径历史命中为 0，两个旧路径 blob 在清理阶段均已回收，且 `git fsck --full --no-reflogs --unreachable` 无输出；形成最终基线时只重新加入当前脱敏模板，含旧个人信息的版本保持不可达。
+- 对可达 blob 的脱敏特征扫描未发现旧个人信息；未在日志、报告或提交消息中复述个人信息。
+- 已将远端 `main` 强制更新为清理基线，随后在清理后的候选克隆恢复当前脱敏模板和经验证的文档修复。
+- 已从 GitHub 全新克隆再次核验引用、模板路径历史、敏感旧版本不可达、脱敏扫描、模板哈希和全部专项检查；最终提交 ID 以 `origin/main` 和交付记录为准。
+- 历史改写不会自动删除第三方既有克隆、fork 或平台缓存；协作者必须停止使用旧克隆并从最终 `main` 重新克隆。

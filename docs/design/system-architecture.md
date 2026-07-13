@@ -226,6 +226,15 @@ flowchart TD
 - 路由层不接收 SQLAlchemy 模型，也不返回 ORM 对象；稳定请求、响应、任务和错误模型才能进入 `packages/contracts`。
 - 对同一用例的重试请求只有在服务端定义了幂等键语义时才允许客户端自动重试；不将所有 POST 默认视为幂等。
 
+客户端幂等键定义如下：
+
+- **scope**：由园所、操作者、HTTP 方法、规范化路由模板和 key 组成。
+- **fingerprint**：另含规范化实际 path、业务 query 和 canonical JSON body。
+- 相同 scope、key 和 fingerprint 返回原结果。
+- 相同 scope/key 但 fingerprint 不同返回冲突。
+- 内部批量子任务不伪造客户端幂等键，使用自身业务唯一约束。
+- 详细机器契约以 [`openapi.yaml`](../../specs/001-daily-activity-plan/contracts/openapi.yaml) 为准，跨端点语义和解释以 [契约说明](../../specs/001-daily-activity-plan/contracts/README.md) 为准。
+
 ### 7.2 跨进程任务契约
 
 Redis 消息只携带执行所需的最小标识，例如：

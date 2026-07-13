@@ -8,9 +8,8 @@
 
 - 本文件只是实现计划，不授权修改 canonical 文档、创建/切换分支、提交、cherry-pick、推送
   或创建 PR。
-- T001–T002 只能在用户明确授权 `main` docs-only 修改后执行；没有提交授权时不得提交。
-- T003 只有在用户明确指定 `codex` 或 `trae` 并授权分支操作与 cherry-pick 后执行；一次只
-  使用一个实现分支，禁止在两个实现分支之间自行合并。
+- T001–T002 只能在用户明确授权 `main` docs-only 修改后执行；未另行获得提交、推送授权时，不得声称已提交、推送或同步 `origin/main`。
+- T003 只有在 M0-G1～M0-G8 全部关闭并形成最终 docs-only `main` 基线后，经用户明确授权从同一提交创建 `codex` 和 `trae` 时执行。初始建分支不得 cherry-pick 旧基线；后续新的共享文档提交才可在分别获得授权后同步。禁止在两个实现分支之间自行合并。
 - T004 起的代码任务只能在已授权实现分支执行，绝不能落到 `main`。
 - 每项 RED 测试任务必须先建立可收集测试 seam：若配对实现任务所列的目标模块尚不存在，
   该 RED 任务可以且只能在配对实现任务已经列出的最终路径创建最小 import skeleton。Skeleton
@@ -36,19 +35,22 @@
 
 ## Phase 1: Setup（Pre-M1 文档门禁与工程初始化）
 
-**Purpose**: 先消除已确认规则在 canonical 文档中的漂移，再在获授权的单一实现分支建立
-Python 3.14 工程与本地测试依赖。
+**Purpose**: 先消除已确认规则在 canonical 文档中的漂移并完成 M0 共享基线，再在获授权且基线相同的 `codex` 和 `trae` 实现分支上分别建立 Python 3.14 工程与本地测试依赖。
 
 - [x] T001 已在用户授权后同步 `AGENTS.md`、`README.md`、`CONTEXT.md`、`docs/PRD/lesson-management.md`、`docs/design/system-architecture.md`、`docs/design/data-model.md`、`docs/design/database-schema.md`、`docs/ROADMAP.md`，统一采用建快照、一键四栏、显式反思、区域按栏、`pending_dispatch`、学期外空周次、`unavailable`、栏目/输入哈希、解绑保留署名、模型默认并发 2、导出仅以前五栏判缺且空反思保留三行，以及 `\{\{[ \t]*([a-z][a-z0-9_]*)[ \t]*\}\}` 白名单纯替换；验证：旧规则检索无未解释命中，精确提示词词法和空反思导出规则均有 canonical 命中，`git diff --check` 通过。
-- [x] T002 已对 `AGENTS.md`、`README.md`、`CONTEXT.md`、`docs/`、`specs/001-daily-activity-plan/` 完成 Pre-M1 一致性审查，并通过 docs-only 提交 `56cc5e2` 同步至 `main` 与 `origin/main`；验证：Spec Kit 分析无 CRITICAL/HIGH 未解释项，72 个 FR 与 17 个 SC 均有任务映射，提交不含 `apps/`、`packages/`、迁移或测试。T003 仍被用户指定实现分支与分支操作授权阻断。
-- [ ] T003 在用户明确指定并授权后，将 T002 的 canonical docs-only 提交同步到单一 `codex` 或 `trae` 实现分支并核对 `AGENTS.md` 与 `specs/001-daily-activity-plan/` 基线；验证：`git branch --show-current` 等于用户指定分支，`git show --name-only --format= HEAD` 只含 T001 文档路径，且未从另一实现分支合并代码
+- [x] T002 已对最终候选文档基线执行 Pre-M1 一致性审查；验证：Spec Kit 分析无未解释的
+  CRITICAL/HIGH 问题，72 个 FR 与 17 个 SC 均有任务映射，文档链接、模板结构/样式/哈希
+  和 graphify 专项检查通过。本记录不写入最终提交 ID，也不声称已同步 `origin/main`。
+- [ ] T003 在 M0-G1～M0-G8 全部关闭并形成最终 docs-only `main` 基线后，经明确授权从
+  同一提交创建 `codex` 和 `trae` 两个实现分支，记录相同基线提交 ID；初始建分支不得
+  cherry-pick 旧基线，后续新的共享文档提交才分别在授权后 cherry-pick。
 - [ ] T004 在 `.python-version`、`pyproject.toml`、`uv.lock` 建立 Python 3.14+ 项目、四个已冻结运行入口、核心/开发依赖和已审查许可的锁定版本；验证：`uv sync --locked && uv run python -VV && uv tree` 成功，解释器为 Python 3.14+，无手工 `requirements.txt` 第二清单
 - [ ] T005 在 `apps/web/`、`apps/api/`、`apps/worker/`、`packages/contracts/`、`packages/backend/`、`tests/architecture/`、`tests/contract/`、`tests/unit/`、`tests/api/`、`tests/repository/`、`tests/migrations/`、`tests/worker/`、`tests/word/`、`tests/web/`、`tests/fixtures/` 创建 `plan.md` 规定的最小包骨架，并在 `packages/contracts/common.py`、`identity.py`、`settings.py`、`lesson_plans.py`、`prompts.py`、`jobs.py`、`exports.py`、`audit.py` 与 `packages/backend/ports.py` 建立稳定可导入的公共 Schema/Protocol/工厂签名 skeleton；skeleton 只提供类型和可被行为断言替换的中性返回值，不实现业务规则；验证：`uv run pytest --collect-only` 退出 0，`uv run python -c "import packages.contracts.common, packages.contracts.identity, packages.contracts.settings, packages.contracts.lesson_plans, packages.contracts.prompts, packages.contracts.jobs, packages.contracts.exports, packages.contracts.audit, packages.backend.ports"` 退出 0，且 `fdfind --type f '__init__\.py' apps packages | sort` 显示三个运行单元和两个共享包，无照片、对象存储、审批或生产部署空壳
 - [ ] T006 在 `.github/workflows/quality.yml` 和 `pyproject.toml` 配置锁定安装、Ruff、Pyright、Pytest、OpenAPI 校验和 Python 3.14 CI 门禁；验证：`uv run ruff format --check . && uv run ruff check . && uv run pyright && uv run pytest --collect-only` 均可执行，未配置检查不得用替代命令冒充
 - [ ] T007 [P] 在 `compose.dev.yaml` 与 `.gitignore` 增加仅供本地测试的 PostgreSQL/Redis、健康检查及敏感/临时/导出文件忽略规则；验证：`docker compose -f compose.dev.yaml config` 成功，两服务只绑定回环地址，文件中无 Caddy、DNS、证书、Tailscale、生产备份或真实秘密
 - [ ] T008 完成 `pyproject.toml`、`uv.lock`、`compose.dev.yaml` 的 Setup 门禁；验证：`docker compose -f compose.dev.yaml up -d postgres redis && docker compose -f compose.dev.yaml ps` 显示两依赖健康，随后逐条运行 `uv sync --locked`、`uv run ruff format --check .`、`uv run ruff check .`、`uv run pyright`、`uv run pytest` 并如实记录任何失败
 
-**Checkpoint**: canonical 规则已同步且用户授权的单一实现分支具备可重复锁定安装；尚无业务空壳。
+**Checkpoint**: M0 共享基线已闭环，且用户授权的 `codex` 和 `trae` 从同一提交创建，两个实现分支均具备可重复锁定安装；尚无业务空壳。
 
 ---
 
