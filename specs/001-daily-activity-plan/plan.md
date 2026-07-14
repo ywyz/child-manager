@@ -9,9 +9,9 @@
 交付单园云版一日活动计划完整首期：先建立 Python 3.14 monorepo、认证与园所/班级授权，
 再完成必要设置、手工教案和历史，随后接入 PostgreSQL 权威状态的异步 AI、教师栏目级采用、
 固定 Word 导出、审计、降级与功能验收。NiceGUI Web、FastAPI API 和 Dramatiq Worker 独立
-运行；浏览器只访问 `127.0.0.1:8080` 的 NiceGUI Web，同源 `/api/v1/*` 由 Web 作为服务端
-BFF（Backend for Frontend）转发到回环地址 `127.0.0.1:8000` 的 API。BFF 必须转发 Cookie、
-`Origin/Referer`、`X-CSRF-Token` 与 API 的 `Set-Cookie`，浏览器不得直连 8000。所有业务
+运行；浏览器只访问当前实现档位的 NiceGUI Web，同源 `/api/v1/*` 由 Web 作为服务端 BFF
+（Backend for Frontend）转发到本档位回环 API。BFF 必须转发 Cookie、`Origin/Referer`、
+`X-CSRF-Token` 与 API 的 `Set-Cookie`，浏览器不得直连本档位 API 端口。所有业务
 真相保存在 PostgreSQL，Redis 只负责投递和短期协调；AI 结果先成为结构化预览，只有教师
 明确采用时修改正文并创建快照。
 
@@ -170,13 +170,16 @@ tests/
 `packages/backend/*` 的应用用例拥有授权、事务、幂等与审计；Repository 不自行提交事务；
 `packages/contracts` 不含 ORM、Repository、业务逻辑或供应商客户端。M1 创建以下明确开发
 入口，供后续 quickstart 和自动化引用。Web 的 `--api-base-url` 仅供 BFF 在服务器侧访问
-内部 API；浏览器唯一入口是 `http://127.0.0.1:8080`，其 `/api/v1/*` 请求由 BFF 转发：
+内部 API；浏览器唯一入口是当前实现档位的 `CHILD_MANAGER_WEB_PORT`，其 `/api/v1/*` 请求由
+BFF 转发。Codex 与 Trae 的固定档位见
+[`local-development-environments.md`](../../docs/development/local-development-environments.md)：
 
 ```bash
 uv run python -m packages.backend.bootstrap init-admin
-uv run uvicorn apps.api.app:app --host 127.0.0.1 --port 8000
+uv run uvicorn apps.api.app:app --host 127.0.0.1 --port "$CHILD_MANAGER_API_PORT"
 uv run python -m apps.worker
-uv run python -m apps.web --host 127.0.0.1 --port 8080 --api-base-url http://127.0.0.1:8000
+uv run python -m apps.web --host 127.0.0.1 --port "$CHILD_MANAGER_WEB_PORT" \
+  --api-base-url "http://127.0.0.1:${CHILD_MANAGER_API_PORT}"
 ```
 
 入口名称属于本 feature 的实现契约；当前 `main` 尚无代码，以上命令在 M1 完成前不可执行。
@@ -237,11 +240,11 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 
 - `/api/v1` 统一 Cookie/CSRF、分页、错误、请求 ID、版本冲突和 Idempotency-Key。
 - 权限矩阵同时约束 Web 可见能力与 API 实际授权；请求不得提交园所或角色扩大权限。
-- NiceGUI Web 是浏览器唯一同源 BFF：浏览器只访问 8080，BFF 把 `/api/v1/*` 转发到回环
-  API 8000，并双向转发 Cookie/Origin/Referer/CSRF 与 `Set-Cookie`；浏览器伪造的代理地址
+- NiceGUI Web 是浏览器唯一同源 BFF：浏览器只访问本档位 Web 端口，BFF 把 `/api/v1/*`
+  转发到本档位回环 API 端口，并双向转发 Cookie/Origin/Referer/CSRF 与 `Set-Cookie`；浏览器伪造的代理地址
   头必须被剥离，API 只信任显式回环 BFF 重建的内部来源信息。Foundational 集成测试逐项
   验证方法、路径、query、body、认证/来源头、多个 `Set-Cookie`、请求 ID 与 hop-by-hop 头，
-  浏览器冒烟的网络记录不得出现直连 8000。登录/刷新各保留两条 access/refresh
+  浏览器冒烟的网络记录不得出现直连本档位 `CHILD_MANAGER_API_PORT`。登录/刷新各保留两条 access/refresh
   `Set-Cookie`，退出保留两条过期 Cookie，禁止逗号折叠。
 - AI 预览采用复核目标栏目基线和实际输入哈希；全局版本仍用于写入 CAS，相关冲突不覆盖。
 - 提示词只使用 `\{\{[ \t]*([a-z][a-z0-9_]*)[ \t]*\}\}` 白名单纯替换，复杂值采用稳定
