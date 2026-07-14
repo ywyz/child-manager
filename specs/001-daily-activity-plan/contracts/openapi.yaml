@@ -4,12 +4,17 @@ info:
   version: 1.0.0
   description: |
     首期 M1-M8 的稳定 HTTP 契约。园所、角色和班级权限只能来自服务端会话；
-    Redis/Dramatiq 不作为任务事实来源。浏览器只访问 NiceGUI Web 8080，同源 BFF 在
-    服务端转发本契约到回环 API 8000，并剥离浏览器伪造的代理地址头。API 只信任显式
+    Redis/Dramatiq 不作为任务事实来源。浏览器只访问当前实现档位的 NiceGUI Web，同源 BFF
+    在服务端转发本契约到本档位回环 API，并剥离浏览器伪造的代理地址头。API 只信任显式
     回环 BFF 重建的内部客户端来源。所有用户可见消息使用简体中文。
 servers:
-  - url: http://127.0.0.1:8000
-    description: 仅供本地 NiceGUI BFF 服务端访问的回环 API；不是浏览器或生产入口
+  - url: http://127.0.0.1:{api_port}
+    description: 仅供对应实现档位的本地 NiceGUI BFF 服务端访问；不是浏览器或生产入口
+    variables:
+      api_port:
+        default: "18000"
+        enum: ["18000", "28000"]
+        description: Codex 使用 18000，Trae 使用 28000
 tags:
   - name: Health
   - name: Auth

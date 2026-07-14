@@ -8,7 +8,7 @@
 
 ## 1. 边界与可信上下文
 
-- 浏览器唯一入口是 NiceGUI Web 的同源 8080 端口；浏览器不得直连回环 API 8000。Web 作为
+- 浏览器唯一入口是当前实现档位的 NiceGUI Web 端口；浏览器不得直连本档位回环 API 端口。Web 作为
   服务端 BFF，将浏览器 `/api/v1/*` 请求转发到内部 API，并双向转发 Cookie、
   `Origin/Referer`、`X-CSRF-Token` 和 `Set-Cookie`。
 - BFF 丢弃浏览器传入的 `Forwarded`、`X-Forwarded-For` 和内部客户端地址头，再按直接
