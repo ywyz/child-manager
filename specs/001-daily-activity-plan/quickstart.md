@@ -14,13 +14,25 @@
 本 quickstart 不创建或验收生产 Caddy/Compose 拓扑、DNS、证书、Tailscale、生产密钥
 托管、备份或发布流程，也不包含 PDF、照片、OCR、对象存储、审批和后续业务子系统。
 `compose.dev.yaml` 若由 M1 创建，只允许启动本地测试 PostgreSQL/Redis，不代表生产拓扑。
+Codex 与 Trae 同机并行时必须先按
+[`local-development-environments.md`](../../docs/development/local-development-environments.md)
+进入各自 worktree 并加载对应档位。下列命令统一引用档位变量，不再假定共享固定端口。
 
 ## 2. 锁定安装与本地依赖
 
 ```bash
+test -n "$COMPOSE_PROJECT_NAME"
+test -n "$CHILD_MANAGER_PROFILE"
+test -n "$CHILD_MANAGER_WEB_PORT"
+test -n "$CHILD_MANAGER_API_PORT"
+test -n "$CHILD_MANAGER_POSTGRES_PORT"
+test -n "$CHILD_MANAGER_REDIS_PORT"
+test -n "$CHILD_MANAGER_DATABASE_NAME"
 uv sync --locked
 docker compose -f compose.dev.yaml up -d postgres redis
 docker compose -f compose.dev.yaml ps
+docker compose -f compose.dev.yaml port postgres 5432
+docker compose -f compose.dev.yaml port redis 6379
 ```
 
 预期：锁定安装无变更；PostgreSQL 和 Redis 健康，且只绑定回环地址。若 Docker 不可用，
@@ -31,8 +43,8 @@ docker compose -f compose.dev.yaml ps
 ```bash
 export CHILD_MANAGER_ENV=development
 export CHILD_MANAGER_BIND_HOST=127.0.0.1
-export CHILD_MANAGER_DATABASE_URL='postgresql+psycopg://child_manager:child_manager@127.0.0.1:5432/child_manager'
-export CHILD_MANAGER_REDIS_URL='redis://127.0.0.1:6379/0'
+export CHILD_MANAGER_DATABASE_URL="postgresql+psycopg://child_manager:child_manager@127.0.0.1:${CHILD_MANAGER_POSTGRES_PORT}/${CHILD_MANAGER_DATABASE_NAME}"
+export CHILD_MANAGER_REDIS_URL="redis://127.0.0.1:${CHILD_MANAGER_REDIS_PORT}/0"
 export CHILD_MANAGER_JWT_SIGNING_KEY="$(openssl rand -base64 32)"
 export CHILD_MANAGER_AI_KEYRING="dev-v1:$(openssl rand -base64 32)"
 ```
@@ -55,11 +67,11 @@ uv run python -m packages.backend.bootstrap init-admin
 
 ## 4. 启动三个独立进程
 
-在三个终端使用同一组本地配置。API 的 8000 端口只供回环地址上的 Web BFF、Worker 和
-诊断测试访问；浏览器唯一入口是 NiceGUI Web 的 8080 端口，不能直连 8000：
+在三个终端使用同一档位的本地配置。`CHILD_MANAGER_API_PORT` 只供回环地址上的 Web BFF、
+Worker 和诊断测试访问；浏览器唯一入口是 `CHILD_MANAGER_WEB_PORT`，不能直连 API 端口：
 
 ```bash
-uv run uvicorn apps.api.app:app --host 127.0.0.1 --port 8000
+uv run uvicorn apps.api.app:app --host 127.0.0.1 --port "$CHILD_MANAGER_API_PORT"
 ```
 
 ```bash
@@ -67,7 +79,8 @@ uv run python -m apps.worker
 ```
 
 ```bash
-uv run python -m apps.web --host 127.0.0.1 --port 8080 --api-base-url http://127.0.0.1:8000
+uv run python -m apps.web --host 127.0.0.1 --port "$CHILD_MANAGER_WEB_PORT" \
+  --api-base-url "http://127.0.0.1:${CHILD_MANAGER_API_PORT}"
 ```
 
 Web 必须把浏览器同源 `/api/v1/*` 请求服务器侧转发到 API，并双向转发认证 Cookie、
@@ -80,16 +93,19 @@ API 仅信任显式配置的回环 BFF，伪造地址不得绕过或嫁祸登录
 
 自动化先运行 `uv run pytest tests/web/test_bff_proxy.py`：逐项验证方法、路径、query、body，
 Cookie、Origin/Referer、`X-CSRF-Token`，多个 `Set-Cookie`、`Content-Type`、`X-Request-ID`，
-hop-by-hop 头剥离和伪造来源头重建；浏览器网络记录不得出现任何直连 8000 的请求。
+hop-by-hop 头剥离和伪造来源头重建；浏览器网络记录不得出现任何直连
+`CHILD_MANAGER_API_PORT` 的请求。
 
 检查：
 
 ```bash
-curl --fail http://127.0.0.1:8000/health/live
-curl --fail http://127.0.0.1:8000/health/ready
-curl --fail http://127.0.0.1:8080/
-curl --fail --cookie-jar /tmp/child-manager-cookies http://127.0.0.1:8080/api/v1/auth/csrf
-rm -f /tmp/child-manager-cookies
+export CHILD_MANAGER_COOKIE_JAR="/tmp/child-manager-${CHILD_MANAGER_PROFILE}-cookies"
+curl --fail "http://127.0.0.1:${CHILD_MANAGER_API_PORT}/health/live"
+curl --fail "http://127.0.0.1:${CHILD_MANAGER_API_PORT}/health/ready"
+curl --fail "http://127.0.0.1:${CHILD_MANAGER_WEB_PORT}/"
+curl --fail --cookie-jar "$CHILD_MANAGER_COOKIE_JAR" \
+  "http://127.0.0.1:${CHILD_MANAGER_WEB_PORT}/api/v1/auth/csrf"
+rm -f "$CHILD_MANAGER_COOKIE_JAR"
 ```
 
 预期：API 存活；就绪响应分别报告 PostgreSQL、Redis 与必要配置。PostgreSQL 不可用返回
@@ -98,9 +114,8 @@ rm -f /tmp/child-manager-cookies
 200，但相应 check 为 degraded；实际依赖端点可在受理前返回 `configuration.unavailable`。
 Redis 不可用时 API 保持可提供同步手工能力并以 degraded 状态报告，
 不能把已保存到 PostgreSQL 的任务改报未受理。固定 AI/在线日历不可用不得令 API 整体
-不就绪。浏览器访问 `http://127.0.0.1:8080/` 进入中文登录页，CSRF 响应及 Cookie 也来自
-8080 同源 BFF；`/tmp/child-manager-cookies` 仅为本次本地检查的临时 cookie jar，命令结束时
-必须删除。
+不就绪。浏览器访问本档位 `CHILD_MANAGER_WEB_PORT` 进入中文登录页，CSRF 响应及 Cookie
+也来自同一 Web 端口；档位专属 cookie jar 仅用于本次本地检查，命令结束时必须删除。
 
 ## 5. 自动化质量门禁
 
@@ -138,8 +153,9 @@ git status --short -- templates/teacherplan/teacherplan.docx
 
 ### 6.1 初始化、登录与会话
 
-1. 打开 `http://127.0.0.1:8080/`，由同源 BFF 的 `/api/v1/auth/csrf` 取得签名 CSRF Cookie；
-   浏览器不得请求 `http://127.0.0.1:8000/api/v1/*`。
+1. 打开 `http://127.0.0.1:${CHILD_MANAGER_WEB_PORT}/`，由同源 BFF 的
+   `/api/v1/auth/csrf` 取得签名 CSRF Cookie；浏览器不得请求
+   `http://127.0.0.1:${CHILD_MANAGER_API_PORT}/api/v1/*`。
 2. 使用初始化管理员登录；确认 Cookie 为 HttpOnly/SameSite=Lax，开发环境仅 Secure=false。
 3. 缺失/伪造 `X-CSRF-Token` 或错误 Origin 的状态变更必须得到
    `403 auth.csrf_invalid`。

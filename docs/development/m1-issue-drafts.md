@@ -39,7 +39,7 @@
 - 建立独立的 NiceGUI Web、FastAPI API 和后台 Worker 运行入口。
 - 建立 `packages/contracts`、`packages/backend` 工程骨架（skeleton）及明确的依赖方向。
 - 配置 Ruff、Pyright、Pytest、OpenAPI 校验和 GitHub Actions 质量门禁。
-- 为本地开发和自动化测试建立仅绑定回环地址的 PostgreSQL、Redis 最小依赖及健康检查。
+- 为本地开发和自动化测试建立仅绑定回环地址的 PostgreSQL、Redis 最小依赖及健康检查，并遵循共享 Codex/Trae 档位隔离约定。
 - 建立结构化日志、请求 ID、追踪 ID、确定性测试替身和 Alembic/事务基础。
 
 #### 任务映射
@@ -60,6 +60,7 @@
 
 - [ ] `uv sync --locked` 可在干净环境完成。
 - [ ] Web、API、Worker 三个运行入口可独立启动并返回存活状态。
+- [ ] 两个实现各自完成分支内 M1 验证后，按共享本地档位同机同时启动，worktree、Compose 项目、回环端口、数据库、卷和运行时目录互不影响，停止一方不影响另一方。
 - [ ] API 就绪检查可区分 PostgreSQL、Redis 和外部 AI 故障；AI 不可用不令 API 整体不就绪。
 - [ ] 静态架构检查能够阻止 Web 导入 ORM、Repository 或 `packages/backend`。
 - [ ] 两个实现分别通过 `uv sync --locked`、Ruff format check、Ruff check、Pyright 和 Pytest。
@@ -124,8 +125,8 @@
 - [ ] T004：建立 Python 3.14+ 项目、冻结运行入口、依赖与锁文件；验证锁定安装、解释器版本和依赖树。
 - [ ] T005：建立三个运行单元、两个共享包、测试目录及稳定可导入的契约/端口骨架；不实现业务规则或未来空壳。
 - [ ] T006：配置 Ruff、Pyright、Pytest、OpenAPI 校验和 Python 3.14 GitHub Actions 门禁。
-- [ ] T007：增加仅供本地开发/测试的 PostgreSQL、Redis 与忽略规则；只绑定回环地址且不含生产拓扑或秘密。
-- [ ] T008：完成初始化（Setup）检查点，实际运行依赖健康检查和五条标准质量命令。
+- [ ] T007：增加仅供本地开发/测试的 PostgreSQL、Redis 与忽略规则；读取 Codex 档位的 Compose 项目、回环端口和可选镜像变量，不含生产拓扑、永久代理或秘密。
+- [ ] T008：完成初始化（Setup）检查点，实际验证 Codex 档位依赖健康、端口归属和五条标准质量命令；不等待 Trae 分支进度。
 - [ ] T009：先写 Web/API 依赖方向和 BFF 转发红灯（RED）测试。
 - [ ] T010：先写统一错误、分页、Request ID、幂等规范化指纹（fingerprint）与 OpenAPI 3.1 红灯测试。
 - [ ] T011：先写敏感配置、日志脱敏、回环保护和存活/就绪（live/ready）红灯测试。
@@ -188,8 +189,8 @@
 - [ ] T004：建立 Python 3.14+ 项目、冻结运行入口、依赖与锁文件；验证锁定安装、解释器版本和依赖树。
 - [ ] T005：建立三个运行单元、两个共享包、测试目录及稳定可导入的契约/端口骨架；不实现业务规则或未来空壳。
 - [ ] T006：配置 Ruff、Pyright、Pytest、OpenAPI 校验和 Python 3.14 GitHub Actions 门禁。
-- [ ] T007：增加仅供本地开发/测试的 PostgreSQL、Redis 与忽略规则；只绑定回环地址且不含生产拓扑或秘密。
-- [ ] T008：完成初始化（Setup）检查点，实际运行依赖健康检查和五条标准质量命令。
+- [ ] T007：增加仅供本地开发/测试的 PostgreSQL、Redis 与忽略规则；读取 Trae 档位的 Compose 项目、回环端口和可选镜像变量，不含生产拓扑、永久代理或秘密。
+- [ ] T008：完成初始化（Setup）检查点，实际验证 Trae 档位依赖健康、端口归属和五条标准质量命令；不等待 Codex 分支进度。
 - [ ] T009：先写 Web/API 依赖方向和 BFF 转发红灯（RED）测试。
 - [ ] T010：先写统一错误、分页、Request ID、幂等规范化指纹（fingerprint）与 OpenAPI 3.1 红灯测试。
 - [ ] T011：先写敏感配置、日志脱敏、回环保护和存活/就绪（live/ready）红灯测试。
