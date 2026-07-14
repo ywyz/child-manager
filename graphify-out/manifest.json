@@ -120,9 +120,9 @@
     "semantic_hash": "0c791ccbfb6a745b89ba90e6a4c1eebe"
   },
   "docs/development/dual-agent-development.md": {
-    "mtime": 1783851231.2611878,
-    "ast_hash": "3a05fda1fd051387059275421db42d2f",
-    "semantic_hash": "3a05fda1fd051387059275421db42d2f"
+    "mtime": 1784003495.1296628,
+    "ast_hash": "49d559f75c8d2aabe10479163dbede0b",
+    "semantic_hash": "49d559f75c8d2aabe10479163dbede0b"
   },
   ".specify/feature.json": {
     "mtime": 1783861265.3035243,
@@ -340,13 +340,18 @@
     "semantic_hash": "4d83ef5335e2bab2099e80d433d37fc9"
   },
   "docs/\u5ba1\u67e5\u62a5\u544a/20260714\u5ba1\u67e5\u62a5\u544a.md": {
-    "mtime": 1783998454.7754664,
-    "ast_hash": "4593f066772051cbbc5f087413743347",
-    "semantic_hash": "4593f066772051cbbc5f087413743347"
+    "mtime": 1784003086.0057364,
+    "ast_hash": "ddde2ae8ae1170e1a65a55f6d6c95c8b",
+    "semantic_hash": "ddde2ae8ae1170e1a65a55f6d6c95c8b"
   },
   "docs/\u5ba1\u67e5\u62a5\u544a/20260714\u89e3\u51b3\u65b9\u6848.md": {
-    "mtime": 1784002277.4042976,
-    "ast_hash": "55ba79fa8730b86fcf0b62e747adaac8",
-    "semantic_hash": "55ba79fa8730b86fcf0b62e747adaac8"
+    "mtime": 1784003086.0057364,
+    "ast_hash": "c54ee8bd45c7658ebbea2bf22b9f221f",
+    "semantic_hash": "c54ee8bd45c7658ebbea2bf22b9f221f"
+  },
+  "docs/development/m1-issue-drafts.md": {
+    "mtime": 1784004434.9663107,
+    "ast_hash": "1848d73a95a645f743b7a28414b859d2",
+    "semantic_hash": "1848d73a95a645f743b7a28414b859d2"
   }
 }
