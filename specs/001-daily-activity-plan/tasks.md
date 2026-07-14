@@ -9,7 +9,7 @@
 - 本文件只是实现计划，不授权修改 canonical 文档、创建/切换分支、提交、cherry-pick、推送
   或创建 PR。
 - T001–T002 只能在用户明确授权 `main` docs-only 修改后执行；未另行获得提交、推送授权时，不得声称已提交、推送或同步 `origin/main`。
-- T003 只有在 M0-G1～M0-G8 全部关闭并形成最终 docs-only `main` 基线后，经用户明确授权从同一提交创建 `codex` 和 `trae` 时执行。初始建分支不得 cherry-pick 旧基线；后续新的共享文档提交才可在分别获得授权后同步。禁止在两个实现分支之间自行合并。
+- T003 已在 M0-G1～M0-G8 全部关闭后，经用户明确授权执行：`codex` 和 `trae` 从共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` 创建并推送。初始建分支未 cherry-pick 旧基线；后续新的共享文档提交仍须分别获得授权后同步。禁止在两个实现分支之间自行合并。
 - T004 起的代码任务只能在已授权实现分支执行，绝不能落到 `main`。
 - 每项 RED 测试任务必须先建立可收集测试 seam：若配对实现任务所列的目标模块尚不存在，
   该 RED 任务可以且只能在配对实现任务已经列出的最终路径创建最小 import skeleton。Skeleton
@@ -41,9 +41,9 @@
 - [x] T002 已对最终候选文档基线执行 Pre-M1 一致性审查；验证：Spec Kit 分析无未解释的
   CRITICAL/HIGH 问题，72 个 FR 与 17 个 SC 均有任务映射，文档链接、模板结构/样式/哈希
   和 graphify 专项检查通过。本记录不写入最终提交 ID，也不声称已同步 `origin/main`。
-- [ ] T003 在 M0-G1～M0-G8 全部关闭并形成最终 docs-only `main` 基线后，经明确授权从
-  同一提交创建 `codex` 和 `trae` 两个实现分支，记录相同基线提交 ID；初始建分支不得
-  cherry-pick 旧基线，后续新的共享文档提交才分别在授权后 cherry-pick。
+- [x] T003 已在 M0-G1～M0-G8 全部关闭并形成最终 docs-only `main` 基线后，经明确授权从
+  共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` 创建并推送 `codex` 和 `trae`；本地与
+  远端两分支均指向该提交，初始建分支未 cherry-pick 旧基线；后续共享文档仍分别授权同步。
 - [ ] T004 在 `.python-version`、`pyproject.toml`、`uv.lock` 建立 Python 3.14+ 项目、四个已冻结运行入口、核心/开发依赖和已审查许可的锁定版本；验证：`uv sync --locked && uv run python -VV && uv tree` 成功，解释器为 Python 3.14+，无手工 `requirements.txt` 第二清单
 - [ ] T005 在 `apps/web/`、`apps/api/`、`apps/worker/`、`packages/contracts/`、`packages/backend/`、`tests/architecture/`、`tests/contract/`、`tests/unit/`、`tests/api/`、`tests/repository/`、`tests/migrations/`、`tests/worker/`、`tests/word/`、`tests/web/`、`tests/fixtures/` 创建 `plan.md` 规定的最小包骨架，并在 `packages/contracts/common.py`、`identity.py`、`settings.py`、`lesson_plans.py`、`prompts.py`、`jobs.py`、`exports.py`、`audit.py` 与 `packages/backend/ports.py` 建立稳定可导入的公共 Schema/Protocol/工厂签名 skeleton；skeleton 只提供类型和可被行为断言替换的中性返回值，不实现业务规则；验证：`uv run pytest --collect-only` 退出 0，`uv run python -c "import packages.contracts.common, packages.contracts.identity, packages.contracts.settings, packages.contracts.lesson_plans, packages.contracts.prompts, packages.contracts.jobs, packages.contracts.exports, packages.contracts.audit, packages.backend.ports"` 退出 0，且 `fdfind --type f '__init__\.py' apps packages | sort` 显示三个运行单元和两个共享包，无照片、对象存储、审批或生产部署空壳
 - [ ] T006 在 `.github/workflows/quality.yml` 和 `pyproject.toml` 配置锁定安装、Ruff、Pyright、Pytest、OpenAPI 校验和 Python 3.14 CI 门禁；验证：`uv run ruff format --check . && uv run ruff check . && uv run pyright && uv run pytest --collect-only` 均可执行，未配置检查不得用替代命令冒充
@@ -392,7 +392,7 @@ flowchart LR
     U7 --> P[Polish T155-T165]
 ```
 
-- T001–T003 是授权门禁，不能因运行 `/speckit-implement` 自动获得授权。
+- T001–T003 是授权门禁；T003 已完成，但不能据此推导 T004 起的实现授权，也不能因运行 `/speckit-implement` 自动获得授权。
 - Foundational 完成前，任何用户故事不得开始。
 - US3 的通用任务迁移使用 US2 已存在的教案强外键，因此本清单选择 US2 → US3 的安全顺序，
   不先建弱 `plan_id` 约束。US3 完成后，US4 才能同时依赖教案与模型/提示词/任务基础。
