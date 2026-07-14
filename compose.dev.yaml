@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: ${CHILD_MANAGER_POSTGRES_IMAGE:-postgres:16}
+    ports:
+      - "${CHILD_MANAGER_POSTGRES_PORT:-25432}:5432"
+    environment:
+      POSTGRES_DB: ${CHILD_MANAGER_DATABASE_NAME:-child_manager_trae}
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: dev_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d ${CHILD_MANAGER_DATABASE_NAME:-child_manager_trae}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: ${CHILD_MANAGER_REDIS_IMAGE:-redis:7}
+    ports:
+      - "${CHILD_MANAGER_REDIS_PORT:-26379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

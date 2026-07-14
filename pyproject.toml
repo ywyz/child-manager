@@ -1,0 +1,66 @@
+[project]
+name = "child-manager"
+version = "0.1.0"
+description = "幼儿园教育管理系统 - 一日活动计划"
+requires-python = ">=3.14"
+readme = "README.md"
+
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.32",
+    "pydantic>=2.9",
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "psycopg>=3.2",
+    "dramatiq>=2.0",
+    "redis>=5.2",
+    "httpx>=0.28",
+    "pyjwt>=2.9",
+    "argon2-cffi>=23.1",
+    "cryptography>=43.0",
+    "python-docx>=1.1",
+    "chinesecalendar>=1.0",
+    "nicegui>=1.40",
+    "email-validator>=2.3.0",
+    "pydantic-settings>=2.14.2",
+    "httpx2>=2.5.0",
+]
+
+[tool.uv]
+managed = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C", "N", "RUF"]
+ignore = ["E501"]
+
+[tool.pyright]
+pythonVersion = "3.14"
+typeCheckingMode = "strict"
+exclude = ["**/node_modules", "**/.git", "**/dist", "**/build"]
+extraPaths = ["apps", "packages", "tests"]
+
+[tool.pytest]
+testpaths = ["tests"]
+addopts = ["-v"]
+pythonpath = ["apps", "packages", "tests"]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning",
+]
+markers = [
+    "integration: Mark integration tests",
+    "api: Mark API tests",
+]
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.156.6",
+    "pyright>=1.1.411",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.15.21",
+]
