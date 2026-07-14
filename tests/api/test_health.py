@@ -10,7 +10,7 @@ import structlog
 from fastapi.testclient import TestClient
 
 from apps.api.app import create_app
-from apps.api.dependencies import HealthDependencies
+from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from tests.conftest import BASE_DATABASE_URL
 
 
@@ -143,3 +143,35 @@ def test_default_dependencies_check_real_local_runtime(
             "export_storage": "ok",
         },
     }
+
+
+@pytest.mark.asyncio
+async def test_default_dependencies_require_profile_runtime_root(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("CHILD_MANAGER_RUNTIME_ROOT", raising=False)
+
+    health = build_health_dependencies()
+
+    assert await health.export_storage() is False
+
+
+def test_default_dependencies_reject_blank_security_keys(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("CHILD_MANAGER_JWT_SIGNING_KEY", "   ")
+    monkeypatch.setenv("CHILD_MANAGER_CSRF_SIGNING_KEY", "\t")
+
+    assert build_health_dependencies().security_ready is False
+
+
+@pytest.mark.asyncio
+async def test_default_calendar_check_degrades_when_library_is_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def unavailable(_name: str) -> object:
+        raise ImportError("calendar unavailable")
+
+    monkeypatch.setattr("apps.api.dependencies.import_module", unavailable)
+
+    assert await build_health_dependencies().calendar() is False

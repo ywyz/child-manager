@@ -45,6 +45,8 @@ def test_global_security_requires_jwt_and_csrf_keys() -> None:
     assert global_security_ready(settings()) is True
     assert global_security_ready(settings(jwt_signing_key=None)) is False
     assert global_security_ready(settings(csrf_signing_key=None)) is False
+    assert global_security_ready(settings(jwt_signing_key="   ")) is False
+    assert global_security_ready(settings(csrf_signing_key="\t")) is False
 
 
 def test_api_entrypoint_rejects_insecure_cookie_on_non_loopback(

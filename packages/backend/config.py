@@ -44,6 +44,6 @@ def global_security_ready(settings: AppSettings) -> bool:
     """JWT 和 CSRF 签名密钥同时存在时全局安全配置才可用。"""
 
     return all(
-        secret is not None and bool(secret.get_secret_value())
+        secret is not None and bool(secret.get_secret_value().strip())
         for secret in (settings.jwt_signing_key, settings.csrf_signing_key)
     )

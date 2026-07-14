@@ -3,6 +3,7 @@
 import os
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
+from importlib import import_module
 from pathlib import Path
 
 import psycopg
@@ -22,12 +23,20 @@ class HealthDependencies:
     security_ready: bool
 
 
-async def _disabled() -> bool:
+async def _ai_unconfigured() -> bool:
     return False
 
 
-async def _available() -> bool:
-    return True
+async def _runtime_storage_unconfigured() -> bool:
+    return False
+
+
+async def _calendar_library_available() -> bool:
+    try:
+        calendar_module = import_module("chinese_calendar")
+    except ImportError:
+        return False
+    return callable(getattr(calendar_module, "is_workday", None))
 
 
 def _database_check(database_url: str | None) -> HealthCheck:
@@ -74,16 +83,22 @@ def build_health_dependencies() -> HealthDependencies:
     """从进程环境构造真实、无副作用的本地就绪检查。"""
 
     repository_root = Path(__file__).resolve().parents[2]
-    runtime_root = Path(os.environ.get("CHILD_MANAGER_RUNTIME_ROOT", "runtime"))
+    runtime_root_value = os.environ.get("CHILD_MANAGER_RUNTIME_ROOT")
+    export_storage = (
+        _path_check(Path(runtime_root_value) / "exports", writable=True)
+        if runtime_root_value
+        else _runtime_storage_unconfigured
+    )
+    security_values = (
+        os.environ.get("CHILD_MANAGER_JWT_SIGNING_KEY"),
+        os.environ.get("CHILD_MANAGER_CSRF_SIGNING_KEY"),
+    )
     return HealthDependencies(
         database=_database_check(os.environ.get("CHILD_MANAGER_DATABASE_URL")),
         redis=_redis_check(os.environ.get("CHILD_MANAGER_REDIS_URL")),
-        ai=_disabled,
-        calendar=_available,
+        ai=_ai_unconfigured,
+        calendar=_calendar_library_available,
         template=_file_check(repository_root / "templates/teacherplan/teacherplan.docx"),
-        export_storage=_path_check(runtime_root / "exports", writable=True),
-        security_ready=all(
-            os.environ.get(name)
-            for name in ("CHILD_MANAGER_JWT_SIGNING_KEY", "CHILD_MANAGER_CSRF_SIGNING_KEY")
-        ),
+        export_storage=export_storage,
+        security_ready=all(value is not None and bool(value.strip()) for value in security_values),
     )
