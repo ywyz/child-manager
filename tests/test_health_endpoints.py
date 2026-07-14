@@ -12,13 +12,21 @@ def client():
 def test_health_live(client):
     response = client.get("/health/live")
     assert response.status_code == 200
-    assert response.json() == {"status": "healthy", "component": "api"}
+    data = response.json()
+    assert data["status"] == "healthy"
+    assert data["component"] == "api"
+    assert "request_id" in data
+    assert "timestamp" in data
 
 
 def test_health_ready(client):
     response = client.get("/health/ready")
     assert response.status_code == 200
-    assert response.json() == {"status": "healthy", "component": "api"}
+    data = response.json()
+    assert data["status"] == "healthy"
+    assert data["component"] == "api"
+    assert "request_id" in data
+    assert "timestamp" in data
 
 
 def test_request_id_header(client):

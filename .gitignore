@@ -22,3 +22,4 @@ build/
 *.tmp
 compose.dev.override.yaml
 alembic.ini.local
+graphify-out/
