@@ -1,9 +1,10 @@
-# M1 工程骨架与质量基线 Issue 草稿
+# M1 工程骨架与质量基线 Issue 草稿与执行记录
 
 > 草稿日期：2026-07-14
 > 草稿复核基线：`ba81925a8b0a9f1a74951358bdf37cd45f8c529b`
-> 当前状态：`main...origin/main = 0/0`，M0 `complete`，M1 `ready`
-> 使用方式：以下三段正文分别用于一个共享父 Issue、一个 Codex 实现子 Issue和一个 Trae 实现子 Issue。正式创建 Issue 和执行 T003 前必须重新读取实时 HEAD，不得把本草稿中的提交 ID 当作永久事实。
+> 草稿复核状态：`main...origin/main = 0/0`，M0 `complete`，M1 `ready`
+> 执行结果：Issue #1～#3 与 `codex`、`trae` 已创建；共同基线为 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`；M1 实现尚未授权
+> 使用方式：以下三段保留创建时的草稿结构；实时状态、父子链接和共同基线以本执行记录及 GitHub Issues 为准。
 
 ## 0. 草稿基线与 graphify 处置记录
 
@@ -12,6 +13,8 @@
 - 草稿复核时 GitHub Issue 全部状态查询结果为 0 个，不存在重复 M1 Issue。
 - 草稿复核验证：本地 Markdown 链接缺失 0，`git diff --check` 通过，graphify 为 1671 节点/1327 边，缺失端点、悬空边、自环、重复或折叠边均为 0。
 - 当前 `main` 尚无业务实现，本次不运行或声称 Ruff、Pyright、Pytest、Docker及三个运行入口检查通过。
+- 2026-07-14 执行时再次确认 `main...origin/main = 0/0`，并从 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` 创建、推送 `codex` 与 `trae`。
+- 已创建 [M1 共享父 Issue #1](https://github.com/ywyz/child-manager/issues/1)、[Codex 子 Issue #2](https://github.com/ywyz/child-manager/issues/2) 和 [Trae 子 Issue #3](https://github.com/ywyz/child-manager/issues/3)，#2、#3 已注册为 #1 的原生 Sub-issues。
 
 ## 1. 共享父 Issue 草稿
 
@@ -28,7 +31,7 @@
 - 草稿复核时 `main...origin/main = 0/0`。
 - M0 状态：`complete`；M1 状态：`ready`。
 - 验证摘要：GitHub Issue 0 个；文档链接与格式检查通过；graphify 为 1671 节点/1327 边且完整性异常为 0；当前无业务代码，不适用实现分支质量命令。
-- 正式执行 T003 时必须重新读取 `main` 与 `origin/main`，并把当时确认的完整提交 ID 同时写入两个实现子 Issue。
+- T003 已执行；两个实现子 Issue 均已记录共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`。
 
 #### 共同目标
 
@@ -41,7 +44,7 @@
 
 #### 任务映射
 
-- T003：经独立分支操作授权，从同一确认的 `main` 提交创建 `codex` 与 `trae`，并记录共同基线。
+- T003：已从同一确认的 `main` 提交创建、推送 `codex` 与 `trae`，并记录共同基线。
 - T004～T020：由 Codex、Trae 在各自实现子 Issue 中分别、完整、依赖有序地执行；不拆成 17 个独立 GitHub Issue。
 
 #### 入口条件
@@ -49,8 +52,8 @@
 - [x] M0 `complete`，M0-G1～M0-G8 已关闭。
 - [x] M1 `ready`。
 - [x] Spec、Plan、Tasks、ADR、模板说明和双 Agent 协议已形成共享文档基线。
-- [ ] GitHub Issue 操作已获得明确授权。
-- [ ] T003 分支操作已获得明确授权。
+- [x] GitHub Issue 操作已获得明确授权并完成。
+- [x] T003 分支操作已获得明确授权并完成。
 - [ ] M1 实现已获得明确授权。
 
 #### 共同出口门禁
@@ -87,8 +90,8 @@
 
 | 实现 | Issue | 状态 | 共同基线 |
 | --- | --- | --- | --- |
-| Codex | 创建后回填 | `ready` / 待授权 | 执行 T003 时回填 |
-| Trae | 创建后回填 | `ready` / 待授权 | 执行 T003 时回填 |
+| Codex | [#2](https://github.com/ywyz/child-manager/issues/2) | `ready` / 待实现授权 | `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` |
+| Trae | [#3](https://github.com/ywyz/child-manager/issues/3) | `ready` / 待实现授权 | `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` |
 
 #### 非目标
 
@@ -107,13 +110,13 @@
 
 #### 关联与边界
 
-- 父 Issue：创建后回填。
+- 父 Issue：[#1](https://github.com/ywyz/child-manager/issues/1)。
 - 目标分支：`codex`。
-- 共同基线：执行 T003 时回填，与 Trae 子 Issue 必须完全相同。
+- 共同基线：`c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`，与 Trae 子 Issue 完全相同。
 - 复核日期：2026-07-14。
 - 草稿复核时 `main` HEAD：`ba81925a8b0a9f1a74951358bdf37cd45f8c529b`；`main...origin/main = 0/0`。
 - 验证摘要：GitHub Issue 0 个；文档链接与格式检查通过；graphify 为 1671 节点/1327 边且完整性异常为 0；当前无业务代码，不适用实现分支质量命令。
-- 当前状态：`ready` / 待分支与实现授权。
+- 当前状态：`ready` / 分支已创建，待实现授权。
 - 只记录 Codex 自己的方案、提交、迁移、验证、风险和阻塞。
 
 #### T004～T020 有序执行清单
@@ -148,7 +151,7 @@
 #### 验收证据
 
 - 分支 HEAD：完成后回填。
-- 共同基线：执行 T003 时回填。
+- 共同基线：`c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`。
 - 实际提交：逐项回填。
 - 快速测试：逐项回填实际命令和结果。
 - 标准五条命令：逐条回填，不得合并成模糊的“全部通过”。
@@ -171,13 +174,13 @@
 
 #### 关联与边界
 
-- 父 Issue：创建后回填。
+- 父 Issue：[#1](https://github.com/ywyz/child-manager/issues/1)。
 - 目标分支：`trae`。
-- 共同基线：执行 T003 时回填，与 Codex 子 Issue 必须完全相同。
+- 共同基线：`c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`，与 Codex 子 Issue 完全相同。
 - 复核日期：2026-07-14。
 - 草稿复核时 `main` HEAD：`ba81925a8b0a9f1a74951358bdf37cd45f8c529b`；`main...origin/main = 0/0`。
 - 验证摘要：GitHub Issue 0 个；文档链接与格式检查通过；graphify 为 1671 节点/1327 边且完整性异常为 0；当前无业务代码，不适用实现分支质量命令。
-- 当前状态：`ready` / 待分支与实现授权。
+- 当前状态：`ready` / 分支已创建，待实现授权。
 - 只记录 Trae 自己的方案、提交、迁移、验证、风险和阻塞。
 
 #### T004～T020 有序执行清单
@@ -212,7 +215,7 @@
 #### 验收证据
 
 - 分支 HEAD：完成后回填。
-- 共同基线：执行 T003 时回填。
+- 共同基线：`c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`。
 - 实际提交：逐项回填。
 - 快速测试：逐项回填实际命令和结果。
 - 标准五条命令：逐条回填，不得合并成模糊的“全部通过”。
