@@ -1,0 +1,36 @@
+name: ${COMPOSE_PROJECT_NAME:?请先加载本地开发档位并设置 COMPOSE_PROJECT_NAME}
+
+services:
+  postgres:
+    image: ${CHILD_MANAGER_POSTGRES_IMAGE:-postgres:18-alpine@sha256:9a8afca54e7861fd90fab5fdf4c42477a6b1cb7d293595148e674e0a3181de15}
+    labels:
+      child-manager.profile: ${CHILD_MANAGER_PROFILE:?请先设置 CHILD_MANAGER_PROFILE}
+    environment:
+      POSTGRES_DB: ${CHILD_MANAGER_DATABASE_NAME:?请先设置 CHILD_MANAGER_DATABASE_NAME}
+      POSTGRES_USER: child_manager
+      POSTGRES_PASSWORD: ${CHILD_MANAGER_POSTGRES_PASSWORD:?请从当前 shell 或仓库外权限文件提供 CHILD_MANAGER_POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:${CHILD_MANAGER_POSTGRES_PORT:?请先设置 CHILD_MANAGER_POSTGRES_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    volumes:
+      - child-manager-postgres:/var/lib/postgresql
+
+  redis:
+    image: ${CHILD_MANAGER_REDIS_IMAGE:-redis:8-alpine@sha256:9d317178eceac8454a2284a9e6df2466b93c745529947f0cd42a0fa9609d7005}
+    labels:
+      child-manager.profile: ${CHILD_MANAGER_PROFILE:?请先设置 CHILD_MANAGER_PROFILE}
+    command: ["redis-server", "--appendonly", "no", "--save", ""]
+    ports:
+      - "127.0.0.1:${CHILD_MANAGER_REDIS_PORT:?请先设置 CHILD_MANAGER_REDIS_PORT}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  child-manager-postgres:

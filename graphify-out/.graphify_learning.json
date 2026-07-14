@@ -1,8 +1,24 @@
 {
-  "generated_at": "2026-07-13T04:37:19.051068+00:00",
+  "generated_at": "2026-07-14T06:25:25.958149+00:00",
   "nodes": {
+    "context_branch_authorization_boundary": {
+      "code_fingerprint": "d790d2ceab40364ab4afd05385fae7ce4099a5b1b301d715a3c6a0e1e7cb0c6c",
+      "label": "实现分支授权边界",
+      "last": "2026-07-13T04:37:02.594084+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-13T04:37:02.594084+00:00",
+          "outcome": "useful",
+          "q": "请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
+        }
+      ],
+      "score": 0.975462051,
+      "source_file": "CONTEXT.md",
+      "status": "tentative",
+      "uses": 1
+    },
     "docs_design_system_architecture_implementation_order": {
-      "code_fingerprint": "960163afd69263d4c52c86dcbe110f92a74f45388655567e3aedd830c53d2f69",
+      "code_fingerprint": "9a0647df6c018e8487ede04f106258b5120cc4cfc71ae522bed2b331ee08f911",
       "label": "实施顺序 M1–M8",
       "last": "2026-07-13T04:37:02.594084+00:00",
       "provenance": [
@@ -12,7 +28,7 @@
           "q": "请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
         }
       ],
-      "score": 0.999995599,
+      "score": 0.975462051,
       "source_file": "docs/design/system-architecture.md",
       "status": "tentative",
       "uses": 1
@@ -33,58 +49,10 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 1.881901363,
+      "score": 1.835731442,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2
-    },
-    "specs_001_daily_activity_plan_plan_implementation_authorization": {
-      "code_fingerprint": "f06f92cfc429c429e73a8aef5cd3175c31180a0854cba7c9bc7a7b5eea4be576",
-      "label": "实现分支授权边界",
-      "last": "2026-07-13T04:37:02.594084+00:00",
-      "provenance": [
-        {
-          "date": "2026-07-13T04:37:02.594084+00:00",
-          "outcome": "useful",
-          "q": "请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
-        }
-      ],
-      "score": 0.999995599,
-      "source_file": "specs/001-daily-activity-plan/plan.md",
-      "status": "tentative",
-      "uses": 1
-    },
-    "specs_001_daily_activity_plan_tasks_phase_1_setup": {
-      "code_fingerprint": "5aacca9a59700657992157d89338b080f735d88f7d13a230e12543a19ddece24",
-      "label": "Phase 1 Setup T001–T008",
-      "last": "2026-07-13T04:37:02.594084+00:00",
-      "provenance": [
-        {
-          "date": "2026-07-13T04:37:02.594084+00:00",
-          "outcome": "useful",
-          "q": "请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
-        }
-      ],
-      "score": 0.999995599,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "status": "tentative",
-      "uses": 1
-    },
-    "specs_001_daily_activity_plan_tasks_root": {
-      "code_fingerprint": "5aacca9a59700657992157d89338b080f735d88f7d13a230e12543a19ddece24",
-      "label": "首期一日活动计划实现任务清单",
-      "last": "2026-07-13T04:37:02.594084+00:00",
-      "provenance": [
-        {
-          "date": "2026-07-13T04:37:02.594084+00:00",
-          "outcome": "useful",
-          "q": "请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
-        }
-      ],
-      "score": 0.999995599,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "status": "tentative",
-      "uses": 1
     }
   },
   "version": 1
