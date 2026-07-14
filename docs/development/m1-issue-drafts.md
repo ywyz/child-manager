@@ -180,8 +180,8 @@
 - 共同基线：`c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`，与 Codex 子 Issue 完全相同。
 - 复核日期：2026-07-14。
 - 草稿复核时 `main` HEAD：`ba81925a8b0a9f1a74951358bdf37cd45f8c529b`；`main...origin/main = 0/0`。
-- 验证摘要：GitHub Issue 0 个；文档链接与格式检查通过；graphify 为 1671 节点/1327 边且完整性异常为 0；当前无业务代码，不适用实现分支质量命令。
-- 当前状态：`ready` / 分支已创建，待实现授权。
+- 验证摘要：本共享草稿不镜像 Trae 的实时提交和验收结果，避免共享文档滞后后覆盖 Issue #3。
+- 当前状态：以 [Issue #3](https://github.com/ywyz/child-manager/issues/3) 与 `trae` 分支实时证据为准。
 - 只记录 Trae 自己的方案、提交、迁移、验证、风险和阻塞。
 
 #### T004～T020 有序执行清单
