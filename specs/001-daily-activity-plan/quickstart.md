@@ -67,8 +67,8 @@ export CHILD_MANAGER_JWT_SIGNING_KEY="$(openssl rand -base64 32)"
 export CHILD_MANAGER_CSRF_SIGNING_KEY="$(openssl rand -base64 32)"
 ```
 
-预期：开发配置只允许回环地址使用 `Secure=false` Cookie。把
-`CHILD_MANAGER_BIND_HOST` 改为 `0.0.0.0` 或 `::` 时，Web/API 必须拒绝启动。
+预期：开发配置只允许回环地址使用 `Secure=false` Cookie。把 API 使用的
+`CHILD_MANAGER_BIND_HOST` 或 Web 的 `--host` 参数改为 `0.0.0.0` 或 `::` 时，对应进程必须拒绝启动。
 
 ## 3. 数据库与首次初始化
 
@@ -98,7 +98,7 @@ uv run python -m apps.worker
 ```
 
 ```bash
-uv run python -m apps.web --host 127.0.0.1 --port "$CHILD_MANAGER_WEB_PORT" \
+uv run python -m apps.web --host "$CHILD_MANAGER_BIND_HOST" --port "$CHILD_MANAGER_WEB_PORT" \
   --api-base-url "http://127.0.0.1:${CHILD_MANAGER_API_PORT}"
 ```
 
