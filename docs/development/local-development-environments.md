@@ -56,6 +56,7 @@ git worktree list
 | PostgreSQL 宿主机端口 | `15432` | `25432` |
 | Redis 宿主机端口 | `16379` | `26379` |
 | 开发数据库名 | `child_manager_codex` | `child_manager_trae` |
+| 测试数据库名 | `child_manager_codex_test` | `child_manager_trae_test` |
 
 Dramatiq Worker 不监听浏览器或宿主机服务端口。自动化测试临时启动的 HTTP 替身优先请求操作系统分配动态端口 `0`，不得再占用一组共享固定端口。
 
@@ -69,6 +70,8 @@ export CHILD_MANAGER_API_PORT=18000
 export CHILD_MANAGER_POSTGRES_PORT=15432
 export CHILD_MANAGER_REDIS_PORT=16379
 export CHILD_MANAGER_DATABASE_NAME=child_manager_codex
+export CHILD_MANAGER_TEST_DATABASE_NAME=child_manager_codex_test
+export CHILD_MANAGER_RUNTIME_ROOT="${XDG_RUNTIME_DIR:-/tmp}/child-manager-codex"
 ```
 
 ### 4.2 Trae 档位
@@ -81,9 +84,13 @@ export CHILD_MANAGER_API_PORT=28000
 export CHILD_MANAGER_POSTGRES_PORT=25432
 export CHILD_MANAGER_REDIS_PORT=26379
 export CHILD_MANAGER_DATABASE_NAME=child_manager_trae
+export CHILD_MANAGER_TEST_DATABASE_NAME=child_manager_trae_test
+export CHILD_MANAGER_RUNTIME_ROOT="${XDG_RUNTIME_DIR:-/tmp}/child-manager-trae"
 ```
 
 实现分支的 `compose.dev.yaml` 必须从这些变量读取宿主机端口，并为缺失的档位变量提供清晰错误，而不是静默回退到可能冲突的固定端口。Compose 服务间仍通过服务名和容器端口通信；只有宿主机启动的应用、诊断工具和测试使用表中的宿主机端口。
+
+两个档位还必须分别从当前 shell 或仓库外、权限受控的档位文件加载 `CHILD_MANAGER_POSTGRES_PASSWORD`。首次创建档位文件时使用 `openssl rand -hex 32` 生成不同值；不得把生成结果写入仓库、`.env`、Compose、日志、测试快照或本文。所有需要连接数据库的终端必须加载同一档位的同一值。
 
 ## 5. Compose、数据与文件隔离
 
@@ -95,6 +102,7 @@ export CHILD_MANAGER_DATABASE_NAME=child_manager_trae
 - PostgreSQL、Redis 的宿主机端口不同，且只绑定回环地址。
 - 数据库名、测试数据库名和测试 Worker 标识包含实现档位；并行测试时再增加进程或 worker 后缀。
 - 导出、上传解析、Cookie jar、日志和临时文件使用档位专属目录；测试结束清理自己创建的文件，不删除另一档位内容。
+- `CHILD_MANAGER_RUNTIME_ROOT` 是本档位运行文件的唯一根目录；Quickstart 在其下创建 `exports/`、`logs/` 与 `tmp/`，Cookie jar 也写入该目录。实现不得静默回退到另一档位或共享固定目录。
 - 开发密钥只在当前 shell 或仓库外、权限受控的档位专属文件中生成，不写 `.env`、Compose 文件、日志或 Git。
 - 停止一套环境时显式带上其 `COMPOSE_PROJECT_NAME`，不得使用会影响另一项目的全局容器或卷清理命令。
 
@@ -158,21 +166,21 @@ python -m pip install -i https://mirrors.cernet.edu.cn/pypi/web/simple <tool-nam
 
 ## 8. Docker 镜像下载
 
-`github.ywyz.tech` 可作为不稳定网络下的可选加速入口，但不得成为仓库内唯一镜像来源。未来的 `compose.dev.yaml` 应允许通过 shell 变量覆盖镜像，并保留已锁定的官方镜像为默认值。以下是结构示意，`<已锁定版本>` 必须由 T007 替换为实际 tag 后才能执行：
+`github.ywyz.tech` 可作为不稳定网络下的可选加速入口，但不得成为仓库内唯一镜像来源。当前 `compose.dev.yaml` 允许通过 shell 变量覆盖镜像，并以以下带 SHA-256 digest 的官方镜像作为不可变默认值：
 
 ```yaml
 services:
   postgres:
-    image: ${CHILD_MANAGER_POSTGRES_IMAGE:-postgres:<已锁定版本>}
+    image: ${CHILD_MANAGER_POSTGRES_IMAGE:-postgres:18-alpine@sha256:9a8afca54e7861fd90fab5fdf4c42477a6b1cb7d293595148e674e0a3181de15}
   redis:
-    image: ${CHILD_MANAGER_REDIS_IMAGE:-redis:<已锁定版本>}
+    image: ${CHILD_MANAGER_REDIS_IMAGE:-redis:8-alpine@sha256:9d317178eceac8454a2284a9e6df2466b93c745529947f0cd42a0fa9609d7005}
 ```
 
 使用加速入口时只在当前 shell 覆盖：
 
 ```bash
-export CHILD_MANAGER_POSTGRES_IMAGE=github.ywyz.tech/postgres:<同一锁定版本>
-export CHILD_MANAGER_REDIS_IMAGE=github.ywyz.tech/redis:<同一锁定版本>
+export CHILD_MANAGER_POSTGRES_IMAGE=github.ywyz.tech/postgres:18-alpine@sha256:9a8afca54e7861fd90fab5fdf4c42477a6b1cb7d293595148e674e0a3181de15
+export CHILD_MANAGER_REDIS_IMAGE=github.ywyz.tech/redis:8-alpine@sha256:9d317178eceac8454a2284a9e6df2466b93c745529947f0cd42a0fa9609d7005
 ```
 
 其他仓库按相同前缀规则使用：
@@ -200,7 +208,7 @@ Kubernetes：github.ywyz.tech/registry.k8s.io/<image>:<tag>
 1. 两个 worktree 的当前分支分别为 `codex`、`trae`，且工作区互不覆盖。
 2. 两个 Compose 项目可同时启动，四个依赖宿主机端口均只绑定 `127.0.0.1`。
 3. Codex Web/API 与 Trae Web/API 可同时存活，浏览器和 BFF 只访问本档位地址。
-4. 两个 PostgreSQL 数据库、Redis、导出目录和临时目录互不读写。
+4. 两个 PostgreSQL 数据库、Redis 与 `CHILD_MANAGER_RUNTIME_ROOT` 互不读写；导出、日志、Cookie jar 和临时文件都只出现在本档位根目录。
 5. 停止或破坏任一档位的 PostgreSQL/Redis，不会停止或误报另一档位服务。
 6. 镜像加速入口关闭后，取消覆盖即可回到官方镜像，不需要修改受版本控制文件。
 

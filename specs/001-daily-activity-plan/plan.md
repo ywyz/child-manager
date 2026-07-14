@@ -51,18 +51,18 @@ WCAG 2.2 AA 可验证要求
 
 ## Constitution Check
 
-*GATE: 2026-07-14 已关闭 M0-G1～M0-G8 并完成 T003；`codex`、`trae` 已从共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` 创建，M1 父子 Issue 已建立。M1 仍为 `ready`，不得在 `main` 实现业务，T004 起仍须另行获得实现授权。*
+*GATE: 2026-07-14 已关闭 M0-G1～M0-G8 并完成 T003；`codex`、`trae` 已从共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` 创建，M1 父子 Issue 已建立。M1 为 `in_progress`；Codex 已完成分支内 T004～T020，Trae 与共享双环境门禁仍须提供各自证据。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
 | I. 事实来源与范围忠实 | PASS | **PASS（M0）** | canonical 文档、历史清理与最终共享基线均已验证 |
-| II. 服务边界与单向依赖 | PASS | **PENDING（实现授权）** | BFF/API/Worker 边界已设计，两个实现分支已建立，尚未开始实现 |
-| III. 园所隔离与服务端授权 | PASS | **PENDING（实现授权）** | 24 实体、组合外键、Repository 参数和 API 权限矩阵已设计；尚无获准实现 |
-| IV. 权威状态、事务与可恢复性 | PASS | **PENDING（实现授权）** | PostgreSQL 权威任务、幂等键、租约、恢复扫描和文件补偿已设计；尚无获准实现 |
-| V. 教师控制、AI 与 Word 保真 | PASS | **PENDING（实现授权）** | 固定 Schema、栏目级预览、采用事务、模板副本/哈希和红字边界已设计；尚无获准实现 |
-| VI. 可执行验证与真实证据 | PASS | **PENDING（实现）** | 用户故事测试与 quickstart 验收合同已定义，但当前 `main` 无可执行实现 |
+| II. 服务边界与单向依赖 | PASS | **PASS（Codex 分支）** | Codex 的 BFF/API/Worker 边界与依赖方向测试已通过；不据此推断 Trae |
+| III. 园所隔离与服务端授权 | PASS | **PENDING（M2+）** | 24 实体、组合外键、Repository 参数和 API 权限矩阵已设计；M1 不实现业务数据与授权 |
+| IV. 权威状态、事务与可恢复性 | PASS | **PARTIAL（M1）** | Codex 已建立 PostgreSQL 事务与迁移基础；业务幂等、租约、恢复扫描和文件补偿由后续里程碑实现 |
+| V. 教师控制、AI 与 Word 保真 | PASS | **PENDING（M4+）** | 固定 Schema、栏目级预览、采用事务、模板副本/哈希和红字边界已设计，尚未进入对应里程碑 |
+| VI. 可执行验证与真实证据 | PASS | **PASS（Codex M1）** | Codex 的 M1 工程入口与质量门禁已有证据；用户故事验收仍按后续里程碑执行 |
 
-**前置同步与授权处理**: T001 保留为既有 docs-only 同步的历史记录，详情见 [research.md](./research.md) 第 9 节；该旧提交不再作为当前 Pre-M1 通过证据。T002 已在最终候选文档基线上重新完成。T003 已于 2026-07-14 经明确授权完成：`codex` 和 `trae` 从共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` 创建并推送。业务迁移或代码实现仍须另行获得 M1 实现授权。
+**前置同步与授权处理**: T001 保留为既有 docs-only 同步的历史记录，详情见 [research.md](./research.md) 第 9 节；该旧提交不再作为当前 Pre-M1 通过证据。T002 已在最终候选文档基线上重新完成。T003 已于 2026-07-14 经明确授权完成：`codex` 和 `trae` 从共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` 创建并推送。Codex 的 M1 实现授权与 T004～T020 分支内验收均已完成；不据此推断 Trae 或共享双环境门禁状态。
 
 **Complexity result**: 无需宪章例外；Web/API/Worker 是已接受的三个运行单元，不属于新增
 复杂度。24 张表沿用已确认数据模型，不增加反思表、环节表或事务消息系统。
@@ -168,21 +168,26 @@ tests/
 
 **Structure Decision**: 采用现有架构文档的 monorepo。`apps/*` 只含传输和装配；
 `packages/backend/*` 的应用用例拥有授权、事务、幂等与审计；Repository 不自行提交事务；
-`packages/contracts` 不含 ORM、Repository、业务逻辑或供应商客户端。M1 创建以下明确开发
-入口，供后续 quickstart 和自动化引用。Web 的 `--api-base-url` 仅供 BFF 在服务器侧访问
+`packages/contracts` 不含 ORM、Repository、业务逻辑或供应商客户端。M1 创建 API、Worker、
+Web 三个可执行入口，并冻结后续初始化 CLI 的命令名称，供 quickstart 和自动化引用；
+`init-admin` 的真实业务行为仍由 T034 实现，不在 M1 提供误导性的空操作。Web 的
+`--api-base-url` 仅供 BFF 在服务器侧访问
 内部 API；浏览器唯一入口是当前实现档位的 `CHILD_MANAGER_WEB_PORT`，其 `/api/v1/*` 请求由
 BFF 转发。Codex 与 Trae 的固定档位见
 [`local-development-environments.md`](../../docs/development/local-development-environments.md)：
 
 ```bash
+# T034 完成后可执行：
 uv run python -m packages.backend.bootstrap init-admin
-uv run uvicorn apps.api.app:app --host 127.0.0.1 --port "$CHILD_MANAGER_API_PORT"
+# Codex 分支 T004～T020 完成后可执行：
+uv run python -m apps.api --host 127.0.0.1 --port "$CHILD_MANAGER_API_PORT"
 uv run python -m apps.worker
 uv run python -m apps.web --host 127.0.0.1 --port "$CHILD_MANAGER_WEB_PORT" \
   --api-base-url "http://127.0.0.1:${CHILD_MANAGER_API_PORT}"
 ```
 
-入口名称属于本 feature 的实现契约；当前 `main` 尚无代码，以上命令在 M1 完成前不可执行。
+入口名称属于本 feature 的实现契约；当前 `main` 尚无代码。Codex 分支在 T004～T020 后可
+执行 API、Worker、Web 命令；初始化命令仅冻结名称，其真实行为在 T034 完成前不可执行。
 
 ## Phase 0: Research
 
@@ -263,11 +268,11 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 
 - 当前 `main` 无 `pyproject.toml`、代码、迁移或测试，quickstart 只能描述实现后的可执行
   验收，不得声称命令已通过。
-- M1 后使用本计划冻结的四个入口；全程只绑定回环地址，AI/节假日使用固定替身。
+- M1 后使用 API、Worker、Web 三个可执行入口；T034 完成后再使用已冻结名称的初始化入口；全程只绑定回环地址，AI/节假日使用固定替身。
 - 覆盖初始化、认证、园所隔离、手工教案、并发、任务恢复、AI 采用、集体部分成功、
   Word 样式与审计，并明确生产部署和未来子系统反目标。
 
-**Post-design Constitution Check**: 内部设计、T002 最终 Pre-M1 审查、M0-G1～M0-G8 与 T003 均已完成，M0 为 `complete`、M1 为 `ready`；T004 起仍须获得 M1 实现授权。
+**Post-design Constitution Check**: 内部设计、T002 最终 Pre-M1 审查、M0-G1～M0-G8 与 T003 均已完成，M0 为 `complete`、M1 为 `in_progress`；Codex T004～T020 已通过分支内门禁，Trae 与共享父门禁仍独立验收。
 
 ## Phase 2: Task Generation Strategy
 
@@ -316,4 +321,4 @@ US1–US7 建立可独立验收的纵向切片：
 
 ## Complexity Tracking
 
-无内部设计复杂度例外；M0 与 T003 已完成，但 Issue 和分支建立不等同于实现授权。仍须经用户明确授权 M1 实现，两个 Agent 才能分别开始 T004。
+无内部设计复杂度例外；M0 与 T003 已完成，Codex 已在明确授权后完成 T004～T020。Trae 仍按自身授权与证据推进，任何实现都不能替代共享父门禁。
