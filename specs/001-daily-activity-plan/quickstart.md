@@ -2,9 +2,10 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Current repository state**: `main` 只有文档、模板与 Spec Kit 产物；尚无
-`pyproject.toml`、`uv.lock`、应用代码、迁移或测试。因此下列命令是 M1–M8 实现完成后的
-验收合同，当前不可执行，也不表示已经通过。
+**Current repository state**: `main` 只有文档、模板与 Spec Kit 产物；Codex 分支已完成
+T004～T020，可执行锁定安装、本地依赖、迁移及 API、Worker、Web 工程入口。下列命令同时
+覆盖 M1～M8 验收合同：超出当前里程碑的业务初始化与用户故事步骤仍不可执行，也不表示
+已经通过；Trae 状态只以其分支和 Issue #3 的实时证据为准。
 
 ## 1. 前提与反目标
 
@@ -28,11 +29,26 @@ test -n "$CHILD_MANAGER_API_PORT"
 test -n "$CHILD_MANAGER_POSTGRES_PORT"
 test -n "$CHILD_MANAGER_REDIS_PORT"
 test -n "$CHILD_MANAGER_DATABASE_NAME"
+test -n "$CHILD_MANAGER_TEST_DATABASE_NAME"
+test -n "$CHILD_MANAGER_RUNTIME_ROOT"
+test -n "$CHILD_MANAGER_POSTGRES_PASSWORD"
+umask 077
+mkdir -p \
+  "$CHILD_MANAGER_RUNTIME_ROOT/exports" \
+  "$CHILD_MANAGER_RUNTIME_ROOT/logs" \
+  "$CHILD_MANAGER_RUNTIME_ROOT/tmp"
 uv sync --locked
-docker compose -f compose.dev.yaml up -d postgres redis
+docker compose -f compose.dev.yaml up -d --wait postgres redis
 docker compose -f compose.dev.yaml ps
 docker compose -f compose.dev.yaml port postgres 5432
 docker compose -f compose.dev.yaml port redis 6379
+if ! docker compose -f compose.dev.yaml exec -T postgres \
+  psql -U child_manager -d postgres -tAc \
+  "SELECT 1 FROM pg_database WHERE datname = '${CHILD_MANAGER_TEST_DATABASE_NAME}'" \
+  | rg -q '^1$'; then
+  docker compose -f compose.dev.yaml exec -T postgres \
+    createdb -U child_manager "$CHILD_MANAGER_TEST_DATABASE_NAME"
+fi
 ```
 
 预期：锁定安装无变更；PostgreSQL 和 Redis 健康，且只绑定回环地址。若 Docker 不可用，
@@ -43,10 +59,12 @@ docker compose -f compose.dev.yaml port redis 6379
 ```bash
 export CHILD_MANAGER_ENV=development
 export CHILD_MANAGER_BIND_HOST=127.0.0.1
-export CHILD_MANAGER_DATABASE_URL="postgresql+psycopg://child_manager:child_manager@127.0.0.1:${CHILD_MANAGER_POSTGRES_PORT}/${CHILD_MANAGER_DATABASE_NAME}"
+export CHILD_MANAGER_COOKIE_SECURE=false
+export CHILD_MANAGER_DATABASE_URL="postgresql+psycopg://child_manager:${CHILD_MANAGER_POSTGRES_PASSWORD}@127.0.0.1:${CHILD_MANAGER_POSTGRES_PORT}/${CHILD_MANAGER_DATABASE_NAME}"
+export CHILD_MANAGER_TEST_DATABASE_URL="postgresql+psycopg://child_manager:${CHILD_MANAGER_POSTGRES_PASSWORD}@127.0.0.1:${CHILD_MANAGER_POSTGRES_PORT}/${CHILD_MANAGER_TEST_DATABASE_NAME}"
 export CHILD_MANAGER_REDIS_URL="redis://127.0.0.1:${CHILD_MANAGER_REDIS_PORT}/0"
 export CHILD_MANAGER_JWT_SIGNING_KEY="$(openssl rand -base64 32)"
-export CHILD_MANAGER_AI_KEYRING="dev-v1:$(openssl rand -base64 32)"
+export CHILD_MANAGER_CSRF_SIGNING_KEY="$(openssl rand -base64 32)"
 ```
 
 预期：开发配置只允许回环地址使用 `Secure=false` Cookie。把
@@ -57,6 +75,7 @@ export CHILD_MANAGER_AI_KEYRING="dev-v1:$(openssl rand -base64 32)"
 ```bash
 uv run alembic upgrade head
 uv run alembic current
+# 以下 init-admin 命令仅在 T034 完成后执行：
 uv run python -m packages.backend.bootstrap init-admin
 uv run python -m packages.backend.bootstrap init-admin
 ```
@@ -71,7 +90,7 @@ uv run python -m packages.backend.bootstrap init-admin
 Worker 和诊断测试访问；浏览器唯一入口是 `CHILD_MANAGER_WEB_PORT`，不能直连 API 端口：
 
 ```bash
-uv run uvicorn apps.api.app:app --host 127.0.0.1 --port "$CHILD_MANAGER_API_PORT"
+uv run python -m apps.api --host "$CHILD_MANAGER_BIND_HOST" --port "$CHILD_MANAGER_API_PORT"
 ```
 
 ```bash
@@ -99,10 +118,11 @@ hop-by-hop 头剥离和伪造来源头重建；浏览器网络记录不得出现
 检查：
 
 ```bash
-export CHILD_MANAGER_COOKIE_JAR="/tmp/child-manager-${CHILD_MANAGER_PROFILE}-cookies"
+export CHILD_MANAGER_COOKIE_JAR="$CHILD_MANAGER_RUNTIME_ROOT/cookies.txt"
 curl --fail "http://127.0.0.1:${CHILD_MANAGER_API_PORT}/health/live"
 curl --fail "http://127.0.0.1:${CHILD_MANAGER_API_PORT}/health/ready"
 curl --fail "http://127.0.0.1:${CHILD_MANAGER_WEB_PORT}/"
+# 以下 CSRF 业务端点仅在 T035 完成后检查：
 curl --fail --cookie-jar "$CHILD_MANAGER_COOKIE_JAR" \
   "http://127.0.0.1:${CHILD_MANAGER_WEB_PORT}/api/v1/auth/csrf"
 rm -f "$CHILD_MANAGER_COOKIE_JAR"
