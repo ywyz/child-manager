@@ -158,22 +158,92 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
     )
     openapi_schema["components"] = {
         "schemas": {
-            "ErrorResponse": {
+            "Error": {
                 "type": "object",
+                "additionalProperties": False,
+                "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "field_errors",
+                ],
                 "properties": {
-                    "code": {"type": "string"},
+                    "code": {
+                        "type": "string",
+                        "pattern": r"^[a-z][a-z0-9_.-]+$",
+                    },
                     "message": {"type": "string"},
-                    "detail": {"type": "string", "nullable": True},
-                    "request_id": {"type": "string", "nullable": True},
+                    "request_id": {
+                        "type": "string",
+                        "format": "uuid",
+                    },
+                    "field_errors": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": False,
+                            "required": ["field", "code", "message"],
+                            "properties": {
+                                "field": {"type": "string"},
+                                "code": {"type": "string"},
+                                "message": {"type": "string"},
+                            },
+                        },
+                    },
                 },
-                "required": ["code", "message"],
+            },
+            "UnavailableError": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": [
+                    "code",
+                    "message",
+                    "request_id",
+                    "field_errors",
+                ],
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "enum": [
+                            "database.unavailable",
+                            "configuration.unavailable",
+                        ],
+                    },
+                    "message": {"type": "string"},
+                    "request_id": {
+                        "type": "string",
+                        "format": "uuid",
+                    },
+                    "field_errors": {
+                        "type": "array",
+                        "maxItems": 0,
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": False,
+                            "required": ["field", "code", "message"],
+                            "properties": {
+                                "field": {"type": "string"},
+                                "code": {"type": "string"},
+                                "message": {"type": "string"},
+                            },
+                        },
+                    },
+                },
             },
         },
         "responses": {
             "ErrorResponse": {
                 "description": "错误响应",
                 "content": {
-                    "application/json": {"schema": {"$ref": "#/components/schemas/ErrorResponse"}},
+                    "application/json": {"schema": {"$ref": "#/components/schemas/Error"}},
+                },
+            },
+            "Unavailable": {
+                "description": "服务不可用",
+                "content": {
+                    "application/json": {
+                        "schema": {"$ref": "#/components/schemas/UnavailableError"}
+                    },
                 },
             },
         },
@@ -183,23 +253,34 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
 
 
 async def _request_context_middleware(
-    request: Request, call_next: Callable[[Request], Awaitable[JSONResponse]]
+    request: Request,
+    call_next: Callable[[Request], Awaitable[JSONResponse]],
 ) -> JSONResponse:
-    import re
+    from uuid import UUID
 
-    request_id_pattern = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
+    import structlog.contextvars as ctxvars
+
     headers = request.headers
     supplied_request_id = headers.get("x-request-id", "")
-    if supplied_request_id and request_id_pattern.fullmatch(supplied_request_id):
+    try:
+        UUID(supplied_request_id)
         request_id = supplied_request_id
-    else:
+    except ValueError, AttributeError:
         request_id = str(uuid7())
+
     supplied_trace_id = headers.get("x-trace-id", "")
-    trace_id_match = request_id_pattern.fullmatch(supplied_trace_id)
-    trace_id = supplied_trace_id if trace_id_match else request_id
+    try:
+        UUID(supplied_trace_id)
+        trace_id = supplied_trace_id
+    except ValueError, AttributeError:
+        trace_id = request_id
+
     state = request.state
     state.request_id = request_id
     state.trace_id = trace_id
+
+    ctxvars.clear_contextvars()
+    ctxvars.bind_contextvars(request_id=request_id, trace_id=trace_id)
 
     response = await call_next(request)
     response.headers["X-Request-ID"] = request_id

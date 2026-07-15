@@ -8,6 +8,9 @@ from dramatiq.broker import Broker
 
 from apps.worker.broker import build_redis_broker
 from apps.worker.scheduler import Scheduler
+from packages.backend.observability import configure_logging
+
+configure_logging()
 
 
 def serve(

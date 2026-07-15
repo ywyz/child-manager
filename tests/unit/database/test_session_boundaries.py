@@ -29,3 +29,17 @@ def test_session_factory_config():
     session = SessionLocal()
     assert session is not None
     session.close()
+
+
+def test_sqlite_rejected_in_non_test_environment(monkeypatch):
+    """非测试环境必须拒绝 SQLite URL"""
+    import packages.backend.database.session as mod
+
+    # 强制模拟非测试环境
+    monkeypatch.setattr(mod, "_is_testing", lambda: False)
+    monkeypatch.setenv(
+        "CHILD_MANAGER_DATABASE_URL",
+        "sqlite:////tmp/prod-test.sqlite",
+    )
+    with __import__("pytest").raises(RuntimeError, match="PostgreSQL"):
+        mod._get_database_url()

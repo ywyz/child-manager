@@ -7,25 +7,28 @@ from pydantic import BaseModel, Field
 T = TypeVar("T")
 
 
-class ErrorResponse(BaseModel):
-    code: str = Field(..., description="错误代码")
-    message: str = Field(..., description="中文错误消息")
-    detail: str | None = Field(None, description="技术细节")
-    request_id: str | None = Field(None, description="请求ID")
-
-
 class FieldError(BaseModel):
-    field: str = Field(..., description="字段名")
+    field: str = Field(..., description="字段路径")
+    code: str = Field(..., description="稳定机器码")
     message: str = Field(..., description="字段错误消息")
+
+
+class ErrorResponse(BaseModel):
+    code: str = Field(
+        ...,
+        description="稳定英文机器码",
+        pattern=r"^[a-z][a-z0-9_.-]+$",
+    )
+    message: str = Field(..., description="中文错误消息")
+    request_id: str = Field(..., description="请求 ID (UUID)")
+    field_errors: list[FieldError] = Field(default_factory=list, description="字段级错误")
 
 
 class PaginatedResponse[T](BaseModel):
     items: list[T] = Field(..., description="数据列表")
-    total: int = Field(..., description="总记录数")
-    page: int = Field(..., description="当前页码")
-    page_size: int = Field(..., description="每页大小")
-    has_next: bool = Field(..., description="是否有下一页")
-    has_prev: bool = Field(..., description="是否有上一页")
+    page: int = Field(..., ge=1, description="当前页码")
+    page_size: int = Field(..., ge=1, le=100, description="每页大小")
+    total: int = Field(..., ge=0, description="总记录数")
 
 
 class IdempotencyKey(BaseModel):

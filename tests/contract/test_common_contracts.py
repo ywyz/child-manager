@@ -16,27 +16,27 @@ from packages.contracts.common import (
 
 def test_error_response_validation() -> None:
     response = ErrorResponse(
-        code="VALIDATION_ERROR",
+        code="validation_error",
         message="请求参数验证失败",
-        detail=None,
-        request_id="abc-123",
+        request_id="0198a7b0-1234-7890-abcd-ef0123456789",
     )
-    assert response.code == "VALIDATION_ERROR"
+    assert response.code == "validation_error"
     assert response.message == "请求参数验证失败"
+    assert response.field_errors == []
 
 
 def test_error_response_missing_code() -> None:
     with pytest.raises(ValidationError):
         ErrorResponse(  # pyright: ignore[reportCallIssue]
             message="测试错误",
-            detail=None,
-            request_id=None,
+            request_id="0198a7b0-1234-7890-abcd-ef0123456789",
         )
 
 
 def test_field_error_validation() -> None:
-    error = FieldError(field="username", message="用户名不能为空")
+    error = FieldError(field="username", code="required", message="用户名不能为空")
     assert error.field == "username"
+    assert error.code == "required"
 
 
 def test_paginated_response_validation() -> None:
@@ -45,11 +45,21 @@ def test_paginated_response_validation() -> None:
         total=100,
         page=1,
         page_size=20,
-        has_next=True,
-        has_prev=False,
     )
     assert response.total == 100
     assert response.page == 1
+
+
+def test_paginated_response_page_minimum() -> None:
+    with pytest.raises(ValidationError):
+        PaginatedResponse[dict](items=[], total=0, page=0, page_size=20)
+
+
+def test_paginated_response_page_size_range() -> None:
+    with pytest.raises(ValidationError):
+        PaginatedResponse[dict](items=[], total=0, page=1, page_size=0)
+    with pytest.raises(ValidationError):
+        PaginatedResponse[dict](items=[], total=0, page=1, page_size=101)
 
 
 def test_request_context_validation() -> None:
@@ -82,12 +92,29 @@ def test_health_response_validation() -> None:
 
 def test_error_response_json_serialization() -> None:
     response = ErrorResponse(
-        code="NOT_FOUND",
+        code="resource.not_found",
         message="资源不存在",
-        detail="ID 为 1 的资源不存在",
-        request_id="req-001",
+        request_id="0198a7b0-1234-7890-abcd-ef0123456789",
     )
     json_str = response.model_dump_json()
     data = json.loads(json_str)
-    assert data["code"] == "NOT_FOUND"
+    assert data["code"] == "resource.not_found"
     assert data["message"] == "资源不存在"
+    assert data["field_errors"] == []
+
+
+def test_error_response_with_field_errors() -> None:
+    response = ErrorResponse(
+        code="request.validation_error",
+        message="请求参数无效",
+        request_id="0198a7b0-1234-7890-abcd-ef0123456789",
+        field_errors=[
+            FieldError(
+                field="username",
+                code="required",
+                message="请填写用户名。",
+            )
+        ],
+    )
+    assert len(response.field_errors) == 1
+    assert response.field_errors[0].code == "required"

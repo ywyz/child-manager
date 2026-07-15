@@ -76,3 +76,11 @@ class AIResult(BaseModel):
 class AIAdoptRequest(BaseModel):
     result_id: str = Field(..., description="结果ID")
     expected_version: int = Field(..., description="期望版本号")
+
+
+class WorkerMessage(BaseModel):
+    """Worker 消息信封：只传 job_id，不携带 API Key、token 或正文。"""
+
+    model_config = {"extra": "forbid"}
+
+    job_id: str = Field(..., description="任务 ID")

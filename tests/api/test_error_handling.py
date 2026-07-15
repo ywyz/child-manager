@@ -79,7 +79,7 @@ def test_404_response_includes_request_id_header() -> None:
 
 def test_custom_request_id_propagated_to_error_response() -> None:
     client = _make_client()
-    custom_id = "test-error-request-id-001"
+    custom_id = "0198a7b0-1234-7890-abcd-ef0123456789"
     response = client.get("/missing", headers={"X-Request-ID": custom_id})
 
     assert response.headers["X-Request-ID"] == custom_id

@@ -4,6 +4,7 @@
 消息只传 job_id 的边界约束。
 """
 
+import inspect
 from threading import Event, Thread
 from unittest.mock import patch
 
@@ -11,8 +12,14 @@ import dramatiq
 from dramatiq import Message
 from dramatiq.brokers.stub import StubBroker
 
+from apps.worker.actors import (
+    process_export_job,
+    process_generation_job,
+    process_retry_job,
+)
 from apps.worker.broker import build_deterministic_test_broker
 from apps.worker.scheduler import Scheduler
+from packages.contracts.jobs import WorkerMessage
 
 
 def test_build_deterministic_test_broker_returns_stub_broker() -> None:
@@ -78,18 +85,54 @@ def test_scheduler_run_stops_when_event_set_from_another_thread() -> None:
     assert stop_event.is_set()
 
 
-def test_worker_message_only_carries_job_id() -> None:
+_REAL_ACTORS = [
+    process_generation_job,
+    process_export_job,
+    process_retry_job,
+]
+
+
+def test_real_actors_accept_only_job_id() -> None:
+    """真实 actor 函数签名必须只有 job_id 一个参数。"""
+    for actor in _REAL_ACTORS:
+        fn = actor.fn
+        sig = inspect.signature(fn)
+        params = [
+            p
+            for p in sig.parameters.values()
+            if p.kind
+            not in (
+                inspect.Parameter.VAR_POSITIONAL,
+                inspect.Parameter.VAR_KEYWORD,
+            )
+        ]
+        assert len(params) == 1, f"{fn.__name__} 参数过多: {[p.name for p in params]}"
+        assert params[0].name == "job_id"
+
+
+def test_real_actor_message_envelope_matches_contract() -> None:
+    """真实 actor 消息信封必须匹配 WorkerMessage 契约。"""
     broker = build_deterministic_test_broker()
     dramatiq.set_broker(broker)
 
-    @dramatiq.actor
-    def process_job(job_id: str) -> str:
-        return job_id
+    for actor in _REAL_ACTORS:
+        message = actor.message("test-job-id")
+        assert isinstance(message, Message)
+        assert message.args == ("test-job-id",)
+        assert message.kwargs == {}
 
-    message = process_job.message("job-abc-123")
-    assert isinstance(message, Message)
-    assert message.args == ("job-abc-123",)
-    assert message.kwargs == {}
+        # 验证 WorkerMessage 契约
+        envelope = WorkerMessage(job_id=message.args[0])
+        assert envelope.job_id == "test-job-id"
+
+
+def test_worker_message_schema_rejects_extra_fields() -> None:
+    """WorkerMessage 不允许额外字段。"""
+    from pydantic import ValidationError
+
+    WorkerMessage(job_id="ok")
+    with __import__("pytest").raises(ValidationError):
+        WorkerMessage(job_id="x", api_key="secret")  # type: ignore
 
 
 def test_serve_function_accepts_stub_broker_and_stops() -> None:

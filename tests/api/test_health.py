@@ -141,7 +141,9 @@ def test_live_response_has_request_id(client_factory) -> None:
     response = client.get("/health/live")
 
     assert "X-Request-ID" in response.headers
-    assert len(response.headers["X-Request-ID"]) > 0
+    from uuid import UUID
+
+    UUID(response.headers["X-Request-ID"])
 
 
 def test_ready_response_has_request_id(client_factory) -> None:
@@ -149,3 +151,6 @@ def test_ready_response_has_request_id(client_factory) -> None:
     response = client.get("/health/ready")
 
     assert "X-Request-ID" in response.headers
+    from uuid import UUID
+
+    UUID(response.headers["X-Request-ID"])

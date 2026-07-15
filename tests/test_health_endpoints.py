@@ -43,13 +43,25 @@ def test_health_ready(client: TestClient) -> None:
     assert data["checks"]["database"] == "ok"
 
 
-def test_request_id_header(client: TestClient) -> None:
+def test_request_id_header_is_uuid(client: TestClient) -> None:
     response = client.get("/health/live")
     assert "X-Request-ID" in response.headers
-    assert len(response.headers["X-Request-ID"]) > 0
+    request_id = response.headers["X-Request-ID"]
+    from uuid import UUID
+
+    UUID(request_id)  # 验证是合法 UUID
 
 
-def test_custom_request_id(client: TestClient) -> None:
-    custom_id = "test-request-123"
+def test_valid_uuid_request_id_preserved(client: TestClient) -> None:
+    custom_id = "0198a7b0-1234-7890-abcd-ef0123456789"
     response = client.get("/health/live", headers={"X-Request-ID": custom_id})
     assert response.headers["X-Request-ID"] == custom_id
+
+
+def test_non_uuid_request_id_replaced(client: TestClient) -> None:
+    response = client.get("/health/live", headers={"X-Request-ID": "not-a-uuid"})
+    request_id = response.headers["X-Request-ID"]
+    assert request_id != "not-a-uuid"
+    from uuid import UUID
+
+    UUID(request_id)  # 替换后必须是合法 UUID

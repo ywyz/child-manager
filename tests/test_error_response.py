@@ -20,26 +20,24 @@ def test_openapi_schema_exists(client: TestClient) -> None:
 
 def test_error_response_model_structure() -> None:
     error = ErrorResponse(
-        code="TEST_ERROR",
-        message="测试错误",
-        detail="详细信息",
-        request_id="req-123",
+        code="resource.not_found",
+        message="资源不存在",
+        request_id="0198a7b0-1234-7890-abcd-ef0123456789",
+        field_errors=[],
     )
-    assert error.code == "TEST_ERROR"
-    assert error.message == "测试错误"
-    assert error.detail == "详细信息"
-    assert error.request_id == "req-123"
+    assert error.code == "resource.not_found"
+    assert error.message == "资源不存在"
+    assert error.request_id == "0198a7b0-1234-7890-abcd-ef0123456789"
+    assert error.field_errors == []
 
 
-def test_error_response_json() -> None:
+def test_error_response_defaults() -> None:
     error = ErrorResponse(
-        code="VALIDATION_ERROR",
-        message="请求参数验证失败",
-        detail=None,
-        request_id=None,
+        code="server.internal_error",
+        message="服务器内部错误",
+        request_id="0198a7b0-1234-7890-abcd-ef0123456789",
     )
     data = error.model_dump()
-    assert data["code"] == "VALIDATION_ERROR"
-    assert data["message"] == "请求参数验证失败"
-    assert data.get("detail") is None
-    assert data.get("request_id") is None
+    assert data["code"] == "server.internal_error"
+    assert data["message"] == "服务器内部错误"
+    assert data["field_errors"] == []
