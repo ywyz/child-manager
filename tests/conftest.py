@@ -5,13 +5,12 @@ from typing import Any
 from urllib.parse import quote
 from uuid import uuid4
 
-import psycopg
 import pytest
-from psycopg import sql
 
 from tests.database_config import require_test_database_url
 
 BASE_DATABASE_URL = require_test_database_url()
+IS_POSTGRESQL = BASE_DATABASE_URL.startswith("postgresql")
 
 
 def _native_psycopg_url(value: str) -> str:
@@ -38,12 +37,18 @@ def block_external_network(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.fixture
 def isolated_database_url() -> Iterator[str]:
-    schema = f"test_{uuid4().hex}"
-    with psycopg.connect(_native_psycopg_url(BASE_DATABASE_URL), autocommit=True) as connection:
-        connection.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(schema)))
-    options = quote(f"-csearch_path={schema}")
-    try:
-        yield f"{BASE_DATABASE_URL}?options={options}"
-    finally:
+    if IS_POSTGRESQL:
+        import psycopg
+        from psycopg import sql
+
+        schema = f"test_{uuid4().hex}"
         with psycopg.connect(_native_psycopg_url(BASE_DATABASE_URL), autocommit=True) as connection:
-            connection.execute(sql.SQL("DROP SCHEMA {} CASCADE").format(sql.Identifier(schema)))
+            connection.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(schema)))
+        options = quote(f"-csearch_path={schema}")
+        try:
+            yield f"{BASE_DATABASE_URL}?options={options}"
+        finally:
+            with psycopg.connect(_native_psycopg_url(BASE_DATABASE_URL), autocommit=True) as connection:
+                connection.execute(sql.SQL("DROP SCHEMA {} CASCADE").format(sql.Identifier(schema)))
+    else:
+        yield BASE_DATABASE_URL
