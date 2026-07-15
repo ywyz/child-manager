@@ -1,0 +1,913 @@
+{
+  "communities": {
+    "0": [
+      "apps_api_main_healthdependencies",
+      "apps_api_main_healthdependencies_init",
+      "tests_contract_test_openapi_document",
+      "tests_contract_test_openapi_document_load_spec",
+      "tests_contract_test_openapi_document_py_any",
+      "tests_contract_test_openapi_document_rationale_1",
+      "tests_contract_test_openapi_document_rationale_101",
+      "tests_contract_test_openapi_document_rationale_114",
+      "tests_contract_test_openapi_document_rationale_128",
+      "tests_contract_test_openapi_document_rationale_150",
+      "tests_contract_test_openapi_document_rationale_162",
+      "tests_contract_test_openapi_document_rationale_171",
+      "tests_contract_test_openapi_document_rationale_178",
+      "tests_contract_test_openapi_document_rationale_189",
+      "tests_contract_test_openapi_document_rationale_212",
+      "tests_contract_test_openapi_document_rationale_222",
+      "tests_contract_test_openapi_document_rationale_237",
+      "tests_contract_test_openapi_document_rationale_248",
+      "tests_contract_test_openapi_document_rationale_26",
+      "tests_contract_test_openapi_document_rationale_270",
+      "tests_contract_test_openapi_document_rationale_289",
+      "tests_contract_test_openapi_document_rationale_314",
+      "tests_contract_test_openapi_document_rationale_35",
+      "tests_contract_test_openapi_document_rationale_47",
+      "tests_contract_test_openapi_document_rationale_62",
+      "tests_contract_test_openapi_document_rationale_69",
+      "tests_contract_test_openapi_document_rationale_87",
+      "tests_contract_test_openapi_document_runtime_paths",
+      "tests_contract_test_openapi_document_runtime_schemas",
+      "tests_contract_test_openapi_document_test_error_field_schema_has_code",
+      "tests_contract_test_openapi_document_test_error_schema_has_required_envelope",
+      "tests_contract_test_openapi_document_test_health_schema_matches_spec",
+      "tests_contract_test_openapi_document_test_login_has_repeated_auth_cookies",
+      "tests_contract_test_openapi_document_test_logout_has_repeated_clear_cookies",
+      "tests_contract_test_openapi_document_test_pagination_parameters_locked",
+      "tests_contract_test_openapi_document_test_runtime_error_no_additional_properties",
+      "tests_contract_test_openapi_document_test_runtime_error_request_id_is_uuid_format",
+      "tests_contract_test_openapi_document_test_runtime_error_schema_has_required_envelope",
+      "tests_contract_test_openapi_document_test_runtime_health_live_path_responses_match_static",
+      "tests_contract_test_openapi_document_test_runtime_health_ready_path_responses_match_static",
+      "tests_contract_test_openapi_document_test_runtime_health_schema_checks_value_is_enum",
+      "tests_contract_test_openapi_document_test_runtime_health_schema_equivalent_to_static",
+      "tests_contract_test_openapi_document_test_runtime_health_schema_present",
+      "tests_contract_test_openapi_document_test_runtime_health_schema_status_is_enum",
+      "tests_contract_test_openapi_document_test_runtime_openapi_is_valid",
+      "tests_contract_test_openapi_document_test_runtime_unavailable_error_has_two_codes",
+      "tests_contract_test_openapi_document_test_static_openapi_spec_is_valid",
+      "tests_contract_test_openapi_document_test_unavailable_error_has_two_503_codes",
+      "tests_test_health_endpoints",
+      "tests_test_health_endpoints_client",
+      "tests_test_health_endpoints_mock_health_dependencies",
+      "tests_test_health_endpoints_py_testclient",
+      "tests_test_health_endpoints_test_health_live",
+      "tests_test_health_endpoints_test_health_ready",
+      "tests_test_health_endpoints_test_non_uuid_request_id_replaced",
+      "tests_test_health_endpoints_test_request_id_header_is_uuid",
+      "tests_test_health_endpoints_test_valid_uuid_request_id_preserved"
+    ],
+    "1": [
+      "packages_contracts_common",
+      "packages_contracts_common_canonical_fingerprint",
+      "packages_contracts_common_errorresponse",
+      "packages_contracts_common_fielderror",
+      "packages_contracts_common_healthresponse",
+      "packages_contracts_common_idempotency_key_from_fingerprint",
+      "packages_contracts_common_idempotencykey",
+      "packages_contracts_common_paginatedresponse",
+      "packages_contracts_common_py_any",
+      "packages_contracts_common_py_basemodel",
+      "packages_contracts_common_requestcontext",
+      "tests_contract_test_common_contracts",
+      "tests_contract_test_common_contracts_rationale_140",
+      "tests_contract_test_common_contracts_rationale_150",
+      "tests_contract_test_common_contracts_rationale_161",
+      "tests_contract_test_common_contracts_rationale_184",
+      "tests_contract_test_common_contracts_rationale_190",
+      "tests_contract_test_common_contracts_rationale_200",
+      "tests_contract_test_common_contracts_rationale_83",
+      "tests_contract_test_common_contracts_rationale_91",
+      "tests_contract_test_common_contracts_test_error_response_json_serialization",
+      "tests_contract_test_common_contracts_test_error_response_missing_code",
+      "tests_contract_test_common_contracts_test_error_response_rejects_extra_fields",
+      "tests_contract_test_common_contracts_test_error_response_rejects_non_uuid_request_id",
+      "tests_contract_test_common_contracts_test_error_response_validation",
+      "tests_contract_test_common_contracts_test_error_response_with_field_errors",
+      "tests_contract_test_common_contracts_test_field_error_rejects_extra_fields",
+      "tests_contract_test_common_contracts_test_field_error_validation",
+      "tests_contract_test_common_contracts_test_health_response_checks_value_enum",
+      "tests_contract_test_common_contracts_test_health_response_rejects_extra_fields",
+      "tests_contract_test_common_contracts_test_health_response_status_enum",
+      "tests_contract_test_common_contracts_test_health_response_validation",
+      "tests_contract_test_common_contracts_test_paginated_response_page_minimum",
+      "tests_contract_test_common_contracts_test_paginated_response_page_size_range",
+      "tests_contract_test_common_contracts_test_paginated_response_rejects_extra_fields",
+      "tests_contract_test_common_contracts_test_paginated_response_validation",
+      "tests_contract_test_common_contracts_test_request_context_rejects_non_uuid_request_id",
+      "tests_contract_test_common_contracts_test_request_context_validation",
+      "tests_contract_test_common_contracts_test_web_does_not_import_backend",
+      "tests_contract_test_idempotency",
+      "tests_contract_test_idempotency_test_canonical_fingerprint_basic",
+      "tests_contract_test_idempotency_test_canonical_fingerprint_body_stable",
+      "tests_contract_test_idempotency_test_canonical_fingerprint_different_method",
+      "tests_contract_test_idempotency_test_canonical_fingerprint_different_path",
+      "tests_contract_test_idempotency_test_canonical_fingerprint_query_order_insensitive",
+      "tests_contract_test_idempotency_test_canonical_fingerprint_scope_matters",
+      "tests_contract_test_idempotency_test_canonical_fingerprint_with_list_body",
+      "tests_contract_test_idempotency_test_idempotency_key_format",
+      "tests_contract_test_idempotency_test_idempotency_key_from_fingerprint",
+      "tests_contract_test_idempotency_test_idempotency_key_missing_scope",
+      "tests_contract_test_idempotency_test_idempotency_key_validation",
+      "tests_test_error_response",
+      "tests_test_error_response_client",
+      "tests_test_error_response_py_testclient",
+      "tests_test_error_response_test_error_response_defaults",
+      "tests_test_error_response_test_error_response_model_structure",
+      "tests_test_error_response_test_openapi_schema_exists"
+    ],
+    "2": [
+      "apps_worker_actors",
+      "apps_worker_actors_process_export_job",
+      "apps_worker_actors_process_generation_job",
+      "apps_worker_actors_process_retry_job",
+      "apps_worker_broker",
+      "apps_worker_broker_build_deterministic_test_broker",
+      "apps_worker_broker_build_redis_broker",
+      "apps_worker_broker_py_broker",
+      "apps_worker_main_main",
+      "apps_worker_main_py_apps_worker_main_249b7f",
+      "apps_worker_main_py_broker",
+      "apps_worker_main_py_event",
+      "apps_worker_main_serve",
+      "apps_worker_scheduler_py_event",
+      "apps_worker_scheduler_scheduler",
+      "apps_worker_scheduler_scheduler_init",
+      "apps_worker_scheduler_scheduler_register",
+      "apps_worker_scheduler_scheduler_run",
+      "apps_worker_scheduler_scheduler_tick",
+      "packages_contracts_jobs",
+      "packages_contracts_jobs_aiadoptrequest",
+      "packages_contracts_jobs_airesult",
+      "packages_contracts_jobs_job",
+      "packages_contracts_jobs_jobbatchcreaterequest",
+      "packages_contracts_jobs_jobcreaterequest",
+      "packages_contracts_jobs_joblistresponse",
+      "packages_contracts_jobs_jobretryrequest",
+      "packages_contracts_jobs_jobstatus",
+      "packages_contracts_jobs_jobtype",
+      "packages_contracts_jobs_py_basemodel",
+      "packages_contracts_jobs_py_strenum",
+      "packages_contracts_jobs_rationale_82",
+      "packages_contracts_jobs_workermessage",
+      "tests_worker_test_worker",
+      "tests_worker_test_worker_rationale_1",
+      "tests_worker_test_worker_rationale_114",
+      "tests_worker_test_worker_rationale_130",
+      "tests_worker_test_worker_rationale_96",
+      "tests_worker_test_worker_test_build_deterministic_test_broker_returns_stub_broker",
+      "tests_worker_test_worker_test_real_actor_message_envelope_matches_contract",
+      "tests_worker_test_worker_test_real_actors_accept_only_job_id",
+      "tests_worker_test_worker_test_scheduler_register_and_tick",
+      "tests_worker_test_worker_test_scheduler_run_exits_when_stop_event_already_set",
+      "tests_worker_test_worker_test_scheduler_run_stops_when_event_set_from_another_thread",
+      "tests_worker_test_worker_test_scheduler_tick_continues_after_callback_exception",
+      "tests_worker_test_worker_test_serve_function_accepts_stub_broker_and_stops",
+      "tests_worker_test_worker_test_stub_broker_can_be_set_as_global",
+      "tests_worker_test_worker_test_worker_message_schema_rejects_extra_fields"
+    ],
+    "3": [
+      "apps_api_main_ai_unconfigured",
+      "apps_api_main_build_health_dependencies",
+      "apps_api_main_calendar_library_available",
+      "apps_api_main_create_app",
+      "apps_api_main_custom_openapi",
+      "apps_api_main_error_response",
+      "apps_api_main_http_exception_handler",
+      "apps_api_main_live_handler",
+      "apps_api_main_main",
+      "apps_api_main_py_apps_api_main_0a4ce4",
+      "apps_api_main_ready_handler",
+      "apps_api_main_request_context_middleware",
+      "apps_api_main_request_id",
+      "apps_api_main_runtime_storage_unconfigured",
+      "apps_api_main_safe_check",
+      "apps_api_main_unhandled_error_handler",
+      "apps_api_main_validate_bind_host",
+      "apps_api_main_validation_error_handler",
+      "exception",
+      "fastapi",
+      "jsonresponse",
+      "request",
+      "requestvalidationerror",
+      "starlettehttpexception",
+      "tests_api_test_error_handling",
+      "tests_api_test_error_handling_make_client",
+      "tests_api_test_error_handling_py_testclient",
+      "tests_api_test_error_handling_rationale_1",
+      "tests_api_test_error_handling_rationale_140",
+      "tests_api_test_error_handling_rationale_151",
+      "tests_api_test_error_handling_test_404_response_includes_request_id_header",
+      "tests_api_test_error_handling_test_500_returns_chinese_internal_error",
+      "tests_api_test_error_handling_test_contextvars_cleared_after_error",
+      "tests_api_test_error_handling_test_contextvars_cleared_after_request",
+      "tests_api_test_error_handling_test_custom_request_id_propagated_to_error_response",
+      "tests_api_test_error_handling_test_delete_health_ready_returns_405",
+      "tests_api_test_error_handling_test_get_missing_path_returns_chinese_404",
+      "tests_api_test_error_handling_test_http_exception_400_returns_chinese_envelope",
+      "tests_api_test_error_handling_test_options_missing_path_returns_chinese_404",
+      "tests_api_test_error_handling_test_post_health_live_returns_405_not_404",
+      "tests_api_test_error_handling_true",
+      "tests_unit_test_observability",
+      "tests_unit_test_observability_test_error_responses_include_request_id",
+      "tests_unit_test_observability_test_middleware_binds_structlog_contextvars",
+      "tests_unit_test_observability_test_request_context_middleware_accepts_supplied_ids",
+      "tests_unit_test_observability_test_request_context_middleware_generates_ids"
+    ],
+    "4": [
+      "eventdict",
+      "packages_backend_observability",
+      "packages_backend_observability_configure_logging",
+      "packages_backend_observability_rationale_1",
+      "packages_backend_observability_rationale_13",
+      "packages_security_redaction",
+      "packages_security_redaction_is_sensitive_key",
+      "packages_security_redaction_py_any",
+      "packages_security_redaction_rationale_1",
+      "packages_security_redaction_rationale_56",
+      "packages_security_redaction_redact",
+      "packages_security_redaction_redact_dict",
+      "packages_security_redaction_redact_value",
+      "packages_security_redaction_redaction_processor",
+      "tests_unit_test_redaction",
+      "tests_unit_test_redaction_integration",
+      "tests_unit_test_redaction_integration_capture_structlog_output",
+      "tests_unit_test_redaction_integration_py_stringio",
+      "tests_unit_test_redaction_integration_rationale_1",
+      "tests_unit_test_redaction_integration_test_api_key_is_redacted_in_log_output",
+      "tests_unit_test_redaction_integration_test_authorization_header_is_redacted",
+      "tests_unit_test_redaction_integration_test_list_of_sensitive_values_is_redacted",
+      "tests_unit_test_redaction_integration_test_nested_dict_with_sensitive_keys_is_redacted",
+      "tests_unit_test_redaction_integration_test_non_sensitive_data_passes_through_unchanged",
+      "tests_unit_test_redaction_integration_test_password_is_redacted_in_log_output",
+      "tests_unit_test_redaction_integration_test_token_and_cookie_are_redacted",
+      "tests_unit_test_redaction_test_redact_list",
+      "tests_unit_test_redaction_test_redact_nested_dict",
+      "tests_unit_test_redaction_test_redact_preserves_non_sensitive",
+      "tests_unit_test_redaction_test_redact_sensitive_keys",
+      "tests_web_test_web_redaction",
+      "tests_web_test_web_redaction_configure_web_style_logging",
+      "tests_web_test_web_redaction_py_stringio",
+      "tests_web_test_web_redaction_rationale_1",
+      "tests_web_test_web_redaction_rationale_16",
+      "tests_web_test_web_redaction_test_web_preserves_non_sensitive_data",
+      "tests_web_test_web_redaction_test_web_redacts_api_key_in_log_output",
+      "tests_web_test_web_redaction_test_web_redacts_cookie_and_csrf_in_log_output",
+      "tests_web_test_web_redaction_test_web_redacts_password_in_log_output"
+    ],
+    "5": [
+      "abc",
+      "apps_worker_scheduler",
+      "datetime",
+      "packages_backend_ports",
+      "packages_backend_ports_aiclientport",
+      "packages_backend_ports_aiclientport_generate",
+      "packages_backend_ports_auditport",
+      "packages_backend_ports_auditport_record",
+      "packages_backend_ports_calendarport",
+      "packages_backend_ports_calendarport_is_workday",
+      "packages_backend_ports_clockport",
+      "packages_backend_ports_clockport_now",
+      "packages_backend_ports_clockport_utc_now",
+      "packages_backend_ports_cryptoport",
+      "packages_backend_ports_cryptoport_decrypt",
+      "packages_backend_ports_cryptoport_encrypt",
+      "packages_backend_ports_databasesessionport",
+      "packages_backend_ports_databasesessionport_begin",
+      "packages_backend_ports_databasesessionport_close",
+      "packages_backend_ports_databasesessionport_commit",
+      "packages_backend_ports_databasesessionport_rollback",
+      "packages_backend_ports_redisport",
+      "packages_backend_ports_redisport_delete",
+      "packages_backend_ports_redisport_get",
+      "packages_backend_ports_redisport_set",
+      "packages_contracts_exports",
+      "packages_contracts_exports_exportconfirmrequest",
+      "packages_contracts_exports_exportlistresponse",
+      "packages_contracts_exports_exportrecord",
+      "packages_contracts_exports_exportrequest",
+      "packages_contracts_exports_missingcolumnwarning",
+      "packages_contracts_exports_py_basemodel",
+      "tests_fixtures_clock",
+      "tests_fixtures_clock_fixed_datetime"
+    ],
+    "6": [
+      "basesettings",
+      "packages_backend_bootstrap_config",
+      "packages_backend_bootstrap_config_settings",
+      "packages_backend_bootstrap_config_settings_validate_cookie_security",
+      "packages_backend_bootstrap_config_settings_validate_loopback_host",
+      "tests_test_config",
+      "tests_test_config_rationale_60",
+      "tests_test_config_test_allowed_hosts",
+      "tests_test_config_test_cookie_security_non_loopback",
+      "tests_test_config_test_cookie_security_production",
+      "tests_test_config_test_cookie_security_validation",
+      "tests_test_config_test_database_url",
+      "tests_test_config_test_environment_rejects_unknown_values",
+      "tests_test_config_test_jwt_settings",
+      "tests_test_config_test_redis_url",
+      "tests_test_config_test_settings_defaults",
+      "tests_unit_test_config_sensitivity",
+      "tests_unit_test_config_sensitivity_test_allowed_hosts_contains_localhost",
+      "tests_unit_test_config_sensitivity_test_cookie_security_development_loopback",
+      "tests_unit_test_config_sensitivity_test_cookie_security_non_loopback_rejected",
+      "tests_unit_test_config_sensitivity_test_cookie_security_production_requires_secure",
+      "tests_unit_test_config_sensitivity_test_database_url_direct",
+      "tests_unit_test_config_sensitivity_test_jwt_signing_key_is_empty_by_default",
+      "tests_unit_test_config_sensitivity_test_redis_url_direct",
+      "tests_unit_test_config_sensitivity_test_settings_allows_localhost",
+      "tests_unit_test_config_sensitivity_test_settings_defaults_use_loopback",
+      "tests_unit_test_config_sensitivity_test_settings_prohibits_non_loopback_host"
+    ],
+    "7": [
+      "declarativebase",
+      "packages_backend_database_migrations_env",
+      "packages_backend_database_migrations_env_get_database_url",
+      "packages_backend_database_migrations_env_rationale_1",
+      "packages_backend_database_migrations_env_run_migrations_offline",
+      "packages_backend_database_migrations_env_run_migrations_online",
+      "packages_backend_database_session",
+      "packages_backend_database_session_base",
+      "packages_backend_database_session_get_database_url",
+      "packages_backend_database_session_get_db_session",
+      "tests_unit_database_test_session_boundaries",
+      "tests_unit_database_test_session_boundaries_rationale_11",
+      "tests_unit_database_test_session_boundaries_rationale_17",
+      "tests_unit_database_test_session_boundaries_rationale_5",
+      "tests_unit_database_test_session_boundaries_test_get_db_session_commits_on_success",
+      "tests_unit_database_test_session_boundaries_test_get_db_session_returns_session",
+      "tests_unit_database_test_session_boundaries_test_get_db_session_rolls_back_on_exception",
+      "tests_unit_database_test_session_boundaries_test_session_factory_config",
+      "tests_unit_database_test_session_boundaries_test_sqlite_allowed_in_development_environment",
+      "tests_unit_database_test_session_boundaries_test_sqlite_allowed_in_test_environment",
+      "tests_unit_database_test_session_boundaries_test_sqlite_rejected_in_production_environment"
+    ],
+    "8": [
+      "packages_contracts_lesson_plans",
+      "packages_contracts_lesson_plans_dailyreflection",
+      "packages_contracts_lesson_plans_lessonplan",
+      "packages_contracts_lesson_plans_planarchiverequest",
+      "packages_contracts_lesson_plans_planauthor",
+      "packages_contracts_lesson_plans_planautosaverequest",
+      "packages_contracts_lesson_plans_plancontentv1",
+      "packages_contracts_lesson_plans_plancreaterequest",
+      "packages_contracts_lesson_plans_planlistresponse",
+      "packages_contracts_lesson_plans_planopenrequest",
+      "packages_contracts_lesson_plans_planresponse",
+      "packages_contracts_lesson_plans_planrestorerequest",
+      "packages_contracts_lesson_plans_plansaverequest",
+      "packages_contracts_lesson_plans_plansnapshot",
+      "packages_contracts_lesson_plans_plansoftwarning",
+      "packages_contracts_lesson_plans_planunarchiverequest",
+      "packages_contracts_lesson_plans_py_basemodel",
+      "packages_contracts_lesson_plans_snapshotlistresponse"
+    ],
+    "9": [
+      "apps_web_main_apiclient",
+      "apps_web_main_apiclient_init",
+      "apps_web_main_apiclient_request",
+      "apps_web_main_bffresponse",
+      "apps_web_main_main",
+      "apps_web_main_proxy_request",
+      "apps_web_main_py_any",
+      "apps_web_main_py_apps_web_main_97dc54",
+      "apps_web_main_register_web",
+      "apps_web_main_require_loopback",
+      "asyncbasetransport",
+      "tests_web_test_bff_proxy",
+      "tests_web_test_bff_proxy_py_monkeypatch",
+      "tests_web_test_bff_proxy_test_proxy_ignores_process_proxy_environment",
+      "tests_web_test_bff_proxy_test_proxy_preserves_auth_set_cookie_as_raw_headers",
+      "tests_web_test_bff_proxy_test_proxy_preserves_request_and_rebuilds_client_ip",
+      "tests_web_test_bff_proxy_test_proxy_strips_hop_by_hop_and_spoofed_source_headers"
+    ],
+    "10": [
+      "specify_scripts_bash_common",
+      "specify_scripts_bash_common_check_dir",
+      "specify_scripts_bash_common_check_file",
+      "specify_scripts_bash_common_find_specify_root",
+      "specify_scripts_bash_common_format_speckit_command",
+      "specify_scripts_bash_common_get_current_branch",
+      "specify_scripts_bash_common_get_feature_paths",
+      "specify_scripts_bash_common_get_invoke_separator",
+      "specify_scripts_bash_common_get_repo_root",
+      "specify_scripts_bash_common_has_jq",
+      "specify_scripts_bash_common_json_escape",
+      "specify_scripts_bash_common_persist_feature_json",
+      "specify_scripts_bash_common_read_feature_json_feature_directory",
+      "specify_scripts_bash_common_resolve_specify_init_dir",
+      "specify_scripts_bash_common_resolve_template",
+      "specify_scripts_bash_common_resolve_template_content",
+      "specify_scripts_bash_common_sh__entry"
+    ],
+    "11": [
+      "tests_api_test_health",
+      "tests_api_test_health_always_false",
+      "tests_api_test_health_always_true",
+      "tests_api_test_health_client_factory",
+      "tests_api_test_health_error_schema",
+      "tests_api_test_health_health_schema",
+      "tests_api_test_health_make_dependencies",
+      "tests_api_test_health_rationale_1",
+      "tests_api_test_health_test_live_response_has_no_extra_fields",
+      "tests_api_test_health_test_live_response_has_request_id",
+      "tests_api_test_health_test_live_returns_ok_with_empty_checks",
+      "tests_api_test_health_test_ready_response_has_no_extra_fields",
+      "tests_api_test_health_test_ready_response_has_request_id",
+      "tests_api_test_health_test_ready_returns_503_when_database_unavailable",
+      "tests_api_test_health_test_ready_returns_503_when_security_not_ready",
+      "tests_api_test_health_test_ready_returns_degraded_when_non_critical_fails",
+      "tests_api_test_health_test_ready_returns_ok_when_all_pass"
+    ],
+    "12": [
+      "packages_backend_database_migrations_versions_0000_foundation",
+      "packages_backend_database_migrations_versions_0000_foundation_downgrade",
+      "packages_backend_database_migrations_versions_0000_foundation_upgrade",
+      "tests_conftest",
+      "tests_conftest_block_external_network",
+      "tests_conftest_isolated_database_url",
+      "tests_conftest_native_psycopg_url",
+      "tests_conftest_py_monkeypatch",
+      "tests_database_config",
+      "tests_database_config_require_test_database_url",
+      "tests_migrations_test_alembic_migrations",
+      "tests_migrations_test_alembic_migrations_py_monkeypatch",
+      "tests_migrations_test_alembic_migrations_rationale_1",
+      "tests_migrations_test_alembic_migrations_test_alembic_can_run_downgrade",
+      "tests_migrations_test_alembic_migrations_test_alembic_can_run_upgrade",
+      "tests_migrations_test_alembic_migrations_test_alembic_revision_history_is_linear"
+    ],
+    "13": [
+      "packages_contracts_settings",
+      "packages_contracts_settings_agegroup",
+      "packages_contracts_settings_area",
+      "packages_contracts_settings_areacreate",
+      "packages_contracts_settings_areaupdate",
+      "packages_contracts_settings_class",
+      "packages_contracts_settings_classcreate",
+      "packages_contracts_settings_classteacher",
+      "packages_contracts_settings_classupdate",
+      "packages_contracts_settings_kindergarten",
+      "packages_contracts_settings_kindergartenupdate",
+      "packages_contracts_settings_py_basemodel",
+      "packages_contracts_settings_semester",
+      "packages_contracts_settings_semestercreate",
+      "packages_contracts_settings_semesterupdate"
+    ],
+    "14": [
+      "packages_contracts_prompts",
+      "packages_contracts_prompts_prompt",
+      "packages_contracts_prompts_promptcapability",
+      "packages_contracts_prompts_promptcreaterequest",
+      "packages_contracts_prompts_promptpublishrequest",
+      "packages_contracts_prompts_promptresultschema",
+      "packages_contracts_prompts_prompttestrequest",
+      "packages_contracts_prompts_prompttestrun",
+      "packages_contracts_prompts_promptupdaterequest",
+      "packages_contracts_prompts_promptvariable",
+      "packages_contracts_prompts_promptversion",
+      "packages_contracts_prompts_py_basemodel"
+    ],
+    "15": [
+      "packages_contracts_identity",
+      "packages_contracts_identity_changepasswordrequest",
+      "packages_contracts_identity_loginrequest",
+      "packages_contracts_identity_loginresponse",
+      "packages_contracts_identity_py_basemodel",
+      "packages_contracts_identity_role",
+      "packages_contracts_identity_tokenrefreshresponse",
+      "packages_contracts_identity_user",
+      "packages_contracts_identity_usercreate",
+      "packages_contracts_identity_userrole",
+      "packages_contracts_identity_userupdate"
+    ],
+    "16": [
+      "packages_contracts_models",
+      "packages_contracts_models_modelcapability",
+      "packages_contracts_models_modelprofile",
+      "packages_contracts_models_modelprofilecreaterequest",
+      "packages_contracts_models_modelprofileenablerequest",
+      "packages_contracts_models_modelprofilelistresponse",
+      "packages_contracts_models_modelprofileupdaterequest",
+      "packages_contracts_models_py_basemodel",
+      "packages_contracts_models_py_strenum"
+    ],
+    "17": [
+      "packages_contracts_audit",
+      "packages_contracts_audit_auditevent",
+      "packages_contracts_audit_auditeventtype",
+      "packages_contracts_audit_auditlistresponse",
+      "packages_contracts_audit_auditqueryrequest",
+      "packages_contracts_audit_py_basemodel",
+      "packages_contracts_audit_py_strenum"
+    ],
+    "18": [
+      "packages_backend_security_redaction",
+      "packages_backend_security_redaction_is_sensitive_key",
+      "packages_backend_security_redaction_py_any",
+      "packages_backend_security_redaction_redact",
+      "packages_backend_security_redaction_redact_dict",
+      "packages_backend_security_redaction_redact_value"
+    ],
+    "19": [
+      "specify_scripts_bash_create_new_feature",
+      "specify_scripts_bash_create_new_feature_clean_branch_name",
+      "specify_scripts_bash_create_new_feature_generate_branch_name",
+      "specify_scripts_bash_create_new_feature_get_highest_from_specs",
+      "specify_scripts_bash_create_new_feature_sh__entry"
+    ],
+    "20": [
+      "tests_migrations_test_alembic_bootstrap",
+      "tests_migrations_test_alembic_bootstrap_test_alembic_config_exists",
+      "tests_migrations_test_alembic_bootstrap_test_alembic_config_is_valid",
+      "tests_migrations_test_alembic_bootstrap_test_alembic_has_env_py",
+      "tests_migrations_test_alembic_bootstrap_test_alembic_script_directory_exists"
+    ],
+    "21": [
+      "tests_architecture_test_dependency_boundaries",
+      "tests_architecture_test_dependency_boundaries_test_bff_client_configured_with_api_base_url",
+      "tests_architecture_test_dependency_boundaries_test_web_does_not_import_orm_models",
+      "tests_architecture_test_dependency_boundaries_test_web_uses_api_client"
+    ],
+    "22": [
+      "tests_fixtures_ai",
+      "tests_fixtures_ai_mock_ai_client",
+      "tests_fixtures_ai_mockaiclient",
+      "tests_fixtures_ai_mockaiclient_init"
+    ],
+    "23": [
+      "tests_fixtures_calendar",
+      "tests_fixtures_calendar_mock_calendar",
+      "tests_fixtures_calendar_mockcalendar",
+      "tests_fixtures_calendar_mockcalendar_init"
+    ],
+    "24": [
+      "tests_fixtures_redis",
+      "tests_fixtures_redis_mock_redis_client",
+      "tests_fixtures_redis_mockredisclient",
+      "tests_fixtures_redis_mockredisclient_init"
+    ],
+    "25": [
+      "main",
+      "main_main"
+    ],
+    "26": [
+      "scripts_graphify_update",
+      "scripts_graphify_update_rationale_1"
+    ],
+    "27": [
+      "scripts_validate_openapi",
+      "scripts_validate_openapi_main"
+    ],
+    "28": [
+      "specify_scripts_bash_check_prerequisites",
+      "specify_scripts_bash_check_prerequisites_sh__entry"
+    ],
+    "29": [
+      "specify_scripts_bash_setup_plan",
+      "specify_scripts_bash_setup_plan_sh__entry"
+    ],
+    "30": [
+      "specify_scripts_bash_setup_tasks",
+      "specify_scripts_bash_setup_tasks_sh__entry"
+    ],
+    "31": [
+      "apps_api_init"
+    ],
+    "32": [
+      "apps_api_main_py_apps_api_main_803736"
+    ],
+    "33": [
+      "apps_api_routers_init"
+    ],
+    "34": [
+      "apps_web_components_init"
+    ],
+    "35": [
+      "apps_web_init"
+    ],
+    "36": [
+      "apps_web_main_py_apps_web_main_3d2275"
+    ],
+    "37": [
+      "apps_web_pages_init"
+    ],
+    "38": [
+      "apps_worker_init"
+    ],
+    "39": [
+      "apps_worker_main_py_apps_worker_main_0dfd50"
+    ],
+    "40": [
+      "packages_backend_audit_init"
+    ],
+    "41": [
+      "packages_backend_bootstrap_init"
+    ],
+    "42": [
+      "packages_backend_database_init"
+    ],
+    "43": [
+      "packages_backend_database_migrations_init"
+    ],
+    "44": [
+      "packages_backend_exports_init"
+    ],
+    "45": [
+      "packages_backend_identity_init"
+    ],
+    "46": [
+      "packages_backend_init"
+    ],
+    "47": [
+      "packages_backend_integrations_ai_init"
+    ],
+    "48": [
+      "packages_backend_integrations_calendar_init"
+    ],
+    "49": [
+      "packages_backend_integrations_crypto_init"
+    ],
+    "50": [
+      "packages_backend_integrations_files_init"
+    ],
+    "51": [
+      "packages_backend_integrations_init"
+    ],
+    "52": [
+      "packages_backend_jobs_init"
+    ],
+    "53": [
+      "packages_backend_lesson_plans_init"
+    ],
+    "54": [
+      "packages_backend_prompts_init"
+    ],
+    "55": [
+      "packages_backend_settings_init"
+    ],
+    "56": [
+      "packages_contracts_init"
+    ],
+    "57": [
+      "packages_security_init"
+    ],
+    "58": [
+      "pkg_child_manager"
+    ],
+    "59": [
+      "tests_api_init"
+    ],
+    "60": [
+      "tests_architecture_init"
+    ],
+    "61": [
+      "tests_contract_init"
+    ],
+    "62": [
+      "tests_fixtures_init"
+    ],
+    "63": [
+      "tests_init"
+    ],
+    "64": [
+      "tests_migrations_init"
+    ],
+    "65": [
+      "tests_repository_init"
+    ],
+    "66": [
+      "tests_unit_init"
+    ],
+    "67": [
+      "tests_web_init"
+    ],
+    "68": [
+      "tests_word_init"
+    ],
+    "69": [
+      "tests_worker_init"
+    ]
+  },
+  "cohesion": {
+    "0": 0.05576441102756892,
+    "1": 0.05764411027568922,
+    "2": 0.0700354609929078,
+    "3": 0.10338164251207729,
+    "4": 0.09716599190283401,
+    "5": 0.08377896613190731,
+    "6": 0.1339031339031339,
+    "7": 0.12857142857142856,
+    "8": 0.20915032679738563,
+    "9": 0.16911764705882354,
+    "10": 0.1323529411764706,
+    "11": 0.3014705882352941,
+    "12": 0.16666666666666666,
+    "13": 0.24761904761904763,
+    "14": 0.30303030303030304,
+    "15": 0.32727272727272727,
+    "16": 0.3333333333333333,
+    "17": 0.38095238095238093,
+    "18": 0.7333333333333333,
+    "19": 0.4,
+    "20": 0.4,
+    "21": 0.5,
+    "22": 0.6666666666666666,
+    "23": 0.6666666666666666,
+    "24": 0.6666666666666666,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0
+  },
+  "gods": [
+    {
+      "id": "packages_backend_bootstrap_config_settings",
+      "label": "Settings",
+      "degree": 25
+    },
+    {
+      "id": "apps_api_main_create_app",
+      "label": "create_app()",
+      "degree": 20
+    },
+    {
+      "id": "apps_api_main_healthdependencies",
+      "label": "HealthDependencies",
+      "degree": 17
+    },
+    {
+      "id": "tests_contract_test_openapi_document_load_spec",
+      "label": "_load_spec()",
+      "degree": 13
+    },
+    {
+      "id": "tests_contract_test_openapi_document_runtime_schemas",
+      "label": "_runtime_schemas()",
+      "degree": 13
+    },
+    {
+      "id": "apps_api_main_request_context_middleware",
+      "label": "_request_context_middleware()",
+      "degree": 12
+    },
+    {
+      "id": "apps_worker_scheduler_scheduler",
+      "label": "Scheduler",
+      "degree": 12
+    },
+    {
+      "id": "packages_security_redaction_redaction_processor",
+      "label": "redaction_processor()",
+      "degree": 12
+    },
+    {
+      "id": "tests_api_test_health_make_dependencies",
+      "label": "_make_dependencies()",
+      "degree": 12
+    },
+    {
+      "id": "tests_api_test_error_handling_make_client",
+      "label": "_make_client()",
+      "degree": 11
+    }
+  ],
+  "surprises": [
+    {
+      "source": "HealthDependencies",
+      "target": "ErrorResponse",
+      "source_files": [
+        "apps/api/main.py",
+        "packages/contracts/common.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "HealthDependencies",
+      "target": "HealthResponse",
+      "source_files": [
+        "apps/api/main.py",
+        "packages/contracts/common.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "create_app()",
+      "target": "HealthResponse",
+      "source_files": [
+        "apps/api/main.py",
+        "packages/contracts/common.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "_make_dependencies()",
+      "target": "HealthDependencies",
+      "source_files": [
+        "tests/api/test_health.py",
+        "apps/api/main.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "mock_health_dependencies()",
+      "target": "HealthDependencies",
+      "source_files": [
+        "tests/test_health_endpoints.py",
+        "apps/api/main.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; peripheral node `mock_health_dependencies()` unexpectedly reaches hub `HealthDependencies`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `configure_logging()` connect `Community 4` to `Community 2`, `Community 3`?",
+      "why": "High betweenness centrality (0.106) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `create_app()` connect `Community 3` to `Community 0`, `Community 1`, `Community 11`?",
+      "why": "High betweenness centrality (0.092) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `HealthDependencies` connect `Community 0` to `Community 11`, `Community 1`, `Community 3`?",
+      "why": "High betweenness centrality (0.088) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 6 inferred relationships involving `create_app()` (e.g. with `_http_exception_handler()` and `_live_handler()`) actually correct?",
+      "why": "`create_app()` has 6 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `HealthDependencies` (e.g. with `ErrorResponse` and `HealthResponse`) actually correct?",
+      "why": "`HealthDependencies` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?",
+      "why": "6 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.05576441102756892 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
