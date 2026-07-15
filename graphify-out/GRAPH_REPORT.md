@@ -1,16 +1,15 @@
-# Graph Report - child-manager  (2026-07-14)
+# Graph Report - .  (2026-07-15)
 
 ## Corpus Check
-- 140 files · ~80,170 words
-- Verdict: corpus is large enough that graph structure adds value.
+- cluster-only mode — file stats not available
 
 ## Summary
-- 2170 nodes · 1794 edges · 719 communities (150 shown, 569 thin omitted)
+- 2175 nodes · 1808 edges · 719 communities (150 shown, 569 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.69)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c8b2003d`
+- Built from commit: `41772ab0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -22,7 +21,7 @@
 - Child Manager 2026-07-14 编码前审查解决方案
 - Tasks: 首期一日活动计划完整闭环
 - Phase 1 数据模型：首期一日活动计划完整闭环
-- 浏览器验收路径
+- AI 生成与提示词规则
 - Phase 0 研究：首期一日活动计划完整闭环
 - observability.py
 - README.md
@@ -32,7 +31,7 @@
 - proxy_request
 - Functional Requirements
 - test_foundation.py
-- M1 共享父 Issue #1
+- 2026-07-14 仓库与分支状态
 - Tasks: [FEATURE NAME]
 - SKILL.md
 - Child Manager 幼儿园教育管理系统
@@ -146,7 +145,7 @@
 - 15. 生产部署延后边界
 - 4. 架构总览
 - 7. API 与契约
-- 3.4 加密与密钥
+- 3.5 API、任务状态与幂等
 - 3.6 测试与可访问性
 - 3.8 编辑与 AI 采用
 - 15. 安全、隐私与审计
@@ -721,10 +720,10 @@
 4. `ContractModel` - 21 edges
 5. `Child Manager Agent 开发规则` - 20 edges
 6. `Child Manager PostgreSQL 数据库 Schema` - 19 edges
-7. `Child Manager 产品与工程路线图` - 18 edges
-8. `Tasks: 首期一日活动计划完整闭环` - 17 edges
-9. `build_health_dependencies()` - 16 edges
-10. `create_app()` - 15 edges
+7. `create_app()` - 18 edges
+8. `Child Manager 产品与工程路线图` - 18 edges
+9. `Tasks: 首期一日活动计划完整闭环` - 17 edges
+10. `build_health_dependencies()` - 16 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `CI PostgreSQL 服务` --semantically_similar_to--> `PostgreSQL 本地服务`  [INFERRED] [semantically similar]
@@ -768,7 +767,7 @@
 
 ### Community 0 - "test_health.py"
 Cohesion: 0.06
-Nodes (50): create_app(), _error_response(), UUID, FastAPI 应用装配、统一异常转换与健康端点。, _request_id(), _safe_check(), _ai_unconfigured(), build_health_dependencies() (+42 more)
+Nodes (55): create_app(), _error_response(), UUID, FastAPI 应用装配、统一异常转换与健康端点。, _request_id(), _safe_check(), _ai_unconfigured(), build_health_dependencies() (+47 more)
 
 ### Community 1 - "Child Manager 产品与工程路线图"
 Cohesion: 0.04
@@ -811,23 +810,23 @@ Cohesion: 0.06
 Nodes (35): 10. 一日活动计划业务不变量, 11.1 模型访问, 11.2 提示词管理, 11.3 生成行为, 11. AI 与提示词规则, 12. Word 模板与导出, 13. 安全与隐私硬性规则, 14. 审计、日志与错误处理 (+27 more)
 
 ### Community 12 - "ContractModel"
-Cohesion: 0.11
-Nodes (23): AuditEventReference, canonical_request_fingerprint(), ContractModel, ErrorResponse, FieldError, _normalize_scalar(), Page, Pagination (+15 more)
+Cohesion: 0.12
+Nodes (22): AuditEventReference, canonical_request_fingerprint(), ContractModel, ErrorResponse, _normalize_scalar(), Page, Pagination, BaseModel (+14 more)
 
 ### Community 13 - "Child Manager 项目上下文"
 Cohesion: 0.06
 Nodes (31): 10. 当前共同下一步, 11.1 文档职责与工具基线, 11. 高风险点, 12. 系统架构基线, 13. 验证基线, 14. CONTEXT 更新规则, 1. 本文档的用途, 2. 固定阅读顺序 (+23 more)
 
 ### Community 14 - "proxy_request"
-Cohesion: 0.11
-Nodes (23): BffResponse, proxy_request(), NiceGUI 服务端 BFF 客户端的公开接缝。, 按固定 allowlist 转发请求，并保留响应原始多值头。, NiceGUI 页面与同源 API BFF 装配。, register_web(), main(), 仅绑定回环地址的 NiceGUI Web 入口。 (+15 more)
+Cohesion: 0.12
+Nodes (22): BffResponse, proxy_request(), NiceGUI 服务端 BFF 客户端的公开接缝。, 按固定 allowlist 转发请求，并保留响应原始多值头。, NiceGUI 页面与同源 API BFF 装配。, register_web(), main(), 仅绑定回环地址的 NiceGUI Web 入口。 (+14 more)
 
 ### Community 15 - "Functional Requirements"
 Cohesion: 0.07
 Nodes (29): AI 模型与提示词, Assumptions, Clarifications, Dependencies, Edge Cases, Feature Specification: 首期一日活动计划完整闭环, Functional Requirements, Key Entities (+21 more)
 
 ### Community 16 - "test_foundation.py"
-Cohesion: 0.12
+Cohesion: 0.11
 Nodes (21): Actor, load_job(), Broker, 只接收 job_id 的 M1 Dramatiq actor。, 验证最小消息；后续里程碑将从 PostgreSQL 加载权威上下文。, register_actors(), build_redis_broker(), build_test_broker() (+13 more)
 
 ### Community 18 - "Tasks: [FEATURE NAME]"
@@ -839,8 +838,8 @@ Cohesion: 0.08
 Nodes (25): 1. Initialize Analysis Context, 2. Load Artifacts (Progressive Disclosure), 3. Build Semantic Models, 4. Detection Passes (Token-Efficient Analysis), 5. Severity Assignment, 6. Produce Compact Analysis Report, 7. Provide Next Actions, 8. Offer Remediation (+17 more)
 
 ### Community 20 - "Child Manager 幼儿园教育管理系统"
-Cohesion: 0.09
-Nodes (23): AI 提示词管理子系统, AI 生成规则, Child Manager 幼儿园教育管理系统, Word 导出, 一键生成与分栏目生成, 分支协作规范, 后续子系统, 基本规则 (+15 more)
+Cohesion: 0.08
+Nodes (25): AI 提示词管理子系统, AI 生成规则, Child Manager 幼儿园教育管理系统, Docker 镜像构建延后到 M9 并由新部署 ADR 定义, M1 至 M8 每次推送门禁：依赖锁定、Ruff、Pyright、Pytest, Word 导出, 一键生成与分栏目生成, 分支协作规范 (+17 more)
 
 ### Community 21 - "ADR-0001：只交付 Cloud 版本，首期单园运行并保留园所隔离边界"
 Cohesion: 0.10
@@ -1262,7 +1261,7 @@ Nodes (3): 4.1 逻辑视图, 4.2 运行单元, 4. 架构总览
 Cohesion: 0.67
 Nodes (3): 7.1 API 原则, 7.2 跨进程任务契约, 7. API 与契约
 
-### Community 132 - "3.4 加密与密钥"
+### Community 132 - "3.5 API、任务状态与幂等"
 Cohesion: 0.67
 Nodes (3): 3.5 API、任务状态与幂等, Q12：任务状态机缺少 `expired`, Q13：幂等键定义
 
@@ -1283,7 +1282,7 @@ Cohesion: 0.67
 Nodes (3): 4.1 首期目标, 4.2 成功标准, 4. 产品目标
 
 ## Knowledge Gaps
-- **1405 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1400 more)
+- **1403 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1398 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **569 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -1300,15 +1299,15 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Child Manager 数据模型设计` connect `Child Manager 数据模型设计` to `15. 数据快照边界`, `22. 后续扩展边界`, `2. 设计来源与旧系统取舍`, `README.md`, `5. 园所与身份模型`, `6. 教学设置模型`, `8. 提示词模型`, `21. 测试与验收`, `11. 后台任务与 AI 结果`, `16. 外键与删除行为`, `4. 模型总览`, `7. AI 模型档案`, `3. 总体建模原则`, `9. 一日活动计划模型`?**
   _High betweenness centrality (0.049) - this node is a cross-community bridge._
-- **Why does `Child Manager 文档交叉审计合并结论` connect `Child Manager 文档交叉审计合并结论` to `4. 项目文档更新矩阵`, `README.md`, `3. 二十六项问题的最终结论`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Why does `Child Manager PostgreSQL 数据库 Schema` connect `Child Manager PostgreSQL 数据库 Schema` to `README.md`, `3. PostgreSQL 物理约定`, `5. 园所与身份 Schema`, `6. 教学设置 Schema`, `8. 提示词 Schema`, `9. 一日活动计划 Schema`, `10. 后台任务与 AI 结果 Schema`, `12. 系统支撑 Schema`, `2. 事实来源与旧仓库取舍`, `7. AI 模型档案 Schema`?**
+  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+- **Why does `Child Manager 文档交叉审计合并结论` connect `Child Manager 文档交叉审计合并结论` to `4. 项目文档更新矩阵`, `README.md`, `3. 二十六项问题的最终结论`?**
   _High betweenness centrality (0.032) - this node is a cross-community bridge._
 - **Are the 7 inferred relationships involving `ContractModel` (e.g. with `AuditEventReference` and `ExportReference`) actually correct?**
   _`ContractModel` has 7 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
-  _1405 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1403 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `test_health.py` be split into smaller, more focused modules?**
-  _Cohesion score 0.06144393241167435 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
 - **Should `Child Manager 产品与工程路线图` be split into smaller, more focused modules?**
   _Cohesion score 0.04081632653061224 - nodes in this community are weakly interconnected._
