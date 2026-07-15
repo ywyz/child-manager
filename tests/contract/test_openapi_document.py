@@ -185,6 +185,54 @@ def test_runtime_health_schema_present() -> None:
     assert "checks" in props
 
 
+def test_runtime_openapi_is_valid() -> None:
+    """运行时 OpenAPI 必须通过规范校验，无悬空引用。"""
+    from openapi_spec_validator import validate_spec
+
+    async def _ok() -> bool:
+        return True
+
+    deps = HealthDependencies(
+        database=_ok,
+        redis=_ok,
+        ai=_ok,
+        calendar=_ok,
+        template=_ok,
+        export_storage=_ok,
+        security_ready=True,
+    )
+    app = create_app(dependencies=deps)
+    client = TestClient(app)
+    resp = client.get("/openapi.json")
+    assert resp.status_code == 200
+    validate_spec(resp.json())
+
+
+def test_runtime_health_schema_status_is_enum() -> None:
+    """运行时 Health status 必须是枚举，不是任意字符串。"""
+    schemas = _runtime_schemas()
+    health = schemas["Health"]
+    props = health["properties"]
+    status_prop = props["status"]
+    assert "enum" in status_prop
+    assert set(status_prop["enum"]) == {"ok", "degraded", "unavailable"}
+
+
+def test_runtime_health_schema_checks_value_is_enum() -> None:
+    """运行时 Health checks 值必须是枚举。"""
+    schemas = _runtime_schemas()
+    health = schemas["Health"]
+    checks_prop = health["properties"]["checks"]
+    value_schema = checks_prop.get("additionalProperties", {})
+    assert "enum" in value_schema
+    assert set(value_schema["enum"]) == {
+        "ok",
+        "degraded",
+        "unavailable",
+        "not_required",
+    }
+
+
 def test_runtime_unavailable_error_has_two_codes() -> None:
     """运行时 UnavailableError 必须恰好是两个稳定 503 code。"""
     schemas = _runtime_schemas()

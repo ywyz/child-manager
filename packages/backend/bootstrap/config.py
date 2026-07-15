@@ -1,7 +1,10 @@
 from ipaddress import ip_address
+from typing import Literal
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+Environment = Literal["production", "development", "test"]
 
 
 class Settings(BaseSettings):
@@ -10,7 +13,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    environment: str = "production"
+    environment: Environment = "production"
     api_host: str = "127.0.0.1"
     api_port: int = 28000
     web_host: str = "127.0.0.1"

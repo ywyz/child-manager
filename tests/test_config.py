@@ -54,3 +54,14 @@ def test_cookie_security_non_loopback():
         raise AssertionError("应该抛出 ValueError")
     except ValueError:
         pass
+
+
+def test_environment_rejects_unknown_values():
+    """environment 必须拒绝非 production/development/test 的值。"""
+    from pydantic import ValidationError
+
+    try:
+        Settings(environment="staging")  # type: ignore[arg-type]
+        raise AssertionError("应该抛出 ValidationError")
+    except ValidationError:
+        pass

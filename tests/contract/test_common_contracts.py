@@ -6,7 +6,6 @@ from pydantic import ValidationError
 from packages.contracts.common import (
     ErrorResponse,
     FieldError,
-    HealthCheckResult,
     HealthResponse,
     PaginatedResponse,
     RequestContext,
@@ -79,9 +78,22 @@ def test_request_context_validation() -> None:
     assert str(ctx.request_id) == "0198a7b0-1234-7890-abcd-ef0123456789"
 
 
-def test_health_check_result_validation() -> None:
-    result = HealthCheckResult(name="database", status="healthy", message="连接正常")
-    assert result.status in ["healthy", "degraded", "unhealthy"]
+def test_health_response_status_enum() -> None:
+    """HealthResponse.status 必须是 ok/degraded/unavailable 之一。"""
+    HealthResponse(status="ok", checks={})
+    HealthResponse(status="degraded", checks={"db": "unavailable"})
+    with pytest.raises(ValidationError):
+        HealthResponse(status="healthy", checks={})  # type: ignore[arg-type]
+
+
+def test_health_response_checks_value_enum() -> None:
+    """HealthResponse.checks 值必须是合法枚举。"""
+    HealthResponse(status="ok", checks={"db": "ok", "redis": "not_required"})
+    with pytest.raises(ValidationError):
+        HealthResponse(
+            status="ok",
+            checks={"db": "healthy"},  # type: ignore[arg-type]
+        )
 
 
 def test_health_response_validation() -> None:
@@ -181,3 +193,22 @@ def test_health_response_rejects_extra_fields() -> None:
             checks={},
             timestamp="2026-01-01T00:00:00Z",  # type: ignore[arg-type]
         )
+
+
+def test_web_does_not_import_backend() -> None:
+    """Web 不得导入 packages.backend（T019 依赖方向）。"""
+    import subprocess
+
+    result = subprocess.run(
+        [
+            "rg",
+            "--glob",
+            "apps/web/**/*.py",
+            "^\\s*(from|import)\\s+packages\\.backend",
+            ".",
+        ],
+        capture_output=True,
+        text=True,
+        cwd="/home/admin/code/manager/trae/child-manager",
+    )
+    assert result.returncode != 0, f"Web 模块违规导入 packages.backend:\n{result.stdout}"

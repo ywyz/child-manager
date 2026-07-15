@@ -1,6 +1,6 @@
 import hashlib
 import json
-from typing import Any, TypeVar
+from typing import Any, Literal, TypeVar
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -54,17 +54,13 @@ class RequestContext(BaseModel):
     user_id: UUID | None = Field(None, description="用户ID")
 
 
-class HealthCheckResult(BaseModel):
-    name: str = Field(..., description="检查项名称")
-    status: str = Field(..., description="状态: healthy/degraded/unhealthy")
-    message: str | None = Field(None, description="消息")
-
-
 class HealthResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    status: str = Field(..., description="整体状态")
-    checks: dict[str, str] = Field(..., description="检查项列表")
+    status: Literal["ok", "degraded", "unavailable"] = Field(..., description="整体状态")
+    checks: dict[str, Literal["ok", "degraded", "unavailable", "not_required"]] = Field(
+        ..., description="检查项列表"
+    )
 
 
 def canonical_fingerprint(

@@ -1,16 +1,32 @@
 import argparse
+import logging
 from dataclasses import dataclass
 from ipaddress import ip_address
 from typing import Any
 from urllib.parse import SplitResult, urlsplit
 
 import httpx
+import structlog
 from fastapi import Request, Response
 from nicegui import app, ui
 
-from packages.backend.observability import configure_logging
-
-configure_logging()
+# Web 不能导入 packages.backend；直接配置 structlog。
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.stdlib.filter_by_level,
+        structlog.stdlib.add_logger_name,
+        structlog.stdlib.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.dev.ConsoleRenderer(),
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=structlog.stdlib.BoundLogger,
+    cache_logger_on_first_use=True,
+)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 _REQUEST_HEADER_ALLOWLIST = {
     b"accept",

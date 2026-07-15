@@ -158,13 +158,16 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
         version=application.version,
         routes=application.routes,
     )
-    error_schema = ErrorResponse.model_json_schema(
-        ref_template="#/components/schemas/$defs/{model}"
-    )
-    error_defs = error_schema.pop("$defs", {})
-    health_schema = HealthResponse.model_json_schema(
-        ref_template="#/components/schemas/$defs/{model}"
-    )
+
+    # 从公共模型生成 schema，提取 $defs 合并到顶层
+    all_defs: dict[str, object] = {}
+
+    error_schema = ErrorResponse.model_json_schema(ref_template="#/components/schemas/{model}")
+    all_defs.update(error_schema.pop("$defs", {}))
+
+    health_schema = HealthResponse.model_json_schema(ref_template="#/components/schemas/{model}")
+    all_defs.update(health_schema.pop("$defs", {}))
+
     unavailable_schema: dict[str, object] = {
         "type": "object",
         "additionalProperties": False,
@@ -182,14 +185,16 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
             "field_errors": {
                 "type": "array",
                 "maxItems": 0,
-                "items": {"$ref": "#/components/schemas/$defs/FieldError"},
+                "items": {"$ref": "#/components/schemas/FieldError"},
             },
         },
     }
+
     schemas: dict[str, object] = {
-        **error_defs,
+        **all_defs,
         "Error": error_schema,
         "Health": health_schema,
+        "HealthResponse": health_schema,
         "UnavailableError": unavailable_schema,
     }
     openapi_schema["components"] = {
