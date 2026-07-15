@@ -7,6 +7,7 @@ from uuid import UUID
 
 import pytest
 import structlog
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from apps.api.app import create_app
@@ -73,6 +74,70 @@ def test_global_security_failure_returns_configuration_503() -> None:
 
     assert response.status_code == 503
     assert response.json()["code"] == "configuration.unavailable"
+
+
+def test_http_exception_does_not_expose_internal_detail() -> None:
+    application = create_app(dependencies())
+
+    async def fail() -> None:
+        raise HTTPException(status_code=409, detail="internal-diagnostic-must-not-leak")
+
+    application.add_api_route("/test/http-error", fail)
+
+    response = TestClient(application).get("/test/http-error")
+
+    assert response.status_code == 409
+    assert response.json() == {
+        "code": "request.http_error",
+        "message": "请求处理失败，请稍后重试。",
+        "request_id": response.headers["X-Request-ID"],
+        "field_errors": [],
+    }
+    assert "internal-diagnostic-must-not-leak" not in response.text
+
+
+def test_framework_http_exception_uses_error_response() -> None:
+    response = TestClient(create_app(dependencies())).get("/missing-resource")
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "code": "request.http_error",
+        "message": "请求处理失败，请稍后重试。",
+        "request_id": response.headers["X-Request-ID"],
+        "field_errors": [],
+    }
+
+
+def test_unhandled_exception_returns_redacted_error_response() -> None:
+    application = create_app(dependencies())
+
+    async def fail() -> None:
+        raise RuntimeError("internal-diagnostic-must-not-leak")
+
+    application.add_api_route("/test/unhandled-error", fail)
+
+    with structlog.testing.capture_logs() as captured:
+        response = TestClient(application, raise_server_exceptions=False).get(
+            "/test/unhandled-error"
+        )
+
+    assert response.status_code == 500
+    assert response.headers["content-type"] == "application/json"
+    assert response.json() == {
+        "code": "server.internal_error",
+        "message": "服务暂时不可用，请稍后重试。",
+        "request_id": response.headers["X-Request-ID"],
+        "field_errors": [],
+    }
+    assert captured == [
+        {
+            "error_type": "RuntimeError",
+            "event": "unhandled_exception",
+            "log_level": "error",
+        }
+    ]
+    assert "internal-diagnostic-must-not-leak" not in response.text
+    assert "internal-diagnostic-must-not-leak" not in repr(captured)
 
 
 @pytest.mark.parametrize(

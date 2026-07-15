@@ -4,9 +4,10 @@ from collections.abc import Awaitable, Callable
 from uuid import UUID
 
 import structlog
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException
 
 from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from apps.api.middleware import RequestContextMiddleware
@@ -25,12 +26,17 @@ def _request_id(request: Request) -> UUID:
 
 
 def _error_response(request: Request, *, status_code: int, code: str, message: str) -> JSONResponse:
+    request_id = _request_id(request)
     payload = ErrorResponse(
         code=code,
         message=message,
-        request_id=_request_id(request),
+        request_id=request_id,
     )
-    return JSONResponse(status_code=status_code, content=payload.model_dump(mode="json"))
+    return JSONResponse(
+        status_code=status_code,
+        content=payload.model_dump(mode="json"),
+        headers={"X-Request-ID": str(request_id)},
+    )
 
 
 async def _safe_check(name: str, check: Callable[[], Awaitable[bool]]) -> bool:
@@ -108,7 +114,17 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
             request,
             status_code=exc.status_code,
             code="request.http_error",
-            message=str(exc.detail),
+            message="请求处理失败，请稍后重试。",
+        )
+
+    @application.exception_handler(Exception)
+    async def unhandled_error(request: Request, exc: Exception) -> JSONResponse:
+        LOGGER.error("unhandled_exception", error_type=type(exc).__name__)
+        return _error_response(
+            request,
+            status_code=500,
+            code="server.internal_error",
+            message="服务暂时不可用，请稍后重试。",
         )
 
     return application
