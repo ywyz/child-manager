@@ -236,7 +236,11 @@ git commit -m "docs: sync specifications from main"
 - Ruff 格式与静态检查
 - Pyright 类型检查
 - Pytest 自动化测试
-- Docker 镜像构建
+
+Docker 镜像构建不属于当前 M1～M8 功能阶段的每次推送门禁。根据
+[ADR-0009](docs/ADR/ADR-0009-defer-production-deployment-until-feature-complete.md)，应在首期功能
+验收完成并进入 M9 生产部署复审后，由新的部署 ADR 明确镜像边界和构建门禁，再创建相应
+Dockerfile 与 CI 检查。
 
 首期优先适配桌面浏览器和平板，保证教案表格编辑和 Word 预览体验。手机端只保证登录、浏览和简单修改，不承诺完整排版编辑体验。
 
