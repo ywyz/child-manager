@@ -286,13 +286,29 @@ async def _validation_error_handler(request: Request, exc: RequestValidationErro
     return JSONResponse(status_code=422, content=payload)
 
 
+async def _not_found_handler(request: Request) -> JSONResponse:
+    response = _error_response(
+        request,
+        status_code=404,
+        code="resource.not_found",
+        message="请求的资源不存在。",
+    )
+    response.headers["X-Request-ID"] = _request_id(request)
+    return response
+
+
 async def _http_error_handler(request: Request, exc: HTTPException) -> JSONResponse:
-    return _error_response(
+    is_404 = exc.status_code == 404
+    code = "resource.not_found" if is_404 else "request.http_error"
+    message = "请求的资源不存在。" if is_404 else "请求处理失败。"
+    response = _error_response(
         request,
         status_code=exc.status_code,
-        code="request.http_error",
-        message="请求处理失败。",
+        code=code,
+        message=message,
     )
+    response.headers["X-Request-ID"] = _request_id(request)
+    return response
 
 
 async def _unhandled_error_handler(request: Request, exc: Exception) -> JSONResponse:
@@ -301,12 +317,14 @@ async def _unhandled_error_handler(request: Request, exc: Exception) -> JSONResp
         path=str(request.url.path),
         error_type=type(exc).__name__,
     )
-    return _error_response(
+    response = _error_response(
         request,
         status_code=500,
         code="server.internal_error",
         message="服务器内部错误,请稍后重试。",
     )
+    response.headers["X-Request-ID"] = _request_id(request)
+    return response
 
 
 def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
@@ -321,6 +339,15 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
         return await _ready_handler(request, health)
 
     application.get("/health/ready")(ready_endpoint)
+
+    @application.api_route(
+        "/{full_path:path}",
+        methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+        include_in_schema=False,
+    )
+    async def _catch_all(request: Request) -> JSONResponse:
+        return await _not_found_handler(request)
+
     application.exception_handler(RequestValidationError)(_validation_error_handler)
     application.exception_handler(HTTPException)(_http_error_handler)
     application.exception_handler(Exception)(_unhandled_error_handler)

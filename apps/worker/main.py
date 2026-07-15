@@ -1,20 +1,35 @@
 import argparse
 import os
-from threading import Event
+from threading import Event, Thread
 
 import dramatiq
 from dramatiq import Worker
 from dramatiq.broker import Broker
 
 from apps.worker.broker import build_redis_broker
+from apps.worker.scheduler import Scheduler
 
 
-def serve(broker: Broker, *, threads: int, stop_event: Event | None = None) -> None:
+def serve(
+    broker: Broker,
+    *,
+    threads: int,
+    stop_event: Event | None = None,
+) -> None:
     dramatiq.set_broker(broker)
     __import__("apps.worker.actors")
 
     worker = Worker(broker, worker_threads=threads)
     worker.start()
+
+    scheduler = Scheduler()
+    scheduler_thread = Thread(
+        target=scheduler.run,
+        args=(stop_event or Event(),),
+    )
+    scheduler_thread.daemon = True
+    scheduler_thread.start()
+
     shutdown = stop_event or Event()
     try:
         shutdown.wait()
