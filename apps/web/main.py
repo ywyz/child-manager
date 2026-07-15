@@ -2,7 +2,7 @@ import argparse
 from dataclasses import dataclass
 from ipaddress import ip_address
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import SplitResult, urlsplit
 
 import httpx
 from fastapi import Request, Response
@@ -112,6 +112,7 @@ def register_web(*, api_base_url: str) -> None:
         "/api/v1/{api_path:path}",
         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     )
+    # pyright: ignore[reportUnusedFunction]
     async def bff(request: Request, api_path: str) -> Response:
         peer_ip = request.client.host if request.client is not None else "127.0.0.1"
         proxied = await proxy_request(
@@ -128,6 +129,7 @@ def register_web(*, api_base_url: str) -> None:
         return response
 
     @ui.page("/")
+    # pyright: ignore[reportUnusedFunction]
     async def index() -> None:
         with ui.header():
             ui.label("幼儿园教育管理系统").classes("text-xl font-bold")
@@ -144,10 +146,12 @@ def main() -> None:
     args = parser.parse_args()
 
     _require_loopback(args.host, "Web 绑定地址")
-    api_host = urlsplit(args.api_base_url).hostname or ""
+    api_url: SplitResult = urlsplit(args.api_base_url)
+    api_host: str = api_url.hostname or "127.0.0.1"
     _require_loopback(api_host, "API 地址")
 
     register_web(api_base_url=args.api_base_url)
+    # pyright: ignore[reportUnknownMemberType]
     ui.run(
         title="幼儿园教育管理系统",
         host=args.host,

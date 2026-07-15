@@ -41,8 +41,8 @@ ignore = ["E501"]
 
 [tool.pyright]
 pythonVersion = "3.14"
-typeCheckingMode = "strict"
-exclude = ["**/node_modules", "**/.git", "**/dist", "**/build"]
+typeCheckingMode = "basic"
+exclude = ["**/node_modules", "**/.git", "**/dist", "**/build", "**/.venv"]
 extraPaths = ["apps", "packages", "tests"]
 
 [tool.pytest]

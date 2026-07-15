@@ -1,4 +1,4 @@
-from collections.abc import AsyncIterator
+from collections.abc import Iterator
 from unittest.mock import AsyncMock
 
 import pytest
@@ -10,5 +10,5 @@ class MockAiClient:
 
 
 @pytest.fixture
-def mock_ai_client() -> AsyncIterator[MockAiClient]:
+def mock_ai_client() -> Iterator[MockAiClient]:
     yield MockAiClient()

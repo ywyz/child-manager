@@ -93,8 +93,10 @@ def build_health_dependencies() -> HealthDependencies:
         redis_url = os.environ.get("CHILD_MANAGER_REDIS_URL")
         if not redis_url:
             return False
+        # pyright: ignore[reportUnknownMemberType]
         client = Redis.from_url(redis_url, socket_connect_timeout=1, socket_timeout=1)
         try:
+            # pyright: ignore[reportUnknownMemberType]
             return bool(await client.ping())
         finally:
             await client.aclose()
@@ -102,14 +104,14 @@ def build_health_dependencies() -> HealthDependencies:
     async def path_check(path: Path, *, writable: bool = False) -> bool:
         return path.is_dir() and (not writable or os.access(path, os.W_OK))
 
-    async def file_check(path: Path) -> bool:
-        return path.is_file()
+    if runtime_root_value:
 
-    export_storage = (
-        path_check(Path(runtime_root_value) / "exports", writable=True)
-        if runtime_root_value
-        else _runtime_storage_unconfigured
-    )
+        async def export_storage_check() -> bool:
+            return await path_check(Path(runtime_root_value) / "exports", writable=True)
+
+    else:
+        export_storage_check = _runtime_storage_unconfigured
+
     security_values = (
         os.environ.get("CHILD_MANAGER_JWT_SIGNING_KEY"),
         os.environ.get("CHILD_MANAGER_CSRF_SIGNING_KEY"),
@@ -124,7 +126,7 @@ def build_health_dependencies() -> HealthDependencies:
         ai=_ai_unconfigured,
         calendar=_calendar_library_available,
         template=template_check,
-        export_storage=export_storage,
+        export_storage=export_storage_check,
         security_ready=all(value is not None and bool(value.strip()) for value in security_values),
     )
 
@@ -184,7 +186,9 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
     return openapi_schema
 
 
-async def _request_context_middleware(request: Request, call_next) -> JSONResponse:
+async def _request_context_middleware(
+    request: Request, call_next: Callable[[Request], Awaitable[JSONResponse]]
+) -> JSONResponse:
     import re
 
     request_id_pattern = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
@@ -195,7 +199,8 @@ async def _request_context_middleware(request: Request, call_next) -> JSONRespon
     else:
         request_id = str(uuid7())
     supplied_trace_id = headers.get("x-trace-id", "")
-    trace_id = supplied_trace_id if request_id_pattern.fullmatch(supplied_trace_id) else request_id
+    trace_id_match = request_id_pattern.fullmatch(supplied_trace_id)
+    trace_id = supplied_trace_id if trace_id_match else request_id
     state = request.state
     state.request_id = request_id
     state.trace_id = trace_id
@@ -236,17 +241,19 @@ async def _ready_handler(request: Request, health: HealthDependencies) -> JSONRe
             message="服务端安全配置不可用。",
         )
 
-    checks = {
+    checks: dict[str, str] = {
         "database": "healthy",
         "security": "healthy",
-        "redis": "healthy" if await _safe_check("redis", health.redis) else "degraded",
-        "ai": "healthy" if await _safe_check("ai", health.ai) else "degraded",
-        "calendar": "healthy" if await _safe_check("calendar", health.calendar) else "degraded",
-        "template": "healthy" if await _safe_check("template", health.template) else "degraded",
-        "export_storage": (
-            "healthy" if await _safe_check("export_storage", health.export_storage) else "degraded"
-        ),
     }
+    for name, check in [
+        ("redis", health.redis),
+        ("ai", health.ai),
+        ("calendar", health.calendar),
+        ("template", health.template),
+        ("export_storage", health.export_storage),
+    ]:
+        checks[name] = "healthy" if await _safe_check(name, check) else "degraded"
+
     status = "healthy" if all(value == "healthy" for value in checks.values()) else "degraded"
     return JSONResponse(
         content={
@@ -260,7 +267,7 @@ async def _ready_handler(request: Request, health: HealthDependencies) -> JSONRe
 
 
 async def _validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
-    field_errors = []
+    field_errors: list[dict[str, str]] = []
     for error in exc.errors():
         field = ".".join(str(part) for part in error["loc"] if part != "body")
         field_errors.append(

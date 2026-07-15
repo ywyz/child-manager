@@ -7,7 +7,7 @@ from packages.contracts.common import (
 )
 
 
-def test_idempotency_key_validation():
+def test_idempotency_key_validation() -> None:
     data = {
         "key": "user-create-abc123",
         "scope": "user",
@@ -17,14 +17,14 @@ def test_idempotency_key_validation():
     assert key.scope == "user"
 
 
-def test_idempotency_key_missing_scope():
+def test_idempotency_key_missing_scope() -> None:
     from pydantic import ValidationError
 
     with pytest.raises(ValidationError):
-        IdempotencyKey(key="test-key")
+        IdempotencyKey(key="test-key")  # pyright: ignore[reportCallIssue]
 
 
-def test_idempotency_key_format():
+def test_idempotency_key_format() -> None:
     valid_keys = [
         "req-abc123",
         "user-create-uuid-1234",
@@ -36,25 +36,25 @@ def test_idempotency_key_format():
         assert key.key == key_value
 
 
-def test_canonical_fingerprint_basic():
+def test_canonical_fingerprint_basic() -> None:
     fp1 = canonical_fingerprint(path="/api/v1/users", method="POST")
     fp2 = canonical_fingerprint(path="/api/v1/users", method="post")
     assert fp1 == fp2
 
 
-def test_canonical_fingerprint_different_path():
+def test_canonical_fingerprint_different_path() -> None:
     fp1 = canonical_fingerprint(path="/api/v1/users", method="POST")
     fp2 = canonical_fingerprint(path="/api/v1/plans", method="POST")
     assert fp1 != fp2
 
 
-def test_canonical_fingerprint_different_method():
+def test_canonical_fingerprint_different_method() -> None:
     fp1 = canonical_fingerprint(path="/api/v1/users", method="POST")
     fp2 = canonical_fingerprint(path="/api/v1/users", method="GET")
     assert fp1 != fp2
 
 
-def test_canonical_fingerprint_query_order_insensitive():
+def test_canonical_fingerprint_query_order_insensitive() -> None:
     fp1 = canonical_fingerprint(
         path="/api/v1/users",
         method="GET",
@@ -68,7 +68,7 @@ def test_canonical_fingerprint_query_order_insensitive():
     assert fp1 == fp2
 
 
-def test_canonical_fingerprint_body_stable():
+def test_canonical_fingerprint_body_stable() -> None:
     body1 = {"name": "test", "value": 123}
     body2 = {"value": 123, "name": "test"}
     fp1 = canonical_fingerprint(
@@ -84,7 +84,7 @@ def test_canonical_fingerprint_body_stable():
     assert fp1 == fp2
 
 
-def test_canonical_fingerprint_scope_matters():
+def test_canonical_fingerprint_scope_matters() -> None:
     fp1 = canonical_fingerprint(
         path="/api/v1/users",
         method="POST",
@@ -98,7 +98,7 @@ def test_canonical_fingerprint_scope_matters():
     assert fp1 != fp2
 
 
-def test_canonical_fingerprint_with_list_body():
+def test_canonical_fingerprint_with_list_body() -> None:
     body1 = [1, 2, 3]
     body2 = [1, 2, 3]
     fp1 = canonical_fingerprint(
@@ -114,7 +114,7 @@ def test_canonical_fingerprint_with_list_body():
     assert fp1 == fp2
 
 
-def test_idempotency_key_from_fingerprint():
+def test_idempotency_key_from_fingerprint() -> None:
     fingerprint = "abc123"
     scope = "user"
     key = idempotency_key_from_fingerprint(fingerprint, scope)
