@@ -6,29 +6,20 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
+        env_file=None,
         extra="ignore",
     )
 
-    environment: str = "development"
+    environment: str = "production"
     api_host: str = "127.0.0.1"
     api_port: int = 28000
     web_host: str = "127.0.0.1"
     web_port: int = 28080
 
-    postgres_host: str = "localhost"
-    postgres_port: int = 25432
-    database_name: str = "child_manager_trae"
-    database_user: str = "admin"
-    database_password: str = "dev_password"
     database_url: str = ""
-
-    redis_host: str = "localhost"
-    redis_port: int = 26379
     redis_url: str = ""
 
-    jwt_secret_key: str = ""
+    jwt_signing_key: str = ""
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 60
 
@@ -49,20 +40,17 @@ class Settings(BaseSettings):
                 raise ValueError(f"必须使用回环地址,当前值: {v}") from err
         return v
 
-    @property
-    def resolved_database_url(self) -> str:
-        if self.database_url:
-            return self.database_url
-        return (
-            f"postgresql+psycopg://{self.database_user}:{self.database_password}"
-            f"@{self.postgres_host}:{self.postgres_port}/{self.database_name}"
-        )
-
-    @property
-    def resolved_redis_url(self) -> str:
-        if self.redis_url:
-            return self.redis_url
-        return f"redis://{self.redis_host}:{self.redis_port}/0"
+    def validate_cookie_security(self, bind_host: str, cookie_secure: bool) -> None:
+        if cookie_secure:
+            return
+        if self.environment != "development":
+            raise ValueError("非开发环境必须启用 Cookie Secure")
+        try:
+            is_loopback = ip_address(bind_host).is_loopback
+        except ValueError:
+            is_loopback = bind_host == "localhost"
+        if not is_loopback:
+            raise ValueError("关闭 Cookie Secure 时只能绑定回环地址")
 
 
 settings = Settings()

@@ -5,15 +5,14 @@ from threading import Event
 import dramatiq
 from dramatiq import Worker
 from dramatiq.broker import Broker
-from dramatiq.brokers.redis import RedisBroker
 
-
-def build_redis_broker(redis_url: str) -> Broker:
-    return RedisBroker(url=redis_url)
+from apps.worker.broker import build_redis_broker
 
 
 def serve(broker: Broker, *, threads: int, stop_event: Event | None = None) -> None:
     dramatiq.set_broker(broker)
+    __import__("apps.worker.actors")
+
     worker = Worker(broker, worker_threads=threads)
     worker.start()
     shutdown = stop_event or Event()

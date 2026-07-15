@@ -115,12 +115,15 @@ def build_health_dependencies() -> HealthDependencies:
         os.environ.get("CHILD_MANAGER_CSRF_SIGNING_KEY"),
     )
 
+    async def template_check() -> bool:
+        return (repository_root / "templates/teacherplan/teacherplan.docx").is_file()
+
     return HealthDependencies(
         database=database_check,
         redis=redis_check,
         ai=_ai_unconfigured,
         calendar=_calendar_library_available,
-        template=file_check(repository_root / "templates/teacherplan/teacherplan.docx"),
+        template=template_check,
         export_storage=export_storage,
         security_ready=all(value is not None and bool(value.strip()) for value in security_values),
     )
@@ -181,135 +184,157 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
     return openapi_schema
 
 
+async def _request_context_middleware(request: Request, call_next) -> JSONResponse:
+    import re
+
+    request_id_pattern = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
+    headers = request.headers
+    supplied_request_id = headers.get("x-request-id", "")
+    if supplied_request_id and request_id_pattern.fullmatch(supplied_request_id):
+        request_id = supplied_request_id
+    else:
+        request_id = str(uuid7())
+    supplied_trace_id = headers.get("x-trace-id", "")
+    trace_id = supplied_trace_id if request_id_pattern.fullmatch(supplied_trace_id) else request_id
+    state = request.state
+    state.request_id = request_id
+    state.trace_id = trace_id
+
+    response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
+    return response
+
+
+async def _live_handler(request: Request) -> dict[str, object]:
+    from datetime import datetime
+
+    return {
+        "status": "healthy",
+        "component": "api",
+        "request_id": request.state.request_id,
+        "timestamp": datetime.now(UTC).isoformat(),
+        "checks": {},
+    }
+
+
+async def _ready_handler(request: Request, health: HealthDependencies) -> JSONResponse:
+    from datetime import datetime
+
+    database_ready = await _safe_check("database", health.database)
+    if not database_ready:
+        return _error_response(
+            request,
+            status_code=503,
+            code="database.unavailable",
+            message="数据库暂不可用,请稍后重试。",
+        )
+    if not health.security_ready:
+        return _error_response(
+            request,
+            status_code=503,
+            code="configuration.unavailable",
+            message="服务端安全配置不可用。",
+        )
+
+    checks = {
+        "database": "healthy",
+        "security": "healthy",
+        "redis": "healthy" if await _safe_check("redis", health.redis) else "degraded",
+        "ai": "healthy" if await _safe_check("ai", health.ai) else "degraded",
+        "calendar": "healthy" if await _safe_check("calendar", health.calendar) else "degraded",
+        "template": "healthy" if await _safe_check("template", health.template) else "degraded",
+        "export_storage": (
+            "healthy" if await _safe_check("export_storage", health.export_storage) else "degraded"
+        ),
+    }
+    status = "healthy" if all(value == "healthy" for value in checks.values()) else "degraded"
+    return JSONResponse(
+        content={
+            "status": status,
+            "component": "api",
+            "request_id": request.state.request_id,
+            "timestamp": datetime.now(UTC).isoformat(),
+            "checks": checks,
+        }
+    )
+
+
+async def _validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+    field_errors = []
+    for error in exc.errors():
+        field = ".".join(str(part) for part in error["loc"] if part != "body")
+        field_errors.append(
+            {
+                "field": field,
+                "code": str(error["type"]),
+                "message": "请求字段无效。",
+            }
+        )
+    payload = {
+        "code": "request.validation_error",
+        "message": "请求参数无效,请检查后重试。",
+        "request_id": _request_id(request),
+        "field_errors": field_errors,
+    }
+    return JSONResponse(status_code=422, content=payload)
+
+
+async def _http_error_handler(request: Request, exc: HTTPException) -> JSONResponse:
+    return _error_response(
+        request,
+        status_code=exc.status_code,
+        code="request.http_error",
+        message="请求处理失败。",
+    )
+
+
+async def _unhandled_error_handler(request: Request, exc: Exception) -> JSONResponse:
+    LOGGER.error(
+        "unhandled_exception",
+        path=str(request.url.path),
+        error_type=type(exc).__name__,
+    )
+    return _error_response(
+        request,
+        status_code=500,
+        code="server.internal_error",
+        message="服务器内部错误,请稍后重试。",
+    )
+
+
 def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
     health = dependencies or build_health_dependencies()
     application = FastAPI(title="Child Manager API")
     application.openapi = lambda: custom_openapi(application)
 
-    @application.middleware("http")
-    async def request_context_middleware(request: Request, call_next) -> JSONResponse:
-        import re
+    application.middleware("http")(_request_context_middleware)
+    application.get("/health/live")(_live_handler)
 
-        request_id_pattern = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
-        headers = request.headers
-        supplied_request_id = headers.get("x-request-id", "")
-        if supplied_request_id and len(supplied_request_id) <= 128:
-            request_id = supplied_request_id
-        else:
-            request_id = str(uuid7())
-        supplied_trace_id = headers.get("x-trace-id", "")
-        trace_id = (
-            supplied_trace_id if request_id_pattern.fullmatch(supplied_trace_id) else request_id
-        )
-        state = request.state
-        state.request_id = request_id
-        state.trace_id = trace_id
+    async def ready_endpoint(request: Request) -> JSONResponse:
+        return await _ready_handler(request, health)
 
-        response = await call_next(request)
-        response.headers["X-Request-ID"] = request_id
-        return response
-
-    @application.get("/health/live")
-    async def live(request: Request) -> dict[str, object]:
-        from datetime import datetime
-
-        return {
-            "status": "healthy",
-            "component": "api",
-            "request_id": request.state.request_id,
-            "timestamp": datetime.now(UTC).isoformat(),
-            "checks": {},
-        }
-
-    @application.get("/health/ready")
-    async def ready(request: Request) -> JSONResponse:
-        from datetime import datetime
-
-        database_ready = await _safe_check("database", health.database)
-        if not database_ready:
-            return _error_response(
-                request,
-                status_code=503,
-                code="database.unavailable",
-                message="数据库暂不可用,请稍后重试。",
-            )
-        if not health.security_ready:
-            return _error_response(
-                request,
-                status_code=503,
-                code="configuration.unavailable",
-                message="服务端安全配置不可用。",
-            )
-
-        checks = {
-            "database": "healthy",
-            "security": "healthy",
-            "redis": "healthy"
-            if await _safe_check("redis", health.redis)
-            else "degraded",
-            "ai": "healthy"
-            if await _safe_check("ai", health.ai)
-            else "degraded",
-            "calendar": "healthy"
-            if await _safe_check("calendar", health.calendar)
-            else "degraded",
-            "template": "healthy"
-            if await _safe_check("template", health.template)
-            else "degraded",
-            "export_storage": (
-                "healthy"
-                if await _safe_check("export_storage", health.export_storage)
-                else "degraded"
-            ),
-        }
-        status = (
-            "healthy"
-            if all(value == "healthy" for value in checks.values())
-            else "degraded"
-        )
-        return JSONResponse(
-            content={
-                "status": status,
-                "component": "api",
-                "request_id": request.state.request_id,
-                "timestamp": datetime.now(UTC).isoformat(),
-                "checks": checks,
-            }
-        )
-
-    @application.exception_handler(RequestValidationError)
-    async def validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
-        field_errors = []
-        for error in exc.errors():
-            field = ".".join(str(part) for part in error["loc"] if part != "body")
-            field_errors.append(
-                {
-                    "field": field,
-                    "code": str(error["type"]),
-                    "message": "请求字段无效。",
-                }
-            )
-        payload = {
-            "code": "request.validation_error",
-            "message": "请求参数无效,请检查后重试。",
-            "request_id": _request_id(request),
-            "field_errors": field_errors,
-        }
-        return JSONResponse(status_code=422, content=payload)
-
-    @application.exception_handler(HTTPException)
-    async def http_error(request: Request, exc: HTTPException) -> JSONResponse:
-        return _error_response(
-            request,
-            status_code=exc.status_code,
-            code="request.http_error",
-            message=str(exc.detail),
-        )
+    application.get("/health/ready")(ready_endpoint)
+    application.exception_handler(RequestValidationError)(_validation_error_handler)
+    application.exception_handler(HTTPException)(_http_error_handler)
+    application.exception_handler(Exception)(_unhandled_error_handler)
 
     return application
 
 
 app = create_app()
+
+
+def _validate_bind_host(host: str) -> None:
+    from ipaddress import ip_address
+
+    try:
+        if not ip_address(host).is_loopback:
+            environment = os.environ.get("CHILD_MANAGER_ENV", "production")
+            if environment != "development":
+                raise ValueError("非开发环境 API 只能绑定回环地址")
+    except ValueError as err:
+        if host != "localhost":
+            raise ValueError("API 只能绑定回环地址") from err
 
 
 def main() -> None:
@@ -321,6 +346,8 @@ def main() -> None:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", default=28000, type=int)
     args = parser.parse_args()
+
+    _validate_bind_host(args.host)
 
     uvicorn.run(
         "apps.api.main:app",

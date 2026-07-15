@@ -1,4 +1,6 @@
-from typing import TypeVar
+import hashlib
+import json
+from typing import Any, TypeVar
 
 from pydantic import BaseModel, Field
 
@@ -48,3 +50,38 @@ class HealthResponse(BaseModel):
     status: str = Field(..., description="整体状态")
     checks: list[HealthCheckResult] = Field(..., description="检查项列表")
     timestamp: str = Field(..., description="时间戳")
+
+
+def canonical_fingerprint(
+    *,
+    path: str,
+    method: str,
+    query_params: dict[str, Any] | None = None,
+    body: Any = None,
+    scope: str | None = None,
+) -> str:
+    components = {
+        "method": method.upper(),
+        "path": path,
+        "scope": scope or "",
+    }
+
+    if query_params:
+        components["query"] = json.dumps(
+            dict(sorted(query_params.items())),
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+
+    if body is not None:
+        if isinstance(body, (dict, list)):
+            components["body"] = json.dumps(body, sort_keys=True, separators=(",", ":"))
+        else:
+            components["body"] = str(body)
+
+    fingerprint_input = json.dumps(components, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(fingerprint_input.encode("utf-8")).hexdigest()
+
+
+def idempotency_key_from_fingerprint(fingerprint: str, scope: str) -> IdempotencyKey:
+    return IdempotencyKey(key=fingerprint, scope=scope)

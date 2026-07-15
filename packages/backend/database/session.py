@@ -1,12 +1,19 @@
+import os
 from contextlib import contextmanager
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-from packages.backend.bootstrap.config import settings
+
+def _get_database_url() -> str:
+    url = os.environ.get("CHILD_MANAGER_DATABASE_URL")
+    if not url:
+        raise RuntimeError("必须设置 CHILD_MANAGER_DATABASE_URL")
+    return url
+
 
 engine = create_engine(
-    settings.resolved_database_url,
+    _get_database_url(),
     pool_pre_ping=True,
     echo=False,
 )
@@ -29,7 +36,3 @@ def get_db_session():
         raise
     finally:
         session.close()
-
-
-def create_all_tables():
-    Base.metadata.create_all(bind=engine)

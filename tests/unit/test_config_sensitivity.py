@@ -1,6 +1,3 @@
-import os
-from unittest.mock import patch
-
 import pytest
 
 from packages.backend.bootstrap.config import Settings
@@ -31,48 +28,24 @@ def test_settings_allows_localhost():
     assert settings.web_host == "localhost"
 
 
-def test_database_url_construction():
-    settings = Settings(
-        database_user="test_user",
-        database_password="test_pass",
-        postgres_host="localhost",
-        postgres_port=5432,
-        database_name="test_db",
-    )
-
-    expected = (
-        "postgresql+psycopg://test_user:test_pass@localhost:5432/test_db"
-    )
-    assert settings.resolved_database_url == expected
-
-
-def test_custom_database_url_override():
-    custom_url = (
-        "postgresql+psycopg://custom_user:custom_pass"
-        "@custom_host:5432/custom_db"
-    )
+def test_database_url_direct():
+    custom_url = "postgresql+psycopg://test_user:test_pass@localhost:5432/test_db"
     settings = Settings(database_url=custom_url)
 
-    assert settings.resolved_database_url == custom_url
+    assert settings.database_url == custom_url
 
 
-def test_redis_url_construction():
-    settings = Settings(redis_host="localhost", redis_port=6379)
-
-    assert settings.resolved_redis_url == "redis://localhost:6379/0"
-
-
-def test_custom_redis_url_override():
-    custom_url = "redis://custom_host:6379/1"
+def test_redis_url_direct():
+    custom_url = "redis://localhost:6379/0"
     settings = Settings(redis_url=custom_url)
 
-    assert settings.resolved_redis_url == custom_url
+    assert settings.redis_url == custom_url
 
 
-def test_jwt_secret_is_empty_by_default():
+def test_jwt_signing_key_is_empty_by_default():
     settings = Settings()
 
-    assert settings.jwt_secret_key == ""
+    assert settings.jwt_signing_key == ""
 
 
 def test_allowed_hosts_contains_localhost():
@@ -80,3 +53,20 @@ def test_allowed_hosts_contains_localhost():
 
     assert "localhost" in settings.allowed_hosts
     assert "127.0.0.1" in settings.allowed_hosts
+
+
+def test_cookie_security_development_loopback():
+    settings = Settings(environment="development")
+    settings.validate_cookie_security(bind_host="127.0.0.1", cookie_secure=False)
+
+
+def test_cookie_security_production_requires_secure():
+    settings = Settings(environment="production")
+    with pytest.raises(ValueError, match="非开发环境必须启用 Cookie Secure"):
+        settings.validate_cookie_security(bind_host="127.0.0.1", cookie_secure=False)
+
+
+def test_cookie_security_non_loopback_rejected():
+    settings = Settings(environment="development")
+    with pytest.raises(ValueError, match="关闭 Cookie Secure 时只能绑定回环地址"):
+        settings.validate_cookie_security(bind_host="0.0.0.0", cookie_secure=False)

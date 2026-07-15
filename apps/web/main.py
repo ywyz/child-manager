@@ -8,7 +8,6 @@ import httpx
 from fastapi import Request, Response
 from nicegui import app, ui
 
-
 _REQUEST_HEADER_ALLOWLIST = {
     b"accept",
     b"content-type",
