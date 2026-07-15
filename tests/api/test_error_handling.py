@@ -8,7 +8,8 @@ from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from apps.api.main import HealthDependencies, create_app
+from apps.api.app import create_app
+from apps.api.dependencies import HealthDependencies
 
 HEALTH_DEPENDENCIES = HealthDependencies(
     database=lambda: _true(),
@@ -90,16 +91,14 @@ def test_500_returns_chinese_internal_error() -> None:
     from fastapi import FastAPI
 
     app = FastAPI()
-    from apps.api.main import (
-        _request_context_middleware,
-        _unhandled_error_handler,
-    )
+    from apps.api.app import _unhandled_error_handler
+    from apps.api.middleware import request_context_middleware
 
     @app.get("/boom")
     async def boom() -> None:
         raise RuntimeError("unexpected failure")
 
-    app.middleware("http")(_request_context_middleware)
+    app.middleware("http")(request_context_middleware)
     app.exception_handler(Exception)(_unhandled_error_handler)
     client = TestClient(app, raise_server_exceptions=False)
 
@@ -116,16 +115,14 @@ def test_http_exception_400_returns_chinese_envelope() -> None:
     from fastapi import FastAPI
 
     app = FastAPI()
-    from apps.api.main import (
-        _http_exception_handler,
-        _request_context_middleware,
-    )
+    from apps.api.app import _http_exception_handler
+    from apps.api.middleware import request_context_middleware
 
     @app.get("/bad")
     async def bad() -> None:
         raise HTTPException(status_code=400, detail="bad request")
 
-    app.middleware("http")(_request_context_middleware)
+    app.middleware("http")(request_context_middleware)
     app.exception_handler(StarletteHTTPException)(_http_exception_handler)
     client = TestClient(app)
 

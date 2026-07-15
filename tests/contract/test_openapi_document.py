@@ -10,7 +10,8 @@ from typing import Any
 import yaml
 from fastapi.testclient import TestClient
 
-from apps.api.main import HealthDependencies, create_app
+from apps.api.app import create_app
+from apps.api.dependencies import HealthDependencies
 
 SPEC_PATH = (
     Path(__file__).resolve().parents[2] / "specs/001-daily-activity-plan/contracts/openapi.yaml"

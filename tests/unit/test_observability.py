@@ -2,7 +2,7 @@ def test_request_context_middleware_generates_ids():
     from fastapi import FastAPI, Request
     from fastapi.testclient import TestClient
 
-    from apps.api.main import _request_context_middleware
+    from apps.api.middleware import request_context_middleware
 
     app = FastAPI()
 
@@ -13,7 +13,7 @@ def test_request_context_middleware_generates_ids():
             "trace_id": str(request.state.trace_id),
         }
 
-    app.middleware("http")(_request_context_middleware)
+    app.middleware("http")(request_context_middleware)
     client = TestClient(app)
 
     response = client.get("/test")
@@ -28,7 +28,7 @@ def test_request_context_middleware_accepts_supplied_ids():
     from fastapi import FastAPI, Request
     from fastapi.testclient import TestClient
 
-    from apps.api.main import _request_context_middleware
+    from apps.api.middleware import request_context_middleware
 
     app = FastAPI()
 
@@ -39,7 +39,7 @@ def test_request_context_middleware_accepts_supplied_ids():
             "trace_id": str(request.state.trace_id),
         }
 
-    app.middleware("http")(_request_context_middleware)
+    app.middleware("http")(request_context_middleware)
     client = TestClient(app)
 
     req_uuid = "0198a7b0-1234-7890-abcd-ef0123456789"
@@ -62,10 +62,8 @@ def test_error_responses_include_request_id():
     from fastapi import FastAPI, HTTPException
     from fastapi.testclient import TestClient
 
-    from apps.api.main import (
-        _http_exception_handler,
-        _request_context_middleware,
-    )
+    from apps.api.app import _http_exception_handler
+    from apps.api.middleware import request_context_middleware
 
     app = FastAPI()
 
@@ -73,7 +71,7 @@ def test_error_responses_include_request_id():
     async def error_endpoint() -> None:
         raise HTTPException(status_code=400, detail="Bad request")
 
-    app.middleware("http")(_request_context_middleware)
+    app.middleware("http")(request_context_middleware)
     app.exception_handler(HTTPException)(_http_exception_handler)
     client = TestClient(app)
 
@@ -89,7 +87,7 @@ def test_middleware_binds_structlog_contextvars():
     from fastapi import FastAPI, Request
     from fastapi.testclient import TestClient
 
-    from apps.api.main import _request_context_middleware
+    from apps.api.middleware import request_context_middleware
 
     captured: dict[str, str] = {}
 
@@ -101,7 +99,7 @@ def test_middleware_binds_structlog_contextvars():
         captured.update(bound)
         return {"ok": "true"}
 
-    app.middleware("http")(_request_context_middleware)
+    app.middleware("http")(request_context_middleware)
     client = TestClient(app)
 
     req_uuid = "0198a7b0-aaaa-bbbb-cccc-dddddddddddd"

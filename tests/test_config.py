@@ -1,4 +1,4 @@
-from packages.backend.bootstrap.config import Settings
+from packages.backend.config import Settings
 
 
 def test_settings_defaults(monkeypatch):

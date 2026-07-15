@@ -2,9 +2,9 @@ import os
 from contextlib import contextmanager
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import sessionmaker
 
-from packages.backend.bootstrap.config import settings
+from packages.backend.config import settings
 
 
 def _get_database_url() -> str:
@@ -23,10 +23,6 @@ engine = create_engine(
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 @contextmanager

@@ -1,7 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from apps.api.main import HealthDependencies, create_app
+from apps.api.app import create_app
+from apps.api.dependencies import HealthDependencies
 
 
 @pytest.fixture

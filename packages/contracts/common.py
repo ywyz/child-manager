@@ -42,7 +42,7 @@ class PaginatedResponse[T](BaseModel):
 class IdempotencyKey(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    key: str = Field(..., max_length=200, description="幂等键")
+    key: str = Field(..., min_length=1, max_length=200, description="幂等键")
     scope: str = Field(..., description="作用域")
 
 

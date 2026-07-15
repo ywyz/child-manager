@@ -1,8 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from apps.api.main import app
+from apps.api.app import create_app
 from packages.contracts.common import ErrorResponse
+
+app = create_app()
 
 
 @pytest.fixture

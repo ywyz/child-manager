@@ -11,7 +11,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from packages.backend.database.session import Base
+from packages.backend.database.base import Base
 
 config = getattr(context, "config", None)
 

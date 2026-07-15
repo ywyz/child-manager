@@ -134,6 +134,14 @@ def test_idempotency_key_max_length_200() -> None:
         IdempotencyKey(key=key_201, scope="s")
 
 
+def test_idempotency_key_rejects_empty_string() -> None:
+    """幂等键最小长度为 1，空字符串必须拒绝。"""
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        IdempotencyKey(key="", scope="s")
+
+
 def test_canonical_fingerprint_duplicate_query_values() -> None:
     """重复 query 参数按 (name, value) 元组排序。"""
     fp1 = canonical_fingerprint(

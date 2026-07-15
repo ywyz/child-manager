@@ -5,6 +5,8 @@ from importlib import import_module
 def test_web_does_not_import_orm_models():
     web_modules = [
         "apps.web.main",
+        "apps.web.app",
+        "apps.web.api_client",
         "apps.web.components",
         "apps.web.pages",
     ]
@@ -34,15 +36,15 @@ def test_web_does_not_import_orm_models():
 
 
 def test_web_uses_api_client():
-    from apps.web import main
+    from apps.web import api_client
 
-    assert hasattr(main, "ApiClient"), "Web 层应该有 ApiClient 类"
-    assert hasattr(main, "proxy_request"), "Web 层应该有 proxy_request 函数"
+    assert hasattr(api_client, "ApiClient"), "Web 层应该有 ApiClient 类"
+    assert hasattr(api_client, "proxy_request"), "Web 层应该有 proxy_request 函数"
 
 
 def test_bff_client_configured_with_api_base_url():
-    from apps.web import main
+    from apps.web.api_client import ApiClient
 
     default_url = "http://127.0.0.1:28000"
-    client = main.ApiClient(default_url)
+    client = ApiClient(default_url)
     assert client.base_url == default_url

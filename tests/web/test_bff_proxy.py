@@ -1,7 +1,7 @@
 import httpx
 import pytest
 
-from apps.web.main import proxy_request
+from apps.web.api_client import proxy_request
 
 
 @pytest.mark.asyncio
