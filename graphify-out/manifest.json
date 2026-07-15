@@ -15,7 +15,7 @@
     "semantic_hash": "b62cbc863d094a6ae16049b9b1b433c3"
   },
   "CONTEXT.md": {
-    "mtime": 1784033514.1533935,
+    "mtime": 1784034936.359004,
     "ast_hash": "de5c9de1b88ec7ee4509d2951f1135b7",
     "semantic_hash": "de5c9de1b88ec7ee4509d2951f1135b7"
   },
@@ -295,7 +295,7 @@
     "semantic_hash": "12bf9f2c1729cec805f76663c74c637b"
   },
   "specs/001-daily-activity-plan/quickstart.md": {
-    "mtime": 1784033462.8373957,
+    "mtime": 1784034936.3600042,
     "ast_hash": "4295451536d2c7c6b1b73f7519bcdc39",
     "semantic_hash": "4295451536d2c7c6b1b73f7519bcdc39"
   },
@@ -350,7 +350,7 @@
     "semantic_hash": "c54ee8bd45c7658ebbea2bf22b9f221f"
   },
   "docs/development/m1-issue-drafts.md": {
-    "mtime": 1784033462.8363957,
+    "mtime": 1784034936.3600042,
     "ast_hash": "936733128aa1cf132a4dbe43a02ab247",
     "semantic_hash": "936733128aa1cf132a4dbe43a02ab247"
   },
@@ -540,9 +540,9 @@
     "semantic_hash": "e9fffcab4bb2f27c51b9cc46c0eb61bf"
   },
   "pyproject.toml": {
-    "mtime": 1784013594.066253,
-    "ast_hash": "424a3a2e507f6976519b06bafb272f93",
-    "semantic_hash": "424a3a2e507f6976519b06bafb272f93"
+    "mtime": 1784036395.5561013,
+    "ast_hash": "4c139a8209cdc3b0c344a7b41ee21777",
+    "semantic_hash": ""
   },
   "tests/__init__.py": {
     "mtime": 1784013594.067253,

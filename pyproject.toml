@@ -25,6 +25,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "httpx2>=2,<3",
     "openapi-spec-validator>=0.7,<1",
     "pyright>=1.1,<2",
     "pytest>=8.4,<9",
@@ -39,6 +40,9 @@ package = false
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
 testpaths = ["tests"]
+filterwarnings = [
+    "error::starlette.exceptions.StarletteDeprecationWarning",
+]
 
 [tool.ruff]
 target-version = "py314"

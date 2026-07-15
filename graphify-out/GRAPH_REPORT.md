@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-07-14)
+# Graph Report - child-manager  (2026-07-14)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 140 files · ~80,170 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2170 nodes · 1879 edges · 654 communities (152 shown, 502 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 40 edges (avg confidence: 0.75)
+- 2170 nodes · 1794 edges · 719 communities (150 shown, 569 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.69)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `22276f16`
+- Built from commit: `c8b2003d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -647,6 +648,71 @@
 - 一日活动计划 Word 系统说明
 - 表格第一行：教学周次
 - 文件第一行：园所与学期月份范围
+- Cloud 教育管理系统定位
+- Cloud-only 与部署延后基线
+- Codex 分支 M1 五条命令及 61 项测试通过
+- 不可误读的已确认决策
+- 当前状态与交接入口
+- CONTEXT 状态更新规则
+- 一日活动计划首期闭环
+- 一日活动计划业务不变量
+- 首期非目标
+- 设计编码前固定阅读顺序
+- 高风险点与缓解措施
+- 旧仓库仅作经验参考
+- 首期必要设置
+- 管理员教师角色与 API 授权
+- Web API Worker 与园所数据边界
+- M1 至 M9 共同实施路线
+- 共享 M1 双环境门禁下一步
+- 系统架构基线
+- 实现分支验证基线
+- 固定 Word 模板导出规则
+- Codex 分支验收证据要求
+- Codex 实现子 Issue #2
+- Codex T004 至 T020 完成清单
+- Codex 红绿测试与最小实现原则
+- 双 Agent 协作边界
+- Codex 与 Trae 共同提交基线
+- 草稿基线与 graphify 处置记录
+- M1 入口条件
+- M1 工程骨架 Issue 草稿与执行记录
+- M1 草稿只读复核清单
+- M1 共同出口门禁
+- M1 共同工程骨架目标
+- M1 共享父 Issue #1
+- M1 共享事实来源
+- T003 与 T004 至 T020 任务映射
+- Trae 实现子 Issue #3
+- 共享草稿不镜像 Trae 实时提交与验收
+- Trae 状态以 Issue #3 与 trae 分支实时证据为准
+- Trae T004 至 T020 独立执行清单
+- Trae 红绿测试与最小实现原则
+- API 契约快速检查
+- API CHILD_MANAGER_BIND_HOST 必须为回环地址
+- 审计与敏感信息验收
+- 初始化登录与会话验收
+- 自动化质量门禁
+- 浏览器验收路径
+- M8 完整验收记录要求
+- 数据库迁移与首次管理员初始化
+- 存活就绪与依赖降级语义
+- 锁定安装与本地依赖
+- 纯手工教案闭环验收
+- Phase 1 首期实现与验收合同
+- Quickstart 前提与反目标
+- 本地开发档位隔离变量
+- Web 启动使用 CHILD_MANAGER_WEB_PORT 档位变量
+- 一日活动反思生成验收
+- 可靠 AI 任务与栏目级采用
+- 集体活动安全 DOCX 处理
+- Web 同源 BFF 转发契约
+- 必要设置与权限验收
+- API Worker Web 三个独立进程
+- Web --host 必须为回环地址
+- Word 导出与历史副本验收
+- Word 模板哈希与原件状态检查
+- 工作日判断与软降级
 
 ## God Nodes (most connected - your core abstractions)
 1. `Child Manager 数据模型设计` - 24 edges
@@ -655,21 +721,21 @@
 4. `ContractModel` - 21 edges
 5. `Child Manager Agent 开发规则` - 20 edges
 6. `Child Manager PostgreSQL 数据库 Schema` - 19 edges
-7. `Child Manager 项目上下文` - 19 edges
-8. `Child Manager 产品与工程路线图` - 18 edges
-9. `Tasks: 首期一日活动计划完整闭环` - 17 edges
-10. `build_health_dependencies()` - 16 edges
+7. `Child Manager 产品与工程路线图` - 18 edges
+8. `Tasks: 首期一日活动计划完整闭环` - 17 edges
+9. `build_health_dependencies()` - 16 edges
+10. `create_app()` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `CI PostgreSQL 服务` --semantically_similar_to--> `PostgreSQL 本地服务`  [INFERRED] [semantically similar]
   .github/workflows/quality.yml → compose.dev.yaml
 - `PostgreSQL 18 Alpine 固定 Digest` --semantically_similar_to--> `PostgreSQL 18 Alpine 固定 Digest`  [INFERRED] [semantically similar]
   .github/workflows/quality.yml → compose.dev.yaml
-- `实现分支验证基线` --semantically_similar_to--> `M1 共同出口门禁`  [INFERRED] [semantically similar]
-  CONTEXT.md → docs/development/m1-issue-drafts.md
-- `M1 共同出口门禁` --semantically_similar_to--> `自动化质量门禁`  [INFERRED] [semantically similar]
-  docs/development/m1-issue-drafts.md → specs/001-daily-activity-plan/quickstart.md
 - `uv 锁定安装门禁` --implements--> `1. 共享父 Issue 草稿`  [INFERRED]
+  .github/workflows/quality.yml → docs/development/m1-issue-drafts.md
+- `Pyright 类型门禁` --implements--> `1. 共享父 Issue 草稿`  [INFERRED]
+  .github/workflows/quality.yml → docs/development/m1-issue-drafts.md
+- `Pytest 测试门禁` --implements--> `1. 共享父 Issue 草稿`  [INFERRED]
   .github/workflows/quality.yml → docs/development/m1-issue-drafts.md
 
 ## Import Cycles
@@ -698,7 +764,7 @@
 - **AI 预览与教师最终控制** — agents_ai_preview_explicit_adoption, docs_prd_lesson_management_preview_validity_by_actual_inputs, docs_prd_lesson_management_ai_retry_taxonomy [EXTRACTED 1.00]
 - **教案任务预览快照导出持久化链路** — docs_design_data_model_daily_activity_plans, docs_design_data_model_background_jobs, docs_design_data_model_ai_generation_results, docs_design_data_model_daily_activity_plan_snapshots [EXTRACTED 1.00]
 
-## Communities (654 total, 502 thin omitted)
+## Communities (719 total, 569 thin omitted)
 
 ### Community 0 - "test_health.py"
 Cohesion: 0.06
@@ -728,10 +794,6 @@ Nodes (43): Dependencies & Execution Order, Foundation, Implementation for User 
 Cohesion: 0.05
 Nodes (37): 10. 迁移顺序, 11. 必测数据行为, 1. 通用规则, 2. 关系总览, 3.1 `kindergartens`, 3.2 `users`, 3.3 `roles`, 3.4 `user_roles` (+29 more)
 
-### Community 7 - "浏览器验收路径"
-Cohesion: 0.07
-Nodes (37): AI 生成与提示词规则, Cloud 教育管理系统定位, Cloud-only 与部署延后基线, 不可误读的已确认决策, 一日活动计划首期闭环, 一日活动计划业务不变量, 首期非目标, 高风险点与缓解措施 (+29 more)
-
 ### Community 8 - "Phase 0 研究：首期一日活动计划完整闭环"
 Cohesion: 0.05
 Nodes (37): 10. 已排除范围, 1. 研究方法与决策优先级, 2.1 首期使用一套 Spec Kit 文档, 2.2 独立运行单元与模块化单体, 2.3 技术基线与依赖, 2. Feature 与架构, 3.1 当前学期和学期外日期, 3.2 区域按目标栏目校验 (+29 more)
@@ -754,7 +816,7 @@ Nodes (23): AuditEventReference, canonical_request_fingerprint(), ContractModel,
 
 ### Community 13 - "Child Manager 项目上下文"
 Cohesion: 0.06
-Nodes (33): 10. 当前共同下一步, 11.1 文档职责与工具基线, 11. 高风险点, 12. 系统架构基线, 13. 验证基线, 14. CONTEXT 更新规则, 1. 本文档的用途, 2. 固定阅读顺序 (+25 more)
+Nodes (31): 10. 当前共同下一步, 11.1 文档职责与工具基线, 11. 高风险点, 12. 系统架构基线, 13. 验证基线, 14. CONTEXT 更新规则, 1. 本文档的用途, 2. 固定阅读顺序 (+23 more)
 
 ### Community 14 - "proxy_request"
 Cohesion: 0.11
@@ -767,10 +829,6 @@ Nodes (29): AI 模型与提示词, Assumptions, Clarifications, Dependencies, Ed
 ### Community 16 - "test_foundation.py"
 Cohesion: 0.12
 Nodes (21): Actor, load_job(), Broker, 只接收 job_id 的 M1 Dramatiq actor。, 验证最小消息；后续里程碑将从 PostgreSQL 加载权威上下文。, register_actors(), build_redis_broker(), build_test_broker() (+13 more)
-
-### Community 17 - "M1 共享父 Issue #1"
-Cohesion: 0.08
-Nodes (28): 2026-07-14 仓库与分支状态, Codex 分支 M1 五条命令及 61 项测试通过, CONTEXT 状态更新规则, 共享 M1 双环境门禁下一步, 实现分支验证基线, Codex 分支验收证据要求, Codex 实现子 Issue #2, Codex T004 至 T020 完成清单 (+20 more)
 
 ### Community 18 - "Tasks: [FEATURE NAME]"
 Cohesion: 0.07
@@ -946,7 +1004,7 @@ Nodes (7): 9.1 关系表头与 JSONB 正文, 9.2 `daily_activity_plans`, 9.3 `co
 
 ### Community 61 - "3. 二十六项问题的最终结论"
 Cohesion: 0.29
-Nodes (7): 3.1 文档命名与 ADR 状态, 3.5 API、任务状态与幂等, 3. 二十六项问题的最终结论, Q12：任务状态机缺少 `expired`, Q13：幂等键定义, Q1：ADR-0001 文件命名, Q2：ADR-0007 被 ADR-0009 取代的标记
+Nodes (7): 3.1 文档命名与 ADR 状态, 3.4 加密与密钥, 3. 二十六项问题的最终结论, Q10：AI Key 加密算法, Q11：主加密密钥来源, Q1：ADR-0001 文件命名, Q2：ADR-0007 被 ADR-0009 取代的标记
 
 ### Community 62 - "3.9 Codex 交叉审计事项"
 Cohesion: 0.29
@@ -1206,7 +1264,7 @@ Nodes (3): 7.1 API 原则, 7.2 跨进程任务契约, 7. API 与契约
 
 ### Community 132 - "3.4 加密与密钥"
 Cohesion: 0.67
-Nodes (3): 3.4 加密与密钥, Q10：AI Key 加密算法, Q11：主加密密钥来源
+Nodes (3): 3.5 API、任务状态与幂等, Q12：任务状态机缺少 `expired`, Q13：幂等键定义
 
 ### Community 133 - "3.6 测试与可访问性"
 Cohesion: 0.67
@@ -1225,9 +1283,9 @@ Cohesion: 0.67
 Nodes (3): 4.1 首期目标, 4.2 成功标准, 4. 产品目标
 
 ## Knowledge Gaps
-- **1363 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1358 more)
+- **1405 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1400 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **502 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **569 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
@@ -1240,16 +1298,16 @@ Nodes (3): 4.1 首期目标, 4.2 成功标准, 4. 产品目标
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Child Manager PostgreSQL 数据库 Schema` connect `Child Manager PostgreSQL 数据库 Schema` to `README.md`, `3. PostgreSQL 物理约定`, `5. 园所与身份 Schema`, `6. 教学设置 Schema`, `8. 提示词 Schema`, `9. 一日活动计划 Schema`, `10. 后台任务与 AI 结果 Schema`, `12. 系统支撑 Schema`, `2. 事实来源与旧仓库取舍`, `7. AI 模型档案 Schema`?**
-  _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Why does `Child Manager 数据模型设计` connect `Child Manager 数据模型设计` to `15. 数据快照边界`, `22. 后续扩展边界`, `2. 设计来源与旧系统取舍`, `README.md`, `5. 园所与身份模型`, `6. 教学设置模型`, `8. 提示词模型`, `21. 测试与验收`, `11. 后台任务与 AI 结果`, `16. 外键与删除行为`, `4. 模型总览`, `7. AI 模型档案`, `3. 总体建模原则`, `9. 一日活动计划模型`?**
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
+- **Why does `Child Manager 文档交叉审计合并结论` connect `Child Manager 文档交叉审计合并结论` to `4. 项目文档更新矩阵`, `README.md`, `3. 二十六项问题的最终结论`?**
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Why does `Child Manager PostgreSQL 数据库 Schema` connect `Child Manager PostgreSQL 数据库 Schema` to `README.md`, `3. PostgreSQL 物理约定`, `5. 园所与身份 Schema`, `6. 教学设置 Schema`, `8. 提示词 Schema`, `9. 一日活动计划 Schema`, `10. 后台任务与 AI 结果 Schema`, `12. 系统支撑 Schema`, `2. 事实来源与旧仓库取舍`, `7. AI 模型档案 Schema`?**
   _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Why does `M1 工程骨架与质量基线 Issue 草稿与执行记录` connect `M1 工程骨架与质量基线 Issue 草稿与执行记录` to `README.md`, `Python 质量门禁 Job`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Are the 7 inferred relationships involving `ContractModel` (e.g. with `AuditEventReference` and `ExportReference`) actually correct?**
   _`ContractModel` has 7 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
-  _1363 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1405 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `test_health.py` be split into smaller, more focused modules?**
   _Cohesion score 0.06144393241167435 - nodes in this community are weakly interconnected._
 - **Should `Child Manager 产品与工程路线图` be split into smaller, more focused modules?**
