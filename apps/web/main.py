@@ -10,7 +10,9 @@ import structlog
 from fastapi import Request, Response
 from nicegui import app, ui
 
-# Web 不能导入 packages.backend；直接配置 structlog。
+# Web 不能导入 packages.backend；使用共享 packages.security 脱敏模块。
+from packages.security.redaction import redaction_processor
+
 structlog.configure(
     processors=[
         structlog.contextvars.merge_contextvars,
@@ -18,6 +20,7 @@ structlog.configure(
         structlog.stdlib.add_logger_name,
         structlog.stdlib.add_log_level,
         structlog.processors.TimeStamper(fmt="iso"),
+        redaction_processor,
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.dev.ConsoleRenderer(),

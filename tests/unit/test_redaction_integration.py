@@ -10,7 +10,7 @@ import json
 
 import structlog
 
-from packages.backend.observability import redaction_processor
+from packages.security.redaction import redaction_processor
 
 
 def _capture_structlog_output() -> io.StringIO:

@@ -242,3 +242,92 @@ def test_runtime_unavailable_error_has_two_codes() -> None:
         "database.unavailable",
         "configuration.unavailable",
     ]
+
+
+def _runtime_paths() -> dict[str, Any]:
+    """获取运行时 OpenAPI 的 paths。"""
+
+    async def _ok() -> bool:
+        return True
+
+    deps = HealthDependencies(
+        database=_ok,
+        redis=_ok,
+        ai=_ok,
+        calendar=_ok,
+        template=_ok,
+        export_storage=_ok,
+        security_ready=True,
+    )
+    app = create_app(dependencies=deps)
+    client = TestClient(app)
+    resp = client.get("/openapi.json")
+    assert resp.status_code == 200
+    return resp.json()["paths"]
+
+
+def test_runtime_health_live_path_responses_match_static() -> None:
+    """运行时 /health/live 的 path responses 必须与静态契约等价。"""
+    static_paths = _load_spec()["paths"]
+    runtime_paths = _runtime_paths()
+
+    static_live = static_paths["/health/live"]["get"]["responses"]
+    runtime_live = runtime_paths["/health/live"]["get"]["responses"]
+
+    assert "200" in runtime_live
+    live_200 = runtime_live["200"]
+    rt_ref = live_200["content"]["application/json"]["schema"]["$ref"]
+    # 静态契约通过 HealthOk 引用 Health；运行时 FastAPI 使用 Pydantic 模型名
+    assert static_live["200"]["$ref"] == "#/components/responses/HealthOk"
+    assert rt_ref in {
+        "#/components/schemas/Health",
+        "#/components/schemas/HealthResponse",
+    }
+
+
+def test_runtime_health_ready_path_responses_match_static() -> None:
+    """运行时 /health/ready 的 path responses 必须与静态契约等价。"""
+    static_paths = _load_spec()["paths"]
+    runtime_paths = _runtime_paths()
+
+    static_ready = static_paths["/health/ready"]["get"]["responses"]
+    runtime_ready = runtime_paths["/health/ready"]["get"]["responses"]
+
+    # 200 响应必须存在且 schema 指向 Health（或 Pydantic 模型名）
+    assert "200" in runtime_ready
+    ready_200 = runtime_ready["200"]
+    rt_ref = ready_200["content"]["application/json"]["schema"]["$ref"]
+    assert rt_ref in {
+        "#/components/schemas/Health",
+        "#/components/schemas/HealthResponse",
+    }
+
+    # 503 响应必须存在且描述与静态契约一致
+    assert "503" in runtime_ready
+    assert runtime_ready["503"]["description"] == "服务不可用"
+
+    # 静态契约确认 503 引用 Unavailable 响应（含 UnavailableError schema）
+    assert static_ready["503"]["$ref"] == "#/components/responses/Unavailable"
+
+
+def test_runtime_health_schema_equivalent_to_static() -> None:
+    """运行时 Health schema 必须与静态契约结构等价。"""
+    static_spec = _load_spec()
+    static_health = static_spec["components"]["schemas"]["Health"]
+    runtime_health = _runtime_schemas()["Health"]
+
+    # status 枚举必须一致
+    assert set(runtime_health["properties"]["status"]["enum"]) == set(
+        static_health["properties"]["status"]["enum"]
+    )
+
+    # checks additionalProperties 枚举必须一致
+    runtime_checks_enum = set(
+        runtime_health["properties"]["checks"]["additionalProperties"]["enum"]
+    )
+    static_checks_enum = set(static_health["properties"]["checks"]["additionalProperties"]["enum"])
+    assert runtime_checks_enum == static_checks_enum
+
+    # 两者都不允许额外字段
+    assert runtime_health.get("additionalProperties") is False
+    assert static_health.get("additionalProperties") is False

@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
@@ -209,6 +210,6 @@ def test_web_does_not_import_backend() -> None:
         ],
         capture_output=True,
         text=True,
-        cwd="/home/admin/code/manager/trae/child-manager",
+        cwd=str(Path(__file__).resolve().parents[2]),
     )
     assert result.returncode != 0, f"Web 模块违规导入 packages.backend:\n{result.stdout}"

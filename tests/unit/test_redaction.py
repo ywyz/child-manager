@@ -1,4 +1,4 @@
-from packages.backend.security.redaction import redact_dict
+from packages.security.redaction import redact_dict
 
 
 def test_redact_sensitive_keys():
