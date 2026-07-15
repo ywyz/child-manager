@@ -1,4 +1,5 @@
-from apps.worker.main import main
+import importlib
 
 if __name__ == "__main__":
-    main()
+    module = importlib.import_module("apps.worker.main")
+    module.main()

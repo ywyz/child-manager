@@ -61,7 +61,7 @@ def test_error_responses_include_request_id():
     from fastapi.testclient import TestClient
 
     from apps.api.main import (
-        _http_error_handler,
+        _http_exception_handler,
         _request_context_middleware,
     )
 
@@ -72,7 +72,7 @@ def test_error_responses_include_request_id():
         raise HTTPException(status_code=400, detail="Bad request")
 
     app.middleware("http")(_request_context_middleware)
-    app.exception_handler(HTTPException)(_http_error_handler)
+    app.exception_handler(HTTPException)(_http_exception_handler)
     client = TestClient(app)
 
     response = client.get("/error")

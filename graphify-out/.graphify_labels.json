@@ -705,5 +705,8 @@
   "703": "Docker 镜像构建延后到 M9 并由新部署 ADR 定义",
   "704": "M1 至 M8 每次推送门禁：依赖锁定、Ruff、Pyright、Pytest",
   "705": "redact_dict",
-  "706": "validate_openapi.py"
+  "706": "validate_openapi.py",
+  "712": "__main__.py",
+  "713": "__main__.py",
+  "714": "__main__.py"
 }

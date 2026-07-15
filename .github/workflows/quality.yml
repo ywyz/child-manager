@@ -13,6 +13,25 @@ jobs:
       matrix:
         python-version: ["3.14"]
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: child_manager
+          POSTGRES_PASSWORD: child_manager_test
+          POSTGRES_DB: child_manager_test
+        ports:
+          - 127.0.0.1:5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      CHILD_MANAGER_DATABASE_URL: postgresql+psycopg://child_manager:child_manager_test@127.0.0.1:5432/child_manager_test
+      CHILD_MANAGER_TEST_DATABASE_URL: postgresql+psycopg://child_manager:child_manager_test@127.0.0.1:5432/child_manager_test
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

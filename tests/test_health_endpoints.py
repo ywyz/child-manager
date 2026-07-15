@@ -30,20 +30,17 @@ def test_health_live(client: TestClient) -> None:
     response = client.get("/health/live")
     assert response.status_code == 200
     data = response.json()
-    assert data["status"] == "healthy"
-    assert data["component"] == "api"
-    assert "request_id" in data
-    assert "timestamp" in data
+    assert data["status"] == "ok"
+    assert data["checks"] == {}
 
 
 def test_health_ready(client: TestClient) -> None:
     response = client.get("/health/ready")
     assert response.status_code == 200
     data = response.json()
-    assert data["status"] == "healthy"
-    assert data["component"] == "api"
-    assert "request_id" in data
-    assert "timestamp" in data
+    assert data["status"] == "ok"
+    assert "database" in data["checks"]
+    assert data["checks"]["database"] == "ok"
 
 
 def test_request_id_header(client: TestClient) -> None:

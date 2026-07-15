@@ -1,12 +1,16 @@
 import os
 from collections.abc import Awaitable, Callable
-from datetime import UTC
 from uuid import uuid7
 
 import structlog
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+from packages.backend.observability import configure_logging
+
+configure_logging()
 
 LOGGER = structlog.get_logger(__name__)
 
@@ -15,13 +19,24 @@ def _request_id(request: Request) -> str:
     return str(request.state.request_id)
 
 
-def _error_response(request: Request, *, status_code: int, code: str, message: str) -> JSONResponse:
-    payload = {
+def _error_response(
+    request: Request,
+    *,
+    status_code: int,
+    code: str,
+    message: str,
+    field_errors: list[dict[str, str]] | None = None,
+) -> JSONResponse:
+    request_id = _request_id(request)
+    payload: dict[str, object] = {
         "code": code,
         "message": message,
-        "request_id": _request_id(request),
+        "request_id": request_id,
+        "field_errors": field_errors or [],
     }
-    return JSONResponse(status_code=status_code, content=payload)
+    response = JSONResponse(status_code=status_code, content=payload)
+    response.headers["X-Request-ID"] = request_id
+    return response
 
 
 async def _safe_check(name: str, check: Callable[[], Awaitable[bool]]) -> bool:
@@ -153,25 +168,6 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
                 },
                 "required": ["code", "message"],
             },
-            "HealthResponse": {
-                "type": "object",
-                "properties": {
-                    "status": {"type": "string"},
-                    "checks": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "name": {"type": "string"},
-                                "status": {"type": "string"},
-                                "message": {"type": "string", "nullable": True},
-                            },
-                        },
-                    },
-                    "timestamp": {"type": "string"},
-                },
-                "required": ["status", "checks", "timestamp"],
-            },
         },
         "responses": {
             "ErrorResponse": {
@@ -211,20 +207,13 @@ async def _request_context_middleware(
 
 
 async def _live_handler(request: Request) -> dict[str, object]:
-    from datetime import datetime
-
     return {
-        "status": "healthy",
-        "component": "api",
-        "request_id": request.state.request_id,
-        "timestamp": datetime.now(UTC).isoformat(),
+        "status": "ok",
         "checks": {},
     }
 
 
 async def _ready_handler(request: Request, health: HealthDependencies) -> JSONResponse:
-    from datetime import datetime
-
     database_ready = await _safe_check("database", health.database)
     if not database_ready:
         return _error_response(
@@ -242,8 +231,8 @@ async def _ready_handler(request: Request, health: HealthDependencies) -> JSONRe
         )
 
     checks: dict[str, str] = {
-        "database": "healthy",
-        "security": "healthy",
+        "database": "ok",
+        "security": "ok",
     }
     for name, check in [
         ("redis", health.redis),
@@ -252,18 +241,10 @@ async def _ready_handler(request: Request, health: HealthDependencies) -> JSONRe
         ("template", health.template),
         ("export_storage", health.export_storage),
     ]:
-        checks[name] = "healthy" if await _safe_check(name, check) else "degraded"
+        checks[name] = "ok" if await _safe_check(name, check) else "degraded"
 
-    status = "healthy" if all(value == "healthy" for value in checks.values()) else "degraded"
-    return JSONResponse(
-        content={
-            "status": status,
-            "component": "api",
-            "request_id": request.state.request_id,
-            "timestamp": datetime.now(UTC).isoformat(),
-            "checks": checks,
-        }
-    )
+    status = "ok" if all(value == "ok" for value in checks.values()) else "degraded"
+    return JSONResponse(content={"status": status, "checks": checks})
 
 
 async def _validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
@@ -277,38 +258,31 @@ async def _validation_error_handler(request: Request, exc: RequestValidationErro
                 "message": "请求字段无效。",
             }
         )
-    payload = {
-        "code": "request.validation_error",
-        "message": "请求参数无效,请检查后重试。",
-        "request_id": _request_id(request),
-        "field_errors": field_errors,
-    }
-    return JSONResponse(status_code=422, content=payload)
-
-
-async def _not_found_handler(request: Request) -> JSONResponse:
-    response = _error_response(
+    return _error_response(
         request,
-        status_code=404,
-        code="resource.not_found",
-        message="请求的资源不存在。",
+        status_code=422,
+        code="request.validation_error",
+        message="请求参数无效,请检查后重试。",
+        field_errors=field_errors,
     )
-    response.headers["X-Request-ID"] = _request_id(request)
-    return response
 
 
-async def _http_error_handler(request: Request, exc: HTTPException) -> JSONResponse:
-    is_404 = exc.status_code == 404
-    code = "resource.not_found" if is_404 else "request.http_error"
-    message = "请求的资源不存在。" if is_404 else "请求处理失败。"
-    response = _error_response(
+async def _http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+    if exc.status_code == 404:
+        code = "resource.not_found"
+        message = "请求的资源不存在。"
+    elif exc.status_code == 405:
+        code = "request.method_not_allowed"
+        message = "请求方法不被允许。"
+    else:
+        code = "request.http_error"
+        message = "请求处理失败。"
+    return _error_response(
         request,
         status_code=exc.status_code,
         code=code,
         message=message,
     )
-    response.headers["X-Request-ID"] = _request_id(request)
-    return response
 
 
 async def _unhandled_error_handler(request: Request, exc: Exception) -> JSONResponse:
@@ -317,14 +291,12 @@ async def _unhandled_error_handler(request: Request, exc: Exception) -> JSONResp
         path=str(request.url.path),
         error_type=type(exc).__name__,
     )
-    response = _error_response(
+    return _error_response(
         request,
         status_code=500,
         code="server.internal_error",
         message="服务器内部错误,请稍后重试。",
     )
-    response.headers["X-Request-ID"] = _request_id(request)
-    return response
 
 
 def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
@@ -340,16 +312,8 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
 
     application.get("/health/ready")(ready_endpoint)
 
-    @application.api_route(
-        "/{full_path:path}",
-        methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-        include_in_schema=False,
-    )
-    async def _catch_all(request: Request) -> JSONResponse:
-        return await _not_found_handler(request)
-
     application.exception_handler(RequestValidationError)(_validation_error_handler)
-    application.exception_handler(HTTPException)(_http_error_handler)
+    application.exception_handler(StarletteHTTPException)(_http_exception_handler)
     application.exception_handler(Exception)(_unhandled_error_handler)
 
     return application
@@ -359,16 +323,17 @@ app = create_app()
 
 
 def _validate_bind_host(host: str) -> None:
+    """进程只能绑定回环地址，包括开发环境。"""
     from ipaddress import ip_address
 
     try:
-        if not ip_address(host).is_loopback:
-            environment = os.environ.get("CHILD_MANAGER_ENV", "production")
-            if environment != "development":
-                raise ValueError("非开发环境 API 只能绑定回环地址")
-    except ValueError as err:
-        if host != "localhost":
-            raise ValueError("API 只能绑定回环地址") from err
+        if ip_address(host).is_loopback:
+            return
+    except ValueError:
+        pass
+    if host == "localhost":
+        return
+    raise ValueError(f"API 只能绑定回环地址,当前值: {host}")
 
 
 def main() -> None:

@@ -1,4 +1,5 @@
 import ipaddress
+import os
 import socket
 from collections.abc import Iterator
 from typing import Any
@@ -8,6 +9,11 @@ from uuid import uuid4
 import pytest
 
 from tests.database_config import require_test_database_url
+
+# 在任何 session.py 导入前设置 CHILD_MANAGER_DATABASE_URL，
+# 避免生产代码因缺少环境变量而拒绝创建引擎。
+if not os.environ.get("CHILD_MANAGER_DATABASE_URL"):
+    os.environ["CHILD_MANAGER_DATABASE_URL"] = require_test_database_url()
 
 BASE_DATABASE_URL = require_test_database_url()
 IS_POSTGRESQL = BASE_DATABASE_URL.startswith("postgresql")

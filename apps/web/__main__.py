@@ -1,4 +1,5 @@
-from apps.web.main import main
+import importlib
 
 if __name__ == "__main__":
-    main()
+    module = importlib.import_module("apps.web.main")
+    module.main()

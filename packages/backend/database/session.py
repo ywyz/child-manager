@@ -7,9 +7,11 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 def _get_database_url() -> str:
     url = os.environ.get("CHILD_MANAGER_DATABASE_URL")
-    if url:
-        return url
-    return "sqlite+aiosqlite:///:memory:"
+    if not url:
+        raise RuntimeError(
+            "未配置 CHILD_MANAGER_DATABASE_URL；生产环境必须显式配置 PostgreSQL 连接串"
+        )
+    return url
 
 
 engine = create_engine(

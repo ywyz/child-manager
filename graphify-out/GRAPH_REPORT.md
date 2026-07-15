@@ -1,16 +1,16 @@
 # Graph Report - child-manager  (2026-07-15)
 
 ## Corpus Check
-- 153 files · ~82,021 words
+- 156 files · ~83,138 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2195 nodes · 1884 edges · 707 communities (174 shown, 533 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 20 edges (avg confidence: 0.68)
+- 2245 nodes · 1995 edges · 710 communities (177 shown, 533 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 31 edges (avg confidence: 0.68)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d4d2d93a`
+- Built from commit: `796200aa`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -693,25 +693,23 @@
 6. `Child Manager PostgreSQL 数据库 Schema` - 19 edges
 7. `Child Manager 产品与工程路线图` - 18 edges
 8. `Tasks: 首期一日活动计划完整闭环` - 17 edges
-9. `Child Manager 项目上下文` - 15 edges
-10. `Child Manager 幼儿园教育管理系统` - 15 edges
+9. `create_app()` - 15 edges
+10. `Child Manager 项目上下文` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `_make_dependencies()` --references--> `HealthDependencies`  [EXTRACTED]
+  tests/api/test_health.py → apps/api/main.py
+- `mock_health_dependencies()` --references--> `HealthDependencies`  [EXTRACTED]
+  tests/test_health_endpoints.py → apps/api/main.py
+- `test_500_returns_chinese_internal_error()` --indirect_call--> `_request_context_middleware()`  [INFERRED]
+  tests/api/test_error_handling.py → apps/api/main.py
+- `test_http_exception_400_returns_chinese_envelope()` --indirect_call--> `_request_context_middleware()`  [INFERRED]
+  tests/api/test_error_handling.py → apps/api/main.py
 - `test_error_responses_include_request_id()` --indirect_call--> `_request_context_middleware()`  [INFERRED]
   tests/unit/test_observability.py → apps/api/main.py
-- `test_request_context_middleware_accepts_supplied_ids()` --indirect_call--> `_request_context_middleware()`  [INFERRED]
-  tests/unit/test_observability.py → apps/api/main.py
-- `test_request_context_middleware_generates_ids()` --indirect_call--> `_request_context_middleware()`  [INFERRED]
-  tests/unit/test_observability.py → apps/api/main.py
-- `test_error_responses_include_request_id()` --indirect_call--> `_http_error_handler()`  [INFERRED]
-  tests/unit/test_observability.py → apps/api/main.py
-- `test_proxy_preserves_auth_set_cookie_as_raw_headers()` --calls--> `proxy_request()`  [EXTRACTED]
-  tests/web/test_bff_proxy.py → apps/web/main.py
 
 ## Import Cycles
-- 1-file cycle: `apps/api/__main__.py -> apps/api/__main__.py`
-- 1-file cycle: `apps/web/__main__.py -> apps/web/__main__.py`
-- 1-file cycle: `apps/worker/__main__.py -> apps/worker/__main__.py`
+- None detected.
 
 ## Hyperedges (group relationships)
 - **M1 并行实现结构** — docs_development_m1_issue_drafts_m1_shared_parent_issue, docs_development_m1_issue_drafts_codex_implementation_issue, docs_development_m1_issue_drafts_trae_implementation_issue, docs_development_m1_issue_drafts_t003_shared_branch_baseline [EXTRACTED 1.00]
@@ -737,7 +735,7 @@
 - **双实现本地运行隔离合同** — docs_development_local_development_environments_worktree_isolation, docs_development_local_development_environments_runtime_profile_isolation, docs_development_local_development_environments_loopback_binding, docs_development_local_development_environments_minimal_compose_dependencies [EXTRACTED 1.00]
 - **中国大陆依赖下载与官方回退策略** — docs_development_local_development_environments_cernet_uv_mirror, docs_development_local_development_environments_official_pypi_fallback, docs_development_local_development_environments_container_image_override, docs_development_local_development_environments_official_image_default [EXTRACTED 1.00]
 
-## Communities (707 total, 533 thin omitted)
+## Communities (710 total, 533 thin omitted)
 
 ### Community 0 - "Child Manager 产品与工程路线图"
 Cohesion: 0.04
@@ -844,7 +842,7 @@ Cohesion: 0.15
 Nodes (12): ADR-0005：AI 供应商中立，并建立管理员专用提示词系统, AI 直接写入教案当前内容, 允许提示词定义输出 Schema, 决策, 只配置一个全局模型, 后果, 备选方案, 复审触发条件 (+4 more)
 
 ### Community 26 - "D1 历史隐私清理完成并关闭 M0-G7"
-Cohesion: 0.16
+Cohesion: 0.17
 Nodes (13): ApiClient, BffResponse, main(), proxy_request(), Any, register_web(), _require_loopback(), AsyncBaseTransport (+5 more)
 
 ### Community 27 - "Child Manager 系统架构设计"
@@ -1237,7 +1235,7 @@ Nodes (17): DailyReflection, LessonPlan, PlanArchiveRequest, PlanAuthor, PlanAut
 
 ### Community 608 - "main.py"
 Cohesion: 0.09
-Nodes (36): _ai_unconfigured(), build_health_dependencies(), _calendar_library_available(), create_app(), custom_openapi(), _error_response(), HealthDependencies, _http_error_handler() (+28 more)
+Nodes (45): _ai_unconfigured(), build_health_dependencies(), _calendar_library_available(), create_app(), custom_openapi(), _error_response(), HealthDependencies, _http_exception_handler() (+37 more)
 
 ### Community 609 - "settings.py"
 Cohesion: 0.33
@@ -1256,28 +1254,28 @@ Cohesion: 0.30
 Nodes (11): Prompt, PromptCapability, PromptCreateRequest, PromptPublishRequest, PromptResultSchema, PromptTestRequest, PromptTestRun, PromptUpdateRequest (+3 more)
 
 ### Community 613 - "identity.py"
-Cohesion: 0.14
-Nodes (15): DeclarativeBase, get_database_url(), run_migrations_offline(), run_migrations_online(), Base, get_db_session(), get_db_session 应该在成功时提交, get_db_session 应该在异常时回滚 (+7 more)
+Cohesion: 0.16
+Nodes (13): DeclarativeBase, get_database_url(), Alembic 迁移环境。  模块级代码需兼容两种导入方式： 1. alembic.command.upgrade/downgrade 调用时，context., run_migrations_offline(), run_migrations_online(), Base, get_db_session(), get_db_session 应该在成功时提交 (+5 more)
 
 ### Community 614 - "exports.py"
-Cohesion: 0.17
-Nodes (10): build_deterministic_test_broker(), build_redis_broker(), build_test_broker(), Broker, main(), Broker, Event, serve() (+2 more)
+Cohesion: 0.14
+Nodes (18): build_deterministic_test_broker(), build_redis_broker(), Broker, main(), Broker, Event, serve(), Event (+10 more)
 
 ### Community 615 - "models.py"
 Cohesion: 0.33
 Nodes (8): ModelCapability, ModelProfile, ModelProfileCreateRequest, ModelProfileEnableRequest, ModelProfileListResponse, ModelProfileUpdateRequest, BaseModel, StrEnum
 
 ### Community 616 - "audit.py"
-Cohesion: 0.38
-Nodes (5): block_external_network(), isolated_database_url(), _native_psycopg_url(), MonkeyPatch, require_test_database_url()
+Cohesion: 0.17
+Nodes (11): downgrade(), upgrade(), block_external_network(), isolated_database_url(), _native_psycopg_url(), MonkeyPatch, require_test_database_url(), MonkeyPatch (+3 more)
 
 ### Community 702 - "0000_foundation.py"
-Cohesion: 0.33
-Nodes (4): downgrade(), upgrade(), test_alembic_can_run_downgrade(), test_alembic_can_run_upgrade()
+Cohesion: 0.30
+Nodes (16): _always_false(), _always_true(), client_factory(), _error_schema(), _health_schema(), _make_dependencies(), 健康检查端点权威行为覆盖。  验证运行时 /health/live 和 /health/ready 响应符合静态 OpenAPI 契约， 而非仅验证 YAML, test_live_response_has_no_extra_fields() (+8 more)
 
 ### Community 705 - "redact_dict"
-Cohesion: 0.38
-Nodes (8): _is_sensitive_key(), Any, redact_dict(), redact_value(), test_redact_list(), test_redact_nested_dict(), test_redact_preserves_non_sensitive(), test_redact_sensitive_keys()
+Cohesion: 0.12
+Nodes (26): EventDict, configure_logging(), Any, 结构化日志配置与脱敏处理器。  将 redaction 模块接入 structlog 处理链，确保日志中的敏感字段 （密钥、密码、令牌、Cookie 等）在输出, structlog 处理器：递归脱敏事件字典中的敏感字段。, 配置 structlog 处理链，包含脱敏处理器。, redaction_processor(), _is_sensitive_key() (+18 more)
 
 ## Knowledge Gaps
 - **1350 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1345 more)
@@ -1295,12 +1293,12 @@ Nodes (8): _is_sensitive_key(), Any, redact_dict(), redact_value(), test_redact_
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Child Manager 产品与工程路线图` connect `Child Manager 产品与工程路线图` to `README.md`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Why does `教案管理 PRD（首期：一日活动计划）` connect `教案管理 PRD（首期：一日活动计划）` to `README.md`, `12. AI 模型与提示词管理`, `7. 首期必要设置`, `5. 用户与权限`, `8. 核心业务对象`, `9. 日期与上下文规则`, `18. 验收标准`, `11. 计划管理流程`, `14. Word 导出`, `17. 非功能要求`, `10. 教案栏目与格式`, `13. AI 生成流程`, `15. 安全、隐私与审计`, `4. 产品目标`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+- **Why does `Child Manager PostgreSQL 数据库 Schema` connect `Child Manager PostgreSQL 数据库 Schema` to `3. PostgreSQL 物理约定`, `5. 园所与身份 Schema`, `README.md`, `6. 教学设置 Schema`, `8. 提示词 Schema`, `9. 一日活动计划 Schema`, `10. 后台任务与 AI 结果 Schema`, `12. 系统支撑 Schema`, `2. 事实来源与旧仓库取舍`, `7. AI 模型档案 Schema`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Why does `Child Manager 数据模型设计` connect `Child Manager 数据模型设计` to `15. 数据快照边界`, `22. 后续扩展边界`, `2. 设计来源与旧系统取舍`, `5. 园所与身份模型`, `README.md`, `6. 教学设置模型`, `8. 提示词模型`, `11. 后台任务与 AI 结果`, `16. 外键与删除行为`, `21. 测试与验收`, `4. 模型总览`, `7. AI 模型档案`, `3. 总体建模原则`, `9. 一日活动计划模型`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
   _1350 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Child Manager 产品与工程路线图` be split into smaller, more focused modules?**
