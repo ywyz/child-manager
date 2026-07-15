@@ -31,7 +31,7 @@ def test_alembic_script_directory_exists():
 def test_alembic_config_is_valid():
     """Alembic 配置应该有效"""
     config = Config("alembic.ini")
-    
+
     assert config.get_main_option("script_location") is not None
 
 

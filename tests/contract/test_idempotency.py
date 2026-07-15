@@ -17,7 +17,7 @@ def test_idempotency_key_validation():
 def test_idempotency_key_missing_scope():
     """IdempotencyKey 缺少 scope 字段应该失败"""
     from pydantic import ValidationError
-    
+
     with pytest.raises(ValidationError):
         IdempotencyKey(key="test-key")
 
@@ -29,7 +29,7 @@ def test_idempotency_key_format():
         "user-create-uuid-1234",
         "plan-save-20240101-class-1",
     ]
-    
+
     for key_value in valid_keys:
         key = IdempotencyKey(key=key_value, scope="test")
         assert key.key == key_value

@@ -25,7 +25,7 @@ def test_get_db_session_rolls_back_on_exception():
 def test_session_factory_config():
     """会话工厂应该配置正确"""
     from packages.backend.database.session import SessionLocal
-    
+
     session = SessionLocal()
     assert session is not None
     session.close()

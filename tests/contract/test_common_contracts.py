@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
@@ -7,10 +7,10 @@ from pydantic import ValidationError
 from packages.contracts.common import (
     ErrorResponse,
     FieldError,
-    PaginatedResponse,
-    RequestContext,
     HealthCheckResult,
     HealthResponse,
+    PaginatedResponse,
+    RequestContext,
 )
 
 
@@ -91,7 +91,7 @@ def test_health_response_validation():
             {"name": "database", "status": "healthy"},
             {"name": "redis", "status": "healthy"},
         ],
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
     response = HealthResponse(**data)
     assert len(response.checks) == 2

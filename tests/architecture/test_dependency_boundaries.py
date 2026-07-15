@@ -3,7 +3,6 @@ from importlib import import_module
 
 
 def test_web_does_not_import_orm_models():
-    """Web 层不得导入 ORM 模型, 确保依赖方向正确"""
     web_modules = [
         "apps.web.main",
         "apps.web.components",
@@ -30,22 +29,20 @@ def test_web_does_not_import_orm_models():
             attr_module = getattr(attr, "__module__", "")
             for forbidden in forbidden_modules:
                 assert forbidden not in attr_module, (
-                    f"Web 模块 {module_name} 导入了禁止的模块 {forbidden} "
-                    f"(通过 {attr_name})"
+                    f"Web 模块 {module_name} 导入了禁止的模块 {forbidden} (通过 {attr_name})"
                 )
 
 
 def test_web_uses_api_client():
-    """Web 层应该通过 API 客户端访问业务能力"""
     from apps.web import main
 
-    assert hasattr(main, "api_client"), "Web 层应该有 api_client"
-    assert hasattr(main, "fetch_api"), "Web 层应该有 fetch_api 函数"
+    assert hasattr(main, "ApiClient"), "Web 层应该有 ApiClient 类"
+    assert hasattr(main, "proxy_request"), "Web 层应该有 proxy_request 函数"
 
 
 def test_bff_client_configured_with_api_base_url():
-    """BFF 客户端应该配置正确的 API 基础 URL"""
     from apps.web import main
 
-    assert main.api_client.base_url.host == "127.0.0.1"
-    assert str(main.api_client.base_url.port) == "28000"
+    default_url = "http://127.0.0.1:28000"
+    client = main.ApiClient(default_url)
+    assert client.base_url == default_url

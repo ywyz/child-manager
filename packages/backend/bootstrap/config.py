@@ -1,3 +1,6 @@
+from ipaddress import ip_address
+
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -34,6 +37,17 @@ class Settings(BaseSettings):
     ai_api_timeout_seconds: int = 60
 
     allowed_hosts: list[str] = ["localhost", "127.0.0.1"]
+
+    @field_validator("api_host", "web_host")
+    @classmethod
+    def validate_loopback_host(cls, v: str) -> str:
+        try:
+            if not ip_address(v).is_loopback:
+                raise ValueError(f"必须使用回环地址,当前值: {v}")
+        except ValueError as err:
+            if v != "localhost":
+                raise ValueError(f"必须使用回环地址,当前值: {v}") from err
+        return v
 
     @property
     def resolved_database_url(self) -> str:

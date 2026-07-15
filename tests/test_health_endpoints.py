@@ -1,11 +1,28 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from apps.api.main import app
+from apps.api.main import HealthDependencies, create_app
 
 
 @pytest.fixture
-def client():
+def mock_health_dependencies():
+    async def always_ready() -> bool:
+        return True
+
+    return HealthDependencies(
+        database=always_ready,
+        redis=always_ready,
+        ai=always_ready,
+        calendar=always_ready,
+        template=always_ready,
+        export_storage=always_ready,
+        security_ready=True,
+    )
+
+
+@pytest.fixture
+def client(mock_health_dependencies):
+    app = create_app(dependencies=mock_health_dependencies)
     return TestClient(app)
 
 
