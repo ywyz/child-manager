@@ -48,7 +48,9 @@ def isolated_database_url() -> Iterator[str]:
         try:
             yield f"{BASE_DATABASE_URL}?options={options}"
         finally:
-            with psycopg.connect(_native_psycopg_url(BASE_DATABASE_URL), autocommit=True) as connection:
+            with psycopg.connect(
+                _native_psycopg_url(BASE_DATABASE_URL), autocommit=True
+            ) as connection:
                 connection.execute(sql.SQL("DROP SCHEMA {} CASCADE").format(sql.Identifier(schema)))
     else:
         yield BASE_DATABASE_URL
