@@ -198,18 +198,15 @@ def test_health_response_rejects_extra_fields() -> None:
 
 def test_web_does_not_import_backend() -> None:
     """Web 不得导入 packages.backend（T019 依赖方向）。"""
-    import subprocess
+    import re
 
-    result = subprocess.run(
-        [
-            "rg",
-            "--glob",
-            "apps/web/**/*.py",
-            "^\\s*(from|import)\\s+packages\\.backend",
-            ".",
-        ],
-        capture_output=True,
-        text=True,
-        cwd=str(Path(__file__).resolve().parents[2]),
-    )
-    assert result.returncode != 0, f"Web 模块违规导入 packages.backend:\n{result.stdout}"
+    project_root = Path(__file__).resolve().parents[2]
+    pattern = re.compile(r"^\s*(from|import)\s+packages\.backend", re.MULTILINE)
+    web_dir = project_root / "apps" / "web"
+    violations: list[str] = []
+    if web_dir.is_dir():
+        for py_file in web_dir.rglob("*.py"):
+            content = py_file.read_text(encoding="utf-8", errors="replace")
+            if pattern.search(content):
+                violations.append(str(py_file.relative_to(project_root)))
+    assert not violations, "Web 模块违规导入 packages.backend:\n" + "\n".join(violations)

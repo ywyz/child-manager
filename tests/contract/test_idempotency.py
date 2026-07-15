@@ -58,12 +58,12 @@ def test_canonical_fingerprint_query_order_insensitive() -> None:
     fp1 = canonical_fingerprint(
         path="/api/v1/users",
         method="GET",
-        query_params={"page": 1, "page_size": 20},
+        query_params=[("page", "1"), ("page_size", "20")],
     )
     fp2 = canonical_fingerprint(
         path="/api/v1/users",
         method="GET",
-        query_params={"page_size": 20, "page": 1},
+        query_params=[("page_size", "20"), ("page", "1")],
     )
     assert fp1 == fp2
 
@@ -120,3 +120,39 @@ def test_idempotency_key_from_fingerprint() -> None:
     key = idempotency_key_from_fingerprint(fingerprint, scope)
     assert key.key == fingerprint
     assert key.scope == scope
+
+
+def test_idempotency_key_max_length_200() -> None:
+    """幂等键最长 200 字符，201 字符必须拒绝。"""
+    from pydantic import ValidationError
+
+    key_200 = "a" * 200
+    assert IdempotencyKey(key=key_200, scope="s").key == key_200
+
+    key_201 = "a" * 201
+    with pytest.raises(ValidationError):
+        IdempotencyKey(key=key_201, scope="s")
+
+
+def test_canonical_fingerprint_duplicate_query_values() -> None:
+    """重复 query 参数按 (name, value) 元组排序。"""
+    fp1 = canonical_fingerprint(
+        path="/api/v1/search",
+        method="GET",
+        query_params=[("tag", "a"), ("tag", "b")],
+    )
+    fp2 = canonical_fingerprint(
+        path="/api/v1/search",
+        method="GET",
+        query_params=[("tag", "b"), ("tag", "a")],
+    )
+    # 相同 (name, value) 对，顺序不同，排序后应一致
+    assert fp1 == fp2
+
+    fp3 = canonical_fingerprint(
+        path="/api/v1/search",
+        method="GET",
+        query_params=[("tag", "a"), ("tag", "c")],
+    )
+    # 值不同，指纹应不同
+    assert fp1 != fp3

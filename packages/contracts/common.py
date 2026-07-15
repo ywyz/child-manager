@@ -1,5 +1,6 @@
 import hashlib
 import json
+from collections.abc import Sequence
 from typing import Any, Literal, TypeVar
 from uuid import UUID
 
@@ -41,7 +42,7 @@ class PaginatedResponse[T](BaseModel):
 class IdempotencyKey(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    key: str = Field(..., description="幂等键")
+    key: str = Field(..., max_length=200, description="幂等键")
     scope: str = Field(..., description="作用域")
 
 
@@ -58,39 +59,48 @@ class HealthResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     status: Literal["ok", "degraded", "unavailable"] = Field(..., description="整体状态")
-    checks: dict[str, Literal["ok", "degraded", "unavailable", "not_required"]] = Field(
-        ..., description="检查项列表"
-    )
+    checks: dict[
+        str,
+        Literal["ok", "degraded", "unavailable", "not_required"],
+    ] = Field(..., description="检查项列表")
 
 
 def canonical_fingerprint(
     *,
     path: str,
     method: str,
-    query_params: dict[str, Any] | None = None,
+    query_params: Sequence[tuple[str, str]] | None = None,
     body: Any = None,
     scope: str | None = None,
 ) -> str:
-    components = {
+    components: dict[str, Any] = {
         "method": method.upper(),
         "path": path,
         "scope": scope or "",
     }
 
     if query_params:
+        normalized = sorted(query_params)
         components["query"] = json.dumps(
-            dict(sorted(query_params.items())),
-            sort_keys=True,
+            normalized,
             separators=(",", ":"),
         )
 
     if body is not None:
         if isinstance(body, (dict, list)):
-            components["body"] = json.dumps(body, sort_keys=True, separators=(",", ":"))
+            components["body"] = json.dumps(
+                body,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
         else:
             components["body"] = str(body)
 
-    fingerprint_input = json.dumps(components, sort_keys=True, separators=(",", ":"))
+    fingerprint_input = json.dumps(
+        components,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
     return hashlib.sha256(fingerprint_input.encode("utf-8")).hexdigest()
 
 
