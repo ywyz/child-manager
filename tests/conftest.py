@@ -10,6 +10,11 @@ import pytest
 
 from tests.database_config import require_test_database_url
 
+# 在任何 config.py / session.py 导入前设置环境，
+# 避免 Settings 默认 production 拒绝 SQLite 测试库。
+if not os.environ.get("ENVIRONMENT"):
+    os.environ["ENVIRONMENT"] = "test"
+
 # 在任何 session.py 导入前设置 CHILD_MANAGER_DATABASE_URL，
 # 避免生产代码因缺少环境变量而拒绝创建引擎。
 if not os.environ.get("CHILD_MANAGER_DATABASE_URL"):

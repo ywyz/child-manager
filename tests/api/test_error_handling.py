@@ -134,3 +134,25 @@ def test_http_exception_400_returns_chinese_envelope() -> None:
     data = response.json()
     assert data["code"] == "request.http_error"
     assert "request_id" in data
+
+
+def test_contextvars_cleared_after_request() -> None:
+    """请求完成后 contextvars 必须被清理。"""
+    import structlog.contextvars as ctxvars
+
+    client = _make_client()
+    client.get("/health/live")
+    bound = ctxvars.get_contextvars()
+    assert "request_id" not in bound
+    assert "trace_id" not in bound
+
+
+def test_contextvars_cleared_after_error() -> None:
+    """异常路径后 contextvars 也必须被清理。"""
+    import structlog.contextvars as ctxvars
+
+    client = _make_client()
+    client.get("/missing")
+    bound = ctxvars.get_contextvars()
+    assert "request_id" not in bound
+    assert "trace_id" not in bound

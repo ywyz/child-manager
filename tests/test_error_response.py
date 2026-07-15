@@ -19,23 +19,28 @@ def test_openapi_schema_exists(client: TestClient) -> None:
 
 
 def test_error_response_model_structure() -> None:
-    error = ErrorResponse(
-        code="resource.not_found",
-        message="资源不存在",
-        request_id="0198a7b0-1234-7890-abcd-ef0123456789",
-        field_errors=[],
+    error = ErrorResponse.model_validate(
+        {
+            "code": "resource.not_found",
+            "message": "资源不存在",
+            "request_id": "0198a7b0-1234-7890-abcd-ef0123456789",
+            "field_errors": [],
+        }
     )
     assert error.code == "resource.not_found"
     assert error.message == "资源不存在"
-    assert error.request_id == "0198a7b0-1234-7890-abcd-ef0123456789"
+    assert str(error.request_id) == "0198a7b0-1234-7890-abcd-ef0123456789"
     assert error.field_errors == []
 
 
 def test_error_response_defaults() -> None:
-    error = ErrorResponse(
-        code="server.internal_error",
-        message="服务器内部错误",
-        request_id="0198a7b0-1234-7890-abcd-ef0123456789",
+    error = ErrorResponse.model_validate(
+        {
+            "code": "server.internal_error",
+            "message": "服务器内部错误",
+            "request_id": "0198a7b0-1234-7890-abcd-ef0123456789",
+            "field_errors": [],
+        }
     )
     data = error.model_dump()
     assert data["code"] == "server.internal_error"

@@ -8,6 +8,10 @@ import httpx
 from fastapi import Request, Response
 from nicegui import app, ui
 
+from packages.backend.observability import configure_logging
+
+configure_logging()
+
 _REQUEST_HEADER_ALLOWLIST = {
     b"accept",
     b"content-type",

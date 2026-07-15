@@ -1,12 +1,16 @@
 """OpenAPI 契约锁定测试。
 
 读取静态 openapi.yaml 并锁定关键结构，防止后续实现漂移。
+增加运行时 OpenAPI 与静态契约的一致性门禁。
 """
 
 from pathlib import Path
 from typing import Any
 
 import yaml
+from fastapi.testclient import TestClient
+
+from apps.api.main import HealthDependencies, create_app
 
 SPEC_PATH = (
     Path(__file__).resolve().parents[2] / "specs/001-daily-activity-plan/contracts/openapi.yaml"
@@ -118,3 +122,75 @@ def test_pagination_parameters_locked() -> None:
     assert page_size["schema"]["minimum"] == 1
     assert page_size["schema"]["maximum"] == 100
     assert page_size["schema"]["default"] == 20
+
+
+def _runtime_schemas() -> dict[str, Any]:
+    """获取运行时 OpenAPI 的 components/schemas。"""
+
+    async def _ok() -> bool:
+        return True
+
+    deps = HealthDependencies(
+        database=_ok,
+        redis=_ok,
+        ai=_ok,
+        calendar=_ok,
+        template=_ok,
+        export_storage=_ok,
+        security_ready=True,
+    )
+    app = create_app(dependencies=deps)
+    client = TestClient(app)
+    resp = client.get("/openapi.json")
+    assert resp.status_code == 200
+    return resp.json()["components"]["schemas"]
+
+
+def test_runtime_error_schema_has_required_envelope() -> None:
+    """运行时 Error schema 必须包含 code/message/request_id/field_errors。"""
+    schemas = _runtime_schemas()
+    error = schemas["Error"]
+    assert set(error["required"]) == {
+        "code",
+        "message",
+        "request_id",
+        "field_errors",
+    }
+
+
+def test_runtime_error_request_id_is_uuid_format() -> None:
+    """运行时 Error 的 request_id 必须是 uuid 格式。"""
+    schemas = _runtime_schemas()
+    error = schemas["Error"]
+    props = error["properties"]
+    request_id_schema = props["request_id"]
+    assert request_id_schema.get("format") == "uuid"
+
+
+def test_runtime_error_no_additional_properties() -> None:
+    """运行时 Error schema 必须禁止额外字段。"""
+    schemas = _runtime_schemas()
+    error = schemas["Error"]
+    assert error.get("additionalProperties") is False
+
+
+def test_runtime_health_schema_present() -> None:
+    """运行时必须包含 Health schema。"""
+    schemas = _runtime_schemas()
+    assert "Health" in schemas
+    health = schemas["Health"]
+    assert health.get("additionalProperties") is False
+    props = health["properties"]
+    assert "status" in props
+    assert "checks" in props
+
+
+def test_runtime_unavailable_error_has_two_codes() -> None:
+    """运行时 UnavailableError 必须恰好是两个稳定 503 code。"""
+    schemas = _runtime_schemas()
+    unavail = schemas["UnavailableError"]
+    code_prop = unavail["properties"]["code"]
+    assert code_prop["enum"] == [
+        "database.unavailable",
+        "configuration.unavailable",
+    ]

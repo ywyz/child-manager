@@ -151,91 +151,60 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
         return application.openapi_schema
     from fastapi.openapi.utils import get_openapi
 
+    from packages.contracts.common import ErrorResponse, HealthResponse
+
     openapi_schema = get_openapi(
         title=application.title,
         version=application.version,
         routes=application.routes,
     )
-    openapi_schema["components"] = {
-        "schemas": {
-            "Error": {
-                "type": "object",
-                "additionalProperties": False,
-                "required": [
-                    "code",
-                    "message",
-                    "request_id",
-                    "field_errors",
+    error_schema = ErrorResponse.model_json_schema(
+        ref_template="#/components/schemas/$defs/{model}"
+    )
+    error_defs = error_schema.pop("$defs", {})
+    health_schema = HealthResponse.model_json_schema(
+        ref_template="#/components/schemas/$defs/{model}"
+    )
+    unavailable_schema: dict[str, object] = {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["code", "message", "request_id", "field_errors"],
+        "properties": {
+            "code": {
+                "type": "string",
+                "enum": [
+                    "database.unavailable",
+                    "configuration.unavailable",
                 ],
-                "properties": {
-                    "code": {
-                        "type": "string",
-                        "pattern": r"^[a-z][a-z0-9_.-]+$",
-                    },
-                    "message": {"type": "string"},
-                    "request_id": {
-                        "type": "string",
-                        "format": "uuid",
-                    },
-                    "field_errors": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "additionalProperties": False,
-                            "required": ["field", "code", "message"],
-                            "properties": {
-                                "field": {"type": "string"},
-                                "code": {"type": "string"},
-                                "message": {"type": "string"},
-                            },
-                        },
-                    },
-                },
             },
-            "UnavailableError": {
-                "type": "object",
-                "additionalProperties": False,
-                "required": [
-                    "code",
-                    "message",
-                    "request_id",
-                    "field_errors",
-                ],
-                "properties": {
-                    "code": {
-                        "type": "string",
-                        "enum": [
-                            "database.unavailable",
-                            "configuration.unavailable",
-                        ],
-                    },
-                    "message": {"type": "string"},
-                    "request_id": {
-                        "type": "string",
-                        "format": "uuid",
-                    },
-                    "field_errors": {
-                        "type": "array",
-                        "maxItems": 0,
-                        "items": {
-                            "type": "object",
-                            "additionalProperties": False,
-                            "required": ["field", "code", "message"],
-                            "properties": {
-                                "field": {"type": "string"},
-                                "code": {"type": "string"},
-                                "message": {"type": "string"},
-                            },
-                        },
-                    },
-                },
+            "message": {"type": "string"},
+            "request_id": {"type": "string", "format": "uuid"},
+            "field_errors": {
+                "type": "array",
+                "maxItems": 0,
+                "items": {"$ref": "#/components/schemas/$defs/FieldError"},
             },
         },
+    }
+    schemas: dict[str, object] = {
+        **error_defs,
+        "Error": error_schema,
+        "Health": health_schema,
+        "UnavailableError": unavailable_schema,
+    }
+    openapi_schema["components"] = {
+        "schemas": schemas,
         "responses": {
             "ErrorResponse": {
                 "description": "错误响应",
                 "content": {
                     "application/json": {"schema": {"$ref": "#/components/schemas/Error"}},
+                },
+            },
+            "HealthOk": {
+                "description": "健康状态",
+                "content": {
+                    "application/json": {"schema": {"$ref": "#/components/schemas/Health"}},
                 },
             },
             "Unavailable": {
@@ -282,9 +251,12 @@ async def _request_context_middleware(
     ctxvars.clear_contextvars()
     ctxvars.bind_contextvars(request_id=request_id, trace_id=trace_id)
 
-    response = await call_next(request)
-    response.headers["X-Request-ID"] = request_id
-    return response
+    try:
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = request_id
+        return response
+    finally:
+        ctxvars.clear_contextvars()
 
 
 async def _live_handler(request: Request) -> dict[str, object]:
@@ -386,12 +358,25 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
     application.openapi = lambda: custom_openapi(application)
 
     application.middleware("http")(_request_context_middleware)
-    application.get("/health/live")(_live_handler)
+
+    from packages.contracts.common import HealthResponse
+
+    application.get(
+        "/health/live",
+        response_model=HealthResponse,
+        responses={},
+    )(_live_handler)
 
     async def ready_endpoint(request: Request) -> JSONResponse:
         return await _ready_handler(request, health)
 
-    application.get("/health/ready")(ready_endpoint)
+    application.get(
+        "/health/ready",
+        response_model=HealthResponse,
+        responses={
+            503: {"model": None, "description": "服务不可用"},
+        },
+    )(ready_endpoint)
 
     application.exception_handler(RequestValidationError)(_validation_error_handler)
     application.exception_handler(StarletteHTTPException)(_http_exception_handler)

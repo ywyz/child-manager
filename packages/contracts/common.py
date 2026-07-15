@@ -1,30 +1,37 @@
 import hashlib
 import json
 from typing import Any, TypeVar
+from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 T = TypeVar("T")
 
 
 class FieldError(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     field: str = Field(..., description="字段路径")
     code: str = Field(..., description="稳定机器码")
     message: str = Field(..., description="字段错误消息")
 
 
 class ErrorResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     code: str = Field(
         ...,
         description="稳定英文机器码",
         pattern=r"^[a-z][a-z0-9_.-]+$",
     )
     message: str = Field(..., description="中文错误消息")
-    request_id: str = Field(..., description="请求 ID (UUID)")
-    field_errors: list[FieldError] = Field(default_factory=list, description="字段级错误")
+    request_id: UUID = Field(..., description="请求 ID (UUID)")
+    field_errors: list[FieldError] = Field(..., description="字段级错误")
 
 
 class PaginatedResponse[T](BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     items: list[T] = Field(..., description="数据列表")
     page: int = Field(..., ge=1, description="当前页码")
     page_size: int = Field(..., ge=1, le=100, description="每页大小")
@@ -32,15 +39,19 @@ class PaginatedResponse[T](BaseModel):
 
 
 class IdempotencyKey(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     key: str = Field(..., description="幂等键")
     scope: str = Field(..., description="作用域")
 
 
 class RequestContext(BaseModel):
-    request_id: str = Field(..., description="请求ID")
-    trace_id: str | None = Field(None, description="追踪ID")
-    kindergarten_id: str | None = Field(None, description="园所ID")
-    user_id: str | None = Field(None, description="用户ID")
+    model_config = ConfigDict(extra="forbid")
+
+    request_id: UUID = Field(..., description="请求ID")
+    trace_id: UUID | None = Field(None, description="追踪ID")
+    kindergarten_id: UUID | None = Field(None, description="园所ID")
+    user_id: UUID | None = Field(None, description="用户ID")
 
 
 class HealthCheckResult(BaseModel):
@@ -50,9 +61,10 @@ class HealthCheckResult(BaseModel):
 
 
 class HealthResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     status: str = Field(..., description="整体状态")
-    checks: list[HealthCheckResult] = Field(..., description="检查项列表")
-    timestamp: str = Field(..., description="时间戳")
+    checks: dict[str, str] = Field(..., description="检查项列表")
 
 
 def canonical_fingerprint(

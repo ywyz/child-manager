@@ -1,7 +1,8 @@
 from packages.backend.bootstrap.config import Settings
 
 
-def test_settings_defaults():
+def test_settings_defaults(monkeypatch):
+    monkeypatch.delenv("ENVIRONMENT", raising=False)
     settings = Settings()
     assert settings.environment == "production"
     assert settings.api_host == "127.0.0.1"
