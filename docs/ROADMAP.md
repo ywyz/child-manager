@@ -167,12 +167,12 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 
 ### 出口门禁
 
-- [ ] `uv sync --locked` 可在干净环境完成。
-- [ ] 三个运行入口可独立启动并返回存活状态。
-- [ ] Codex、Trae 各自完成分支内 M1 验证后，两套实现可按共享本地档位在同一开发机同时启动；工作树、Compose 项目、回环端口、数据库和运行时目录互不影响，停止一方不影响另一方。
-- [ ] API 就绪检查可区分 PostgreSQL、Redis 和外部 AI 的不同失败；AI 不可用不得令 API 整体不就绪。
-- [ ] 静态架构检查能阻止 Web 绕过 API。
-- [ ] 标准五条质量命令全部通过。
+- [x] `uv sync --locked` 可在干净环境完成。
+- [x] 三个运行入口可独立启动并返回存活状态。
+- [x] Codex、Trae 各自完成分支内 M1 验证后，两套实现可按共享本地档位在同一开发机同时启动；工作树、Compose 项目、回环端口、数据库和运行时目录互不影响，停止一方不影响另一方。
+- [x] API 就绪检查可区分 PostgreSQL、Redis 和外部 AI 的不同失败；AI 不可用不得令 API 整体不就绪。
+- [x] 静态架构检查能阻止 Web 绕过 API。
+- [x] 标准五条质量命令全部通过。
 
 ### 明确不做
 
@@ -371,13 +371,15 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 
 ## 16. 当前状态快照
 
-状态日期：2026-07-14
+状态日期：2026-07-16
 
 | 里程碑 | 状态 | 当前证据 | 下一个解锁动作 |
 | --- | --- | --- | --- |
 | M0 共享基线 | `complete` | M0-G1～M0-G8 已关闭；历史隐私清理完成，脱敏模板和最终 docs-only `main` 基线已通过专项验证与远端重克隆复核 | 保持 `main` 为共享文档基线；后续共享文档按独立授权同步 |
-| M1 | `in_progress` | T003 已从共同基线创建两个实现分支；Codex 已完成分支内 T004～T020 及五条标准命令、专项测试和 graphify；Trae 状态只以 Issue #3 为准 | 两个子 Issue 分别完成后，在父 Issue #1 执行双环境同时启动与互不影响门禁 |
-| M2–M8 | `pending` | 尚未开始实现 | 等待前序里程碑完成 |
+| M1 | `complete` | [Issue #1](https://github.com/ywyz/child-manager/issues/1) 最终只读复核通过并关闭；[#2](https://github.com/ywyz/child-manager/issues/2)、[#3](https://github.com/ywyz/child-manager/issues/3) 均已关闭，双环境同时启动与互不影响门禁已取得证据 | 保留验收记录；不据此自动授权 M2 实现 |
+| M2 | `ready` | M1 已 `complete`，入口条件满足；任务边界已固定为 T021～T035；[M2 Issue 草稿与执行记录](development/m2-issue-drafts.md) 已完成只读复核；父 Issue [#4](https://github.com/ywyz/child-manager/issues/4) 与子 Issue [#5](https://github.com/ywyz/child-manager/issues/5)、[#6](https://github.com/ywyz/child-manager/issues/6) 已创建，尚未同步共享基线或授权实现 | 先确认并形成当前 docs-only 共享提交，再单独申请将该基线同步到两个实现分支；实现仍需后续独立授权 |
+| M3 | `pending` | 任务边界已固定为 T036～T045；尚未开始实现 | 等待 M2 `complete` |
+| M4–M8 | `pending` | 尚未开始实现 | 等待前序里程碑完成 |
 | M9 生产复审 | `pending` | ADR-0009 明确延后 | 等待 M8 `complete` |
 
 该快照只能根据实际分支、文件、命令与验收证据更新。不得根据另一实现分支、计划文件或未执行命令猜测状态。

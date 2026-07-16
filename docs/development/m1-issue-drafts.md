@@ -2,9 +2,9 @@
 
 > 草稿日期：2026-07-14
 > 草稿复核基线：`ba81925a8b0a9f1a74951358bdf37cd45f8c529b`
-> 草稿复核状态：Issue #1～#3 已创建并进入执行；M0 `complete`，M1 `in_progress`
-> 执行结果：`codex`、`trae` 共同基线为 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`；Codex 已完成分支内 T004～T020，Trae 与共享父门禁只按各自证据更新
-> 使用方式：以下三段保留创建时的草稿结构；实时状态、父子链接和共同基线以本执行记录及 GitHub Issues 为准。
+> 状态同步日期：2026-07-16
+> 执行结果：Issue #1～#3 均已关闭，M1 `complete`；Codex 最终 HEAD `3225daf793525742c9e01ba2b4874092d5ed0c87`，Trae 最终 HEAD `55b25964e4a7e1aa1db4608e9193e7c2c4b09834`
+> 使用方式：以下三段保留创建时的草稿结构并同步最终执行状态；详细验收命令、评论和关闭时间以 GitHub Issues 为准。
 
 ## 0. 草稿基线与 graphify 处置记录
 
@@ -15,6 +15,7 @@
 - 当前 `main` 尚无业务实现，本次不运行或声称 Ruff、Pyright、Pytest、Docker及三个运行入口检查通过。
 - 2026-07-14 执行时再次确认 `main...origin/main = 0/0`，并从 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` 创建、推送 `codex` 与 `trae`。
 - 已创建 [M1 共享父 Issue #1](https://github.com/ywyz/child-manager/issues/1)、[Codex 子 Issue #2](https://github.com/ywyz/child-manager/issues/2) 和 [Trae 子 Issue #3](https://github.com/ywyz/child-manager/issues/3)，#2、#3 已注册为 #1 的原生 Sub-issues。
+- 2026-07-16 已核对三个 Issue 均关闭；#1 的最终只读复核确认两个分支内验收与共享双环境出口门禁均通过，M1 状态为 `complete`。
 
 ## 1. 共享父 Issue 草稿
 
@@ -29,8 +30,8 @@
 - 复核日期：2026-07-14。
 - 草稿复核时 `main` HEAD：`ba81925a8b0a9f1a74951358bdf37cd45f8c529b`。
 - 草稿复核时 `main...origin/main = 0/0`。
-- M0 状态：`complete`；M1 状态：`in_progress`。
-- 验证摘要：Codex 已完成分支内 T004～T020；Trae 与共享双环境出口门禁仍以各自实时证据为准。
+- M0 状态：`complete`；M1 状态：`complete`。
+- 验证摘要：Codex、Trae 均完成分支内 T004～T020；共享双环境出口门禁与最终只读复核均通过，Issue #1 已关闭。
 - T003 已执行；两个实现子 Issue 均已记录共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`。
 
 #### 共同目标
@@ -58,13 +59,13 @@
 
 #### 共同出口门禁
 
-- [ ] `uv sync --locked` 可在干净环境完成。
-- [ ] Web、API、Worker 三个运行入口可独立启动并返回存活状态。
-- [ ] 两个实现各自完成分支内 M1 验证后，按共享本地档位同机同时启动，worktree、Compose 项目、回环端口、数据库、卷和运行时目录互不影响，停止一方不影响另一方。
-- [ ] API 就绪检查可区分 PostgreSQL、Redis 和外部 AI 故障；AI 不可用不令 API 整体不就绪。
-- [ ] 静态架构检查能够阻止 Web 导入 ORM、Repository 或 `packages/backend`。
-- [ ] 两个实现分别通过 `uv sync --locked`、Ruff format check、Ruff check、Pyright 和 Pytest。
-- [ ] 两个实现分别提供自己的专项检查、风险、阻塞和 graphify 更新证据。
+- [x] `uv sync --locked` 可在干净环境完成。
+- [x] Web、API、Worker 三个运行入口可独立启动并返回存活状态。
+- [x] 两个实现各自完成分支内 M1 验证后，按共享本地档位同机同时启动，worktree、Compose 项目、回环端口、数据库、卷和运行时目录互不影响，停止一方不影响另一方。
+- [x] API 就绪检查可区分 PostgreSQL、Redis 和外部 AI 故障；AI 不可用不令 API 整体不就绪。
+- [x] 静态架构检查能够阻止 Web 导入 ORM、Repository 或 `packages/backend`。
+- [x] 两个实现分别通过 `uv sync --locked`、Ruff format check、Ruff check、Pyright 和 Pytest。
+- [x] 两个实现分别提供自己的专项检查、风险、阻塞和 graphify 更新证据。
 
 #### 共享事实来源
 
@@ -91,8 +92,8 @@
 
 | 实现 | Issue | 状态 | 共同基线 |
 | --- | --- | --- | --- |
-| Codex | [#2](https://github.com/ywyz/child-manager/issues/2) | `complete` / 分支内验收已完成 | `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` |
-| Trae | [#3](https://github.com/ywyz/child-manager/issues/3) | 以 Issue #3 实时状态为准 | `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` |
+| Codex | [#2](https://github.com/ywyz/child-manager/issues/2) | `complete` / 已关闭 | `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` |
+| Trae | [#3](https://github.com/ywyz/child-manager/issues/3) | `complete` / 已关闭 | `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7` |
 
 #### 非目标
 
@@ -181,28 +182,28 @@
 - 复核日期：2026-07-14。
 - 草稿复核时 `main` HEAD：`ba81925a8b0a9f1a74951358bdf37cd45f8c529b`；`main...origin/main = 0/0`。
 - 验证摘要：本共享草稿不镜像 Trae 的实时提交和验收结果，避免共享文档滞后后覆盖 Issue #3。
-- 当前状态：以 [Issue #3](https://github.com/ywyz/child-manager/issues/3) 与 `trae` 分支实时证据为准。
+- 当前状态：`complete` / Issue #3 已关闭；最终 HEAD `55b25964e4a7e1aa1db4608e9193e7c2c4b09834`。
 - 只记录 Trae 自己的方案、提交、迁移、验证、风险和阻塞。
 
 #### T004～T020 有序执行清单
 
-- [ ] T004：建立 Python 3.14+ 项目、冻结运行入口、依赖与锁文件；验证锁定安装、解释器版本和依赖树。
-- [ ] T005：建立三个运行单元、两个共享包、测试目录及稳定可导入的契约/端口骨架；不实现业务规则或未来空壳。
-- [ ] T006：配置 Ruff、Pyright、Pytest、OpenAPI 校验和 Python 3.14 GitHub Actions 门禁。
-- [ ] T007：增加仅供本地开发/测试的 PostgreSQL、Redis 与忽略规则；读取 Trae 档位的 Compose 项目、回环端口和可选镜像变量，不含生产拓扑、永久代理或秘密。
-- [ ] T008：完成初始化（Setup）检查点，实际验证 Trae 档位依赖健康、端口归属和五条标准质量命令；不等待 Codex 分支进度。
-- [ ] T009：先写 Web/API 依赖方向和 BFF 转发红灯（RED）测试。
-- [ ] T010：先写统一错误、分页、Request ID、幂等规范化指纹（fingerprint）与 OpenAPI 3.1 红灯测试。
-- [ ] T011：先写敏感配置、日志脱敏、回环保护和存活/就绪（live/ready）红灯测试。
-- [ ] T012：先写事务边界与 Alembic 空库升级红灯测试，只建立测试收集所需的最小引导骨架（bootstrap）。
-- [ ] T013：实现公共错误、分页、Request ID、幂等和 OpenAPI 校验契约，使 T010 转为绿灯（GREEN）。
-- [ ] T014：实现分级配置、回环保护、结构化日志、追踪传播和脱敏，使相关测试转为绿灯。
-- [ ] T015：建立 SQLAlchemy 2.x、PostgreSQL 事务和 Alembic 基础，使事务与迁移测试转为绿灯。
-- [ ] T016：建立隔离数据库、固定时钟、日历/AI/Redis 替身和禁网保护。
-- [ ] T017：实现 API 装配、统一异常转换及 `/health/live`、`/health/ready`。
-- [ ] T018：建立只传 `job_id` 的消息契约、Dramatiq/Redis Worker 入口和测试消息代理（broker）。
-- [ ] T019：建立 NiceGUI Web 入口与 BFF 客户端，使依赖方向和转发测试转为绿灯。
-- [ ] T020：完成基础能力（Foundational）检查点，运行专项测试、五条标准命令并更新 graphify。
+- [x] T004：建立 Python 3.14+ 项目、冻结运行入口、依赖与锁文件；验证锁定安装、解释器版本和依赖树。
+- [x] T005：建立三个运行单元、两个共享包、测试目录及稳定可导入的契约/端口骨架；不实现业务规则或未来空壳。
+- [x] T006：配置 Ruff、Pyright、Pytest、OpenAPI 校验和 Python 3.14 GitHub Actions 门禁。
+- [x] T007：增加仅供本地开发/测试的 PostgreSQL、Redis 与忽略规则；读取 Trae 档位的 Compose 项目、回环端口和可选镜像变量，不含生产拓扑、永久代理或秘密。
+- [x] T008：完成初始化（Setup）检查点，实际验证 Trae 档位依赖健康、端口归属和五条标准质量命令；不等待 Codex 分支进度。
+- [x] T009：先写 Web/API 依赖方向和 BFF 转发红灯（RED）测试。
+- [x] T010：先写统一错误、分页、Request ID、幂等规范化指纹（fingerprint）与 OpenAPI 3.1 红灯测试。
+- [x] T011：先写敏感配置、日志脱敏、回环保护和存活/就绪（live/ready）红灯测试。
+- [x] T012：先写事务边界与 Alembic 空库升级红灯测试，只建立测试收集所需的最小引导骨架（bootstrap）。
+- [x] T013：实现公共错误、分页、Request ID、幂等和 OpenAPI 校验契约，使 T010 转为绿灯（GREEN）。
+- [x] T014：实现分级配置、回环保护、结构化日志、追踪传播和脱敏，使相关测试转为绿灯。
+- [x] T015：建立 SQLAlchemy 2.x、PostgreSQL 事务和 Alembic 基础，使事务与迁移测试转为绿灯。
+- [x] T016：建立隔离数据库、固定时钟、日历/AI/Redis 替身和禁网保护。
+- [x] T017：实现 API 装配、统一异常转换及 `/health/live`、`/health/ready`。
+- [x] T018：建立只传 `job_id` 的消息契约、Dramatiq/Redis Worker 入口和测试消息代理（broker）。
+- [x] T019：建立 NiceGUI Web 入口与 BFF 客户端，使依赖方向和转发测试转为绿灯。
+- [x] T020：完成基础能力（Foundational）检查点，运行专项测试、五条标准命令并更新 graphify。
 
 任务描述和逐项命令以 [T004～T020 权威清单](../../specs/001-daily-activity-plan/tasks.md#phase-1-setuppre-m1-文档门禁与工程初始化) 为准；Issue 摘要不得覆盖权威 Tasks。
 
@@ -215,7 +216,7 @@
 
 #### 验收证据
 
-- 分支 HEAD：完成后回填。
+- 分支 HEAD：`55b25964e4a7e1aa1db4608e9193e7c2c4b09834`。
 - 共同基线：`c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`。
 - 实际提交：逐项回填。
 - 快速测试：逐项回填实际命令和结果。
@@ -236,5 +237,5 @@
 - [x] Codex、Trae 子 Issue 的 T004～T020、共同门禁、TDD 和最小实现要求对称。
 - [x] 两个子 Issue 只分别记录自己的提交、验证、风险和阻塞。
 - [x] T004～T020 未拆成 17 个独立 Issue。
-- [x] M2～M8 保持 `pending`，未预建实现 Issue。
+- [x] M2 因 M1 `complete` 进入 `ready`；父 Issue #4 与实现子 Issue #5、#6 已创建，但共享基线同步和实现仍未获授权；M3～M8 保持 `pending`。
 - [x] Issue、分支和实现授权彼此独立，草稿完成不声称后续操作已经获批。

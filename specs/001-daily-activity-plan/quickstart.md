@@ -2,10 +2,10 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Current repository state**: `main` 只有文档、模板与 Spec Kit 产物；Codex 分支已完成
-T004～T020，可执行锁定安装、本地依赖、迁移及 API、Worker、Web 工程入口。下列命令同时
-覆盖 M1～M8 验收合同：超出当前里程碑的业务初始化与用户故事步骤仍不可执行，也不表示
-已经通过；Trae 状态只以其分支和 Issue #3 的实时证据为准。
+**Current repository state**: `main` 只有文档、模板与 Spec Kit 产物；Codex、Trae 分支均已
+完成 M1 T004～T020 与共享出口验收，可执行锁定安装、本地依赖、迁移及 API、Worker、Web
+工程入口。M2 当前为 `ready`，但 Issue 创建与实现尚未授权；下列命令覆盖 M1～M8 验收
+合同，超出已完成 M1 的业务初始化与用户故事步骤仍不可执行，也不表示已经通过。
 
 ## 1. 前提与反目标
 
@@ -75,7 +75,7 @@ export CHILD_MANAGER_CSRF_SIGNING_KEY="$(openssl rand -base64 32)"
 ```bash
 uv run alembic upgrade head
 uv run alembic current
-# 以下 init-admin 命令仅在 T034 完成后执行：
+# 以下 init-admin 命令仅在 T032 完成后执行：
 uv run python -m packages.backend.bootstrap init-admin
 uv run python -m packages.backend.bootstrap init-admin
 ```
@@ -122,7 +122,7 @@ export CHILD_MANAGER_COOKIE_JAR="$CHILD_MANAGER_RUNTIME_ROOT/cookies.txt"
 curl --fail "http://127.0.0.1:${CHILD_MANAGER_API_PORT}/health/live"
 curl --fail "http://127.0.0.1:${CHILD_MANAGER_API_PORT}/health/ready"
 curl --fail "http://127.0.0.1:${CHILD_MANAGER_WEB_PORT}/"
-# 以下 CSRF 业务端点仅在 T035 完成后检查：
+# 以下 CSRF 业务端点仅在 T033 完成后检查：
 curl --fail --cookie-jar "$CHILD_MANAGER_COOKIE_JAR" \
   "http://127.0.0.1:${CHILD_MANAGER_WEB_PORT}/api/v1/auth/csrf"
 rm -f "$CHILD_MANAGER_COOKIE_JAR"
