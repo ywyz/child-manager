@@ -452,8 +452,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_app",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "app.py"
     },
     {
@@ -463,8 +463,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "apps_api_app_error_response",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_error_response()"
     },
     {
@@ -474,8 +474,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_app_py_request",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "request"
     },
     {
@@ -485,8 +485,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_app_py_jsonresponse",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "jsonresponse"
     },
     {
@@ -496,8 +496,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "apps_api_app_custom_openapi",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "custom_openapi()"
     },
     {
@@ -507,8 +507,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "fastapi",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "fastapi"
     },
     {
@@ -518,8 +518,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "apps_api_app_live_handler",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_live_handler()"
     },
     {
@@ -529,8 +529,8 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "apps_api_app_ready_handler",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_ready_handler()"
     },
     {
@@ -540,8 +540,8 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "apps_api_app_validation_error_handler",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_validation_error_handler()"
     },
     {
@@ -551,8 +551,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "requestvalidationerror",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "requestvalidationerror"
     },
     {
@@ -562,8 +562,8 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "apps_api_app_http_exception_handler",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_http_exception_handler()"
     },
     {
@@ -573,8 +573,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "starlettehttpexception",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "starlettehttpexception"
     },
     {
@@ -584,8 +584,8 @@
       "source_location": "L195",
       "_origin": "ast",
       "id": "apps_api_app_unhandled_error_handler",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_unhandled_error_handler()"
     },
     {
@@ -595,8 +595,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "exception"
     },
     {
@@ -606,8 +606,8 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "apps_api_app_create_app",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "create_app()"
     },
     {
@@ -628,8 +628,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "apps_api_dependencies_safe_check",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_safe_check()"
     },
     {
@@ -705,8 +705,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_main_py_apps_api_main_0a4ce4",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "main.py"
     },
     {
@@ -716,8 +716,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_api_main_validate_bind_host",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_validate_bind_host()"
     },
     {
@@ -727,8 +727,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "apps_api_main_main",
-      "community": 26,
-      "community_name": "app.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "main()"
     },
     {
@@ -738,8 +738,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_middleware",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "middleware.py"
     },
     {
@@ -749,8 +749,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "apps_api_middleware_request_id",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "request_id()"
     },
     {
@@ -760,8 +760,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_middleware_py_request",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "request"
     },
     {
@@ -771,8 +771,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "apps_api_middleware_request_context_middleware",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "request_context_middleware()"
     },
     {
@@ -782,8 +782,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_middleware_py_jsonresponse",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "jsonresponse"
     },
     {
@@ -1057,8 +1057,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_broker",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "broker.py"
     },
     {
@@ -1068,8 +1068,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "apps_worker_broker_build_redis_broker",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "build_redis_broker()"
     },
     {
@@ -1079,8 +1079,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_worker_broker_py_broker",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "broker"
     },
     {
@@ -1101,8 +1101,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_main_py_apps_worker_main_249b7f",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "main.py"
     },
     {
@@ -1112,8 +1112,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "apps_worker_main_serve",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "serve()"
     },
     {
@@ -1123,8 +1123,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_worker_main_py_broker",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "broker"
     },
     {
@@ -1134,8 +1134,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_worker_main_py_event",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "event"
     },
     {
@@ -1145,8 +1145,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "apps_worker_main_main",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "main()"
     },
     {
@@ -1156,8 +1156,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_scheduler",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 38,
+      "community_name": "test_error_handling.py",
       "norm_label": "scheduler.py"
     },
     {
@@ -1167,8 +1167,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "apps_worker_scheduler_scheduler",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": "scheduler"
     },
     {
@@ -1178,8 +1178,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_worker_scheduler_scheduler_init",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": ".__init__()"
     },
     {
@@ -1189,8 +1189,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "apps_worker_scheduler_scheduler_register",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": ".register()"
     },
     {
@@ -1200,8 +1200,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "apps_worker_scheduler_scheduler_run",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": ".run()"
     },
     {
@@ -1211,8 +1211,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_worker_scheduler_py_event",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": "event"
     },
     {
@@ -1222,8 +1222,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "apps_worker_scheduler_scheduler_tick",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": "._tick()"
     },
     {
@@ -1673,8 +1673,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "databasesessionport"
     },
     {
@@ -1695,8 +1695,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport_begin",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": ".begin()"
     },
     {
@@ -1706,8 +1706,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport_commit",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": ".commit()"
     },
     {
@@ -1717,8 +1717,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport_rollback",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": ".rollback()"
     },
     {
@@ -1728,8 +1728,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport_close",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": ".close()"
     },
     {
@@ -1739,8 +1739,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "packages_backend_ports_clockport",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 38,
+      "community_name": "test_error_handling.py",
       "norm_label": "clockport"
     },
     {
@@ -1750,8 +1750,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "packages_backend_ports_clockport_now",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 38,
+      "community_name": "test_error_handling.py",
       "norm_label": ".now()"
     },
     {
@@ -1761,8 +1761,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "datetime",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 38,
+      "community_name": "test_error_handling.py",
       "norm_label": "datetime"
     },
     {
@@ -1772,8 +1772,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "packages_backend_ports_clockport_utc_now",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 38,
+      "community_name": "test_error_handling.py",
       "norm_label": ".utc_now()"
     },
     {
@@ -1794,8 +1794,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "packages_backend_ports_calendarport_is_workday",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 24,
+      "community_name": "ports.py",
       "norm_label": ".is_workday()"
     },
     {
@@ -1959,42 +1959,20 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_audit",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 72,
+      "community_name": "AuditEventReference",
       "norm_label": "audit.py"
     },
     {
-      "label": "AuditEventType",
+      "label": "AuditEventReference",
       "file_type": "code",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L7",
+      "source_location": "L6",
       "_origin": "ast",
-      "id": "packages_contracts_audit_auditeventtype",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "auditeventtype"
-    },
-    {
-      "label": "StrEnum",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "packages_contracts_audit_py_strenum",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "strenum"
-    },
-    {
-      "label": "AuditEvent",
-      "file_type": "code",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L45",
-      "_origin": "ast",
-      "id": "packages_contracts_audit_auditevent",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "auditevent"
+      "id": "packages_contracts_audit_auditeventreference",
+      "community": 72,
+      "community_name": "AuditEventReference",
+      "norm_label": "auditeventreference"
     },
     {
       "label": "BaseModel",
@@ -2003,31 +1981,9 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_audit_py_basemodel",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 72,
+      "community_name": "AuditEventReference",
       "norm_label": "basemodel"
-    },
-    {
-      "label": "AuditListResponse",
-      "file_type": "code",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L59",
-      "_origin": "ast",
-      "id": "packages_contracts_audit_auditlistresponse",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "auditlistresponse"
-    },
-    {
-      "label": "AuditQueryRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L64",
-      "_origin": "ast",
-      "id": "packages_contracts_audit_auditqueryrequest",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "auditqueryrequest"
     },
     {
       "label": "common.py",
@@ -2157,20 +2113,20 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_exports",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 73,
+      "community_name": "ExportReference",
       "norm_label": "exports.py"
     },
     {
-      "label": "ExportRequest",
+      "label": "ExportReference",
       "file_type": "code",
       "source_file": "packages/contracts/exports.py",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "packages_contracts_exports_exportrequest",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "exportrequest"
+      "id": "packages_contracts_exports_exportreference",
+      "community": 73,
+      "community_name": "ExportReference",
+      "norm_label": "exportreference"
     },
     {
       "label": "BaseModel",
@@ -2179,53 +2135,9 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_exports_py_basemodel",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 73,
+      "community_name": "ExportReference",
       "norm_label": "basemodel"
-    },
-    {
-      "label": "ExportRecord",
-      "file_type": "code",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L11",
-      "_origin": "ast",
-      "id": "packages_contracts_exports_exportrecord",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "exportrecord"
-    },
-    {
-      "label": "ExportListResponse",
-      "file_type": "code",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "packages_contracts_exports_exportlistresponse",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "exportlistresponse"
-    },
-    {
-      "label": "MissingColumnWarning",
-      "file_type": "code",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L31",
-      "_origin": "ast",
-      "id": "packages_contracts_exports_missingcolumnwarning",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "missingcolumnwarning"
-    },
-    {
-      "label": "ExportConfirmRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L36",
-      "_origin": "ast",
-      "id": "packages_contracts_exports_exportconfirmrequest",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "exportconfirmrequest"
     },
     {
       "label": "identity.py",
@@ -2234,20 +2146,20 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_identity",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 79,
+      "community_name": "CurrentUser",
       "norm_label": "identity.py"
     },
     {
-      "label": "User",
+      "label": "CurrentUser",
       "file_type": "code",
       "source_file": "packages/contracts/identity.py",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "packages_contracts_identity_user",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "user"
+      "id": "packages_contracts_identity_currentuser",
+      "community": 79,
+      "community_name": "CurrentUser",
+      "norm_label": "currentuser"
     },
     {
       "label": "BaseModel",
@@ -2256,97 +2168,9 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_identity_py_basemodel",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 79,
+      "community_name": "CurrentUser",
       "norm_label": "basemodel"
-    },
-    {
-      "label": "UserCreate",
-      "file_type": "code",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L18",
-      "_origin": "ast",
-      "id": "packages_contracts_identity_usercreate",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "usercreate"
-    },
-    {
-      "label": "UserUpdate",
-      "file_type": "code",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "packages_contracts_identity_userupdate",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "userupdate"
-    },
-    {
-      "label": "LoginRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L33",
-      "_origin": "ast",
-      "id": "packages_contracts_identity_loginrequest",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "loginrequest"
-    },
-    {
-      "label": "LoginResponse",
-      "file_type": "code",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L38",
-      "_origin": "ast",
-      "id": "packages_contracts_identity_loginresponse",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "loginresponse"
-    },
-    {
-      "label": "TokenRefreshResponse",
-      "file_type": "code",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L44",
-      "_origin": "ast",
-      "id": "packages_contracts_identity_tokenrefreshresponse",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "tokenrefreshresponse"
-    },
-    {
-      "label": "ChangePasswordRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L49",
-      "_origin": "ast",
-      "id": "packages_contracts_identity_changepasswordrequest",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "changepasswordrequest"
-    },
-    {
-      "label": "Role",
-      "file_type": "code",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L54",
-      "_origin": "ast",
-      "id": "packages_contracts_identity_role",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "role"
-    },
-    {
-      "label": "UserRole",
-      "file_type": "code",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L61",
-      "_origin": "ast",
-      "id": "packages_contracts_identity_userrole",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "userrole"
     },
     {
       "label": "jobs.py",
@@ -2360,48 +2184,15 @@
       "norm_label": "jobs.py"
     },
     {
-      "label": "JobStatus",
+      "label": "WorkerMessage",
       "file_type": "code",
       "source_file": "packages/contracts/jobs.py",
-      "source_location": "L7",
+      "source_location": "L6",
       "_origin": "ast",
-      "id": "packages_contracts_jobs_jobstatus",
+      "id": "packages_contracts_jobs_workermessage",
       "community": 1,
       "community_name": "test_worker.py",
-      "norm_label": "jobstatus"
-    },
-    {
-      "label": "StrEnum",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_py_strenum",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "strenum"
-    },
-    {
-      "label": "JobType",
-      "file_type": "code",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_jobtype",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "jobtype"
-    },
-    {
-      "label": "Job",
-      "file_type": "code",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L23",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_job",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "job"
+      "norm_label": "workermessage"
     },
     {
       "label": "BaseModel",
@@ -2415,89 +2206,12 @@
       "norm_label": "basemodel"
     },
     {
-      "label": "JobCreateRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L42",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_jobcreaterequest",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "jobcreaterequest"
-    },
-    {
-      "label": "JobBatchCreateRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L49",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_jobbatchcreaterequest",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "jobbatchcreaterequest"
-    },
-    {
-      "label": "JobRetryRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L54",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_jobretryrequest",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "jobretryrequest"
-    },
-    {
-      "label": "JobListResponse",
-      "file_type": "code",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L58",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_joblistresponse",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "joblistresponse"
-    },
-    {
-      "label": "AIResult",
-      "file_type": "code",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L63",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_airesult",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "airesult"
-    },
-    {
-      "label": "AIAdoptRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L76",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_aiadoptrequest",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "aiadoptrequest"
-    },
-    {
-      "label": "WorkerMessage",
-      "file_type": "code",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L81",
-      "_origin": "ast",
-      "id": "packages_contracts_jobs_workermessage",
-      "community": 1,
-      "community_name": "test_worker.py",
-      "norm_label": "workermessage"
-    },
-    {
       "label": "Worker \u6d88\u606f\u4fe1\u5c01\uff1a\u53ea\u4f20 job_id\uff0c\u4e0d\u643a\u5e26 API Key\u3001token \u6216\u6b63\u6587\u3002",
       "file_type": "rationale",
       "source_file": "packages/contracts/jobs.py",
-      "source_location": "L82",
+      "source_location": "L7",
       "_origin": "ast",
-      "id": "packages_contracts_jobs_rationale_82",
+      "id": "packages_contracts_jobs_rationale_7",
       "community": 1,
       "community_name": "test_worker.py",
       "norm_label": "worker \u6d88\u606f\u4fe1\u5c01:\u53ea\u4f20 job_id,\u4e0d\u643a\u5e26 api key\u3001token \u6216\u6b63\u6587\u3002"
@@ -2514,15 +2228,15 @@
       "norm_label": "lesson_plans.py"
     },
     {
-      "label": "PlanContentV1",
+      "label": "LessonPlanReference",
       "file_type": "code",
       "source_file": "packages/contracts/lesson_plans.py",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_plancontentv1",
+      "id": "packages_contracts_lesson_plans_lessonplanreference",
       "community": 27,
       "community_name": "lesson_plans.py",
-      "norm_label": "plancontentv1"
+      "norm_label": "lessonplanreference"
     },
     {
       "label": "BaseModel",
@@ -2536,270 +2250,6 @@
       "norm_label": "basemodel"
     },
     {
-      "label": "DailyReflection",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L15",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_dailyreflection",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "dailyreflection"
-    },
-    {
-      "label": "PlanAuthor",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L21",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_planauthor",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "planauthor"
-    },
-    {
-      "label": "PlanSnapshot",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L27",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_plansnapshot",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "plansnapshot"
-    },
-    {
-      "label": "LessonPlan",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L37",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_lessonplan",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "lessonplan"
-    },
-    {
-      "label": "PlanCreateRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L54",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_plancreaterequest",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "plancreaterequest"
-    },
-    {
-      "label": "PlanOpenRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L59",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_planopenrequest",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "planopenrequest"
-    },
-    {
-      "label": "PlanSaveRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L64",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_plansaverequest",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "plansaverequest"
-    },
-    {
-      "label": "PlanAutoSaveRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L69",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_planautosaverequest",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "planautosaverequest"
-    },
-    {
-      "label": "PlanArchiveRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L74",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_planarchiverequest",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "planarchiverequest"
-    },
-    {
-      "label": "PlanUnarchiveRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L78",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_planunarchiverequest",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "planunarchiverequest"
-    },
-    {
-      "label": "PlanRestoreRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L82",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_planrestorerequest",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "planrestorerequest"
-    },
-    {
-      "label": "PlanSoftWarning",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L87",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_plansoftwarning",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "plansoftwarning"
-    },
-    {
-      "label": "PlanResponse",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L92",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_planresponse",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "planresponse"
-    },
-    {
-      "label": "PlanListResponse",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L97",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_planlistresponse",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "planlistresponse"
-    },
-    {
-      "label": "SnapshotListResponse",
-      "file_type": "code",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L102",
-      "_origin": "ast",
-      "id": "packages_contracts_lesson_plans_snapshotlistresponse",
-      "community": 27,
-      "community_name": "lesson_plans.py",
-      "norm_label": "snapshotlistresponse"
-    },
-    {
-      "label": "models.py",
-      "file_type": "code",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "packages_contracts_models",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "models.py"
-    },
-    {
-      "label": "ModelCapability",
-      "file_type": "code",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "packages_contracts_models_modelcapability",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "modelcapability"
-    },
-    {
-      "label": "StrEnum",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "packages_contracts_models_py_strenum",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "strenum"
-    },
-    {
-      "label": "ModelProfile",
-      "file_type": "code",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "packages_contracts_models_modelprofile",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "modelprofile"
-    },
-    {
-      "label": "BaseModel",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "packages_contracts_models_py_basemodel",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "basemodel"
-    },
-    {
-      "label": "ModelProfileCreateRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "packages_contracts_models_modelprofilecreaterequest",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "modelprofilecreaterequest"
-    },
-    {
-      "label": "ModelProfileUpdateRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L36",
-      "_origin": "ast",
-      "id": "packages_contracts_models_modelprofileupdaterequest",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "modelprofileupdaterequest"
-    },
-    {
-      "label": "ModelProfileEnableRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L44",
-      "_origin": "ast",
-      "id": "packages_contracts_models_modelprofileenablerequest",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "modelprofileenablerequest"
-    },
-    {
-      "label": "ModelProfileListResponse",
-      "file_type": "code",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L48",
-      "_origin": "ast",
-      "id": "packages_contracts_models_modelprofilelistresponse",
-      "community": 24,
-      "community_name": "ports.py",
-      "norm_label": "modelprofilelistresponse"
-    },
-    {
       "label": "prompts.py",
       "file_type": "code",
       "source_file": "packages/contracts/prompts.py",
@@ -2811,15 +2261,15 @@
       "norm_label": "prompts.py"
     },
     {
-      "label": "PromptVariable",
+      "label": "PromptReference",
       "file_type": "code",
       "source_file": "packages/contracts/prompts.py",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "packages_contracts_prompts_promptvariable",
+      "id": "packages_contracts_prompts_promptreference",
       "community": 45,
       "community_name": "prompts.py",
-      "norm_label": "promptvariable"
+      "norm_label": "promptreference"
     },
     {
       "label": "BaseModel",
@@ -2833,105 +2283,6 @@
       "norm_label": "basemodel"
     },
     {
-      "label": "PromptCapability",
-      "file_type": "code",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "packages_contracts_prompts_promptcapability",
-      "community": 45,
-      "community_name": "prompts.py",
-      "norm_label": "promptcapability"
-    },
-    {
-      "label": "PromptResultSchema",
-      "file_type": "code",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L17",
-      "_origin": "ast",
-      "id": "packages_contracts_prompts_promptresultschema",
-      "community": 45,
-      "community_name": "prompts.py",
-      "norm_label": "promptresultschema"
-    },
-    {
-      "label": "PromptVersion",
-      "file_type": "code",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L22",
-      "_origin": "ast",
-      "id": "packages_contracts_prompts_promptversion",
-      "community": 45,
-      "community_name": "prompts.py",
-      "norm_label": "promptversion"
-    },
-    {
-      "label": "Prompt",
-      "file_type": "code",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L34",
-      "_origin": "ast",
-      "id": "packages_contracts_prompts_prompt",
-      "community": 45,
-      "community_name": "prompts.py",
-      "norm_label": "prompt"
-    },
-    {
-      "label": "PromptCreateRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L47",
-      "_origin": "ast",
-      "id": "packages_contracts_prompts_promptcreaterequest",
-      "community": 45,
-      "community_name": "prompts.py",
-      "norm_label": "promptcreaterequest"
-    },
-    {
-      "label": "PromptUpdateRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L57",
-      "_origin": "ast",
-      "id": "packages_contracts_prompts_promptupdaterequest",
-      "community": 45,
-      "community_name": "prompts.py",
-      "norm_label": "promptupdaterequest"
-    },
-    {
-      "label": "PromptPublishRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L66",
-      "_origin": "ast",
-      "id": "packages_contracts_prompts_promptpublishrequest",
-      "community": 45,
-      "community_name": "prompts.py",
-      "norm_label": "promptpublishrequest"
-    },
-    {
-      "label": "PromptTestRun",
-      "file_type": "code",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L70",
-      "_origin": "ast",
-      "id": "packages_contracts_prompts_prompttestrun",
-      "community": 45,
-      "community_name": "prompts.py",
-      "norm_label": "prompttestrun"
-    },
-    {
-      "label": "PromptTestRequest",
-      "file_type": "code",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L83",
-      "_origin": "ast",
-      "id": "packages_contracts_prompts_prompttestrequest",
-      "community": 45,
-      "community_name": "prompts.py",
-      "norm_label": "prompttestrequest"
-    },
-    {
       "label": "settings.py",
       "file_type": "code",
       "source_file": "packages/contracts/settings.py",
@@ -2943,15 +2294,15 @@
       "norm_label": "settings.py"
     },
     {
-      "label": "Kindergarten",
+      "label": "KindergartenSummary",
       "file_type": "code",
       "source_file": "packages/contracts/settings.py",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "packages_contracts_settings_kindergarten",
+      "id": "packages_contracts_settings_kindergartensummary",
       "community": 34,
       "community_name": "settings.py",
-      "norm_label": "kindergarten"
+      "norm_label": "kindergartensummary"
     },
     {
       "label": "BaseModel",
@@ -2963,138 +2314,6 @@
       "community": 34,
       "community_name": "settings.py",
       "norm_label": "basemodel"
-    },
-    {
-      "label": "KindergartenUpdate",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L15",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_kindergartenupdate",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "kindergartenupdate"
-    },
-    {
-      "label": "Semester",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L19",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_semester",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "semester"
-    },
-    {
-      "label": "SemesterCreate",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L31",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_semestercreate",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "semestercreate"
-    },
-    {
-      "label": "SemesterUpdate",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L38",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_semesterupdate",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "semesterupdate"
-    },
-    {
-      "label": "AgeGroup",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L46",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_agegroup",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "agegroup"
-    },
-    {
-      "label": "Class",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L53",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_class",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "class"
-    },
-    {
-      "label": "ClassCreate",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L62",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_classcreate",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "classcreate"
-    },
-    {
-      "label": "ClassUpdate",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L67",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_classupdate",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "classupdate"
-    },
-    {
-      "label": "ClassTeacher",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L72",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_classteacher",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "classteacher"
-    },
-    {
-      "label": "Area",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L79",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_area",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "area"
-    },
-    {
-      "label": "AreaCreate",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L91",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_areacreate",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "areacreate"
-    },
-    {
-      "label": "AreaUpdate",
-      "file_type": "code",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L97",
-      "_origin": "ast",
-      "id": "packages_contracts_settings_areaupdate",
-      "community": 34,
-      "community_name": "settings.py",
-      "norm_label": "areaupdate"
     },
     {
       "label": "__init__.py",
@@ -3282,8 +2501,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_test_error_handling",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_error_handling.py"
     },
     {
@@ -3293,8 +2512,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_true",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_true()"
     },
     {
@@ -3304,8 +2523,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_make_client",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "_make_client()"
     },
     {
@@ -3315,8 +2534,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_py_testclient",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "testclient"
     },
     {
@@ -3326,8 +2545,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_get_missing_path_returns_chinese_404",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_get_missing_path_returns_chinese_404()"
     },
     {
@@ -3337,8 +2556,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_options_missing_path_returns_chinese_404",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_options_missing_path_returns_chinese_404()"
     },
     {
@@ -3348,8 +2567,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_post_health_live_returns_405_not_404",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_post_health_live_returns_405_not_404()"
     },
     {
@@ -3359,8 +2578,8 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_delete_health_ready_returns_405",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_delete_health_ready_returns_405()"
     },
     {
@@ -3370,8 +2589,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_404_response_includes_request_id_header",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_404_response_includes_request_id_header()"
     },
     {
@@ -3381,8 +2600,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_custom_request_id_propagated_to_error_response",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_custom_request_id_propagated_to_error_response()"
     },
     {
@@ -3392,8 +2611,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_500_returns_chinese_internal_error",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_500_returns_chinese_internal_error()"
     },
     {
@@ -3403,8 +2622,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_http_exception_400_returns_chinese_envelope",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_http_exception_400_returns_chinese_envelope()"
     },
     {
@@ -3414,8 +2633,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_contextvars_cleared_after_request",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_contextvars_cleared_after_request()"
     },
     {
@@ -3425,8 +2644,8 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_contextvars_cleared_after_error",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_contextvars_cleared_after_error()"
     },
     {
@@ -3436,8 +2655,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_rationale_1",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "\u516c\u5f00 http \u5f02\u5e38\u63a5\u7f1d\u6d4b\u8bd5\u3002  \u8986\u76d6 404\u3001405(\u542b options)\u3001\u4e3b\u52a8 http \u5f02\u5e38\u3001\u6846\u67b6\u5f02\u5e38\u548c\u672a\u77e5 500, \u9a8c\u8bc1\u4e2d\u6587 envelope\u3001req"
     },
     {
@@ -3447,8 +2666,8 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_rationale_137",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "\u8bf7\u6c42\u5b8c\u6210\u540e contextvars \u5fc5\u987b\u88ab\u6e05\u7406\u3002"
     },
     {
@@ -3458,8 +2677,8 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_rationale_148",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "\u5f02\u5e38\u8def\u5f84\u540e contextvars \u4e5f\u5fc5\u987b\u88ab\u6e05\u7406\u3002"
     },
     {
@@ -4910,8 +4129,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_fixtures_clock",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 38,
+      "community_name": "test_error_handling.py",
       "norm_label": "clock.py"
     },
     {
@@ -4921,8 +4140,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_fixtures_clock_fixed_datetime",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 38,
+      "community_name": "test_error_handling.py",
       "norm_label": "fixed_datetime()"
     },
     {
@@ -5658,8 +4877,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_test_observability",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_observability.py"
     },
     {
@@ -5669,8 +4888,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_test_observability_test_request_context_middleware_generates_ids",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_request_context_middleware_generates_ids()"
     },
     {
@@ -5680,8 +4899,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_unit_test_observability_test_request_context_middleware_accepts_supplied_ids",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_request_context_middleware_accepts_supplied_ids()"
     },
     {
@@ -5691,8 +4910,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_unit_test_observability_test_error_responses_include_request_id",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_error_responses_include_request_id()"
     },
     {
@@ -5702,8 +4921,8 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "tests_unit_test_observability_test_middleware_binds_structlog_contextvars",
-      "community": 35,
-      "community_name": "request_context_middleware",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": "test_middleware_binds_structlog_contextvars()"
     },
     {
@@ -6120,8 +5339,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_worker_test_worker_test_scheduler_register_and_tick",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": "test_scheduler_register_and_tick()"
     },
     {
@@ -6131,8 +5350,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "tests_worker_test_worker_test_scheduler_tick_continues_after_callback_exception",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": "test_scheduler_tick_continues_after_callback_exception()"
     },
     {
@@ -6142,8 +5361,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "tests_worker_test_worker_test_scheduler_run_exits_when_stop_event_already_set",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": "test_scheduler_run_exits_when_stop_event_already_set()"
     },
     {
@@ -6153,8 +5372,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "tests_worker_test_worker_test_scheduler_run_stops_when_event_set_from_another_thread",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 26,
+      "community_name": "app.py",
       "norm_label": "test_scheduler_run_stops_when_event_set_from_another_thread()"
     },
     {
@@ -14821,8 +14040,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_3_4_\u52a0\u5bc6\u4e0e\u5bc6\u94a5",
-      "community": 130,
-      "community_name": "3.4 \u52a0\u5bc6\u4e0e\u5bc6\u94a5",
+      "community": 68,
+      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
       "norm_label": "3.4 \u52a0\u5bc6\u4e0e\u5bc6\u94a5"
     },
     {
@@ -14832,8 +14051,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_q10_ai_key_\u52a0\u5bc6\u7b97\u6cd5",
-      "community": 130,
-      "community_name": "3.4 \u52a0\u5bc6\u4e0e\u5bc6\u94a5",
+      "community": 68,
+      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
       "norm_label": "q10:ai key \u52a0\u5bc6\u7b97\u6cd5"
     },
     {
@@ -14843,8 +14062,8 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_q11_\u4e3b\u52a0\u5bc6\u5bc6\u94a5\u6765\u6e90",
-      "community": 130,
-      "community_name": "3.4 \u52a0\u5bc6\u4e0e\u5bc6\u94a5",
+      "community": 68,
+      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
       "norm_label": "q11:\u4e3b\u52a0\u5bc6\u5bc6\u94a5\u6765\u6e90"
     },
     {
@@ -14854,8 +14073,8 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_3_5_api_\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
-      "community": 68,
-      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
+      "community": 61,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "3.5 api\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49"
     },
     {
@@ -14865,8 +14084,8 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_q12_\u4efb\u52a1\u72b6\u6001\u673a\u7f3a\u5c11_expired",
-      "community": 68,
-      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
+      "community": 61,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "q12:\u4efb\u52a1\u72b6\u6001\u673a\u7f3a\u5c11 `expired`"
     },
     {
@@ -14876,8 +14095,8 @@
       "source_location": "L141",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_q13_\u5e42\u7b49\u952e\u5b9a\u4e49",
-      "community": 68,
-      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
+      "community": 61,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "q13:\u5e42\u7b49\u952e\u5b9a\u4e49"
     },
     {
@@ -16603,8 +15822,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "specs_001_daily_activity_plan_data_model",
-      "community": 9,
-      "community_name": "Phase 1 \u6570\u636e\u6a21\u578b\uff1a\u9996\u671f\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u5b8c\u6574\u95ed\u73af",
+      "community": 7,
+      "community_name": "README.md",
       "norm_label": "data-model.md"
     },
     {
@@ -22541,94 +21760,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "packages_contracts_audit",
-      "target": "datetime",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "packages_contracts_exports",
-      "target": "datetime",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "packages_contracts_identity",
-      "target": "datetime",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "datetime",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "datetime",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "packages_contracts_models",
-      "target": "datetime",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "datetime",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "datetime",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "tests/fixtures/clock.py",
       "source_location": "L2",
       "weight": 1.0,
@@ -22731,79 +21862,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L45",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "packages_contracts_audit",
-      "target": "packages_contracts_audit_auditevent",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "packages_contracts_audit",
-      "target": "packages_contracts_audit_auditeventtype",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "packages_contracts_audit",
-      "target": "packages_contracts_audit_auditlistresponse",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "packages_contracts_audit",
-      "target": "packages_contracts_audit_auditqueryrequest",
+      "target": "packages_contracts_audit_auditeventreference",
       "confidence_score": 1.0
     },
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L7",
+      "source_location": "L6",
       "weight": 1.0,
-      "source": "packages_contracts_audit_auditeventtype",
-      "target": "packages_contracts_audit_py_strenum",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L45",
-      "weight": 1.0,
-      "source": "packages_contracts_audit_auditevent",
-      "target": "packages_contracts_audit_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "packages_contracts_audit_auditlistresponse",
-      "target": "packages_contracts_audit_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/audit.py",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "packages_contracts_audit_auditqueryrequest",
+      "source": "packages_contracts_audit_auditeventreference",
       "target": "packages_contracts_audit_py_basemodel",
       "confidence_score": 1.0
     },
@@ -23358,50 +22429,10 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/exports.py",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "packages_contracts_exports",
-      "target": "packages_contracts_exports_exportconfirmrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L26",
-      "weight": 1.0,
-      "source": "packages_contracts_exports",
-      "target": "packages_contracts_exports_exportlistresponse",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L11",
-      "weight": 1.0,
-      "source": "packages_contracts_exports",
-      "target": "packages_contracts_exports_exportrecord",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/exports.py",
       "source_location": "L6",
       "weight": 1.0,
       "source": "packages_contracts_exports",
-      "target": "packages_contracts_exports_exportrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L31",
-      "weight": 1.0,
-      "source": "packages_contracts_exports",
-      "target": "packages_contracts_exports_missingcolumnwarning",
+      "target": "packages_contracts_exports_exportreference",
       "confidence_score": 1.0
     },
     {
@@ -23410,98 +22441,8 @@
       "source_file": "packages/contracts/exports.py",
       "source_location": "L6",
       "weight": 1.0,
-      "source": "packages_contracts_exports_exportrequest",
+      "source": "packages_contracts_exports_exportreference",
       "target": "packages_contracts_exports_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "packages_contracts_exports_exportconfirmrequest",
-      "target": "packages_contracts_exports_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L26",
-      "weight": 1.0,
-      "source": "packages_contracts_exports_exportlistresponse",
-      "target": "packages_contracts_exports_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L11",
-      "weight": 1.0,
-      "source": "packages_contracts_exports_exportrecord",
-      "target": "packages_contracts_exports_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/exports.py",
-      "source_location": "L31",
-      "weight": 1.0,
-      "source": "packages_contracts_exports_missingcolumnwarning",
-      "target": "packages_contracts_exports_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L49",
-      "weight": 1.0,
-      "source": "packages_contracts_identity",
-      "target": "packages_contracts_identity_changepasswordrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L33",
-      "weight": 1.0,
-      "source": "packages_contracts_identity",
-      "target": "packages_contracts_identity_loginrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L38",
-      "weight": 1.0,
-      "source": "packages_contracts_identity",
-      "target": "packages_contracts_identity_loginresponse",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "packages_contracts_identity",
-      "target": "packages_contracts_identity_role",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L44",
-      "weight": 1.0,
-      "source": "packages_contracts_identity",
-      "target": "packages_contracts_identity_tokenrefreshresponse",
       "confidence_score": 1.0
     },
     {
@@ -23511,37 +22452,7 @@
       "source_location": "L6",
       "weight": 1.0,
       "source": "packages_contracts_identity",
-      "target": "packages_contracts_identity_user",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L18",
-      "weight": 1.0,
-      "source": "packages_contracts_identity",
-      "target": "packages_contracts_identity_usercreate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L61",
-      "weight": 1.0,
-      "source": "packages_contracts_identity",
-      "target": "packages_contracts_identity_userrole",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L26",
-      "weight": 1.0,
-      "source": "packages_contracts_identity",
-      "target": "packages_contracts_identity_userupdate",
+      "target": "packages_contracts_identity_currentuser",
       "confidence_score": 1.0
     },
     {
@@ -23550,87 +22461,7 @@
       "source_file": "packages/contracts/identity.py",
       "source_location": "L6",
       "weight": 1.0,
-      "source": "packages_contracts_identity_user",
-      "target": "packages_contracts_identity_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L49",
-      "weight": 1.0,
-      "source": "packages_contracts_identity_changepasswordrequest",
-      "target": "packages_contracts_identity_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L33",
-      "weight": 1.0,
-      "source": "packages_contracts_identity_loginrequest",
-      "target": "packages_contracts_identity_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L38",
-      "weight": 1.0,
-      "source": "packages_contracts_identity_loginresponse",
-      "target": "packages_contracts_identity_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "packages_contracts_identity_role",
-      "target": "packages_contracts_identity_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L44",
-      "weight": 1.0,
-      "source": "packages_contracts_identity_tokenrefreshresponse",
-      "target": "packages_contracts_identity_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L18",
-      "weight": 1.0,
-      "source": "packages_contracts_identity_usercreate",
-      "target": "packages_contracts_identity_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L61",
-      "weight": 1.0,
-      "source": "packages_contracts_identity_userrole",
-      "target": "packages_contracts_identity_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/identity.py",
-      "source_location": "L26",
-      "weight": 1.0,
-      "source": "packages_contracts_identity_userupdate",
+      "source": "packages_contracts_identity_currentuser",
       "target": "packages_contracts_identity_py_basemodel",
       "confidence_score": 1.0
     },
@@ -23638,97 +22469,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/jobs.py",
-      "source_location": "L76",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "packages_contracts_jobs_aiadoptrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L63",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "packages_contracts_jobs_airesult",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L23",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "packages_contracts_jobs_job",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L49",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "packages_contracts_jobs_jobbatchcreaterequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "packages_contracts_jobs_jobcreaterequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L58",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "packages_contracts_jobs_joblistresponse",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "packages_contracts_jobs_jobretryrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "packages_contracts_jobs_jobstatus",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L16",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs",
-      "target": "packages_contracts_jobs_jobtype",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L81",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "packages_contracts_jobs",
       "target": "packages_contracts_jobs_workermessage",
@@ -23746,113 +22487,23 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "inherits",
+      "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/jobs.py",
       "source_location": "L7",
       "weight": 1.0,
-      "source": "packages_contracts_jobs_jobstatus",
-      "target": "packages_contracts_jobs_py_strenum",
+      "source": "packages_contracts_jobs_rationale_7",
+      "target": "packages_contracts_jobs_workermessage",
       "confidence_score": 1.0
     },
     {
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/jobs.py",
-      "source_location": "L16",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs_jobtype",
-      "target": "packages_contracts_jobs_py_strenum",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L23",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs_job",
-      "target": "packages_contracts_jobs_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L76",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs_aiadoptrequest",
-      "target": "packages_contracts_jobs_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L63",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs_airesult",
-      "target": "packages_contracts_jobs_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L49",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs_jobbatchcreaterequest",
-      "target": "packages_contracts_jobs_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs_jobcreaterequest",
-      "target": "packages_contracts_jobs_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L58",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs_joblistresponse",
-      "target": "packages_contracts_jobs_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs_jobretryrequest",
-      "target": "packages_contracts_jobs_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L81",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "packages_contracts_jobs_workermessage",
       "target": "packages_contracts_jobs_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/jobs.py",
-      "source_location": "L82",
-      "weight": 1.0,
-      "source": "packages_contracts_jobs_rationale_82",
-      "target": "packages_contracts_jobs_workermessage",
       "confidence_score": 1.0
     },
     {
@@ -23892,160 +22543,10 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L15",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_dailyreflection",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L37",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_lessonplan",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L74",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_planarchiverequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_planauthor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L69",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_planautosaverequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
       "source_location": "L6",
       "weight": 1.0,
       "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_plancontentv1",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_plancreaterequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L97",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_planlistresponse",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_planopenrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L92",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_planresponse",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L82",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_planrestorerequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_plansaverequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L27",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_plansnapshot",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L87",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_plansoftwarning",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L78",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_planunarchiverequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L102",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans",
-      "target": "packages_contracts_lesson_plans_snapshotlistresponse",
+      "target": "packages_contracts_lesson_plans_lessonplanreference",
       "confidence_score": 1.0
     },
     {
@@ -24054,358 +22555,8 @@
       "source_file": "packages/contracts/lesson_plans.py",
       "source_location": "L6",
       "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_plancontentv1",
+      "source": "packages_contracts_lesson_plans_lessonplanreference",
       "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L15",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_dailyreflection",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L37",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_lessonplan",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L74",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_planarchiverequest",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_planauthor",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L69",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_planautosaverequest",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L54",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_plancreaterequest",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L97",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_planlistresponse",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_planopenrequest",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L92",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_planresponse",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L82",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_planrestorerequest",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_plansaverequest",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L27",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_plansnapshot",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L87",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_plansoftwarning",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L78",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_planunarchiverequest",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/lesson_plans.py",
-      "source_location": "L102",
-      "weight": 1.0,
-      "source": "packages_contracts_lesson_plans_snapshotlistresponse",
-      "target": "packages_contracts_lesson_plans_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "packages_contracts_models",
-      "target": "packages_contracts_models_modelcapability",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L13",
-      "weight": 1.0,
-      "source": "packages_contracts_models",
-      "target": "packages_contracts_models_modelprofile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L28",
-      "weight": 1.0,
-      "source": "packages_contracts_models",
-      "target": "packages_contracts_models_modelprofilecreaterequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L44",
-      "weight": 1.0,
-      "source": "packages_contracts_models",
-      "target": "packages_contracts_models_modelprofileenablerequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "packages_contracts_models",
-      "target": "packages_contracts_models_modelprofilelistresponse",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "packages_contracts_models",
-      "target": "packages_contracts_models_modelprofileupdaterequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "packages_contracts_models_modelcapability",
-      "target": "packages_contracts_models_py_strenum",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L13",
-      "weight": 1.0,
-      "source": "packages_contracts_models_modelprofile",
-      "target": "packages_contracts_models_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L28",
-      "weight": 1.0,
-      "source": "packages_contracts_models_modelprofilecreaterequest",
-      "target": "packages_contracts_models_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L44",
-      "weight": 1.0,
-      "source": "packages_contracts_models_modelprofileenablerequest",
-      "target": "packages_contracts_models_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "packages_contracts_models_modelprofilelistresponse",
-      "target": "packages_contracts_models_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/models.py",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "packages_contracts_models_modelprofileupdaterequest",
-      "target": "packages_contracts_models_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L34",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_prompt",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_promptcapability",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L47",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_promptcreaterequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L66",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_promptpublishrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L17",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_promptresultschema",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L83",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_prompttestrequest",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L70",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_prompttestrun",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L57",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_promptupdaterequest",
       "confidence_score": 1.0
     },
     {
@@ -24415,17 +22566,7 @@
       "source_location": "L6",
       "weight": 1.0,
       "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_promptvariable",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L22",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts",
-      "target": "packages_contracts_prompts_promptversion",
+      "target": "packages_contracts_prompts_promptreference",
       "confidence_score": 1.0
     },
     {
@@ -24434,178 +22575,8 @@
       "source_file": "packages/contracts/prompts.py",
       "source_location": "L6",
       "weight": 1.0,
-      "source": "packages_contracts_prompts_promptvariable",
+      "source": "packages_contracts_prompts_promptreference",
       "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L34",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts_prompt",
-      "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts_promptcapability",
-      "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L47",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts_promptcreaterequest",
-      "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L66",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts_promptpublishrequest",
-      "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L17",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts_promptresultschema",
-      "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L83",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts_prompttestrequest",
-      "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L70",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts_prompttestrun",
-      "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L57",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts_promptupdaterequest",
-      "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/prompts.py",
-      "source_location": "L22",
-      "weight": 1.0,
-      "source": "packages_contracts_prompts_promptversion",
-      "target": "packages_contracts_prompts_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L46",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_agegroup",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L79",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_area",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L91",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_areacreate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L97",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_areaupdate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L53",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_class",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L62",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_classcreate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L72",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_classteacher",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L67",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_classupdate",
       "confidence_score": 1.0
     },
     {
@@ -24615,47 +22586,7 @@
       "source_location": "L6",
       "weight": 1.0,
       "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_kindergarten",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L15",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_kindergartenupdate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L19",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_semester",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L31",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_semestercreate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L38",
-      "weight": 1.0,
-      "source": "packages_contracts_settings",
-      "target": "packages_contracts_settings_semesterupdate",
+      "target": "packages_contracts_settings_kindergartensummary",
       "confidence_score": 1.0
     },
     {
@@ -24664,127 +22595,7 @@
       "source_file": "packages/contracts/settings.py",
       "source_location": "L6",
       "weight": 1.0,
-      "source": "packages_contracts_settings_kindergarten",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L46",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_agegroup",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L79",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_area",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L91",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_areacreate",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L97",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_areaupdate",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L53",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_class",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L62",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_classcreate",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L72",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_classteacher",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L67",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_classupdate",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L15",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_kindergartenupdate",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L19",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_semester",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L31",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_semestercreate",
-      "target": "packages_contracts_settings_py_basemodel",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "inherits",
-      "confidence": "EXTRACTED",
-      "source_file": "packages/contracts/settings.py",
-      "source_location": "L38",
-      "weight": 1.0,
-      "source": "packages_contracts_settings_semesterupdate",
+      "source": "packages_contracts_settings_kindergartensummary",
       "target": "packages_contracts_settings_py_basemodel",
       "confidence_score": 1.0
     },
@@ -40718,5 +38529,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "ce2d3a852e40f6fa2db5d4eb27169aed6802fcb2"
+  "built_at_commit": "60990f2bbf4a3ed055ef92df2ba87b10418c3b75"
 }
