@@ -3,7 +3,7 @@
 > 草稿日期：2026-07-16
 > 当前状态：Issue #4～#6 已创建并建立父子关系，尚未授权共享基线同步或业务实现
 > 草稿核对时 `main` HEAD：`96920309c92f1ffa95903cd6bf90919ab5fee140`，与远端 `main` 一致
-> 共同实现基线：待当前 M1→M2 docs-only 修改形成经确认的共享提交后确定
+> 共享文档状态：M1→M2 docs-only 内容已发布到 `main`；实现共同基线待获得分支同步授权后按届时 `main` HEAD 回填
 
 ## 0. 草稿事实与授权边界
 
@@ -16,8 +16,9 @@
   [Codex 子 Issue #5](https://github.com/ywyz/child-manager/issues/5) 和
   [Trae 子 Issue #6](https://github.com/ywyz/child-manager/issues/6)，并将 #5、#6 注册为 #4 的
   原生 Sub-issues。
-- 当前工作区包含尚未提交的 M1→M2 docs-only 同步，因此不得把现有 `main` HEAD 或任一实现
-  分支 HEAD 写成 M2 共同基线。共同基线必须在共享文档提交确认后回填。
+- M1→M2 docs-only 内容已发布到 `main`；`codex`、`trae` 仍停留在各自 M1 最终 HEAD，不得把
+  旧实现分支 HEAD 写成 M2 共同基线。获得分支同步授权后，以包含本文的届时 `main` HEAD
+  作为两方完全相同的共同基线并回填 Issues。
 - 本文件记录已获授权并完成的 Issue 创建，但不授权同步或切换分支、提交、推送、创建
   Pull Request 或开始 T021。共享基线同步和 M2 实现仍分别等待明确授权。
 - M2 仍采用一个共享父 Issue 和两个完整、独立的实现子 Issue；不把 T021～T035 机械拆成
@@ -35,10 +36,10 @@
 
 - M1：`complete`；M2：`ready`。
 - M1 Issues：#1～#3 均已关闭。
-- M2 共同基线：在 docs-only 提交确认并分别同步到 `codex`、`trae` 后回填。
+- M2 共同基线：docs-only 内容已发布到 `main`；分别同步到 `codex`、`trae` 后回填精确提交。
 - 本 Issue 已创建为 #4；这只表示共享范围已登记，不自动授权分支同步或实现。
-- 当前 T021～T035 修改尚未发布到远端 `main`；共享提交形成并同步前，Issue 中的任务链接只用于
-  定位待发布章节，不得据此开始实现。
+- T021～T035 已发布到远端 `main`，但尚未同步两个实现分支；同步和实现分别获得授权前不得
+  开始 T021。
 
 #### 共同目标
 
@@ -64,7 +65,7 @@
 
 - [x] M1 已完成，共享父 Issue 和两个实现子 Issue 均已关闭。
 - [x] M2/M3 任务边界已在共享规格中明确：M2 为 T021～T035，M3 为 T036～T045。
-- [ ] 当前 docs-only 修改已形成单一目的共享提交并获得确认。
+- [x] 当前 docs-only 修改已形成单一目的共享提交并发布到 `origin/main`。
 - [ ] `codex` 与 `trae` 已经授权同步并指向同一版 M2 共享文档基线。
 - [x] M2 父 Issue #4 和实现子 Issue #5、#6 的创建已获得明确授权并完成父子关系登记。
 - [ ] T021～T035 的业务实现已获得明确授权。
@@ -103,8 +104,8 @@
 
 | 实现 | Issue | 状态 | 目标分支 | 共同基线 |
 | --- | --- | --- | --- | --- |
-| Codex | [#5](https://github.com/ywyz/child-manager/issues/5) | `pending` | `codex` | 共享文档提交确认后回填 |
-| Trae | [#6](https://github.com/ywyz/child-manager/issues/6) | `pending` | `trae` | 与 Codex 完全相同，确认后回填 |
+| Codex | [#5](https://github.com/ywyz/child-manager/issues/5) | `pending` | `codex` | 获得分支同步授权后按届时 `main` HEAD 回填 |
+| Trae | [#6](https://github.com/ywyz/child-manager/issues/6) | `pending` | `trae` | 与 Codex 完全相同，获得分支同步授权后回填 |
 
 #### 非目标
 
@@ -125,9 +126,10 @@
 
 - 父 Issue：[#4](https://github.com/ywyz/child-manager/issues/4)。
 - 目标分支：`codex`。
-- 共同基线：共享 docs-only 提交确认并同步后回填；必须与 Trae 子 Issue 完全相同。
+- 共同基线：docs-only 内容已发布到 `main`；获得分支同步授权后按届时 `main` HEAD 回填，且
+  必须与 Trae 子 Issue 完全相同。
 - 当前状态：`pending`；Issue 创建不等于实现授权。
-- 远端 `main` 尚未发布新的 T021～T035 章节；共享基线同步前不得开始实现。
+- 远端 `main` 已发布新的 T021～T035 章节；共享基线同步和实现分别获得授权前不得开始 T021。
 - 只记录 Codex 自己的方案、提交、迁移、验证、风险和阻塞，不复制或引用 Trae 实现证据。
 
 #### T021～T035 有序执行清单
@@ -188,9 +190,10 @@
 
 - 父 Issue：[#4](https://github.com/ywyz/child-manager/issues/4)。
 - 目标分支：`trae`。
-- 共同基线：共享 docs-only 提交确认并同步后回填；必须与 Codex 子 Issue 完全相同。
+- 共同基线：docs-only 内容已发布到 `main`；获得分支同步授权后按届时 `main` HEAD 回填，且
+  必须与 Codex 子 Issue 完全相同。
 - 当前状态：`pending`；Issue 创建不等于实现授权。
-- 远端 `main` 尚未发布新的 T021～T035 章节；共享基线同步前不得开始实现。
+- 远端 `main` 已发布新的 T021～T035 章节；共享基线同步和实现分别获得授权前不得开始 T021。
 - 只记录 Trae 自己的方案、提交、迁移、验证、风险和阻塞，不复制或引用 Codex 实现证据。
 
 #### T021～T035 有序执行清单

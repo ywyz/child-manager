@@ -377,7 +377,7 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 | --- | --- | --- | --- |
 | M0 共享基线 | `complete` | M0-G1～M0-G8 已关闭；历史隐私清理完成，脱敏模板和最终 docs-only `main` 基线已通过专项验证与远端重克隆复核 | 保持 `main` 为共享文档基线；后续共享文档按独立授权同步 |
 | M1 | `complete` | [Issue #1](https://github.com/ywyz/child-manager/issues/1) 最终只读复核通过并关闭；[#2](https://github.com/ywyz/child-manager/issues/2)、[#3](https://github.com/ywyz/child-manager/issues/3) 均已关闭，双环境同时启动与互不影响门禁已取得证据 | 保留验收记录；不据此自动授权 M2 实现 |
-| M2 | `ready` | M1 已 `complete`，入口条件满足；任务边界已固定为 T021～T035；[M2 Issue 草稿与执行记录](development/m2-issue-drafts.md) 已完成只读复核；父 Issue [#4](https://github.com/ywyz/child-manager/issues/4) 与子 Issue [#5](https://github.com/ywyz/child-manager/issues/5)、[#6](https://github.com/ywyz/child-manager/issues/6) 已创建，尚未同步共享基线或授权实现 | 先确认并形成当前 docs-only 共享提交，再单独申请将该基线同步到两个实现分支；实现仍需后续独立授权 |
+| M2 | `ready` | M1 已 `complete`，入口条件满足；任务边界已固定为 T021～T035；[M2 Issue 草稿与执行记录](development/m2-issue-drafts.md) 已完成只读复核；父 Issue [#4](https://github.com/ywyz/child-manager/issues/4) 与子 Issue [#5](https://github.com/ywyz/child-manager/issues/5)、[#6](https://github.com/ywyz/child-manager/issues/6) 已创建；M1→M2 docs-only 内容已发布到 `main`，尚未同步实现分支或授权实现 | 单独申请将包含本文的 `main` HEAD 同步到两个实现分支；实现仍需后续独立授权 |
 | M3 | `pending` | 任务边界已固定为 T036～T045；尚未开始实现 | 等待 M2 `complete` |
 | M4–M8 | `pending` | 尚未开始实现 | 等待前序里程碑完成 |
 | M9 生产复审 | `pending` | ADR-0009 明确延后 | 等待 M8 `complete` |
