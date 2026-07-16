@@ -1,16 +1,16 @@
 # Graph Report - child-manager  (2026-07-16)
 
 ## Corpus Check
-- 156 files · ~82,814 words
+- 156 files · ~82,907 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1694 nodes · 2027 edges · 175 communities (167 shown, 8 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 55 edges (avg confidence: 0.64)
+- 1700 nodes · 2039 edges · 172 communities (164 shown, 8 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 59 edges (avg confidence: 0.63)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6dd16f17`
+- Built from commit: `2a7fe81c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -50,10 +50,8 @@
 - Execution Steps
 - Implementation Plan: 首期一日活动计划完整闭环
 - settings.py
-- request_context_middleware
 - ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行
 - Child Manager 数据模型设计
-- test_error_handling.py
 - ADR-0005：AI 供应商中立，并建立管理员专用提示词系统
 - Child Manager 系统架构设计
 - Feature Specification: [FEATURE NAME]
@@ -76,7 +74,6 @@
 - 右侧列
 - 这是一份word表格
 - 18. 验收标准
-- 3.5 API、任务状态与幂等
 - Implementation Plan: [FEATURE]
 - SKILL.md
 - SKILL.md
@@ -177,15 +174,15 @@
 ## Import Cycles
 - None detected.
 
-## Communities (175 total, 8 thin omitted)
+## Communities (172 total, 8 thin omitted)
 
 ### Community 0 - "test_common_contracts.py"
 Cohesion: 0.05
 Nodes (48): canonical_fingerprint(), ErrorResponse, FieldError, HealthResponse, idempotency_key_from_fingerprint(), IdempotencyKey, PaginatedResponse, Any (+40 more)
 
 ### Community 1 - "test_worker.py"
-Cohesion: 0.17
-Nodes (13): process_export_job(), process_generation_job(), process_retry_job(), BaseModel, Worker 消息信封：只传 job_id，不携带 API Key、token 或正文。, WorkerMessage, Worker 自动化测试。  使用 StubBroker 验证 broker 工厂、Scheduler 停止语义和 消息只传 job_id 的边界约束。, 真实 actor 消息信封必须匹配 WorkerMessage 契约。 (+5 more)
+Cohesion: 0.09
+Nodes (29): process_export_job(), process_generation_job(), process_retry_job(), build_deterministic_test_broker(), build_redis_broker(), Broker, main(), Broker (+21 more)
 
 ### Community 2 - "Child Manager 产品与工程路线图"
 Cohesion: 0.04
@@ -276,20 +273,20 @@ Cohesion: 0.10
 Nodes (20): 10. 禁止事项, 11. 启动前检查清单, 1. 文档目的, 2. 事实来源与优先级, 3. 分支模型与所有权, 4.1 共享父 Issue, 4.2 实现子 Issue, 4.3 纵向拆分 (+12 more)
 
 ### Community 24 - "ports.py"
-Cohesion: 0.14
-Nodes (7): ABC, AIClientPort, AuditPort, CalendarPort, CryptoPort, DatabaseSessionPort, RedisPort
+Cohesion: 0.11
+Nodes (10): ABC, datetime, AIClientPort, AuditPort, CalendarPort, ClockPort, CryptoPort, DatabaseSessionPort (+2 more)
 
 ### Community 25 - "HealthDependencies"
 Cohesion: 0.18
 Nodes (15): _ai_unconfigured(), build_health_dependencies(), _calendar_library_available(), HealthDependencies, _runtime_storage_unconfigured(), 运行时 OpenAPI 必须通过规范校验，无悬空引用。, test_runtime_openapi_is_valid(), client() (+7 more)
 
 ### Community 26 - "app.py"
-Cohesion: 0.22
-Nodes (6): Event, Scheduler, test_scheduler_register_and_tick(), test_scheduler_run_exits_when_stop_event_already_set(), test_scheduler_run_stops_when_event_set_from_another_thread(), test_scheduler_tick_continues_after_callback_exception()
+Cohesion: 0.67
+Nodes (3): 3.4 加密与密钥, Q10：AI Key 加密算法, Q11：主加密密钥来源
 
 ### Community 27 - "lesson_plans.py"
-Cohesion: 0.08
-Nodes (23): AuditEventReference, BaseModel, ExportReference, BaseModel, CurrentUser, BaseModel, LessonPlanReference, BaseModel (+15 more)
+Cohesion: 0.07
+Nodes (28): ModuleType, AuditEventReference, BaseModel, ExportReference, BaseModel, CurrentUser, BaseModel, LessonPlanReference (+20 more)
 
 ### Community 28 - "6. 浏览器验收路径"
 Cohesion: 0.11
@@ -319,10 +316,6 @@ Nodes (16): API 与任务契约, Complexity Tracking, Constitution Check, Docume
 Cohesion: 0.24
 Nodes (16): create_app(), custom_openapi(), _error_response(), _http_exception_handler(), _live_handler(), JSONResponse, Request, _ready_handler() (+8 more)
 
-### Community 35 - "request_context_middleware"
-Cohesion: 0.22
-Nodes (10): build_deterministic_test_broker(), build_redis_broker(), Broker, main(), Broker, Event, serve(), test_build_deterministic_test_broker_returns_stub_broker() (+2 more)
-
 ### Community 36 - "ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行"
 Cohesion: 0.14
 Nodes (13): ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行, API 同步执行 AI 和 Word, Celery + Redis, PostgreSQL 直接充当轮询任务队列, Redis 作为任务最终状态存储, 决策, 后果, 备选方案 (+5 more)
@@ -330,10 +323,6 @@ Nodes (13): ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 
 ### Community 37 - "Child Manager 数据模型设计"
 Cohesion: 0.14
 Nodes (14): 10. JSONB Schema 演进, 12.1 `daily_activity_plan_exports`, 12. Word 导出模型, 13.1 `workday_cache`, 13. 工作日缓存, 14.1 `audit_events`, 14. 审计模型, 17. 索引原则 (+6 more)
-
-### Community 38 - "test_error_handling.py"
-Cohesion: 0.47
-Nodes (3): datetime, ClockPort, fixed_datetime()
 
 ### Community 39 - "ADR-0005：AI 供应商中立，并建立管理员专用提示词系统"
 Cohesion: 0.15
@@ -423,10 +412,6 @@ Nodes (10): 填写说明, 填写说明：, 填写说明：, 填写说明：, 文
 Cohesion: 0.22
 Nodes (9): 18.1 账号与权限, 18.2 设置, 18.3 教案管理, 18.4 日期规则, 18.5 提示词与 AI, 18.6 集体活动, 18.7 Word 导出, 18.8 运维与安全 (+1 more)
 
-### Community 61 - "3.5 API、任务状态与幂等"
-Cohesion: 0.67
-Nodes (3): 3.5 API、任务状态与幂等, Q12：任务状态机缺少 `expired`, Q13：幂等键定义
-
 ### Community 62 - "Implementation Plan: [FEATURE]"
 Cohesion: 0.22
 Nodes (8): Complexity Tracking, Constitution Check, Documentation (this feature), Implementation Plan: [FEATURE], Project Structure, Source Code (repository root), Summary, Technical Context
@@ -453,7 +438,7 @@ Nodes (7): 9.1 关系表头与 JSONB 正文, 9.2 `daily_activity_plans`, 9.3 `co
 
 ### Community 68 - "3. 二十六项问题的最终结论"
 Cohesion: 0.29
-Nodes (7): 3.1 文档命名与 ADR 状态, 3.4 加密与密钥, 3. 二十六项问题的最终结论, Q10：AI Key 加密算法, Q11：主加密密钥来源, Q1：ADR-0001 文件命名, Q2：ADR-0007 被 ADR-0009 取代的标记
+Nodes (7): 3.1 文档命名与 ADR 状态, 3.5 API、任务状态与幂等, 3. 二十六项问题的最终结论, Q12：任务状态机缺少 `expired`, Q13：幂等键定义, Q1：ADR-0001 文件命名, Q2：ADR-0007 被 ADR-0009 取代的标记
 
 ### Community 69 - "3.9 Codex 交叉审计事项"
 Cohesion: 0.29
@@ -691,11 +676,11 @@ Nodes (3): 4.1 首期目标, 4.2 成功标准, 4. 产品目标
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `Child Manager 文档交叉审计合并结论` connect `Child Manager 文档交叉审计合并结论` to `4. 项目文档更新矩阵`, `3. 二十六项问题的最终结论`, `README.md`?**
+  _High betweenness centrality (0.045) - this node is a cross-community bridge._
 - **Why does `教案管理 PRD（首期：一日活动计划）` connect `教案管理 PRD（首期：一日活动计划）` to `11. 计划管理流程`, `14. Word 导出`, `17. 非功能要求`, `15. 安全、隐私与审计`, `10. 教案栏目与格式`, `13. AI 生成流程`, `README.md`, `4. 产品目标`, `5. 用户与权限`, `8. 核心业务对象`, `12. AI 模型与提示词管理`, `7. 首期必要设置`, `9. 日期与上下文规则`, `18. 验收标准`?**
   _High betweenness centrality (0.044) - this node is a cross-community bridge._
-- **Why does `Child Manager 文档交叉审计合并结论` connect `Child Manager 文档交叉审计合并结论` to `4. 项目文档更新矩阵`, `3. 二十六项问题的最终结论`, `README.md`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
-- **Why does `Child Manager 数据模型设计` connect `Child Manager 数据模型设计` to `3. 总体建模原则`, `9. 一日活动计划模型`, `15. 数据快照边界`, `README.md`, `22. 后续扩展边界`, `2. 设计来源与旧系统取舍`, `8. 提示词模型`, `5. 园所与身份模型`, `6. 教学设置模型`, `11. 后台任务与 AI 结果`, `16. 外键与删除行为`, `4. 模型总览`, `7. AI 模型档案`, `21. 测试与验收`?**
+- **Why does `这是一份word表格` connect `这是一份word表格` to `README.md`, `右侧列`, `右侧列`, `右侧列`, `右侧列为两行：`, `右侧列为两行：`, `右侧列`?**
   _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `create_app()` (e.g. with `_http_exception_handler()` and `_live_handler()`) actually correct?**
   _`create_app()` has 6 INFERRED edges - model-reasoned connections that need verification._
@@ -703,5 +688,5 @@ _Questions this graph is uniquely positioned to answer:_
   _904 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `test_common_contracts.py` be split into smaller, more focused modules?**
   _Cohesion score 0.05288207297726071 - nodes in this community are weakly interconnected._
-- **Should `Child Manager 产品与工程路线图` be split into smaller, more focused modules?**
-  _Cohesion score 0.04081632653061224 - nodes in this community are weakly interconnected._
+- **Should `test_worker.py` be split into smaller, more focused modules?**
+  _Cohesion score 0.08636977058029689 - nodes in this community are weakly interconnected._

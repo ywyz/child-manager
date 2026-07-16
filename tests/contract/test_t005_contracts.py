@@ -1,15 +1,37 @@
 """T005 契约骨架回归测试：确保后续阶段接口不提前固化到 contracts 包。"""
 
+import inspect
 from pathlib import Path
+from types import ModuleType
 
 import pytest
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
-from packages.contracts import identity, jobs, settings
+from packages.contracts import (
+    audit,
+    exports,
+    identity,
+    jobs,
+    lesson_plans,
+    prompts,
+    settings,
+)
 from packages.contracts.audit import AuditEventReference
 from packages.contracts.exports import ExportReference
 from packages.contracts.lesson_plans import LessonPlanReference
 from packages.contracts.prompts import PromptReference
+
+
+def _public_base_model_names(module: ModuleType) -> set[str]:
+    """返回模块中所有公开 BaseModel 子类的名称集合（含导入的类，不含 BaseModel 本身）。"""
+    return {
+        name
+        for name, obj in inspect.getmembers(module)
+        if inspect.isclass(obj)
+        and issubclass(obj, BaseModel)
+        and obj is not BaseModel
+        and not name.startswith("_")
+    }
 
 
 class TestIdentitySkeleton:
@@ -99,6 +121,33 @@ class TestOtherSkeletons:
     def test_prompt_reference(self) -> None:
         ref = PromptReference(id="prompt-1", code="daily_plan")
         assert ref.code == "daily_plan"
+
+
+class TestPublicClassScope:
+    """各契约模块的公开 BaseModel 类集合必须精确等于最小骨架范围。"""
+
+    @pytest.mark.parametrize(
+        ("module", "expected"),
+        [
+            pytest.param(identity, {"CurrentUser"}, id="identity"),
+            pytest.param(settings, {"KindergartenSummary"}, id="settings"),
+            pytest.param(jobs, {"WorkerMessage"}, id="jobs"),
+            pytest.param(audit, {"AuditEventReference"}, id="audit"),
+            pytest.param(exports, {"ExportReference"}, id="exports"),
+            pytest.param(
+                lesson_plans,
+                {"LessonPlanReference"},
+                id="lesson_plans",
+            ),
+            pytest.param(prompts, {"PromptReference"}, id="prompts"),
+        ],
+    )
+    def test_module_public_base_model_classes(
+        self,
+        module: ModuleType,
+        expected: set[str],
+    ) -> None:
+        assert _public_base_model_names(module) == expected
 
 
 class TestModelsFileRemoved:

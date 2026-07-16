@@ -795,8 +795,8 @@
     "semantic_hash": ""
   },
   "tests/contract/test_t005_contracts.py": {
-    "mtime": 1784183871.234287,
-    "ast_hash": "660399cbca64ac69f08fa9a82fa9dbf5",
+    "mtime": 1784184836.60223,
+    "ast_hash": "c741a1bd65fcfa4f22174da5c9fabc07",
     "semantic_hash": ""
   }
 }
