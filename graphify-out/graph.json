@@ -452,8 +452,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_app",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "app.py"
     },
     {
@@ -463,8 +463,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "apps_api_app_error_response",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "_error_response()"
     },
     {
@@ -474,8 +474,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_app_py_request",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "request"
     },
     {
@@ -485,8 +485,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_app_py_jsonresponse",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "jsonresponse"
     },
     {
@@ -496,8 +496,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "apps_api_app_custom_openapi",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "custom_openapi()"
     },
     {
@@ -507,8 +507,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "fastapi",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "fastapi"
     },
     {
@@ -518,8 +518,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "apps_api_app_live_handler",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "_live_handler()"
     },
     {
@@ -529,8 +529,8 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "apps_api_app_ready_handler",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "_ready_handler()"
     },
     {
@@ -540,8 +540,8 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "apps_api_app_validation_error_handler",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "_validation_error_handler()"
     },
     {
@@ -551,8 +551,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "requestvalidationerror",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "requestvalidationerror"
     },
     {
@@ -562,8 +562,8 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "apps_api_app_http_exception_handler",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "_http_exception_handler()"
     },
     {
@@ -573,8 +573,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "starlettehttpexception",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "starlettehttpexception"
     },
     {
@@ -584,8 +584,8 @@
       "source_location": "L195",
       "_origin": "ast",
       "id": "apps_api_app_unhandled_error_handler",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "_unhandled_error_handler()"
     },
     {
@@ -595,8 +595,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "exception"
     },
     {
@@ -606,8 +606,8 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "apps_api_app_create_app",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "create_app()"
     },
     {
@@ -628,8 +628,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "apps_api_dependencies_safe_check",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "_safe_check()"
     },
     {
@@ -705,8 +705,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_main_py_apps_api_main_0a4ce4",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "main.py"
     },
     {
@@ -716,8 +716,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_api_main_validate_bind_host",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "_validate_bind_host()"
     },
     {
@@ -727,8 +727,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "apps_api_main_main",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 34,
+      "community_name": "settings.py",
       "norm_label": "main()"
     },
     {
@@ -738,8 +738,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_middleware",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "middleware.py"
     },
     {
@@ -749,8 +749,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "apps_api_middleware_request_id",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "request_id()"
     },
     {
@@ -760,8 +760,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_middleware_py_request",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "request"
     },
     {
@@ -771,8 +771,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "apps_api_middleware_request_context_middleware",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "request_context_middleware()"
     },
     {
@@ -782,8 +782,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_middleware_py_jsonresponse",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "jsonresponse"
     },
     {
@@ -1090,8 +1090,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "apps_worker_broker_build_deterministic_test_broker",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "build_deterministic_test_broker()"
     },
     {
@@ -1156,8 +1156,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_worker_scheduler",
-      "community": 38,
-      "community_name": "test_error_handling.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "scheduler.py"
     },
     {
@@ -1673,8 +1673,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport",
-      "community": 55,
-      "community_name": "DatabaseSessionPort",
+      "community": 24,
+      "community_name": "ports.py",
       "norm_label": "databasesessionport"
     },
     {
@@ -1695,8 +1695,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport_begin",
-      "community": 55,
-      "community_name": "DatabaseSessionPort",
+      "community": 24,
+      "community_name": "ports.py",
       "norm_label": ".begin()"
     },
     {
@@ -1706,8 +1706,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport_commit",
-      "community": 55,
-      "community_name": "DatabaseSessionPort",
+      "community": 24,
+      "community_name": "ports.py",
       "norm_label": ".commit()"
     },
     {
@@ -1717,8 +1717,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport_rollback",
-      "community": 55,
-      "community_name": "DatabaseSessionPort",
+      "community": 24,
+      "community_name": "ports.py",
       "norm_label": ".rollback()"
     },
     {
@@ -1728,8 +1728,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "packages_backend_ports_databasesessionport_close",
-      "community": 55,
-      "community_name": "DatabaseSessionPort",
+      "community": 24,
+      "community_name": "ports.py",
       "norm_label": ".close()"
     },
     {
@@ -1794,8 +1794,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "packages_backend_ports_calendarport_is_workday",
-      "community": 24,
-      "community_name": "ports.py",
+      "community": 25,
+      "community_name": "HealthDependencies",
       "norm_label": ".is_workday()"
     },
     {
@@ -1959,8 +1959,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_audit",
-      "community": 72,
-      "community_name": "AuditEventReference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "audit.py"
     },
     {
@@ -1970,8 +1970,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_contracts_audit_auditeventreference",
-      "community": 72,
-      "community_name": "AuditEventReference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "auditeventreference"
     },
     {
@@ -1981,8 +1981,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_audit_py_basemodel",
-      "community": 72,
-      "community_name": "AuditEventReference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "basemodel"
     },
     {
@@ -2113,8 +2113,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_exports",
-      "community": 73,
-      "community_name": "ExportReference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "exports.py"
     },
     {
@@ -2124,8 +2124,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_contracts_exports_exportreference",
-      "community": 73,
-      "community_name": "ExportReference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "exportreference"
     },
     {
@@ -2135,8 +2135,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_exports_py_basemodel",
-      "community": 73,
-      "community_name": "ExportReference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "basemodel"
     },
     {
@@ -2146,8 +2146,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_identity",
-      "community": 79,
-      "community_name": "CurrentUser",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "identity.py"
     },
     {
@@ -2157,8 +2157,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_contracts_identity_currentuser",
-      "community": 79,
-      "community_name": "CurrentUser",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "currentuser"
     },
     {
@@ -2168,8 +2168,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_identity_py_basemodel",
-      "community": 79,
-      "community_name": "CurrentUser",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "basemodel"
     },
     {
@@ -2256,8 +2256,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_prompts",
-      "community": 45,
-      "community_name": "prompts.py",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "prompts.py"
     },
     {
@@ -2267,8 +2267,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_contracts_prompts_promptreference",
-      "community": 45,
-      "community_name": "prompts.py",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "promptreference"
     },
     {
@@ -2278,8 +2278,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_prompts_py_basemodel",
-      "community": 45,
-      "community_name": "prompts.py",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "basemodel"
     },
     {
@@ -2289,8 +2289,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_settings",
-      "community": 34,
-      "community_name": "settings.py",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "settings.py"
     },
     {
@@ -2300,8 +2300,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_contracts_settings_kindergartensummary",
-      "community": 34,
-      "community_name": "settings.py",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "kindergartensummary"
     },
     {
@@ -2311,8 +2311,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_settings_py_basemodel",
-      "community": 34,
-      "community_name": "settings.py",
+      "community": 27,
+      "community_name": "lesson_plans.py",
       "norm_label": "basemodel"
     },
     {
@@ -2501,8 +2501,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_test_error_handling",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "test_error_handling.py"
     },
     {
@@ -2512,8 +2512,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_true",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "_true()"
     },
     {
@@ -2523,8 +2523,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_make_client",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "_make_client()"
     },
     {
@@ -2534,8 +2534,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_py_testclient",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "testclient"
     },
     {
@@ -2545,8 +2545,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_get_missing_path_returns_chinese_404",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "test_get_missing_path_returns_chinese_404()"
     },
     {
@@ -2556,8 +2556,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_options_missing_path_returns_chinese_404",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "test_options_missing_path_returns_chinese_404()"
     },
     {
@@ -2567,8 +2567,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_post_health_live_returns_405_not_404",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "test_post_health_live_returns_405_not_404()"
     },
     {
@@ -2578,8 +2578,8 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_delete_health_ready_returns_405",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "test_delete_health_ready_returns_405()"
     },
     {
@@ -2589,8 +2589,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_404_response_includes_request_id_header",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "test_404_response_includes_request_id_header()"
     },
     {
@@ -2600,8 +2600,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_custom_request_id_propagated_to_error_response",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "test_custom_request_id_propagated_to_error_response()"
     },
     {
@@ -2611,8 +2611,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_500_returns_chinese_internal_error",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "test_500_returns_chinese_internal_error()"
     },
     {
@@ -2622,8 +2622,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_http_exception_400_returns_chinese_envelope",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "test_http_exception_400_returns_chinese_envelope()"
     },
     {
@@ -2633,8 +2633,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_contextvars_cleared_after_request",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "test_contextvars_cleared_after_request()"
     },
     {
@@ -2644,8 +2644,8 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_test_contextvars_cleared_after_error",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "test_contextvars_cleared_after_error()"
     },
     {
@@ -2655,8 +2655,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_rationale_1",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "\u516c\u5f00 http \u5f02\u5e38\u63a5\u7f1d\u6d4b\u8bd5\u3002  \u8986\u76d6 404\u3001405(\u542b options)\u3001\u4e3b\u52a8 http \u5f02\u5e38\u3001\u6846\u67b6\u5f02\u5e38\u548c\u672a\u77e5 500, \u9a8c\u8bc1\u4e2d\u6587 envelope\u3001req"
     },
     {
@@ -2666,8 +2666,8 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_rationale_137",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "\u8bf7\u6c42\u5b8c\u6210\u540e contextvars \u5fc5\u987b\u88ab\u6e05\u7406\u3002"
     },
     {
@@ -2677,8 +2677,8 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_rationale_148",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 55,
+      "community_name": "DatabaseSessionPort",
       "norm_label": "\u5f02\u5e38\u8def\u5f84\u540e contextvars \u4e5f\u5fc5\u987b\u88ab\u6e05\u7406\u3002"
     },
     {
@@ -3991,6 +3991,281 @@
       "norm_label": "\u8fd0\u884c\u65f6 health schema \u5fc5\u987b\u4e0e\u9759\u6001\u5951\u7ea6\u7ed3\u6784\u7b49\u4ef7\u3002"
     },
     {
+      "label": "test_t005_contracts.py",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "test_t005_contracts.py"
+    },
+    {
+      "label": "TestIdentitySkeleton",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "testidentityskeleton"
+    },
+    {
+      "label": ".test_current_user_valid()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testidentityskeleton_test_current_user_valid",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_current_user_valid()"
+    },
+    {
+      "label": ".test_current_user_rejects_extra_fields()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testidentityskeleton_test_current_user_rejects_extra_fields",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_current_user_rejects_extra_fields()"
+    },
+    {
+      "label": ".test_no_login_response_in_identity_module()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testidentityskeleton_test_no_login_response_in_identity_module",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_no_login_response_in_identity_module()"
+    },
+    {
+      "label": "TestSettingsSkeleton",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testsettingsskeleton",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "testsettingsskeleton"
+    },
+    {
+      "label": ".test_kindergarten_summary_valid()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testsettingsskeleton_test_kindergarten_summary_valid",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_kindergarten_summary_valid()"
+    },
+    {
+      "label": ".test_kindergarten_summary_rejects_extra_fields()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testsettingsskeleton_test_kindergarten_summary_rejects_extra_fields",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_kindergarten_summary_rejects_extra_fields()"
+    },
+    {
+      "label": "TestJobsSkeleton",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "testjobsskeleton"
+    },
+    {
+      "label": ".test_worker_message_valid()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L65",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testjobsskeleton_test_worker_message_valid",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_worker_message_valid()"
+    },
+    {
+      "label": ".test_worker_message_rejects_sensitive_payload()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L69",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testjobsskeleton_test_worker_message_rejects_sensitive_payload",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_worker_message_rejects_sensitive_payload()"
+    },
+    {
+      "label": ".test_worker_message_rejects_result_body()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testjobsskeleton_test_worker_message_rejects_result_body",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_worker_message_rejects_result_body()"
+    },
+    {
+      "label": "TestOtherSkeletons",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L84",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testotherskeletons",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "testotherskeletons"
+    },
+    {
+      "label": ".test_audit_event_reference()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testotherskeletons_test_audit_event_reference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_audit_event_reference()"
+    },
+    {
+      "label": ".test_export_reference()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L91",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testotherskeletons_test_export_reference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_export_reference()"
+    },
+    {
+      "label": ".test_lesson_plan_reference()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testotherskeletons_test_lesson_plan_reference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_lesson_plan_reference()"
+    },
+    {
+      "label": ".test_prompt_reference()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L99",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testotherskeletons_test_prompt_reference",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_prompt_reference()"
+    },
+    {
+      "label": "TestModelsFileRemoved",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L104",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testmodelsfileremoved",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "testmodelsfileremoved"
+    },
+    {
+      "label": ".test_models_file_removed()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L107",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_testmodelsfileremoved_test_models_file_removed",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": ".test_models_file_removed()"
+    },
+    {
+      "label": "T005 \u5951\u7ea6\u9aa8\u67b6\u56de\u5f52\u6d4b\u8bd5\uff1a\u786e\u4fdd\u540e\u7eed\u9636\u6bb5\u63a5\u53e3\u4e0d\u63d0\u524d\u56fa\u5316\u5230 contracts \u5305\u3002",
+      "file_type": "rationale",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_rationale_1",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "t005 \u5951\u7ea6\u9aa8\u67b6\u56de\u5f52\u6d4b\u8bd5:\u786e\u4fdd\u540e\u7eed\u9636\u6bb5\u63a5\u53e3\u4e0d\u63d0\u524d\u56fa\u5316\u5230 contracts \u5305\u3002"
+    },
+    {
+      "label": "identity.py \u53ea\u5141\u8bb8 CurrentUser \u6700\u5c0f\u5f15\u7528\u9aa8\u67b6\u3002",
+      "file_type": "rationale",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_rationale_16",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "identity.py \u53ea\u5141\u8bb8 currentuser \u6700\u5c0f\u5f15\u7528\u9aa8\u67b6\u3002"
+    },
+    {
+      "label": "settings.py \u53ea\u5141\u8bb8 KindergartenSummary \u6700\u5c0f\u5f15\u7528\u9aa8\u67b6\u3002",
+      "file_type": "rationale",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_rationale_43",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "settings.py \u53ea\u5141\u8bb8 kindergartensummary \u6700\u5c0f\u5f15\u7528\u9aa8\u67b6\u3002"
+    },
+    {
+      "label": "jobs.py \u53ea\u5141\u8bb8 WorkerMessage \u6700\u5c0f\u5f15\u7528\u9aa8\u67b6\uff0c\u4e14\u53ea\u4f20 job_id\u3002",
+      "file_type": "rationale",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_rationale_63",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "jobs.py \u53ea\u5141\u8bb8 workermessage \u6700\u5c0f\u5f15\u7528\u9aa8\u67b6,\u4e14\u53ea\u4f20 job_id\u3002"
+    },
+    {
+      "label": "audit/exports/lesson_plans/prompts \u53ea\u4fdd\u7559\u6700\u5c0f\u5f15\u7528\u578b\u9aa8\u67b6\u3002",
+      "file_type": "rationale",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L85",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_rationale_85",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "audit/exports/lesson_plans/prompts \u53ea\u4fdd\u7559\u6700\u5c0f\u5f15\u7528\u578b\u9aa8\u67b6\u3002"
+    },
+    {
+      "label": "models.py\uff08T029+ AI \u6a21\u578b\u6863\u6848\u5b8c\u6574\u5951\u7ea6\uff09\u4e0d\u5e94\u5b58\u5728\u3002",
+      "file_type": "rationale",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L105",
+      "_origin": "ast",
+      "id": "tests_contract_test_t005_contracts_rationale_105",
+      "community": 27,
+      "community_name": "lesson_plans.py",
+      "norm_label": "models.py(t029+ ai \u6a21\u578b\u6863\u6848\u5b8c\u6574\u5951\u7ea6)\u4e0d\u5e94\u5b58\u5728\u3002"
+    },
+    {
       "label": "database_config.py",
       "file_type": "code",
       "source_file": "tests/database_config.py",
@@ -4877,8 +5152,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_test_observability",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "test_observability.py"
     },
     {
@@ -4888,8 +5163,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_test_observability_test_request_context_middleware_generates_ids",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "test_request_context_middleware_generates_ids()"
     },
     {
@@ -4899,8 +5174,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_unit_test_observability_test_request_context_middleware_accepts_supplied_ids",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "test_request_context_middleware_accepts_supplied_ids()"
     },
     {
@@ -4910,8 +5185,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_unit_test_observability_test_error_responses_include_request_id",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "test_error_responses_include_request_id()"
     },
     {
@@ -4921,8 +5196,8 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "tests_unit_test_observability_test_middleware_binds_structlog_contextvars",
-      "community": 25,
-      "community_name": "HealthDependencies",
+      "community": 45,
+      "community_name": "prompts.py",
       "norm_label": "test_middleware_binds_structlog_contextvars()"
     },
     {
@@ -5317,8 +5592,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_worker_test_worker_test_build_deterministic_test_broker_returns_stub_broker",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "test_build_deterministic_test_broker_returns_stub_broker()"
     },
     {
@@ -5328,8 +5603,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "tests_worker_test_worker_test_stub_broker_can_be_set_as_global",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "test_stub_broker_can_be_set_as_global()"
     },
     {
@@ -5416,8 +5691,8 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "tests_worker_test_worker_test_serve_function_accepts_stub_broker_and_stops",
-      "community": 1,
-      "community_name": "test_worker.py",
+      "community": 35,
+      "community_name": "request_context_middleware",
       "norm_label": "test_serve_function_accepts_stub_broker_and_stops()"
     },
     {
@@ -21869,6 +22144,17 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_audit",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/audit.py",
@@ -21877,6 +22163,78 @@
       "source": "packages_contracts_audit_auditeventreference",
       "target": "packages_contracts_audit_py_basemodel",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_audit_auditeventreference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "target": "packages_contracts_audit_auditeventreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "target": "packages_contracts_audit_auditeventreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testmodelsfileremoved",
+      "target": "packages_contracts_audit_auditeventreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons",
+      "target": "packages_contracts_audit_auditeventreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons_test_audit_event_reference",
+      "target": "packages_contracts_audit_auditeventreference"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L9",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testsettingsskeleton",
+      "target": "packages_contracts_audit_auditeventreference",
+      "confidence_score": 0.5
     },
     {
       "relation": "contains",
@@ -22436,6 +22794,17 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_exports",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/exports.py",
@@ -22446,6 +22815,78 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_exports_exportreference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L10",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "target": "packages_contracts_exports_exportreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L10",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "target": "packages_contracts_exports_exportreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L10",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testmodelsfileremoved",
+      "target": "packages_contracts_exports_exportreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L10",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons",
+      "target": "packages_contracts_exports_exportreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons_test_export_reference",
+      "target": "packages_contracts_exports_exportreference"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L10",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testsettingsskeleton",
+      "target": "packages_contracts_exports_exportreference",
+      "confidence_score": 0.5
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/identity.py",
@@ -22453,6 +22894,17 @@
       "weight": 1.0,
       "source": "packages_contracts_identity",
       "target": "packages_contracts_identity_currentuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "submodule_import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_identity",
       "confidence_score": 1.0
     },
     {
@@ -22473,6 +22925,17 @@
       "weight": 1.0,
       "source": "packages_contracts_jobs",
       "target": "packages_contracts_jobs_workermessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "submodule_import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_jobs",
       "confidence_score": 1.0
     },
     {
@@ -22550,6 +23013,17 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_lesson_plans",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/lesson_plans.py",
@@ -22560,6 +23034,78 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_lesson_plans_lessonplanreference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L11",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "target": "packages_contracts_lesson_plans_lessonplanreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L11",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "target": "packages_contracts_lesson_plans_lessonplanreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L11",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testmodelsfileremoved",
+      "target": "packages_contracts_lesson_plans_lessonplanreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L11",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons",
+      "target": "packages_contracts_lesson_plans_lessonplanreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons_test_lesson_plan_reference",
+      "target": "packages_contracts_lesson_plans_lessonplanreference"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L11",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testsettingsskeleton",
+      "target": "packages_contracts_lesson_plans_lessonplanreference",
+      "confidence_score": 0.5
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/prompts.py",
@@ -22567,6 +23113,17 @@
       "weight": 1.0,
       "source": "packages_contracts_prompts",
       "target": "packages_contracts_prompts_promptreference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_prompts",
       "confidence_score": 1.0
     },
     {
@@ -22580,6 +23137,78 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_prompts_promptreference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L12",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "target": "packages_contracts_prompts_promptreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L12",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "target": "packages_contracts_prompts_promptreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L12",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testmodelsfileremoved",
+      "target": "packages_contracts_prompts_promptreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L12",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons",
+      "target": "packages_contracts_prompts_promptreference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons_test_prompt_reference",
+      "target": "packages_contracts_prompts_promptreference"
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L12",
+      "weight": 0.8,
+      "source": "tests_contract_test_t005_contracts_testsettingsskeleton",
+      "target": "packages_contracts_prompts_promptreference",
+      "confidence_score": 0.5
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/settings.py",
@@ -22587,6 +23216,17 @@
       "weight": 1.0,
       "source": "packages_contracts_settings",
       "target": "packages_contracts_settings_kindergartensummary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "submodule_import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "packages_contracts_settings",
       "confidence_score": 1.0
     },
     {
@@ -24874,6 +25514,246 @@
       "weight": 1.0,
       "source": "tests_contract_test_openapi_document_rationale_315",
       "target": "tests_contract_test_openapi_document_test_runtime_health_schema_equivalent_to_static",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "tests_contract_test_t005_contracts_testmodelsfileremoved",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "tests_contract_test_t005_contracts_testotherskeletons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts",
+      "target": "tests_contract_test_t005_contracts_testsettingsskeleton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_rationale_1",
+      "target": "tests_contract_test_t005_contracts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_rationale_16",
+      "target": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "target": "tests_contract_test_t005_contracts_testidentityskeleton_test_current_user_rejects_extra_fields",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "target": "tests_contract_test_t005_contracts_testidentityskeleton_test_current_user_valid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testidentityskeleton",
+      "target": "tests_contract_test_t005_contracts_testidentityskeleton_test_no_login_response_in_identity_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_rationale_43",
+      "target": "tests_contract_test_t005_contracts_testsettingsskeleton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testsettingsskeleton",
+      "target": "tests_contract_test_t005_contracts_testsettingsskeleton_test_kindergarten_summary_rejects_extra_fields",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testsettingsskeleton",
+      "target": "tests_contract_test_t005_contracts_testsettingsskeleton_test_kindergarten_summary_valid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_rationale_63",
+      "target": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "target": "tests_contract_test_t005_contracts_testjobsskeleton_test_worker_message_rejects_result_body",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "target": "tests_contract_test_t005_contracts_testjobsskeleton_test_worker_message_rejects_sensitive_payload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testjobsskeleton",
+      "target": "tests_contract_test_t005_contracts_testjobsskeleton_test_worker_message_valid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_rationale_85",
+      "target": "tests_contract_test_t005_contracts_testotherskeletons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons",
+      "target": "tests_contract_test_t005_contracts_testotherskeletons_test_audit_event_reference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons",
+      "target": "tests_contract_test_t005_contracts_testotherskeletons_test_export_reference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons",
+      "target": "tests_contract_test_t005_contracts_testotherskeletons_test_lesson_plan_reference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testotherskeletons",
+      "target": "tests_contract_test_t005_contracts_testotherskeletons_test_prompt_reference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L105",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_rationale_105",
+      "target": "tests_contract_test_t005_contracts_testmodelsfileremoved",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_t005_contracts.py",
+      "source_location": "L107",
+      "weight": 1.0,
+      "source": "tests_contract_test_t005_contracts_testmodelsfileremoved",
+      "target": "tests_contract_test_t005_contracts_testmodelsfileremoved_test_models_file_removed",
       "confidence_score": 1.0
     },
     {
@@ -38529,5 +39409,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "60990f2bbf4a3ed055ef92df2ba87b10418c3b75"
+  "built_at_commit": "6dd16f17f5716deba90de7926f73da8747293495"
 }
