@@ -29,3 +29,15 @@ def test_state_change_rejects_missing_csrf_and_wrong_origin(identity_client: Tes
     )
     assert wrong_origin.status_code == 403
     assert wrong_origin.json()["code"] == "auth.csrf_invalid"
+
+
+def test_state_change_rejects_malformed_csrf_token(identity_client: TestClient) -> None:
+    identity_client.cookies.set("child_manager_csrf", "a.a")
+    response = identity_client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "管理员足够长的安全测试密码 2026"},
+        headers={"Origin": "http://testserver", "X-CSRF-Token": "a.a"},
+    )
+
+    assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"
