@@ -53,7 +53,7 @@ def _is_allowed_host(host: str | None) -> bool:
 def validate_csrf_request(
     *, cookie_value: str | None, header_value: str | None, origin: str | None, referer: str | None
 ) -> bool:
-    """校验 CSRF 双提交与来源头。"""
+    """校验签名双提交 CSRF：Cookie 与 Header 必须同时存在、均有效且值相同。"""
     if not cookie_value or not header_value:
         return False
 
@@ -64,7 +64,9 @@ def validate_csrf_request(
     if not _is_allowed_host(_origin_host(source)):
         return False
 
-    if settings.environment == "test":
-        return cookie_value == header_value
-
-    return verify_csrf_token(header_value, settings.csrf_signing_key)
+    # 签名双提交：分别验证 Cookie 与 Header 的签名，再比较二者是否完全一致。
+    if not verify_csrf_token(cookie_value, settings.csrf_signing_key):
+        return False
+    if not verify_csrf_token(header_value, settings.csrf_signing_key):
+        return False
+    return cookie_value == header_value

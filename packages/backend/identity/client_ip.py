@@ -3,7 +3,7 @@
 from ipaddress import ip_address
 from typing import Any
 
-_INTERNAL_IP_HEADER = b"x-child-manager-client-ip"
+_INTERNAL_IP_HEADER = "x-child-manager-client-ip"
 
 
 def _is_trusted_peer(host: str | None, trusted_peers: set[str]) -> bool:
@@ -31,6 +31,8 @@ def get_client_ip(request: Any, trusted_peers: set[str]) -> str:
 
     if _is_trusted_peer(peer_host, trusted_peers):
         internal = request.headers.get(_INTERNAL_IP_HEADER)
+        if internal is None:
+            internal = request.headers.get(_INTERNAL_IP_HEADER.encode("ascii"))
         if internal:
             return internal.decode("ascii") if isinstance(internal, bytes) else str(internal)
 

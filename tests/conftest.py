@@ -16,7 +16,7 @@ IS_POSTGRESQL = BASE_DATABASE_URL.startswith("postgresql")
 
 def pytest_configure(config: pytest.Config) -> None:
     """在测试模块导入前固定环境变量，确保 Settings 读取到测试值。"""
-    os.environ.setdefault("ENVIRONMENT", "test")
+    os.environ.setdefault("CHILD_MANAGER_ENVIRONMENT", "test")
     os.environ.setdefault("CHILD_MANAGER_DATABASE_URL", BASE_DATABASE_URL)
     os.environ.setdefault("CHILD_MANAGER_JWT_SIGNING_KEY", "test-jwt-signing-key-32bytes-long-0000")
     os.environ.setdefault(

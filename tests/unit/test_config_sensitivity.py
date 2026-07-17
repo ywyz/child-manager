@@ -42,7 +42,9 @@ def test_redis_url_direct():
     assert settings.redis_url == custom_url
 
 
-def test_jwt_signing_key_is_empty_by_default():
+def test_jwt_signing_key_is_empty_by_default(monkeypatch):
+    monkeypatch.delenv("CHILD_MANAGER_JWT_SIGNING_KEY", raising=False)
+    monkeypatch.delenv("CHILD_MANAGER_CSRF_SIGNING_KEY", raising=False)
     settings = Settings()
 
     assert settings.jwt_signing_key == ""

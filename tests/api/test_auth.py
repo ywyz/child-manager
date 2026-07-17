@@ -1,5 +1,6 @@
 """认证 API 测试。"""
 
+from collections.abc import Iterator
 from typing import Any
 
 import pytest
@@ -47,11 +48,38 @@ def _set_keys(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
-_CSRF_COOKIE = {"child_manager_csrf": "test-csrf"}
-_CSRF_HEADERS = {
-    "origin": "http://127.0.0.1:28080",
-    "x-csrf-token": "test-csrf",
-}
+@pytest.fixture(autouse=True)
+def _reset_login_throttle() -> Iterator[None]:
+    """每个认证测试前清空内存限流状态，避免顺序运行导致误拦截。"""
+    from apps.api.routers import auth as auth_router
+
+    backend = getattr(auth_router._throttle, "_backend", None)
+    if backend is not None and hasattr(backend, "storage"):
+        backend.storage.clear()
+    yield
+
+
+@pytest.fixture
+def csrf_token(monkeypatch: pytest.MonkeyPatch) -> str:
+    from packages.backend.config import settings
+    from packages.backend.identity.csrf import generate_csrf_token
+
+    key = "test-csrf-signing-key-32bytes-long-1234"
+    monkeypatch.setattr(settings, "csrf_signing_key", key, raising=False)
+    return generate_csrf_token(key)
+
+
+@pytest.fixture
+def csrf_cookie(csrf_token: str) -> dict[str, str]:
+    return {"child_manager_csrf": csrf_token}
+
+
+@pytest.fixture
+def csrf_headers(csrf_token: str) -> dict[str, str]:
+    return {
+        "origin": "http://127.0.0.1:28080",
+        "x-csrf-token": csrf_token,
+    }
 
 
 def _cookies(response: Any) -> list[str]:
@@ -62,12 +90,14 @@ def _auth_cookies(response: Any) -> list[str]:
     return [c for c in _cookies(response) if "HttpOnly" in c]
 
 
-def test_login_sets_two_http_only_cookies(client: TestClient) -> None:
+def test_login_sets_two_http_only_cookies(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
     response = client.post(
         "/api/v1/auth/login",
         json={"username": "admin", "password": "ValidPassword2024!"},
-        headers=_CSRF_HEADERS,
-        cookies=_CSRF_COOKIE,
+        headers=csrf_headers,
+        cookies=csrf_cookie,
     )
     assert response.status_code == 200
     cookies = _auth_cookies(response)
@@ -77,71 +107,132 @@ def test_login_sets_two_http_only_cookies(client: TestClient) -> None:
     assert any(c.startswith("child_manager_refresh=") for c in cookies)
 
 
-def test_login_failure_returns_generic_message(client: TestClient) -> None:
+def test_login_failure_returns_generic_message(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
     response = client.post(
         "/api/v1/auth/login",
         json={"username": "admin", "password": "wrong-password"},
-        headers=_CSRF_HEADERS,
-        cookies=_CSRF_COOKIE,
+        headers=csrf_headers,
+        cookies=csrf_cookie,
     )
     assert response.status_code == 401
     data = response.json()
     assert "账号或密码错误" in data["message"]
 
 
-def test_disabled_user_cannot_login(client: TestClient) -> None:
+def test_disabled_user_cannot_login(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
     response = client.post(
         "/api/v1/auth/login",
         json={"username": "disabled", "password": "ValidPassword2024!"},
-        headers=_CSRF_HEADERS,
-        cookies=_CSRF_COOKIE,
+        headers=csrf_headers,
+        cookies=csrf_cookie,
     )
     assert response.status_code == 401
 
 
-def test_refresh_returns_two_new_cookies(client: TestClient) -> None:
+def test_refresh_returns_two_new_cookies(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
     login = client.post(
         "/api/v1/auth/login",
         json={"username": "admin", "password": "ValidPassword2024!"},
-        headers=_CSRF_HEADERS,
-        cookies=_CSRF_COOKIE,
+        headers=csrf_headers,
+        cookies=csrf_cookie,
     )
     assert login.status_code == 200
     refresh_cookie = login.cookies.get("child_manager_refresh")
     assert refresh_cookie is not None
     response = client.post(
         "/api/v1/auth/refresh",
-        cookies={"child_manager_refresh": refresh_cookie},
+        headers=csrf_headers,
+        cookies={"child_manager_refresh": refresh_cookie, **csrf_cookie},
     )
     assert response.status_code == 200
     cookies = _auth_cookies(response)
     assert len(cookies) == 2
 
 
-def test_logout_clears_two_cookies(client: TestClient) -> None:
+def test_logout_clears_two_cookies(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
     response = client.post(
         "/api/v1/auth/logout",
-        headers=_CSRF_HEADERS,
-        cookies=_CSRF_COOKIE,
+        headers=csrf_headers,
+        cookies=csrf_cookie,
     )
-    assert response.status_code == 200
+    assert response.status_code == 204
     cookies = _auth_cookies(response)
     assert len(cookies) == 2
     assert all("Max-Age=0" in c for c in cookies)
 
 
-def test_login_rate_limit_after_repeated_failures(client: TestClient) -> None:
+def test_login_rate_limit_after_repeated_failures(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
     for _ in range(5):
         client.post(
             "/api/v1/auth/login",
             json={"username": "admin", "password": "wrong"},
-            headers=_CSRF_HEADERS,
-            cookies=_CSRF_COOKIE,
+            headers=csrf_headers,
+            cookies=csrf_cookie,
         )
     response = client.post(
         "/api/v1/auth/login",
         json={"username": "admin", "password": "wrong"},
-        headers=_CSRF_HEADERS,
-        cookies=_CSRF_COOKIE,
+        headers=csrf_headers,
+        cookies=csrf_cookie,
     )
     assert response.status_code == 429
+
+
+def test_refresh_replay_revokes_family(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"username": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert login.status_code == 200
+    refresh_cookie = login.cookies.get("child_manager_refresh")
+    assert refresh_cookie is not None
+
+    first = client.post(
+        "/api/v1/auth/refresh",
+        headers=csrf_headers,
+        cookies={"child_manager_refresh": refresh_cookie, **csrf_cookie},
+    )
+    assert first.status_code == 200
+
+    replay = client.post(
+        "/api/v1/auth/refresh",
+        headers=csrf_headers,
+        cookies={"child_manager_refresh": refresh_cookie, **csrf_cookie},
+    )
+    assert replay.status_code == 401
+
+
+def test_change_password_returns_204(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"username": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert login.status_code == 200
+    access_cookie = login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    response = client.post(
+        "/api/v1/auth/change-password",
+        json={"old_password": "ValidPassword2024!", "new_password": "NewPassword2024!"},
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert response.status_code == 204

@@ -21,6 +21,9 @@ IDENTITY_LOGOUT = "identity.logout"
 IDENTITY_CHANGE_PASSWORD = "identity.change_password"
 IDENTITY_RESET_PASSWORD = "identity.reset_password"
 IDENTITY_CREATE_USER = "identity.create_user"
+IDENTITY_UPDATE_USER = "identity.update_user"
+IDENTITY_SET_ROLES = "identity.set_roles"
+IDENTITY_ACTIVATE_USER = "identity.activate_user"
 IDENTITY_DEACTIVATE_USER = "identity.deactivate_user"
 
 # 审计资源类型常量

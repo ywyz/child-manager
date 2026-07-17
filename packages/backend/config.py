@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=None,
         extra="ignore",
+        env_prefix="CHILD_MANAGER_",
     )
 
     environment: Environment = "production"

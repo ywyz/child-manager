@@ -1,15 +1,28 @@
 """身份 Repository 园所隔离测试。"""
 
+from collections.abc import Iterator
 from uuid import uuid4
 
 import pytest
 
+from packages.backend.database import session as session_module
 from packages.backend.identity.repository import IdentityRepository
 
 
 @pytest.fixture
-def repo() -> IdentityRepository:
-    return IdentityRepository(session=None)
+def repo(db_repo: IdentityRepository) -> IdentityRepository:
+    """默认使用真实 PostgreSQL 隔离 schema 的 Repository。"""
+    return db_repo
+
+
+@pytest.fixture
+def db_repo(migrated_database_url: str) -> Iterator[IdentityRepository]:
+    """在真实 PostgreSQL 隔离 schema 上构造 Repository。"""
+    session = session_module.SessionLocal()
+    try:
+        yield IdentityRepository(session)
+    finally:
+        session.close()
 
 
 @pytest.fixture
@@ -48,28 +61,31 @@ def test_user_isolation(repo: IdentityRepository, kg_a: str, kg_b: str) -> None:
 def test_active_admin_count_is_per_kindergarten(
     repo: IdentityRepository, kg_a: str, kg_b: str
 ) -> None:
-    repo.create_user(
+    role = repo.create_role(kindergarten_id=kg_a, code="admin", name="管理员")
+    user = repo.create_user(
         kindergarten_id=kg_a,
         username="admin",
         phone=None,
         display_name="管理员",
         password_hash="hash",
     )
+    repo.assign_role(kindergarten_id=kg_a, user_id=user.id, role_id=role.id)
     assert repo.get_active_admin_count(kg_a) == 1
     assert repo.get_active_admin_count(kg_b) == 0
 
 
-def test_deactivate_user_requires_another_admin(repo: IdentityRepository, kg_a: str) -> None:
-    repo.create_user(
+def test_deactivate_user_sets_is_active_false(repo: IdentityRepository, kg_a: str) -> None:
+    user = repo.create_user(
         kindergarten_id=kg_a,
-        username="sole-admin",
+        username="teacher",
         phone=None,
-        display_name="唯一管理员",
+        display_name="教师",
         password_hash="hash",
     )
-    assert repo.get_active_admin_count(kg_a) == 1
-    with pytest.raises(ValueError):
-        repo.deactivate_user(kg_a, "user-id")
+    repo.deactivate_user(kg_a, user.id)
+    deactivated = repo.get_user_by_id(kg_a, user.id)
+    assert deactivated is not None
+    assert deactivated.is_active is False
 
 
 def test_role_code_unique_per_kindergarten(repo: IdentityRepository, kg_a: str, kg_b: str) -> None:
@@ -79,9 +95,63 @@ def test_role_code_unique_per_kindergarten(repo: IdentityRepository, kg_a: str, 
     assert role_b is not None
 
 
-def test_refresh_family_revoke_returns_count(repo: IdentityRepository) -> None:
-    assert repo.revoke_refresh_family("family-1") >= 0
+def test_refresh_family_revoke_returns_count(repo: IdentityRepository, kg_a: str) -> None:
+    assert repo.revoke_refresh_family(kg_a, "family-1") >= 0
 
 
 def test_revoke_user_tokens_returns_count(repo: IdentityRepository, kg_a: str) -> None:
     assert repo.revoke_user_tokens(kg_a, "user-1") >= 0
+
+
+def test_refresh_token_crud_with_family_expires_at(db_repo: IdentityRepository) -> None:
+    from datetime import UTC, datetime, timedelta
+
+    kg_id = str(uuid4())
+    user_id = str(uuid4())
+    family_id = str(uuid4())
+    token_hash = "hash-1"
+    expires = datetime.now(UTC) + timedelta(days=7)
+
+    token = db_repo.create_refresh_token(
+        kindergarten_id=kg_id,
+        user_id=user_id,
+        family_id=family_id,
+        token_hash=token_hash,
+        expires_at=expires,
+        family_expires_at=expires,
+    )
+    assert token.family_expires_at == expires
+
+    found = db_repo.get_refresh_token_by_hash(token_hash)
+    assert found is not None
+    assert found.family_id == family_id
+
+    count = db_repo.revoke_refresh_family(kg_id, family_id)
+    assert count == 1
+
+    revoked = db_repo.get_refresh_token_by_hash(token_hash)
+    assert revoked is not None
+    assert revoked.revoked_at is not None
+
+
+def test_get_refresh_token_by_hash_for_update(db_repo: IdentityRepository) -> None:
+    from datetime import UTC, datetime, timedelta
+
+    kg_id = str(uuid4())
+    user_id = str(uuid4())
+    family_id = str(uuid4())
+    token_hash = "hash-2"
+    expires = datetime.now(UTC) + timedelta(days=7)
+
+    db_repo.create_refresh_token(
+        kindergarten_id=kg_id,
+        user_id=user_id,
+        family_id=family_id,
+        token_hash=token_hash,
+        expires_at=expires,
+        family_expires_at=expires,
+    )
+
+    found = db_repo.get_refresh_token_by_hash_for_update(token_hash)
+    assert found is not None
+    assert found.token_hash == token_hash

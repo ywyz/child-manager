@@ -42,6 +42,7 @@ class TestIdentitySkeleton:
             id="u1",
             username="teacher-a",
             display_name="王老师",
+            kindergarten_id="k1",
             roles=["teacher"],
         )
         assert user.id == "u1"
@@ -140,8 +141,11 @@ class TestPublicClassScope:
                     "RefreshRequest",
                     "ChangePasswordRequest",
                     "UserCreateRequest",
+                    "UserPatch",
                     "UserResponse",
+                    "UserPage",
                     "ResetPasswordRequest",
+                    "UserRolesUpdateRequest",
                 },
                 id="identity",
             ),

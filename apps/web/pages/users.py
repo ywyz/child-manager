@@ -90,8 +90,8 @@ def user_management_page() -> None:
         if isinstance(data, dict) and "error" in data:
             message.set_text(data["error"])
             return
-        if isinstance(data, list):
-            list_container.set_content(_render_user_table(data))
+        if isinstance(data, dict) and "items" in data:
+            list_container.set_content(_render_user_table(data["items"]))
         else:
             list_container.set_content("<p>加载失败</p>")
 
@@ -110,8 +110,8 @@ def user_management_page() -> None:
                 body={
                     "username": username.value,
                     "display_name": display_name.value,
-                    "initial_password": initial_password.value,
-                    "roles": selected if isinstance(selected, list) else [selected],
+                    "password": initial_password.value,
+                    "role_codes": selected if isinstance(selected, list) else [selected],
                 },
             )
             result = await ui.run_javascript(js)

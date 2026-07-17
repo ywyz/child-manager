@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
-from sqlalchemy import func, select, update
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.orm import Session
 
 from packages.backend.identity.models import Kindergarten, RefreshToken, Role, User, UserRole
@@ -118,6 +118,18 @@ class IdentityRepository:
             self._db.flush()
         return user_role
 
+    def remove_role(self, *, kindergarten_id: str, user_id: str, role_id: str) -> int:
+        if self._is_in_memory():
+            return 0
+        stmt = delete(UserRole).where(
+            UserRole.kindergarten_id == kindergarten_id,
+            UserRole.user_id == user_id,
+            UserRole.role_id == role_id,
+        )
+        result = self._db.execute(stmt)
+        self._db.flush()
+        return int(getattr(result, "rowcount", 0) or 0)
+
     def list_users(self, kindergarten_id: str) -> list[User]:
         if self._is_in_memory():
             return [
@@ -177,9 +189,6 @@ class IdentityRepository:
         if user is None:
             msg = "用户不存在"
             raise ValueError(msg)
-        if user.is_active and self.get_active_admin_count(kindergarten_id) <= 1:
-            msg = "不能停用最后一个有效管理员"
-            raise ValueError(msg)
         user.is_active = False
         if not self._is_in_memory():
             self._db.flush()
@@ -193,6 +202,7 @@ class IdentityRepository:
         family_id: str,
         token_hash: str,
         expires_at: datetime,
+        family_expires_at: datetime,
     ) -> RefreshToken:
         token = RefreshToken(
             id=str(uuid4()),
@@ -201,6 +211,7 @@ class IdentityRepository:
             family_id=family_id,
             token_hash=token_hash,
             expires_at=expires_at,
+            family_expires_at=family_expires_at,
         )
         if not self._is_in_memory():
             self._db.add(token)
@@ -213,12 +224,22 @@ class IdentityRepository:
         stmt = select(RefreshToken).where(RefreshToken.token_hash == token_hash)
         return self._db.execute(stmt).scalar_one_or_none()
 
-    def revoke_refresh_family(self, family_id: str) -> int:
+    def get_refresh_token_by_hash_for_update(self, token_hash: str) -> RefreshToken | None:
+        if self._is_in_memory():
+            return None
+        stmt = select(RefreshToken).where(RefreshToken.token_hash == token_hash).with_for_update()
+        return self._db.execute(stmt).scalar_one_or_none()
+
+    def revoke_refresh_family(self, kindergarten_id: str, family_id: str) -> int:
         if self._is_in_memory():
             return 0
         stmt = (
             update(RefreshToken)
-            .where(RefreshToken.family_id == family_id, RefreshToken.revoked_at.is_(None))
+            .where(
+                RefreshToken.kindergarten_id == kindergarten_id,
+                RefreshToken.family_id == family_id,
+                RefreshToken.revoked_at.is_(None),
+            )
             .values(revoked_at=datetime.now(UTC))
         )
         result = self._db.execute(stmt)

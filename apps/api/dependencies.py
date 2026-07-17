@@ -152,7 +152,9 @@ def get_current_user(
     if user is None or not user.is_active:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
 
-    return service.build_current_user(user)
+    current_user = service.build_current_user(user)
+    current_user.kindergarten_id = kindergarten_id
+    return current_user
 
 
 def require_admin(

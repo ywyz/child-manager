@@ -74,3 +74,30 @@ def test_missing_origin_header_is_rejected(client: TestClient) -> None:
         cookies={"child_manager_csrf": "token"},
     )
     assert response.status_code == 403
+
+
+def test_valid_signed_csrf_token_is_accepted(client: TestClient) -> None:
+    from packages.backend.config import settings
+    from packages.backend.identity.csrf import generate_csrf_token
+
+    token = generate_csrf_token(settings.csrf_signing_key)
+    response = client.post(
+        "/api/v1/auth/logout",
+        headers={"origin": "http://127.0.0.1:28080", "x-csrf-token": token},
+        cookies={"child_manager_csrf": token},
+    )
+    assert response.status_code == 204
+
+
+def test_signed_cookie_and_header_mismatch_is_rejected(client: TestClient) -> None:
+    from packages.backend.config import settings
+    from packages.backend.identity.csrf import generate_csrf_token
+
+    cookie_token = generate_csrf_token(settings.csrf_signing_key)
+    header_token = generate_csrf_token(settings.csrf_signing_key)
+    response = client.post(
+        "/api/v1/auth/logout",
+        headers={"origin": "http://127.0.0.1:28080", "x-csrf-token": header_token},
+        cookies={"child_manager_csrf": cookie_token},
+    )
+    assert response.status_code == 403

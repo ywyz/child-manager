@@ -15,13 +15,22 @@ def _schema_fields(model: type[BaseModel]) -> set[str]:
 
 def test_user_create_request_has_identity_fields() -> None:
     fields = _schema_fields(UserCreateRequest)
-    required = {"username", "display_name", "phone", "roles", "initial_password"}
+    required = {"username", "display_name", "phone_e164", "role_codes", "password"}
     assert required <= fields
 
 
 def test_user_response_matches_database_shape() -> None:
     fields = _schema_fields(UserResponse)
-    required = {"id", "username", "display_name", "phone", "roles", "is_active"}
+    required = {
+        "id",
+        "username",
+        "display_name",
+        "phone_e164",
+        "role_codes",
+        "is_active",
+        "created_at",
+        "updated_at",
+    }
     assert required <= fields
 
 

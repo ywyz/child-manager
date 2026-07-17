@@ -176,12 +176,14 @@ async def login(
     )
 
 
-@router.post("/refresh")
+@router.post("/refresh", response_model=CurrentUser)
 async def refresh(
     request: Request,
     response: Response,
     session: Annotated[Session, Depends(get_db)],
-) -> dict[str, object]:
+) -> CurrentUser:
+    _require_csrf(request)
+
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
     if not refresh_cookie:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
@@ -198,15 +200,15 @@ async def refresh(
         csrf_token=result["csrf_token"],
     )
     session.commit()
-    return {"user": {"id": result["user_id"], "roles": result["roles"]}}
+    return _build_current_user(service, result["user_id"], result["kindergarten_id"])
 
 
-@router.post("/logout")
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 async def logout(
     request: Request,
     response: Response,
     session: Annotated[Session, Depends(get_db)],
-) -> dict[str, str]:
+) -> Response:
     _require_csrf(request)
 
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
@@ -217,7 +219,8 @@ async def logout(
         session.commit()
 
     _clear_auth_cookies(response)
-    return {"message": "已退出登录"}
+    response.status_code = status.HTTP_204_NO_CONTENT
+    return response
 
 
 @router.get("/me", response_model=CurrentUser)
@@ -226,18 +229,19 @@ async def me(current_user: Annotated[CurrentUser, Depends(get_current_user)]) ->
     return current_user
 
 
-@router.post("/change-password")
+@router.post("/change-password", status_code=status.HTTP_204_NO_CONTENT)
 async def change_password(
     request: Request,
     response: Response,
     body: ChangePasswordRequest,
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_db)],
-) -> dict[str, str]:
+) -> Response:
     _require_csrf(request)
 
     service = IdentityService(session)
     if not service.change_password(
+        kindergarten_id=current_user.kindergarten_id,
         user_id=current_user.id,
         old_password=body.old_password,
         new_password=body.new_password,
@@ -246,4 +250,5 @@ async def change_password(
 
     session.commit()
     _clear_auth_cookies(response)
-    return {"message": "密码已修改，请重新登录"}
+    response.status_code = status.HTTP_204_NO_CONTENT
+    return response

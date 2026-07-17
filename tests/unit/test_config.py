@@ -2,7 +2,7 @@ from packages.backend.config import Settings
 
 
 def test_settings_defaults(monkeypatch):
-    monkeypatch.delenv("ENVIRONMENT", raising=False)
+    monkeypatch.delenv("CHILD_MANAGER_ENVIRONMENT", raising=False)
     settings = Settings()
     assert settings.environment == "production"
     assert settings.api_host == "127.0.0.1"
