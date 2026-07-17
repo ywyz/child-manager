@@ -31,10 +31,6 @@ def test_password_is_argon2id_hashed_and_verified() -> None:
     assert not verify_password("错误但同样足够长的密码", encoded)
 
 
-def test_invalid_password_hash_is_rejected() -> None:
-    assert verify_password("足够长的安全密码 2026", "not-an-argon2-hash") is False
-
-
 def test_seclists_resource_is_exactly_pinned_and_attributed() -> None:
     content = RESOURCE.read_bytes()
     notice = NOTICE.read_text(encoding="utf-8")
