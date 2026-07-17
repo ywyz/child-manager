@@ -6,6 +6,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from apps.api.middleware import request_context_middleware
+from apps.api.routers import auth, users
 from packages.backend.observability import configure_logging
 from packages.contracts.common import ErrorResponse, HealthResponse
 
@@ -44,14 +45,18 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
         routes=application.routes,
     )
 
-    # 从公共模型生成 schema，提取 $defs 合并到顶层
-    all_defs: dict[str, object] = {}
+    components = openapi_schema.setdefault("components", {})
+    schemas: dict[str, object] = dict(components.setdefault("schemas", {}))
 
+    # 从公共模型生成 schema，提取 $defs 合并到顶层
     error_schema = ErrorResponse.model_json_schema(ref_template="#/components/schemas/{model}")
-    all_defs.update(error_schema.pop("$defs", {}))
+    schemas.update(error_schema.pop("$defs", {}))
+    schemas["Error"] = error_schema
 
     health_schema = HealthResponse.model_json_schema(ref_template="#/components/schemas/{model}")
-    all_defs.update(health_schema.pop("$defs", {}))
+    schemas.update(health_schema.pop("$defs", {}))
+    schemas.setdefault("Health", health_schema)
+    schemas["HealthResponse"] = health_schema
 
     unavailable_schema: dict[str, object] = {
         "type": "object",
@@ -74,36 +79,26 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
             },
         },
     }
+    schemas["UnavailableError"] = unavailable_schema
 
-    schemas: dict[str, object] = {
-        **all_defs,
-        "Error": error_schema,
-        "Health": health_schema,
-        "HealthResponse": health_schema,
-        "UnavailableError": unavailable_schema,
-    }
-    openapi_schema["components"] = {
-        "schemas": schemas,
-        "responses": {
-            "ErrorResponse": {
-                "description": "错误响应",
-                "content": {
-                    "application/json": {"schema": {"$ref": "#/components/schemas/Error"}},
-                },
+    components["schemas"] = schemas
+    components["responses"] = {
+        "ErrorResponse": {
+            "description": "错误响应",
+            "content": {
+                "application/json": {"schema": {"$ref": "#/components/schemas/Error"}},
             },
-            "HealthOk": {
-                "description": "健康状态",
-                "content": {
-                    "application/json": {"schema": {"$ref": "#/components/schemas/Health"}},
-                },
+        },
+        "HealthOk": {
+            "description": "健康状态",
+            "content": {
+                "application/json": {"schema": {"$ref": "#/components/schemas/Health"}},
             },
-            "Unavailable": {
-                "description": "服务不可用",
-                "content": {
-                    "application/json": {
-                        "schema": {"$ref": "#/components/schemas/UnavailableError"}
-                    },
-                },
+        },
+        "Unavailable": {
+            "description": "服务不可用",
+            "content": {
+                "application/json": {"schema": {"$ref": "#/components/schemas/UnavailableError"}},
             },
         },
     }
@@ -183,7 +178,7 @@ async def _http_exception_handler(request: Request, exc: StarletteHTTPException)
         message = "请求方法不被允许。"
     else:
         code = "request.http_error"
-        message = "请求处理失败。"
+        message = str(exc.detail) if exc.detail else "请求处理失败。"
     return _error_response(
         request,
         status_code=exc.status_code,
@@ -236,5 +231,8 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
     application.exception_handler(RequestValidationError)(_validation_error_handler)
     application.exception_handler(StarletteHTTPException)(_http_exception_handler)
     application.exception_handler(Exception)(_unhandled_error_handler)
+
+    application.include_router(auth.router, prefix="/api/v1")
+    application.include_router(users.router, prefix="/api/v1")
 
     return application

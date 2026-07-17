@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 from ipaddress import ip_address
 from urllib.parse import urlsplit
 
@@ -7,6 +8,7 @@ import structlog
 from nicegui import ui
 
 from apps.web.app import register_web
+from packages.security.cookie import validate_cookie_security
 from packages.security.redaction import redaction_processor
 
 structlog.configure(
@@ -47,6 +49,13 @@ def main() -> None:
     _require_loopback(args.host, "Web 绑定地址")
     api_host = urlsplit(args.api_base_url).hostname or "127.0.0.1"
     _require_loopback(api_host, "API 地址")
+
+    environment = os.environ.get("ENVIRONMENT", "production")
+    validate_cookie_security(
+        environment=environment,
+        bind_host=args.host,
+        cookie_secure=environment == "production",
+    )
 
     register_web(api_base_url=args.api_base_url)
     # pyright: ignore[reportUnknownMemberType]

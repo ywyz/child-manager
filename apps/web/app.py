@@ -2,6 +2,9 @@ from fastapi import Request, Response
 from nicegui import app, ui
 
 from apps.web.api_client import proxy_request
+from apps.web.components.navigation import render_navigation
+from apps.web.pages.auth import change_password_page, login_page
+from apps.web.pages.users import user_management_page
 
 
 def register_web(*, api_base_url: str) -> None:
@@ -32,8 +35,23 @@ def register_web(*, api_base_url: str) -> None:
     @ui.page("/")
     # pyright: ignore[reportUnusedFunction]
     async def index() -> None:
-        with ui.header():
-            ui.label("幼儿园教育管理系统").classes("text-xl font-bold")
-
+        render_navigation(current_user=None)
         with ui.card():
             ui.label("欢迎使用一日活动计划系统")
+
+    @ui.page("/login")
+    # pyright: ignore[reportUnusedFunction]
+    async def login() -> None:
+        login_page()
+
+    @ui.page("/change-password")
+    # pyright: ignore[reportUnusedFunction]
+    async def change_password() -> None:
+        render_navigation(current_user=None)
+        change_password_page()
+
+    @ui.page("/users")
+    # pyright: ignore[reportUnusedFunction]
+    async def users() -> None:
+        render_navigation(current_user=None)
+        user_management_page()

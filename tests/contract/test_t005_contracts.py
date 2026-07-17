@@ -35,7 +35,7 @@ def _public_base_model_names(module: ModuleType) -> set[str]:
 
 
 class TestIdentitySkeleton:
-    """identity.py 只允许 CurrentUser 最小引用骨架。"""
+    """identity.py 在 M2 扩展为 Auth/Users 公共契约。"""
 
     def test_current_user_valid(self) -> None:
         user = identity.CurrentUser(
@@ -56,9 +56,10 @@ class TestIdentitySkeleton:
                 password="secret",  # type: ignore[call-arg]
             )
 
-    def test_no_login_response_in_identity_module(self) -> None:
-        assert not hasattr(identity, "LoginResponse")
-        assert not hasattr(identity, "TokenRefreshResponse")
+    def test_identity_has_auth_contracts(self) -> None:
+        assert hasattr(identity, "LoginRequest")
+        assert hasattr(identity, "LoginResponse")
+        assert hasattr(identity, "CsrfResponse")
 
 
 class TestSettingsSkeleton:
@@ -129,7 +130,21 @@ class TestPublicClassScope:
     @pytest.mark.parametrize(
         ("module", "expected"),
         [
-            pytest.param(identity, {"CurrentUser"}, id="identity"),
+            pytest.param(
+                identity,
+                {
+                    "CurrentUser",
+                    "CsrfResponse",
+                    "LoginRequest",
+                    "LoginResponse",
+                    "RefreshRequest",
+                    "ChangePasswordRequest",
+                    "UserCreateRequest",
+                    "UserResponse",
+                    "ResetPasswordRequest",
+                },
+                id="identity",
+            ),
             pytest.param(settings, {"KindergartenSummary"}, id="settings"),
             pytest.param(jobs, {"WorkerMessage"}, id="jobs"),
             pytest.param(audit, {"AuditEventReference"}, id="audit"),

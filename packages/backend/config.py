@@ -4,6 +4,8 @@ from typing import Literal
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from packages.security.cookie import validate_cookie_security
+
 Environment = Literal["production", "development", "test"]
 
 
@@ -23,6 +25,7 @@ class Settings(BaseSettings):
     redis_url: str = ""
 
     jwt_signing_key: str = ""
+    csrf_signing_key: str = ""
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 60
 
@@ -50,16 +53,11 @@ class Settings(BaseSettings):
         bind_host: str,
         cookie_secure: bool,
     ) -> None:
-        if cookie_secure:
-            return
-        if self.environment != "development":
-            raise ValueError("非开发环境必须启用 Cookie Secure")
-        try:
-            is_loopback = ip_address(bind_host).is_loopback
-        except ValueError:
-            is_loopback = bind_host == "localhost"
-        if not is_loopback:
-            raise ValueError("关闭 Cookie Secure 时只能绑定回环地址")
+        validate_cookie_security(
+            environment=self.environment,
+            bind_host=bind_host,
+            cookie_secure=cookie_secure,
+        )
 
 
 settings = Settings()

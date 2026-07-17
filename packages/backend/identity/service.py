@@ -1,0 +1,387 @@
+"""身份与认证业务 Service。"""
+
+from datetime import UTC, datetime, timedelta
+from typing import Any
+
+from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
+
+from packages.backend.audit.service import AuditService
+from packages.backend.config import settings
+from packages.backend.identity.csrf import generate_csrf_token
+from packages.backend.identity.identifiers import normalize_phone, normalize_username
+from packages.backend.identity.models import Kindergarten, User
+from packages.backend.identity.passwords import (
+    hash_password,
+    validate_password,
+    verify_password,
+)
+from packages.backend.identity.repository import IdentityRepository
+from packages.backend.identity.tokens import (
+    create_access_token,
+    generate_refresh_value,
+    hash_refresh_value,
+)
+from packages.contracts import audit as audit_events
+from packages.contracts.identity import CurrentUser, UserCreateRequest, UserResponse
+
+
+class IdentityService:
+    """身份业务编排：协调 Repository、Token、CSRF 与审计。"""
+
+    def __init__(self, session: Session | None) -> None:
+        self._session = session
+        self._repo = IdentityRepository(session)
+        self._audit = AuditService(session) if session is not None else None
+
+    def _db(self) -> Session:
+        if self._session is None:
+            msg = "数据库会话未初始化"
+            raise RuntimeError(msg)
+        return self._session
+
+    def _record_identity(
+        self,
+        *,
+        kindergarten_id: str,
+        event_type: str,
+        actor_user_id: str | None,
+        resource_id: str,
+        action: str,
+        result: str,
+        source_ip: str | None = None,
+    ) -> None:
+        if self._audit is None:
+            return
+        self._audit.record_identity(
+            kindergarten_id=kindergarten_id,
+            event_type=event_type,
+            actor_user_id=actor_user_id,
+            resource_id=resource_id,
+            action=action,
+            result=result,
+            source_ip=source_ip,
+        )
+
+    def _get_kindergarten(self) -> Kindergarten | None:
+        """M2 单园部署：返回唯一园所。"""
+        if self._session is None:
+            return None
+        return self._session.query(Kindergarten).first()
+
+    def ensure_roles(self, kindergarten_id: str) -> None:
+        """幂等确保园所具备 admin/teacher 角色。"""
+        for code, name in (("admin", "管理员"), ("teacher", "教师")):
+            if self._repo.get_role_by_code(kindergarten_id, code) is None:
+                self._repo.create_role(kindergarten_id=kindergarten_id, code=code, name=name)
+
+    def get_active_admin_count(self, kindergarten_id: str) -> int:
+        """返回具有 admin 角色的有效用户数量。"""
+        count = 0
+        for user in self._repo.list_users(kindergarten_id):
+            if user.is_active and "admin" in self._repo.list_user_roles(kindergarten_id, user.id):
+                count += 1
+        return count
+
+    def build_current_user(self, user: User) -> CurrentUser:
+        roles = self._repo.list_user_roles(user.kindergarten_id, user.id)
+        return CurrentUser(
+            id=user.id,
+            username=user.username,
+            display_name=user.display_name,
+            roles=roles,
+        )
+
+    def authenticate(
+        self, *, username: str, password: str, source_ip: str | None = None
+    ) -> tuple[User, list[str]] | None:
+        kg = self._get_kindergarten()
+        if kg is None:
+            return None
+
+        account_key = normalize_username(username)
+        user = self._repo.get_user_by_username(kg.id, account_key)
+        if user is None or not verify_password(password, user.password_hash):
+            self._record_identity(
+                kindergarten_id=kg.id,
+                event_type=audit_events.IDENTITY_LOGIN,
+                actor_user_id=None,
+                resource_id="unknown",
+                action="login",
+                result=audit_events.RESULT_FAILURE,
+                source_ip=source_ip,
+            )
+            return None
+
+        if not user.is_active:
+            self._record_identity(
+                kindergarten_id=kg.id,
+                event_type=audit_events.IDENTITY_LOGIN,
+                actor_user_id=None,
+                resource_id=user.id,
+                action="login",
+                result=audit_events.RESULT_FAILURE,
+                source_ip=source_ip,
+            )
+            return None
+
+        roles = self._repo.list_user_roles(kg.id, user.id)
+        self._record_identity(
+            kindergarten_id=kg.id,
+            event_type=audit_events.IDENTITY_LOGIN,
+            actor_user_id=user.id,
+            resource_id=user.id,
+            action="login",
+            result=audit_events.RESULT_SUCCESS,
+            source_ip=source_ip,
+        )
+        return user, roles
+
+    def login(
+        self, *, username: str, password: str, source_ip: str | None = None
+    ) -> dict[str, Any] | None:
+        result = self.authenticate(username=username, password=password, source_ip=source_ip)
+        if result is None:
+            return None
+        user, roles = result
+
+        access_token = create_access_token(
+            user_id=user.id,
+            kindergarten_id=user.kindergarten_id,
+            roles=roles,
+            signing_key=settings.jwt_signing_key,
+            expire_minutes=settings.jwt_expire_minutes,
+        )
+        refresh_value = generate_refresh_value()
+        refresh_hash = hash_refresh_value(refresh_value)
+        self._repo.create_refresh_token(
+            kindergarten_id=user.kindergarten_id,
+            user_id=user.id,
+            family_id=user.id,
+            token_hash=refresh_hash,
+            expires_at=datetime.now(UTC) + timedelta(days=7),
+        )
+        csrf_token = generate_csrf_token(settings.csrf_signing_key)
+        return {
+            "user": user,
+            "roles": roles,
+            "kindergarten_id": user.kindergarten_id,
+            "access_token": access_token,
+            "refresh_value": refresh_value,
+            "csrf_token": csrf_token,
+        }
+
+    def refresh(self, *, refresh_cookie: str) -> dict[str, Any] | None:
+        token_row = self._repo.get_refresh_token_by_hash(hash_refresh_value(refresh_cookie))
+        if token_row is None:
+            return None
+
+        if token_row.revoked_at is not None or token_row.expires_at < datetime.now(UTC):
+            self._record_identity(
+                kindergarten_id=token_row.kindergarten_id,
+                event_type=audit_events.IDENTITY_TOKEN_REPLAY,
+                actor_user_id=None,
+                resource_id=token_row.user_id,
+                action="refresh",
+                result=audit_events.RESULT_FAILURE,
+            )
+            self._repo.revoke_refresh_family(token_row.family_id)
+            return None
+
+        user = self._repo.get_user_by_id(token_row.kindergarten_id, token_row.user_id)
+        if user is None or not user.is_active:
+            return None
+
+        self._repo.revoke_refresh_family(token_row.family_id)
+        roles = self._repo.list_user_roles(token_row.kindergarten_id, token_row.user_id)
+        access_token = create_access_token(
+            user_id=token_row.user_id,
+            kindergarten_id=token_row.kindergarten_id,
+            roles=roles,
+            signing_key=settings.jwt_signing_key,
+            expire_minutes=settings.jwt_expire_minutes,
+        )
+        refresh_value = generate_refresh_value()
+        refresh_hash = hash_refresh_value(refresh_value)
+        self._repo.create_refresh_token(
+            kindergarten_id=token_row.kindergarten_id,
+            user_id=token_row.user_id,
+            family_id=token_row.family_id,
+            token_hash=refresh_hash,
+            expires_at=datetime.now(UTC) + timedelta(days=7),
+        )
+        csrf_token = generate_csrf_token(settings.csrf_signing_key)
+        self._record_identity(
+            kindergarten_id=token_row.kindergarten_id,
+            event_type=audit_events.IDENTITY_REFRESH,
+            actor_user_id=token_row.user_id,
+            resource_id=token_row.user_id,
+            action="refresh",
+            result=audit_events.RESULT_SUCCESS,
+        )
+        return {
+            "user_id": token_row.user_id,
+            "kindergarten_id": token_row.kindergarten_id,
+            "roles": roles,
+            "access_token": access_token,
+            "refresh_value": refresh_value,
+            "csrf_token": csrf_token,
+        }
+
+    def logout(self, *, refresh_cookie: str | None, source_ip: str | None = None) -> None:
+        if not refresh_cookie:
+            return
+        token_row = self._repo.get_refresh_token_by_hash(hash_refresh_value(refresh_cookie))
+        if token_row is not None:
+            self._repo.revoke_refresh_family(token_row.family_id)
+            self._record_identity(
+                kindergarten_id=token_row.kindergarten_id,
+                event_type=audit_events.IDENTITY_LOGOUT,
+                actor_user_id=token_row.user_id,
+                resource_id=token_row.user_id,
+                action="logout",
+                result=audit_events.RESULT_SUCCESS,
+                source_ip=source_ip,
+            )
+
+    def change_password(self, *, user_id: str, old_password: str, new_password: str) -> bool:
+        kg = self._get_kindergarten()
+        if kg is None:
+            return False
+        user = self._repo.get_user_by_id(kg.id, user_id)
+        if user is None or not verify_password(old_password, user.password_hash):
+            return False
+        validate_password(new_password)
+        user.password_hash = hash_password(new_password)
+        self._repo.revoke_user_tokens(kg.id, user.id)
+        self._record_identity(
+            kindergarten_id=kg.id,
+            event_type=audit_events.IDENTITY_CHANGE_PASSWORD,
+            actor_user_id=user.id,
+            resource_id=user.id,
+            action="change_password",
+            result=audit_events.RESULT_SUCCESS,
+        )
+        return True
+
+    def create_user(self, *, creator: CurrentUser, request: UserCreateRequest) -> User:
+        kg = self._get_kindergarten()
+        if kg is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="园所不存在")
+        self.ensure_roles(kg.id)
+
+        username = normalize_username(request.username)
+        phone = normalize_phone(request.phone) if request.phone else None
+        validate_password(request.initial_password)
+
+        user = self._repo.create_user(
+            kindergarten_id=kg.id,
+            username=username,
+            phone=phone,
+            display_name=request.display_name,
+            password_hash=hash_password(request.initial_password),
+            created_by=creator.id,
+        )
+        for role_code in request.roles:
+            role = self._repo.get_role_by_code(kg.id, role_code)
+            if role is not None:
+                self._repo.assign_role(kindergarten_id=kg.id, user_id=user.id, role_id=role.id)
+        self._record_identity(
+            kindergarten_id=kg.id,
+            event_type=audit_events.IDENTITY_CREATE_USER,
+            actor_user_id=creator.id,
+            resource_id=user.id,
+            action="create_user",
+            result=audit_events.RESULT_SUCCESS,
+        )
+        return user
+
+    def list_users(self) -> list[UserResponse]:
+        kg = self._get_kindergarten()
+        if kg is None:
+            return []
+        users = self._repo.list_users(kg.id)
+        return [
+            UserResponse(
+                id=user.id,
+                username=user.username,
+                display_name=user.display_name,
+                phone=user.phone,
+                roles=self._repo.list_user_roles(kg.id, user.id),
+                is_active=user.is_active,
+            )
+            for user in users
+        ]
+
+    def reset_password(self, *, admin_user_id: str, target_user_id: str, new_password: str) -> bool:
+        kg = self._get_kindergarten()
+        if kg is None:
+            return False
+        user = self._repo.get_user_by_id(kg.id, target_user_id)
+        if user is None:
+            return False
+        validate_password(new_password)
+        user.password_hash = hash_password(new_password)
+        self._repo.revoke_user_tokens(kg.id, user.id)
+        self._record_identity(
+            kindergarten_id=kg.id,
+            event_type=audit_events.IDENTITY_RESET_PASSWORD,
+            actor_user_id=admin_user_id,
+            resource_id=user.id,
+            action="reset_password",
+            result=audit_events.RESULT_SUCCESS,
+        )
+        return True
+
+    def deactivate_user(self, *, admin_user_id: str, user_id: str) -> None:
+        kg = self._get_kindergarten()
+        if kg is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="园所不存在")
+        target = self._repo.get_user_by_id(kg.id, user_id)
+        if target is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
+        if target.is_active and self._repo.get_active_admin_count(kg.id) <= 1:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="不能停用最后一个有效管理员",
+            )
+        self._repo.deactivate_user(kg.id, user_id)
+        self._repo.revoke_user_tokens(kg.id, user_id)
+        self._record_identity(
+            kindergarten_id=kg.id,
+            event_type=audit_events.IDENTITY_DEACTIVATE_USER,
+            actor_user_id=admin_user_id,
+            resource_id=user_id,
+            action="deactivate_user",
+            result=audit_events.RESULT_SUCCESS,
+        )
+
+    def init_admin(self, *, kg_name: str, admin_username: str, password: str) -> dict[str, Any]:
+        if self._session is None:
+            raise RuntimeError("数据库会话未初始化")
+        kg = self._repo.create_kindergarten(name=kg_name or "默认幼儿园")
+        self.ensure_roles(kg.id)
+        admin_role = self._repo.get_role_by_code(kg.id, "admin")
+        if admin_role is None:
+            raise RuntimeError("管理员角色初始化失败")
+        user = self._repo.create_user(
+            kindergarten_id=kg.id,
+            username=normalize_username(admin_username),
+            phone=None,
+            display_name="系统管理员",
+            password_hash=hash_password(password),
+        )
+        self._repo.assign_role(kindergarten_id=kg.id, user_id=user.id, role_id=admin_role.id)
+        self._session.commit()
+        self._record_identity(
+            kindergarten_id=kg.id,
+            event_type=audit_events.IDENTITY_INIT_ADMIN,
+            actor_user_id=user.id,
+            resource_id=user.id,
+            action="init_admin",
+            result=audit_events.RESULT_SUCCESS,
+        )
+        return {"user_id": user.id, "kindergarten_id": kg.id}
+
+    def get_user_by_id(self, kindergarten_id: str, user_id: str) -> User | None:
+        return self._repo.get_user_by_id(kindergarten_id, user_id)
