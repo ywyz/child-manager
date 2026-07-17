@@ -8,6 +8,15 @@ from packages.backend.audit.repository import AuditRepository
 from packages.contracts.audit import IdentityAuditEventCode
 
 
+def test_identity_audit_repository_is_append_only() -> None:
+    public_commands = {
+        name
+        for name, value in vars(AuditRepository).items()
+        if callable(value) and not name.startswith("_")
+    }
+    assert public_commands == {"append"}
+
+
 def test_identity_audit_rejects_sensitive_metadata_keys() -> None:
     connection = cast(psycopg.Connection[tuple[object, ...]], object())
     repository = AuditRepository(connection, uuid4())

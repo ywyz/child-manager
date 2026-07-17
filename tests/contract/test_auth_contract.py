@@ -3,7 +3,12 @@ from pathlib import Path
 import pytest
 import yaml
 
-from packages.contracts.identity import ChangePasswordRequest, LoginRequest
+from packages.contracts.identity import (
+    ChangePasswordRequest,
+    CurrentUser,
+    KindergartenSummary,
+    LoginRequest,
+)
 
 OPENAPI = yaml.safe_load(
     Path("specs/001-daily-activity-plan/contracts/openapi.yaml").read_text(encoding="utf-8")
@@ -51,3 +56,33 @@ def test_auth_request_models_reject_extra_fields_and_short_new_password() -> Non
 def test_login_request_matches_openapi_length_bounds(payload: dict[str, str]) -> None:
     with pytest.raises(ValueError):
         LoginRequest.model_validate(payload)
+
+
+def test_current_user_matches_required_and_unique_openapi_contract() -> None:
+    with pytest.raises(ValueError):
+        CurrentUser.model_validate(
+            {"id": "00000000-0000-7000-8000-000000000001", "display_name": "教师"}
+        )
+    with pytest.raises(ValueError):
+        KindergartenSummary.model_validate(
+            {
+                "id": "00000000-0000-7000-8000-000000000001",
+                "name": "测试幼儿园",
+                "timezone": "UTC",
+            }
+        )
+    with pytest.raises(ValueError):
+        CurrentUser.model_validate(
+            {
+                "id": "00000000-0000-7000-8000-000000000001",
+                "username": "teacher",
+                "display_name": "教师",
+                "kindergarten": {
+                    "id": "00000000-0000-7000-8000-000000000002",
+                    "name": "测试幼儿园",
+                    "timezone": "Asia/Shanghai",
+                },
+                "role_codes": ["teacher", "teacher"],
+                "capabilities": ["plans:view", "plans:view"],
+            }
+        )

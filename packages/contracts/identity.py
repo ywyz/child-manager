@@ -1,7 +1,7 @@
 """身份与认证公共 Schema 骨架。"""
 
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Literal
 from uuid import UUID
 
 from pydantic import Field, field_validator, model_validator
@@ -21,6 +21,12 @@ def _unique_role_codes(value: list[str]) -> list[str]:
     return value
 
 
+def _unique_strings(value: list[str]) -> list[str]:
+    if len(value) != len(set(value)):
+        raise ValueError("列表项不能重复")
+    return value
+
+
 class LoginRequest(ContractModel):
     login: LoginIdentifier
     password: Credential
@@ -34,16 +40,19 @@ class ChangePasswordRequest(ContractModel):
 class KindergartenSummary(ContractModel):
     id: UUID
     name: str
-    timezone: str = "Asia/Shanghai"
+    timezone: Literal["Asia/Shanghai"]
 
 
 class CurrentUser(ContractModel):
     id: UUID
     username: str
     display_name: str
-    kindergarten: KindergartenSummary | None = None
-    role_codes: list[str] = Field(default_factory=list)
-    capabilities: list[str] = Field(default_factory=list)
+    kindergarten: KindergartenSummary
+    role_codes: list[RoleCode]
+    capabilities: list[str]
+
+    _roles_are_unique = field_validator("role_codes")(_unique_role_codes)
+    _capabilities_are_unique = field_validator("capabilities")(_unique_strings)
 
 
 class CreateUserRequest(ContractModel):
