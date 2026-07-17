@@ -3,6 +3,7 @@
 import pytest
 
 from apps.api import __main__ as api_main
+from apps.web import __main__ as web_main
 from packages.backend.config import AppSettings, global_security_ready
 
 
@@ -65,5 +66,25 @@ def test_api_entrypoint_rejects_insecure_cookie_on_non_loopback(
 
     with pytest.raises(ValueError, match="回环"):
         api_main.main()
+
+    assert called is False
+
+
+def test_web_entrypoint_rejects_insecure_cookie_outside_development(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    called = False
+
+    def run_server(*args: object, **kwargs: object) -> None:
+        nonlocal called
+        called = True
+
+    monkeypatch.setenv("CHILD_MANAGER_ENV", "production")
+    monkeypatch.setenv("CHILD_MANAGER_COOKIE_SECURE", "false")
+    monkeypatch.setattr(web_main.ui, "run", run_server)
+    monkeypatch.setattr("sys.argv", ["python -m apps.web"])
+
+    with pytest.raises(ValueError, match="Secure"):
+        web_main.main()
 
     assert called is False
