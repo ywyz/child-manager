@@ -185,5 +185,9 @@
   "183": "clock.py",
   "184": "CurrentUser",
   "185": "ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体",
-  "186": "normalize_username"
+  "186": "normalize_username",
+  "187": "User",
+  "188": "build_health_dependencies",
+  "189": "0002_updated_at.py",
+  "190": "0003_refresh_family.py"
 }
