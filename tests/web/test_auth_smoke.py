@@ -63,7 +63,7 @@ async def test_bff_login_preserves_two_auth_cookies() -> None:
             (b"origin", b"http://127.0.0.1:28080"),
             (b"x-csrf-token", b"csrf"),
         ),
-        body=b'{"username":"admin","password":"ValidPassword2024!"}',
+        body=b'{"login":"admin","password":"ValidPassword2024!"}',
         peer_ip="127.0.0.1",
         api_base_url="http://127.0.0.1:28000",
         transport=httpx.MockTransport(handler),
@@ -228,15 +228,15 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
         path="/api/v1/auth/login",
         query=b"",
         headers=(*common_headers, (b"cookie", csrf_cookie)),
-        body=json.dumps({"username": "admin", "password": "ValidPassword2024!"}).encode("utf-8"),
+        body=json.dumps({"login": "admin", "password": "ValidPassword2024!"}).encode("utf-8"),
         peer_ip=peer_ip,
         api_base_url=api_base_url,
         transport=transport,
     )
     assert login.status_code == 200
-    login_body = json.loads(login.body)["user"]
+    login_body = json.loads(login.body)
     assert login_body["id"]
-    assert "admin" in login_body["roles"]
+    assert "admin" in login_body["role_codes"]
     set_cookies = [v for n, v in login.headers if n.lower() == b"set-cookie"]
     assert len(set_cookies) == 3
     cookie_header = b"; ".join(set_cookies)
@@ -285,7 +285,7 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
         query=b"",
         headers=(*state_headers, (b"cookie", refresh_cookie_header)),
         body=json.dumps(
-            {"old_password": "ValidPassword2024!", "new_password": "NewPassword2024!"}
+            {"current_password": "ValidPassword2024!", "new_password": "NewPassword2024!"}
         ).encode("utf-8"),
         peer_ip=peer_ip,
         api_base_url=api_base_url,

@@ -42,7 +42,7 @@ def register_web(*, api_base_url: str) -> None:
     @ui.page("/login")
     # pyright: ignore[reportUnusedFunction]
     async def login() -> None:
-        login_page()
+        await login_page()
 
     @ui.page("/change-password")
     # pyright: ignore[reportUnusedFunction]

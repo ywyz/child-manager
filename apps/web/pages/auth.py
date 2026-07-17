@@ -45,26 +45,48 @@ def _js_fetch(
     """
 
 
-def login_page() -> None:
-    """登录页面。"""
+_JS_PREFETCH_CSRF = """
+async function prefetchCsrf() {
+    const resp = await fetch('/api/v1/auth/csrf', {
+        method: 'GET',
+        headers: {'Origin': window.location.origin},
+    });
+    if (!resp.ok) return 'CSRF 令牌获取失败';
+    return null;
+}
+return await prefetchCsrf();
+"""
+
+
+async def login_page() -> None:
+    """登录页面；加载时先预取 CSRF 令牌再启用登录按钮。"""
     with ui.card().classes("w-96 mx-auto"):
         ui.label("登录").classes("text-xl font-bold mb-4")
-        username = ui.input("用户名").classes("mb-4 w-full")
+        login_input = ui.input("用户名").classes("mb-4 w-full")
         password = ui.input("密码", password=True).classes("mb-4 w-full")
         error = ui.label("").classes("text-red-500 mb-4")
+
+        login_button = ui.button("登录", on_click=None).classes("w-full")
+        login_button.set_enabled(False)
 
         async def handle_login() -> None:
             js = _js_fetch(
                 method="POST",
                 path="/api/v1/auth/login",
-                body={"username": username.value, "password": password.value},
+                body={"login": login_input.value, "password": password.value},
                 redirect_on_ok="/",
             )
             result = await ui.run_javascript(js)
             if result:
                 error.set_text(result)
 
-        ui.button("登录", on_click=handle_login).classes("w-full")
+        login_button.on_click(handle_login)
+
+        prefetch_result = await ui.run_javascript(_JS_PREFETCH_CSRF)
+        if prefetch_result:
+            error.set_text(prefetch_result)
+        else:
+            login_button.set_enabled(True)
 
 
 def change_password_page() -> None:
@@ -83,7 +105,7 @@ def change_password_page() -> None:
             js = _js_fetch(
                 method="POST",
                 path="/api/v1/auth/change-password",
-                body={"old_password": old_password.value, "new_password": new_password.value},
+                body={"current_password": old_password.value, "new_password": new_password.value},
                 redirect_on_ok="/login",
             )
             result = await ui.run_javascript(js)

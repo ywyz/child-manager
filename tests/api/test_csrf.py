@@ -48,16 +48,17 @@ def _set_keys(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_state_change_without_csrf_is_rejected(client: TestClient) -> None:
     response = client.post(
         "/api/v1/auth/login",
-        json={"username": "admin", "password": "ValidPassword2024!"},
+        json={"login": "admin", "password": "ValidPassword2024!"},
         headers={"origin": "http://127.0.0.1:28080"},
     )
     assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"
 
 
 def test_csrf_with_forged_origin_is_rejected(client: TestClient) -> None:
     response = client.post(
         "/api/v1/auth/login",
-        json={"username": "admin", "password": "ValidPassword2024!"},
+        json={"login": "admin", "password": "ValidPassword2024!"},
         headers={
             "origin": "http://evil.example.com",
             "x-csrf-token": "token",
@@ -65,6 +66,7 @@ def test_csrf_with_forged_origin_is_rejected(client: TestClient) -> None:
         cookies={"child_manager_csrf": "token"},
     )
     assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"
 
 
 def test_missing_origin_header_is_rejected(client: TestClient) -> None:
@@ -74,6 +76,7 @@ def test_missing_origin_header_is_rejected(client: TestClient) -> None:
         cookies={"child_manager_csrf": "token"},
     )
     assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"
 
 
 def test_valid_signed_csrf_token_is_accepted(client: TestClient) -> None:
@@ -101,3 +104,4 @@ def test_signed_cookie_and_header_mismatch_is_rejected(client: TestClient) -> No
         cookies={"child_manager_csrf": cookie_token},
     )
     assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"

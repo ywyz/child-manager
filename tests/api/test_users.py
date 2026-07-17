@@ -57,7 +57,7 @@ _CSRF_COOKIE = {"child_manager_csrf": _CSRF_TOKEN}
 def _admin_session(client: TestClient) -> dict[str, str]:
     login = client.post(
         "/api/v1/auth/login",
-        json={"username": "admin", "password": "ValidPassword2024!"},
+        json={"login": "admin", "password": "ValidPassword2024!"},
         headers=_CSRF_HEADERS,
         cookies=_CSRF_COOKIE,
     )
@@ -209,7 +209,8 @@ def test_deactivate_and_activate_user(client: TestClient) -> None:
         headers=_CSRF_HEADERS,
         cookies=cookies,
     )
-    assert deactivate.status_code == 204
+    assert deactivate.status_code == 200
+    assert deactivate.json()["is_active"] is False
 
     get_response = client.get(f"/api/v1/users/{user_id}", headers=_CSRF_HEADERS, cookies=cookies)
     assert get_response.json()["is_active"] is False

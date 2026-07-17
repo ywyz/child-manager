@@ -42,10 +42,14 @@ class TestIdentitySkeleton:
             id="u1",
             username="teacher-a",
             display_name="王老师",
-            kindergarten_id="k1",
-            roles=["teacher"],
+            kindergarten=identity.KindergartenSnapshot(
+                id="k1", name="实验幼儿园", timezone="Asia/Shanghai"
+            ),
+            role_codes=["teacher"],
         )
         assert user.id == "u1"
+        assert user.role_codes == ["teacher"]
+        assert user.kindergarten_id == "k1"
         assert user.roles == ["teacher"]
 
     def test_current_user_rejects_extra_fields(self) -> None:
@@ -59,7 +63,7 @@ class TestIdentitySkeleton:
 
     def test_identity_has_auth_contracts(self) -> None:
         assert hasattr(identity, "LoginRequest")
-        assert hasattr(identity, "LoginResponse")
+        assert hasattr(identity, "CurrentUser")
         assert hasattr(identity, "CsrfResponse")
 
 
@@ -135,9 +139,9 @@ class TestPublicClassScope:
                 identity,
                 {
                     "CurrentUser",
+                    "KindergartenSnapshot",
                     "CsrfResponse",
                     "LoginRequest",
-                    "LoginResponse",
                     "RefreshRequest",
                     "ChangePasswordRequest",
                     "UserCreateRequest",

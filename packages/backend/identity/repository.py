@@ -218,13 +218,20 @@ class IdentityRepository:
             self._db.flush()
         return token
 
-    def get_refresh_token_by_hash(self, token_hash: str) -> RefreshToken | None:
+    def find_refresh_token_by_hash(self, token_hash: str) -> RefreshToken | None:
+        """通过全局唯一 token_hash 定位 Refresh Token。
+
+        Refresh 流程的入口只有 opaque token，调用方在查询前尚不知道园所。
+        该方法仅用于安全定位并读取 token.kindergarten_id；所有下游撤销、创建
+        和用户信息读取必须使用 token.kindergarten_id 显式隔离。
+        """
         if self._is_in_memory():
             return None
         stmt = select(RefreshToken).where(RefreshToken.token_hash == token_hash)
         return self._db.execute(stmt).scalar_one_or_none()
 
-    def get_refresh_token_by_hash_for_update(self, token_hash: str) -> RefreshToken | None:
+    def find_refresh_token_by_hash_for_update(self, token_hash: str) -> RefreshToken | None:
+        """带行锁的 find_refresh_token_by_hash；隔离语义同上。"""
         if self._is_in_memory():
             return None
         stmt = select(RefreshToken).where(RefreshToken.token_hash == token_hash).with_for_update()

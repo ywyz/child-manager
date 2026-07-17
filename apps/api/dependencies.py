@@ -152,14 +152,12 @@ def get_current_user(
     if user is None or not user.is_active:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
 
-    current_user = service.build_current_user(user)
-    current_user.kindergarten_id = kindergarten_id
-    return current_user
+    return service.build_current_user(user)
 
 
 def require_admin(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ) -> CurrentUser:
-    if "admin" not in current_user.roles:
+    if "admin" not in current_user.role_codes:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="需要管理员权限")
     return current_user

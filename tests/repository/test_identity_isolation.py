@@ -122,19 +122,19 @@ def test_refresh_token_crud_with_family_expires_at(db_repo: IdentityRepository) 
     )
     assert token.family_expires_at == expires
 
-    found = db_repo.get_refresh_token_by_hash(token_hash)
+    found = db_repo.find_refresh_token_by_hash(token_hash)
     assert found is not None
     assert found.family_id == family_id
 
     count = db_repo.revoke_refresh_family(kg_id, family_id)
     assert count == 1
 
-    revoked = db_repo.get_refresh_token_by_hash(token_hash)
+    revoked = db_repo.find_refresh_token_by_hash(token_hash)
     assert revoked is not None
     assert revoked.revoked_at is not None
 
 
-def test_get_refresh_token_by_hash_for_update(db_repo: IdentityRepository) -> None:
+def test_find_refresh_token_by_hash_for_update(db_repo: IdentityRepository) -> None:
     from datetime import UTC, datetime, timedelta
 
     kg_id = str(uuid4())
@@ -152,6 +152,33 @@ def test_get_refresh_token_by_hash_for_update(db_repo: IdentityRepository) -> No
         family_expires_at=expires,
     )
 
-    found = db_repo.get_refresh_token_by_hash_for_update(token_hash)
+    found = db_repo.find_refresh_token_by_hash_for_update(token_hash)
     assert found is not None
     assert found.token_hash == token_hash
+
+
+def test_refresh_token_revoke_respects_kindergarten_id(
+    db_repo: IdentityRepository, kg_a: str, kg_b: str
+) -> None:
+    from datetime import UTC, datetime, timedelta
+
+    user_id = str(uuid4())
+    family_id = str(uuid4())
+    token_hash = "hash-3"
+    expires = datetime.now(UTC) + timedelta(days=7)
+
+    db_repo.create_refresh_token(
+        kindergarten_id=kg_a,
+        user_id=user_id,
+        family_id=family_id,
+        token_hash=token_hash,
+        expires_at=expires,
+        family_expires_at=expires,
+    )
+
+    assert db_repo.revoke_refresh_family(kg_b, family_id) == 0
+    assert db_repo.revoke_user_tokens(kg_b, user_id) == 0
+
+    token = db_repo.find_refresh_token_by_hash(token_hash)
+    assert token is not None
+    assert token.revoked_at is None

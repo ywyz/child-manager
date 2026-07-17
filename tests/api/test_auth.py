@@ -95,7 +95,7 @@ def test_login_sets_two_http_only_cookies(
 ) -> None:
     response = client.post(
         "/api/v1/auth/login",
-        json={"username": "admin", "password": "ValidPassword2024!"},
+        json={"login": "admin", "password": "ValidPassword2024!"},
         headers=csrf_headers,
         cookies=csrf_cookie,
     )
@@ -112,7 +112,7 @@ def test_login_failure_returns_generic_message(
 ) -> None:
     response = client.post(
         "/api/v1/auth/login",
-        json={"username": "admin", "password": "wrong-password"},
+        json={"login": "admin", "password": "wrong-password"},
         headers=csrf_headers,
         cookies=csrf_cookie,
     )
@@ -126,7 +126,7 @@ def test_disabled_user_cannot_login(
 ) -> None:
     response = client.post(
         "/api/v1/auth/login",
-        json={"username": "disabled", "password": "ValidPassword2024!"},
+        json={"login": "disabled", "password": "ValidPassword2024!"},
         headers=csrf_headers,
         cookies=csrf_cookie,
     )
@@ -138,7 +138,7 @@ def test_refresh_returns_two_new_cookies(
 ) -> None:
     login = client.post(
         "/api/v1/auth/login",
-        json={"username": "admin", "password": "ValidPassword2024!"},
+        json={"login": "admin", "password": "ValidPassword2024!"},
         headers=csrf_headers,
         cookies=csrf_cookie,
     )
@@ -175,13 +175,13 @@ def test_login_rate_limit_after_repeated_failures(
     for _ in range(5):
         client.post(
             "/api/v1/auth/login",
-            json={"username": "admin", "password": "wrong"},
+            json={"login": "admin", "password": "wrong"},
             headers=csrf_headers,
             cookies=csrf_cookie,
         )
     response = client.post(
         "/api/v1/auth/login",
-        json={"username": "admin", "password": "wrong"},
+        json={"login": "admin", "password": "wrong"},
         headers=csrf_headers,
         cookies=csrf_cookie,
     )
@@ -193,7 +193,7 @@ def test_refresh_replay_revokes_family(
 ) -> None:
     login = client.post(
         "/api/v1/auth/login",
-        json={"username": "admin", "password": "ValidPassword2024!"},
+        json={"login": "admin", "password": "ValidPassword2024!"},
         headers=csrf_headers,
         cookies=csrf_cookie,
     )
@@ -207,6 +207,8 @@ def test_refresh_replay_revokes_family(
         cookies={"child_manager_refresh": refresh_cookie, **csrf_cookie},
     )
     assert first.status_code == 200
+    new_refresh_cookie = first.cookies.get("child_manager_refresh")
+    assert new_refresh_cookie is not None
 
     replay = client.post(
         "/api/v1/auth/refresh",
@@ -215,13 +217,20 @@ def test_refresh_replay_revokes_family(
     )
     assert replay.status_code == 401
 
+    new_token_after_replay = client.post(
+        "/api/v1/auth/refresh",
+        headers=csrf_headers,
+        cookies={"child_manager_refresh": new_refresh_cookie, **csrf_cookie},
+    )
+    assert new_token_after_replay.status_code == 401
+
 
 def test_change_password_returns_204(
     client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
 ) -> None:
     login = client.post(
         "/api/v1/auth/login",
-        json={"username": "admin", "password": "ValidPassword2024!"},
+        json={"login": "admin", "password": "ValidPassword2024!"},
         headers=csrf_headers,
         cookies=csrf_cookie,
     )
@@ -231,7 +240,7 @@ def test_change_password_returns_204(
 
     response = client.post(
         "/api/v1/auth/change-password",
-        json={"old_password": "ValidPassword2024!", "new_password": "NewPassword2024!"},
+        json={"current_password": "ValidPassword2024!", "new_password": "NewPassword2024!"},
         headers=csrf_headers,
         cookies={"child_manager_access": access_cookie, **csrf_cookie},
     )

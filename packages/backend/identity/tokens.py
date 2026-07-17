@@ -56,10 +56,3 @@ def generate_refresh_value() -> str:
 def hash_refresh_value(value: str) -> str:
     """返回 Refresh 明文 SHA-256 哈希。"""
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
-
-
-class RefreshTokenManager:
-    """管理 Refresh 令牌族：签发、轮换与重放检测。"""
-
-    def __init__(self, *, signing_key: str) -> None:
-        self._signing_key = signing_key

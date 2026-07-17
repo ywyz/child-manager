@@ -5,16 +5,37 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 
 
+class KindergartenSnapshot(BaseModel):
+    """当前登录用户所属园所快照。"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str = Field(..., description="园所ID")
+    name: str = Field(..., description="园所名称")
+    timezone: str = Field(default="Asia/Shanghai", description="园所时区")
+
+
 class CurrentUser(BaseModel):
-    """当前登录用户的最小引用。"""
+    """当前登录用户。"""
 
     model_config = ConfigDict(extra="forbid")
 
     id: str = Field(..., description="用户ID")
     username: str = Field(..., description="用户名")
     display_name: str = Field(..., description="显示名称")
-    kindergarten_id: str = Field(..., description="所属园所ID")
-    roles: list[str] = Field(default_factory=list, description="角色代码列表")
+    kindergarten: KindergartenSnapshot = Field(..., description="所属园所快照")
+    role_codes: list[str] = Field(default_factory=list, description="角色代码列表")
+    capabilities: list[str] = Field(default_factory=list, description="能力标签列表")
+
+    @property
+    def kindergarten_id(self) -> str:
+        """内部兼容：返回所属园所ID。"""
+        return self.kindergarten.id
+
+    @property
+    def roles(self) -> list[str]:
+        """内部兼容：返回角色代码列表。"""
+        return self.role_codes
 
 
 class CsrfResponse(BaseModel):
@@ -30,16 +51,8 @@ class LoginRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    username: str = Field(..., description="用户名或手机号")
+    login: str = Field(..., description="用户名或手机号")
     password: str = Field(..., description="密码")
-
-
-class LoginResponse(BaseModel):
-    """登录响应。"""
-
-    model_config = ConfigDict(extra="forbid")
-
-    user: CurrentUser = Field(..., description="当前用户信息")
 
 
 class RefreshRequest(BaseModel):
@@ -55,7 +68,7 @@ class ChangePasswordRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    old_password: str = Field(..., description="原密码")
+    current_password: str = Field(..., description="原密码")
     new_password: str = Field(..., description="新密码")
 
 

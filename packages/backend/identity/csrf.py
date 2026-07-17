@@ -4,6 +4,9 @@ import hmac
 import secrets
 from urllib.parse import urlparse
 
+from fastapi import Request
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
 from packages.backend.config import settings
 
 _MIN_KEY_LENGTH = 32
@@ -70,3 +73,26 @@ def validate_csrf_request(
     if not verify_csrf_token(header_value, settings.csrf_signing_key):
         return False
     return cookie_value == header_value
+
+
+class CsrfError(StarletteHTTPException):
+    """CSRF 校验失败的专用异常，错误码为 auth.csrf_invalid。"""
+
+    def __init__(self) -> None:
+        super().__init__(status_code=403, detail="CSRF 校验失败")
+        self.code = "auth.csrf_invalid"
+
+
+def require_csrf(request: Request) -> None:
+    """从请求中读取 CSRF Cookie 与 Header，校验失败时抛 CsrfError。"""
+    origin = request.headers.get("origin")
+    referer = request.headers.get("referer")
+    cookie = request.cookies.get("child_manager_csrf")
+    header = request.headers.get("x-csrf-token")
+    if not validate_csrf_request(
+        cookie_value=cookie,
+        header_value=header,
+        origin=origin,
+        referer=referer,
+    ):
+        raise CsrfError()

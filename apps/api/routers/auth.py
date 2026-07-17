@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from apps.api.dependencies import get_current_user, get_db
 from packages.backend.config import settings
 from packages.backend.identity.client_ip import get_client_ip
-from packages.backend.identity.csrf import generate_csrf_token, validate_csrf_request
+from packages.backend.identity.csrf import generate_csrf_token, require_csrf
 from packages.backend.identity.identifiers import normalize_username
 from packages.backend.identity.login_throttle import (
     InMemoryThrottleBackend,
@@ -21,7 +21,6 @@ from packages.contracts.identity import (
     CsrfResponse,
     CurrentUser,
     LoginRequest,
-    LoginResponse,
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -108,20 +107,6 @@ def _clear_auth_cookies(response: Response) -> None:
     )
 
 
-def _require_csrf(request: Request) -> None:
-    origin = request.headers.get("origin")
-    referer = request.headers.get("referer")
-    cookie = request.cookies.get(CSRF_COOKIE_NAME)
-    header = request.headers.get("x-csrf-token")
-    if not validate_csrf_request(
-        cookie_value=cookie,
-        header_value=header,
-        origin=origin,
-        referer=referer,
-    ):
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="CSRF 校验失败")
-
-
 def _build_current_user(
     service: IdentityService, user_id: str, kindergarten_id: str
 ) -> CurrentUser:
@@ -139,17 +124,17 @@ async def csrf(response: Response) -> CsrfResponse:
     return CsrfResponse(csrf_token=token)
 
 
-@router.post("/login", response_model=LoginResponse)
+@router.post("/login", response_model=CurrentUser)
 async def login(
     request: Request,
     response: Response,
     body: LoginRequest,
     session: Annotated[Session, Depends(get_db)],
-) -> LoginResponse:
-    _require_csrf(request)
+) -> CurrentUser:
+    require_csrf(request)
 
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
-    account_key = normalize_username(body.username)
+    account_key = normalize_username(body.login)
 
     if await _throttle.is_blocked(account_key=account_key, source_ip=source_ip):
         raise HTTPException(
@@ -159,6 +144,7 @@ async def login(
     service = IdentityService(session)
     result = service.login(username=account_key, password=body.password, source_ip=source_ip)
     if result is None:
+        session.commit()
         await _throttle.record_failure(account_key=account_key, source_ip=source_ip)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="账号或密码错误")
 
@@ -171,9 +157,7 @@ async def login(
         csrf_token=result["csrf_token"],
     )
     session.commit()
-    return LoginResponse(
-        user=_build_current_user(service, result["user"].id, result["kindergarten_id"])
-    )
+    return _build_current_user(service, result["user"].id, result["kindergarten_id"])
 
 
 @router.post("/refresh", response_model=CurrentUser)
@@ -182,7 +166,7 @@ async def refresh(
     response: Response,
     session: Annotated[Session, Depends(get_db)],
 ) -> CurrentUser:
-    _require_csrf(request)
+    require_csrf(request)
 
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
     if not refresh_cookie:
@@ -191,6 +175,7 @@ async def refresh(
     service = IdentityService(session)
     result = service.refresh(refresh_cookie=refresh_cookie)
     if result is None:
+        session.commit()
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
 
     _set_auth_cookies(
@@ -209,7 +194,7 @@ async def logout(
     response: Response,
     session: Annotated[Session, Depends(get_db)],
 ) -> Response:
-    _require_csrf(request)
+    require_csrf(request)
 
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
@@ -237,13 +222,13 @@ async def change_password(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_db)],
 ) -> Response:
-    _require_csrf(request)
+    require_csrf(request)
 
     service = IdentityService(session)
     if not service.change_password(
         kindergarten_id=current_user.kindergarten_id,
         user_id=current_user.id,
-        old_password=body.old_password,
+        old_password=body.current_password,
         new_password=body.new_password,
     ):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="原密码错误")

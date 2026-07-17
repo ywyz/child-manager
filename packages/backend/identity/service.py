@@ -26,6 +26,7 @@ from packages.backend.identity.tokens import (
 from packages.contracts import audit as audit_events
 from packages.contracts.identity import (
     CurrentUser,
+    KindergartenSnapshot,
     UserCreateRequest,
     UserPatch,
     UserResponse,
@@ -68,8 +69,7 @@ class IdentityService:
             result=result,
             source_ip=source_ip,
         )
-        if self._session is not None:
-            self._session.commit()
+        # Service 不自行提交；由 Router/CLI 等调用方控制事务边界。
 
     def _get_kindergarten(self) -> Kindergarten | None:
         """M2 单园部署：返回唯一园所。
@@ -97,12 +97,21 @@ class IdentityService:
 
     def build_current_user(self, user: User) -> CurrentUser:
         roles = self._repo.list_user_roles(user.kindergarten_id, user.id)
+        kindergarten = self._repo.get_kindergarten_by_id(user.kindergarten_id)
+        if kindergarten is None:
+            msg = "用户所属园所不存在"
+            raise RuntimeError(msg)
         return CurrentUser(
             id=user.id,
             username=user.username,
             display_name=user.display_name,
-            kindergarten_id=user.kindergarten_id,
-            roles=roles,
+            kindergarten=KindergartenSnapshot(
+                id=kindergarten.id,
+                name=kindergarten.name,
+                timezone=kindergarten.timezone,
+            ),
+            role_codes=roles,
+            capabilities=[],
         )
 
     def authenticate(
@@ -188,7 +197,7 @@ class IdentityService:
 
     def refresh(self, *, refresh_cookie: str) -> dict[str, Any] | None:
         token_hash = hash_refresh_value(refresh_cookie)
-        token_row = self._repo.get_refresh_token_by_hash_for_update(token_hash)
+        token_row = self._repo.find_refresh_token_by_hash_for_update(token_hash)
         if token_row is None:
             return None
 
@@ -254,7 +263,7 @@ class IdentityService:
     def logout(self, *, refresh_cookie: str | None, source_ip: str | None = None) -> None:
         if not refresh_cookie:
             return
-        token_row = self._repo.get_refresh_token_by_hash(hash_refresh_value(refresh_cookie))
+        token_row = self._repo.find_refresh_token_by_hash(hash_refresh_value(refresh_cookie))
         if token_row is not None:
             self._repo.revoke_refresh_family(token_row.kindergarten_id, token_row.family_id)
             self._record_identity(
@@ -484,7 +493,6 @@ class IdentityService:
             password_hash=hash_password(password),
         )
         self._repo.assign_role(kindergarten_id=kg.id, user_id=user.id, role_id=admin_role.id)
-        self._session.commit()
         self._record_identity(
             kindergarten_id=kg.id,
             event_type=audit_events.IDENTITY_INIT_ADMIN,
@@ -493,6 +501,7 @@ class IdentityService:
             action="init_admin",
             result=audit_events.RESULT_SUCCESS,
         )
+        self._session.commit()
         return {"user_id": user.id, "kindergarten_id": kg.id}
 
     def get_user_by_id(self, kindergarten_id: str, user_id: str) -> User | None:

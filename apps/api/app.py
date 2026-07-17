@@ -7,6 +7,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from apps.api.middleware import request_context_middleware
 from apps.api.routers import auth, users
+from packages.backend.identity.csrf import CsrfError
 from packages.backend.observability import configure_logging
 from packages.contracts.common import ErrorResponse, HealthResponse
 
@@ -169,6 +170,15 @@ async def _validation_error_handler(request: Request, exc: RequestValidationErro
     )
 
 
+async def _csrf_error_handler(request: Request, exc: CsrfError) -> JSONResponse:
+    return _error_response(
+        request,
+        status_code=exc.status_code,
+        code=exc.code,
+        message=str(exc.detail),
+    )
+
+
 async def _http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
     if exc.status_code == 404:
         code = "resource.not_found"
@@ -229,6 +239,7 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
     )(ready_endpoint)
 
     application.exception_handler(RequestValidationError)(_validation_error_handler)
+    application.exception_handler(CsrfError)(_csrf_error_handler)
     application.exception_handler(StarletteHTTPException)(_http_exception_handler)
     application.exception_handler(Exception)(_unhandled_error_handler)
 
