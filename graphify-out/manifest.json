@@ -515,8 +515,8 @@
     "semantic_hash": "7ca50b4cc9e4484ceb0585643bfc3ac8"
   },
   "packages/contracts/identity.py": {
-    "mtime": 1784261829.6649368,
-    "ast_hash": "fefab27f12f5f73994d87b4603c561d7",
+    "mtime": 1784263355.702183,
+    "ast_hash": "7743b9e7de490783d35d7a94cbce4971",
     "semantic_hash": ""
   },
   "packages/contracts/jobs.py": {
@@ -875,8 +875,8 @@
     "semantic_hash": ""
   },
   "tests/contract/test_auth_contract.py": {
-    "mtime": 1784261727.7344599,
-    "ast_hash": "5efa9d7fe95376df6250f421a2a330ab",
+    "mtime": 1784263402.9060352,
+    "ast_hash": "251305f7f032e7e97a8eaf52fa40c83d",
     "semantic_hash": ""
   },
   "tests/contract/test_users_contract.py": {
@@ -900,8 +900,8 @@
     "semantic_hash": ""
   },
   "tests/unit/identity/test_audit.py": {
-    "mtime": 1784259512.3088744,
-    "ast_hash": "6f4cf37df47dc091eadaa2769ddd5c0a",
+    "mtime": 1784263413.0433776,
+    "ast_hash": "7f232f0393aebfef3372795c5ba184b7",
     "semantic_hash": ""
   },
   "tests/unit/identity/test_client_ip.py": {
