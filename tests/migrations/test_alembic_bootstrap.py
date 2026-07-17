@@ -7,13 +7,13 @@ from alembic.config import Config
 from alembic.script import ScriptDirectory
 
 
-def test_foundation_revision_is_declared() -> None:
+def test_identity_revision_is_declared_as_head() -> None:
     heads = ScriptDirectory.from_config(Config("alembic.ini")).get_heads()
 
-    assert heads == ["0000_foundation"]
+    assert heads == ["0001_identity_and_audit"]
 
 
-def test_empty_database_can_upgrade_to_foundation_head(isolated_database_url: str) -> None:
+def test_empty_database_can_upgrade_to_identity_head(isolated_database_url: str) -> None:
     environment = os.environ | {"CHILD_MANAGER_DATABASE_URL": isolated_database_url}
     upgrade = subprocess.run(
         ["uv", "run", "alembic", "upgrade", "head"],
@@ -32,7 +32,7 @@ def test_empty_database_can_upgrade_to_foundation_head(isolated_database_url: st
 
     assert upgrade.returncode == 0, upgrade.stderr
     assert current.returncode == 0, current.stderr
-    assert "0000_foundation" in current.stdout
+    assert "0001_identity_and_audit" in current.stdout
 
 
 def test_migrations_reject_missing_database_url() -> None:

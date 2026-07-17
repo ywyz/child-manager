@@ -27,6 +27,7 @@ dependencies = [
 dev = [
     "httpx2>=2,<3",
     "openapi-spec-validator>=0.7,<1",
+    "playwright>=1.57,<2",
     "pyright>=1.1,<2",
     "pytest>=8.4,<9",
     "pytest-asyncio>=1.1,<2",

@@ -1,16 +1,24 @@
 """FastAPI 应用装配、统一异常转换与健康端点。"""
 
+import os
 from collections.abc import Awaitable, Callable
+from datetime import UTC, datetime
 from uuid import UUID
 
 import structlog
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from redis.asyncio import Redis
 from starlette.exceptions import HTTPException
 
 from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from apps.api.middleware import RequestContextMiddleware
+from apps.api.routers.auth import router as auth_router
+from apps.api.routers.users import router as users_router
+from packages.backend.identity.client_ip import parse_trusted_bff_peers
+from packages.backend.identity.login_throttle import MemoryLoginThrottle, RedisLoginThrottle
+from packages.backend.identity.service import IdentityError
 from packages.contracts.common import (
     CONFIGURATION_UNAVAILABLE,
     DATABASE_UNAVAILABLE,
@@ -19,6 +27,19 @@ from packages.contracts.common import (
 )
 
 LOGGER = structlog.get_logger(__name__)
+
+
+def _login_throttle() -> MemoryLoginThrottle | RedisLoginThrottle | None:
+    backend = os.environ.get("CHILD_MANAGER_LOGIN_THROTTLE_BACKEND", "redis")
+    redis_url = os.environ.get("CHILD_MANAGER_REDIS_URL")
+    if backend == "memory":
+        return MemoryLoginThrottle()
+    if backend != "redis":
+        raise ValueError("CHILD_MANAGER_LOGIN_THROTTLE_BACKEND 必须为 redis 或 memory")
+    if redis_url:
+        return RedisLoginThrottle(Redis.from_url(redis_url))
+    # Redis 未配置时不得静默退化为进程内计数
+    return None
 
 
 def _request_id(request: Request) -> UUID:
@@ -53,6 +74,13 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
     health = dependencies or build_health_dependencies()
     application = FastAPI(title="Child Manager API")
     application.add_middleware(RequestContextMiddleware)
+    application.state.login_throttle = _login_throttle()
+    application.state.trusted_bff_peers = parse_trusted_bff_peers(
+        os.environ.get("CHILD_MANAGER_TRUSTED_BFF_PEERS")
+    )
+    application.state.clock = lambda: datetime.now(UTC)
+    application.include_router(auth_router)
+    application.include_router(users_router)
 
     @application.get("/health/live")
     async def live() -> dict[str, object]:
@@ -101,12 +129,24 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
             for error in exc.errors()
         ]
         payload = ErrorResponse(
-            code="request.validation_error",
+            code="request.validation_failed",
             message="请求参数无效，请检查后重试。",
             request_id=_request_id(request),
             field_errors=field_errors,
         )
         return JSONResponse(status_code=422, content=payload.model_dump(mode="json"))
+
+    @application.exception_handler(IdentityError)
+    async def identity_error(request: Request, exc: IdentityError) -> JSONResponse:
+        response = _error_response(
+            request,
+            status_code=exc.status_code,
+            code=exc.code,
+            message=exc.message,
+        )
+        if exc.status_code == 429:
+            response.headers["Retry-After"] = "60"
+        return response
 
     @application.exception_handler(HTTPException)
     async def http_error(request: Request, exc: HTTPException) -> JSONResponse:

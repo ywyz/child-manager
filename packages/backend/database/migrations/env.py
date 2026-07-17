@@ -6,7 +6,9 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+from packages.backend.audit import models as audit_models  # noqa: F401
 from packages.backend.database.base import Base
+from packages.backend.identity import models as identity_models  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:

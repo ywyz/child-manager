@@ -5,9 +5,13 @@ from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from importlib import import_module
 from pathlib import Path
+from typing import Annotated
 
 import psycopg
+from fastapi import Cookie, Depends
 from redis.asyncio import Redis
+
+from packages.backend.identity.service import IdentityError, IdentityService, SessionUser
 
 HealthCheck = Callable[[], Awaitable[bool]]
 
@@ -102,3 +106,30 @@ def build_health_dependencies() -> HealthDependencies:
         export_storage=export_storage,
         security_ready=all(value is not None and bool(value.strip()) for value in security_values),
     )
+
+
+def identity_service() -> IdentityService:
+    return IdentityService.from_environment()
+
+
+IdentityServiceDependency = Annotated[IdentityService, Depends(identity_service)]
+
+
+def current_session(
+    service: IdentityServiceDependency,
+    child_manager_access: Annotated[str | None, Cookie()] = None,
+) -> SessionUser:
+    if not child_manager_access:
+        raise IdentityError(401, "auth.unauthenticated", "请先登录。")
+    return service.authenticate_access(child_manager_access)
+
+
+CurrentSessionDependency = Annotated[SessionUser, Depends(current_session)]
+
+
+def admin_session(session: CurrentSessionDependency) -> SessionUser:
+    IdentityService.require_admin(session)
+    return session
+
+
+AdminSessionDependency = Annotated[SessionUser, Depends(admin_session)]

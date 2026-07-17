@@ -14,6 +14,7 @@ jobs:
     timeout-minutes: 20
     env:
       CHILD_MANAGER_TEST_DATABASE_URL: postgresql+psycopg://child_manager:ci-${{ github.run_id }}-${{ github.run_attempt }}@127.0.0.1:5432/child_manager_ci
+      CHILD_MANAGER_TEST_REDIS_URL: redis://127.0.0.1:6379/15
     services:
       postgres:
         image: postgres:18-alpine@sha256:9a8afca54e7861fd90fab5fdf4c42477a6b1cb7d293595148e674e0a3181de15
@@ -28,6 +29,15 @@ jobs:
           --health-interval 2s
           --health-timeout 3s
           --health-retries 15
+      redis:
+        image: redis:8-alpine@sha256:9d317178eceac8454a2284a9e6df2466b93c745529947f0cd42a0fa9609d7005
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 15
     steps:
       - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v7
@@ -35,6 +45,7 @@ jobs:
           enable-cache: true
           python-version: "3.14"
       - run: uv sync --locked
+      - run: uv run playwright install --with-deps chromium
       - run: uv run ruff format --check .
       - run: uv run ruff check .
       - run: uv run pyright
