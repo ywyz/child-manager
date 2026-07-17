@@ -8,6 +8,7 @@ from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from apps.api.middleware import request_context_middleware
 from apps.api.routers import auth, users
 from packages.backend.identity.csrf import CsrfError
+from packages.backend.identity.exceptions import IdentityError
 from packages.backend.observability import configure_logging
 from packages.contracts.common import ErrorResponse, HealthResponse
 
@@ -164,7 +165,7 @@ async def _validation_error_handler(request: Request, exc: RequestValidationErro
     return _error_response(
         request,
         status_code=422,
-        code="request.validation_error",
+        code="request.validation_failed",
         message="请求参数无效,请检查后重试。",
         field_errors=field_errors,
     )
@@ -176,6 +177,15 @@ async def _csrf_error_handler(request: Request, exc: CsrfError) -> JSONResponse:
         status_code=exc.status_code,
         code=exc.code,
         message=str(exc.detail),
+    )
+
+
+async def _identity_error_handler(request: Request, exc: IdentityError) -> JSONResponse:
+    return _error_response(
+        request,
+        status_code=exc.status_code,
+        code=exc.code,
+        message=exc.message,
     )
 
 
@@ -240,6 +250,7 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
 
     application.exception_handler(RequestValidationError)(_validation_error_handler)
     application.exception_handler(CsrfError)(_csrf_error_handler)
+    application.exception_handler(IdentityError)(_identity_error_handler)
     application.exception_handler(StarletteHTTPException)(_http_exception_handler)
     application.exception_handler(Exception)(_unhandled_error_handler)
 

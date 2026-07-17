@@ -59,8 +59,8 @@ def test_decode_access_token_rejects_expired(signing_key: str) -> None:
 
 
 def test_refresh_value_is_random_and_hashed() -> None:
-    value1 = generate_refresh_value()
-    value2 = generate_refresh_value()
+    value1 = generate_refresh_value(kindergarten_id="kg-1")
+    value2 = generate_refresh_value(kindergarten_id="kg-1")
     assert value1 != value2
     assert len(value1) >= 32
     hashed = hash_refresh_value(value1)

@@ -1,8 +1,9 @@
 """身份与认证公共 Schema。"""
 
 from datetime import datetime
+from typing import Self
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class KindergartenSnapshot(BaseModel):
@@ -83,6 +84,13 @@ class UserCreateRequest(BaseModel):
     role_codes: list[str] = Field(default_factory=list, description="角色代码列表")
     password: str = Field(..., description="初始密码")
 
+    @field_validator("role_codes")
+    @classmethod
+    def _require_at_least_one_role(cls, value: list[str]) -> list[str]:
+        if not value:
+            raise ValueError("创建账号时必须指定至少一个角色")
+        return value
+
 
 class UserPatch(BaseModel):
     """修改账号非凭证字段请求。"""
@@ -92,6 +100,12 @@ class UserPatch(BaseModel):
     username: str | None = Field(None, description="用户名")
     display_name: str | None = Field(None, description="显示名称")
     phone_e164: str | None = Field(None, description="手机号(E.164)")
+
+    @model_validator(mode="after")
+    def _require_at_least_one_field(self) -> Self:
+        if self.username is None and self.display_name is None and self.phone_e164 is None:
+            raise ValueError("PATCH 请求必须提供至少一个要修改的字段")
+        return self
 
 
 class UserResponse(BaseModel):

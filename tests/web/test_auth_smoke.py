@@ -293,6 +293,107 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
     )
     assert change_pw.status_code == 204
 
+    # 账号管理闭环：创建、列表、重置密码、调整角色、停用后失权、重新启用
+    create_user = await proxy_request(
+        method="POST",
+        path="/api/v1/users",
+        query=b"",
+        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        body=json.dumps(
+            {
+                "username": "teacher_smoke",
+                "display_name": "冒烟教师",
+                "phone_e164": None,
+                "role_codes": ["teacher"],
+                "password": "ValidPassword2024!",
+            }
+        ).encode("utf-8"),
+        peer_ip=peer_ip,
+        api_base_url=api_base_url,
+        transport=transport,
+    )
+    assert create_user.status_code == 201
+    teacher_id = json.loads(create_user.body)["id"]
+
+    list_users = await proxy_request(
+        method="GET",
+        path="/api/v1/users",
+        query=b"",
+        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        body=b"",
+        peer_ip=peer_ip,
+        api_base_url=api_base_url,
+        transport=transport,
+    )
+    assert list_users.status_code == 200
+    assert any(u["username"] == "teacher_smoke" for u in json.loads(list_users.body)["items"])
+
+    reset_pw = await proxy_request(
+        method="POST",
+        path=f"/api/v1/users/{teacher_id}/reset-password",
+        query=b"",
+        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        body=json.dumps({"new_password": "ResetPassword2024!"}).encode("utf-8"),
+        peer_ip=peer_ip,
+        api_base_url=api_base_url,
+        transport=transport,
+    )
+    assert reset_pw.status_code == 204
+
+    set_roles = await proxy_request(
+        method="PUT",
+        path=f"/api/v1/users/{teacher_id}/roles",
+        query=b"",
+        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        body=json.dumps({"role_codes": ["teacher", "admin"]}).encode("utf-8"),
+        peer_ip=peer_ip,
+        api_base_url=api_base_url,
+        transport=transport,
+    )
+    assert set_roles.status_code == 200
+    assert set(json.loads(set_roles.body)["role_codes"]) == {"teacher", "admin"}
+
+    deactivate = await proxy_request(
+        method="POST",
+        path=f"/api/v1/users/{teacher_id}/deactivate",
+        query=b"",
+        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        body=b"",
+        peer_ip=peer_ip,
+        api_base_url=api_base_url,
+        transport=transport,
+    )
+    assert deactivate.status_code == 200
+    assert json.loads(deactivate.body)["is_active"] is False
+
+    failed_login = await proxy_request(
+        method="POST",
+        path="/api/v1/auth/login",
+        query=b"",
+        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        body=json.dumps({"login": "teacher_smoke", "password": "ResetPassword2024!"}).encode(
+            "utf-8"
+        ),
+        peer_ip=peer_ip,
+        api_base_url=api_base_url,
+        transport=transport,
+    )
+    assert failed_login.status_code == 401
+    assert json.loads(failed_login.body)["code"] == "auth.login_failed"
+
+    activate = await proxy_request(
+        method="POST",
+        path=f"/api/v1/users/{teacher_id}/activate",
+        query=b"",
+        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        body=b"",
+        peer_ip=peer_ip,
+        api_base_url=api_base_url,
+        transport=transport,
+    )
+    assert activate.status_code == 200
+    assert json.loads(activate.body)["is_active"] is True
+
     logout = await proxy_request(
         method="POST",
         path="/api/v1/auth/logout",

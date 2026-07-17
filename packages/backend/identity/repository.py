@@ -100,6 +100,15 @@ class IdentityRepository:
         )
         return self._db.execute(stmt).scalar_one_or_none()
 
+    def get_user_by_phone(self, kindergarten_id: str, phone: str) -> User | None:
+        if self._is_in_memory():
+            for user in self._in_memory["users"].values():
+                if user.kindergarten_id == kindergarten_id and user.phone == phone:
+                    return user
+            return None
+        stmt = select(User).where(User.kindergarten_id == kindergarten_id, User.phone == phone)
+        return self._db.execute(stmt).scalar_one_or_none()
+
     def get_user_by_id(self, kindergarten_id: str, user_id: str) -> User | None:
         if self._is_in_memory():
             user = self._in_memory["users"].get(user_id)
@@ -218,23 +227,37 @@ class IdentityRepository:
             self._db.flush()
         return token
 
-    def find_refresh_token_by_hash(self, token_hash: str) -> RefreshToken | None:
-        """通过全局唯一 token_hash 定位 Refresh Token。
+    def find_refresh_token_by_hash(
+        self, kindergarten_id: str, token_hash: str
+    ) -> RefreshToken | None:
+        """在指定园所内通过 token_hash 定位 Refresh Token。
 
-        Refresh 流程的入口只有 opaque token，调用方在查询前尚不知道园所。
-        该方法仅用于安全定位并读取 token.kindergarten_id；所有下游撤销、创建
-        和用户信息读取必须使用 token.kindergarten_id 显式隔离。
+        Refresh 明文已编码园所 ID，调用方解析后必须显式传入 kindergarten_id，
+        使 Repository 查询符合园所隔离要求。所有下游撤销、创建和用户信息读取
+        继续使用 token.kindergarten_id 隔离。
         """
         if self._is_in_memory():
             return None
-        stmt = select(RefreshToken).where(RefreshToken.token_hash == token_hash)
+        stmt = select(RefreshToken).where(
+            RefreshToken.kindergarten_id == kindergarten_id,
+            RefreshToken.token_hash == token_hash,
+        )
         return self._db.execute(stmt).scalar_one_or_none()
 
-    def find_refresh_token_by_hash_for_update(self, token_hash: str) -> RefreshToken | None:
+    def find_refresh_token_by_hash_for_update(
+        self, kindergarten_id: str, token_hash: str
+    ) -> RefreshToken | None:
         """带行锁的 find_refresh_token_by_hash；隔离语义同上。"""
         if self._is_in_memory():
             return None
-        stmt = select(RefreshToken).where(RefreshToken.token_hash == token_hash).with_for_update()
+        stmt = (
+            select(RefreshToken)
+            .where(
+                RefreshToken.kindergarten_id == kindergarten_id,
+                RefreshToken.token_hash == token_hash,
+            )
+            .with_for_update()
+        )
         return self._db.execute(stmt).scalar_one_or_none()
 
     def revoke_refresh_family(self, kindergarten_id: str, family_id: str) -> int:

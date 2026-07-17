@@ -1,10 +1,12 @@
 """Users 契约测试。"""
 
-from pydantic import BaseModel
+import pytest
+from pydantic import BaseModel, ValidationError
 
 from packages.contracts.identity import (
     ResetPasswordRequest,
     UserCreateRequest,
+    UserPatch,
     UserResponse,
 )
 
@@ -37,3 +39,19 @@ def test_user_response_matches_database_shape() -> None:
 def test_reset_password_request_has_new_password() -> None:
     fields = _schema_fields(ResetPasswordRequest)
     assert "new_password" in fields
+
+
+def test_user_create_request_requires_at_least_one_role() -> None:
+    with pytest.raises(ValidationError):
+        UserCreateRequest(
+            username="teacher",
+            display_name="教师",
+            phone_e164=None,
+            password="ValidPassword2024!",
+            role_codes=[],
+        )
+
+
+def test_user_patch_requires_at_least_one_field() -> None:
+    with pytest.raises(ValidationError):
+        UserPatch(username=None, display_name=None, phone_e164=None)

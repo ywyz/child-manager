@@ -48,9 +48,21 @@ def decode_access_token(token: str, signing_key: str) -> dict[str, Any] | None:
         return None
 
 
-def generate_refresh_value() -> str:
-    """生成 opaque Refresh 明文。"""
-    return secrets.token_urlsafe(32)
+def generate_refresh_value(*, kindergarten_id: str) -> str:
+    """生成 opaque Refresh 明文；前缀编码园所 ID 以便 Repository 显式隔离。"""
+    return f"kg:{kindergarten_id}:{secrets.token_urlsafe(32)}"
+
+
+def parse_refresh_kindergarten_id(value: str) -> str | None:
+    """从 Refresh 明文中解析园所 ID；失败返回 None。"""
+    prefix = "kg:"
+    if not value.startswith(prefix):
+        return None
+    rest = value[len(prefix) :]
+    parts = rest.split(":", 1)
+    if len(parts) != 2:
+        return None
+    return parts[0]
 
 
 def hash_refresh_value(value: str) -> str:

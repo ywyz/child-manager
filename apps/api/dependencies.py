@@ -4,10 +4,11 @@ from pathlib import Path
 from typing import Annotated
 
 import structlog
-from fastapi import Depends, HTTPException, Request, status
+from fastapi import Depends, Request
 from sqlalchemy.orm import Session
 
 from packages.backend.database import session as session_module
+from packages.backend.identity.exceptions import ForbiddenError, UnauthenticatedError
 from packages.backend.identity.tokens import decode_access_token
 from packages.contracts.identity import CurrentUser
 
@@ -133,24 +134,24 @@ def get_current_user(
 ) -> CurrentUser:
     token = request.cookies.get("child_manager_access")
     if not token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="未登录")
+        raise UnauthenticatedError("未登录")
 
     from packages.backend.config import settings
 
     payload = decode_access_token(token, settings.jwt_signing_key)
     if payload is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
+        raise UnauthenticatedError("会话已失效")
 
     kindergarten_id = payload.get("kindergarten_id")
     if not kindergarten_id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
+        raise UnauthenticatedError("会话已失效")
 
     from packages.backend.identity.service import IdentityService
 
     service = IdentityService(session)
     user = service.get_user_by_id(kindergarten_id, payload["sub"])
     if user is None or not user.is_active:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
+        raise UnauthenticatedError("会话已失效")
 
     return service.build_current_user(user)
 
@@ -159,5 +160,5 @@ def require_admin(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ) -> CurrentUser:
     if "admin" not in current_user.role_codes:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="需要管理员权限")
+        raise ForbiddenError("需要管理员权限")
     return current_user

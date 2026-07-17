@@ -245,3 +245,40 @@ def test_change_password_returns_204(
         cookies={"child_manager_access": access_cookie, **csrf_cookie},
     )
     assert response.status_code == 204
+
+
+def test_login_with_phone_number(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    admin_login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert admin_login.status_code == 200
+    access_cookie = admin_login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "phoneuser",
+            "display_name": "手机号用户",
+            "phone_e164": "13800000000",
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert create.status_code == 201
+
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"login": "13800000000", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 200
+    assert response.json()["username"] == "phoneuser"

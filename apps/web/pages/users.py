@@ -76,9 +76,58 @@ def _render_user_table(users: list[dict]) -> str:
     )
 
 
+async def _load_users(
+    list_container: ui.html,
+    user_selector: ui.select,
+    show_error: Callable[[str], None],
+) -> None:
+    result = await ui.run_javascript(_js_get("/api/v1/users"))
+    if not result:
+        list_container.set_content("<p>暂无账号</p>")
+        user_selector.set_options([])
+        return
+    data = json.loads(result)
+    if isinstance(data, dict) and "error" in data:
+        show_error(data["error"])
+        return
+    if isinstance(data, dict) and "items" in data:
+        list_container.set_content(_render_user_table(data["items"]))
+        options = [
+            {"label": f"{u.get('username')} ({u.get('display_name')})", "value": u.get("id")}
+            for u in data["items"]
+        ]
+        user_selector.set_options(options)
+    else:
+        list_container.set_content("<p>加载失败</p>")
+
+
+async def _do_action(
+    user_selector: ui.select,
+    path: str,
+    body: dict | None,
+    method: str,
+    show_success: Callable[[str], None],
+    show_error: Callable[[str], None],
+    load_users: Callable[[], Awaitable[None]],
+) -> bool:
+    user_id = user_selector.value
+    if not user_id:
+        show_error("请先选择账号")
+        return False
+    result = await ui.run_javascript(
+        _js_fetch(method=method, path=f"/api/v1/users/{user_id}{path}", body=body)
+    )
+    if result:
+        show_error(result)
+        return False
+    show_success("操作成功")
+    await load_users()
+    return True
+
+
 def _render_create_form(
     *,
-    on_success: Callable[[str], object],
+    on_success: Callable[[str], Awaitable[None]],
     show_error: Callable[[str], None],
 ) -> None:
     username = ui.input("用户名").classes("mb-2 w-full")
@@ -159,44 +208,22 @@ def user_management_page() -> None:
         message.classes("text-red-500")
 
     async def load_users() -> None:
-        result = await ui.run_javascript(_js_get("/api/v1/users"))
-        if not result:
-            list_container.set_content("<p>暂无账号</p>")
-            user_selector.set_options([])
-            return
-        data = json.loads(result)
-        if isinstance(data, dict) and "error" in data:
-            show_error(data["error"])
-            return
-        if isinstance(data, dict) and "items" in data:
-            list_container.set_content(_render_user_table(data["items"]))
-            options = [
-                {"label": f"{u.get('username')} ({u.get('display_name')})", "value": u.get("id")}
-                for u in data["items"]
-            ]
-            user_selector.set_options(options)
-        else:
-            list_container.set_content("<p>加载失败</p>")
+        await _load_users(list_container, user_selector, show_error)
 
     async def do_action(path: str, body: dict | None = None, method: str = "POST") -> bool:
-        user_id = user_selector.value
-        if not user_id:
-            show_error("请先选择账号")
-            return False
-        result = await ui.run_javascript(
-            _js_fetch(method=method, path=f"/api/v1/users/{user_id}{path}", body=body)
+        return await _do_action(
+            user_selector, path, body, method, show_success, show_error, load_users
         )
-        if result:
-            show_error(result)
-            return False
-        show_success("操作成功")
-        await load_users()
-        return True
 
     with ui.card().classes("w-full mb-4"):
         ui.label("新建账号").classes("font-bold mb-2")
+
+        async def _on_create_success(text: str) -> None:
+            show_success(text)
+            await load_users()
+
         _render_create_form(
-            on_success=lambda text: (show_success(text), load_users()),
+            on_success=_on_create_success,
             show_error=show_error,
         )
 

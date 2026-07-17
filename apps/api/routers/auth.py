@@ -9,6 +9,11 @@ from apps.api.dependencies import get_current_user, get_db
 from packages.backend.config import settings
 from packages.backend.identity.client_ip import get_client_ip
 from packages.backend.identity.csrf import generate_csrf_token, require_csrf
+from packages.backend.identity.exceptions import (
+    LoginFailedError,
+    LoginRateLimitedError,
+    UnauthenticatedError,
+)
 from packages.backend.identity.identifiers import normalize_username
 from packages.backend.identity.login_throttle import (
     InMemoryThrottleBackend,
@@ -43,6 +48,16 @@ _throttle = _build_throttle()
 ACCESS_COOKIE_NAME = "child_manager_access"
 REFRESH_COOKIE_NAME = "child_manager_refresh"
 CSRF_COOKIE_NAME = "child_manager_csrf"
+
+
+def _check_csrf(request: Request) -> None:
+    """从 FastAPI Request 提取 CSRF 所需字段并校验。"""
+    require_csrf(
+        cookie_value=request.cookies.get(CSRF_COOKIE_NAME),
+        header_value=request.headers.get("x-csrf-token"),
+        origin=request.headers.get("origin"),
+        referer=request.headers.get("referer"),
+    )
 
 
 def _set_csrf_cookie(response: Response, csrf_token: str) -> None:
@@ -131,22 +146,22 @@ async def login(
     body: LoginRequest,
     session: Annotated[Session, Depends(get_db)],
 ) -> CurrentUser:
-    require_csrf(request)
+    _check_csrf(request)
 
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
     account_key = normalize_username(body.login)
 
-    if await _throttle.is_blocked(account_key=account_key, source_ip=source_ip):
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="登录尝试过于频繁"
-        )
-
     service = IdentityService(session)
+    if await _throttle.is_blocked(account_key=account_key, source_ip=source_ip):
+        service.record_login_rate_limited(username=account_key, source_ip=source_ip)
+        session.commit()
+        raise LoginRateLimitedError()
+
     result = service.login(username=account_key, password=body.password, source_ip=source_ip)
     if result is None:
         session.commit()
         await _throttle.record_failure(account_key=account_key, source_ip=source_ip)
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="账号或密码错误")
+        raise LoginFailedError()
 
     await _throttle.record_success(account_key=account_key, source_ip=source_ip)
 
@@ -166,17 +181,17 @@ async def refresh(
     response: Response,
     session: Annotated[Session, Depends(get_db)],
 ) -> CurrentUser:
-    require_csrf(request)
+    _check_csrf(request)
 
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
     if not refresh_cookie:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
+        raise UnauthenticatedError()
 
     service = IdentityService(session)
     result = service.refresh(refresh_cookie=refresh_cookie)
     if result is None:
         session.commit()
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
+        raise UnauthenticatedError()
 
     _set_auth_cookies(
         response,
@@ -194,7 +209,7 @@ async def logout(
     response: Response,
     session: Annotated[Session, Depends(get_db)],
 ) -> Response:
-    require_csrf(request)
+    _check_csrf(request)
 
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
@@ -222,7 +237,7 @@ async def change_password(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_db)],
 ) -> Response:
-    require_csrf(request)
+    _check_csrf(request)
 
     service = IdentityService(session)
     if not service.change_password(

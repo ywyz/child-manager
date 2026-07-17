@@ -4,12 +4,12 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import uuid4
 
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from packages.backend.audit.service import AuditService
 from packages.backend.config import settings
 from packages.backend.identity.csrf import generate_csrf_token
+from packages.backend.identity.exceptions import LastAdminError, UserNotFoundError
 from packages.backend.identity.identifiers import normalize_phone, normalize_username
 from packages.backend.identity.models import Kindergarten, User
 from packages.backend.identity.passwords import (
@@ -22,6 +22,7 @@ from packages.backend.identity.tokens import (
     create_access_token,
     generate_refresh_value,
     hash_refresh_value,
+    parse_refresh_kindergarten_id,
 )
 from packages.contracts import audit as audit_events
 from packages.contracts.identity import (
@@ -114,6 +115,21 @@ class IdentityService:
             capabilities=[],
         )
 
+    def record_login_rate_limited(self, *, username: str, source_ip: str | None = None) -> None:
+        """记录因登录限流被拒绝的登录失败审计。"""
+        kg = self._get_kindergarten()
+        if kg is None:
+            return
+        self._record_identity(
+            kindergarten_id=kg.id,
+            event_type=audit_events.IDENTITY_LOGIN,
+            actor_user_id=None,
+            resource_id="unknown",
+            action="login",
+            result=audit_events.RESULT_FAILURE,
+            source_ip=source_ip,
+        )
+
     def authenticate(
         self, *, username: str, password: str, source_ip: str | None = None
     ) -> tuple[User, list[str]] | None:
@@ -123,6 +139,10 @@ class IdentityService:
 
         account_key = normalize_username(username)
         user = self._repo.get_user_by_username(kg.id, account_key)
+        if user is None:
+            phone = normalize_phone(username)
+            if phone is not None:
+                user = self._repo.get_user_by_phone(kg.id, phone)
         if user is None or not verify_password(password, user.password_hash):
             self._record_identity(
                 kindergarten_id=kg.id,
@@ -174,7 +194,7 @@ class IdentityService:
             signing_key=settings.jwt_signing_key,
             expire_minutes=settings.jwt_expire_minutes,
         )
-        refresh_value = generate_refresh_value()
+        refresh_value = generate_refresh_value(kindergarten_id=user.kindergarten_id)
         refresh_hash = hash_refresh_value(refresh_value)
         family_expires_at = datetime.now(UTC) + timedelta(days=7)
         self._repo.create_refresh_token(
@@ -196,8 +216,11 @@ class IdentityService:
         }
 
     def refresh(self, *, refresh_cookie: str) -> dict[str, Any] | None:
+        kindergarten_id = parse_refresh_kindergarten_id(refresh_cookie)
+        if kindergarten_id is None:
+            return None
         token_hash = hash_refresh_value(refresh_cookie)
-        token_row = self._repo.find_refresh_token_by_hash_for_update(token_hash)
+        token_row = self._repo.find_refresh_token_by_hash_for_update(kindergarten_id, token_hash)
         if token_row is None:
             return None
 
@@ -231,7 +254,7 @@ class IdentityService:
             signing_key=settings.jwt_signing_key,
             expire_minutes=settings.jwt_expire_minutes,
         )
-        refresh_value = generate_refresh_value()
+        refresh_value = generate_refresh_value(kindergarten_id=token_row.kindergarten_id)
         new_hash = hash_refresh_value(refresh_value)
         expires_at = min(token_row.family_expires_at, now + timedelta(days=7))
         self._repo.create_refresh_token(
@@ -263,7 +286,12 @@ class IdentityService:
     def logout(self, *, refresh_cookie: str | None, source_ip: str | None = None) -> None:
         if not refresh_cookie:
             return
-        token_row = self._repo.find_refresh_token_by_hash(hash_refresh_value(refresh_cookie))
+        kindergarten_id = parse_refresh_kindergarten_id(refresh_cookie)
+        if kindergarten_id is None:
+            return
+        token_row = self._repo.find_refresh_token_by_hash(
+            kindergarten_id, hash_refresh_value(refresh_cookie)
+        )
         if token_row is not None:
             self._repo.revoke_refresh_family(token_row.kindergarten_id, token_row.family_id)
             self._record_identity(
@@ -390,10 +418,7 @@ class IdentityService:
         new_roles = set(role_codes)
         if "admin" in current_roles and "admin" not in new_roles:
             if self._repo.get_active_admin_count(kindergarten_id) <= 1 and user.is_active:
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail="不能移除最后一个有效管理员",
-                )
+                raise LastAdminError()
         for role_code in new_roles - current_roles:
             role = self._repo.get_role_by_code(kindergarten_id, role_code)
             if role is not None:
@@ -455,17 +480,14 @@ class IdentityService:
     def deactivate_user(self, *, kindergarten_id: str, admin_user_id: str, user_id: str) -> None:
         target = self._repo.get_user_by_id(kindergarten_id, user_id)
         if target is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
+            raise UserNotFoundError()
         target_roles = self._repo.list_user_roles(kindergarten_id, user_id)
         if (
             target.is_active
             and "admin" in target_roles
             and self._repo.get_active_admin_count(kindergarten_id) <= 1
         ):
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="不能停用最后一个有效管理员",
-            )
+            raise LastAdminError()
         self._repo.deactivate_user(kindergarten_id, user_id)
         self._repo.revoke_user_tokens(kindergarten_id, user_id)
         self._record_identity(

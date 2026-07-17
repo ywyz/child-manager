@@ -63,6 +63,6 @@ def render_navigation(*, current_user: object) -> None:
         async def load_roles() -> None:
             result = await ui.run_javascript(_js_get("/api/v1/auth/me"))
             user = json.loads(result) if result else {}
-            nav.set_content(_nav_html(user.get("roles") or []))
+            nav.set_content(_nav_html(user.get("role_codes") or []))
 
         ui.timer(0.1, load_roles, once=True)

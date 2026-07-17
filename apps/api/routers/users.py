@@ -2,11 +2,12 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
+from fastapi import APIRouter, Depends, Query, Request, Response, status
 from sqlalchemy.orm import Session
 
 from apps.api.dependencies import get_db, require_admin
 from packages.backend.identity.csrf import require_csrf
+from packages.backend.identity.exceptions import UserNotFoundError
 from packages.backend.identity.service import IdentityService
 from packages.contracts.identity import (
     CurrentUser,
@@ -20,6 +21,18 @@ from packages.contracts.identity import (
 
 router = APIRouter(prefix="/users", tags=["users"])
 
+_CSRF_COOKIE_NAME = "child_manager_csrf"
+
+
+def _check_csrf(request: Request) -> None:
+    """从 FastAPI Request 提取 CSRF 所需字段并校验。"""
+    require_csrf(
+        cookie_value=request.cookies.get(_CSRF_COOKIE_NAME),
+        header_value=request.headers.get("x-csrf-token"),
+        origin=request.headers.get("origin"),
+        referer=request.headers.get("referer"),
+    )
+
 
 @router.post("", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(
@@ -28,7 +41,7 @@ async def create_user(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    require_csrf(request)
+    _check_csrf(request)
 
     service = IdentityService(session)
     user = service.create_user(
@@ -37,9 +50,7 @@ async def create_user(
     session.commit()
     response = service.get_user(current_user.kindergarten_id, user.id)
     if response is None:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="创建用户后读取失败"
-        )
+        raise UserNotFoundError("创建用户后读取失败")
     return response
 
 
@@ -64,7 +75,7 @@ async def get_user(
     service = IdentityService(session)
     user = service.get_user(current_user.kindergarten_id, user_id)
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
+        raise UserNotFoundError()
     return user
 
 
@@ -76,7 +87,7 @@ async def update_user(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    require_csrf(request)
+    _check_csrf(request)
 
     service = IdentityService(session)
     user = service.update_user(
@@ -86,7 +97,7 @@ async def update_user(
         patch=body,
     )
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
+        raise UserNotFoundError()
     session.commit()
     return user
 
@@ -99,7 +110,7 @@ async def set_user_roles(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    require_csrf(request)
+    _check_csrf(request)
 
     service = IdentityService(session)
     user = service.set_user_roles(
@@ -109,7 +120,7 @@ async def set_user_roles(
         role_codes=body.role_codes,
     )
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
+        raise UserNotFoundError()
     session.commit()
     return user
 
@@ -121,7 +132,7 @@ async def activate_user(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    require_csrf(request)
+    _check_csrf(request)
 
     service = IdentityService(session)
     user = service.activate_user(
@@ -130,7 +141,7 @@ async def activate_user(
         user_id=user_id,
     )
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
+        raise UserNotFoundError()
     session.commit()
     return user
 
@@ -142,7 +153,7 @@ async def deactivate_user(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    require_csrf(request)
+    _check_csrf(request)
 
     service = IdentityService(session)
     service.deactivate_user(
@@ -153,9 +164,7 @@ async def deactivate_user(
     session.commit()
     user = service.get_user(current_user.kindergarten_id, user_id)
     if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="停用用户后读取失败"
-        )
+        raise UserNotFoundError("停用用户后读取失败")
     return user
 
 
@@ -168,7 +177,7 @@ async def reset_password(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> Response:
-    require_csrf(request)
+    _check_csrf(request)
 
     service = IdentityService(session)
     if not service.reset_password(
@@ -177,7 +186,7 @@ async def reset_password(
         target_user_id=user_id,
         new_password=body.new_password,
     ):
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
+        raise UserNotFoundError()
 
     session.commit()
     response.status_code = status.HTTP_204_NO_CONTENT
