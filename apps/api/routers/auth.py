@@ -18,7 +18,12 @@ from packages.backend.identity.service import (
     IdentityService,
     SessionUser,
 )
-from packages.contracts.identity import ChangePasswordRequest, LoginRequest
+from packages.contracts.identity import (
+    ChangePasswordRequest,
+    CsrfResponse,
+    CurrentUser,
+    LoginRequest,
+)
 
 router = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 
@@ -120,7 +125,7 @@ async def _throttle_check(request: Request, *, account: str, source: str) -> Thr
     return decision
 
 
-@router.get("/csrf")
+@router.get("/csrf", response_model=CsrfResponse)
 def csrf(response: Response) -> dict[str, str]:
     signing_key = os.environ.get("CHILD_MANAGER_CSRF_SIGNING_KEY")
     if not signing_key:
@@ -138,7 +143,7 @@ def csrf(response: Response) -> dict[str, str]:
     return {"csrf_token": token}
 
 
-@router.post("/login")
+@router.post("/login", response_model=CurrentUser)
 async def login(
     body: LoginRequest,
     request: Request,
@@ -193,7 +198,7 @@ async def login(
     return _payload(service, result.session)
 
 
-@router.post("/refresh")
+@router.post("/refresh", response_model=CurrentUser)
 def refresh(
     request: Request,
     response: Response,
@@ -219,7 +224,7 @@ def logout(
     _clear_auth_cookies(response)
 
 
-@router.get("/me")
+@router.get("/me", response_model=CurrentUser)
 def me(
     session: CurrentSessionDependency,
     service: IdentityServiceDependency,

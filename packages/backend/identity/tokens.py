@@ -12,6 +12,7 @@ def create_access_token(
     *,
     user_id: str,
     kindergarten_id: str,
+    token_family_id: str,
     signing_key: str,
     now: datetime,
     session_version: str | None = None,
@@ -20,6 +21,7 @@ def create_access_token(
     claims = {
         "sub": user_id,
         "kid": kindergarten_id,
+        "fid": token_family_id,
         "iat": int(issued_at.timestamp()),
         "exp": int((issued_at + timedelta(minutes=15)).timestamp()),
         "jti": secrets.token_hex(16),
@@ -36,7 +38,10 @@ def decode_access_token(token: str, *, signing_key: str, now: datetime) -> dict[
                 token,
                 signing_key,
                 algorithms=["HS256"],
-                options={"verify_exp": False, "require": ["sub", "kid", "iat", "exp", "jti"]},
+                options={
+                    "verify_exp": False,
+                    "require": ["sub", "kid", "fid", "iat", "exp", "jti"],
+                },
             )
         )
     except jwt.PyJWTError as exc:

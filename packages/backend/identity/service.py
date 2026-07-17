@@ -167,6 +167,7 @@ class IdentityService:
                 access = create_access_token(
                     user_id=str(user.id),
                     kindergarten_id=str(kindergarten_id),
+                    token_family_id=str(family_id),
                     signing_key=self.jwt_signing_key,
                     now=now,
                     session_version=_session_version(user.password_hash),
@@ -202,6 +203,7 @@ class IdentityService:
             )
             user_id = UUID(str(claims["sub"]))
             kindergarten_id = UUID(str(claims["kid"]))
+            family_id = UUID(str(claims["fid"]))
         except ValueError, KeyError:
             raise IdentityError(
                 401, "auth.unauthenticated", "登录状态已失效，请重新登录。"
@@ -213,6 +215,7 @@ class IdentityService:
                 user is None
                 or not user.is_active
                 or claims.get("sv") != _session_version(user.password_hash)
+                or not repository.has_active_refresh_family(user_id, family_id)
             ):
                 raise IdentityError(401, "auth.unauthenticated", "登录状态已失效，请重新登录。")
             return SessionUser(user, repository.roles_for_user(user.id))
@@ -232,15 +235,11 @@ class IdentityService:
         token_hash = hash_refresh_token(raw_token)
         result: AuthResult | None = None
         with self._connect() as connection, connection.transaction():
-            row = connection.execute(
-                "SELECT kindergarten_id FROM refresh_tokens WHERE token_hash=%s", (token_hash,)
-            ).fetchone()
-            if row is None:
-                raise IdentityError(401, "auth.unauthenticated", "刷新会话已失效，请重新登录。")
-            kindergarten_id: UUID = row[0]  # type: ignore[assignment]
+            kindergarten_id = self._kindergarten_id(connection)
             repository = IdentityRepository(connection, kindergarten_id)
             old = repository.get_refresh(token_hash, lock=True)
-            assert old is not None
+            if old is None:
+                raise IdentityError(401, "auth.unauthenticated", "刷新会话已失效，请重新登录。")
             if old.revoked_at is not None:
                 repository.revoke_family(old.token_family_id, reason="replay")
                 AuditRepository(connection, kindergarten_id).append(
@@ -272,6 +271,7 @@ class IdentityService:
                     access = create_access_token(
                         user_id=str(user.id),
                         kindergarten_id=str(kindergarten_id),
+                        token_family_id=str(old.token_family_id),
                         signing_key=self.jwt_signing_key,
                         now=now,
                         session_version=_session_version(user.password_hash),
@@ -286,12 +286,7 @@ class IdentityService:
             return
         token_hash = hash_refresh_token(raw_token)
         with self._connect() as connection, connection.transaction():
-            row = connection.execute(
-                "SELECT kindergarten_id FROM refresh_tokens WHERE token_hash=%s", (token_hash,)
-            ).fetchone()
-            if row is None:
-                return
-            kindergarten_id: UUID = row[0]  # type: ignore[assignment]
+            kindergarten_id = self._kindergarten_id(connection)
             repository = IdentityRepository(connection, kindergarten_id)
             token = repository.get_refresh(token_hash, lock=True)
             if token is None:

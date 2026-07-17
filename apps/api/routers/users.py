@@ -11,7 +11,9 @@ from packages.contracts.identity import (
     CreateUserRequest,
     PasswordResetRequest,
     RoleUpdate,
+    UserPage,
     UserPatch,
+    UserResponse,
 )
 
 router = APIRouter(prefix="/api/v1/users", tags=["Users"])
@@ -35,7 +37,7 @@ def _user(session: SessionUser) -> dict[str, object]:
     }
 
 
-@router.get("")
+@router.get("", response_model=UserPage)
 def list_users(
     request: Request,
     session: AdminSessionDependency,
@@ -56,7 +58,7 @@ def list_users(
     }
 
 
-@router.post("", status_code=201)
+@router.post("", status_code=201, response_model=UserResponse)
 def create_user(
     body: CreateUserRequest,
     request: Request,
@@ -76,7 +78,7 @@ def create_user(
     return _user(created)
 
 
-@router.get("/{user_id}")
+@router.get("/{user_id}", response_model=UserResponse)
 def get_user(
     user_id: UUID,
     session: AdminSessionDependency,
@@ -85,7 +87,7 @@ def get_user(
     return _user(service.get_user(session, user_id))
 
 
-@router.patch("/{user_id}")
+@router.patch("/{user_id}", response_model=UserResponse)
 def patch_user(
     user_id: UUID,
     body: UserPatch,
@@ -107,7 +109,7 @@ def patch_user(
     return _user(updated)
 
 
-@router.put("/{user_id}/roles")
+@router.put("/{user_id}/roles", response_model=UserResponse)
 def set_roles(
     user_id: UUID,
     body: RoleUpdate,
@@ -121,7 +123,7 @@ def set_roles(
     )
 
 
-@router.post("/{user_id}/activate")
+@router.post("/{user_id}/activate", response_model=UserResponse)
 def activate(
     user_id: UUID,
     request: Request,
@@ -132,7 +134,7 @@ def activate(
     return _user(service.set_active(session, user_id, active=True, request_id=_request_id(request)))
 
 
-@router.post("/{user_id}/deactivate")
+@router.post("/{user_id}/deactivate", response_model=UserResponse)
 def deactivate(
     user_id: UUID,
     request: Request,

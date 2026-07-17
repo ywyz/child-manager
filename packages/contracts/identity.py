@@ -37,6 +37,10 @@ class ChangePasswordRequest(ContractModel):
     new_password: Password
 
 
+class CsrfResponse(ContractModel):
+    csrf_token: Annotated[str, Field(min_length=32, max_length=512)]
+
+
 class KindergartenSummary(ContractModel):
     id: UUID
     name: str

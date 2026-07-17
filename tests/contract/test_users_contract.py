@@ -2,7 +2,9 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 import pytest
+from fastapi.routing import APIRoute
 
+from apps.api.routers.users import router as users_router
 from packages.contracts.identity import (
     CreateUserRequest,
     RoleUpdate,
@@ -56,3 +58,22 @@ def test_user_write_models_match_openapi_non_empty_and_unique_constraints() -> N
         UserPatch()
     with pytest.raises(ValueError):
         RoleUpdate(role_codes=["teacher", "teacher"])
+
+
+def test_user_routes_bind_runtime_responses_to_shared_contracts() -> None:
+    response_models: dict[tuple[str, str], object] = {}
+    for route in users_router.routes:
+        if not isinstance(route, APIRoute) or route.methods is None:
+            continue
+        for method in route.methods:
+            response_models[(route.path, method)] = route.response_model
+    assert response_models[("/api/v1/users", "GET")] is UserPage
+    assert response_models[("/api/v1/users", "POST")] is UserResponse
+    for path, method in (
+        ("/api/v1/users/{user_id}", "GET"),
+        ("/api/v1/users/{user_id}", "PATCH"),
+        ("/api/v1/users/{user_id}/roles", "PUT"),
+        ("/api/v1/users/{user_id}/activate", "POST"),
+        ("/api/v1/users/{user_id}/deactivate", "POST"),
+    ):
+        assert response_models[(path, method)] is UserResponse

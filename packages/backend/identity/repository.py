@@ -278,6 +278,15 @@ class IdentityRepository:
         ).fetchone()
         return RefreshRecord(*row) if row is not None else None  # type: ignore[arg-type]
 
+    def has_active_refresh_family(self, user_id: UUID, family_id: UUID) -> bool:
+        row = self.connection.execute(
+            """SELECT EXISTS(SELECT 1 FROM refresh_tokens
+            WHERE kindergarten_id=%s AND user_id=%s AND token_family_id=%s
+              AND revoked_at IS NULL AND expires_at>now())""",
+            (self.kindergarten_id, user_id, family_id),
+        ).fetchone()
+        return bool(row and row[0])
+
     def rotate_refresh(self, old: RefreshRecord, *, new_hash: str, now: datetime) -> UUID:
         if old.revoked_at is not None or old.expires_at <= now:
             raise ValueError("Refresh token 已失效")

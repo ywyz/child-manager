@@ -2,6 +2,7 @@
 
 from datetime import UTC, datetime, timedelta
 from typing import cast
+from uuid import uuid4
 
 import psycopg
 import pytest
@@ -10,7 +11,8 @@ from fastapi.testclient import TestClient
 
 from apps.api.app import create_app
 from packages.backend.identity.login_throttle import ThrottleDecision
-from packages.backend.identity.tokens import hash_refresh_token
+from packages.backend.identity.service import IdentityError, IdentityService
+from packages.backend.identity.tokens import generate_refresh_token, hash_refresh_token
 from tests.api.identity_helpers import csrf_headers, identity_client, login_admin  # noqa: F401
 
 
@@ -88,26 +90,89 @@ def test_refresh_rotates_then_replay_revokes_family(identity_client: TestClient)
     assert refreshed.status_code == 200
     assert len(_auth_cookies(refreshed)) == 2
     new_refresh = refreshed.cookies["child_manager_refresh"]
+    family_access = refreshed.cookies["child_manager_access"]
     assert new_refresh != old_refresh
     identity_client.cookies.set("child_manager_refresh", old_refresh)
     replay = identity_client.post("/api/v1/auth/refresh", headers=headers)
     assert replay.status_code == 401
+    identity_client.cookies.set("child_manager_access", family_access)
+    assert identity_client.get("/api/v1/auth/me").status_code == 401
     identity_client.cookies.set("child_manager_refresh", new_refresh)
     assert identity_client.post("/api/v1/auth/refresh", headers=headers).status_code == 401
 
 
+def test_refresh_and_logout_do_not_resolve_token_outside_active_kindergarten(
+    identity_client: TestClient, isolated_database_url: str
+) -> None:
+    raw_refresh = generate_refresh_token()
+    now = datetime.now(UTC)
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    with psycopg.connect(native_url) as connection:
+        kindergarten_id = uuid4()
+        user_id = uuid4()
+        connection.execute(
+            "INSERT INTO kindergartens (id, name, is_active) VALUES (%s, %s, false)",
+            (kindergarten_id, "非当前园所"),
+        )
+        connection.execute(
+            """INSERT INTO users
+            (id, kindergarten_id, username, username_normalized, display_name,
+             password_hash, password_changed_at)
+            VALUES (%s,%s,%s,%s,%s,%s,%s)""",
+            (
+                user_id,
+                kindergarten_id,
+                "other-admin",
+                "other-admin",
+                "其他园所管理员",
+                "$argon2id$test",
+                now,
+            ),
+        )
+        connection.execute(
+            """INSERT INTO refresh_tokens
+            (id, kindergarten_id, user_id, token_family_id, token_hash, issued_at, expires_at)
+            VALUES (%s,%s,%s,%s,%s,%s,%s)""",
+            (
+                uuid4(),
+                kindergarten_id,
+                user_id,
+                uuid4(),
+                hash_refresh_token(raw_refresh),
+                now,
+                now + timedelta(days=7),
+            ),
+        )
+    service = IdentityService.from_environment()
+    with pytest.raises(IdentityError) as raised:
+        service.refresh(raw_refresh, request_id=None)
+
+    assert raised.value.status_code == 401
+    assert raised.value.code == "auth.unauthenticated"
+    service.logout(raw_refresh, request_id=None)
+    with psycopg.connect(native_url) as connection:
+        row = connection.execute(
+            "SELECT revoked_at FROM refresh_tokens WHERE token_hash=%s",
+            (hash_refresh_token(raw_refresh),),
+        ).fetchone()
+    assert row == (None,)
+
+
 def test_logout_clears_two_independent_cookies(identity_client: TestClient) -> None:
     headers = csrf_headers(identity_client)
-    identity_client.post(
+    login = identity_client.post(
         "/api/v1/auth/login",
         json={"login": "admin", "password": "管理员足够长的安全测试密码 2026"},
         headers=headers,
     )
+    access = login.cookies["child_manager_access"]
     response = identity_client.post("/api/v1/auth/logout", headers=headers)
     assert response.status_code == 204
     cookies = _auth_cookies(response)
     assert len(cookies) == 2
     assert all("Max-Age=0" in value for value in cookies)
+    identity_client.cookies.set("child_manager_access", access)
+    assert identity_client.get("/api/v1/auth/me").status_code == 401
 
 
 def test_change_password_revokes_all_sessions(identity_client: TestClient) -> None:

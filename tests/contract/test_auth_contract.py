@@ -2,9 +2,12 @@ from pathlib import Path
 
 import pytest
 import yaml
+from fastapi.routing import APIRoute
 
+from apps.api.routers.auth import router as auth_router
 from packages.contracts.identity import (
     ChangePasswordRequest,
+    CsrfResponse,
     CurrentUser,
     KindergartenSummary,
     LoginRequest,
@@ -86,3 +89,15 @@ def test_current_user_matches_required_and_unique_openapi_contract() -> None:
                 "capabilities": ["plans:view", "plans:view"],
             }
         )
+
+
+def test_auth_routes_bind_runtime_responses_to_shared_contracts() -> None:
+    response_models = {
+        route.path: route.response_model
+        for route in auth_router.routes
+        if isinstance(route, APIRoute)
+    }
+    assert response_models["/api/v1/auth/csrf"] is CsrfResponse
+    assert response_models["/api/v1/auth/login"] is CurrentUser
+    assert response_models["/api/v1/auth/refresh"] is CurrentUser
+    assert response_models["/api/v1/auth/me"] is CurrentUser
