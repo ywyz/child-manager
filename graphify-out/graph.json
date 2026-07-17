@@ -828,8 +828,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "apps_api_app_login_throttle",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "_login_throttle()"
     },
     {
@@ -905,8 +905,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "apps_api_app_create_app",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "create_app()"
     },
     {
@@ -916,8 +916,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "fastapi",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "fastapi"
     },
     {
@@ -949,8 +949,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "apps_api_dependencies_healthdependencies",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "healthdependencies"
     },
     {
@@ -960,8 +960,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "apps_api_dependencies_ai_unconfigured",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "_ai_unconfigured()"
     },
     {
@@ -993,8 +993,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "apps_api_dependencies_database_check",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "_database_check()"
     },
     {
@@ -1004,8 +1004,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "healthcheck",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "healthcheck"
     },
     {
@@ -1015,8 +1015,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "apps_api_dependencies_redis_check",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "_redis_check()"
     },
     {
@@ -1026,8 +1026,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "apps_api_dependencies_path_check",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "_path_check()"
     },
     {
@@ -1037,8 +1037,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_dependencies_py_path",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "path"
     },
     {
@@ -1048,8 +1048,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "apps_api_dependencies_file_check",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "_file_check()"
     },
     {
@@ -1059,8 +1059,8 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "apps_api_dependencies_build_health_dependencies",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "build_health_dependencies()"
     },
     {
@@ -1136,8 +1136,8 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "apps_api_dependencies_rationale_87",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "\u4ece\u8fdb\u7a0b\u73af\u5883\u6784\u9020\u771f\u5b9e\u3001\u65e0\u526f\u4f5c\u7528\u7684\u672c\u5730\u5c31\u7eea\u68c0\u67e5\u3002"
     },
     {
@@ -1694,7 +1694,7 @@
       "label": "_require_loopback()",
       "file_type": "code",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L13",
+      "source_location": "L14",
       "_origin": "ast",
       "id": "apps_web_main_require_loopback",
       "community": 14,
@@ -1702,10 +1702,21 @@
       "norm_label": "_require_loopback()"
     },
     {
+      "label": "_validate_cookie_security()",
+      "file_type": "code",
+      "source_file": "apps/web/__main__.py",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "apps_web_main_validate_cookie_security",
+      "community": 14,
+      "community_name": "proxy_request",
+      "norm_label": "_validate_cookie_security()"
+    },
+    {
       "label": "main()",
       "file_type": "code",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L22",
+      "source_location": "L31",
       "_origin": "ast",
       "id": "apps_web_main_main",
       "community": 14,
@@ -2951,8 +2962,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "client_ip.py"
     },
     {
@@ -2962,8 +2973,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip_parse_trusted_bff_peers",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "parse_trusted_bff_peers()"
     },
     {
@@ -2973,8 +2984,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip_resolve_client_ip",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "resolve_client_ip()"
     },
     {
@@ -2984,8 +2995,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "collection",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "collection"
     },
     {
@@ -2995,8 +3006,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip_rationale_8",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "\u53ea\u63a5\u53d7\u663e\u5f0f\u914d\u7f6e\u7684\u56de\u73af bff socket peer\u3002"
     },
     {
@@ -3083,8 +3094,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "login_throttle.py"
     },
     {
@@ -3094,8 +3105,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_throttledecision",
-      "community": 45,
-      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "throttledecision"
     },
     {
@@ -3105,8 +3116,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_memoryloginthrottle",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "memoryloginthrottle"
     },
     {
@@ -3116,8 +3127,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_memoryloginthrottle_init",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": ".__init__()"
     },
     {
@@ -3127,8 +3138,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_memoryloginthrottle_prune",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "._prune()"
     },
     {
@@ -3138,8 +3149,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_py_datetime",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "datetime"
     },
     {
@@ -3149,8 +3160,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_memoryloginthrottle_record_failure",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": ".record_failure()"
     },
     {
@@ -3160,8 +3171,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_memoryloginthrottle_check",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": ".check()"
     },
     {
@@ -3171,8 +3182,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_memoryloginthrottle_record_success",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": ".record_success()"
     },
     {
@@ -3182,8 +3193,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_redisloginthrottle",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "redisloginthrottle"
     },
     {
@@ -3193,8 +3204,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_redisloginthrottle_init",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": ".__init__()"
     },
     {
@@ -3204,8 +3215,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "redis",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "redis"
     },
     {
@@ -3215,8 +3226,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_redisloginthrottle_record_failure",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": ".record_failure()"
     },
     {
@@ -3226,8 +3237,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_redisloginthrottle_check",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": ".check()"
     },
     {
@@ -3237,8 +3248,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_redisloginthrottle_record_success",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": ".record_success()"
     },
     {
@@ -3248,8 +3259,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "packages_backend_identity_login_throttle_rationale_47",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "redis \u6709\u754c\u7a97\u53e3\u5b9e\u73b0;\u6d4b\u8bd5\u53ef\u4f7f\u7528 memoryloginthrottle \u786e\u5b9a\u6027\u66ff\u8eab\u3002"
     },
     {
@@ -4546,8 +4557,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_common",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "common.py"
     },
     {
@@ -4590,8 +4601,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "packages_contracts_common_fielderror",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "fielderror"
     },
     {
@@ -4601,8 +4612,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "packages_contracts_common_errorresponse",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "errorresponse"
     },
     {
@@ -4612,8 +4623,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "packages_contracts_common_pagination",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "pagination"
     },
     {
@@ -4623,8 +4634,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "packages_contracts_common_page",
-      "community": 14,
-      "community_name": "proxy_request",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "page"
     },
     {
@@ -4634,8 +4645,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "packages_contracts_common_normalize_scalar",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "_normalize_scalar()"
     },
     {
@@ -4645,8 +4656,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "packages_contracts_common_canonical_request_fingerprint",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "canonical_request_fingerprint()"
     },
     {
@@ -4656,8 +4667,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_common_rationale_1",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "\u8de8\u670d\u52a1\u4f7f\u7528\u7684\u516c\u5171 schema \u4e0e\u89c4\u8303\u5316\u51fd\u6570\u3002"
     },
     {
@@ -4667,8 +4678,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "packages_contracts_common_rationale_79",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "\u8ba1\u7b97\u8986\u76d6\u8def\u7531\u3001\u5b9e\u9645\u8d44\u6e90\u4e0e\u8bed\u4e49\u8f93\u5165\u7684 canonical sha-256\u3002"
     },
     {
@@ -4989,8 +5000,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_identity_helpers",
-      "community": 724,
-      "community_name": "middleware.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "identity_helpers.py"
     },
     {
@@ -5104,10 +5115,21 @@
       "norm_label": "test_login_failure_is_generic_for_missing_wrong_and_inactive_accounts()"
     },
     {
-      "label": "test_refresh_rotates_then_replay_revokes_family()",
+      "label": "test_invalid_access_token_returns_unauthenticated()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
       "source_location": "L70",
+      "_origin": "ast",
+      "id": "tests_api_test_auth_test_invalid_access_token_returns_unauthenticated",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
+      "norm_label": "test_invalid_access_token_returns_unauthenticated()"
+    },
+    {
+      "label": "test_refresh_rotates_then_replay_revokes_family()",
+      "file_type": "code",
+      "source_file": "tests/api/test_auth.py",
+      "source_location": "L79",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_refresh_rotates_then_replay_revokes_family",
       "community": 132,
@@ -5118,7 +5140,7 @@
       "label": "test_logout_clears_two_independent_cookies()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L90",
+      "source_location": "L99",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_logout_clears_two_independent_cookies",
       "community": 132,
@@ -5129,7 +5151,7 @@
       "label": "test_change_password_revokes_all_sessions()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L104",
+      "source_location": "L113",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_change_password_revokes_all_sessions",
       "community": 132,
@@ -5140,7 +5162,7 @@
       "label": "test_expired_refresh_is_rejected()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L123",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_expired_refresh_is_rejected",
       "community": 132,
@@ -5151,7 +5173,7 @@
       "label": "test_source_rate_limit_returns_429_and_is_audited()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L144",
+      "source_location": "L153",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_source_rate_limit_returns_429_and_is_audited",
       "community": 132,
@@ -5162,7 +5184,7 @@
       "label": "test_redis_mode_without_url_fails_closed_for_login()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L173",
+      "source_location": "L182",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_redis_mode_without_url_fails_closed_for_login",
       "community": 132,
@@ -5225,14 +5247,25 @@
       "norm_label": "test_state_change_rejects_missing_csrf_and_wrong_origin()"
     },
     {
+      "label": "test_state_change_rejects_malformed_csrf_token()",
+      "file_type": "code",
+      "source_file": "tests/api/test_csrf.py",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "tests_api_test_csrf_test_state_change_rejects_malformed_csrf_token",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
+      "norm_label": "test_state_change_rejects_malformed_csrf_token()"
+    },
+    {
       "label": "test_health.py",
       "file_type": "code",
       "source_file": "tests/api/test_health.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_test_health",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_health.py"
     },
     {
@@ -5242,8 +5275,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_api_test_health_check",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "check()"
     },
     {
@@ -5253,8 +5286,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_api_test_health_dependencies",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "dependencies()"
     },
     {
@@ -5264,8 +5297,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "tests_api_test_health_test_live_reports_process_liveness",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_live_reports_process_liveness()"
     },
     {
@@ -5275,8 +5308,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "tests_api_test_health_test_database_failure_returns_stable_503_code",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_database_failure_returns_stable_503_code()"
     },
     {
@@ -5286,8 +5319,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "tests_api_test_health_test_invalid_supplied_request_id_is_replaced_consistently",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_invalid_supplied_request_id_is_replaced_consistently()"
     },
     {
@@ -5297,8 +5330,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "tests_api_test_health_test_global_security_failure_returns_configuration_503",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_global_security_failure_returns_configuration_503()"
     },
     {
@@ -5308,8 +5341,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "tests_api_test_health_test_http_exception_does_not_expose_internal_detail",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_http_exception_does_not_expose_internal_detail()"
     },
     {
@@ -5319,8 +5352,8 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_api_test_health_test_framework_http_exception_uses_error_response",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_framework_http_exception_uses_error_response()"
     },
     {
@@ -5330,8 +5363,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "tests_api_test_health_test_unhandled_exception_returns_redacted_error_response",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_unhandled_exception_returns_redacted_error_response()"
     },
     {
@@ -5341,8 +5374,8 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "tests_api_test_health_test_each_optional_dependency_only_degrades_ready_response",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_each_optional_dependency_only_degrades_ready_response()"
     },
     {
@@ -5352,8 +5385,8 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "tests_api_test_health_test_health_check_exception_is_logged_without_exception_message",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_health_check_exception_is_logged_without_exception_message()"
     },
     {
@@ -5363,8 +5396,8 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "tests_api_test_health_test_default_dependencies_check_real_local_runtime",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_default_dependencies_check_real_local_runtime()"
     },
     {
@@ -5374,8 +5407,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_test_health_py_monkeypatch",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "monkeypatch"
     },
     {
@@ -5385,8 +5418,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_test_health_py_path",
-      "community": 745,
-      "community_name": "create_app",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "path"
     },
     {
@@ -5396,8 +5429,8 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "tests_api_test_health_test_default_dependencies_require_profile_runtime_root",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_default_dependencies_require_profile_runtime_root()"
     },
     {
@@ -5407,8 +5440,8 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "tests_api_test_health_test_default_dependencies_reject_blank_security_keys",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_default_dependencies_reject_blank_security_keys()"
     },
     {
@@ -5418,8 +5451,8 @@
       "source_location": "L234",
       "_origin": "ast",
       "id": "tests_api_test_health_test_default_calendar_check_degrades_when_library_is_unavailable",
-      "community": 747,
-      "community_name": "build_health_dependencies",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_default_calendar_check_degrades_when_library_is_unavailable()"
     },
     {
@@ -5891,8 +5924,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_common_contracts.py"
     },
     {
@@ -5902,8 +5935,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_test_error_response_has_stable_shape_and_empty_field_errors",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_error_response_has_stable_shape_and_empty_field_errors()"
     },
     {
@@ -5913,8 +5946,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_test_pagination_rejects_values_outside_contract",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_pagination_rejects_values_outside_contract()"
     },
     {
@@ -5924,8 +5957,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_test_unavailable_error_codes_are_stable",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_unavailable_error_codes_are_stable()"
     },
     {
@@ -5935,8 +5968,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_rationale_1",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "\u7edf\u4e00\u9519\u8bef\u3001\u5206\u9875\u548c request id \u5951\u7ea6\u3002"
     },
     {
@@ -5946,8 +5979,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_contract_test_idempotency",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "test_idempotency.py"
     },
     {
@@ -5957,8 +5990,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_contract_test_idempotency_fingerprint",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "fingerprint()"
     },
     {
@@ -5968,8 +6001,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_contract_test_idempotency_test_fingerprint_changes_across_actual_path_resources",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "test_fingerprint_changes_across_actual_path_resources()"
     },
     {
@@ -5979,8 +6012,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_contract_test_idempotency_test_fingerprint_is_stable_for_equivalent_query_and_json_order",
-      "community": 746,
-      "community_name": "common.py",
+      "community": 45,
+      "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "norm_label": "test_fingerprint_is_stable_for_equivalent_query_and_json_order()"
     },
     {
@@ -6683,8 +6716,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_client_ip.py"
     },
     {
@@ -6694,8 +6727,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_configured_loopback_bff_peer_can_supply_internal_client_ip",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_configured_loopback_bff_peer_can_supply_internal_client_ip()"
     },
     {
@@ -6705,8 +6738,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_untrusted_peer_cannot_supply_internal_client_ip",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_untrusted_peer_cannot_supply_internal_client_ip()"
     },
     {
@@ -6716,8 +6749,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_non_loopback_peer_cannot_be_configured_as_trusted_bff",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_non_loopback_peer_cannot_be_configured_as_trusted_bff()"
     },
     {
@@ -6727,8 +6760,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_trusted_bff_peers_are_empty_until_explicitly_configured",
-      "community": 749,
-      "community_name": "resolve_client_ip",
+      "community": 0,
+      "community_name": "test_health.py",
       "norm_label": "test_trusted_bff_peers_are_empty_until_explicitly_configured()"
     },
     {
@@ -6782,8 +6815,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_login_throttle",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "test_login_throttle.py"
     },
     {
@@ -6793,8 +6826,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_unit_identity_test_login_throttle_test_account_delay_starts_at_fifth_failure_and_is_exponential",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "test_account_delay_starts_at_fifth_failure_and_is_exponential()"
     },
     {
@@ -6804,8 +6837,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_unit_identity_test_login_throttle_test_source_is_rate_limited_after_thirty_failures_in_fifteen_minutes",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "test_source_is_rate_limited_after_thirty_failures_in_fifteen_minutes()"
     },
     {
@@ -6815,8 +6848,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_unit_identity_test_login_throttle_test_window_and_success_reset_account_delay",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "test_window_and_success_reset_account_delay()"
     },
     {
@@ -6826,8 +6859,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "tests_unit_identity_test_login_throttle_test_redis_throttle_persists_source_limit_across_instances",
-      "community": 727,
-      "community_name": "app.py",
+      "community": 132,
+      "community_name": "3.5 API\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
       "norm_label": "test_redis_throttle_persists_source_limit_across_instances()"
     },
     {
@@ -6897,10 +6930,21 @@
       "norm_label": "test_password_is_argon2id_hashed_and_verified()"
     },
     {
-      "label": "test_seclists_resource_is_exactly_pinned_and_attributed()",
+      "label": "test_invalid_password_hash_is_rejected()",
       "file_type": "code",
       "source_file": "tests/unit/identity/test_passwords.py",
       "source_location": "L34",
+      "_origin": "ast",
+      "id": "tests_unit_identity_test_passwords_test_invalid_password_hash_is_rejected",
+      "community": 724,
+      "community_name": "middleware.py",
+      "norm_label": "test_invalid_password_hash_is_rejected()"
+    },
+    {
+      "label": "test_seclists_resource_is_exactly_pinned_and_attributed()",
+      "file_type": "code",
+      "source_file": "tests/unit/identity/test_passwords.py",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "tests_unit_identity_test_passwords_test_seclists_resource_is_exactly_pinned_and_attributed",
       "community": 724,
@@ -6966,7 +7010,7 @@
       "label": "settings()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L9",
+      "source_location": "L10",
       "_origin": "ast",
       "id": "tests_unit_test_config_settings",
       "community": 9,
@@ -6977,7 +7021,7 @@
       "label": "test_development_insecure_cookie_requires_loopback_binding()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L23",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_development_insecure_cookie_requires_loopback_binding",
       "community": 9,
@@ -6988,7 +7032,7 @@
       "label": "test_production_never_allows_insecure_cookie()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L31",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_production_never_allows_insecure_cookie",
       "community": 9,
@@ -6999,7 +7043,7 @@
       "label": "test_settings_repr_masks_all_secret_values()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L36",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_settings_repr_masks_all_secret_values",
       "community": 9,
@@ -7010,7 +7054,7 @@
       "label": "test_global_security_requires_jwt_and_csrf_keys()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L44",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_global_security_requires_jwt_and_csrf_keys",
       "community": 9,
@@ -7021,7 +7065,7 @@
       "label": "test_api_entrypoint_rejects_insecure_cookie_on_non_loopback()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L52",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_api_entrypoint_rejects_insecure_cookie_on_non_loopback",
       "community": 9,
@@ -7038,6 +7082,17 @@
       "community": 9,
       "community_name": "observability.py",
       "norm_label": "monkeypatch"
+    },
+    {
+      "label": "test_web_entrypoint_rejects_insecure_cookie_outside_development()",
+      "file_type": "code",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "tests_unit_test_config_test_web_entrypoint_rejects_insecure_cookie_outside_development",
+      "community": 9,
+      "community_name": "observability.py",
+      "norm_label": "test_web_entrypoint_rejects_insecure_cookie_outside_development()"
     },
     {
       "label": "test_observability.py",
@@ -16352,8 +16407,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_3_4_\u52a0\u5bc6\u4e0e\u5bc6\u94a5",
-      "community": 733,
-      "community_name": "3.4 \u52a0\u5bc6\u4e0e\u5bc6\u94a5",
+      "community": 61,
+      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
       "norm_label": "3.4 \u52a0\u5bc6\u4e0e\u5bc6\u94a5"
     },
     {
@@ -16363,8 +16418,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_q10_ai_key_\u52a0\u5bc6\u7b97\u6cd5",
-      "community": 733,
-      "community_name": "3.4 \u52a0\u5bc6\u4e0e\u5bc6\u94a5",
+      "community": 61,
+      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
       "norm_label": "q10:ai key \u52a0\u5bc6\u7b97\u6cd5"
     },
     {
@@ -16374,8 +16429,8 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_q11_\u4e3b\u52a0\u5bc6\u5bc6\u94a5\u6765\u6e90",
-      "community": 733,
-      "community_name": "3.4 \u52a0\u5bc6\u4e0e\u5bc6\u94a5",
+      "community": 61,
+      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
       "norm_label": "q11:\u4e3b\u52a0\u5bc6\u5bc6\u94a5\u6765\u6e90"
     },
     {
@@ -16385,8 +16440,8 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_3_5_api_\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49",
-      "community": 61,
-      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
+      "community": 727,
+      "community_name": "app.py",
       "norm_label": "3.5 api\u3001\u4efb\u52a1\u72b6\u6001\u4e0e\u5e42\u7b49"
     },
     {
@@ -16396,8 +16451,8 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_q12_\u4efb\u52a1\u72b6\u6001\u673a\u7f3a\u5c11_expired",
-      "community": 61,
-      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
+      "community": 727,
+      "community_name": "app.py",
       "norm_label": "q12:\u4efb\u52a1\u72b6\u6001\u673a\u7f3a\u5c11 `expired`"
     },
     {
@@ -16407,8 +16462,8 @@
       "source_location": "L141",
       "_origin": "ast",
       "id": "docs_faq_combined_audit_q13_\u5e42\u7b49\u952e\u5b9a\u4e49",
-      "community": 61,
-      "community_name": "3. \u4e8c\u5341\u516d\u9879\u95ee\u9898\u7684\u6700\u7ec8\u7ed3\u8bba",
+      "community": 727,
+      "community_name": "app.py",
       "norm_label": "q13:\u5e42\u7b49\u952e\u5b9a\u4e49"
     },
     {
@@ -30327,7 +30382,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L178",
+      "source_location": "L187",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_redis_mode_without_url_fails_closed_for_login",
       "target": "apps_api_app_create_app",
@@ -33041,7 +33096,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "apps_web_main",
       "target": "apps_web_app",
@@ -33052,7 +33107,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "apps_web_main",
       "target": "apps_web_app_register_web",
@@ -33062,7 +33117,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L22",
+      "source_location": "L31",
       "weight": 1.0,
       "source": "apps_web_main",
       "target": "apps_web_main_main",
@@ -33072,10 +33127,20 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0,
       "source": "apps_web_main",
       "target": "apps_web_main_require_loopback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/__main__.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "apps_web_main",
+      "target": "apps_web_main_validate_cookie_security",
       "confidence_score": 1.0
     },
     {
@@ -33083,7 +33148,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L10",
+      "source_location": "L11",
       "weight": 1.0,
       "source": "apps_web_main",
       "target": "apps_web_observability",
@@ -33094,7 +33159,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L10",
+      "source_location": "L11",
       "weight": 1.0,
       "source": "apps_web_main",
       "target": "apps_web_observability_configure_logging",
@@ -33111,11 +33176,22 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "submodule_import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "tests_unit_test_config",
+      "target": "apps_web_main",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L30",
+      "source_location": "L39",
       "weight": 1.0,
       "source": "apps_web_main_main",
       "target": "apps_web_main_require_loopback",
@@ -33126,7 +33202,29 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L33",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "apps_web_main_validate_cookie_security",
+      "target": "apps_web_main_require_loopback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/__main__.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "apps_web_main_main",
+      "target": "apps_web_main_validate_cookie_security",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/web/__main__.py",
+      "source_location": "L50",
       "weight": 1.0,
       "source": "apps_web_main_main",
       "target": "apps_web_app_register_web",
@@ -33137,7 +33235,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "apps/web/__main__.py",
-      "source_location": "L23",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "apps_web_main_main",
       "target": "apps_web_observability_configure_logging",
@@ -35031,7 +35129,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "tests_unit_test_config",
       "target": "packages_backend_config",
@@ -35073,7 +35171,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "tests_unit_test_config",
       "target": "packages_backend_config_appsettings",
@@ -35084,7 +35182,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "tests_unit_test_config_settings",
       "target": "packages_backend_config_appsettings",
@@ -35136,7 +35234,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "tests_unit_test_config",
       "target": "packages_backend_config_global_security_ready",
@@ -35147,7 +35245,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0,
       "source": "tests_unit_test_config_test_global_security_requires_jwt_and_csrf_keys",
       "target": "packages_backend_config_global_security_ready",
@@ -35977,7 +36075,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L149",
+      "source_location": "L158",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_source_rate_limit_returns_429_and_is_audited",
       "target": "packages_backend_identity_login_throttle_throttledecision",
@@ -36597,6 +36695,17 @@
       "source_location": "L6",
       "weight": 1.0,
       "source": "tests_unit_identity_test_passwords",
+      "target": "packages_backend_identity_passwords_verify_password",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/identity/test_passwords.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "tests_unit_identity_test_passwords_test_invalid_password_hash_is_rejected",
       "target": "packages_backend_identity_passwords_verify_password",
       "confidence_score": 1.0
     },
@@ -39171,7 +39280,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L132",
+      "source_location": "L141",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_expired_refresh_is_rejected",
       "target": "packages_backend_identity_tokens_hash_refresh_token",
@@ -40923,7 +41032,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L105",
+      "source_location": "L114",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_change_password_revokes_all_sessions",
       "target": "tests_api_identity_helpers_csrf_headers",
@@ -40934,7 +41043,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L126",
+      "source_location": "L135",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_expired_refresh_is_rejected",
       "target": "tests_api_identity_helpers_csrf_headers",
@@ -40967,7 +41076,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L91",
+      "source_location": "L100",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_logout_clears_two_independent_cookies",
       "target": "tests_api_identity_helpers_csrf_headers",
@@ -40978,7 +41087,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L181",
+      "source_location": "L190",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_redis_mode_without_url_fails_closed_for_login",
       "target": "tests_api_identity_helpers_csrf_headers",
@@ -40989,7 +41098,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L71",
+      "source_location": "L80",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_refresh_rotates_then_replay_revokes_family",
       "target": "tests_api_identity_helpers_csrf_headers",
@@ -41000,7 +41109,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L161",
+      "source_location": "L170",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_source_rate_limit_returns_429_and_is_audited",
       "target": "tests_api_identity_helpers_csrf_headers",
@@ -41163,7 +41272,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L104",
+      "source_location": "L113",
       "weight": 1.0,
       "source": "tests_api_test_auth",
       "target": "tests_api_test_auth_test_change_password_revokes_all_sessions",
@@ -41173,10 +41282,20 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L123",
+      "source_location": "L132",
       "weight": 1.0,
       "source": "tests_api_test_auth",
       "target": "tests_api_test_auth_test_expired_refresh_is_rejected",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/api/test_auth.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "tests_api_test_auth",
+      "target": "tests_api_test_auth_test_invalid_access_token_returns_unauthenticated",
       "confidence_score": 1.0
     },
     {
@@ -41203,7 +41322,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L90",
+      "source_location": "L99",
       "weight": 1.0,
       "source": "tests_api_test_auth",
       "target": "tests_api_test_auth_test_logout_clears_two_independent_cookies",
@@ -41213,7 +41332,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L173",
+      "source_location": "L182",
       "weight": 1.0,
       "source": "tests_api_test_auth",
       "target": "tests_api_test_auth_test_redis_mode_without_url_fails_closed_for_login",
@@ -41223,7 +41342,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L70",
+      "source_location": "L79",
       "weight": 1.0,
       "source": "tests_api_test_auth",
       "target": "tests_api_test_auth_test_refresh_rotates_then_replay_revokes_family",
@@ -41233,7 +41352,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L144",
+      "source_location": "L153",
       "weight": 1.0,
       "source": "tests_api_test_auth",
       "target": "tests_api_test_auth_test_source_rate_limit_returns_429_and_is_audited",
@@ -41255,7 +41374,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L99",
+      "source_location": "L108",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_logout_clears_two_independent_cookies",
       "target": "tests_api_test_auth_auth_cookies",
@@ -41266,7 +41385,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L80",
+      "source_location": "L89",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_refresh_rotates_then_replay_revokes_family",
       "target": "tests_api_test_auth_auth_cookies",
@@ -41288,7 +41407,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L104",
+      "source_location": "L113",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_change_password_revokes_all_sessions",
       "target": "tests_api_test_auth_py_testclient",
@@ -41299,9 +41418,20 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L123",
+      "source_location": "L132",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_expired_refresh_is_rejected",
+      "target": "tests_api_test_auth_py_testclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/api/test_auth.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "tests_api_test_auth_test_invalid_access_token_returns_unauthenticated",
       "target": "tests_api_test_auth_py_testclient",
       "confidence_score": 1.0
     },
@@ -41321,7 +41451,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L90",
+      "source_location": "L99",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_logout_clears_two_independent_cookies",
       "target": "tests_api_test_auth_py_testclient",
@@ -41332,7 +41462,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L173",
+      "source_location": "L182",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_redis_mode_without_url_fails_closed_for_login",
       "target": "tests_api_test_auth_py_testclient",
@@ -41343,7 +41473,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L70",
+      "source_location": "L79",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_refresh_rotates_then_replay_revokes_family",
       "target": "tests_api_test_auth_py_testclient",
@@ -41354,7 +41484,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L144",
+      "source_location": "L153",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_source_rate_limit_returns_429_and_is_audited",
       "target": "tests_api_test_auth_py_testclient",
@@ -41365,7 +41495,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L173",
+      "source_location": "L182",
       "weight": 1.0,
       "source": "tests_api_test_auth_test_redis_mode_without_url_fails_closed_for_login",
       "target": "tests_api_test_auth_py_monkeypatch",
@@ -41379,6 +41509,16 @@
       "weight": 1.0,
       "source": "tests_api_test_csrf",
       "target": "tests_api_test_csrf_test_csrf_cookie_is_signed_readable_and_not_httponly",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/api/test_csrf.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "tests_api_test_csrf",
+      "target": "tests_api_test_csrf_test_state_change_rejects_malformed_csrf_token",
       "confidence_score": 1.0
     },
     {
@@ -41399,6 +41539,17 @@
       "source_location": "L8",
       "weight": 1.0,
       "source": "tests_api_test_csrf_test_csrf_cookie_is_signed_readable_and_not_httponly",
+      "target": "tests_api_test_csrf_py_testclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/api/test_csrf.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "tests_api_test_csrf_test_state_change_rejects_malformed_csrf_token",
       "target": "tests_api_test_csrf_py_testclient",
       "confidence_score": 1.0
     },
@@ -43146,6 +43297,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/identity/test_passwords.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "tests_unit_identity_test_passwords",
+      "target": "tests_unit_identity_test_passwords_test_invalid_password_hash_is_rejected",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/identity/test_passwords.py",
       "source_location": "L27",
       "weight": 1.0,
       "source": "tests_unit_identity_test_passwords",
@@ -43166,7 +43327,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/identity/test_passwords.py",
-      "source_location": "L34",
+      "source_location": "L38",
       "weight": 1.0,
       "source": "tests_unit_identity_test_passwords",
       "target": "tests_unit_identity_test_passwords_test_seclists_resource_is_exactly_pinned_and_attributed",
@@ -43237,7 +43398,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "tests_unit_test_config",
       "target": "tests_unit_test_config_settings",
@@ -43247,7 +43408,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L52",
+      "source_location": "L53",
       "weight": 1.0,
       "source": "tests_unit_test_config",
       "target": "tests_unit_test_config_test_api_entrypoint_rejects_insecure_cookie_on_non_loopback",
@@ -43257,7 +43418,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L23",
+      "source_location": "L24",
       "weight": 1.0,
       "source": "tests_unit_test_config",
       "target": "tests_unit_test_config_test_development_insecure_cookie_requires_loopback_binding",
@@ -43267,7 +43428,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0,
       "source": "tests_unit_test_config",
       "target": "tests_unit_test_config_test_global_security_requires_jwt_and_csrf_keys",
@@ -43277,7 +43438,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L31",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "tests_unit_test_config",
       "target": "tests_unit_test_config_test_production_never_allows_insecure_cookie",
@@ -43287,10 +43448,20 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0,
       "source": "tests_unit_test_config",
       "target": "tests_unit_test_config_test_settings_repr_masks_all_secret_values",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "tests_unit_test_config",
+      "target": "tests_unit_test_config_test_web_entrypoint_rejects_insecure_cookie_outside_development",
       "confidence_score": 1.0
     },
     {
@@ -43298,7 +43469,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0,
       "source": "tests_unit_test_config_test_development_insecure_cookie_requires_loopback_binding",
       "target": "tests_unit_test_config_settings",
@@ -43309,7 +43480,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0,
       "source": "tests_unit_test_config_test_global_security_requires_jwt_and_csrf_keys",
       "target": "tests_unit_test_config_settings",
@@ -43320,7 +43491,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0,
       "source": "tests_unit_test_config_test_production_never_allows_insecure_cookie",
       "target": "tests_unit_test_config_settings",
@@ -43331,7 +43502,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L37",
+      "source_location": "L38",
       "weight": 1.0,
       "source": "tests_unit_test_config_test_settings_repr_masks_all_secret_values",
       "target": "tests_unit_test_config_settings",
@@ -43342,9 +43513,20 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L52",
+      "source_location": "L53",
       "weight": 1.0,
       "source": "tests_unit_test_config_test_api_entrypoint_rejects_insecure_cookie_on_non_loopback",
+      "target": "tests_unit_test_config_py_monkeypatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "tests_unit_test_config_test_web_entrypoint_rejects_insecure_cookie_outside_development",
       "target": "tests_unit_test_config_py_monkeypatch",
       "confidence_score": 1.0
     },
@@ -57888,5 +58070,5 @@
       "source_file": "docs/design/data-model.md"
     }
   ],
-  "built_at_commit": "c8e3ad258e53c8b6f1eefdc3146611b8418e6238"
+  "built_at_commit": "42df7c911444ae23d2962965bf054d9e2099bd35"
 }

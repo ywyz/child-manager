@@ -732,7 +732,6 @@
   "730": "test_0001_identity.py",
   "731": "_run_cli",
   "732": "GitHub Actions 质量工作流",
-  "733": "3.4 加密与密钥",
   "734": "NOTICE.md",
   "735": "__init__.py",
   "736": "__init__.py",
@@ -744,9 +743,5 @@
   "742": "M1 至 M8 每次推送门禁：依赖锁定、Ruff、Pyright、Pytest",
   "743": "__init__.py",
   "744": "test_identity_isolation.py",
-  "745": "create_app",
-  "746": "common.py",
-  "747": "build_health_dependencies",
-  "748": "后台任务状态机与 AI 采用契约",
-  "749": "resolve_client_ip"
+  "748": "后台任务状态机与 AI 采用契约"
 }

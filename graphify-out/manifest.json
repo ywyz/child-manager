@@ -395,9 +395,9 @@
     "semantic_hash": "12d2ce99fd4393e41650ea0253478870"
   },
   "apps/web/__main__.py": {
-    "mtime": 1784030697.0955188,
-    "ast_hash": "5d4a5cde3d459994fd1f1ea7dfa34ec9",
-    "semantic_hash": "5d4a5cde3d459994fd1f1ea7dfa34ec9"
+    "mtime": 1784286684.1413348,
+    "ast_hash": "fb19d0faa4f4b20bed05fafd90aa2fb9",
+    "semantic_hash": ""
   },
   "apps/web/api_client.py": {
     "mtime": 1784030893.378337,
@@ -660,9 +660,9 @@
     "semantic_hash": "3f58ba07853e729c7be1991085462e56"
   },
   "tests/unit/test_config.py": {
-    "mtime": 1784033382.1242573,
-    "ast_hash": "eaaea45111d0d4bdacbad9d7eb904b3c",
-    "semantic_hash": "eaaea45111d0d4bdacbad9d7eb904b3c"
+    "mtime": 1784286684.142335,
+    "ast_hash": "54a64daa62fd0ea89b1e051e16cdc401",
+    "semantic_hash": ""
   },
   "tests/unit/test_observability.py": {
     "mtime": 1784031489.799758,
@@ -810,7 +810,7 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/csrf.py": {
-    "mtime": 1784259033.0185525,
+    "mtime": 1784286266.3793545,
     "ast_hash": "0cb095bf04b0a5af532c842ce8b38933",
     "semantic_hash": ""
   },
@@ -830,7 +830,7 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/passwords.py": {
-    "mtime": 1784259033.0185525,
+    "mtime": 1784286266.3793545,
     "ast_hash": "fe7e130c32f0bb8821f0341f20302cc7",
     "semantic_hash": ""
   },
@@ -840,7 +840,7 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/service.py": {
-    "mtime": 1784259318.7690246,
+    "mtime": 1784286266.3803544,
     "ast_hash": "e4944dae226e7cd00ae45a39fccb162d",
     "semantic_hash": ""
   },
@@ -855,13 +855,13 @@
     "semantic_hash": ""
   },
   "tests/api/test_auth.py": {
-    "mtime": 1784262568.0724046,
-    "ast_hash": "ee75893d3711ca15dc2c178312515cff",
+    "mtime": 1784286996.8097224,
+    "ast_hash": "bf5681d00d17871ffc1211d814417bb6",
     "semantic_hash": ""
   },
   "tests/api/test_csrf.py": {
-    "mtime": 1784259092.651352,
-    "ast_hash": "4b3897f063fc95583077773de2653958",
+    "mtime": 1784286996.8087223,
+    "ast_hash": "0d627cd7bb66100d7ce15c3cc7b0809a",
     "semantic_hash": ""
   },
   "tests/api/test_init_admin_cli.py": {
@@ -920,8 +920,8 @@
     "semantic_hash": ""
   },
   "tests/unit/identity/test_passwords.py": {
-    "mtime": 1784259501.0555549,
-    "ast_hash": "3df13b230d55882a7a89aed491828d7b",
+    "mtime": 1784286996.8087223,
+    "ast_hash": "aa096add7a920bcf387bde32d232894f",
     "semantic_hash": ""
   },
   "tests/unit/identity/test_tokens.py": {
