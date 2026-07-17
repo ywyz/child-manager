@@ -67,6 +67,15 @@ def test_login_failure_is_generic_for_missing_wrong_and_inactive_accounts(
     assert len({response.json()["message"] for response in responses}) == 1
 
 
+def test_invalid_access_token_returns_unauthenticated(identity_client: TestClient) -> None:
+    identity_client.cookies.set("child_manager_access", "not-a-jwt")
+
+    response = identity_client.get("/api/v1/auth/me")
+
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
 def test_refresh_rotates_then_replay_revokes_family(identity_client: TestClient) -> None:
     headers = csrf_headers(identity_client)
     login = identity_client.post(
