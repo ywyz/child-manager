@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-07-15)
+# Graph Report - child-manager  (2026-07-17)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 185 files · ~101,382 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2175 nodes · 1808 edges · 719 communities (150 shown, 569 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.69)
+- 2524 nodes · 2719 edges · 745 communities (174 shown, 571 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 55 edges (avg confidence: 0.58)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `41772ab0`
+- Built from commit: `38ff8ee2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -712,30 +713,49 @@
 - Word 导出与历史副本验收
 - Word 模板哈希与原件状态检查
 - 工作日判断与软降级
+- 正文
+- MemoryLoginThrottle
+- ports.py
+- build_health_dependencies
+- Python 质量门禁 Job
+- middleware.py
+- 正文
+- 正文
+- app.py
+- CI PostgreSQL 服务
+- 0001_identity_and_audit.py
+- test_0001_identity.py
+- _run_cli
+- GitHub Actions 质量工作流
+- 3.4 加密与密钥
+- NOTICE.md
+- Docker 镜像构建延后到 M9 并由新部署 ADR 定义
+- M1 至 M8 每次推送门禁：依赖锁定、Ruff、Pyright、Pytest
+- test_identity_isolation.py
 
 ## God Nodes (most connected - your core abstractions)
-1. `Child Manager 数据模型设计` - 24 edges
-2. `教案管理 PRD（首期：一日活动计划）` - 22 edges
-3. `Child Manager 系统架构设计` - 22 edges
-4. `ContractModel` - 21 edges
-5. `Child Manager Agent 开发规则` - 20 edges
-6. `Child Manager PostgreSQL 数据库 Schema` - 19 edges
-7. `create_app()` - 18 edges
-8. `Child Manager 产品与工程路线图` - 18 edges
-9. `Tasks: 首期一日活动计划完整闭环` - 17 edges
-10. `build_health_dependencies()` - 16 edges
+1. `IdentityRepository` - 35 edges
+2. `IdentityError` - 34 edges
+3. `ContractModel` - 31 edges
+4. `IdentityService` - 30 edges
+5. `create_app()` - 25 edges
+6. `AuditRepository` - 24 edges
+7. `SessionUser` - 24 edges
+8. `Child Manager 数据模型设计` - 24 edges
+9. `教案管理 PRD（首期：一日活动计划）` - 22 edges
+10. `Child Manager 系统架构设计` - 22 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `CI PostgreSQL 服务` --semantically_similar_to--> `PostgreSQL 本地服务`  [INFERRED] [semantically similar]
   .github/workflows/quality.yml → compose.dev.yaml
 - `PostgreSQL 18 Alpine 固定 Digest` --semantically_similar_to--> `PostgreSQL 18 Alpine 固定 Digest`  [INFERRED] [semantically similar]
   .github/workflows/quality.yml → compose.dev.yaml
-- `uv 锁定安装门禁` --implements--> `1. 共享父 Issue 草稿`  [INFERRED]
-  .github/workflows/quality.yml → docs/development/m1-issue-drafts.md
-- `Pyright 类型门禁` --implements--> `1. 共享父 Issue 草稿`  [INFERRED]
-  .github/workflows/quality.yml → docs/development/m1-issue-drafts.md
-- `Pytest 测试门禁` --implements--> `1. 共享父 Issue 草稿`  [INFERRED]
-  .github/workflows/quality.yml → docs/development/m1-issue-drafts.md
+- `create_app()` --indirect_call--> `IdentityError`  [INFERRED]
+  apps/api/app.py → packages/backend/identity/service.py
+- `HealthDependencies` --uses--> `IdentityError`  [INFERRED]
+  apps/api/dependencies.py → packages/backend/identity/service.py
+- `HealthDependencies` --uses--> `IdentityService`  [INFERRED]
+  apps/api/dependencies.py → packages/backend/identity/service.py
 
 ## Import Cycles
 - None detected.
@@ -763,19 +783,19 @@
 - **AI 预览与教师最终控制** — agents_ai_preview_explicit_adoption, docs_prd_lesson_management_preview_validity_by_actual_inputs, docs_prd_lesson_management_ai_retry_taxonomy [EXTRACTED 1.00]
 - **教案任务预览快照导出持久化链路** — docs_design_data_model_daily_activity_plans, docs_design_data_model_background_jobs, docs_design_data_model_ai_generation_results, docs_design_data_model_daily_activity_plan_snapshots [EXTRACTED 1.00]
 
-## Communities (719 total, 569 thin omitted)
+## Communities (745 total, 571 thin omitted)
 
 ### Community 0 - "test_health.py"
 Cohesion: 0.06
-Nodes (55): create_app(), _error_response(), UUID, FastAPI 应用装配、统一异常转换与健康端点。, _request_id(), _safe_check(), _ai_unconfigured(), build_health_dependencies() (+47 more)
+Nodes (57): create_app(), _error_response(), _login_throttle(), Request, UUID, FastAPI 应用装配、统一异常转换与健康端点。, _request_id(), _ai_unconfigured() (+49 more)
 
 ### Community 1 - "Child Manager 产品与工程路线图"
 Cohesion: 0.04
 Nodes (49): 10. M4：AI 模型与提示词基础, 11. M5：无 AI 教案手工闭环, 12. M6：AI 异步生成与人工采用, 13. M7：固定 Word 导出与历史, 14. M8：首期功能验收, 15. M9：生产安全与部署复审, 16. 当前状态快照, 17. Roadmap 更新规则 (+41 more)
 
 ### Community 2 - "Python 质量门禁 Job"
-Cohesion: 0.05
-Nodes (48): CHILD_MANAGER_DATABASE_NAME 强制变量, Compose 项目隔离 PostgreSQL 卷, 本地依赖 Compose 清单, PostgreSQL 18 Alpine 固定 Digest, PostgreSQL 健康检查, PostgreSQL 镜像覆盖变量, PostgreSQL 回环绑定, CHILD_MANAGER_POSTGRES_PASSWORD 外部变量 (+40 more)
+Cohesion: 0.13
+Nodes (16): CHILD_MANAGER_DATABASE_NAME 强制变量, Compose 项目隔离 PostgreSQL 卷, 本地依赖 Compose 清单, PostgreSQL 健康检查, PostgreSQL 回环绑定, CHILD_MANAGER_POSTGRES_PASSWORD 外部变量, CHILD_MANAGER_POSTGRES_PORT 强制变量, PostgreSQL 本地服务 (+8 more)
 
 ### Community 3 - "M0 阻塞项统一修复执行方案（Codex + Trae）"
 Cohesion: 0.05
@@ -786,8 +806,8 @@ Cohesion: 0.05
 Nodes (41): 1. 结论, 2.1 Git 与 GitHub, 2.2 当前阶段状态, 2.3 M0-G1～G8 最终汇总, 2. 审查基线, 3.1 指标, 3.2 覆盖与宪章, 3. Spec Kit 非破坏性一致性审查 (+33 more)
 
 ### Community 5 - "Tasks: 首期一日活动计划完整闭环"
-Cohesion: 0.05
-Nodes (43): Dependencies & Execution Order, Foundation, Implementation for User Story 1, Implementation for User Story 2, Implementation for User Story 3, Implementation for User Story 4, Implementation for User Story 5, Implementation for User Story 6 (+35 more)
+Cohesion: 0.04
+Nodes (47): Dependencies & Execution Order, Foundation, Implementation for User Story 2, Implementation for User Story 3, Implementation for User Story 4, Implementation for User Story 5, Implementation for User Story 6, Implementation for User Story 7 (+39 more)
 
 ### Community 6 - "Phase 1 数据模型：首期一日活动计划完整闭环"
 Cohesion: 0.05
@@ -798,36 +818,36 @@ Cohesion: 0.05
 Nodes (37): 10. 已排除范围, 1. 研究方法与决策优先级, 2.1 首期使用一套 Spec Kit 文档, 2.2 独立运行单元与模块化单体, 2.3 技术基线与依赖, 2. Feature 与架构, 3.1 当前学期和学期外日期, 3.2 区域按目标栏目校验 (+29 more)
 
 ### Community 9 - "observability.py"
-Cohesion: 0.10
-Nodes (30): main(), AppSettings, global_security_ready(), BaseModel, 拒绝在非开发环境或非回环地址关闭 Cookie Secure。, 验证进程启动时的 Cookie 与监听地址组合。, JWT 和 CSRF 签名密钥同时存在时全局安全配置才可用。, validate_cookie_security() (+22 more)
+Cohesion: 0.05
+Nodes (51): Actor, main(), load_job(), Broker, 只接收 job_id 的 M1 Dramatiq actor。, 验证最小消息；后续里程碑将从 PostgreSQL 加载权威上下文。, register_actors(), build_redis_broker() (+43 more)
 
 ### Community 10 - "README.md"
-Cohesion: 0.16
-Nodes (10): Child Manager 架构决策记录, 与旧仓库 ADR 的关系, 决策索引, 新增 ADR 的判断标准, 状态约定, Content Quality, Feature Readiness, Notes (+2 more)
+Cohesion: 0.11
+Nodes (21): Child Manager 架构决策记录, 与旧仓库 ADR 的关系, 决策索引, 新增 ADR 的判断标准, 状态约定, Content Quality, Feature Readiness, Notes (+13 more)
 
 ### Community 11 - "Child Manager Agent 开发规则"
 Cohesion: 0.06
 Nodes (35): 10. 一日活动计划业务不变量, 11.1 模型访问, 11.2 提示词管理, 11.3 生成行为, 11. AI 与提示词规则, 12. Word 模板与导出, 13. 安全与隐私硬性规则, 14. 审计、日志与错误处理 (+27 more)
 
 ### Community 12 - "ContractModel"
-Cohesion: 0.12
-Nodes (22): AuditEventReference, canonical_request_fingerprint(), ContractModel, ErrorResponse, _normalize_scalar(), Page, Pagination, BaseModel (+14 more)
+Cohesion: 0.24
+Nodes (10): AuditRepository, Connection, UUID, 首位管理员初始化必须在单一数据库事务内完成。, AuthResult, AuditEventReference, IdentityAuditEventCode, ResourceReference (+2 more)
 
 ### Community 13 - "Child Manager 项目上下文"
 Cohesion: 0.06
 Nodes (31): 10. 当前共同下一步, 11.1 文档职责与工具基线, 11. 高风险点, 12. 系统架构基线, 13. 验证基线, 14. CONTEXT 更新规则, 1. 本文档的用途, 2. 固定阅读顺序 (+23 more)
 
 ### Community 14 - "proxy_request"
-Cohesion: 0.12
-Nodes (22): BffResponse, proxy_request(), NiceGUI 服务端 BFF 客户端的公开接缝。, 按固定 allowlist 转发请求，并保留响应原始多值头。, NiceGUI 页面与同源 API BFF 装配。, register_web(), main(), 仅绑定回环地址的 NiceGUI Web 入口。 (+14 more)
+Cohesion: 0.07
+Nodes (43): BffResponse, proxy_request(), NiceGUI 服务端 BFF 客户端的公开接缝。, 按固定 allowlist 转发请求，并保留响应原始多值头。, NiceGUI 页面与同源 API BFF 装配。, register_web(), navigation_for_capabilities(), 按 API capabilities 生成导航。 (+35 more)
 
 ### Community 15 - "Functional Requirements"
 Cohesion: 0.07
 Nodes (29): AI 模型与提示词, Assumptions, Clarifications, Dependencies, Edge Cases, Feature Specification: 首期一日活动计划完整闭环, Functional Requirements, Key Entities (+21 more)
 
 ### Community 16 - "test_foundation.py"
-Cohesion: 0.11
-Nodes (21): Actor, load_job(), Broker, 只接收 job_id 的 M1 Dramatiq actor。, 验证最小消息；后续里程碑将从 PostgreSQL 加载权威上下文。, register_actors(), build_redis_broker(), build_test_broker() (+13 more)
+Cohesion: 0.17
+Nodes (13): admin_session(), current_session(), identity_service(), CurrentSessionDependency, IdentityServiceDependency, Cookie, Exception, IdentityError (+5 more)
 
 ### Community 18 - "Tasks: [FEATURE NAME]"
 Cohesion: 0.07
@@ -838,8 +858,8 @@ Cohesion: 0.08
 Nodes (25): 1. Initialize Analysis Context, 2. Load Artifacts (Progressive Disclosure), 3. Build Semantic Models, 4. Detection Passes (Token-Efficient Analysis), 5. Severity Assignment, 6. Produce Compact Analysis Report, 7. Provide Next Actions, 8. Offer Remediation (+17 more)
 
 ### Community 20 - "Child Manager 幼儿园教育管理系统"
-Cohesion: 0.08
-Nodes (25): AI 提示词管理子系统, AI 生成规则, Child Manager 幼儿园教育管理系统, Docker 镜像构建延后到 M9 并由新部署 ADR 定义, M1 至 M8 每次推送门禁：依赖锁定、Ruff、Pyright、Pytest, Word 导出, 一键生成与分栏目生成, 分支协作规范 (+17 more)
+Cohesion: 0.09
+Nodes (23): AI 提示词管理子系统, AI 生成规则, Child Manager 幼儿园教育管理系统, Word 导出, 一键生成与分栏目生成, 分支协作规范, 后续子系统, 基本规则 (+15 more)
 
 ### Community 21 - "ADR-0001：只交付 Cloud 版本，首期单园运行并保留园所隔离边界"
 Cohesion: 0.10
@@ -858,8 +878,8 @@ Cohesion: 0.10
 Nodes (20): 10. 禁止事项, 11. 启动前检查清单, 1. 文档目的, 2. 事实来源与优先级, 3. 分支模型与所有权, 4.1 共享父 Issue, 4.2 实现子 Issue, 4.3 纵向拆分 (+12 more)
 
 ### Community 25 - "M1 工程骨架与质量基线 Issue 草稿与执行记录"
-Cohesion: 0.11
-Nodes (19): 0. 草稿基线与 graphify 处置记录, 2. Codex 实现子 Issue 草稿, 3. Trae 实现子 Issue 草稿, 4. 草稿只读复核清单, M1 工程骨架与质量基线 Issue 草稿与执行记录, T004～T020 有序执行清单, T004～T020 有序执行清单, 关联与边界 (+11 more)
+Cohesion: 0.18
+Nodes (11): 0. 草稿基线与 graphify 处置记录, 2. Codex 实现子 Issue 草稿, 4. 草稿只读复核清单, M1 工程骨架与质量基线 Issue 草稿与执行记录, T004～T020 有序执行清单, 关联与边界, 实施原则, 标题 (+3 more)
 
 ### Community 26 - "test_local_development_profiles.py"
 Cohesion: 0.14
@@ -922,8 +942,8 @@ Cohesion: 0.17
 Nodes (11): Child Manager 项目宪章, Core Principles, Governance, I. 事实来源与范围忠实, II. 服务边界与单向依赖, III. 园所隔离与服务端授权（NON-NEGOTIABLE）, IV. 权威状态、事务与可恢复性, V. 教师控制、AI 与 Word 保真 (+3 more)
 
 ### Community 41 - "后台任务状态机与 AI 采用契约"
-Cohesion: 0.17
-Nodes (11): 10. Web 轮询契约, 1. 任务类型, 2. 状态定义, 3. 受理、投递与租约, 4. 模型调用与重试分类, 5. 幂等契约, 6. AI 预览有效性, 7. 各任务输入快照 (+3 more)
+Cohesion: 0.19
+Nodes (8): IdentityRepository, Connection, datetime, UUID, 所有查询都显式绑定 kindergarten_id 的身份 Repository。, RefreshRecord, _user(), UserRecord
 
 ### Community 42 - "SKILL.md"
 Cohesion: 0.18
@@ -938,8 +958,8 @@ Cohesion: 0.18
 Nodes (10): Checklist Format (REQUIRED), Completion Report, Done When, Mandatory Post-Execution Hooks, Outline, Phase Structure, Pre-Execution Checks, Task Generation Rules (+2 more)
 
 ### Community 45 - "ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体"
-Cohesion: 0.18
-Nodes (11): ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体, NiceGUI 一体化进程, React/TypeScript 独立前端, 从首期开始全面微服务化, 决策, 前端直接访问数据库或共享 Repository, 后果, 备选方案 (+3 more)
+Cohesion: 0.07
+Nodes (64): AdminSessionDependency, _allowed_origins(), change_password(), _clear_auth_cookies(), _cookie_secure(), csrf(), login(), logout() (+56 more)
 
 ### Community 46 - "ADR-0004：采用同源入口、HttpOnly Cookie 与 API 统一授权"
 Cohesion: 0.18
@@ -1003,7 +1023,7 @@ Nodes (7): 9.1 关系表头与 JSONB 正文, 9.2 `daily_activity_plans`, 9.3 `co
 
 ### Community 61 - "3. 二十六项问题的最终结论"
 Cohesion: 0.29
-Nodes (7): 3.1 文档命名与 ADR 状态, 3.4 加密与密钥, 3. 二十六项问题的最终结论, Q10：AI Key 加密算法, Q11：主加密密钥来源, Q1：ADR-0001 文件命名, Q2：ADR-0007 被 ADR-0009 取代的标记
+Nodes (7): 3.1 文档命名与 ADR 状态, 3.5 API、任务状态与幂等, 3. 二十六项问题的最终结论, Q12：任务状态机缺少 `expired`, Q13：幂等键定义, Q1：ADR-0001 文件命名, Q2：ADR-0007 被 ADR-0009 取代的标记
 
 ### Community 62 - "3.9 Codex 交叉审计事项"
 Cohesion: 0.29
@@ -1044,6 +1064,10 @@ Nodes (6): load_document(), Any, OpenAPI 3.1 文档与基础机器契约。, tes
 ### Community 71 - "完整 SDD 工作流"
 Cohesion: 0.33
 Nodes (6): Spec Kit 任务实施, Spec Kit 实施规划, Spec Kit 功能规格生成, Spec Kit 任务生成, 规格与计划评审门禁, 完整 SDD 工作流
+
+### Community 72 - "env.py"
+Cohesion: 0.24
+Nodes (9): DeclarativeBase, AuditEvent, Base, Kindergarten, 园所、账号、角色与 Refresh token ORM 模型。, RefreshToken, Role, User (+1 more)
 
 ### Community 73 - "5. 园所与身份模型"
 Cohesion: 0.33
@@ -1262,8 +1286,8 @@ Cohesion: 0.67
 Nodes (3): 7.1 API 原则, 7.2 跨进程任务契约, 7. API 与契约
 
 ### Community 132 - "3.5 API、任务状态与幂等"
-Cohesion: 0.67
-Nodes (3): 3.5 API、任务状态与幂等, Q12：任务状态机缺少 `expired`, Q13：幂等键定义
+Cohesion: 0.09
+Nodes (36): MemoryLoginThrottle, datetime, Redis 有界窗口实现；测试可使用 MemoryLoginThrottle 确定性替身。, RedisLoginThrottle, ThrottleDecision, Redis, csrf_headers(), identity_client() (+28 more)
 
 ### Community 133 - "3.6 测试与可访问性"
 Cohesion: 0.67
@@ -1281,10 +1305,74 @@ Nodes (3): 15.1 敏感数据, 15.2 审计事件, 15. 安全、隐私与审计
 Cohesion: 0.67
 Nodes (3): 4.1 首期目标, 4.2 成功标准, 4. 产品目标
 
+### Community 719 - "正文"
+Cohesion: 0.07
+Nodes (30): 0. 草稿事实与授权边界, 1. 共享父 Issue 草稿, 2. Codex 实现子 Issue 草稿, 3. Trae 实现子 Issue 草稿, 4. 草稿只读复核清单, M2 认证、授权与身份审计 Issue 草稿与执行记录, T021～T035 有序执行清单, T021～T035 有序执行清单 (+22 more)
+
+### Community 720 - "MemoryLoginThrottle"
+Cohesion: 0.29
+Nodes (12): _native_url(), 身份用例：实时授权、会话轮换、撤销与最后管理员保护。, create_access_token(), decode_access_token(), generate_refresh_token(), hash_refresh_token(), Any, datetime (+4 more)
+
+### Community 721 - "ports.py"
+Cohesion: 0.16
+Nodes (11): _calendar_library_available(), AiClient, Clock, DependencyCheck, JobBroker, date, datetime, UUID (+3 more)
+
+### Community 722 - "build_health_dependencies"
+Cohesion: 0.23
+Nodes (10): initialize_admin(), _native_url(), 返回 True 表示创建成功，False 表示系统已经初始化。, _init_admin(), main(), normalize_phone(), normalize_username(), test_invalid_phone_is_rejected() (+2 more)
+
+### Community 723 - "Python 质量门禁 Job"
+Cohesion: 0.25
+Nodes (11): 1. 共享父 Issue 草稿, 标题, uv 锁定安装门禁, OpenAPI 规格校验门禁, Pyright 类型门禁, Pytest 测试门禁, Python 3.14 运行时, Python 质量门禁 Job (+3 more)
+
+### Community 724 - "middleware.py"
+Cohesion: 0.25
+Nodes (10): hash_password(), password_violations(), Path, verify_password(), _weak_passwords(), Path, test_password_is_argon2id_hashed_and_verified(), test_password_length_is_15_to_128_unicode_characters() (+2 more)
+
+### Community 725 - "正文"
+Cohesion: 0.20
+Nodes (10): 任务映射, 入口条件, 共享事实来源, 共同出口门禁, 共同目标, 协作边界, 实现子 Issue, 当前状态与基线 (+2 more)
+
+### Community 726 - "正文"
+Cohesion: 0.25
+Nodes (8): 3. Trae 实现子 Issue 草稿, T004～T020 有序执行清单, 关联与边界, 实施原则, 标题, 正文, 非目标, 验收证据
+
+### Community 727 - "app.py"
+Cohesion: 0.18
+Nodes (11): ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体, NiceGUI 一体化进程, React/TypeScript 独立前端, 从首期开始全面微服务化, 决策, 前端直接访问数据库或共享 Repository, 后果, 备选方案 (+3 more)
+
+### Community 728 - "CI PostgreSQL 服务"
+Cohesion: 0.29
+Nodes (7): PostgreSQL 18 Alpine 固定 Digest, PostgreSQL 镜像覆盖变量, 每次运行动态 CI 数据库密码, PostgreSQL 18 Alpine 固定 Digest, PostgreSQL 健康门禁, CI PostgreSQL 服务, 隔离 PostgreSQL 测试 URL
+
+### Community 729 - "0001_identity_and_audit.py"
+Cohesion: 0.53
+Nodes (4): Column, datetime, _timestamps(), upgrade()
+
+### Community 730 - "test_0001_identity.py"
+Cohesion: 0.47
+Nodes (5): migrated_database(), Connection, MonkeyPatch, test_identity_migration_creates_tables_extension_and_role_seeds(), test_identity_migration_is_idempotent()
+
+### Community 731 - "_run_cli"
+Cohesion: 0.50
+Nodes (4): CompletedProcess, MonkeyPatch, _run_cli(), test_init_admin_is_single_transaction_non_echoing_and_idempotent()
+
+### Community 732 - "GitHub Actions 质量工作流"
+Cohesion: 0.50
+Nodes (4): 只读仓库内容权限, Pull Request 触发器, main、codex、trae 推送触发器, GitHub Actions 质量工作流
+
+### Community 733 - "3.4 加密与密钥"
+Cohesion: 0.67
+Nodes (3): 3.4 加密与密钥, Q10：AI Key 加密算法, Q11：主加密密钥来源
+
+### Community 744 - "test_identity_isolation.py"
+Cohesion: 0.47
+Nodes (10): identity_database(), _insert_kindergarten(), _insert_user(), Connection, MonkeyPatch, UUID, test_cross_kindergarten_role_assignment_is_rejected_by_composite_foreign_key(), test_refresh_replacement_cannot_cross_kindergarten() (+2 more)
+
 ## Knowledge Gaps
-- **1403 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1398 more)
+- **1432 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+1427 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **569 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **571 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
@@ -1297,17 +1385,17 @@ Nodes (3): 4.1 首期目标, 4.2 成功标准, 4. 产品目标
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Child Manager 数据模型设计` connect `Child Manager 数据模型设计` to `15. 数据快照边界`, `22. 后续扩展边界`, `2. 设计来源与旧系统取舍`, `README.md`, `5. 园所与身份模型`, `6. 教学设置模型`, `8. 提示词模型`, `21. 测试与验收`, `11. 后台任务与 AI 结果`, `16. 外键与删除行为`, `4. 模型总览`, `7. AI 模型档案`, `3. 总体建模原则`, `9. 一日活动计划模型`?**
-  _High betweenness centrality (0.049) - this node is a cross-community bridge._
-- **Why does `Child Manager PostgreSQL 数据库 Schema` connect `Child Manager PostgreSQL 数据库 Schema` to `README.md`, `3. PostgreSQL 物理约定`, `5. 园所与身份 Schema`, `6. 教学设置 Schema`, `8. 提示词 Schema`, `9. 一日活动计划 Schema`, `10. 后台任务与 AI 结果 Schema`, `12. 系统支撑 Schema`, `2. 事实来源与旧仓库取舍`, `7. AI 模型档案 Schema`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Why does `Child Manager 文档交叉审计合并结论` connect `Child Manager 文档交叉审计合并结论` to `4. 项目文档更新矩阵`, `README.md`, `3. 二十六项问题的最终结论`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Are the 7 inferred relationships involving `ContractModel` (e.g. with `AuditEventReference` and `ExportReference`) actually correct?**
-  _`ContractModel` has 7 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
-  _1403 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `test_health.py` be split into smaller, more focused modules?**
-  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
-- **Should `Child Manager 产品与工程路线图` be split into smaller, more focused modules?**
-  _Cohesion score 0.04081632653061224 - nodes in this community are weakly interconnected._
+- **Why does `教案管理 PRD（首期：一日活动计划）` connect `教案管理 PRD（首期：一日活动计划）` to `13. AI 生成流程`, `15. 安全、隐私与审计`, `4. 产品目标`, `README.md`, `12. AI 模型与提示词管理`, `5. 用户与权限`, `7. 首期必要设置`, `8. 核心业务对象`, `9. 日期与上下文规则`, `18. 验收标准`, `11. 计划管理流程`, `14. Word 导出`, `17. 非功能要求`, `10. 教案栏目与格式`?**
+  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+- **Why does `M1 工程骨架与质量基线 Issue 草稿与执行记录` connect `M1 工程骨架与质量基线 Issue 草稿与执行记录` to `README.md`, `Python 质量门禁 Job`, `正文`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+- **Why does `这是一份word表格` connect `这是一份word表格` to `右侧列`, `右侧列`, `右侧列`, `右侧列为两行：`, `右侧列为两行：`, `README.md`, `右侧列`?**
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+- **Are the 4 inferred relationships involving `IdentityError` (e.g. with `create_app()` and `HealthDependencies`) actually correct?**
+  _`IdentityError` has 4 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 17 inferred relationships involving `ContractModel` (e.g. with `AuditEventReference` and `IdentityAuditEventCode`) actually correct?**
+  _`ContractModel` has 17 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 3 inferred relationships involving `IdentityService` (e.g. with `HealthDependencies` and `AuditRepository`) actually correct?**
+  _`IdentityService` has 3 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 2 inferred relationships involving `create_app()` (e.g. with `RequestContextMiddleware` and `IdentityError`) actually correct?**
+  _`create_app()` has 2 INFERRED edges - model-reasoned connections that need verification._
