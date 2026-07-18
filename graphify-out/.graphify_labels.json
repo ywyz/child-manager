@@ -194,10 +194,16 @@
   "192": "get_client_ip",
   "193": "UserRole",
   "194": "generate_csrf_token",
+  "195": "后台任务状态机与 AI 采用契约",
   "196": "0004_refresh_token_fk.py",
   "197": "select",
   "198": "3.4 加密与密钥",
   "199": "User",
+  "200": "m2-issue-drafts.md",
+  "201": "init_admin.py",
+  "202": "ADR-0009：功能完成前延后生产部署与访问网络决策",
   "203": "0005_refresh_family_revoked.py",
-  "204": "conftest.py"
+  "204": "conftest.py",
+  "205": "Specification Quality Checklist: 首期一日活动计划完整闭环",
+  "206": "3.5 API、任务状态与幂等"
 }
