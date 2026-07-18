@@ -42,14 +42,14 @@ def kindergarten(service: IdentityService):
     result = service.init_admin(
         kg_name="Refresh 测试园", admin_username="admin", password="ValidPassword2024!"
     )
-    service._db().commit()
+    service._session.commit()
     return result["kindergarten_id"]
 
 
 def test_login_creates_independent_family(service: IdentityService, kindergarten: str) -> None:
     result = service.login(username="admin", password="ValidPassword2024!")
     assert result is not None
-    service._db().commit()
+    service._session.commit()
 
     token = service._repo.find_refresh_token_by_hash(
         kindergarten, hash_refresh_value(result["refresh_value"])
@@ -64,7 +64,7 @@ def test_refresh_preserves_family_id_and_absolute_expiration(
 ) -> None:
     login = service.login(username="admin", password="ValidPassword2024!")
     assert login is not None
-    service._db().commit()
+    service._session.commit()
 
     original_family = service._repo.find_refresh_token_by_hash(
         kindergarten, hash_refresh_value(login["refresh_value"])
@@ -75,7 +75,7 @@ def test_refresh_preserves_family_id_and_absolute_expiration(
 
     refreshed = service.refresh(refresh_cookie=login["refresh_value"])
     assert refreshed is not None
-    service._db().commit()
+    service._session.commit()
 
     new_token = service._repo.find_refresh_token_by_hash(
         kindergarten, hash_refresh_value(refreshed["refresh_value"])

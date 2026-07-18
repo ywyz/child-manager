@@ -52,6 +52,34 @@ def test_user_create_request_requires_at_least_one_role() -> None:
         )
 
 
+def test_user_create_request_rejects_unknown_roles() -> None:
+    with pytest.raises(ValidationError):
+        UserCreateRequest(
+            username="teacher",
+            display_name="教师",
+            phone_e164=None,
+            password="ValidPassword2024!",
+            role_codes=["admin", "unknown"],
+        )
+
+
+def test_user_create_request_rejects_duplicate_roles() -> None:
+    with pytest.raises(ValidationError):
+        UserCreateRequest(
+            username="teacher",
+            display_name="教师",
+            phone_e164=None,
+            password="ValidPassword2024!",
+            role_codes=["admin", "admin"],
+        )
+
+
 def test_user_patch_requires_at_least_one_field() -> None:
     with pytest.raises(ValidationError):
-        UserPatch(username=None, display_name=None, phone_e164=None)
+        UserPatch.model_validate({})
+
+
+def test_user_patch_accepts_phone_e164_null() -> None:
+    patch = UserPatch(phone_e164=None)
+    assert patch.phone_e164 is None
+    assert patch.phone_e164_is_set is True

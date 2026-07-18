@@ -5,8 +5,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, Request, Response, status
 from sqlalchemy.orm import Session
 
-from apps.api.dependencies import get_db, require_admin
-from packages.backend.identity.csrf import require_csrf
+from apps.api.dependencies import check_csrf, get_db, require_admin
 from packages.backend.identity.exceptions import UserNotFoundError
 from packages.backend.identity.service import IdentityService
 from packages.contracts.identity import (
@@ -21,18 +20,6 @@ from packages.contracts.identity import (
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-_CSRF_COOKIE_NAME = "child_manager_csrf"
-
-
-def _check_csrf(request: Request) -> None:
-    """从 FastAPI Request 提取 CSRF 所需字段并校验。"""
-    require_csrf(
-        cookie_value=request.cookies.get(_CSRF_COOKIE_NAME),
-        header_value=request.headers.get("x-csrf-token"),
-        origin=request.headers.get("origin"),
-        referer=request.headers.get("referer"),
-    )
-
 
 @router.post("", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(
@@ -41,7 +28,7 @@ async def create_user(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    _check_csrf(request)
+    check_csrf(request)
 
     service = IdentityService(session)
     user = service.create_user(
@@ -87,7 +74,7 @@ async def update_user(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    _check_csrf(request)
+    check_csrf(request)
 
     service = IdentityService(session)
     user = service.update_user(
@@ -110,7 +97,7 @@ async def set_user_roles(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    _check_csrf(request)
+    check_csrf(request)
 
     service = IdentityService(session)
     user = service.set_user_roles(
@@ -132,7 +119,7 @@ async def activate_user(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    _check_csrf(request)
+    check_csrf(request)
 
     service = IdentityService(session)
     user = service.activate_user(
@@ -153,7 +140,7 @@ async def deactivate_user(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> UserResponse:
-    _check_csrf(request)
+    check_csrf(request)
 
     service = IdentityService(session)
     service.deactivate_user(
@@ -177,7 +164,7 @@ async def reset_password(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> Response:
-    _check_csrf(request)
+    check_csrf(request)
 
     service = IdentityService(session)
     if not service.reset_password(

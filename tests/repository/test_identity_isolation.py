@@ -117,11 +117,22 @@ def test_revoke_user_tokens_returns_count(repo: IdentityRepository, kg_a: str) -
     assert repo.revoke_user_tokens(kg_a, "user-1") >= 0
 
 
+def _make_user(repo: IdentityRepository, kindergarten_id: str, username: str) -> str:
+    user = repo.create_user(
+        kindergarten_id=kindergarten_id,
+        username=username,
+        phone=None,
+        display_name=username,
+        password_hash="hash",
+    )
+    return user.id
+
+
 def test_refresh_token_crud_with_family_expires_at(db_repo: IdentityRepository) -> None:
     from datetime import UTC, datetime, timedelta
 
     kg_id = str(uuid4())
-    user_id = str(uuid4())
+    user_id = _make_user(db_repo, kg_id, "user1")
     family_id = str(uuid4())
     token_hash = "hash-1"
     expires = datetime.now(UTC) + timedelta(days=7)
@@ -152,7 +163,7 @@ def test_find_refresh_token_by_hash_for_update(db_repo: IdentityRepository) -> N
     from datetime import UTC, datetime, timedelta
 
     kg_id = str(uuid4())
-    user_id = str(uuid4())
+    user_id = _make_user(db_repo, kg_id, "user2")
     family_id = str(uuid4())
     token_hash = "hash-2"
     expires = datetime.now(UTC) + timedelta(days=7)
@@ -176,7 +187,7 @@ def test_refresh_token_revoke_respects_kindergarten_id(
 ) -> None:
     from datetime import UTC, datetime, timedelta
 
-    user_id = str(uuid4())
+    user_id = _make_user(db_repo, kg_a, "user3")
     family_id = str(uuid4())
     token_hash = "hash-3"
     expires = datetime.now(UTC) + timedelta(days=7)
@@ -197,3 +208,33 @@ def test_refresh_token_revoke_respects_kindergarten_id(
     token = db_repo.find_refresh_token_by_hash(kg_a, token_hash)
     assert token is not None
     assert token.revoked_at is None
+
+
+def test_refresh_token_rejects_cross_kindergarten_user(
+    db_repo: IdentityRepository, kg_a: str, kg_b: str
+) -> None:
+    """Refresh token 的组合外键拒绝 (其他园 kindergarten_id, 本园 user_id) 的孤儿行。"""
+    from datetime import UTC, datetime, timedelta
+
+    from sqlalchemy.exc import IntegrityError
+
+    user = db_repo.create_user(
+        kindergarten_id=kg_a,
+        username="orphan_user",
+        phone=None,
+        display_name="孤儿用户",
+        password_hash="hash",
+    )
+    family_id = str(uuid4())
+    token_hash = "hash-orphan"
+    expires = datetime.now(UTC) + timedelta(days=7)
+
+    with pytest.raises(IntegrityError):
+        db_repo.create_refresh_token(
+            kindergarten_id=kg_b,
+            user_id=user.id,
+            family_id=family_id,
+            token_hash=token_hash,
+            expires_at=expires,
+            family_expires_at=expires,
+        )

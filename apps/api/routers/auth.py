@@ -5,10 +5,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy.orm import Session
 
-from apps.api.dependencies import get_current_user, get_db
+from apps.api.dependencies import check_csrf, get_current_user, get_db
 from packages.backend.config import settings
 from packages.backend.identity.client_ip import get_client_ip
-from packages.backend.identity.csrf import generate_csrf_token, require_csrf
+from packages.backend.identity.csrf import generate_csrf_token
 from packages.backend.identity.exceptions import (
     LoginFailedError,
     LoginRateLimitedError,
@@ -48,16 +48,6 @@ _throttle = _build_throttle()
 ACCESS_COOKIE_NAME = "child_manager_access"
 REFRESH_COOKIE_NAME = "child_manager_refresh"
 CSRF_COOKIE_NAME = "child_manager_csrf"
-
-
-def _check_csrf(request: Request) -> None:
-    """从 FastAPI Request 提取 CSRF 所需字段并校验。"""
-    require_csrf(
-        cookie_value=request.cookies.get(CSRF_COOKIE_NAME),
-        header_value=request.headers.get("x-csrf-token"),
-        origin=request.headers.get("origin"),
-        referer=request.headers.get("referer"),
-    )
 
 
 def _set_csrf_cookie(response: Response, csrf_token: str) -> None:
@@ -146,7 +136,7 @@ async def login(
     body: LoginRequest,
     session: Annotated[Session, Depends(get_db)],
 ) -> CurrentUser:
-    _check_csrf(request)
+    check_csrf(request)
 
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
     account_key = normalize_username(body.login)
@@ -181,7 +171,7 @@ async def refresh(
     response: Response,
     session: Annotated[Session, Depends(get_db)],
 ) -> CurrentUser:
-    _check_csrf(request)
+    check_csrf(request)
 
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
     if not refresh_cookie:
@@ -209,7 +199,7 @@ async def logout(
     response: Response,
     session: Annotated[Session, Depends(get_db)],
 ) -> Response:
-    _check_csrf(request)
+    check_csrf(request)
 
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
@@ -237,7 +227,7 @@ async def change_password(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_db)],
 ) -> Response:
-    _check_csrf(request)
+    check_csrf(request)
 
     service = IdentityService(session)
     if not service.change_password(

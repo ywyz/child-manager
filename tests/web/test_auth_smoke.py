@@ -165,6 +165,21 @@ def test_navigation_component_is_defined() -> None:
     assert callable(render_navigation)
 
 
+def test_navigation_shows_admin_entry_for_admin() -> None:
+    from apps.web.components.navigation import _nav_html
+
+    html = _nav_html(["admin"])
+    assert "账号管理" in html
+    assert "/users" in html
+
+
+def test_navigation_hides_admin_entry_for_teacher() -> None:
+    from apps.web.components.navigation import _nav_html
+
+    html = _nav_html(["teacher"])
+    assert "账号管理" not in html
+
+
 @pytest.mark.asyncio
 async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -> None:
     """通过 BFF 代理访问真实 API，验证登录-刷新-改密-退出完整流程。"""

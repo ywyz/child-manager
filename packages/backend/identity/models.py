@@ -111,6 +111,13 @@ class UserRole(Base):
 
 class RefreshToken(Base):
     __tablename__ = "refresh_tokens"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["kindergarten_id", "user_id"],
+            ["users.kindergarten_id", "users.id"],
+            name="fk_refresh_tokens_user",
+        ),
+    )
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
     kindergarten_id: Mapped[str] = mapped_column(String(36), nullable=False)

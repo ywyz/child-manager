@@ -4,6 +4,8 @@ import getpass
 import sys
 from collections.abc import Callable
 
+from sqlalchemy import select
+
 from packages.backend.database.session import SessionLocal
 from packages.backend.identity.models import User
 from packages.backend.identity.passwords import validate_password
@@ -13,7 +15,7 @@ from packages.backend.identity.service import IdentityService
 def _has_initial_admin() -> bool:
     session = SessionLocal()
     try:
-        return session.query(User).first() is not None
+        return session.execute(select(User)).scalars().first() is not None
     finally:
         session.close()
 

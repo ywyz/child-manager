@@ -73,6 +73,22 @@ class ChangePasswordRequest(BaseModel):
     new_password: str = Field(..., description="新密码")
 
 
+_ALLOWED_ROLE_CODES = {"admin", "teacher"}
+
+
+def _validate_role_codes(value: list[str]) -> list[str]:
+    """校验角色列表：非空、唯一、仅允许 admin/teacher。"""
+    if not value:
+        raise ValueError("角色列表不能为空")
+    codes = [code.strip().lower() for code in value]
+    if len(set(codes)) != len(codes):
+        raise ValueError("角色不能重复")
+    unknown = set(codes) - _ALLOWED_ROLE_CODES
+    if unknown:
+        raise ValueError(f"未知角色: {', '.join(sorted(unknown))}")
+    return codes
+
+
 class UserCreateRequest(BaseModel):
     """创建用户请求。"""
 
@@ -86,10 +102,8 @@ class UserCreateRequest(BaseModel):
 
     @field_validator("role_codes")
     @classmethod
-    def _require_at_least_one_role(cls, value: list[str]) -> list[str]:
-        if not value:
-            raise ValueError("创建账号时必须指定至少一个角色")
-        return value
+    def _validate_roles(cls, value: list[str]) -> list[str]:
+        return _validate_role_codes(value)
 
 
 class UserPatch(BaseModel):
@@ -97,15 +111,20 @@ class UserPatch(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    username: str | None = Field(None, description="用户名")
-    display_name: str | None = Field(None, description="显示名称")
-    phone_e164: str | None = Field(None, description="手机号(E.164)")
+    username: str | None = Field(default=None, description="用户名")
+    display_name: str | None = Field(default=None, description="显示名称")
+    phone_e164: str | None = Field(default=None, description="手机号(E.164)")
 
     @model_validator(mode="after")
     def _require_at_least_one_field(self) -> Self:
-        if self.username is None and self.display_name is None and self.phone_e164 is None:
+        if not self.model_fields_set:
             raise ValueError("PATCH 请求必须提供至少一个要修改的字段")
         return self
+
+    @property
+    def phone_e164_is_set(self) -> bool:
+        """phone_e164 是否在请求中被显式提供（包括设为 null）。"""
+        return "phone_e164" in self.model_fields_set
 
 
 class UserResponse(BaseModel):
@@ -148,3 +167,8 @@ class UserRolesUpdateRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     role_codes: list[str] = Field(..., description="角色代码列表")
+
+    @field_validator("role_codes")
+    @classmethod
+    def _validate_roles(cls, value: list[str]) -> list[str]:
+        return _validate_role_codes(value)

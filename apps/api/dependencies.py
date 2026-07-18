@@ -8,6 +8,7 @@ from fastapi import Depends, Request
 from sqlalchemy.orm import Session
 
 from packages.backend.database import session as session_module
+from packages.backend.identity.csrf import require_csrf
 from packages.backend.identity.exceptions import ForbiddenError, UnauthenticatedError
 from packages.backend.identity.tokens import decode_access_token
 from packages.contracts.identity import CurrentUser
@@ -117,6 +118,19 @@ def build_health_dependencies() -> HealthDependencies:
         template=template_check,
         export_storage=export_storage_check,
         security_ready=all(value is not None and bool(value.strip()) for value in security_values),
+    )
+
+
+_CSRF_COOKIE_NAME = "child_manager_csrf"
+
+
+def check_csrf(request: Request) -> None:
+    """从 FastAPI Request 提取 CSRF 所需字段并校验。"""
+    require_csrf(
+        cookie_value=request.cookies.get(_CSRF_COOKIE_NAME),
+        header_value=request.headers.get("x-csrf-token"),
+        origin=request.headers.get("origin"),
+        referer=request.headers.get("referer"),
     )
 
 

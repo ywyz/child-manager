@@ -151,7 +151,7 @@ def _render_create_form(
         if result:
             show_error(result)
         else:
-            on_success("创建成功")
+            await on_success("创建成功")
 
     ui.button("创建账号", on_click=handle_create)
 

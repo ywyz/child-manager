@@ -4,6 +4,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import uuid4
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from packages.backend.audit.service import AuditService
@@ -37,16 +38,10 @@ from packages.contracts.identity import (
 class IdentityService:
     """身份业务编排：协调 Repository、Token、CSRF 与审计。"""
 
-    def __init__(self, session: Session | None) -> None:
+    def __init__(self, session: Session) -> None:
         self._session = session
         self._repo = IdentityRepository(session)
-        self._audit = AuditService(session) if session is not None else None
-
-    def _db(self) -> Session:
-        if self._session is None:
-            msg = "数据库会话未初始化"
-            raise RuntimeError(msg)
-        return self._session
+        self._audit = AuditService(session)
 
     def _record_identity(
         self,
@@ -59,8 +54,6 @@ class IdentityService:
         result: str,
         source_ip: str | None = None,
     ) -> None:
-        if self._audit is None:
-            return
         self._audit.record_identity(
             kindergarten_id=kindergarten_id,
             event_type=event_type,
@@ -78,9 +71,8 @@ class IdentityService:
         当前仅支持单园，所有已认证请求通过 token/session 携带明确的
         kindergarten_id；本方法仅用于登录前定位唯一园所。
         """
-        if self._session is None:
-            return None
-        return self._session.query(Kindergarten).first()
+        stmt = select(Kindergarten)
+        return self._session.execute(stmt).scalar_one_or_none()
 
     def ensure_roles(self, kindergarten_id: str) -> None:
         """幂等确保园所具备 admin/teacher 角色。"""
@@ -140,9 +132,15 @@ class IdentityService:
         account_key = normalize_username(username)
         user = self._repo.get_user_by_username(kg.id, account_key)
         if user is None:
-            phone = normalize_phone(username)
+            # 对非用户名形态的输入尝试按手机号查找；任何异常统一视为登录失败，
+            # 避免泄露账号是否存在。
+            try:
+                phone = normalize_phone(username)
+            except ValueError:
+                phone = None
             if phone is not None:
                 user = self._repo.get_user_by_phone(kg.id, phone)
+
         if user is None or not verify_password(password, user.password_hash):
             self._record_identity(
                 kindergarten_id=kg.id,
@@ -396,6 +394,8 @@ class IdentityService:
             user.display_name = patch.display_name
         if patch.phone_e164 is not None:
             user.phone = normalize_phone(patch.phone_e164)
+        elif patch.phone_e164_is_set:
+            user.phone = None
         user.updated_by = admin_user_id
         self._record_identity(
             kindergarten_id=kindergarten_id,
@@ -500,8 +500,6 @@ class IdentityService:
         )
 
     def init_admin(self, *, kg_name: str, admin_username: str, password: str) -> dict[str, Any]:
-        if self._session is None:
-            raise RuntimeError("数据库会话未初始化")
         kg = self._repo.create_kindergarten(name=kg_name or "默认幼儿园")
         self.ensure_roles(kg.id)
         admin_role = self._repo.get_role_by_code(kg.id, "admin")

@@ -3,6 +3,7 @@
 from collections.abc import Iterator
 
 import pytest
+from sqlalchemy import func, select
 
 from packages.backend.audit.models import AuditEvent
 from packages.backend.database import session as session_module
@@ -48,18 +49,15 @@ def kindergarten(service: IdentityService):
 
 
 def _audit_count(session, kindergarten_id: str, event_type: str) -> int:
-    return (
-        session.query(AuditEvent)
-        .filter(
-            AuditEvent.kindergarten_id == kindergarten_id,
-            AuditEvent.event_type == event_type,
-        )
-        .count()
+    stmt = select(func.count(AuditEvent.id)).where(
+        AuditEvent.kindergarten_id == kindergarten_id,
+        AuditEvent.event_type == event_type,
     )
+    return int(session.execute(stmt).scalar() or 0)
 
 
 def _commit(service: IdentityService) -> None:
-    service._db().commit()
+    service._session.commit()
 
 
 def test_login_failure_audit_persisted(service: IdentityService, kindergarten: str) -> None:
@@ -67,7 +65,7 @@ def test_login_failure_audit_persisted(service: IdentityService, kindergarten: s
     assert result is None
     _commit(service)
 
-    count = _audit_count(service._db(), kindergarten, audit_events.IDENTITY_LOGIN)
+    count = _audit_count(service._session, kindergarten, audit_events.IDENTITY_LOGIN)
     assert count >= 1
 
 
@@ -85,7 +83,7 @@ def test_refresh_replay_audit_persisted(service: IdentityService, kindergarten: 
     assert replay is None
     _commit(service)
 
-    count = _audit_count(service._db(), kindergarten, audit_events.IDENTITY_TOKEN_REPLAY)
+    count = _audit_count(service._session, kindergarten, audit_events.IDENTITY_TOKEN_REPLAY)
     assert count == 1
 
 
@@ -96,5 +94,5 @@ def test_init_admin_audit_persisted(service: IdentityService) -> None:
     _commit(service)
     kg_id = result["kindergarten_id"]
 
-    count = _audit_count(service._db(), kg_id, audit_events.IDENTITY_INIT_ADMIN)
+    count = _audit_count(service._session, kg_id, audit_events.IDENTITY_INIT_ADMIN)
     assert count == 1

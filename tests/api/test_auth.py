@@ -282,3 +282,83 @@ def test_login_with_phone_number(
     )
     assert response.status_code == 200
     assert response.json()["username"] == "phoneuser"
+
+
+def test_unknown_account_login_returns_generic_401(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """未知账号登录不得泄露是否存在，统一返回 401 auth.login_failed。"""
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"login": "definitely-missing-user", "password": "AnyPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 401
+    data = response.json()
+    assert data["code"] == "auth.login_failed"
+
+
+def test_deactivated_user_access_token_revoked_on_next_request(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """教师已登录 -> 管理员停用 -> 旧会话访问受保护资源返回 401。"""
+    admin_login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert admin_login.status_code == 200
+    admin_access = admin_login.cookies.get("child_manager_access")
+    assert admin_access is not None
+
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "teacher_to_disable",
+            "display_name": "待停用教师",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=csrf_headers,
+        cookies={"child_manager_access": admin_access, **csrf_cookie},
+    )
+    assert create.status_code == 201
+    teacher_id = create.json()["id"]
+
+    teacher_login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "teacher_to_disable", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert teacher_login.status_code == 200
+    teacher_access = teacher_login.cookies.get("child_manager_access")
+    assert teacher_access is not None
+
+    # 教师会话有效
+    me_before = client.get(
+        "/api/v1/auth/me",
+        headers=csrf_headers,
+        cookies={"child_manager_access": teacher_access, **csrf_cookie},
+    )
+    assert me_before.status_code == 200
+
+    # 管理员停用教师
+    deactivate = client.post(
+        f"/api/v1/users/{teacher_id}/deactivate",
+        headers=csrf_headers,
+        cookies={"child_manager_access": admin_access, **csrf_cookie},
+    )
+    assert deactivate.status_code == 200
+
+    # 教师旧会话下一受保护请求失权
+    me_after = client.get(
+        "/api/v1/auth/me",
+        headers=csrf_headers,
+        cookies={"child_manager_access": teacher_access, **csrf_cookie},
+    )
+    assert me_after.status_code == 401
+    assert me_after.json()["code"] == "auth.unauthenticated"
