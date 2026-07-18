@@ -800,8 +800,8 @@
     "semantic_hash": ""
   },
   "apps/api/routers/auth.py": {
-    "mtime": 1784334223.0580893,
-    "ast_hash": "cfd50baeea2a3f7f3e215f1b55329ad4",
+    "mtime": 1784351432.9629505,
+    "ast_hash": "f2a2a55649925da5c3878e2b940390a4",
     "semantic_hash": ""
   },
   "apps/api/routers/users.py": {
@@ -890,8 +890,8 @@
     "semantic_hash": ""
   },
   "tests/api/test_auth.py": {
-    "mtime": 1784334311.2152624,
-    "ast_hash": "4d6b8850aba8b922cf281f9c9eb9557c",
+    "mtime": 1784351456.9900827,
+    "ast_hash": "59d478f084e201df0f0daafd65b702e8",
     "semantic_hash": ""
   },
   "tests/api/test_csrf.py": {
@@ -1030,8 +1030,8 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/exceptions.py": {
-    "mtime": 1784332867.7223587,
-    "ast_hash": "f9514b6df2d18c1222fa1c2a716bf203",
+    "mtime": 1784351462.1853275,
+    "ast_hash": "941e6bee6fe489421da89d6322c1fde5",
     "semantic_hash": ""
   },
   "packages/backend/database/migrations/versions/0004_refresh_token_fk.py": {
