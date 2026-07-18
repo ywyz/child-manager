@@ -54,23 +54,27 @@ def test_user_create_request_requires_at_least_one_role() -> None:
 
 def test_user_create_request_rejects_unknown_roles() -> None:
     with pytest.raises(ValidationError):
-        UserCreateRequest(
-            username="teacher",
-            display_name="教师",
-            phone_e164=None,
-            password="ValidPassword2024!",
-            role_codes=["admin", "unknown"],
+        UserCreateRequest.model_validate(
+            {
+                "username": "teacher",
+                "display_name": "教师",
+                "phone_e164": None,
+                "password": "ValidPassword2024!",
+                "role_codes": ["admin", "unknown"],
+            }
         )
 
 
 def test_user_create_request_rejects_duplicate_roles() -> None:
     with pytest.raises(ValidationError):
-        UserCreateRequest(
-            username="teacher",
-            display_name="教师",
-            phone_e164=None,
-            password="ValidPassword2024!",
-            role_codes=["admin", "admin"],
+        UserCreateRequest.model_validate(
+            {
+                "username": "teacher",
+                "display_name": "教师",
+                "phone_e164": None,
+                "password": "ValidPassword2024!",
+                "role_codes": ["admin", "admin"],
+            }
         )
 
 
@@ -105,3 +109,19 @@ def test_user_create_request_requires_role_codes() -> None:
                 "password": "ValidPassword2024!",
             }
         )
+
+
+def test_user_create_request_rejects_short_password() -> None:
+    with pytest.raises(ValidationError):
+        UserCreateRequest(
+            username="teacher",
+            display_name="教师",
+            phone_e164=None,
+            password="short",
+            role_codes=["teacher"],
+        )
+
+
+def test_reset_password_request_rejects_short_password() -> None:
+    with pytest.raises(ValidationError):
+        ResetPasswordRequest(new_password="short")

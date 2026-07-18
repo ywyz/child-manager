@@ -6,7 +6,7 @@ from collections.abc import Iterator
 import pytest
 from alembic.command import upgrade
 from alembic.config import Config
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import DateTime, create_engine, inspect
 from sqlalchemy.engine import Engine
 
 from tests.conftest import IS_POSTGRESQL
@@ -31,15 +31,12 @@ def test_family_revoked_at_column_exists(upgraded_engine: Engine) -> None:
 
 
 @pytest.mark.skipif(not IS_POSTGRESQL, reason="family_revoked_at 迁移需要 PostgreSQL")
-def test_family_revoked_at_column_is_nullable_datetime(
+def test_family_revoked_at_column_is_nullable_datetime_with_timezone(
     upgraded_engine: Engine,
 ) -> None:
     inspector = inspect(upgraded_engine)
     columns = {c["name"]: c for c in inspector.get_columns("refresh_tokens")}
     column = columns["family_revoked_at"]
     assert column["nullable"] is True
-    assert str(column["type"]).lower() in {
-        "timestamp with time zone",
-        "datetime_with_timezone",
-        "timestamp",
-    }
+    assert isinstance(column["type"], DateTime)
+    assert column["type"].timezone is True

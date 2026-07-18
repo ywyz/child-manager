@@ -1,7 +1,7 @@
 """身份与认证公共 Schema。"""
 
 from datetime import datetime
-from typing import Self
+from typing import Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -52,8 +52,8 @@ class LoginRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    login: str = Field(..., description="用户名或手机号")
-    password: str = Field(..., description="密码")
+    login: str = Field(..., min_length=1, max_length=120, description="用户名或手机号")
+    password: str = Field(..., min_length=1, max_length=128, description="密码")
 
 
 class ChangePasswordRequest(BaseModel):
@@ -61,11 +61,12 @@ class ChangePasswordRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    current_password: str = Field(..., description="原密码")
-    new_password: str = Field(..., description="新密码")
+    current_password: str = Field(..., min_length=1, max_length=128, description="原密码")
+    new_password: str = Field(..., min_length=15, max_length=128, description="新密码")
 
 
-_ALLOWED_ROLE_CODES = {"admin", "teacher"}
+RoleCode = Literal["admin", "teacher"]
+_ALLOWED_ROLE_CODES = set(RoleCode.__args__)  # type: ignore[attr-defined]
 
 
 def _validate_role_codes(value: list[str]) -> list[str]:
@@ -89,8 +90,13 @@ class UserCreateRequest(BaseModel):
     username: str = Field(..., min_length=1, max_length=120, description="用户名")
     display_name: str = Field(..., min_length=1, max_length=120, description="显示名称")
     phone_e164: str | None = Field(None, max_length=32, description="手机号(E.164)")
-    role_codes: list[str] = Field(..., description="角色代码列表")
-    password: str = Field(..., description="初始密码")
+    role_codes: list[RoleCode] = Field(
+        ...,
+        min_length=1,
+        description="角色代码列表",
+        json_schema_extra={"uniqueItems": True},
+    )
+    password: str = Field(..., min_length=15, max_length=128, description="初始密码")
 
     @field_validator("role_codes")
     @classmethod
@@ -160,7 +166,7 @@ class ResetPasswordRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    new_password: str = Field(..., description="新密码")
+    new_password: str = Field(..., min_length=15, max_length=128, description="新密码")
 
 
 class UserRolesUpdateRequest(BaseModel):
@@ -168,7 +174,12 @@ class UserRolesUpdateRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    role_codes: list[str] = Field(..., description="角色代码列表")
+    role_codes: list[RoleCode] = Field(
+        ...,
+        min_length=1,
+        description="角色代码列表",
+        json_schema_extra={"uniqueItems": True},
+    )
 
     @field_validator("role_codes")
     @classmethod

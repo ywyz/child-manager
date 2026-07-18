@@ -92,10 +92,9 @@ async def _load_users(
         return
     if isinstance(data, dict) and "items" in data:
         list_container.set_content(_render_user_table(data["items"]))
-        options = [
-            {"label": f"{u.get('username')} ({u.get('display_name')})", "value": u.get("id")}
-            for u in data["items"]
-        ]
+        options = {
+            u.get("id"): f"{u.get('username')} ({u.get('display_name')})" for u in data["items"]
+        }
         user_selector.set_options(options)
     else:
         list_container.set_content("<p>加载失败</p>")

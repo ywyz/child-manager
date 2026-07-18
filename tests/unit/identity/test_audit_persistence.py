@@ -74,7 +74,7 @@ def test_refresh_replay_audit_persisted(service: IdentityService, kindergarten: 
     assert login is not None
     _commit(service)
 
-    old_refresh = login["refresh_value"]
+    old_refresh = login.refresh_value
     first = service.refresh(refresh_cookie=old_refresh)
     assert first is not None
     _commit(service)

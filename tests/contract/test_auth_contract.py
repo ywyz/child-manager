@@ -1,6 +1,7 @@
 """Auth 契约测试。"""
 
-from pydantic import BaseModel
+import pytest
+from pydantic import BaseModel, ValidationError
 
 from packages.contracts.identity import (
     ChangePasswordRequest,
@@ -42,3 +43,23 @@ def test_change_password_request_has_both_passwords() -> None:
     fields = _schema_fields(ChangePasswordRequest)
     assert "current_password" in fields
     assert "new_password" in fields
+
+
+def test_login_request_rejects_empty_login() -> None:
+    with pytest.raises(ValidationError):
+        LoginRequest(login="", password="ValidPassword2024!")
+
+
+def test_login_request_rejects_empty_password() -> None:
+    with pytest.raises(ValidationError):
+        LoginRequest(login="admin", password="")
+
+
+def test_login_request_rejects_too_long_login() -> None:
+    with pytest.raises(ValidationError):
+        LoginRequest(login="a" * 121, password="ValidPassword2024!")
+
+
+def test_change_password_request_rejects_short_new_password() -> None:
+    with pytest.raises(ValidationError):
+        ChangePasswordRequest(current_password="ValidPassword2024!", new_password="short")

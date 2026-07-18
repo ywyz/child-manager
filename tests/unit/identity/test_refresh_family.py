@@ -52,10 +52,10 @@ def test_login_creates_independent_family(service: IdentityService, kindergarten
     service._session.commit()
 
     token = service._repo.find_refresh_token_by_hash(
-        kindergarten, hash_refresh_value(result["refresh_value"])
+        kindergarten, hash_refresh_value(result.refresh_value)
     )
     assert token is not None
-    assert token.family_id != result["user"].id
+    assert token.family_id != result.user.id
     assert token.family_expires_at == token.expires_at
 
 
@@ -67,18 +67,18 @@ def test_refresh_preserves_family_id_and_absolute_expiration(
     service._session.commit()
 
     original_family = service._repo.find_refresh_token_by_hash(
-        kindergarten, hash_refresh_value(login["refresh_value"])
+        kindergarten, hash_refresh_value(login.refresh_value)
     )
     assert original_family is not None
     family_id = original_family.family_id
     family_expires = original_family.family_expires_at
 
-    refreshed = service.refresh(refresh_cookie=login["refresh_value"])
+    refreshed = service.refresh(refresh_cookie=login.refresh_value)
     assert refreshed is not None
     service._session.commit()
 
     new_token = service._repo.find_refresh_token_by_hash(
-        kindergarten, hash_refresh_value(refreshed["refresh_value"])
+        kindergarten, hash_refresh_value(refreshed.refresh_value)
     )
     assert new_token is not None
     assert new_token.family_id == family_id

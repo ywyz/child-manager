@@ -31,14 +31,9 @@ async def create_user(
     check_csrf(request)
 
     service = IdentityService(session)
-    user = service.create_user(
+    return service.create_user(
         kindergarten_id=current_user.kindergarten_id, creator=current_user, request=body
     )
-    session.commit()
-    response = service.get_user(current_user.kindergarten_id, user.id)
-    if response is None:
-        raise UserNotFoundError("创建用户后读取失败")
-    return response
 
 
 @router.get("", response_model=UserPage)
@@ -85,7 +80,6 @@ async def update_user(
     )
     if user is None:
         raise UserNotFoundError()
-    session.commit()
     return user
 
 
@@ -108,7 +102,6 @@ async def set_user_roles(
     )
     if user is None:
         raise UserNotFoundError()
-    session.commit()
     return user
 
 
@@ -129,7 +122,6 @@ async def activate_user(
     )
     if user is None:
         raise UserNotFoundError()
-    session.commit()
     return user
 
 
@@ -143,16 +135,11 @@ async def deactivate_user(
     check_csrf(request)
 
     service = IdentityService(session)
-    service.deactivate_user(
+    return service.deactivate_user(
         kindergarten_id=current_user.kindergarten_id,
         admin_user_id=current_user.id,
         user_id=user_id,
     )
-    session.commit()
-    user = service.get_user(current_user.kindergarten_id, user_id)
-    if user is None:
-        raise UserNotFoundError("停用用户后读取失败")
-    return user
 
 
 @router.post("/{user_id}/reset-password")
@@ -175,6 +162,5 @@ async def reset_password(
     ):
         raise UserNotFoundError()
 
-    session.commit()
     response.status_code = status.HTTP_204_NO_CONTENT
     return response

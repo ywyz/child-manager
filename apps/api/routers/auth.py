@@ -113,15 +113,6 @@ def _clear_auth_cookies(response: Response) -> None:
     )
 
 
-def _build_current_user(
-    service: IdentityService, user_id: str, kindergarten_id: str
-) -> CurrentUser:
-    user = service.get_user_by_id(kindergarten_id, user_id)
-    if user is None:
-        raise UnauthenticatedError("会话已失效")
-    return service.build_current_user(user)
-
-
 @router.get("/csrf", response_model=CsrfResponse)
 async def csrf(response: Response) -> CsrfResponse:
     """签发签名双提交 CSRF Cookie。"""
@@ -145,12 +136,10 @@ async def login(
     service = IdentityService(session)
     if await _throttle.is_blocked(account_key=account_key, source_ip=source_ip):
         service.record_login_rate_limited(username=account_key, source_ip=source_ip)
-        session.commit()
         raise LoginRateLimitedError()
 
     result = service.login(username=account_key, password=body.password, source_ip=source_ip)
     if result is None:
-        session.commit()
         await _throttle.record_failure(account_key=account_key, source_ip=source_ip)
         raise LoginFailedError()
 
@@ -158,12 +147,11 @@ async def login(
 
     _set_auth_cookies(
         response,
-        access_token=result["access_token"],
-        refresh_token=result["refresh_value"],
-        csrf_token=result["csrf_token"],
+        access_token=result.access_token,
+        refresh_token=result.refresh_value,
+        csrf_token=result.csrf_token,
     )
-    session.commit()
-    return _build_current_user(service, result["user"].id, result["kindergarten_id"])
+    return result.current_user
 
 
 @router.post("/refresh", response_model=CurrentUser)
@@ -181,17 +169,15 @@ async def refresh(
     service = IdentityService(session)
     result = service.refresh(refresh_cookie=refresh_cookie)
     if result is None:
-        session.commit()
         raise UnauthenticatedError()
 
     _set_auth_cookies(
         response,
-        access_token=result["access_token"],
-        refresh_token=result["refresh_value"],
-        csrf_token=result["csrf_token"],
+        access_token=result.access_token,
+        refresh_token=result.refresh_value,
+        csrf_token=result.csrf_token,
     )
-    session.commit()
-    return _build_current_user(service, result["user_id"], result["kindergarten_id"])
+    return result.current_user
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
@@ -206,8 +192,6 @@ async def logout(
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
     service = IdentityService(session)
     service.logout(refresh_cookie=refresh_cookie, source_ip=source_ip)
-    if refresh_cookie:
-        session.commit()
 
     _clear_auth_cookies(response)
     response.status_code = status.HTTP_204_NO_CONTENT
@@ -239,7 +223,6 @@ async def change_password(
     ):
         raise ChangePasswordFailedError()
 
-    session.commit()
     _clear_auth_cookies(response)
     response.status_code = status.HTTP_204_NO_CONTENT
     return response

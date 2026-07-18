@@ -11,6 +11,7 @@ from collections.abc import Callable
 from typing import Any
 
 import pytest
+from nicegui import ui
 from nicegui.testing.user import User
 
 
@@ -20,6 +21,10 @@ def _rule(value: Any) -> Callable[[re.Match], Any]:
 
 def _js_rule(pattern: str) -> re.Pattern:
     return re.compile(rf".*{re.escape(pattern)}.*", re.DOTALL)
+
+
+def _action_js_rule(suffix: str) -> re.Pattern:
+    return re.compile(rf".*api/v1/users/.*/{suffix}.*", re.DOTALL)
 
 
 def _add_js_rules(
@@ -43,6 +48,26 @@ def _add_js_rules(
     user.javascript_rules[_js_rule("/api/v1/auth/login")] = _rule(None)
     user.javascript_rules[_js_rule("/api/v1/auth/change-password")] = _rule(None)
     user.javascript_rules[_js_rule("/api/v1/users")] = _users_result
+    # 账号操作：重置密码、停用、启用、保存角色均返回 null 表示成功。
+    user.javascript_rules[_action_js_rule("reset-password")] = _rule(None)
+    user.javascript_rules[_action_js_rule("deactivate")] = _rule(None)
+    user.javascript_rules[_action_js_rule("activate")] = _rule(None)
+    user.javascript_rules[_action_js_rule("roles")] = _rule(None)
+
+
+def _select_user(user: User, user_id: str) -> None:
+    """在动态账号列表加载后，直接设置选择器的值为目标用户 ID。
+
+    NiceGUI `ui.select` 的选项为字典时，测试框架无法通过文本点击选择，
+    因此通过页面元素设置值后再触发按钮，仍属于页面级交互验证。
+    """
+    assert user.client is not None
+    with user:
+        for element in user.client.elements.values():
+            if isinstance(element, ui.select) and element.props.get("label") == "选择账号":
+                element.value = user_id
+                return
+    raise AssertionError("未找到账号选择器")
 
 
 @pytest.mark.asyncio
@@ -61,8 +86,8 @@ async def test_login_page_allows_typing_and_click(user: User) -> None:
     user.find("用户名").type("admin")
     user.find("密码").type("ValidPassword2024!")
     user.find("登录").click()
-    # 登录成功后 JS 返回 null，错误标签保持为空；页面仍保留登录表单。
-    await user.should_see("登录")
+    # 登录请求已发出并成功（JS 返回 null），错误标签不出现请求失败提示。
+    await user.should_not_see("请求失败", retries=10)
 
 
 @pytest.mark.asyncio
@@ -95,6 +120,13 @@ async def test_navigation_renders_header_and_links(user: User) -> None:
     await user.should_see("首页")
     await user.should_see("修改密码")
     await user.should_see("退出")
+
+
+@pytest.mark.asyncio
+async def test_navigation_renders_admin_link_for_admin(user: User) -> None:
+    _add_js_rules(user, role_codes=["admin"])
+    await user.open("/")
+    await user.should_see("账号管理")
 
 
 @pytest.mark.asyncio
@@ -141,3 +173,102 @@ async def test_user_management_page_create_user_closes_loop(user: User) -> None:
     # 创建成功后先看到成功消息，随后列表刷新显示新账号。
     await user.should_see("创建成功", retries=10)
     await user.should_see("教师一", retries=10)
+
+
+@pytest.mark.asyncio
+async def test_user_management_page_refresh_list(user: User) -> None:
+    _add_js_rules(
+        user,
+        users_payload={
+            "items": [
+                {
+                    "id": "u1",
+                    "username": "teacher1",
+                    "display_name": "教师一",
+                    "role_codes": ["teacher"],
+                    "is_active": True,
+                }
+            ]
+        },
+    )
+    await user.open("/users")
+    user.find("刷新列表").click()
+    await user.should_see("教师一", retries=10)
+    await user.should_see("teacher1", retries=10)
+
+
+@pytest.mark.asyncio
+async def test_user_management_page_reset_password(user: User) -> None:
+    _add_js_rules(
+        user,
+        users_payload={
+            "items": [
+                {
+                    "id": "u1",
+                    "username": "teacher1",
+                    "display_name": "教师一",
+                    "role_codes": ["teacher"],
+                    "is_active": True,
+                }
+            ]
+        },
+    )
+    await user.open("/users")
+    await user.should_see("teacher1", retries=10)
+    _select_user(user, "u1")
+    user.find("新密码").type("NewPassword2024!")
+    user.find("重置密码").click()
+    await user.should_see("操作成功", retries=10)
+    await user.should_not_see("请求失败", retries=5)
+
+
+@pytest.mark.asyncio
+async def test_user_management_page_deactivate_and_activate(user: User) -> None:
+    _add_js_rules(
+        user,
+        users_payload={
+            "items": [
+                {
+                    "id": "u1",
+                    "username": "teacher1",
+                    "display_name": "教师一",
+                    "role_codes": ["teacher"],
+                    "is_active": True,
+                }
+            ]
+        },
+    )
+    await user.open("/users")
+    await user.should_see("teacher1", retries=10)
+    _select_user(user, "u1")
+    user.find("停用账号").click()
+    await user.should_see("操作成功", retries=10)
+    _select_user(user, "u1")
+    user.find("启用账号").click()
+    await user.should_see("操作成功", retries=10)
+
+
+@pytest.mark.asyncio
+async def test_user_management_page_set_roles(user: User) -> None:
+    _add_js_rules(
+        user,
+        users_payload={
+            "items": [
+                {
+                    "id": "u1",
+                    "username": "teacher1",
+                    "display_name": "教师一",
+                    "role_codes": ["teacher"],
+                    "is_active": True,
+                }
+            ]
+        },
+    )
+    await user.open("/users")
+    await user.should_see("teacher1", retries=10)
+    _select_user(user, "u1")
+    user.find("调整角色").click()
+    user.find("admin").click()
+    user.find("保存角色").click()
+    await user.should_see("操作成功", retries=10)
+    await user.should_not_see("请求失败", retries=5)

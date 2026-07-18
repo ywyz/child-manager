@@ -1,5 +1,7 @@
 """身份与认证业务 Service。"""
 
+from collections.abc import Sequence
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import uuid4
@@ -35,6 +37,37 @@ from packages.contracts.identity import (
 )
 
 
+@dataclass(frozen=True)
+class LoginResult:
+    """登录成功后的完整结果，避免使用无类型字典。
+
+    当前用户对象在事务提交前构造完成，Router 层不再额外查询数据库。
+    """
+
+    user: User
+    roles: list[str]
+    kindergarten_id: str
+    family_id: str
+    access_token: str
+    refresh_value: str
+    csrf_token: str
+    current_user: CurrentUser
+
+
+@dataclass(frozen=True)
+class RefreshResult:
+    """刷新成功后的完整结果。"""
+
+    user_id: str
+    kindergarten_id: str
+    family_id: str
+    roles: list[str]
+    access_token: str
+    refresh_value: str
+    csrf_token: str
+    current_user: CurrentUser
+
+
 class IdentityService:
     """身份业务编排：协调 Repository、Token、CSRF 与审计。"""
 
@@ -63,7 +96,7 @@ class IdentityService:
             result=result,
             source_ip=source_ip,
         )
-        # Service 不自行提交；由 Router/CLI 等调用方控制事务边界。
+        # 应用用例方法内部统一控制事务边界；Router/CLI 只负责传输与装配。
 
     def _get_kindergarten(self) -> Kindergarten | None:
         """M2 单园部署：返回唯一园所。
@@ -113,6 +146,7 @@ class IdentityService:
             result=audit_events.RESULT_FAILURE,
             source_ip=source_ip,
         )
+        self._session.commit()
 
     def authenticate(
         self, *, username: str, password: str, source_ip: str | None = None
@@ -143,6 +177,7 @@ class IdentityService:
                 result=audit_events.RESULT_FAILURE,
                 source_ip=source_ip,
             )
+            self._session.commit()
             return None
 
         if not user.is_active:
@@ -155,6 +190,7 @@ class IdentityService:
                 result=audit_events.RESULT_FAILURE,
                 source_ip=source_ip,
             )
+            self._session.commit()
             return None
 
         roles = self._repo.list_user_roles(kg.id, user.id)
@@ -171,7 +207,7 @@ class IdentityService:
 
     def login(
         self, *, username: str, password: str, source_ip: str | None = None
-    ) -> dict[str, Any] | None:
+    ) -> LoginResult | None:
         result = self.authenticate(username=username, password=password, source_ip=source_ip)
         if result is None:
             return None
@@ -198,17 +234,20 @@ class IdentityService:
             family_expires_at=family_expires_at,
         )
         csrf_token = generate_csrf_token(settings.csrf_signing_key)
-        return {
-            "user": user,
-            "roles": roles,
-            "kindergarten_id": user.kindergarten_id,
-            "family_id": family_id,
-            "access_token": access_token,
-            "refresh_value": refresh_value,
-            "csrf_token": csrf_token,
-        }
+        current_user = self.build_current_user(user)
+        self._session.commit()
+        return LoginResult(
+            user=user,
+            roles=roles,
+            kindergarten_id=user.kindergarten_id,
+            family_id=family_id,
+            access_token=access_token,
+            refresh_value=refresh_value,
+            csrf_token=csrf_token,
+            current_user=current_user,
+        )
 
-    def refresh(self, *, refresh_cookie: str) -> dict[str, Any] | None:
+    def refresh(self, *, refresh_cookie: str) -> RefreshResult | None:
         kindergarten_id = parse_refresh_kindergarten_id(refresh_cookie)
         if kindergarten_id is None:
             return None
@@ -233,10 +272,12 @@ class IdentityService:
                 result=audit_events.RESULT_FAILURE,
             )
             self._repo.revoke_refresh_family(token_row.kindergarten_id, token_row.family_id)
+            self._session.commit()
             return None
 
         user = self._repo.get_user_by_id(token_row.kindergarten_id, token_row.user_id)
         if user is None or not user.is_active:
+            self._session.commit()
             return None
 
         # 正常轮换：只撤销当前 token，保留 family；Access Token 携带同一 family_id。
@@ -270,15 +311,18 @@ class IdentityService:
             action="refresh",
             result=audit_events.RESULT_SUCCESS,
         )
-        return {
-            "user_id": token_row.user_id,
-            "kindergarten_id": token_row.kindergarten_id,
-            "family_id": token_row.family_id,
-            "roles": roles,
-            "access_token": access_token,
-            "refresh_value": refresh_value,
-            "csrf_token": csrf_token,
-        }
+        current_user = self.build_current_user(user)
+        self._session.commit()
+        return RefreshResult(
+            user_id=token_row.user_id,
+            kindergarten_id=token_row.kindergarten_id,
+            family_id=token_row.family_id,
+            roles=roles,
+            access_token=access_token,
+            refresh_value=refresh_value,
+            csrf_token=csrf_token,
+            current_user=current_user,
+        )
 
     def is_token_family_active(self, kindergarten_id: str, family_id: str) -> bool:
         """Access Token 携带的 family 是否仍活跃。"""
@@ -304,6 +348,7 @@ class IdentityService:
                 result=audit_events.RESULT_SUCCESS,
                 source_ip=source_ip,
             )
+            self._session.commit()
 
     def change_password(
         self, *, kindergarten_id: str, user_id: str, old_password: str, new_password: str
@@ -322,6 +367,7 @@ class IdentityService:
             action="change_password",
             result=audit_events.RESULT_SUCCESS,
         )
+        self._session.commit()
         return True
 
     def _build_user_response(self, user: User) -> UserResponse:
@@ -338,7 +384,7 @@ class IdentityService:
 
     def create_user(
         self, *, kindergarten_id: str, creator: CurrentUser, request: UserCreateRequest
-    ) -> User:
+    ) -> UserResponse:
         self.ensure_roles(kindergarten_id)
 
         username = normalize_username(request.username)
@@ -359,6 +405,7 @@ class IdentityService:
                 self._repo.assign_role(
                     kindergarten_id=kindergarten_id, user_id=user.id, role_id=role.id
                 )
+        response = self._build_user_response(user)
         self._record_identity(
             kindergarten_id=kindergarten_id,
             event_type=audit_events.IDENTITY_CREATE_USER,
@@ -367,7 +414,8 @@ class IdentityService:
             action="create_user",
             result=audit_events.RESULT_SUCCESS,
         )
-        return user
+        self._session.commit()
+        return response
 
     def list_users(
         self, kindergarten_id: str, *, page: int = 1, page_size: int = 20
@@ -408,10 +456,11 @@ class IdentityService:
             action="update_user",
             result=audit_events.RESULT_SUCCESS,
         )
+        self._session.commit()
         return self._build_user_response(user)
 
     def set_user_roles(
-        self, *, kindergarten_id: str, admin_user_id: str, user_id: str, role_codes: list[str]
+        self, *, kindergarten_id: str, admin_user_id: str, user_id: str, role_codes: Sequence[str]
     ) -> UserResponse | None:
         user = self._repo.get_user_by_id(kindergarten_id, user_id)
         if user is None:
@@ -442,6 +491,7 @@ class IdentityService:
             action="set_user_roles",
             result=audit_events.RESULT_SUCCESS,
         )
+        self._session.commit()
         return self._build_user_response(user)
 
     def activate_user(
@@ -459,6 +509,7 @@ class IdentityService:
             action="activate_user",
             result=audit_events.RESULT_SUCCESS,
         )
+        self._session.commit()
         return self._build_user_response(user)
 
     def reset_password(
@@ -478,9 +529,12 @@ class IdentityService:
             action="reset_password",
             result=audit_events.RESULT_SUCCESS,
         )
+        self._session.commit()
         return True
 
-    def deactivate_user(self, *, kindergarten_id: str, admin_user_id: str, user_id: str) -> None:
+    def deactivate_user(
+        self, *, kindergarten_id: str, admin_user_id: str, user_id: str
+    ) -> UserResponse:
         target = self._repo.get_user_by_id(kindergarten_id, user_id)
         if target is None:
             raise UserNotFoundError()
@@ -493,6 +547,7 @@ class IdentityService:
             raise LastAdminError()
         self._repo.deactivate_user(kindergarten_id, user_id)
         self._repo.revoke_user_tokens(kindergarten_id, user_id)
+        response = self._build_user_response(target)
         self._record_identity(
             kindergarten_id=kindergarten_id,
             event_type=audit_events.IDENTITY_DEACTIVATE_USER,
@@ -501,6 +556,8 @@ class IdentityService:
             action="deactivate_user",
             result=audit_events.RESULT_SUCCESS,
         )
+        self._session.commit()
+        return response
 
     def init_admin(self, *, kg_name: str, admin_username: str, password: str) -> dict[str, Any]:
         kg = self._repo.create_kindergarten(name=kg_name or "默认幼儿园")
