@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "packages/backend/config.py": {
-    "mtime": 1784289855.5324416,
-    "ast_hash": "68550c83e74e27ef0162f0e442171c88",
+    "mtime": 1784370048.7430618,
+    "ast_hash": "14095261150fc12708fefbb0550327ee",
     "semantic_hash": ""
   },
   "packages/backend/database/__init__.py": {
@@ -295,8 +295,8 @@
     "semantic_hash": ""
   },
   "packages/contracts/identity.py": {
-    "mtime": 1784364894.8693154,
-    "ast_hash": "06a76b204c2275ed560305fc650ace9b",
+    "mtime": 1784370151.1055586,
+    "ast_hash": "c06a1edec98cdb684c163d31b8fd356c",
     "semantic_hash": ""
   },
   "packages/contracts/jobs.py": {
@@ -790,13 +790,13 @@
     "semantic_hash": ""
   },
   "tests/unit/test_config.py": {
-    "mtime": 1784290097.3697345,
-    "ast_hash": "c81e314488ae6b80cd3695ce4826749d",
+    "mtime": 1784370048.8480675,
+    "ast_hash": "fb305524effc059cb27aef20e92ebb09",
     "semantic_hash": ""
   },
   "tests/contract/test_t005_contracts.py": {
-    "mtime": 1784332868.3203845,
-    "ast_hash": "156b75cacca2077a2b6ae01982ab29c7",
+    "mtime": 1784370145.806276,
+    "ast_hash": "efdb7954e0f960f372d202f79837dc68",
     "semantic_hash": ""
   },
   "apps/api/routers/auth.py": {
@@ -885,7 +885,7 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/tokens.py": {
-    "mtime": 1784363940.2076347,
+    "mtime": 1784371453.362448,
     "ast_hash": "0820557884642f6df6fae31edde5a2cb",
     "semantic_hash": ""
   },
@@ -910,8 +910,8 @@
     "semantic_hash": ""
   },
   "tests/contract/test_auth_contract.py": {
-    "mtime": 1784332868.2523816,
-    "ast_hash": "b42a9e51b69881cf20bafff841695505",
+    "mtime": 1784370138.6508942,
+    "ast_hash": "3e5bfa23337fef7bd53f3dae8064adef",
     "semantic_hash": ""
   },
   "tests/contract/test_users_contract.py": {
@@ -1055,8 +1055,13 @@
     "semantic_hash": ""
   },
   "tests/web/test_pages_smoke.py": {
-    "mtime": 1784365361.8011868,
-    "ast_hash": "aa586edf570c4ec95a22e4947a518c73",
+    "mtime": 1784371014.2959359,
+    "ast_hash": "09e2dd1a741d6c191df676de0753ab50",
+    "semantic_hash": ""
+  },
+  "tests/migrations/test_0005_refresh_family_revoked.py": {
+    "mtime": 1784371453.362448,
+    "ast_hash": "e7aaf460dd5efca75697a869ff8047bd",
     "semantic_hash": ""
   }
 }
