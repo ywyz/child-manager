@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     jwt_signing_key: str = ""
     csrf_signing_key: str = ""
     jwt_algorithm: str = "HS256"
-    jwt_expire_minutes: int = 60
+    jwt_expire_minutes: int = 15
 
     encryption_key_path: str = ""
 

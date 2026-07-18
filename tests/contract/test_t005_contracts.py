@@ -142,7 +142,6 @@ class TestPublicClassScope:
                     "KindergartenSnapshot",
                     "CsrfResponse",
                     "LoginRequest",
-                    "RefreshRequest",
                     "ChangePasswordRequest",
                     "UserCreateRequest",
                     "UserPatch",

@@ -14,7 +14,7 @@ def test_settings_defaults(monkeypatch):
 def test_jwt_settings():
     settings = Settings()
     assert settings.jwt_algorithm == "HS256"
-    assert settings.jwt_expire_minutes == 60
+    assert settings.jwt_expire_minutes == 15
 
 
 def test_allowed_hosts():

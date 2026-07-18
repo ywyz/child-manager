@@ -56,14 +56,6 @@ class LoginRequest(BaseModel):
     password: str = Field(..., description="密码")
 
 
-class RefreshRequest(BaseModel):
-    """刷新请求。"""
-
-    model_config = ConfigDict(extra="forbid")
-
-    refresh_token: str = Field(..., description="Refresh 令牌")
-
-
 class ChangePasswordRequest(BaseModel):
     """修改密码请求。"""
 
@@ -94,9 +86,9 @@ class UserCreateRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    username: str = Field(..., description="用户名")
-    display_name: str = Field(..., description="显示名称")
-    phone_e164: str | None = Field(None, description="手机号(E.164)")
+    username: str = Field(..., min_length=1, max_length=120, description="用户名")
+    display_name: str = Field(..., min_length=1, max_length=120, description="显示名称")
+    phone_e164: str | None = Field(None, max_length=32, description="手机号(E.164)")
     role_codes: list[str] = Field(..., description="角色代码列表")
     password: str = Field(..., description="初始密码")
 
@@ -111,9 +103,11 @@ class UserPatch(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    username: str | None = Field(default=None, description="用户名")
-    display_name: str | None = Field(default=None, description="显示名称")
-    phone_e164: str | None = Field(default=None, description="手机号(E.164)")
+    username: str | None = Field(default=None, min_length=1, max_length=120, description="用户名")
+    display_name: str | None = Field(
+        default=None, min_length=1, max_length=120, description="显示名称"
+    )
+    phone_e164: str | None = Field(default=None, max_length=32, description="手机号(E.164)")
 
     @field_validator("username", "display_name")
     @classmethod

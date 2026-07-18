@@ -6,7 +6,6 @@ from packages.contracts.identity import (
     ChangePasswordRequest,
     CurrentUser,
     LoginRequest,
-    RefreshRequest,
 )
 
 
@@ -37,11 +36,6 @@ def test_login_response_is_current_user() -> None:
     fields = _schema_fields(CurrentUser)
     assert "kindergarten" in fields
     assert "role_codes" in fields
-
-
-def test_refresh_request_has_token_field() -> None:
-    fields = _schema_fields(RefreshRequest)
-    assert "refresh_token" in fields
 
 
 def test_change_password_request_has_both_passwords() -> None:
