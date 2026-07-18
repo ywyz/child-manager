@@ -10,6 +10,8 @@ import pytest
 
 from tests.database_config import require_test_database_url
 
+pytest_plugins = ["nicegui.testing.user_plugin"]
+
 BASE_DATABASE_URL = require_test_database_url()
 IS_POSTGRESQL = BASE_DATABASE_URL.startswith("postgresql")
 

@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import sys
 from ipaddress import ip_address
 from urllib.parse import urlsplit
 
@@ -44,7 +45,12 @@ def main() -> None:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", default=28080, type=int)
     parser.add_argument("--api-base-url", default="http://127.0.0.1:28000")
-    args = parser.parse_args()
+    # NiceGUI testing 通过 runpy 加载本文件并继承 pytest 的 sys.argv，
+    # 因此测试上下文中使用空参数列表，避免 argparse 解析 pytest 参数失败。
+    if "pytest" in sys.modules:
+        args = parser.parse_args([])
+    else:
+        args = parser.parse_args()
 
     _require_loopback(args.host, "Web 绑定地址")
     api_host = urlsplit(args.api_base_url).hostname or "127.0.0.1"
@@ -67,5 +73,5 @@ def main() -> None:
     )
 
 
-if __name__ == "__main__":
+if __name__ in {"__main__", "__mp_main__"}:
     main()

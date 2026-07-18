@@ -49,6 +49,9 @@ extraPaths = ["apps", "packages", "tests"]
 testpaths = ["tests"]
 addopts = ["-v"]
 pythonpath = ["apps", "packages", "tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+main_file = "apps/web/main.py"
 filterwarnings = [
     "error",
     "ignore::DeprecationWarning",
