@@ -38,18 +38,20 @@ class TestIdentitySkeleton:
     """identity.py 在 M2 扩展为 Auth/Users 公共契约。"""
 
     def test_current_user_valid(self) -> None:
+        user_id = "11111111-1111-1111-1111-111111111111"
+        kg_id = "22222222-2222-2222-2222-222222222222"
         user = identity.CurrentUser(
-            id="u1",
+            id=user_id,
             username="teacher-a",
             display_name="王老师",
             kindergarten=identity.KindergartenSnapshot(
-                id="k1", name="实验幼儿园", timezone="Asia/Shanghai"
+                id=kg_id, name="实验幼儿园", timezone="Asia/Shanghai"
             ),
             role_codes=["teacher"],
         )
-        assert user.id == "u1"
+        assert user.id == user_id
         assert user.role_codes == ["teacher"]
-        assert user.kindergarten_id == "k1"
+        assert user.kindergarten_id == kg_id
         assert user.roles == ["teacher"]
 
     def test_current_user_rejects_extra_fields(self) -> None:

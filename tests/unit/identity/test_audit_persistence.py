@@ -48,10 +48,10 @@ def kindergarten(service: IdentityService):
     return result["kindergarten_id"]
 
 
-def _audit_count(session, kindergarten_id: str, event_type: str) -> int:
+def _audit_count(session, kindergarten_id: str, event_code: str) -> int:
     stmt = select(func.count(AuditEvent.id)).where(
         AuditEvent.kindergarten_id == kindergarten_id,
-        AuditEvent.event_type == event_type,
+        AuditEvent.event_code == event_code,
     )
     return int(session.execute(stmt).scalar() or 0)
 

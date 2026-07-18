@@ -4,12 +4,12 @@ Revision ID: 0002_add_updated_at_to_identity_audit
 Revises: 0001_identity_and_audit
 Create Date: 2026-07-17 00:00:00.000000
 
+说明：冻结 Schema 已将 updated_at 下沉到 0001_identity_and_audit，
+本迁移保留以保持 Alembic 链完整，不再执行额外变更。
+
 """
 
 from collections.abc import Sequence
-
-import sqlalchemy as sa
-from alembic import op
 
 revision: str = "0002_updated_at"
 down_revision: str | None = "0001_identity_and_audit"
@@ -18,36 +18,8 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    op.add_column(
-        "user_roles",
-        sa.Column(
-            "updated_at",
-            sa.DateTime(timezone=True),
-            nullable=False,
-            server_default=sa.text("CURRENT_TIMESTAMP"),
-        ),
-    )
-    op.add_column(
-        "refresh_tokens",
-        sa.Column(
-            "updated_at",
-            sa.DateTime(timezone=True),
-            nullable=False,
-            server_default=sa.text("CURRENT_TIMESTAMP"),
-        ),
-    )
-    op.add_column(
-        "audit_events",
-        sa.Column(
-            "updated_at",
-            sa.DateTime(timezone=True),
-            nullable=False,
-            server_default=sa.text("CURRENT_TIMESTAMP"),
-        ),
-    )
+    pass
 
 
 def downgrade() -> None:
-    op.drop_column("audit_events", "updated_at")
-    op.drop_column("refresh_tokens", "updated_at")
-    op.drop_column("user_roles", "updated_at")
+    pass

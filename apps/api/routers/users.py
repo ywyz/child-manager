@@ -32,7 +32,9 @@ async def create_user(
 
     service = IdentityService(session)
     return service.create_user(
-        kindergarten_id=current_user.kindergarten_id, creator=current_user, request=body
+        kindergarten_id=current_user.kindergarten_id,
+        creator=current_user,
+        request=body,
     )
 
 
@@ -74,7 +76,7 @@ async def update_user(
     service = IdentityService(session)
     user = service.update_user(
         kindergarten_id=current_user.kindergarten_id,
-        admin_user_id=current_user.id,
+        admin_user=current_user,
         user_id=user_id,
         patch=body,
     )
@@ -96,7 +98,7 @@ async def set_user_roles(
     service = IdentityService(session)
     user = service.set_user_roles(
         kindergarten_id=current_user.kindergarten_id,
-        admin_user_id=current_user.id,
+        admin_user=current_user,
         user_id=user_id,
         role_codes=body.role_codes,
     )
@@ -117,7 +119,7 @@ async def activate_user(
     service = IdentityService(session)
     user = service.activate_user(
         kindergarten_id=current_user.kindergarten_id,
-        admin_user_id=current_user.id,
+        admin_user=current_user,
         user_id=user_id,
     )
     if user is None:
@@ -137,7 +139,7 @@ async def deactivate_user(
     service = IdentityService(session)
     return service.deactivate_user(
         kindergarten_id=current_user.kindergarten_id,
-        admin_user_id=current_user.id,
+        admin_user=current_user,
         user_id=user_id,
     )
 
@@ -156,7 +158,7 @@ async def reset_password(
     service = IdentityService(session)
     if not service.reset_password(
         kindergarten_id=current_user.kindergarten_id,
-        admin_user_id=current_user.id,
+        admin_user=current_user,
         target_user_id=user_id,
         new_password=body.new_password,
     ):

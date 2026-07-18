@@ -8,6 +8,7 @@ from alembic.command import upgrade
 from alembic.config import Config
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.engine import Engine
+from sqlalchemy.types import UUID
 
 from tests.conftest import IS_POSTGRESQL
 
@@ -44,40 +45,89 @@ def test_kindergarten_columns(upgraded_engine: Engine) -> None:
     columns = {c["name"]: c for c in inspector.get_columns("kindergartens")}
     assert "name" in columns
     assert "timezone" in columns
+    assert "is_active" in columns
     assert "created_at" in columns
     assert "updated_at" in columns
+    assert isinstance(columns["id"]["type"], UUID)
 
 
 @pytest.mark.skipif(not IS_POSTGRESQL, reason="身份迁移需要 PostgreSQL")
-def test_user_unique_constraints(upgraded_engine: Engine) -> None:
+def test_roles_global(upgraded_engine: Engine) -> None:
     inspector = inspect(upgraded_engine)
-    constraints = inspector.get_unique_constraints("users")
-    names = {uc["name"] for uc in constraints if uc.get("name")}
-    assert any("username" in (name or "").lower() for name in names)
+    columns = {c["name"]: c for c in inspector.get_columns("roles")}
+    assert "code" in columns
+    assert "name" in columns
+    assert "is_system" in columns
+    assert "kindergarten_id" not in columns
+    assert "created_at" not in columns
+    assert "updated_at" not in columns
 
-
-@pytest.mark.skipif(not IS_POSTGRESQL, reason="身份迁移需要 PostgreSQL")
-def test_roles_unique_per_kindergarten(upgraded_engine: Engine) -> None:
-    inspector = inspect(upgraded_engine)
     constraints = inspector.get_unique_constraints("roles")
     names = {uc["name"] for uc in constraints if uc.get("name")}
-    assert any("code" in (name or "").lower() for name in names)
+    assert "uq_roles_code" in names
 
 
 @pytest.mark.skipif(not IS_POSTGRESQL, reason="身份迁移需要 PostgreSQL")
-def test_user_roles_composite_foreign_keys(upgraded_engine: Engine) -> None:
+def test_user_columns_and_constraints(upgraded_engine: Engine) -> None:
     inspector = inspect(upgraded_engine)
+    columns = {c["name"]: c for c in inspector.get_columns("users")}
+    required = {
+        "username",
+        "username_normalized",
+        "phone_e164",
+        "display_name",
+        "password_hash",
+        "is_active",
+        "password_changed_at",
+        "last_login_at",
+        "created_by",
+        "updated_by",
+    }
+    assert required <= set(columns)
+    assert isinstance(columns["id"]["type"], UUID)
+    assert isinstance(columns["kindergarten_id"]["type"], UUID)
+
+    constraints = inspector.get_unique_constraints("users")
+    names = {uc["name"] for uc in constraints if uc.get("name")}
+    assert "uq_users_kindergarten_username" in names
+
+
+@pytest.mark.skipif(not IS_POSTGRESQL, reason="身份迁移需要 PostgreSQL")
+def test_user_roles_composite_primary_key(upgraded_engine: Engine) -> None:
+    inspector = inspect(upgraded_engine)
+    pk = inspector.get_pk_constraint("user_roles")
+    assert set(pk["constrained_columns"]) == {
+        "kindergarten_id",
+        "user_id",
+        "role_id",
+    }
+
     fks = inspector.get_foreign_keys("user_roles")
-    assert len(fks) >= 2
+    assert len(fks) >= 3
     constrained_columns = {col for fk in fks for col in fk["constrained_columns"]}
-    assert {"kindergarten_id", "user_id", "role_id"} <= constrained_columns
+    assert {"kindergarten_id", "user_id", "role_id", "assigned_by"} <= constrained_columns
 
 
 @pytest.mark.skipif(not IS_POSTGRESQL, reason="身份迁移需要 PostgreSQL")
 def test_refresh_token_columns(upgraded_engine: Engine) -> None:
     inspector = inspect(upgraded_engine)
     columns = {c["name"]: c for c in inspector.get_columns("refresh_tokens")}
-    assert {"user_id", "family_id", "token_hash", "expires_at", "revoked_at"} <= set(columns)
+    required = {
+        "user_id",
+        "token_family_id",
+        "token_hash",
+        "issued_at",
+        "expires_at",
+        "family_expires_at",
+        "last_used_at",
+        "revoked_at",
+        "family_revoked_at",
+        "revoke_reason",
+        "replaced_by_id",
+        "client_label",
+    }
+    assert required <= set(columns)
+    assert isinstance(columns["id"]["type"], UUID)
 
 
 @pytest.mark.skipif(not IS_POSTGRESQL, reason="身份迁移需要 PostgreSQL")
@@ -86,12 +136,19 @@ def test_audit_events_columns(upgraded_engine: Engine) -> None:
     columns = {c["name"]: c for c in inspector.get_columns("audit_events")}
     required = {
         "kindergarten_id",
-        "event_type",
+        "event_code",
         "actor_user_id",
+        "actor_role_codes",
         "resource_type",
         "resource_id",
-        "result",
-        "event_metadata",
+        "request_id",
+        "trace_id",
+        "job_id",
+        "outcome",
+        "metadata",
+        "occurred_at",
         "created_at",
+        "updated_at",
     }
     assert required <= set(columns)
+    assert isinstance(columns["id"]["type"], UUID)

@@ -1,4 +1,8 @@
-"""updated_at 字段迁移测试。"""
+"""updated_at 字段迁移测试。
+
+冻结 Schema 已将 updated_at 下沉到 0001_identity_and_audit；
+本迁移保留以保持 Alembic 链完整，不再执行额外变更。
+"""
 
 import os
 from collections.abc import Iterator

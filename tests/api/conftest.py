@@ -16,7 +16,7 @@ def _seed_test_identity(migrated_database_url: str) -> Iterator[None]:
     session = session_module.SessionLocal()
     try:
         service = IdentityService(session)
-        service.init_admin(
+        result = service.init_admin(
             kg_name="阳光幼儿园",
             admin_username="admin",
             password="ValidPassword2024!",
@@ -25,13 +25,14 @@ def _seed_test_identity(migrated_database_url: str) -> Iterator[None]:
         repo = IdentityRepository(session)
         kg = service._get_kindergarten()
         assert kg is not None
-        admin_role = repo.get_role_by_code(kg.id, "admin")
+        admin_role = repo.get_role_by_code("admin")
         assert admin_role is not None
 
         disabled_user = repo.create_user(
             kindergarten_id=kg.id,
             username="disabled",
-            phone=None,
+            username_normalized="disabled",
+            phone_e164=None,
             display_name="已停用账号",
             password_hash=hash_password("ValidPassword2024!"),
         )
@@ -40,6 +41,7 @@ def _seed_test_identity(migrated_database_url: str) -> Iterator[None]:
             kindergarten_id=kg.id,
             user_id=disabled_user.id,
             role_id=admin_role.id,
+            assigned_by=result["user_id"],
         )
 
         session.commit()

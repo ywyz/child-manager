@@ -61,3 +61,10 @@ class LoginRateLimitedError(IdentityError):
 
     def __init__(self, message: str = "登录尝试过于频繁") -> None:
         super().__init__("auth.login_rate_limited", message, status_code=429)
+
+
+class ConflictError(IdentityError):
+    """资源唯一性冲突时抛出。"""
+
+    def __init__(self, message: str = "资源已存在") -> None:
+        super().__init__("resource.conflict", message, status_code=409)

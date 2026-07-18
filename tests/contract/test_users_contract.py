@@ -125,3 +125,35 @@ def test_user_create_request_rejects_short_password() -> None:
 def test_reset_password_request_rejects_short_password() -> None:
     with pytest.raises(ValidationError):
         ResetPasswordRequest(new_password="short")
+
+
+def test_user_response_rejects_duplicate_role_codes() -> None:
+    from datetime import UTC, datetime
+
+    with pytest.raises(ValidationError):
+        UserResponse(
+            id="11111111-1111-1111-1111-111111111111",
+            username="teacher",
+            display_name="教师",
+            phone_e164=None,
+            role_codes=["teacher", "teacher"],
+            is_active=True,
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
+        )
+
+
+def test_user_response_rejects_unknown_role_codes() -> None:
+    from datetime import UTC, datetime
+
+    with pytest.raises(ValidationError):
+        UserResponse(
+            id="11111111-1111-1111-1111-111111111111",
+            username="teacher",
+            display_name="教师",
+            phone_e164=None,
+            role_codes=["superadmin"],
+            is_active=True,
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
+        )
