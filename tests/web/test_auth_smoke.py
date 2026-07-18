@@ -308,12 +308,36 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
     )
     assert change_pw.status_code == 204
 
+    # 改密后旧 Access Token 已失效，使用新密码重新登录以继续账号管理操作。
+    re_login = await proxy_request(
+        method="POST",
+        path="/api/v1/auth/login",
+        query=b"",
+        headers=(*common_headers, (b"cookie", csrf_cookie)),
+        body=json.dumps({"login": "admin", "password": "NewPassword2024!"}).encode("utf-8"),
+        peer_ip=peer_ip,
+        api_base_url=api_base_url,
+        transport=transport,
+    )
+    assert re_login.status_code == 200
+    re_login_cookies = [v for n, v in re_login.headers if n.lower() == b"set-cookie"]
+    assert len(re_login_cookies) == 3
+    re_login_cookie_header = b"; ".join(re_login_cookies)
+    csrf_after_re_login = _extract_cookie(re_login_cookie_header, b"child_manager_csrf").decode(
+        "ascii"
+    )
+    admin_headers = (
+        (b"origin", origin.encode("ascii")),
+        (b"x-csrf-token", csrf_after_re_login.encode("ascii")),
+        (b"content-type", b"application/json"),
+    )
+
     # 账号管理闭环：创建、列表、重置密码、调整角色、停用后失权、重新启用
     create_user = await proxy_request(
         method="POST",
         path="/api/v1/users",
         query=b"",
-        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        headers=(*admin_headers, (b"cookie", re_login_cookie_header)),
         body=json.dumps(
             {
                 "username": "teacher_smoke",
@@ -334,7 +358,7 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
         method="GET",
         path="/api/v1/users",
         query=b"",
-        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        headers=(*admin_headers, (b"cookie", re_login_cookie_header)),
         body=b"",
         peer_ip=peer_ip,
         api_base_url=api_base_url,
@@ -347,7 +371,7 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
         method="POST",
         path=f"/api/v1/users/{teacher_id}/reset-password",
         query=b"",
-        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        headers=(*admin_headers, (b"cookie", re_login_cookie_header)),
         body=json.dumps({"new_password": "ResetPassword2024!"}).encode("utf-8"),
         peer_ip=peer_ip,
         api_base_url=api_base_url,
@@ -359,7 +383,7 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
         method="PUT",
         path=f"/api/v1/users/{teacher_id}/roles",
         query=b"",
-        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        headers=(*admin_headers, (b"cookie", re_login_cookie_header)),
         body=json.dumps({"role_codes": ["teacher", "admin"]}).encode("utf-8"),
         peer_ip=peer_ip,
         api_base_url=api_base_url,
@@ -372,7 +396,7 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
         method="POST",
         path=f"/api/v1/users/{teacher_id}/deactivate",
         query=b"",
-        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        headers=(*admin_headers, (b"cookie", re_login_cookie_header)),
         body=b"",
         peer_ip=peer_ip,
         api_base_url=api_base_url,
@@ -385,7 +409,7 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
         method="POST",
         path="/api/v1/auth/login",
         query=b"",
-        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        headers=(*admin_headers, (b"cookie", re_login_cookie_header)),
         body=json.dumps({"login": "teacher_smoke", "password": "ResetPassword2024!"}).encode(
             "utf-8"
         ),
@@ -400,7 +424,7 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
         method="POST",
         path=f"/api/v1/users/{teacher_id}/activate",
         query=b"",
-        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        headers=(*admin_headers, (b"cookie", re_login_cookie_header)),
         body=b"",
         peer_ip=peer_ip,
         api_base_url=api_base_url,
@@ -413,7 +437,7 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
         method="POST",
         path="/api/v1/auth/logout",
         query=b"",
-        headers=(*state_headers, (b"cookie", refresh_cookie_header)),
+        headers=(*admin_headers, (b"cookie", re_login_cookie_header)),
         body=b"",
         peer_ip=peer_ip,
         api_base_url=api_base_url,

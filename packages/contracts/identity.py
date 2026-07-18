@@ -97,7 +97,7 @@ class UserCreateRequest(BaseModel):
     username: str = Field(..., description="用户名")
     display_name: str = Field(..., description="显示名称")
     phone_e164: str | None = Field(None, description="手机号(E.164)")
-    role_codes: list[str] = Field(default_factory=list, description="角色代码列表")
+    role_codes: list[str] = Field(..., description="角色代码列表")
     password: str = Field(..., description="初始密码")
 
     @field_validator("role_codes")
@@ -114,6 +114,14 @@ class UserPatch(BaseModel):
     username: str | None = Field(default=None, description="用户名")
     display_name: str | None = Field(default=None, description="显示名称")
     phone_e164: str | None = Field(default=None, description="手机号(E.164)")
+
+    @field_validator("username", "display_name")
+    @classmethod
+    def _reject_null_strings(cls, value: str | None) -> str | None:
+        """username/display_name 只能作为有效字符串提交，不允许显式设为 null。"""
+        if value is None:
+            raise ValueError("字段不能为 null")
+        return value
 
     @model_validator(mode="after")
     def _require_at_least_one_field(self) -> Self:

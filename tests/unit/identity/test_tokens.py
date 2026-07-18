@@ -23,6 +23,7 @@ def test_access_token_roundtrip(signing_key: str) -> None:
         user_id="user-1",
         kindergarten_id="kg-1",
         roles=["admin"],
+        family_id=str(uuid4()),
         signing_key=signing_key,
         expire_minutes=5,
     )
@@ -32,6 +33,7 @@ def test_access_token_roundtrip(signing_key: str) -> None:
     assert payload["sub"] == "user-1"
     assert payload["kindergarten_id"] == "kg-1"
     assert payload["roles"] == ["admin"]
+    assert "family_id" in payload
     assert "jti" in payload
     assert "exp" in payload
 
@@ -41,6 +43,7 @@ def test_decode_access_token_rejects_invalid_signature(signing_key: str) -> None
         user_id="user-1",
         kindergarten_id="kg-1",
         roles=["admin"],
+        family_id=str(uuid4()),
         signing_key=signing_key,
     )
     assert decode_access_token(token, "wrong-key") is None
@@ -51,6 +54,7 @@ def test_decode_access_token_rejects_expired(signing_key: str) -> None:
         user_id="user-1",
         kindergarten_id="kg-1",
         roles=["admin"],
+        family_id=str(uuid4()),
         signing_key=signing_key,
         expire_minutes=-1,
     )

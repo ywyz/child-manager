@@ -156,13 +156,17 @@ def get_current_user(
     if payload is None:
         raise UnauthenticatedError("会话已失效")
 
+    family_id = payload.get("family_id")
     kindergarten_id = payload.get("kindergarten_id")
-    if not kindergarten_id:
+    if not family_id or not kindergarten_id:
         raise UnauthenticatedError("会话已失效")
 
     from packages.backend.identity.service import IdentityService
 
     service = IdentityService(session)
+    if not service.is_token_family_active(kindergarten_id, family_id):
+        raise UnauthenticatedError("会话已失效")
+
     user = service.get_user_by_id(kindergarten_id, payload["sub"])
     if user is None or not user.is_active:
         raise UnauthenticatedError("会话已失效")

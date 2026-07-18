@@ -22,16 +22,22 @@ def create_access_token(
     user_id: str,
     kindergarten_id: str,
     roles: list[str],
+    family_id: str,
     signing_key: str,
     expire_minutes: int = 15,
 ) -> str:
-    """签发 Access JWT。"""
+    """签发 Access JWT。
+
+    family_id 与 Refresh Token family 绑定，用于在退出、改密、重置、停用或
+    Refresh 重放后使相应旧 Access Token 立即失效。
+    """
     _require_signing_key(signing_key)
     now = datetime.now(UTC)
     payload = {
         "sub": user_id,
         "kindergarten_id": kindergarten_id,
         "roles": roles,
+        "family_id": family_id,
         "jti": str(uuid4()),
         "iat": now,
         "exp": now + timedelta(minutes=expire_minutes),

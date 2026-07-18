@@ -249,6 +249,58 @@ def test_reset_password_returns_204(client: TestClient) -> None:
     assert response.status_code == 204
 
 
+def test_reset_password_revokes_target_access_token_on_next_request(client: TestClient) -> None:
+    """管理员重置密码后，目标用户旧 Access Token 下一请求必须返回 401。"""
+    admin_cookies = _admin_session(client)
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "teacher_reset_target",
+            "display_name": "重置目标教师",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=admin_cookies,
+    )
+    assert create.status_code == 201
+    user_id = create.json()["id"]
+
+    teacher_login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "teacher_reset_target", "password": "ValidPassword2024!"},
+        headers=_CSRF_HEADERS,
+        cookies=_CSRF_COOKIE,
+    )
+    assert teacher_login.status_code == 200
+    teacher_access = teacher_login.cookies.get("child_manager_access")
+    assert teacher_access is not None
+
+    me_before = client.get(
+        "/api/v1/auth/me",
+        headers=_CSRF_HEADERS,
+        cookies={"child_manager_access": teacher_access, **_CSRF_COOKIE},
+    )
+    assert me_before.status_code == 200
+
+    reset = client.post(
+        f"/api/v1/users/{user_id}/reset-password",
+        json={"new_password": "NewPassword2024!"},
+        headers=_CSRF_HEADERS,
+        cookies=admin_cookies,
+    )
+    assert reset.status_code == 204
+
+    me_after = client.get(
+        "/api/v1/auth/me",
+        headers=_CSRF_HEADERS,
+        cookies={"child_manager_access": teacher_access, **_CSRF_COOKIE},
+    )
+    assert me_after.status_code == 401
+    assert me_after.json()["code"] == "auth.unauthenticated"
+
+
 def test_deactivate_last_admin_is_rejected(client: TestClient) -> None:
     cookies = _admin_session(client)
     me = client.get("/api/v1/auth/me", headers=_CSRF_HEADERS, cookies=cookies)

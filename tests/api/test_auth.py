@@ -169,6 +169,38 @@ def test_logout_clears_two_cookies(
     assert all("Max-Age=0" in c for c in cookies)
 
 
+def test_logout_revokes_access_token_on_next_request(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """退出后，旧 Access Token 下一请求必须返回 401。"""
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert login.status_code == 200
+    access_cookie = login.cookies.get("child_manager_access")
+    refresh_cookie = login.cookies.get("child_manager_refresh")
+    assert access_cookie is not None
+    assert refresh_cookie is not None
+
+    logout = client.post(
+        "/api/v1/auth/logout",
+        headers=csrf_headers,
+        cookies={"child_manager_refresh": refresh_cookie, **csrf_cookie},
+    )
+    assert logout.status_code == 204
+
+    me_after_logout = client.get(
+        "/api/v1/auth/me",
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert me_after_logout.status_code == 401
+    assert me_after_logout.json()["code"] == "auth.unauthenticated"
+
+
 def test_login_rate_limit_after_repeated_failures(
     client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
 ) -> None:
@@ -207,7 +239,9 @@ def test_refresh_replay_revokes_family(
         cookies={"child_manager_refresh": refresh_cookie, **csrf_cookie},
     )
     assert first.status_code == 200
+    new_access_cookie = first.cookies.get("child_manager_access")
     new_refresh_cookie = first.cookies.get("child_manager_refresh")
+    assert new_access_cookie is not None
     assert new_refresh_cookie is not None
 
     replay = client.post(
@@ -216,6 +250,15 @@ def test_refresh_replay_revokes_family(
         cookies={"child_manager_refresh": refresh_cookie, **csrf_cookie},
     )
     assert replay.status_code == 401
+
+    # 重放后，第一次轮换得到的新 Access Token 也必须失效。
+    access_after_replay = client.get(
+        "/api/v1/auth/me",
+        headers=csrf_headers,
+        cookies={"child_manager_access": new_access_cookie, **csrf_cookie},
+    )
+    assert access_after_replay.status_code == 401
+    assert access_after_replay.json()["code"] == "auth.unauthenticated"
 
     new_token_after_replay = client.post(
         "/api/v1/auth/refresh",
@@ -245,6 +288,37 @@ def test_change_password_returns_204(
         cookies={"child_manager_access": access_cookie, **csrf_cookie},
     )
     assert response.status_code == 204
+
+
+def test_change_password_revokes_access_token_on_next_request(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """本人改密后，旧 Access Token 下一请求必须返回 401。"""
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert login.status_code == 200
+    access_cookie = login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    response = client.post(
+        "/api/v1/auth/change-password",
+        json={"current_password": "ValidPassword2024!", "new_password": "NewPassword2024!"},
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert response.status_code == 204
+
+    me_after_change = client.get(
+        "/api/v1/auth/me",
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert me_after_change.status_code == 401
+    assert me_after_change.json()["code"] == "auth.unauthenticated"
 
 
 def test_change_password_wrong_current_password_returns_auth_login_failed(

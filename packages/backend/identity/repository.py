@@ -15,28 +15,24 @@ class IdentityRepository:
     def __init__(self, session: Session) -> None:
         self._session = session
 
-    @property
-    def _db(self) -> Session:
-        return self._session
-
     def create_kindergarten(self, *, name: str, timezone: str = "Asia/Shanghai") -> Kindergarten:
         kg = Kindergarten(id=str(uuid4()), name=name, timezone=timezone)
-        self._db.add(kg)
-        self._db.flush()
+        self._session.add(kg)
+        self._session.flush()
         return kg
 
     def get_kindergarten_by_id(self, kindergarten_id: str) -> Kindergarten | None:
-        return self._db.get(Kindergarten, kindergarten_id)
+        return self._session.get(Kindergarten, kindergarten_id)
 
     def create_role(self, *, kindergarten_id: str, code: str, name: str) -> Role:
         role = Role(id=str(uuid4()), kindergarten_id=kindergarten_id, code=code, name=name)
-        self._db.add(role)
-        self._db.flush()
+        self._session.add(role)
+        self._session.flush()
         return role
 
     def get_role_by_code(self, kindergarten_id: str, code: str) -> Role | None:
         stmt = select(Role).where(Role.kindergarten_id == kindergarten_id, Role.code == code)
-        return self._db.execute(stmt).scalar_one_or_none()
+        return self._session.execute(stmt).scalar_one_or_none()
 
     def create_user(
         self,
@@ -58,30 +54,30 @@ class IdentityRepository:
             is_active=True,
             created_by=created_by,
         )
-        self._db.add(user)
-        self._db.flush()
+        self._session.add(user)
+        self._session.flush()
         return user
 
     def get_user_by_username(self, kindergarten_id: str, username: str) -> User | None:
         stmt = select(User).where(
             User.kindergarten_id == kindergarten_id, User.username == username
         )
-        return self._db.execute(stmt).scalar_one_or_none()
+        return self._session.execute(stmt).scalar_one_or_none()
 
     def get_user_by_phone(self, kindergarten_id: str, phone: str) -> User | None:
         stmt = select(User).where(User.kindergarten_id == kindergarten_id, User.phone == phone)
-        return self._db.execute(stmt).scalar_one_or_none()
+        return self._session.execute(stmt).scalar_one_or_none()
 
     def get_user_by_id(self, kindergarten_id: str, user_id: str) -> User | None:
         stmt = select(User).where(User.kindergarten_id == kindergarten_id, User.id == user_id)
-        return self._db.execute(stmt).scalar_one_or_none()
+        return self._session.execute(stmt).scalar_one_or_none()
 
     def assign_role(self, *, kindergarten_id: str, user_id: str, role_id: str) -> UserRole:
         user_role = UserRole(
             id=str(uuid4()), kindergarten_id=kindergarten_id, user_id=user_id, role_id=role_id
         )
-        self._db.add(user_role)
-        self._db.flush()
+        self._session.add(user_role)
+        self._session.flush()
         return user_role
 
     def remove_role(self, *, kindergarten_id: str, user_id: str, role_id: str) -> int:
@@ -90,13 +86,13 @@ class IdentityRepository:
             UserRole.user_id == user_id,
             UserRole.role_id == role_id,
         )
-        result = self._db.execute(stmt)
-        self._db.flush()
+        result = self._session.execute(stmt)
+        self._session.flush()
         return int(getattr(result, "rowcount", 0) or 0)
 
     def list_users(self, kindergarten_id: str) -> list[User]:
         stmt = select(User).where(User.kindergarten_id == kindergarten_id)
-        return list(self._db.execute(stmt).scalars().all())
+        return list(self._session.execute(stmt).scalars().all())
 
     def list_user_roles(self, kindergarten_id: str, user_id: str) -> list[str]:
         stmt = (
@@ -107,7 +103,7 @@ class IdentityRepository:
                 UserRole.user_id == user_id,
             )
         )
-        return list(self._db.execute(stmt).scalars().all())
+        return list(self._session.execute(stmt).scalars().all())
 
     def get_active_admin_count(self, kindergarten_id: str) -> int:
         """返回具有 admin 角色的有效用户数量。"""
@@ -123,7 +119,7 @@ class IdentityRepository:
                 UserRole.kindergarten_id == kindergarten_id,
             )
         )
-        return int(self._db.execute(stmt).scalar() or 0)
+        return int(self._session.execute(stmt).scalar() or 0)
 
     def deactivate_user(self, kindergarten_id: str, user_id: str) -> bool:
         user = self.get_user_by_id(kindergarten_id, user_id)
@@ -131,7 +127,7 @@ class IdentityRepository:
             msg = "用户不存在"
             raise ValueError(msg)
         user.is_active = False
-        self._db.flush()
+        self._session.flush()
         return True
 
     def create_refresh_token(
@@ -153,8 +149,8 @@ class IdentityRepository:
             expires_at=expires_at,
             family_expires_at=family_expires_at,
         )
-        self._db.add(token)
-        self._db.flush()
+        self._session.add(token)
+        self._session.flush()
         return token
 
     def find_refresh_token_by_hash(
@@ -170,7 +166,7 @@ class IdentityRepository:
             RefreshToken.kindergarten_id == kindergarten_id,
             RefreshToken.token_hash == token_hash,
         )
-        return self._db.execute(stmt).scalar_one_or_none()
+        return self._session.execute(stmt).scalar_one_or_none()
 
     def find_refresh_token_by_hash_for_update(
         self, kindergarten_id: str, token_hash: str
@@ -184,32 +180,66 @@ class IdentityRepository:
             )
             .with_for_update()
         )
-        return self._db.execute(stmt).scalar_one_or_none()
+        return self._session.execute(stmt).scalar_one_or_none()
+
+    def is_family_active(self, kindergarten_id: str, family_id: str) -> bool:
+        """family 内存在未撤销的 token 时视为活跃。"""
+        stmt = (
+            select(RefreshToken)
+            .where(
+                RefreshToken.kindergarten_id == kindergarten_id,
+                RefreshToken.family_id == family_id,
+                RefreshToken.family_revoked_at.is_(None),
+            )
+            .limit(1)
+        )
+        return self._session.execute(stmt).scalar_one_or_none() is not None
+
+    def revoke_refresh_token(self, kindergarten_id: str, token_hash: str) -> int:
+        """撤销单个 Refresh Token（用于正常轮换）。"""
+        stmt = (
+            update(RefreshToken)
+            .where(
+                RefreshToken.kindergarten_id == kindergarten_id,
+                RefreshToken.token_hash == token_hash,
+                RefreshToken.revoked_at.is_(None),
+            )
+            .values(revoked_at=datetime.now(UTC))
+        )
+        result = self._session.execute(stmt)
+        self._session.flush()
+        return int(getattr(result, "rowcount", 0) or 0)
 
     def revoke_refresh_family(self, kindergarten_id: str, family_id: str) -> int:
+        """撤销整个 Refresh family（用于退出、改密、重置、停用、重放）。"""
         stmt = (
             update(RefreshToken)
             .where(
                 RefreshToken.kindergarten_id == kindergarten_id,
                 RefreshToken.family_id == family_id,
-                RefreshToken.revoked_at.is_(None),
             )
-            .values(revoked_at=datetime.now(UTC))
+            .values(
+                revoked_at=datetime.now(UTC),
+                family_revoked_at=datetime.now(UTC),
+            )
         )
-        result = self._db.execute(stmt)
-        self._db.flush()
+        result = self._session.execute(stmt)
+        self._session.flush()
         return int(getattr(result, "rowcount", 0) or 0)
 
     def revoke_user_tokens(self, kindergarten_id: str, user_id: str) -> int:
+        """撤销用户的全部 Refresh Token 及其 family。"""
         stmt = (
             update(RefreshToken)
             .where(
                 RefreshToken.kindergarten_id == kindergarten_id,
                 RefreshToken.user_id == user_id,
-                RefreshToken.revoked_at.is_(None),
             )
-            .values(revoked_at=datetime.now(UTC))
+            .values(
+                revoked_at=datetime.now(UTC),
+                family_revoked_at=datetime.now(UTC),
+            )
         )
-        result = self._db.execute(stmt)
-        self._db.flush()
+        result = self._session.execute(stmt)
+        self._session.flush()
         return int(getattr(result, "rowcount", 0) or 0)

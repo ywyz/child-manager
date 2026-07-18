@@ -80,14 +80,6 @@ class IdentityService:
             if self._repo.get_role_by_code(kindergarten_id, code) is None:
                 self._repo.create_role(kindergarten_id=kindergarten_id, code=code, name=name)
 
-    def get_active_admin_count(self, kindergarten_id: str) -> int:
-        """返回具有 admin 角色的有效用户数量。"""
-        count = 0
-        for user in self._repo.list_users(kindergarten_id):
-            if user.is_active and "admin" in self._repo.list_user_roles(kindergarten_id, user.id):
-                count += 1
-        return count
-
     def build_current_user(self, user: User) -> CurrentUser:
         roles = self._repo.list_user_roles(user.kindergarten_id, user.id)
         kindergarten = self._repo.get_kindergarten_by_id(user.kindergarten_id)
@@ -185,10 +177,12 @@ class IdentityService:
             return None
         user, roles = result
 
+        family_id = str(uuid4())
         access_token = create_access_token(
             user_id=user.id,
             kindergarten_id=user.kindergarten_id,
             roles=roles,
+            family_id=family_id,
             signing_key=settings.jwt_signing_key,
             expire_minutes=settings.jwt_expire_minutes,
         )
@@ -198,7 +192,7 @@ class IdentityService:
         self._repo.create_refresh_token(
             kindergarten_id=user.kindergarten_id,
             user_id=user.id,
-            family_id=str(uuid4()),
+            family_id=family_id,
             token_hash=refresh_hash,
             expires_at=family_expires_at,
             family_expires_at=family_expires_at,
@@ -208,6 +202,7 @@ class IdentityService:
             "user": user,
             "roles": roles,
             "kindergarten_id": user.kindergarten_id,
+            "family_id": family_id,
             "access_token": access_token,
             "refresh_value": refresh_value,
             "csrf_token": csrf_token,
@@ -225,6 +220,7 @@ class IdentityService:
         now = datetime.now(UTC)
         if (
             token_row.revoked_at is not None
+            or token_row.family_revoked_at is not None
             or token_row.expires_at < now
             or token_row.family_expires_at < now
         ):
@@ -243,12 +239,14 @@ class IdentityService:
         if user is None or not user.is_active:
             return None
 
-        self._repo.revoke_refresh_family(token_row.kindergarten_id, token_row.family_id)
+        # 正常轮换：只撤销当前 token，保留 family；Access Token 携带同一 family_id。
+        self._repo.revoke_refresh_token(token_row.kindergarten_id, token_hash)
         roles = self._repo.list_user_roles(token_row.kindergarten_id, token_row.user_id)
         access_token = create_access_token(
             user_id=token_row.user_id,
             kindergarten_id=token_row.kindergarten_id,
             roles=roles,
+            family_id=token_row.family_id,
             signing_key=settings.jwt_signing_key,
             expire_minutes=settings.jwt_expire_minutes,
         )
@@ -275,11 +273,16 @@ class IdentityService:
         return {
             "user_id": token_row.user_id,
             "kindergarten_id": token_row.kindergarten_id,
+            "family_id": token_row.family_id,
             "roles": roles,
             "access_token": access_token,
             "refresh_value": refresh_value,
             "csrf_token": csrf_token,
         }
+
+    def is_token_family_active(self, kindergarten_id: str, family_id: str) -> bool:
+        """Access Token 携带的 family 是否仍活跃。"""
+        return self._repo.is_family_active(kindergarten_id, family_id)
 
     def logout(self, *, refresh_cookie: str | None, source_ip: str | None = None) -> None:
         if not refresh_cookie:
