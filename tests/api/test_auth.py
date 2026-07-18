@@ -247,6 +247,32 @@ def test_change_password_returns_204(
     assert response.status_code == 204
 
 
+def test_change_password_wrong_current_password_returns_auth_login_failed(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """原密码错误时返回 401 auth.login_failed，不使用 request.http_error。"""
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert login.status_code == 200
+    access_cookie = login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    response = client.post(
+        "/api/v1/auth/change-password",
+        json={"current_password": "WrongPassword2024!", "new_password": "NewPassword2024!"},
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert response.status_code == 401
+    data = response.json()
+    assert data["code"] == "auth.login_failed"
+    assert "原密码" in data["message"]
+
+
 def test_login_with_phone_number(
     client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
 ) -> None:

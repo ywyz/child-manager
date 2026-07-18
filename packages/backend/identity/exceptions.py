@@ -35,6 +35,13 @@ class LoginFailedError(IdentityError):
         super().__init__("auth.login_failed", message, status_code=401)
 
 
+class ChangePasswordFailedError(IdentityError):
+    """修改密码时原密码校验失败。"""
+
+    def __init__(self, message: str = "原密码错误") -> None:
+        super().__init__("auth.login_failed", message, status_code=401)
+
+
 class UnauthenticatedError(IdentityError):
     """请求缺少有效身份凭证时抛出。"""
 

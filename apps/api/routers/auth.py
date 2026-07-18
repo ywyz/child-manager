@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi import APIRouter, Depends, Request, Response, status
 from sqlalchemy.orm import Session
 
 from apps.api.dependencies import check_csrf, get_current_user, get_db
@@ -10,6 +10,7 @@ from packages.backend.config import settings
 from packages.backend.identity.client_ip import get_client_ip
 from packages.backend.identity.csrf import generate_csrf_token
 from packages.backend.identity.exceptions import (
+    ChangePasswordFailedError,
     LoginFailedError,
     LoginRateLimitedError,
     UnauthenticatedError,
@@ -117,7 +118,7 @@ def _build_current_user(
 ) -> CurrentUser:
     user = service.get_user_by_id(kindergarten_id, user_id)
     if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="会话已失效")
+        raise UnauthenticatedError("会话已失效")
     return service.build_current_user(user)
 
 
@@ -236,7 +237,7 @@ async def change_password(
         old_password=body.current_password,
         new_password=body.new_password,
     ):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="原密码错误")
+        raise ChangePasswordFailedError()
 
     session.commit()
     _clear_auth_cookies(response)
