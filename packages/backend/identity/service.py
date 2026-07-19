@@ -138,12 +138,13 @@ class IdentityService:
         kg = self._get_kindergarten()
         if kg is None:
             return
-        account_key = normalize_username(username)
+        # 冻结 Schema §6.2 resource_id 为 UUID NULL；限流时用户可能不存在，
+        # 无法确定 user_id，因此 resource_id 记录 None。
         self._record_identity(
             kindergarten_id=kg.id,
             event_code=audit_events.IDENTITY_LOGIN,
             actor_user_id=None,
-            resource_id=account_key,
+            resource_id=None,
             outcome=audit_events.RESULT_FAILURE,
             source_ip=source_ip,
         )
@@ -169,11 +170,13 @@ class IdentityService:
                 user = self._repo.get_user_by_phone(kg.id, phone)
 
         if user is None or not verify_password(password, user.password_hash):
+            # 冻结 Schema §6.2 resource_id 为 UUID NULL；用户存在时记录 user_id，
+            # 不存在时记录 None，不再写入 username 字符串。
             self._record_identity(
                 kindergarten_id=kg.id,
                 event_code=audit_events.IDENTITY_LOGIN,
                 actor_user_id=None,
-                resource_id=account_key,
+                resource_id=user.id if user is not None else None,
                 outcome=audit_events.RESULT_FAILURE,
                 source_ip=source_ip,
             )
@@ -295,8 +298,9 @@ class IdentityService:
         )
         refresh_value = generate_refresh_value(kindergarten_id=token_row.kindergarten_id)
         new_hash = hash_refresh_value(refresh_value)
-        # 滑动续期：每条 Refresh Token 自带 7 天 expires_at；冻结 Schema 未定义 family 级过期。
-        expires_at = now + timedelta(days=7)
+        # 冻结 Schema §5.5：同一 family 的后续 token 必须复制首次签发的 expires_at，
+        # 不得按轮换时间重新计算或延长，保证 family 生命周期上限为 7 天绝对期限。
+        expires_at = token_row.expires_at
         self._repo.create_refresh_token(
             kindergarten_id=token_row.kindergarten_id,
             user_id=token_row.user_id,
@@ -338,35 +342,62 @@ class IdentityService:
         refresh_cookie: str | None = None,
         source_ip: str | None = None,
     ) -> None:
-        kindergarten_id: str | None = None
-        family_id: str | None = None
-        actor_user_id: str | None = None
+        """注销：独立解析 access 与 refresh，撤销当前会话 family。
 
+        Codex 第十二轮 P0-3：refresh 无效/查无/错配时不得阻断 access 回退。
+        分别独立解析二者；若二者 family 不一致，至少撤销 access 所代表的当前会话。
+        """
+        # 1. 独立解析 refresh cookie（可能畸形、查无或属于另一 family）。
+        refresh_family_id: str | None = None
+        refresh_kindergarten_id: str | None = None
+        refresh_actor_user_id: str | None = None
         if refresh_cookie:
-            kindergarten_id = parse_refresh_kindergarten_id(refresh_cookie)
-            if kindergarten_id:
+            refresh_kindergarten_id = parse_refresh_kindergarten_id(refresh_cookie)
+            if refresh_kindergarten_id:
                 token_row = self._repo.find_refresh_token_by_hash(
-                    kindergarten_id, hash_refresh_value(refresh_cookie)
+                    refresh_kindergarten_id, hash_refresh_value(refresh_cookie)
                 )
                 if token_row is not None:
-                    family_id = token_row.token_family_id
-                    actor_user_id = token_row.user_id
-        elif access_token:
+                    refresh_family_id = token_row.token_family_id
+                    refresh_actor_user_id = token_row.user_id
+
+        # 2. 独立解析 access token（refresh 无效不得阻断 access 回退）。
+        access_family_id: str | None = None
+        access_kindergarten_id: str | None = None
+        access_actor_user_id: str | None = None
+        if access_token:
             payload = decode_access_token(access_token, settings.jwt_signing_key)
             if payload is not None:
-                family_id = payload.get("family_id")
-                kindergarten_id = payload.get("kindergarten_id")
-                actor_user_id = payload.get("sub")
+                access_family_id = payload.get("family_id")
+                access_kindergarten_id = payload.get("kindergarten_id")
+                access_actor_user_id = payload.get("sub")
 
-        if not kindergarten_id or not family_id:
+        # 3. 优先撤销 access 所代表的当前会话；refresh 有效且 family 一致时一并撤销。
+        #    二者 family 不一致时至少撤销 access 所在 family，并单独撤销 refresh family。
+        target_kindergarten_id = access_kindergarten_id or refresh_kindergarten_id
+        target_family_id = access_family_id or refresh_family_id
+        actor_user_id = access_actor_user_id or refresh_actor_user_id
+
+        if not target_kindergarten_id or not target_family_id:
             return
 
         roles: list[str] = []
         if actor_user_id is not None:
-            roles = self._repo.list_user_roles(kindergarten_id, actor_user_id)
-        self._repo.revoke_refresh_family(kindergarten_id, family_id, revoke_reason="logout")
+            roles = self._repo.list_user_roles(target_kindergarten_id, actor_user_id)
+        self._repo.revoke_refresh_family(
+            target_kindergarten_id, target_family_id, revoke_reason="logout"
+        )
+        # refresh family 与 access family 不一致时，同时撤销 refresh family。
+        if (
+            refresh_family_id is not None
+            and refresh_kindergarten_id is not None
+            and refresh_family_id != target_family_id
+        ):
+            self._repo.revoke_refresh_family(
+                refresh_kindergarten_id, refresh_family_id, revoke_reason="logout"
+            )
         self._record_identity(
-            kindergarten_id=kindergarten_id,
+            kindergarten_id=target_kindergarten_id,
             event_code=audit_events.IDENTITY_LOGOUT,
             actor_user_id=actor_user_id,
             actor_role_codes=roles or None,
