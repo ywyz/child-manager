@@ -16,6 +16,43 @@ from nicegui import ui
 from nicegui.testing.user import User
 
 
+def _parse_braced_json(code: str, start: int) -> dict[str, Any] | None:
+    """从 ``start`` 指向的 ``{`` 开始，匹配到对应的 ``}`` 并解析为 JSON。
+
+    用于从生成的 JS 源码中提取对象字面量。嵌套字符串内的花括号不参与
+    深度计数——这与 ``json.loads`` 兼容，因为 JSON 字符串里的 ``{`` 必须
+    出现在 ``"..."`` 之内，而 ``json.loads`` 能正确处理转义。
+    """
+    depth = 0
+    end = start
+    in_string = False
+    escape = False
+    for i in range(start, len(code)):
+        ch = code[i]
+        if escape:
+            escape = False
+            continue
+        if ch == "\\":
+            escape = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            continue
+        if in_string:
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    try:
+        return json.loads(code[start:end])
+    except json.JSONDecodeError:
+        return None
+
+
 @dataclass
 class CapturedRequest:
     """页面 run_javascript 发起的一次 fetch 请求记录。"""
@@ -65,22 +102,20 @@ class JsRequestRecorder:
             start += 1
         if code.startswith("null", start):
             return None
+        # ``auth.py`` 的 ``_js_fetch`` 现在使用
+        # ``body: payload === null ? null : JSON.stringify(payload)``。
+        # 此处兼容两种历史格式：直接的 ``{...}`` 字面量，或通过 ``payload`` 变量
+        # 绑定后 ``JSON.stringify``。优先解析 ``payload = {...}`` 字面量。
+        payload_start = code.find("payload = ")
+        if payload_start != -1:
+            obj_start = payload_start + len("payload = ")
+            while obj_start < len(code) and code[obj_start].isspace():
+                obj_start += 1
+            if obj_start < len(code) and code[obj_start] == "{":
+                return _parse_braced_json(code, obj_start)
         if code[start] != "{":
             return None
-        depth = 0
-        end = start
-        for i in range(start, len(code)):
-            if code[i] == "{":
-                depth += 1
-            elif code[i] == "}":
-                depth -= 1
-                if depth == 0:
-                    end = i + 1
-                    break
-        try:
-            return json.loads(code[start:end])
-        except json.JSONDecodeError:
-            return None
+        return _parse_braced_json(code, start)
 
     def _match_response(self, req: CapturedRequest) -> Any:
         """按精确 method:path 或前缀匹配返回 mock 响应。"""

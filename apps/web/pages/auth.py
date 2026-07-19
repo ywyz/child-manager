@@ -21,9 +21,13 @@ def _js_fetch(
 ) -> str:
     body_literal = "null" if body is None else json.dumps(body, ensure_ascii=False)
     redirect_literal = "null" if redirect_on_ok is None else json.dumps(redirect_on_ok)
+    # ``body_literal`` 是 JSON 字符串，插入 JS 后成为对象字面量。``fetch`` 的
+    # ``body`` 参数必须为字符串，否则浏览器会将其 ``toString()`` 为 ``[object Object]``，
+    # 导致 API 收到无法解析的请求体并返回 422。此处用 ``JSON.stringify`` 序列化。
     return f"""
     async function call() {{
         const csrf = {_csrf_js()};
+        const payload = {body_literal};
         const resp = await fetch({json.dumps(path)}, {{
             method: {json.dumps(method)},
             headers: {{
@@ -31,7 +35,7 @@ def _js_fetch(
                 'X-CSRF-Token': csrf,
                 'Origin': window.location.origin,
             }},
-            body: {body_literal},
+            body: payload === null ? null : JSON.stringify(payload),
         }});
         if (resp.ok) {{
             const redirect = {redirect_literal};
