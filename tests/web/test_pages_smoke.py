@@ -394,6 +394,9 @@ async def test_logout_button_invokes_logout_endpoint(user: User) -> None:
      Cookie 清除由浏览器根据 logout 响应的 Set-Cookie: Max-Age=0 自动处理
     （见 tests/web/test_auth_smoke.py 的真实 API 闭环），页面 JS 只负责发起
      请求和跳转；这里验证页面层面的请求与跳转指令。
+
+     Issue #6：JS 必须检查 resp.ok，仅在成功时跳转，失败时显示中文错误，
+     避免“看似已退出但服务端 family 与 Cookie 仍有效”的不一致。
     """
     recorder = _wire_recorder(user)
     await user.open("/")
@@ -406,6 +409,9 @@ async def test_logout_button_invokes_logout_endpoint(user: User) -> None:
     # logout 请求的 JS 源码必须包含跳转到登录页的指令
     assert "window.location.href" in req.raw_code
     assert "'/login'" in req.raw_code
+    # Issue #6：必须检查 resp.ok，失败时不跳转并显示中文错误
+    assert "resp.ok" in req.raw_code
+    assert "alert" in req.raw_code
 
 
 @pytest.mark.asyncio
@@ -414,6 +420,9 @@ async def test_refresh_session_invokes_refresh_endpoint(user: User) -> None:
     POST /api/v1/auth/refresh 请求。
 
     这提供页面会话触发的 refresh 证据，而非直接调用 BFF proxy_request。
+
+    Issue #6：JS 必须检查 resp.ok，仅在成功时 reload，失败时显示中文错误，
+    避免刷新失败仍 reload 造成用户无法感知失败。
     """
     recorder = _wire_recorder(user)
     await user.open("/")
@@ -424,6 +433,9 @@ async def test_refresh_session_invokes_refresh_endpoint(user: User) -> None:
     req = await _wait_for_request(recorder, method="POST", path="/api/v1/auth/refresh")
     # refresh 请求的 JS 源码必须包含重载页面的指令
     assert "window.location.reload" in req.raw_code
+    # Issue #6：必须检查 resp.ok，失败时不 reload 并显示中文错误
+    assert "resp.ok" in req.raw_code
+    assert "alert" in req.raw_code
 
 
 @pytest.mark.asyncio

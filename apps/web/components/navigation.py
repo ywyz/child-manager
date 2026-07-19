@@ -42,33 +42,53 @@ def _nav_html(roles: list[str]) -> str:
     )
 
 
-_REFRESH_JS = """
-async function refreshSession() {
-  const csrf = (document.cookie.split('; ').find(r => r.startsWith('child_manager_csrf=')) || '').split('=')[1] || '';
-  await fetch('/api/v1/auth/refresh', {
-    method: 'POST',
-    headers: {'X-CSRF-Token': csrf, 'Origin': window.location.origin},
-  });
-  window.location.reload();
-}
-return await refreshSession();
-"""
+def _auth_fetch_js(path: str, success_js: str) -> str:
+    """构造 POST 认证 fetch；仅 resp.ok 时执行 success_js，否则弹中文错误。
 
-_LOGOUT_JS = """
-async function logout() {
-  const csrf = (document.cookie.split('; ').find(r => r.startsWith('child_manager_csrf=')) || '').split('=')[1] || '';
-  await fetch('/api/v1/auth/logout', {
-    method: 'POST',
-    headers: {'X-CSRF-Token': csrf, 'Origin': window.location.origin},
-  });
-  window.location.href = '/login';
-}
-return await logout();
-"""
+    AGENTS.md 要求异常不得静默吞掉，用户获得中文可理解的错误信息。原来
+    refresh/logout 不检查 resp.ok，失败仍 reload/跳转，造成“看似已退出但
+    服务端 family 与 Cookie 仍有效”的不一致。这里仅在成功时执行副作用，
+    失败保留当前页面并通过 alert 显示中文错误。
+    """
+    return f"""
+    async function call() {{
+      const csrf = {_csrf_js()};
+      try {{
+        const resp = await fetch({json.dumps(path)}, {{
+          method: 'POST',
+          headers: {{'X-CSRF-Token': csrf, 'Origin': window.location.origin}},
+        }});
+        if (resp.ok) {{
+          {success_js}
+          return 'ok';
+        }}
+        alert('操作失败，请稍后重试。');
+        return 'error';
+      }} catch (e) {{
+        alert('网络错误，请检查连接后重试。');
+        return 'error';
+      }}
+    }}
+    return await call();
+    """
+
+
+_REFRESH_JS = _auth_fetch_js(
+    "/api/v1/auth/refresh",
+    "window.location.reload();",
+)
+
+_LOGOUT_JS = _auth_fetch_js(
+    "/api/v1/auth/logout",
+    "window.location.href = '/login';",
+)
 
 
 async def _handle_refresh() -> None:
-    """刷新会话按钮 on_click：调用 /api/v1/auth/refresh 并重载页面。"""
+    """刷新会话按钮 on_click：调用 /api/v1/auth/refresh 并重载页面。
+
+    失败时不重载，由浏览器 alert 显示中文错误，避免静默吞掉失败。
+    """
     await ui.run_javascript(_REFRESH_JS)
 
 
@@ -76,7 +96,7 @@ async def _handle_logout() -> None:
     """退出按钮 on_click：调用 /api/v1/auth/logout 并跳转到 /login。
 
     Cookie 清除由浏览器根据 logout 响应的 Set-Cookie: Max-Age=0 自动处理；
-    页面 JS 只负责发起请求和跳转。
+    仅当服务端确认退出成功后才跳转，避免“以为已退出但服务端仍有效”。
     """
     await ui.run_javascript(_LOGOUT_JS)
 
