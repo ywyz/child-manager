@@ -1,16 +1,16 @@
 # Graph Report - child-manager  (2026-07-19)
 
 ## Corpus Check
-- 210 files · ~114,288 words
+- 211 files · ~116,051 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2434 nodes · 3781 edges · 217 communities (204 shown, 13 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 153 edges (avg confidence: 0.65)
+- 2477 nodes · 3847 edges · 216 communities (205 shown, 11 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 158 edges (avg confidence: 0.66)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f2efba81`
+- Built from commit: `3d569da4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -179,7 +179,6 @@
 - generate_csrf_token
 - Config
 - test_alembic_upgrade_from_0005_with_data.py
-- ._validate_role_codes
 - test_0005_refresh_family_revoked.py
 - Child Manager 架构决策记录
 - test_0002_updated_at.py
@@ -212,7 +211,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (217 total, 13 thin omitted)
+## Communities (216 total, 11 thin omitted)
 
 ### Community 0 - "test_common_contracts.py"
 Cohesion: 0.05
@@ -271,8 +270,8 @@ Cohesion: 0.07
 Nodes (29): AI 模型与提示词, Assumptions, Clarifications, Dependencies, Edge Cases, Feature Specification: 首期一日活动计划完整闭环, Functional Requirements, Key Entities (+21 more)
 
 ### Community 15 - "test_session_boundaries.py"
-Cohesion: 0.24
-Nodes (22): get_db(), require_admin(), activate_user(), create_user(), deactivate_user(), get_user(), list_users(), Depends (+14 more)
+Cohesion: 0.22
+Nodes (25): check_csrf(), get_current_user(), get_db(), Depends, Request, Session, 从 FastAPI Request 提取 CSRF 所需字段并校验。, require_admin() (+17 more)
 
 ### Community 16 - "Tasks: [FEATURE NAME]"
 Cohesion: 0.07
@@ -284,15 +283,15 @@ Nodes (25): 1. Initialize Analysis Context, 2. Load Artifacts (Progressive Discl
 
 ### Community 18 - "test_auth_smoke.py"
 Cohesion: 0.06
-Nodes (54): ApiClient, BffResponse, proxy_request(), Any, register_web(), _csrf_js(), _handle_logout(), _handle_refresh() (+46 more)
+Nodes (54): ApiClient, BffResponse, proxy_request(), Any, register_web(), _auth_fetch_js(), _csrf_js(), _handle_logout() (+46 more)
 
 ### Community 19 - "Child Manager 幼儿园教育管理系统"
 Cohesion: 0.09
 Nodes (23): AI 提示词管理子系统, AI 生成规则, Child Manager 幼儿园教育管理系统, Word 导出, 一键生成与分栏目生成, 分支协作规范, 后续子系统, 基本规则 (+15 more)
 
 ### Community 20 - "IdentityRepository"
-Cohesion: 0.13
-Nodes (24): IdentityRepository, 同园身份 Repository；所有操作必须显式传入 kindergarten_id。, db_repo(), kg_a(), kg_b(), _make_user(), 身份 Repository 园所隔离测试。, 默认使用真实 PostgreSQL 隔离 schema 的 Repository。 (+16 more)
+Cohesion: 0.12
+Nodes (25): IdentityRepository, Session, 同园身份 Repository；所有操作必须显式传入 kindergarten_id。, db_repo(), kg_a(), kg_b(), _make_user(), 身份 Repository 园所隔离测试。 (+17 more)
 
 ### Community 21 - "ADR-0001：只交付 Cloud 版本，首期单园运行并保留园所隔离边界"
 Cohesion: 0.10
@@ -307,16 +306,16 @@ Cohesion: 0.10
 Nodes (20): 10. 禁止事项, 11. 启动前检查清单, 1. 文档目的, 2. 事实来源与优先级, 3. 分支模型与所有权, 4.1 共享父 Issue, 4.2 实现子 Issue, 4.3 纵向拆分 (+12 more)
 
 ### Community 24 - "ports.py"
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (9): ABC, AIClientPort, AuditPort, CalendarPort, ClockPort, CryptoPort, DatabaseSessionPort, datetime (+1 more)
 
 ### Community 25 - "create_app"
-Cohesion: 0.40
-Nodes (4): _ai_unconfigured(), build_health_dependencies(), _calendar_library_available(), _runtime_storage_unconfigured()
+Cohesion: 0.36
+Nodes (14): change_password(), _clear_auth_cookies(), csrf(), login(), logout(), me(), Depends, Request (+6 more)
 
 ### Community 26 - "auth.py"
-Cohesion: 0.12
-Nodes (29): check_csrf(), get_current_user(), Depends, Request, Session, 从 FastAPI Request 提取 CSRF 所需字段并校验。, change_password(), _clear_auth_cookies() (+21 more)
+Cohesion: 0.16
+Nodes (9): ChangePasswordFailedError, ForbiddenError, IdentityError, LoginFailedError, LoginRateLimitedError, Exception, 身份域异常。  这些异常不依赖任何 HTTP 传输类型，由 API 层捕获后转换为 HTTP 响应。, 身份域错误基类，携带稳定错误码、中文消息与 HTTP 状态码。 (+1 more)
 
 ### Community 27 - "test_t005_contracts.py"
 Cohesion: 0.08
@@ -379,8 +378,8 @@ Cohesion: 0.15
 Nodes (12): Assumptions, Edge Cases, Feature Specification: [FEATURE NAME], Functional Requirements, Key Entities *(include if feature involves data)*, Measurable Outcomes, Requirements *(mandatory)*, Success Criteria *(mandatory)* (+4 more)
 
 ### Community 42 - "test_auth.py"
-Cohesion: 0.08
-Nodes (38): _auth_cookies(), client(), _cookies(), csrf_token(), Any, MonkeyPatch, TestClient, 退出后，旧 Access Token 下一请求必须返回 401。 (+30 more)
+Cohesion: 0.07
+Nodes (42): _auth_cookies(), client(), _cookies(), csrf_token(), Any, MonkeyPatch, TestClient, 退出后，旧 Access Token 下一请求必须返回 401。 (+34 more)
 
 ### Community 43 - "ADR-0008：日期与外部服务采用本地优先和软降级"
 Cohesion: 0.17
@@ -391,16 +390,16 @@ Cohesion: 0.17
 Nodes (12): 1. 文档目的, 2. 事实来源与边界, 3. 工作树隔离, 4.1 Codex 档位, 4.2 Trae 档位, 4. 固定本地档位, 5. Compose、数据与文件隔离, 6. 技术栈与中国大陆网络边界 (+4 more)
 
 ### Community 45 - "LoginThrottle"
-Cohesion: 0.06
-Nodes (27): _build_throttle(), deque, InMemoryThrottleBackend, LoginThrottle, Any, datetime, 登录限流：账号失败计数指数退避与来源级硬频控。  T030 规格： - 账号 5 次/15 分钟后执行 1～60 秒指数延迟（不返回 429，阻塞请求）。 -, 登录限流器：账号级指数退避 + 来源级硬频控。 (+19 more)
+Cohesion: 0.05
+Nodes (36): _build_throttle(), InMemoryThrottleBackend, LoginThrottle, Any, datetime, 登录限流：账号失败计数指数退避与来源级硬频控。  T030 规格： - 账号 5 次/15 分钟后执行 1～60 秒指数延迟（不返回 429，阻塞请求）。 -, 基于 Redis 的限流后端。      使用单条 Lua 脚本原子完成 INCR + EXPIRE，避免在两步之间进程中断或     Redis 错误留下无, 登录限流器：账号级指数退避 + 来源级硬频控。 (+28 more)
 
 ### Community 46 - "Core Principles"
 Cohesion: 0.17
 Nodes (11): Child Manager 项目宪章, Core Principles, Governance, I. 事实来源与范围忠实, II. 服务边界与单向依赖, III. 园所隔离与服务端授权（NON-NEGOTIABLE）, IV. 权威状态、事务与可恢复性, V. 教师控制、AI 与 Word 保真 (+3 more)
 
 ### Community 47 - "init_admin.py"
-Cohesion: 0.14
-Nodes (23): ChangePasswordRequest, CsrfResponse, KindergartenSnapshot, LoginRequest, 校验角色列表：非空、唯一、仅允许 admin/teacher。, _validate_role_codes(), BaseModel, 登录直接返回 CurrentUser，不再嵌套在 LoginResponse 中。 (+15 more)
+Cohesion: 0.15
+Nodes (21): ChangePasswordRequest, CsrfResponse, KindergartenSnapshot, LoginRequest, BaseModel, 登录直接返回 CurrentUser，不再嵌套在 LoginResponse 中。, _schema_fields(), test_change_password_request_has_both_passwords() (+13 more)
 
 ### Community 48 - "SKILL.md"
 Cohesion: 0.18
@@ -419,8 +418,8 @@ Cohesion: 0.09
 Nodes (24): AuditEvent, _now(), datetime, 审计事件 ORM 模型。  本模型与 docs/design/database-schema.md §6 冻结 Schema 保持一致。, AuditRepository, Any, AuditService, Any (+16 more)
 
 ### Community 52 - "._record_identity"
-Cohesion: 0.17
-Nodes (12): IntegrityError, LastAdminError, IdentityService, Any, 幂等确保全局 admin/teacher 角色存在。, Access Token 携带的 family 是否仍活跃。, 注销：独立解析 access 与 refresh，撤销当前会话 family。          Codex 第十二轮 P0-3：refresh 无效/查无/错, 身份业务编排：协调 Repository、Token、CSRF 与审计。 (+4 more)
+Cohesion: 0.19
+Nodes (8): IntegrityError, IdentityService, Any, 幂等确保全局 admin/teacher 角色存在。, Access Token 携带的 family 是否仍活跃。, 注销：独立解析 access 与 refresh，撤销当前会话 family。          Codex 第十二轮 P0-3：refresh 无效/查无/错, 身份业务编排：协调 Repository、Token、CSRF 与审计。, UserResponse
 
 ### Community 53 - "Child Manager PostgreSQL 数据库 Schema"
 Cohesion: 0.18
@@ -484,7 +483,7 @@ Nodes (7): 9.1 关系表头与 JSONB 正文, 9.2 `daily_activity_plans`, 9.3 `co
 
 ### Community 68 - "3. 二十六项问题的最终结论"
 Cohesion: 0.29
-Nodes (7): 3.1 文档命名与 ADR 状态, 3.4 加密与密钥, 3. 二十六项问题的最终结论, Q10：AI Key 加密算法, Q11：主加密密钥来源, Q1：ADR-0001 文件命名, Q2：ADR-0007 被 ADR-0009 取代的标记
+Nodes (7): 3.1 文档命名与 ADR 状态, 3.5 API、任务状态与幂等, 3. 二十六项问题的最终结论, Q12：任务状态机缺少 `expired`, Q13：幂等键定义, Q1：ADR-0001 文件命名, Q2：ADR-0007 被 ADR-0009 取代的标记
 
 ### Community 69 - "3.9 Codex 交叉审计事项"
 Cohesion: 0.29
@@ -499,8 +498,8 @@ Cohesion: 0.29
 Nodes (7): 13.1 一键生成, 13.2 分栏目生成, 13.3 集体活动, 13.4 输入上下文, 13.5 异步状态, 13.6 重试策略, 13. AI 生成流程
 
 ### Community 72 - "test_users_contract.py"
-Cohesion: 0.10
-Nodes (17): username/display_name 只能作为有效字符串提交，不允许显式设为 null。, phone_e164 是否在请求中被显式提供（包括设为 null）。, ResetPasswordRequest, UserCreateRequest, UserPatch, Self, BaseModel, _schema_fields() (+9 more)
+Cohesion: 0.07
+Nodes (29): ConflictError, LastAdminError, LoginResult, 登录成功后的完整结果，避免使用无类型字典。      当前用户对象在事务提交前构造完成，Router 层不再额外查询数据库。, RefreshResult, BaseModel, 校验响应角色列表：唯一、仅允许 admin/teacher（允许空）。, username/display_name 只能作为有效字符串提交，不允许显式设为 null。 (+21 more)
 
 ### Community 73 - "app.py"
 Cohesion: 0.25
@@ -527,8 +526,8 @@ Cohesion: 0.29
 Nodes (7): 右侧列为两行：, 填写说明：, 填写说明：, 左侧列, 第一行：, 第二行：, 表格第四行：
 
 ### Community 79 - "csrf.py"
-Cohesion: 0.32
-Nodes (3): Kindergarten, datetime, _uuid()
+Cohesion: 0.15
+Nodes (7): Kindergarten, RefreshToken, datetime, 撤销单个 Refresh Token（用于正常轮换）。, 撤销整个 Refresh family（用于退出、改密、重置、停用、重放）。, 撤销用户的全部 Refresh Token 及其 family。, _uuid()
 
 ### Community 80 - "5. 园所与身份模型"
 Cohesion: 0.33
@@ -615,8 +614,8 @@ Cohesion: 0.40
 Nodes (4): [Category 1], [Category 2], [CHECKLIST TYPE] Checklist: [FEATURE NAME], Notes
 
 ### Community 102 - "tokens.py"
-Cohesion: 0.07
-Nodes (44): LoginResult, 登录成功后的完整结果，避免使用无类型字典。      当前用户对象在事务提交前构造完成，Router 层不再额外查询数据库。, create_access_token(), decode_access_token(), generate_refresh_value(), hash_refresh_value(), Any, Access JWT 与 opaque Refresh 令牌。 (+36 more)
+Cohesion: 0.08
+Nodes (39): create_access_token(), decode_access_token(), generate_refresh_value(), parse_refresh_kindergarten_id(), Any, Access JWT 与 opaque Refresh 令牌。, 签发 Access JWT。      family_id 与 Refresh Token family 绑定，用于在退出、改密、重置、停用或     Refr, 生成 opaque Refresh 明文；前缀编码园所 ID 以便 Repository 显式隔离。 (+31 more)
 
 ### Community 103 - "15. 数据快照边界"
 Cohesion: 0.50
@@ -743,8 +742,8 @@ Cohesion: 0.18
 Nodes (11): ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体, NiceGUI 一体化进程, React/TypeScript 独立前端, 从首期开始全面微服务化, 决策, 前端直接访问数据库或共享 Repository, 后果, 备选方案 (+3 more)
 
 ### Community 185 - "models.py"
-Cohesion: 0.22
-Nodes (9): DeclarativeBase, Base, get_database_url(), Alembic 迁移环境。  模块级代码需兼容两种导入方式： 1. alembic.command.upgrade/downgrade 调用时，context., run_migrations_offline(), run_migrations_online(), _now(), datetime (+1 more)
+Cohesion: 0.19
+Nodes (10): DeclarativeBase, Base, get_database_url(), Alembic 迁移环境。  模块级代码需兼容两种导入方式： 1. alembic.command.upgrade/downgrade 调用时，context., run_migrations_offline(), run_migrations_online(), _now(), datetime (+2 more)
 
 ### Community 186 - ".create_user"
 Cohesion: 0.18
@@ -755,32 +754,32 @@ Cohesion: 0.17
 Nodes (11): ADR-0006：一日活动计划采用固定 Word 模板导出边界, UI 直接修改模板并下载, 从零生成 Word 排版, 决策, 只向浏览器返回临时文件, 后果, 备选方案, 复审触发条件 (+3 more)
 
 ### Community 188 - "validate_password"
-Cohesion: 0.14
-Nodes (17): _default_password_input(), _has_initial_admin(), 交互式终端使用 getpass 避免回显；非 TTY 环境回退到 input 以支持自动化测试。, _read_password(), run_init_admin(), hash_password(), 校验密码复杂度：长度 15–128 字符且不在常见弱密码列表中。, validate_password() (+9 more)
+Cohesion: 0.17
+Nodes (15): _default_password_input(), _has_initial_admin(), 交互式终端使用 getpass 避免回显；非 TTY 环境回退到 input 以支持自动化测试。, _read_password(), run_init_admin(), hash_password(), 校验密码复杂度：长度 15–128 字符且不在常见弱密码列表中。, validate_password() (+7 more)
 
 ### Community 191 - "repository.py"
-Cohesion: 0.15
-Nodes (7): RefreshToken, 在指定园所内通过 token_hash 定位 Refresh Token。, 带行锁的 find_refresh_token_by_hash；隔离语义同上。, family 内存在未撤销的 token 时视为活跃。, 撤销单个 Refresh Token（用于正常轮换）。, 撤销整个 Refresh family（用于退出、改密、重置、停用、重放）。, 撤销用户的全部 Refresh Token 及其 family。
+Cohesion: 0.18
+Nodes (13): hash_refresh_value(), 返回 Refresh 明文 SHA-256 哈希。, kindergarten(), MonkeyPatch, Refresh Token family 语义测试。, 在已迁移的隔离 schema 上构造 IdentityService。, 冻结 Schema §5.5：同一 family 后续 token 必须复制首次签发的 expires_at。, 连续轮换两次，family 内所有 token 的 expires_at 必须完全一致。 (+5 more)
 
 ### Community 192 - "get_client_ip"
 Cohesion: 0.30
 Nodes (11): get_client_ip(), _is_trusted_peer(), Any, 解析请求的真实客户端地址。      仅当直接 socket peer 来自受信任回环地址时，才接受内部转发头；     否则忽略 Forwarded、X-Fo, FakeClient, FakeRequest, test_falls_back_to_peer_when_no_internal_header(), test_ignores_forwarded_and_xff() (+3 more)
 
 ### Community 193 - "UserRole"
-Cohesion: 0.24
-Nodes (11): HealthDependencies, 运行时 OpenAPI 必须通过规范校验，无悬空引用。, test_runtime_openapi_is_valid(), client(), mock_health_dependencies(), TestClient, test_health_live(), test_health_ready() (+3 more)
+Cohesion: 0.19
+Nodes (15): _ai_unconfigured(), build_health_dependencies(), _calendar_library_available(), HealthDependencies, _runtime_storage_unconfigured(), 运行时 OpenAPI 必须通过规范校验，无悬空引用。, test_runtime_openapi_is_valid(), client() (+7 more)
 
 ### Community 194 - "generate_csrf_token"
-Cohesion: 0.27
-Nodes (8): _convert_varchar36_to_uuid(), _ensure_system_roles(), _migrate_roles_to_global(), reconcile identity schema  Revision ID: 0006_reconcile_identity_schema Revises:, 将指定表的 varchar(36) 列批量转换为 uuid 类型。, 确保全局 admin/teacher 系统角色存在。, 将旧园所范围的 roles 表收敛为全局只读字典，并更新 user_roles.role_id。      旧 0001 的 roles 表要求 kinderg, upgrade()
+Cohesion: 0.17
+Nodes (14): _abort_if_oversized(), _backfill_username_normalized(), _convert_varchar36_to_uuid(), _ensure_system_roles(), _migrate_roles_to_global(), _normalize_username_nfkc(), reconcile identity schema  Revision ID: 0006_reconcile_identity_schema Revises:, 将旧园所范围的 roles 表收敛为全局只读字典，并更新 user_roles.role_id。      旧 0001 的 roles 表要求 kinderg (+6 more)
 
 ### Community 195 - "后台任务状态机与 AI 采用契约"
 Cohesion: 0.17
 Nodes (11): 10. Web 轮询契约, 1. 任务类型, 2. 状态定义, 3. 受理、投递与租约, 4. 模型调用与重试分类, 5. 幂等契约, 6. AI 预览有效性, 7. 各任务输入快照 (+3 more)
 
 ### Community 197 - "select"
-Cohesion: 0.14
-Nodes (5): Role, UserRole, 返回具有 admin 角色的有效用户数量。, 带行锁的有效管理员列表，用于最后管理员并发保护。, select
+Cohesion: 0.11
+Nodes (7): UserRole, 返回具有 admin 角色的有效用户数量。, 带行锁的有效管理员列表，用于最后管理员并发保护。, 在指定园所内通过 token_hash 定位 Refresh Token。, 带行锁的 find_refresh_token_by_hash；隔离语义同上。, family 内存在未撤销的 token 时视为活跃。, select
 
 ### Community 198 - "3.4 加密与密钥"
 Cohesion: 0.27
@@ -799,12 +798,16 @@ Cohesion: 0.22
 Nodes (14): Any, Engine, 冻结 Schema §5.1/§5.2/§5.3：name/username/display_name 长度收窄。, 从 SQLAlchemy inspector 列信息中提取 VARCHAR 长度。, test_audit_events_columns(), test_frozen_schema_varchar_lengths(), test_identity_tables_exist(), test_kindergarten_columns() (+6 more)
 
 ### Community 202 - "ADR-0009：功能完成前延后生产部署与访问网络决策"
-Cohesion: 0.21
-Nodes (7): get_db_session(), get_db_session 应该在成功时提交, get_db_session 应该在异常时回滚, get_db_session 应该返回数据库会话, test_get_db_session_commits_on_success(), test_get_db_session_returns_session(), test_get_db_session_rolls_back_on_exception()
+Cohesion: 0.15
+Nodes (9): get_db_session(), 在已迁移的隔离 schema 中写入最小身份数据供 API 测试使用。, _seed_test_identity(), get_db_session 应该在成功时提交, get_db_session 应该在异常时回滚, get_db_session 应该返回数据库会话, test_get_db_session_commits_on_success(), test_get_db_session_returns_session() (+1 more)
 
 ### Community 205 - "Specification Quality Checklist: 首期一日活动计划完整闭环"
-Cohesion: 0.33
+Cohesion: 0.29
 Nodes (5): Content Quality, Feature Readiness, Notes, Requirement Completeness, Specification Quality Checklist: 首期一日活动计划完整闭环
+
+### Community 206 - "3.5 API、任务状态与幂等"
+Cohesion: 0.18
+Nodes (13): engine_with_legacy_0005_nfkc_user(), Engine, 0006 迁移数据策略回归测试。  覆盖 Codex Issue #6 指出的三类硬问题： 1. 旧用户名经 NFKC+trim+lower 回填 userna, 0005 允许 201 字符园所名；0006 收窄到 200 时必须阻止升级并给出清晰错误。      AGENTS.md 要求数据迁移不得静默截断合法旧数据。, 0005 允许 128 字符 username；0006 收窄到 120 时必须阻止升级。, head -> 0005 降级时，NULL resource_id 必须先填充占位值再恢复 NOT NULL。      Codex 探针发现 downgrad, 在已升级到 0005 的库中插入一个带 NFKC 规范化需求的旧用户。      旧用户名 " Ｔｅａｃｈｅｒ "（全角字符 + 前后空格）经应用层     n, 旧用户名 " Ｔｅａｃｈｅｒ " 升级后 username_normalized 必须为 "teacher"。      Codex 探针发现 0006 仅用 (+5 more)
 
 ### Community 207 - "_seed_two_admins"
 Cohesion: 0.29
@@ -812,11 +815,11 @@ Nodes (6): _build_current_user(), 最后管理员并发保护：双事务 Postgr
 
 ### Community 208 - "3.5 API、任务状态与幂等"
 Cohesion: 0.67
-Nodes (3): 3.5 API、任务状态与幂等, Q12：任务状态机缺少 `expired`, Q13：幂等键定义
+Nodes (3): 3.4 加密与密钥, Q10：AI Key 加密算法, Q11：主加密密钥来源
 
 ### Community 209 - "generate_csrf_token"
-Cohesion: 0.27
-Nodes (11): generate_csrf_token(), client(), MonkeyPatch, TestClient, _set_keys(), test_csrf_with_forged_origin_is_rejected(), test_missing_origin_header_is_rejected(), test_signed_cookie_and_header_mismatch_is_rejected() (+3 more)
+Cohesion: 0.22
+Nodes (12): client(), MonkeyPatch, TestClient, _set_keys(), test_csrf_with_forged_origin_is_rejected(), test_missing_origin_header_is_rejected(), test_signed_cookie_and_header_mismatch_is_rejected(), test_state_change_without_csrf_is_rejected() (+4 more)
 
 ### Community 210 - "Config"
 Cohesion: 0.36
@@ -841,17 +844,17 @@ Nodes (4): Engine, updated_at 字段迁移测试。  冻结 Schema 已将 update
 ## Knowledge Gaps
 - **930 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+925 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `IdentityService` connect `._record_identity` to `tokens.py`, `test_users_contract.py`, `test_session_boundaries.py`, `init_admin.py`, `_seed_two_admins`, `test_auth_smoke.py`, `AuditService`, `auth.py`, `validate_password`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
-- **Why does `IdentityRepository` connect `IdentityRepository` to `select`, `3.5 API、任务状态与幂等`, `csrf.py`, `_seed_two_admins`, `AuditService`, `validate_password`, `repository.py`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
-- **Why does `User` connect `User` to `select`, `csrf.py`, `IdentityRepository`, `._record_identity`, `models.py`, `validate_password`?**
-  _High betweenness centrality (0.026) - this node is a cross-community bridge._
+- **Why does `IdentityService` connect `._record_identity` to `UserRole`, `tokens.py`, `test_users_contract.py`, `ADR-0009：功能完成前延后生产部署与访问网络决策`, `test_session_boundaries.py`, `init_admin.py`, `_seed_two_admins`, `test_auth_smoke.py`, `AuditService`, `generate_csrf_token`, `create_app`, `validate_password`, `repository.py`?**
+  _High betweenness centrality (0.054) - this node is a cross-community bridge._
+- **Why does `IdentityRepository` connect `IdentityRepository` to `select`, `test_users_contract.py`, `ADR-0009：功能完成前延后生产部署与访问网络决策`, `csrf.py`, `_seed_two_admins`, `AuditService`, `models.py`?**
+  _High betweenness centrality (0.028) - this node is a cross-community bridge._
+- **Why does `User` connect `User` to `select`, `test_users_contract.py`, `csrf.py`, `IdentityRepository`, `._record_identity`, `models.py`, `validate_password`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
 - **Are the 9 inferred relationships involving `IdentityService` (e.g. with `AuditService` and `ConflictError`) actually correct?**
   _`IdentityService` has 9 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `User` (e.g. with `_has_initial_admin()` and `Base`) actually correct?**
