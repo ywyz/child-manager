@@ -74,3 +74,14 @@ class ConflictError(IdentityError):
 
     def __init__(self, message: str = "资源已存在") -> None:
         super().__init__("resource.conflict", message, status_code=409)
+
+
+class InvalidUsernameError(IdentityError):
+    """用户名经规范化后仍不满足非空、允许字符或长度约束时抛出。
+
+    NFKC 组合字符扩长会把原长 <=120 的契约合法输入变成 >120 的值，
+    若不在统一边界拦截会写入 ``VARCHAR(120)`` 失败并把 DataError 外泄为 500。
+    """
+
+    def __init__(self, message: str = "用户名格式无效") -> None:
+        super().__init__("auth.invalid_username", message, status_code=422)

@@ -6,6 +6,8 @@ T030 规格：
 - 成功只清账号退避，不清来源级窗口。
 """
 
+import asyncio
+import os
 from unittest.mock import AsyncMock
 
 import pytest
@@ -165,6 +167,41 @@ async def test_redis_backend_repairs_legacy_no_ttl_key() -> None:
 
 
 @pytest.mark.asyncio
+async def test_redis_backend_get_count_uses_atomic_lua_script() -> None:
+    """get_count 必须用单条 Lua 脚本原子读取并修复缺失 TTL。
+
+    Codex 第十六轮审阅发现：旧 get_count 用裸 GET 读取计数，不修复 TTL。
+    is_source_blocked 读取遗留无 TTL 键后直接 429，永远不进入 increment 的
+    补 TTL Lua，导致来源被永久锁定。修复后 get_count 必须用 Lua 原子读取
+    并在 TTL==-1 时设置 EXPIRE。
+    """
+    redis_client = AsyncMock()
+    redis_client.eval = AsyncMock(return_value=30)
+    backend = RedisThrottleBackend(redis_client)
+    count = await backend.get_count("login:source:1.2.3.4", 900)
+    assert count == 30
+    # 必须调用 eval（Lua 脚本），不得调用裸 get
+    assert redis_client.eval.await_count == 1
+    redis_client.get.assert_not_called()
+    script = redis_client.eval.call_args.args[0]
+    assert "GET" in script
+    assert "TTL" in script or "ttl" in script
+    assert "== -1" in script
+    assert "EXPIRE" in script
+
+
+@pytest.mark.asyncio
+async def test_redis_backend_get_count_returns_zero_for_missing_key() -> None:
+    """键不存在时 get_count 必须返回 0，不触发 TTL 修复。"""
+    redis_client = AsyncMock()
+    # Lua 脚本对不存在的键返回 0
+    redis_client.eval = AsyncMock(return_value=0)
+    backend = RedisThrottleBackend(redis_client)
+    count = await backend.get_count("login:source:missing", 900)
+    assert count == 0
+
+
+@pytest.mark.asyncio
 async def test_in_memory_backend_fixed_window_semantics_matches_redis() -> None:
     """内存替身必须与 Redis 后端语义等价（自首次请求起的固定窗口）。
 
@@ -212,3 +249,74 @@ async def test_in_memory_backend_fixed_window_semantics_matches_redis() -> None:
     t3 = t2 + timedelta(seconds=window_seconds + 1)
     with patch.object(backend, "_now", return_value=t3):
         assert await backend.get_count("key", window_seconds) == 0
+
+
+# ---------------------------------------------------------------------------
+# 真实 Redis 集成测试
+#
+# Codex 第十六轮审阅要求：补真实 Redis 的 count>=30 无 TTL 调用链 RED 测试。
+# 这类测试无法用 mock 复现 Lua 脚本在 Redis 服务端的原子语义，必须连真实
+# Redis。通过 ``CHILD_MANAGER_TEST_REDIS_URL`` 显式启用；未配置时跳过，不
+# 影响标准门禁在无 Redis 环境下的可用性。
+# ---------------------------------------------------------------------------
+
+_REDIS_URL = os.environ.get("CHILD_MANAGER_TEST_REDIS_URL", "")
+
+
+def _redis_available() -> bool:
+    if not _REDIS_URL:
+        return False
+    try:
+        from redis.asyncio import Redis
+
+        async def _ping() -> bool:
+            client = Redis.from_url(_REDIS_URL)
+            try:
+                return bool(await client.ping())
+            finally:
+                await client.aclose()
+
+        return bool(asyncio.run(_ping()))
+    except Exception:
+        return False
+
+
+_SKIP_REASON = "需要 CHILD_MANAGER_TEST_REDIS_URL 指向可用 Redis 才运行"
+
+
+@pytest.mark.skipif(not _redis_available(), reason=_SKIP_REASON)
+@pytest.mark.asyncio
+async def test_real_redis_get_count_repairs_legacy_no_ttl_key() -> None:
+    """真实 Redis：预置 count=30/TTL=-1 的遗留键，get_count 必须原子补 TTL。
+
+    Codex 第十六轮探针复现：预置 count=30/TTL=-1 后调用 is_source_blocked，
+    结果 ``blocked=True, ttl_after_check=-1``--键永久锁定来源。修复后
+    get_count 的 Lua 脚本必须在读取时补 TTL，使键最终能过期解锁。
+    """
+    import secrets
+
+    from redis.asyncio import Redis
+
+    client = Redis.from_url(_REDIS_URL)
+    # 唯一来源 IP 避免与其他测试或并行运行冲突。
+    source_ip = f"10.99.99.{secrets.token_hex(2)}"
+    key = f"login:source:{source_ip}"
+    try:
+        # 预置遗留键：count=30，无 TTL（PERSIST 确保 TTL=-1）。
+        await client.set(key, 30)
+        await client.persist(key)
+        assert await client.ttl(key) == -1, "预置键应有 TTL==-1"
+
+        backend = RedisThrottleBackend(client)
+        throttle = LoginThrottle(backend)
+
+        # is_source_blocked 调用 get_count，应返回 True 并修复 TTL。
+        blocked = await throttle.is_source_blocked(source_ip=source_ip)
+        assert blocked is True
+
+        # 关键断言：TTL 必须不再是 -1（已被 get_count 的 Lua 原子修复）。
+        ttl_after = await client.ttl(key)
+        assert ttl_after > 0, f"遗留无 TTL 键应被修复，实际 TTL={ttl_after}"
+    finally:
+        await client.delete(key)
+        await client.aclose()

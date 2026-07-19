@@ -136,7 +136,13 @@ async def login(
     check_csrf(request)
 
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
-    account_key = normalize_username(body.login)
+    # 登录输入可能是用户名或手机号。normalize_username 在统一边界校验 NFKC 后
+    # 非空、允许字符与长度 <=120；输入不符合用户名格式（例如带 ``+`` 的 E.164
+    # 手机号）时退化为原始输入的小写形式作为限流键，避免把有效登录请求变成 500。
+    try:
+        account_key = normalize_username(body.login)
+    except ValueError:
+        account_key = body.login.strip().lower() or body.login
 
     service = IdentityService(session)
 

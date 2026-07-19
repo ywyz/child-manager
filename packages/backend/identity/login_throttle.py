@@ -140,6 +140,12 @@ class RedisThrottleBackend:
     Lua 脚本还修复遗留无 TTL 键：如果 INCR 后发现键无 TTL（TTL == -1，
     可能由旧版本代码或人工操作留下），立即设置 EXPIRE，确保任何被计数的
     键都一定有过期时间。
+
+    Codex 第十六轮审阅发现：``increment`` 的补 TTL Lua 只在计数递增时执行，
+    而 ``is_source_blocked`` 先通过 ``get_count`` 读取计数并直接返回 429，
+    永远不会进入 ``increment``。预置 count=30/TTL=-1 的遗留键因此永久锁定
+    来源。修复后 ``get_count`` 也用 Lua 原子读取并补 TTL，保证任何被读取
+    的遗留无 TTL 键都会被修复，最终能过期解锁。
     """
 
     # Lua 脚本在 Redis 服务端原子执行：
@@ -156,6 +162,23 @@ end
 return current
 """
 
+    # get_count 的 Lua 脚本原子读取计数并修复遗留无 TTL 键：
+    # 1. GET 读取计数；键不存在时直接返回 0，无需 TTL 修复。
+    # 2. TTL 检查：-1 表示键存在但无 TTL（遗留键），立即设置 EXPIRE，
+    #    避免 is_source_blocked 读取遗留键后直接 429 却永远不进入 increment。
+    # 3. 返回计数。窗口语义由调用方传入的 window_seconds 体现在 EXPIRE 上。
+    _GET_COUNT_SCRIPT = """
+local value = redis.call('GET', KEYS[1])
+if value == false then
+  return 0
+end
+local ttl = redis.call('TTL', KEYS[1])
+if ttl == -1 then
+  redis.call('EXPIRE', KEYS[1], ARGV[1])
+end
+return tonumber(value)
+"""
+
     def __init__(self, redis_client: Any) -> None:
         self._client = redis_client
 
@@ -164,9 +187,8 @@ return current
         return int(count)
 
     async def get_count(self, key: str, window_seconds: int) -> int:
-        del window_seconds  # Redis TTL 已体现窗口
-        value = await self._client.get(key)
-        return int(value) if value is not None else 0
+        count = await self._client.eval(self._GET_COUNT_SCRIPT, 1, key, window_seconds)
+        return int(count)
 
     async def reset(self, key: str) -> None:
         await self._client.delete(key)

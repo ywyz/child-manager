@@ -15,6 +15,7 @@ from packages.backend.config import settings
 from packages.backend.identity.csrf import generate_csrf_token
 from packages.backend.identity.exceptions import (
     ConflictError,
+    InvalidUsernameError,
     LastAdminError,
     UserNotFoundError,
 )
@@ -103,6 +104,18 @@ class IdentityService:
             source_ip=source_ip,
         )
 
+    def _normalize_username_or_raise(self, value: str) -> str:
+        """规范化用户名并把边界校验失败转为 422 领域错误，不让 DataError 外泄。
+
+        create/update/init 的输入是用户名（非手机号），必须在统一边界校验
+        NFKC 后非空、允许字符与长度 <=120；失败时返回 422 而非让数据库
+        ``VARCHAR(120)`` 拒绝写入后外泄为 500。
+        """
+        try:
+            return normalize_username(value)
+        except ValueError as exc:
+            raise InvalidUsernameError(str(exc)) from exc
+
     def _get_kindergarten(self) -> Kindergarten | None:
         """M2 单园部署：返回唯一园所。"""
         stmt = select(Kindergarten)
@@ -157,8 +170,15 @@ class IdentityService:
         if kg is None:
             return None
 
-        account_key = normalize_username(username)
-        user = self._repo.get_user_by_username(kg.id, account_key)
+        # 登录输入可能是用户名或手机号。normalize_username 在统一边界校验
+        # NFKC 后非空、允许字符与长度 <=120；输入不符合用户名格式（例如带
+        # ``+`` 的 E.164 手机号）时跳过用户名查找，回退到手机号查找。
+        user: User | None = None
+        try:
+            account_key = normalize_username(username)
+            user = self._repo.get_user_by_username(kg.id, account_key)
+        except ValueError:
+            user = None
         if user is None:
             # 对非用户名形态的输入尝试按手机号查找；任何异常统一视为登录失败，
             # 避免泄露账号是否存在。
@@ -467,7 +487,7 @@ class IdentityService:
     ) -> UserResponse:
         self.ensure_roles()
 
-        username = normalize_username(request.username)
+        username = self._normalize_username_or_raise(request.username)
         phone = normalize_phone(request.phone_e164) if request.phone_e164 else None
         validate_password(request.password)
 
@@ -534,7 +554,7 @@ class IdentityService:
         try:
             update_kwargs: dict[str, Any] = {"updated_by": admin_user.id}
             if patch.username is not None:
-                username = normalize_username(patch.username)
+                username = self._normalize_username_or_raise(patch.username)
                 update_kwargs["username"] = username
                 update_kwargs["username_normalized"] = username
             if patch.display_name is not None:
@@ -706,7 +726,7 @@ class IdentityService:
         admin_role = self._repo.get_role_by_code("admin")
         if admin_role is None:
             raise RuntimeError("管理员角色初始化失败")
-        username = normalize_username(admin_username)
+        username = self._normalize_username_or_raise(admin_username)
         try:
             user = self._repo.create_user(
                 kindergarten_id=kg.id,

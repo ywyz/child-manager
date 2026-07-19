@@ -104,6 +104,50 @@ def test_create_user_returns_201_and_user(client: TestClient) -> None:
     assert "created_at" in data
 
 
+def test_create_user_rejects_nfkc_expanded_username_with_422(client: TestClient) -> None:
+    """NFKC 扩长用户名必须在统一边界返回 422，不得让 DataError 外泄为 500。
+
+    U+FB03 ``ﬃ`` 经 NFKC 展开为 ``ffi``。50 个 ``ﬃ`` 原长 50（<=120，契约
+    合法），规范化后 150（>120），写入 ``VARCHAR(120)`` 会被数据库拒绝。
+    Codex 第十六轮探针复现：PostgreSQL 实测报 ``value too long``。
+    """
+    cookies = _admin_session(client)
+    response = client.post(
+        "/api/v1/users",
+        json={
+            "username": "\ufb03" * 50,
+            "display_name": "扩长用户名",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    data = response.json()
+    assert data["code"] == "auth.invalid_username"
+
+
+def test_create_user_rejects_disallowed_characters_with_422(client: TestClient) -> None:
+    """包含不允许字符的用户名必须在边界返回 422。"""
+    cookies = _admin_session(client)
+    response = client.post(
+        "/api/v1/users",
+        json={
+            "username": "user name",
+            "display_name": "非法字符",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "auth.invalid_username"
+
+
 def test_list_users_returns_pagination(client: TestClient) -> None:
     cookies = _admin_session(client)
     response = client.get("/api/v1/users", headers=_CSRF_HEADERS, cookies=cookies)
@@ -188,6 +232,34 @@ def test_update_user_username(client: TestClient) -> None:
     )
     assert response.status_code == 200
     assert response.json()["username"] == "teacher_new_name"
+
+
+def test_update_user_rejects_nfkc_expanded_username_with_422(client: TestClient) -> None:
+    """PATCH NFKC 扩长用户名必须在统一边界返回 422，不得外泄 DataError。"""
+    cookies = _admin_session(client)
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "teacher_nfkc_patch",
+            "display_name": "教师",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert create.status_code == 201
+    user_id = create.json()["id"]
+
+    response = client.patch(
+        f"/api/v1/users/{user_id}",
+        json={"username": "\ufb03" * 50},
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "auth.invalid_username"
 
 
 def test_update_user_phone_to_null_clears_phone(client: TestClient) -> None:

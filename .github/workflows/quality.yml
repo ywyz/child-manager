@@ -56,5 +56,11 @@ jobs:
       - name: OpenAPI spec validation
         run: uv run python scripts/validate_openapi.py
 
+      - name: Install Playwright chromium
+        # 浏览器冒烟测试（tests/web/test_browser_smoke.py）需要真实 Chromium。
+        # 仅 `uv sync` 安装 Python 依赖，不会下载浏览器二进制；CI 必须显式安装，
+        # 否则 Playwright 测试因找不到 Chromium 可执行文件而失败，T035 门禁不通过。
+        run: uv run playwright install --with-deps chromium
+
       - name: Pytest
         run: uv run pytest

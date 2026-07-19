@@ -412,6 +412,24 @@ def test_unknown_account_login_returns_generic_401(
     assert data["code"] == "auth.login_failed"
 
 
+def test_login_with_nfkc_expanded_input_does_not_500(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """NFKC 扩长的登录输入不得外泄为 500，应回退为 401 登录失败。
+
+    登录输入可能是用户名或手机号。NFKC 扩长后超过 120 字符的输入在统一边界
+    被拒绝后，应回退为登录失败（401），不得把数据库 DataError 外泄为 500。
+    """
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"login": "\ufb03" * 50, "password": "AnyPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.login_failed"
+
+
 def test_deactivated_user_access_token_revoked_on_next_request(
     client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
 ) -> None:
