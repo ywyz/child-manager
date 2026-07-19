@@ -388,28 +388,42 @@ async def test_change_password_success_redirects_to_login(user: User) -> None:
 
 @pytest.mark.asyncio
 async def test_logout_button_invokes_logout_endpoint(user: User) -> None:
-    """NiceGUI User 驱动的退出：导航渲染退出入口并绑定 logout 处理函数。
+    """NiceGUI User 驱动的退出闭环：点击退出按钮，验证页面发起 POST /api/v1/auth/logout
+     请求，且 JS 源码包含跳转到 /login 的指令。
 
-    退出入口通过内联 onclick="logout(event)" 绑定，logout 函数由
-    ui.add_body_html 注入；这里断言导航渲染退出入口且绑定 logout 处理函数。
-    logout 端点与跳转目标已由 API 层与页面 JS 源码覆盖。
+     Cookie 清除由浏览器根据 logout 响应的 Set-Cookie: Max-Age=0 自动处理
+    （见 tests/web/test_auth_smoke.py 的真实 API 闭环），页面 JS 只负责发起
+     请求和跳转；这里验证页面层面的请求与跳转指令。
     """
-    _wire_recorder(user)
+    recorder = _wire_recorder(user)
     await user.open("/")
     await user.should_see("退出")
-    # 导航 HTML 必须包含退出入口并绑定 logout 处理函数。
-    assert user.client is not None
-    from nicegui import ui
+    # 等待导航组件的 auth/me 请求完成，避免异步事件冲突
+    await _wait_for_request(recorder, method="GET", path="/api/v1/auth/me")
+    # 实际触发退出按钮的 on_click handler，驱动页面 JS 发起 logout 请求
+    await _click_button(user, "退出")
+    req = await _wait_for_request(recorder, method="POST", path="/api/v1/auth/logout")
+    # logout 请求的 JS 源码必须包含跳转到登录页的指令
+    assert "window.location.href" in req.raw_code
+    assert "'/login'" in req.raw_code
 
-    nav_html = ""
-    with user:
-        for element in user.client.elements.values():
-            if isinstance(element, ui.html):
-                content = str(getattr(element, "content", ""))
-                if "退出" in content:
-                    nav_html = content
-                    break
-    assert 'onclick="logout(event)"' in nav_html
+
+@pytest.mark.asyncio
+async def test_refresh_session_invokes_refresh_endpoint(user: User) -> None:
+    """NiceGUI User 驱动的刷新会话闭环：点击刷新会话按钮，验证页面发起
+    POST /api/v1/auth/refresh 请求。
+
+    这提供页面会话触发的 refresh 证据，而非直接调用 BFF proxy_request。
+    """
+    recorder = _wire_recorder(user)
+    await user.open("/")
+    await user.should_see("刷新会话")
+    await _wait_for_request(recorder, method="GET", path="/api/v1/auth/me")
+    # 实际触发刷新会话按钮的 on_click handler，驱动页面 JS 发起 refresh 请求
+    await _click_button(user, "刷新会话")
+    req = await _wait_for_request(recorder, method="POST", path="/api/v1/auth/refresh")
+    # refresh 请求的 JS 源码必须包含重载页面的指令
+    assert "window.location.reload" in req.raw_code
 
 
 @pytest.mark.asyncio
