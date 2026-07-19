@@ -196,6 +196,68 @@ def test_upgrade_aborts_on_oversized_username(
 
 @pytest.mark.skipif(
     not IS_POSTGRESQL,
+    reason="NFKC 规范化后长度检测需要 PostgreSQL 迁移实际执行",
+)
+def test_upgrade_aborts_on_nfkc_oversized_username(
+    isolated_database_url: str,
+) -> None:
+    """原始 username <= 120 但 NFKC 规范化后 > 120 时必须阻止升级。
+
+    Codex 探针发现 0006 仅检测原始 username 长度，未检测 NFKC 规范化后
+    长度。组合字符 ﬃ（U+FB03）经 NFKC 展开为 ffi（3 字符），原始 50 字符
+    的 username 规范化后为 150 字符，写入 username_normalized VARCHAR(120)
+    会被 PostgreSQL 静默截断，导致登录时按截断值匹配而失败。
+    修复后必须在回填前检测规范化后长度，超长时以 RuntimeError 阻止升级。
+    """
+    import os
+
+    os.environ["CHILD_MANAGER_DATABASE_URL"] = isolated_database_url
+    config = Config("alembic.ini")
+    upgrade(config, "0005_refresh_family_revoked")
+
+    engine = create_engine(isolated_database_url)
+    try:
+        with engine.begin() as conn:
+            conn.execute(
+                text(
+                    "INSERT INTO kindergartens (id, name, timezone, created_at, updated_at) "
+                    "VALUES (:id, :name, 'Asia/Shanghai', now(), now())"
+                ),
+                {
+                    "id": "00000000-0000-7000-8000-000000000001",
+                    "name": "测试园所",
+                },
+            )
+            # U+FB03 = ﬃ，NFKC 展开为 "ffi"（1→3 字符）。
+            # 50 个 ﬃ = 原始 50 字符（<= 120），NFKC 后 150 字符（> 120）。
+            nfkc_expanding_username = "\ufb03" * 50
+            assert len(nfkc_expanding_username) == 50
+            import unicodedata
+
+            assert len(unicodedata.normalize("NFKC", nfkc_expanding_username)) == 150
+            conn.execute(
+                text(
+                    "INSERT INTO users (id, kindergarten_id, username, phone, display_name, "
+                    "password_hash, is_active, created_at, updated_at, created_by, updated_by) "
+                    "VALUES (:id, :kg, :username, NULL, :display, :pw, true, now(), now(), NULL, NULL)"
+                ),
+                {
+                    "id": "00000000-0000-7000-8000-000000000100",
+                    "kg": "00000000-0000-7000-8000-000000000001",
+                    "username": nfkc_expanding_username,
+                    "display": "教师",
+                    "pw": "argon2id$placeholder",
+                },
+            )
+    finally:
+        engine.dispose()
+
+    with pytest.raises(RuntimeError, match=r"NFKC 规范化后超过"):
+        upgrade(config, "head")
+
+
+@pytest.mark.skipif(
+    not IS_POSTGRESQL,
     reason="含数据 downgrade 需要 PostgreSQL 的 NOT NULL 约束语义",
 )
 def test_downgrade_handles_null_resource_id(

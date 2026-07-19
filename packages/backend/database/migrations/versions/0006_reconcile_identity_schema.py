@@ -52,25 +52,43 @@ def _abort_if_oversized(table: str, column: str, max_length: int) -> None:
         raise RuntimeError(msg)
 
 
+_USERNAME_NORMALIZED_MAX_LENGTH = 120  # 与 users.username_normalized VARCHAR(120) 一致
+
+
 def _backfill_username_normalized() -> None:
-    """按 NFKC+trim+lower 回填 username_normalized 并检测碰撞。
+    """按 NFKC+trim+lower 回填 username_normalized 并检测碰撞与规范化后超长。
 
     回填必须使用与应用层 identifiers.normalize_username 相同的规则，否则
     旧账号升级后无法按新规范登录（例如旧用户名 " Ｔｅａｃｈｅｒ " 经 NFKC
     应规范化为 "teacher"，而仅 lower() 会得到 " ｔｅａｃｈｅｒ "）。
+
+    NFKC 可能令字符串变长（如组合字符 ﬁ→fi、全角字符 Ａ→A 等），原始
+    username 满足 VARCHAR(120) 不代表规范化后仍 <= 120。若不检测，回填
+    会被 PostgreSQL 静默截断，导致登录时按截断值匹配而失败。因此这里
+    在 Python 侧先计算规范化值并检测长度，超长时阻止升级。
 
     若同一园所内多个旧用户名经规范化后碰撞，以清晰错误阻止升级，要求先
     完成可审计的数据修复（重命名其中一方），不得静默选择保留方。
     """
     bind = op.get_bind()
     rows = bind.execute(sa.text("SELECT id, kindergarten_id, username FROM users")).fetchall()
-    # 先在 Python 侧计算规范化值并检测碰撞。
+    # 先在 Python 侧计算规范化值，检测超长与碰撞。
     seen: dict[tuple[str, str], str] = {}
     collisions: list[str] = []
+    oversized: list[str] = []
     updates: list[tuple[str, str, str]] = []
     for row in rows:
         user_id, kg_id, username = row
-        normalized = _normalize_username_nfkc(username if username is not None else "")
+        raw_username = username if username is not None else ""
+        normalized = _normalize_username_nfkc(raw_username)
+        # NFKC 可能令字符串变长，检测规范化后长度是否超出列定义。
+        if len(normalized) > _USERNAME_NORMALIZED_MAX_LENGTH:
+            oversized.append(
+                f"user_id={user_id} kindergarten_id={kg_id} "
+                f"username={raw_username!r} normalized='{normalized}' "
+                f"(len={len(normalized)} > {_USERNAME_NORMALIZED_MAX_LENGTH})"
+            )
+            continue
         key = (str(kg_id), normalized)
         if key in seen:
             collisions.append(
@@ -80,6 +98,16 @@ def _backfill_username_normalized() -> None:
             continue
         seen[key] = str(user_id)
         updates.append((str(user_id), str(kg_id), normalized))
+    if oversized:
+        msg = (
+            f"检测到 {len(oversized)} 行用户名经 NFKC 规范化后超过 "
+            f"{_USERNAME_NORMALIZED_MAX_LENGTH} 字符，无法安全回填 "
+            f"username_normalized VARCHAR({_USERNAME_NORMALIZED_MAX_LENGTH})：\n"
+            + "\n".join(oversized)
+            + "\nPostgreSQL 会静默截断超长值导致登录匹配失败，请先审计并缩短"
+            "这些用户名，再重新执行升级。"
+        )
+        raise RuntimeError(msg)
     if collisions:
         msg = (
             "检测到用户名 NFKC 规范化碰撞，无法安全回填 username_normalized：\n"
