@@ -207,5 +207,13 @@
   "205": "Specification Quality Checklist: 首期一日活动计划完整闭环",
   "206": "3.5 API、任务状态与幂等",
   "207": "_seed_two_admins",
-  "208": "3.5 API、任务状态与幂等"
+  "208": "3.5 API、任务状态与幂等",
+  "209": "generate_csrf_token",
+  "210": "Config",
+  "211": "test_alembic_upgrade_from_0005_with_data.py",
+  "212": "._validate_role_codes",
+  "213": "test_0005_refresh_family_revoked.py",
+  "214": "Child Manager 架构决策记录",
+  "215": "test_0002_updated_at.py",
+  "216": "test_alembic_bootstrap.py"
 }

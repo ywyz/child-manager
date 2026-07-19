@@ -370,8 +370,8 @@
     "semantic_hash": ""
   },
   "tests/conftest.py": {
-    "mtime": 1784438491.112802,
-    "ast_hash": "bd9910db1b5d19b0b44db5ced094bec8",
+    "mtime": 1784448325.13541,
+    "ast_hash": "c6b4a6c3780ecaa43ef2e6c5ae2758d8",
     "semantic_hash": ""
   },
   "tests/contract/__init__.py": {
@@ -800,8 +800,8 @@
     "semantic_hash": ""
   },
   "apps/api/routers/auth.py": {
-    "mtime": 1784437999.7252429,
-    "ast_hash": "d99b0968ed8f817af81c0bd9bbacc1cd",
+    "mtime": 1784448339.233874,
+    "ast_hash": "f078db8201415601ccfd7b80af24aea9",
     "semantic_hash": ""
   },
   "apps/api/routers/users.py": {
@@ -810,8 +810,8 @@
     "semantic_hash": ""
   },
   "apps/web/components/navigation.py": {
-    "mtime": 1784365230.9436178,
-    "ast_hash": "04ff3e2291596321c05ce203fdc7d983",
+    "mtime": 1784448245.4277883,
+    "ast_hash": "7777c29fb3923500cee7d1acaf82d1c5",
     "semantic_hash": ""
   },
   "apps/web/pages/auth.py": {
@@ -825,8 +825,8 @@
     "semantic_hash": ""
   },
   "packages/backend/audit/models.py": {
-    "mtime": 1784441450.2395976,
-    "ast_hash": "fe128b112bd6eda3605c4833b8e1e9cc",
+    "mtime": 1784447342.564787,
+    "ast_hash": "12a95e024967007ae4bf784e4e00824d",
     "semantic_hash": ""
   },
   "packages/backend/audit/repository.py": {
@@ -865,8 +865,8 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/login_throttle.py": {
-    "mtime": 1784435077.2386117,
-    "ast_hash": "10d90da992ccea903f16d81ffa5f2854",
+    "mtime": 1784447675.7968519,
+    "ast_hash": "8a68158ee41179d7fc6473b9c8977c11",
     "semantic_hash": ""
   },
   "packages/backend/identity/models.py": {
@@ -890,8 +890,8 @@
     "semantic_hash": ""
   },
   "tests/api/test_auth.py": {
-    "mtime": 1784438380.0504134,
-    "ast_hash": "94391fd0d6a177c282bd5dd743807ac4",
+    "mtime": 1784447751.7003787,
+    "ast_hash": "480ddc4f7667971977254bf78db45242",
     "semantic_hash": ""
   },
   "tests/api/test_csrf.py": {
@@ -920,8 +920,8 @@
     "semantic_hash": ""
   },
   "tests/migrations/test_0001_identity.py": {
-    "mtime": 1784441677.308003,
-    "ast_hash": "bb1f74895faa82bc01bf52db5cce6b63",
+    "mtime": 1784448377.8711514,
+    "ast_hash": "e2eac74456d2988ec80b9d81392feb85",
     "semantic_hash": ""
   },
   "tests/repository/test_identity_isolation.py": {
@@ -940,8 +940,8 @@
     "semantic_hash": ""
   },
   "tests/unit/identity/test_login_throttle.py": {
-    "mtime": 1784257638.0240123,
-    "ast_hash": "a5881c9f2e7dbb863888ca6caabdd757",
+    "mtime": 1784447731.766715,
+    "ast_hash": "dcb1c84625d5a9ba48d60ebd8873183d",
     "semantic_hash": ""
   },
   "tests/unit/identity/test_passwords.py": {
@@ -980,8 +980,8 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/service.py": {
-    "mtime": 1784441442.1180851,
-    "ast_hash": "a35245f5d8b87e7afa0764b6f5351c5b",
+    "mtime": 1784447358.3023078,
+    "ast_hash": "59f7bd5e7955c1507c437844d1720a43",
     "semantic_hash": ""
   },
   "packages/security/cookie.py": {
@@ -1015,8 +1015,8 @@
     "semantic_hash": ""
   },
   "tests/unit/identity/test_refresh_family.py": {
-    "mtime": 1784441649.655786,
-    "ast_hash": "fd3fb7c59d024e0fbd00294f1b14f5c4",
+    "mtime": 1784447079.644991,
+    "ast_hash": "1cd134e62be72d59ed77d2a7e9ee69c3",
     "semantic_hash": ""
   },
   ".trae/documents/m2-auth-fix-round2-plan.md": {
@@ -1055,8 +1055,8 @@
     "semantic_hash": ""
   },
   "tests/web/test_pages_smoke.py": {
-    "mtime": 1784443586.347102,
-    "ast_hash": "11a26618b473c1409449f9031c7b3282",
+    "mtime": 1784448325.13641,
+    "ast_hash": "1550a1416d6ac64384807e186b3cc744",
     "semantic_hash": ""
   },
   "tests/migrations/test_0005_refresh_family_revoked.py": {
@@ -1065,13 +1065,23 @@
     "semantic_hash": ""
   },
   "packages/backend/database/migrations/versions/0006_reconcile_identity_schema.py": {
-    "mtime": 1784443374.3441343,
-    "ast_hash": "70dfa3181452cae228b93d8dca998701",
+    "mtime": 1784447429.2256582,
+    "ast_hash": "de01ca6be9e841f3eedba8058d1ebca4",
     "semantic_hash": ""
   },
   "tests/repository/test_last_admin_concurrency.py": {
     "mtime": 1784443637.971518,
     "ast_hash": "1e0f67c1c5b28cf22177db5d6582f43a",
+    "semantic_hash": ""
+  },
+  "tests/migrations/test_alembic_upgrade_from_0005_with_data.py": {
+    "mtime": 1784448325.13541,
+    "ast_hash": "2e3cdff2b36b2c414fdee59644d3b4b5",
+    "semantic_hash": ""
+  },
+  "tests/unit/identity/test_logout_independent.py": {
+    "mtime": 1784448325.13541,
+    "ast_hash": "4fa346e840d7d17e2cbecf31396d50d0",
     "semantic_hash": ""
   }
 }
