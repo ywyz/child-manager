@@ -86,13 +86,15 @@ erDiagram
 
 ### 3.5 `refresh_tokens`
 
-关键字段：`token_family_id`、唯一 `token_hash`、`issued_at`、`absolute_expires_at`、
+关键字段：`token_family_id`、唯一 `token_hash`、`issued_at`、`expires_at`、
 `last_used_at`、`revoked_at`、`revoke_reason`、`replaced_by_id`、脱敏 `client_label`。
 
-- Refresh Token 是随机 256 位不透明值，只保存强哈希；族绝对有效期为首次签发后 7 天，
-  轮换不得延长。
+- Refresh Token 是随机 256 位不透明值，只保存强哈希；`expires_at` 保存族首次签发后 7 天的
+  固定绝对到期时间，同一 family 的后续轮换记录沿用该值，不得延长。
 - 每次刷新撤销旧 token 并指向新 token；退出、改密、管理员重置、停用均撤销相应 token。
 - 已撤销 token 重放时撤销整个 `token_family_id`。过期且撤销记录保留 90 天后可清理。
+- 首期不增加 `family_expires_at` 或 `family_revoked_at`；固定期限由同族记录共享的
+  `expires_at` 表达，family 撤销由同族记录的 `revoked_at` 表达。
 - Access Token 不建表：15 分钟 HS256 JWT，签名密钥在数据库外，claims 最小化；每次请求
   仍查询账号、角色和班级关系。
 

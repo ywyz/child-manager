@@ -210,6 +210,11 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 - `CHECK (replaced_by_id IS NULL OR revoked_at IS NOT NULL)`。
 - 索引 `(kindergarten_id, user_id, revoked_at, expires_at)` 和 `(token_family_id, revoked_at)`。
 - `replaced_by_id` 必须属于同一 `token_family_id` 由轮换事务校验。
+- `expires_at` 保存该 `token_family_id` 首次签发后 7 天的固定绝对到期时间；同一 family
+  的后续轮换记录必须复制旧记录的 `expires_at`，不得按轮换时间重新计算或延长。
+- 撤销整个 family 时，撤销事务必须将该 family 已存在记录的 `revoked_at` 和
+  `revoke_reason` 一并更新。首期不增加 `family_expires_at` 或 `family_revoked_at`；前者由同族
+  记录共享的 `expires_at` 表达，后者由同族记录的 `revoked_at` 表达。
 
 ## 6. 教学设置 Schema
 
