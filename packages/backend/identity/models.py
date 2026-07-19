@@ -4,7 +4,7 @@
 """
 
 from datetime import UTC, datetime
-from uuid import uuid4
+from uuid import uuid7
 
 import sqlalchemy as sa
 from sqlalchemy import (
@@ -28,7 +28,8 @@ def _now() -> datetime:
 
 
 def _uuid() -> str:
-    return str(uuid4())
+    # 冻结 Schema §3.2 要求主键使用 UUIDv7，由应用显式生成。
+    return str(uuid7())
 
 
 class Kindergarten(Base):
@@ -207,12 +208,8 @@ class RefreshToken(Base):
         DateTime(timezone=True), nullable=False, default=_now
     )
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    family_expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     last_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    family_revoked_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
     revoke_reason: Mapped[str | None] = mapped_column(String(64), nullable=True)
     replaced_by_id: Mapped[str | None] = mapped_column(Uuid(as_uuid=False), nullable=True)
     client_label: Mapped[str | None] = mapped_column(String(160), nullable=True)

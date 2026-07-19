@@ -181,12 +181,16 @@ async def _csrf_error_handler(request: Request, exc: CsrfError) -> JSONResponse:
 
 
 async def _identity_error_handler(request: Request, exc: IdentityError) -> JSONResponse:
-    return _error_response(
+    response = _error_response(
         request,
         status_code=exc.status_code,
         code=exc.code,
         message=exc.message,
     )
+    retry_after = getattr(exc, "retry_after", 0)
+    if exc.status_code == 429 and retry_after > 0:
+        response.headers["Retry-After"] = str(retry_after)
+    return response
 
 
 async def _http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:

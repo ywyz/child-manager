@@ -136,7 +136,8 @@ async def login(
     service = IdentityService(session)
     if await _throttle.is_blocked(account_key=account_key, source_ip=source_ip):
         service.record_login_rate_limited(username=account_key, source_ip=source_ip)
-        raise LoginRateLimitedError()
+        retry_after = await _throttle.delay_seconds(account_key=account_key, source_ip=source_ip)
+        raise LoginRateLimitedError(retry_after=retry_after)
 
     result = service.login(username=account_key, password=body.password, source_ip=source_ip)
     if result is None:
@@ -188,11 +189,17 @@ async def logout(
 ) -> Response:
     check_csrf(request)
 
+    access_cookie = request.cookies.get(ACCESS_COOKIE_NAME)
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
     service = IdentityService(session)
-    service.logout(refresh_cookie=refresh_cookie, source_ip=source_ip)
+    service.logout(
+        access_token=access_cookie,
+        refresh_cookie=refresh_cookie,
+        source_ip=source_ip,
+    )
 
+    # 安全注销：撤销当前会话 family（refresh 优先，否则通过 access token），并清除全部相关 Cookie。
     _clear_auth_cookies(response)
     response.status_code = status.HTTP_204_NO_CONTENT
     return response

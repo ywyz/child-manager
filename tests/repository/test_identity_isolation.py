@@ -145,7 +145,7 @@ def _make_user(repo: IdentityRepository, kindergarten_id: str, username: str) ->
     return user.id
 
 
-def test_refresh_token_crud_with_family_expires_at(db_repo: IdentityRepository) -> None:
+def test_refresh_token_crud(db_repo: IdentityRepository) -> None:
     from datetime import UTC, datetime, timedelta
 
     kg = db_repo.create_kindergarten(name="Refresh测试园")
@@ -161,9 +161,8 @@ def test_refresh_token_crud_with_family_expires_at(db_repo: IdentityRepository) 
         token_family_id=family_id,
         token_hash=token_hash,
         expires_at=expires,
-        family_expires_at=expires,
     )
-    assert token.family_expires_at == expires
+    assert token.expires_at == expires
 
     found = db_repo.find_refresh_token_by_hash(kg_id, token_hash)
     assert found is not None
@@ -193,7 +192,6 @@ def test_find_refresh_token_by_hash_for_update(db_repo: IdentityRepository) -> N
         token_family_id=family_id,
         token_hash=token_hash,
         expires_at=expires,
-        family_expires_at=expires,
     )
 
     found = db_repo.find_refresh_token_by_hash_for_update(kg_id, token_hash)
@@ -217,7 +215,6 @@ def test_refresh_token_revoke_respects_kindergarten_id(
         token_family_id=family_id,
         token_hash=token_hash,
         expires_at=expires,
-        family_expires_at=expires,
     )
 
     assert db_repo.revoke_refresh_family(kg_b, family_id) == 0
@@ -256,5 +253,4 @@ def test_refresh_token_rejects_cross_kindergarten_user(
             token_family_id=family_id,
             token_hash=token_hash,
             expires_at=expires,
-            family_expires_at=expires,
         )

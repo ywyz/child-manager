@@ -59,8 +59,14 @@ class ForbiddenError(IdentityError):
 class LoginRateLimitedError(IdentityError):
     """登录请求被限流时抛出。"""
 
-    def __init__(self, message: str = "登录尝试过于频繁") -> None:
+    def __init__(
+        self,
+        message: str = "登录尝试过于频繁",
+        *,
+        retry_after: int = 0,
+    ) -> None:
         super().__init__("auth.login_rate_limited", message, status_code=429)
+        self.retry_after = retry_after
 
 
 class ConflictError(IdentityError):

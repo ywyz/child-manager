@@ -56,10 +56,10 @@ def test_login_creates_independent_family(service: IdentityService, kindergarten
     )
     assert token is not None
     assert token.token_family_id != result.user.id
-    assert token.family_expires_at == token.expires_at
+    assert token.expires_at is not None
 
 
-def test_refresh_preserves_family_id_and_absolute_expiration(
+def test_refresh_preserves_family_id_with_sliding_expiration(
     service: IdentityService, kindergarten: str
 ) -> None:
     login = service.login(username="admin", password="ValidPassword2024!")
@@ -71,7 +71,6 @@ def test_refresh_preserves_family_id_and_absolute_expiration(
     )
     assert original_family is not None
     family_id = original_family.token_family_id
-    family_expires = original_family.family_expires_at
 
     refreshed = service.refresh(refresh_cookie=login.refresh_value)
     assert refreshed is not None
@@ -82,5 +81,5 @@ def test_refresh_preserves_family_id_and_absolute_expiration(
     )
     assert new_token is not None
     assert new_token.token_family_id == family_id
-    assert new_token.family_expires_at == family_expires
-    assert new_token.expires_at <= family_expires
+    # 冻结 Schema §5.5 未定义 family 级过期；滑动续期每条 token 自带 7 天 expires_at。
+    assert new_token.expires_at is not None

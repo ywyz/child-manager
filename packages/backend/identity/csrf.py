@@ -33,21 +33,38 @@ def verify_csrf_token(token: str, signing_key: str) -> bool:
     return hmac.compare_digest(signature, expected)
 
 
-def _origin_host(origin: str) -> str | None:
+def _normalize_origin(origin: str) -> str | None:
+    """把 Origin/Referer 规范化为 scheme://host:port 形式，比较完整同源。"""
     try:
         parsed = urlparse(origin)
-        return parsed.hostname
+        if not parsed.scheme or not parsed.hostname:
+            return None
+        port = parsed.port
+        if port is None:
+            default_ports = {"http": 80, "https": 443}
+            port = default_ports.get(parsed.scheme, 0)
+        return f"{parsed.scheme.lower()}://{parsed.hostname.lower()}:{port}"
     except ValueError:
         return None
 
 
-def _is_allowed_host(host: str | None) -> bool:
-    if host is None:
+def _build_allowed_origins() -> set[str]:
+    """根据配置生成允许的完整 Origin 集合（scheme + host + effective port）。"""
+    origins: set[str] = set()
+    web_port = settings.web_port
+    scheme = "https" if settings.environment == "production" else "http"
+    for host in settings.allowed_hosts:
+        origins.add(f"{scheme}://{host}:{web_port}")
+    # 保留标准端口的 localhost / 127.0.0.1，便于本地调试
+    for host in ("localhost", "127.0.0.1"):
+        origins.add(f"{scheme}://{host}")
+    return origins
+
+
+def _is_allowed_origin(origin: str | None) -> bool:
+    if origin is None:
         return False
-    allowed = set(settings.allowed_hosts)
-    allowed.add("localhost")
-    allowed.add("127.0.0.1")
-    return host in allowed
+    return origin in _build_allowed_origins()
 
 
 def validate_csrf_request(
@@ -61,7 +78,7 @@ def validate_csrf_request(
     if not source:
         return False
 
-    if not _is_allowed_host(_origin_host(source)):
+    if not _is_allowed_origin(_normalize_origin(source)):
         return False
 
     # 签名双提交：分别验证 Cookie 与 Header 的签名，再比较二者是否完全一致。

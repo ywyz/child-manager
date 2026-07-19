@@ -4,7 +4,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from typing import Any
-from uuid import uuid4
+from uuid import uuid7
 
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -28,6 +28,7 @@ from packages.backend.identity.passwords import (
 from packages.backend.identity.repository import IdentityRepository
 from packages.backend.identity.tokens import (
     create_access_token,
+    decode_access_token,
     generate_refresh_value,
     hash_refresh_value,
     parse_refresh_kindergarten_id,
@@ -137,11 +138,12 @@ class IdentityService:
         kg = self._get_kindergarten()
         if kg is None:
             return
+        account_key = normalize_username(username)
         self._record_identity(
             kindergarten_id=kg.id,
             event_code=audit_events.IDENTITY_LOGIN,
             actor_user_id=None,
-            resource_id=None,
+            resource_id=account_key,
             outcome=audit_events.RESULT_FAILURE,
             source_ip=source_ip,
         )
@@ -171,7 +173,7 @@ class IdentityService:
                 kindergarten_id=kg.id,
                 event_code=audit_events.IDENTITY_LOGIN,
                 actor_user_id=None,
-                resource_id=None,
+                resource_id=account_key,
                 outcome=audit_events.RESULT_FAILURE,
                 source_ip=source_ip,
             )
@@ -210,7 +212,7 @@ class IdentityService:
             return None
         user, roles = result
 
-        family_id = str(uuid4())
+        family_id = str(uuid7())
         access_token = create_access_token(
             user_id=user.id,
             kindergarten_id=user.kindergarten_id,
@@ -221,14 +223,15 @@ class IdentityService:
         )
         refresh_value = generate_refresh_value(kindergarten_id=user.kindergarten_id)
         refresh_hash = hash_refresh_value(refresh_value)
-        family_expires_at = datetime.now(UTC) + timedelta(days=7)
+        # 冻结 Schema §5.5 未定义 family 级过期时间，使用每条 token 的 expires_at
+        # 表达滑动的 7 天 Refresh 生命周期；family 撤销通过批量设置 revoked_at 实现。
+        expires_at = datetime.now(UTC) + timedelta(days=7)
         self._repo.create_refresh_token(
             kindergarten_id=user.kindergarten_id,
             user_id=user.id,
             token_family_id=family_id,
             token_hash=refresh_hash,
-            expires_at=family_expires_at,
-            family_expires_at=family_expires_at,
+            expires_at=expires_at,
         )
         self._repo.record_login(user)
         csrf_token = generate_csrf_token(settings.csrf_signing_key)
@@ -256,12 +259,7 @@ class IdentityService:
             return None
 
         now = datetime.now(UTC)
-        if (
-            token_row.revoked_at is not None
-            or token_row.family_revoked_at is not None
-            or token_row.expires_at < now
-            or token_row.family_expires_at < now
-        ):
+        if token_row.revoked_at is not None or token_row.expires_at < now:
             self._record_identity(
                 kindergarten_id=token_row.kindergarten_id,
                 event_code=audit_events.IDENTITY_TOKEN_REPLAY,
@@ -297,14 +295,14 @@ class IdentityService:
         )
         refresh_value = generate_refresh_value(kindergarten_id=token_row.kindergarten_id)
         new_hash = hash_refresh_value(refresh_value)
-        expires_at = min(token_row.family_expires_at, now + timedelta(days=7))
+        # 滑动续期：每条 Refresh Token 自带 7 天 expires_at；冻结 Schema 未定义 family 级过期。
+        expires_at = now + timedelta(days=7)
         self._repo.create_refresh_token(
             kindergarten_id=token_row.kindergarten_id,
             user_id=token_row.user_id,
             token_family_id=token_row.token_family_id,
             token_hash=new_hash,
             expires_at=expires_at,
-            family_expires_at=token_row.family_expires_at,
         )
         csrf_token = generate_csrf_token(settings.csrf_signing_key)
         self._record_identity(
@@ -333,32 +331,50 @@ class IdentityService:
         """Access Token 携带的 family 是否仍活跃。"""
         return self._repo.is_family_active(kindergarten_id, family_id)
 
-    def logout(self, *, refresh_cookie: str | None, source_ip: str | None = None) -> None:
-        if not refresh_cookie:
+    def logout(
+        self,
+        *,
+        access_token: str | None = None,
+        refresh_cookie: str | None = None,
+        source_ip: str | None = None,
+    ) -> None:
+        kindergarten_id: str | None = None
+        family_id: str | None = None
+        actor_user_id: str | None = None
+
+        if refresh_cookie:
+            kindergarten_id = parse_refresh_kindergarten_id(refresh_cookie)
+            if kindergarten_id:
+                token_row = self._repo.find_refresh_token_by_hash(
+                    kindergarten_id, hash_refresh_value(refresh_cookie)
+                )
+                if token_row is not None:
+                    family_id = token_row.token_family_id
+                    actor_user_id = token_row.user_id
+        elif access_token:
+            payload = decode_access_token(access_token, settings.jwt_signing_key)
+            if payload is not None:
+                family_id = payload.get("family_id")
+                kindergarten_id = payload.get("kindergarten_id")
+                actor_user_id = payload.get("sub")
+
+        if not kindergarten_id or not family_id:
             return
-        kindergarten_id = parse_refresh_kindergarten_id(refresh_cookie)
-        if kindergarten_id is None:
-            return
-        token_row = self._repo.find_refresh_token_by_hash(
-            kindergarten_id, hash_refresh_value(refresh_cookie)
+
+        roles: list[str] = []
+        if actor_user_id is not None:
+            roles = self._repo.list_user_roles(kindergarten_id, actor_user_id)
+        self._repo.revoke_refresh_family(kindergarten_id, family_id, revoke_reason="logout")
+        self._record_identity(
+            kindergarten_id=kindergarten_id,
+            event_code=audit_events.IDENTITY_LOGOUT,
+            actor_user_id=actor_user_id,
+            actor_role_codes=roles or None,
+            resource_id=actor_user_id,
+            outcome=audit_events.RESULT_SUCCESS,
+            source_ip=source_ip,
         )
-        if token_row is not None:
-            roles = self._repo.list_user_roles(token_row.kindergarten_id, token_row.user_id)
-            self._repo.revoke_refresh_family(
-                token_row.kindergarten_id,
-                token_row.token_family_id,
-                revoke_reason="logout",
-            )
-            self._record_identity(
-                kindergarten_id=token_row.kindergarten_id,
-                event_code=audit_events.IDENTITY_LOGOUT,
-                actor_user_id=token_row.user_id,
-                actor_role_codes=roles,
-                resource_id=token_row.user_id,
-                outcome=audit_events.RESULT_SUCCESS,
-                source_ip=source_ip,
-            )
-            self._session.commit()
+        self._session.commit()
 
     def change_password(
         self,
@@ -487,14 +503,16 @@ class IdentityService:
         try:
             update_kwargs: dict[str, Any] = {"updated_by": admin_user.id}
             if patch.username is not None:
-                update_kwargs["username"] = normalize_username(patch.username)
-                update_kwargs["username_normalized"] = normalize_username(patch.username)
+                username = normalize_username(patch.username)
+                update_kwargs["username"] = username
+                update_kwargs["username_normalized"] = username
             if patch.display_name is not None:
                 update_kwargs["display_name"] = patch.display_name
-            if patch.phone_e164 is not None:
-                update_kwargs["phone_e164"] = normalize_phone(patch.phone_e164)
-            elif patch.phone_e164_is_set:
-                update_kwargs["phone_e164"] = None
+            if patch.phone_e164_is_set:
+                update_kwargs["phone_e164"] = (
+                    normalize_phone(patch.phone_e164) if patch.phone_e164 is not None else None
+                )
+                update_kwargs["phone_e164_set"] = True
             self._repo.update_user(user=user, **update_kwargs)
             response = self._build_user_response(user)
             self._record_identity(

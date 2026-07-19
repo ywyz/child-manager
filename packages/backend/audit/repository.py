@@ -2,9 +2,13 @@
 
 from datetime import UTC, datetime
 from typing import Any
-from uuid import uuid4
+from uuid import uuid7
 
 from packages.backend.audit.models import AuditEvent
+
+# 冻结 Schema §6.2 要求 metadata 只允许事件专用白名单字段。
+# 当前身份审计只记录来源 IP；未来新事件需要新增字段时必须在此扩展并补回归测试。
+_ALLOWED_METADATA_KEYS = frozenset({"source_ip"})
 
 
 class AuditRepository:
@@ -26,9 +30,16 @@ class AuditRepository:
         trace_id: str | None = None,
         job_id: str | None = None,
     ) -> AuditEvent:
+        normalized_metadata = metadata or {}
+        unexpected = set(normalized_metadata) - _ALLOWED_METADATA_KEYS
+        if unexpected:
+            # 拒绝密钥、令牌、完整教案或 AI 正文等非白名单字段进入审计记录。
+            msg = f"审计 metadata 含未授权字段: {sorted(unexpected)}"
+            raise ValueError(msg)
         now = datetime.now(UTC)
         event = AuditEvent(
-            id=str(uuid4()),
+            # 冻结 Schema §3.2 要求主键使用 UUIDv7。
+            id=str(uuid7()),
             kindergarten_id=kindergarten_id,
             event_code=event_code,
             actor_user_id=actor_user_id,

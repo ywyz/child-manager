@@ -162,6 +162,71 @@ def test_update_user(client: TestClient) -> None:
     assert response.json()["display_name"] == "更新后的名称"
 
 
+def test_update_user_username(client: TestClient) -> None:
+    """PATCH 用户名应能正常更新。"""
+    cookies = _admin_session(client)
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "teacher_username",
+            "display_name": "教师",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert create.status_code == 201
+    user_id = create.json()["id"]
+
+    response = client.patch(
+        f"/api/v1/users/{user_id}",
+        json={"username": "teacher_new_name"},
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 200
+    assert response.json()["username"] == "teacher_new_name"
+
+
+def test_update_user_phone_to_null_clears_phone(client: TestClient) -> None:
+    """PATCH phone_e164 为 null 应显式清空手机号。"""
+    cookies = _admin_session(client)
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "teacher_phone",
+            "display_name": "有手机教师",
+            "phone_e164": "13800000001",
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert create.status_code == 201
+    user_id = create.json()["id"]
+    assert create.json()["phone_e164"] == "+8613800000001"
+
+    response = client.patch(
+        f"/api/v1/users/{user_id}",
+        json={"phone_e164": None},
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 200
+    assert response.json()["phone_e164"] is None
+
+    get_response = client.get(
+        f"/api/v1/users/{user_id}",
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert get_response.status_code == 200
+    assert get_response.json()["phone_e164"] is None
+
+
 def test_set_user_roles(client: TestClient) -> None:
     cookies = _admin_session(client)
     create = client.post(

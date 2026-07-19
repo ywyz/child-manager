@@ -102,3 +102,14 @@ def migrated_database_url(isolated_database_url: str) -> Iterator[str]:
             os.environ.pop("CHILD_MANAGER_DATABASE_URL", None)
         session_module.engine = original_engine
         session_module.SessionLocal = original_session_local
+
+
+@pytest.fixture(autouse=True)
+def _reset_login_throttle_storage() -> Iterator[None]:
+    """每个测试前清空内存限流状态，避免跨测试误拦截。"""
+    from apps.api.routers import auth as auth_router
+
+    backend = getattr(auth_router._throttle, "_backend", None)
+    if backend is not None and hasattr(backend, "storage"):
+        backend.storage.clear()
+    yield

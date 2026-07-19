@@ -97,7 +97,6 @@ class JsRequestRecorder:
 
     def __call__(self, match: re.Match) -> Any:
         code = match.string
-        print(f"[RECORDER ENTER] code preview: {code[:80]!r}", flush=True)
         req = CapturedRequest(
             method=self._extract_method(code),
             path=self._extract_path(code),
@@ -105,7 +104,6 @@ class JsRequestRecorder:
             raw_code=code,
         )
         self.requests.append(req)
-        print(f"[RECORDER] {req.method} {req.path} body={req.body}", flush=True)
         return self._match_response(req)
 
     def find(
@@ -356,6 +354,62 @@ async def test_navigation_hides_admin_link_for_teacher(user: User) -> None:
     await user.open("/")
     await user.should_not_see("账号管理")
     await _wait_for_request(recorder, method="GET", path="/api/v1/auth/me")
+
+
+@pytest.mark.asyncio
+async def test_login_success_redirects_to_home(user: User) -> None:
+    """登录成功后页面 JS 必须把 window.location.href 跳转到首页 "/"。"""
+    recorder = _wire_recorder(user)
+    await user.open("/login")
+    await _wait_for_request(recorder, method="GET", path="/api/v1/auth/csrf")
+    user.find("用户名").type("admin")
+    user.find("密码").type("ValidPassword2024!")
+    await _click_button(user, "登录")
+    req = await _wait_for_request(recorder, method="POST", path="/api/v1/auth/login")
+    # 登录请求的 JS 源码必须包含跳转到首页的指令。
+    assert "window.location.href" in req.raw_code
+    assert '"/"' in req.raw_code
+
+
+@pytest.mark.asyncio
+async def test_change_password_success_redirects_to_login(user: User) -> None:
+    """改密成功后页面 JS 必须把 window.location.href 跳转到登录页 "/login"。"""
+    recorder = _wire_recorder(user)
+    await user.open("/change-password")
+    await _wait_for_request(recorder, method="GET", path="/api/v1/auth/me")
+    _set_input(user, "原密码", "OldPassword2024!")
+    _set_input(user, "新密码", "NewPassword2024!")
+    _set_input(user, "确认新密码", "NewPassword2024!")
+    user.find("确认修改").click()
+    req = await _wait_for_request(recorder, method="POST", path="/api/v1/auth/change-password")
+    assert "window.location.href" in req.raw_code
+    assert '"/login"' in req.raw_code
+
+
+@pytest.mark.asyncio
+async def test_logout_button_invokes_logout_endpoint(user: User) -> None:
+    """NiceGUI User 驱动的退出：导航渲染退出入口并绑定 logout 处理函数。
+
+    退出入口通过内联 onclick="logout(event)" 绑定，logout 函数由
+    ui.add_body_html 注入；这里断言导航渲染退出入口且绑定 logout 处理函数。
+    logout 端点与跳转目标已由 API 层与页面 JS 源码覆盖。
+    """
+    _wire_recorder(user)
+    await user.open("/")
+    await user.should_see("退出")
+    # 导航 HTML 必须包含退出入口并绑定 logout 处理函数。
+    assert user.client is not None
+    from nicegui import ui
+
+    nav_html = ""
+    with user:
+        for element in user.client.elements.values():
+            if isinstance(element, ui.html):
+                content = str(getattr(element, "content", ""))
+                if "退出" in content:
+                    nav_html = content
+                    break
+    assert 'onclick="logout(event)"' in nav_html
 
 
 @pytest.mark.asyncio

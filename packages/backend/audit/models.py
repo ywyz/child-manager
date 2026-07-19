@@ -4,7 +4,7 @@
 """
 
 from datetime import UTC, datetime
-from uuid import uuid4
+from uuid import uuid7
 
 from sqlalchemy import (
     CheckConstraint,
@@ -26,13 +26,19 @@ def _now() -> datetime:
 
 
 def _uuid() -> str:
-    return str(uuid4())
+    # 冻结 Schema §3.2 要求主键使用 UUIDv7。
+    return str(uuid7())
 
 
 class AuditEvent(Base):
     __tablename__ = "audit_events"
     __table_args__ = (
         UniqueConstraint("kindergarten_id", "id", name="uq_audit_events_kindergarten_id"),
+        ForeignKeyConstraint(
+            ["kindergarten_id"],
+            ["kindergartens.id"],
+            name="fk_audit_events_kindergarten",
+        ),
         ForeignKeyConstraint(
             ["kindergarten_id", "actor_user_id"],
             ["users.kindergarten_id", "users.id"],
@@ -55,15 +61,32 @@ class AuditEvent(Base):
             name="ck_audit_events_immutable",
         ),
         Index(
-            "ix_audit_events_lookup",
+            "ix_audit_events_kindergarten_occurred",
             "kindergarten_id",
-            "event_code",
-            "resource_type",
-            "resource_id",
+            "occurred_at",
+            postgresql_ops={"occurred_at": "DESC"},
         ),
         Index(
-            "ix_audit_events_occurred",
+            "ix_audit_events_kindergarten_event_code_occurred",
+            "kindergarten_id",
+            "event_code",
             "occurred_at",
+            postgresql_ops={"occurred_at": "DESC"},
+        ),
+        Index(
+            "ix_audit_events_kindergarten_resource_occurred",
+            "kindergarten_id",
+            "resource_type",
+            "resource_id",
+            "occurred_at",
+            postgresql_ops={"occurred_at": "DESC"},
+        ),
+        Index(
+            "ix_audit_events_kindergarten_actor_occurred",
+            "kindergarten_id",
+            "actor_user_id",
+            "occurred_at",
+            postgresql_ops={"occurred_at": "DESC"},
         ),
     )
 
@@ -73,10 +96,10 @@ class AuditEvent(Base):
     actor_user_id: Mapped[str | None] = mapped_column(Uuid(as_uuid=False), nullable=True)
     actor_role_codes: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
     resource_type: Mapped[str] = mapped_column(String(80), nullable=False)
-    resource_id: Mapped[str | None] = mapped_column(Uuid(as_uuid=False), nullable=True)
-    request_id: Mapped[str | None] = mapped_column(Uuid(as_uuid=False), nullable=True)
-    trace_id: Mapped[str | None] = mapped_column(Uuid(as_uuid=False), nullable=True)
-    job_id: Mapped[str | None] = mapped_column(Uuid(as_uuid=False), nullable=True)
+    resource_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    request_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    trace_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    job_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
     outcome: Mapped[str] = mapped_column(String(16), nullable=False)
     event_metadata: Mapped[dict] = mapped_column("metadata", JSONB, nullable=False, default=dict)
     occurred_at: Mapped[datetime] = mapped_column(

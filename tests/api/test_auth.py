@@ -462,3 +462,93 @@ def test_deactivated_user_access_token_revoked_on_next_request(
     )
     assert me_after.status_code == 401
     assert me_after.json()["code"] == "auth.unauthenticated"
+
+
+def test_logout_without_refresh_cookie_revokes_access_token(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """仅携带 Access Cookie 调用退出，也必须撤销该会话 family。"""
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert login.status_code == 200
+    access_cookie = login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    logout = client.post(
+        "/api/v1/auth/logout",
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert logout.status_code == 204
+
+    me_after_logout = client.get(
+        "/api/v1/auth/me",
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert me_after_logout.status_code == 401
+    assert me_after_logout.json()["code"] == "auth.unauthenticated"
+
+
+def test_csrf_rejects_different_port_origin(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_token: str
+) -> None:
+    """同源校验必须比较 scheme + host + effective port，异端口 Origin 应被拒绝。"""
+    headers = {
+        "origin": "http://127.0.0.1:9999",
+        "x-csrf-token": csrf_token,
+    }
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"
+
+
+def test_csrf_rejects_different_scheme_origin(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_token: str
+) -> None:
+    """异协议 Origin 即使端口相同也应被拒绝。"""
+    headers = {
+        "origin": "https://127.0.0.1:28080",
+        "x-csrf-token": csrf_token,
+    }
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"
+
+
+def test_login_rate_limit_returns_retry_after(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """账号级限流触发 429 时必须返回 Retry-After 头。"""
+    for _ in range(5):
+        client.post(
+            "/api/v1/auth/login",
+            json={"login": "admin", "password": "wrong"},
+            headers=csrf_headers,
+            cookies=csrf_cookie,
+        )
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "wrong"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 429
+    assert response.json()["code"] == "auth.login_rate_limited"
+    retry_after = response.headers.get("retry-after")
+    assert retry_after is not None
+    assert int(retry_after) >= 1

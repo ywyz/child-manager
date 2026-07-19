@@ -35,6 +35,9 @@ managed = true
 line-length = 100
 target-version = "py314"
 
+[tool.ruff.format]
+quote-style = "double"
+
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "C", "N", "RUF"]
 ignore = ["E501", "RUF001", "RUF002", "RUF003"]
@@ -55,6 +58,7 @@ main_file = "apps/web/main.py"
 filterwarnings = [
     "error",
     "ignore::DeprecationWarning",
+    "ignore:.*main_file.*:pytest.PytestConfigWarning",
 ]
 markers = [
     "integration: Mark integration tests",

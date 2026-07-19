@@ -96,3 +96,36 @@ def test_init_admin_audit_persisted(service: IdentityService) -> None:
 
     count = _audit_count(service._session, kg_id, audit_events.IDENTITY_INIT_ADMIN)
     assert count == 1
+
+
+def test_audit_metadata_rejects_unknown_keys(service: IdentityService, kindergarten: str) -> None:
+    """冻结 Schema §6.2：metadata 只允许事件专用白名单字段，拒绝密钥/令牌等。"""
+    repo = service._repo
+    kg = service._get_kindergarten()
+    assert kg is not None
+    from packages.backend.audit.repository import AuditRepository
+
+    audit_repo = AuditRepository(service._session)
+    with pytest.raises(ValueError):
+        audit_repo.record(
+            kindergarten_id=kg.id,
+            event_code=audit_events.IDENTITY_LOGIN,
+            actor_user_id=None,
+            resource_type=audit_events.RESOURCE_TYPE_USER,
+            resource_id=None,
+            outcome=audit_events.RESULT_FAILURE,
+            # 模拟误传敏感字段（密钥/令牌/完整教案），必须被拒绝。
+            metadata={"api_key": "should-not-be-logged", "token": "leak"},
+        )
+    # 白名单内的 source_ip 字段必须正常记录。
+    audit_repo.record(
+        kindergarten_id=kg.id,
+        event_code=audit_events.IDENTITY_LOGIN,
+        actor_user_id=None,
+        resource_type=audit_events.RESOURCE_TYPE_USER,
+        resource_id=None,
+        outcome=audit_events.RESULT_FAILURE,
+        metadata={"source_ip": "127.0.0.1"},
+    )
+    _commit(service)
+    assert repo.get_kindergarten_by_id(kg.id) is not None

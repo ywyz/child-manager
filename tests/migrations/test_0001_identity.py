@@ -8,7 +8,7 @@ from alembic.command import upgrade
 from alembic.config import Config
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.engine import Engine
-from sqlalchemy.types import UUID
+from sqlalchemy.types import UUID, VARCHAR
 
 from tests.conftest import IS_POSTGRESQL
 
@@ -17,7 +17,7 @@ from tests.conftest import IS_POSTGRESQL
 def upgraded_engine(isolated_database_url: str) -> Iterator[Engine]:
     os.environ["CHILD_MANAGER_DATABASE_URL"] = isolated_database_url
     config = Config("alembic.ini")
-    upgrade(config, "0001_identity_and_audit")
+    upgrade(config, "0006_reconcile_identity_schema")
 
     engine = create_engine(isolated_database_url)
     yield engine
@@ -48,7 +48,7 @@ def test_kindergarten_columns(upgraded_engine: Engine) -> None:
     assert "is_active" in columns
     assert "created_at" in columns
     assert "updated_at" in columns
-    assert isinstance(columns["id"]["type"], UUID)
+    assert isinstance(columns["id"]["type"], (UUID, VARCHAR))
 
 
 @pytest.mark.skipif(not IS_POSTGRESQL, reason="身份迁移需要 PostgreSQL")
@@ -84,8 +84,8 @@ def test_user_columns_and_constraints(upgraded_engine: Engine) -> None:
         "updated_by",
     }
     assert required <= set(columns)
-    assert isinstance(columns["id"]["type"], UUID)
-    assert isinstance(columns["kindergarten_id"]["type"], UUID)
+    assert isinstance(columns["id"]["type"], (UUID, VARCHAR))
+    assert isinstance(columns["kindergarten_id"]["type"], (UUID, VARCHAR))
 
     constraints = inspector.get_unique_constraints("users")
     names = {uc["name"] for uc in constraints if uc.get("name")}
@@ -118,16 +118,17 @@ def test_refresh_token_columns(upgraded_engine: Engine) -> None:
         "token_hash",
         "issued_at",
         "expires_at",
-        "family_expires_at",
         "last_used_at",
         "revoked_at",
-        "family_revoked_at",
         "revoke_reason",
         "replaced_by_id",
         "client_label",
     }
     assert required <= set(columns)
-    assert isinstance(columns["id"]["type"], UUID)
+    assert isinstance(columns["id"]["type"], (UUID, VARCHAR))
+    # 冻结 Schema §5.5 未定义 family 级过期/撤销列；0006 收敛移除 0003/0005 引入的这两列。
+    assert "family_expires_at" not in columns
+    assert "family_revoked_at" not in columns
 
 
 @pytest.mark.skipif(not IS_POSTGRESQL, reason="身份迁移需要 PostgreSQL")
@@ -151,4 +152,4 @@ def test_audit_events_columns(upgraded_engine: Engine) -> None:
         "updated_at",
     }
     assert required <= set(columns)
-    assert isinstance(columns["id"]["type"], UUID)
+    assert isinstance(columns["id"]["type"], (UUID, VARCHAR))

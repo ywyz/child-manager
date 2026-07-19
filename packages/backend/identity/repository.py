@@ -1,7 +1,7 @@
 """身份 Repository。"""
 
 from datetime import UTC, datetime
-from uuid import uuid4
+from uuid import uuid7
 
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.orm import Session
@@ -16,7 +16,8 @@ from packages.backend.identity.models import (
 
 
 def _uuid() -> str:
-    return str(uuid4())
+    # 冻结 Schema §3.2 要求主键使用 UUIDv7。
+    return str(uuid7())
 
 
 class IdentityRepository:
@@ -95,15 +96,22 @@ class IdentityRepository:
         self,
         *,
         user: User,
+        username: str | None = None,
+        username_normalized: str | None = None,
         display_name: str | None = None,
         phone_e164: str | None = None,
+        phone_e164_set: bool = False,
         password_hash: str | None = None,
         is_active: bool | None = None,
         updated_by: str | None = None,
     ) -> User:
+        if username is not None:
+            user.username = username
+        if username_normalized is not None:
+            user.username_normalized = username_normalized
         if display_name is not None:
             user.display_name = display_name
-        if phone_e164 is not None:
+        if phone_e164_set:
             user.phone_e164 = phone_e164
         if password_hash is not None:
             user.password_hash = password_hash
@@ -210,7 +218,6 @@ class IdentityRepository:
         token_family_id: str,
         token_hash: str,
         expires_at: datetime,
-        family_expires_at: datetime,
         client_label: str | None = None,
     ) -> RefreshToken:
         token = RefreshToken(
@@ -220,7 +227,6 @@ class IdentityRepository:
             token_family_id=token_family_id,
             token_hash=token_hash,
             expires_at=expires_at,
-            family_expires_at=family_expires_at,
             client_label=client_label,
         )
         self._session.add(token)
@@ -258,7 +264,7 @@ class IdentityRepository:
             .where(
                 RefreshToken.kindergarten_id == kindergarten_id,
                 RefreshToken.token_family_id == token_family_id,
-                RefreshToken.family_revoked_at.is_(None),
+                RefreshToken.revoked_at.is_(None),
             )
             .limit(1)
         )
@@ -304,7 +310,6 @@ class IdentityRepository:
             )
             .values(
                 revoked_at=datetime.now(UTC),
-                family_revoked_at=datetime.now(UTC),
                 revoke_reason=revoke_reason,
             )
         )
@@ -328,7 +333,6 @@ class IdentityRepository:
             )
             .values(
                 revoked_at=datetime.now(UTC),
-                family_revoked_at=datetime.now(UTC),
                 revoke_reason=revoke_reason,
             )
         )

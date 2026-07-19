@@ -14,7 +14,7 @@ class _ThrottleBackend(Protocol):
 
 
 class LoginThrottle:
-    """登录限流器接口。"""
+    """登录限流器接口：账号级指数退避 + 来源级硬频控。"""
 
     _ACCOUNT_THRESHOLD = 5
     _SOURCE_THRESHOLD = 30
@@ -44,19 +44,27 @@ class LoginThrottle:
         )
         return account_count >= self._ACCOUNT_THRESHOLD or source_count >= self._SOURCE_THRESHOLD
 
-    async def delay_seconds(self, *, account_key: str, source_ip: str) -> int:
-        """返回当前应等待的秒数（0 或 1–60）。"""
-        if not await self.is_blocked(account_key=account_key, source_ip=source_ip):
-            return 0
-        account_count = await self._backend.get_count(
-            self._account_key(account_key), self._WINDOW_SECONDS
-        )
+    async def is_source_blocked(self, *, source_ip: str) -> bool:
+        """判断来源是否触发硬频控（>= 30 次/15 分钟）。"""
         source_count = await self._backend.get_count(
             self._source_key(source_ip), self._WINDOW_SECONDS
         )
-        count = max(account_count, source_count)
-        threshold = min(self._ACCOUNT_THRESHOLD, self._SOURCE_THRESHOLD)
-        return min(max(2 ** (count - threshold), 1), 60)
+        return source_count >= self._SOURCE_THRESHOLD
+
+    async def account_backoff_seconds(self, *, account_key: str) -> int:
+        """返回账号级指数退避秒数（0 或 1–60）。"""
+        account_count = await self._backend.get_count(
+            self._account_key(account_key), self._WINDOW_SECONDS
+        )
+        if account_count < self._ACCOUNT_THRESHOLD:
+            return 0
+        return min(max(2 ** (account_count - self._ACCOUNT_THRESHOLD), 1), 60)
+
+    async def delay_seconds(self, *, account_key: str, source_ip: str) -> int:
+        """返回当前应等待的秒数（账号退避与来源硬频控的较大值）。"""
+        if await self.is_source_blocked(source_ip=source_ip):
+            return self._WINDOW_SECONDS
+        return await self.account_backoff_seconds(account_key=account_key)
 
     async def record_success(self, *, account_key: str, source_ip: str) -> None:
         """成功登录后清理失败计数。"""
