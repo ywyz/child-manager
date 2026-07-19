@@ -2,6 +2,7 @@
 
 import os
 from collections.abc import Iterator
+from typing import Any
 
 import pytest
 from alembic.command import upgrade
@@ -153,3 +154,32 @@ def test_audit_events_columns(upgraded_engine: Engine) -> None:
     }
     assert required <= set(columns)
     assert isinstance(columns["id"]["type"], (UUID, VARCHAR))
+    # 冻结 Schema §6.2：resource_id/request_id/trace_id/job_id 必须为 UUID 类型。
+    assert isinstance(columns["resource_id"]["type"], UUID)
+    assert isinstance(columns["request_id"]["type"], UUID)
+    assert isinstance(columns["trace_id"]["type"], UUID)
+    assert isinstance(columns["job_id"]["type"], UUID)
+
+
+@pytest.mark.skipif(not IS_POSTGRESQL, reason="身份迁移需要 PostgreSQL")
+def test_frozen_schema_varchar_lengths(upgraded_engine: Engine) -> None:
+    """冻结 Schema §5.1/§5.2/§5.3：name/username/display_name 长度收窄。"""
+    inspector = inspect(upgraded_engine)
+
+    kg_columns = {c["name"]: c for c in inspector.get_columns("kindergartens")}
+    assert _varchar_length(kg_columns["name"]) == 200
+
+    roles_columns = {c["name"]: c for c in inspector.get_columns("roles")}
+    assert _varchar_length(roles_columns["name"]) == 120
+
+    users_columns = {c["name"]: c for c in inspector.get_columns("users")}
+    assert _varchar_length(users_columns["username"]) == 120
+    assert _varchar_length(users_columns["display_name"]) == 120
+
+
+def _varchar_length(column: Any) -> int:
+    """从 SQLAlchemy inspector 列信息中提取 VARCHAR 长度。"""
+    col_type = column["type"]
+    length = getattr(col_type, "length", None)
+    assert length is not None, f"列类型 {col_type} 缺少 length 属性"
+    return int(length)

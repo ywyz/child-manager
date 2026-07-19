@@ -42,49 +42,63 @@ def _ensure_system_roles() -> None:
 
 
 def _migrate_roles_to_global() -> None:
-    """将旧园所范围的 roles 表收敛为全局只读字典，并更新 user_roles.role_id。"""
+    """将旧园所范围的 roles 表收敛为全局只读字典，并更新 user_roles.role_id。
+
+    旧 0001 的 roles 表要求 kindergarten_id/created_at/updated_at 非空，
+    且存在 `uq_roles_kindergarten_code (kindergarten_id, code)` 唯一约束。
+    因此收敛顺序为：先建立 old_id -> new_id 映射并更新 user_roles
+    （FK 已在阶段 0 删除），再删除全部旧角色，最后插入满足旧 NOT NULL
+    约束的全局新角色，避免唯一约束冲突。
+    """
     bind = op.get_bind()
-    code_rows = bind.execute(sa.text("SELECT DISTINCT code FROM roles")).fetchall()
-    if not code_rows:
+    old_roles = bind.execute(
+        sa.text("SELECT id, kindergarten_id, code, name FROM roles")
+    ).fetchall()
+    if not old_roles:
         return
 
-    code_to_id: dict[str, str] = {}
-    for (code,) in code_rows:
-        new_id = str(uuid7())
-        code_to_id[code] = new_id
-        name_row = bind.execute(
-            sa.text("SELECT name FROM roles WHERE code = :code LIMIT 1"),
-            {"code": code},
-        ).fetchone()
+    # 取一个已存在的 kindergarten_id 作为新行的临时值；园所表为空时使用占位 UUID。
+    kg_row = bind.execute(sa.text("SELECT id FROM kindergartens LIMIT 1")).fetchone()
+    placeholder_kg_id = kg_row[0] if kg_row else "00000000-0000-7000-8000-000000000000"
+
+    # 为每个 code 分配一个新 UUIDv7，同时保留 old_id -> new_id 与 code -> name 映射。
+    code_to_new_id: dict[str, str] = {}
+    code_to_name: dict[str, str] = {}
+    old_to_new: dict[str, str] = {}
+    for old_id, _kg_id, code, name in old_roles:
+        if code not in code_to_new_id:
+            code_to_new_id[code] = str(uuid7())
+            code_to_name[code] = name if name else code
+        old_to_new[old_id] = code_to_new_id[code]
+
+    # FK 已在阶段 0 删除，可直接更新 user_roles.role_id 指向新全局角色 ID。
+    for old_id, new_id in old_to_new.items():
+        bind.execute(
+            sa.text("UPDATE user_roles SET role_id = :new_id WHERE role_id = :old_id"),
+            {"new_id": new_id, "old_id": old_id},
+        )
+
+    # 先删除全部旧角色，避免唯一约束 (kindergarten_id, code) 与新行冲突。
+    bind.execute(sa.text("DELETE FROM roles"))
+
+    # 插入全局新角色；旧表仍要求 kindergarten_id/created_at/updated_at 非空，
+    # 这些列在后续 op.drop_column 中移除。
+    for code, new_id in code_to_new_id.items():
         bind.execute(
             sa.text(
                 """
-                INSERT INTO roles (id, code, name, is_system)
-                VALUES (:id, :code, :name, true)
+                INSERT INTO roles (id, kindergarten_id, code, name, is_system,
+                                   created_at, updated_at)
+                VALUES (:id, :kg_id, :code, :name, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 """
             ),
-            {"id": new_id, "code": code, "name": name_row[0] if name_row else code},
+            {
+                "id": new_id,
+                "kg_id": placeholder_kg_id,
+                "code": code,
+                "name": code_to_name[code],
+            },
         )
-
-    for code, new_id in code_to_id.items():
-        bind.execute(
-            sa.text(
-                """
-                UPDATE user_roles ur
-                SET role_id = :new_id
-                FROM roles r
-                WHERE ur.role_id = r.id AND r.code = :code
-                """
-            ),
-            {"new_id": new_id, "code": code},
-        )
-
-    placeholders = ", ".join(f":id_{i}" for i in range(len(code_to_id)))
-    params = {f"id_{i}": role_id for i, role_id in enumerate(code_to_id.values())}
-    bind.execute(
-        sa.text(f"DELETE FROM roles WHERE id NOT IN ({placeholders})"),
-        params,
-    )
 
 
 def _convert_varchar36_to_uuid(table: str, columns: list[str]) -> None:
@@ -136,17 +150,45 @@ def upgrade() -> None:
         ["id", "kindergarten_id", "actor_user_id"],
     )
 
-    # resource_id 从 varchar(36) 扩展为 varchar(80)，并对齐冻结 Schema §6.2 的可空约束。
+    # resource_id 对齐冻结 Schema §6.2：UUID NULL。
+    # 先放宽 NOT NULL 约束，再清理不可转换的旧值，最后转换为 UUID 类型。
     op.alter_column(
         "audit_events",
         "resource_id",
         existing_type=sa.String(36),
-        type_=sa.String(80),
         existing_nullable=False,
         nullable=True,
     )
+    # 旧值可能是 UUID 字符串（含 UUIDv7）或 username 字符串；不可转换为 UUID 的旧值置 NULL，
+    # 身份事件 resource_id 语义统一为 user_id（UUID）或 NULL。
+    op.execute(
+        sa.text(
+            """
+            UPDATE audit_events
+            SET resource_id = NULL
+            WHERE resource_id IS NOT NULL
+              AND resource_id !~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+            """
+        )
+    )
+    op.alter_column(
+        "audit_events",
+        "resource_id",
+        existing_type=sa.String(36),
+        type_=_UUID,
+        existing_nullable=True,
+        postgresql_using="resource_id::uuid",
+    )
 
     # --- kindergartens ---------------------------------------------------------
+    # 冻结 Schema §5.1：name VARCHAR(200)。
+    op.alter_column(
+        "kindergartens",
+        "name",
+        existing_type=sa.String(255),
+        type_=sa.String(200),
+        existing_nullable=False,
+    )
     op.add_column(
         "kindergartens",
         sa.Column("is_active", sa.Boolean(), nullable=False, server_default=sa.true()),
@@ -165,6 +207,14 @@ def upgrade() -> None:
     _migrate_roles_to_global()
     op.drop_constraint("uq_roles_kindergarten_id", "roles", type_="unique")
     op.drop_constraint("uq_roles_kindergarten_code", "roles", type_="unique")
+    # 冻结 Schema §5.3：name VARCHAR(120)。
+    op.alter_column(
+        "roles",
+        "name",
+        existing_type=sa.String(128),
+        type_=sa.String(120),
+        existing_nullable=False,
+    )
     op.drop_column("roles", "kindergarten_id")
     op.drop_column("roles", "created_at")
     op.drop_column("roles", "updated_at")
@@ -206,6 +256,21 @@ def upgrade() -> None:
     )
 
     # --- users: 增加规范化/登录/审计字段，调整唯一约束 -------------------------
+    # 冻结 Schema §5.2：username/display_name VARCHAR(120)。
+    op.alter_column(
+        "users",
+        "username",
+        existing_type=sa.String(128),
+        type_=sa.String(120),
+        existing_nullable=False,
+    )
+    op.alter_column(
+        "users",
+        "display_name",
+        existing_type=sa.String(128),
+        type_=sa.String(120),
+        existing_nullable=False,
+    )
     op.add_column(
         "users",
         sa.Column("username_normalized", sa.String(120), nullable=True),
@@ -388,15 +453,15 @@ def upgrade() -> None:
     )
     op.add_column(
         "audit_events",
-        sa.Column("request_id", sa.String(80), nullable=True),
+        sa.Column("request_id", _UUID, nullable=True),
     )
     op.add_column(
         "audit_events",
-        sa.Column("trace_id", sa.String(80), nullable=True),
+        sa.Column("trace_id", _UUID, nullable=True),
     )
     op.add_column(
         "audit_events",
-        sa.Column("job_id", sa.String(80), nullable=True),
+        sa.Column("job_id", _UUID, nullable=True),
     )
     op.add_column(
         "audit_events",
@@ -613,6 +678,21 @@ def downgrade() -> None:
     op.drop_column("users", "username_normalized")
     op.drop_column("users", "password_changed_at")
     op.drop_column("users", "last_login_at")
+    # 恢复 0001 的长度：username/display_name VARCHAR(128)。
+    op.alter_column(
+        "users",
+        "username",
+        existing_type=sa.String(120),
+        type_=sa.String(128),
+        existing_nullable=False,
+    )
+    op.alter_column(
+        "users",
+        "display_name",
+        existing_type=sa.String(120),
+        type_=sa.String(128),
+        existing_nullable=False,
+    )
 
     # --- user_roles / roles: 简化降级，清空后恢复旧结构 -------------------------
     op.drop_table("user_roles")
@@ -673,9 +753,11 @@ def downgrade() -> None:
     op.alter_column(
         "audit_events",
         "resource_id",
-        existing_type=sa.String(80),
+        existing_type=_UUID,
         type_=sa.String(36),
-        existing_nullable=False,
+        existing_nullable=True,
+        nullable=False,
+        postgresql_using="resource_id::varchar(36)",
     )
 
     op.create_table(
@@ -734,3 +816,11 @@ def downgrade() -> None:
     # --- kindergartens: 撤销新增字段与约束 -------------------------------------
     op.drop_constraint("ck_kindergartens_timezone", "kindergartens", type_="check")
     op.drop_column("kindergartens", "is_active")
+    # 恢复 0001 的长度：name VARCHAR(255)。
+    op.alter_column(
+        "kindergartens",
+        "name",
+        existing_type=sa.String(200),
+        type_=sa.String(255),
+        existing_nullable=False,
+    )
