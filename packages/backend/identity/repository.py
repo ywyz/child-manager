@@ -55,6 +55,19 @@ class IdentityRepository:
             (str(self.kindergarten_id),),
         )
 
+    # 所有会话写路径保持 user → family → row 的锁序。这样可避免整用户撤销与轮换互相死锁。
+    def _lock_refresh_family(self, family_id: UUID) -> None:
+        self.connection.execute(
+            "SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))",
+            (f"refresh-family:{self.kindergarten_id}:{family_id}",),
+        )
+
+    def lock_user_sessions(self, user_id: UUID) -> None:
+        self.connection.execute(
+            "SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))",
+            (f"user-sessions:{self.kindergarten_id}:{user_id}",),
+        )
+
     def active_admin_count(self) -> int:
         row = self.connection.execute(
             """SELECT count(*) FROM users u
@@ -227,6 +240,7 @@ class IdentityRepository:
             )
 
     def set_active(self, user_id: UUID, *, active: bool, actor_user_id: UUID) -> UserRecord:
+        self.lock_user_sessions(user_id)
         if not active and not self.can_deactivate(user_id):
             raise ValueError("不能停用最后一个有效管理员")
         row = self.connection.execute(
@@ -241,6 +255,7 @@ class IdentityRepository:
         return record
 
     def update_password(self, user_id: UUID, password_hash: str, *, actor_user_id: UUID) -> None:
+        self.lock_user_sessions(user_id)
         cursor = self.connection.execute(
             """UPDATE users SET password_hash=%s, password_changed_at=now(), updated_by=%s,
             updated_at=now() WHERE kindergarten_id=%s AND id=%s""",
@@ -258,6 +273,7 @@ class IdentityRepository:
         issued_at: datetime,
         expires_at: datetime,
     ) -> UUID:
+        self.lock_user_sessions(user_id)
         token_id = uuid7()
         self.connection.execute(
             """INSERT INTO refresh_tokens
@@ -268,6 +284,14 @@ class IdentityRepository:
         return token_id
 
     def get_refresh(self, token_hash: str, *, lock: bool = False) -> RefreshRecord | None:
+        record = self._select_refresh(token_hash, lock=False)
+        if record is None or not lock:
+            return record
+        self.lock_user_sessions(record.user_id)
+        self._lock_refresh_family(record.token_family_id)
+        return self._select_refresh(token_hash, lock=True)
+
+    def _select_refresh(self, token_hash: str, *, lock: bool) -> RefreshRecord | None:
         suffix = " FOR UPDATE" if lock else ""
         row = self.connection.execute(
             """SELECT id, kindergarten_id, user_id, token_family_id, issued_at, expires_at,
@@ -288,6 +312,8 @@ class IdentityRepository:
         return bool(row and row[0])
 
     def rotate_refresh(self, old: RefreshRecord, *, new_hash: str, now: datetime) -> UUID:
+        self.lock_user_sessions(old.user_id)
+        self._lock_refresh_family(old.token_family_id)
         if old.revoked_at is not None or old.expires_at <= now:
             raise ValueError("Refresh token 已失效")
         new_id = self.create_refresh(
@@ -306,6 +332,15 @@ class IdentityRepository:
         return new_id
 
     def revoke_family(self, family_id: UUID, *, reason: str) -> None:
+        user_row = self.connection.execute(
+            """SELECT user_id FROM refresh_tokens
+            WHERE kindergarten_id=%s AND token_family_id=%s ORDER BY id LIMIT 1""",
+            (self.kindergarten_id, family_id),
+        ).fetchone()
+        if user_row is None:
+            return
+        self.lock_user_sessions(user_row[0])  # type: ignore[arg-type]
+        self._lock_refresh_family(family_id)
         self.connection.execute(
             """UPDATE refresh_tokens SET revoked_at=COALESCE(revoked_at, now()),
             revoke_reason=%s, updated_at=now()
@@ -314,6 +349,14 @@ class IdentityRepository:
         )
 
     def revoke_user_sessions(self, user_id: UUID, *, reason: str) -> None:
+        self.lock_user_sessions(user_id)
+        family_ids = self.connection.execute(
+            """SELECT DISTINCT token_family_id FROM refresh_tokens
+            WHERE kindergarten_id=%s AND user_id=%s ORDER BY token_family_id""",
+            (self.kindergarten_id, user_id),
+        ).fetchall()
+        for (family_id,) in family_ids:
+            self._lock_refresh_family(family_id)  # type: ignore[arg-type]
         self.connection.execute(
             """UPDATE refresh_tokens SET revoked_at=COALESCE(revoked_at, now()),
             revoke_reason=%s, updated_at=now()

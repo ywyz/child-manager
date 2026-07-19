@@ -175,6 +175,25 @@ def test_logout_clears_two_independent_cookies(identity_client: TestClient) -> N
     assert identity_client.get("/api/v1/auth/me").status_code == 401
 
 
+def test_logout_revokes_access_family_when_refresh_cookie_is_missing(
+    identity_client: TestClient,
+) -> None:
+    headers = csrf_headers(identity_client)
+    login = identity_client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "管理员足够长的安全测试密码 2026"},
+        headers=headers,
+    )
+    access = login.cookies["child_manager_access"]
+    identity_client.cookies.delete("child_manager_refresh")
+
+    response = identity_client.post("/api/v1/auth/logout", headers=headers)
+
+    assert response.status_code == 204
+    identity_client.cookies.set("child_manager_access", access)
+    assert identity_client.get("/api/v1/auth/me").status_code == 401
+
+
 def test_change_password_revokes_all_sessions(identity_client: TestClient) -> None:
     headers = csrf_headers(identity_client)
     identity_client.post(

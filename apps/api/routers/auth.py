@@ -220,7 +220,11 @@ def logout(
     service: IdentityServiceDependency,
 ) -> None:
     require_csrf(request)
-    service.logout(request.cookies.get(REFRESH_COOKIE), request_id=_request_id(request))
+    service.logout(
+        request.cookies.get(REFRESH_COOKIE),
+        request_id=_request_id(request),
+        raw_access_token=request.cookies.get(ACCESS_COOKIE),
+    )
     _clear_auth_cookies(response)
 
 

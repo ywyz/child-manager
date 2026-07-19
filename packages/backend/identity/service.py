@@ -124,7 +124,17 @@ class IdentityService:
         with self._connect() as connection, connection.transaction():
             kindergarten_id = self._kindergarten_id(connection)
             repository = IdentityRepository(connection, kindergarten_id)
-            user = repository.find_user_by_login(normalized)
+            candidate = repository.find_user_by_login(normalized)
+            user = candidate
+            if candidate is not None:
+                repository.lock_user_sessions(candidate.id)
+                locked_user = repository.get_user(candidate.id, lock=True)
+                user = (
+                    locked_user
+                    if locked_user is not None
+                    and normalized in {locked_user.username_normalized, locked_user.phone_e164}
+                    else None
+                )
             password_hash = user.password_hash if user is not None else _DUMMY_PASSWORD_HASH
             valid = verify_password(password, password_hash)
             if user is None or not user.is_active or not valid:
@@ -281,23 +291,55 @@ class IdentityService:
             raise IdentityError(401, "auth.unauthenticated", "刷新会话已失效，请重新登录。")
         return result
 
-    def logout(self, raw_token: str | None, *, request_id: UUID | None) -> None:
-        if not raw_token:
-            return
-        token_hash = hash_refresh_token(raw_token)
+    def logout(
+        self,
+        raw_token: str | None,
+        *,
+        request_id: UUID | None,
+        raw_access_token: str | None = None,
+    ) -> None:
+        token_hash = hash_refresh_token(raw_token) if raw_token else None
+        access_identity: tuple[UUID, UUID, UUID] | None = None
+        if token_hash is None:
+            if not raw_access_token:
+                return
+            try:
+                claims = decode_access_token(
+                    raw_access_token,
+                    signing_key=self.jwt_signing_key,
+                    now=datetime.now(UTC),
+                )
+                access_identity = (
+                    UUID(str(claims["kid"])),
+                    UUID(str(claims["sub"])),
+                    UUID(str(claims["fid"])),
+                )
+            except KeyError, ValueError:
+                return
         with self._connect() as connection, connection.transaction():
             kindergarten_id = self._kindergarten_id(connection)
             repository = IdentityRepository(connection, kindergarten_id)
-            token = repository.get_refresh(token_hash, lock=True)
-            if token is None:
-                return
-            repository.revoke_family(token.token_family_id, reason="logout")
+            if token_hash is not None:
+                token = repository.get_refresh(token_hash, lock=True)
+                if token is None:
+                    return
+                user_id = token.user_id
+                family_id = token.token_family_id
+            else:
+                assert access_identity is not None
+                access_kindergarten_id, user_id, family_id = access_identity
+                if (
+                    access_kindergarten_id != kindergarten_id
+                    or not repository.has_active_refresh_family(user_id, family_id)
+                ):
+                    return
+            repository.revoke_family(family_id, reason="logout")
             AuditRepository(connection, kindergarten_id).append(
                 event_code=IdentityAuditEventCode.LOGGED_OUT,
-                actor_user_id=token.user_id,
-                actor_role_codes=repository.roles_for_user(token.user_id),
+                actor_user_id=user_id,
+                actor_role_codes=repository.roles_for_user(user_id),
                 resource_type="refresh_family",
-                resource_id=token.token_family_id,
+                resource_id=family_id,
                 request_id=request_id,
                 outcome="success",
             )

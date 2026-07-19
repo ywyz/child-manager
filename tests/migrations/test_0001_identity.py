@@ -42,6 +42,30 @@ def test_identity_migration_creates_tables_extension_and_role_seeds(
         ("admin",),
         ("teacher",),
     ]
+    refresh_columns = tuple(
+        row[0]
+        for row in migrated_database.execute(
+            """SELECT column_name FROM information_schema.columns
+            WHERE table_schema=current_schema() AND table_name='refresh_tokens'
+            ORDER BY ordinal_position"""
+        ).fetchall()
+    )
+    assert refresh_columns == (
+        "id",
+        "kindergarten_id",
+        "user_id",
+        "token_family_id",
+        "token_hash",
+        "issued_at",
+        "expires_at",
+        "last_used_at",
+        "revoked_at",
+        "revoke_reason",
+        "replaced_by_id",
+        "client_label",
+        "created_at",
+        "updated_at",
+    )
 
 
 def test_identity_migration_is_idempotent(
