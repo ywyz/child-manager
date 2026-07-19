@@ -124,34 +124,91 @@ async def test_redis_backend_uses_atomic_lua_script_for_increment() -> None:
 
 
 @pytest.mark.asyncio
-async def test_redis_backend_increment_always_sets_ttl_on_first_increment() -> None:
-    """Lua 脚本在 count==1 时设置 TTL，保证首次计数键一定有过期时间。"""
+async def test_redis_backend_lua_script_checks_ttl_not_current_count() -> None:
+    """Lua 脚本必须用 TTL==-1 判断是否需要设置 EXPIRE，而非 current==1。
+
+    Codex 第十五轮审阅发现：旧脚本 `if current == 1` 只在新键时设置 TTL，
+    无法修复遗留无 TTL 键（current > 1 但 TTL == -1）。修复后脚本必须
+    检查 TTL，TTL==-1 时无论 current 是多少都设置 EXPIRE。
+    """
     redis_client = AsyncMock()
-    # 模拟首次 INCR 返回 1
     redis_client.eval = AsyncMock(return_value=1)
     backend = RedisThrottleBackend(redis_client)
     await backend.increment("login:source:1.2.3.4", 900)
     script = redis_client.eval.call_args.args[0]
-    # 脚本必须包含 "if current == 1" 分支以设置 TTL
-    assert "current == 1" in script
+    # 脚本必须检查 TTL，且 TTL==-1 时设置 EXPIRE
+    assert "TTL" in script or "ttl" in script
+    assert "== -1" in script
+    # 不得使用 current == 1 判断（无法修复遗留无 TTL 键）
+    assert "current == 1" not in script
+
+
+@pytest.mark.asyncio
+async def test_redis_backend_repairs_legacy_no_ttl_key() -> None:
+    """Lua 脚本必须修复遗留无 TTL 键，确保任何被计数的键都一定有过期时间。
+
+    Codex 第十五轮审阅发现：旧脚本只在 current==1 时设置 TTL，遗留无 TTL
+    键（由旧版本代码或人工操作留下）INCR 后 current>1，脚本不会设置 TTL，
+    键仍然永久存在。修复后脚本必须检查 TTL，TTL==-1 时设置 EXPIRE。
+    """
+    redis_client = AsyncMock()
+    # 模拟遗留键：INCR 返回 5（current > 1），但 TTL == -1（无 TTL）
+    redis_client.eval = AsyncMock(return_value=5)
+    backend = RedisThrottleBackend(redis_client)
+    count = await backend.increment("login:source:1.2.3.4", 900)
+    assert count == 5
+    script = redis_client.eval.call_args.args[0]
+    # 脚本必须包含 TTL 检查，能在 current > 1 时也设置 EXPIRE
+    assert "TTL" in script or "ttl" in script
+    assert "== -1" in script
+    assert "EXPIRE" in script
 
 
 @pytest.mark.asyncio
 async def test_in_memory_backend_fixed_window_semantics_matches_redis() -> None:
-    """内存替身必须与 Redis 后端语义等价（固定窗口，非滑动窗口）。
+    """内存替身必须与 Redis 后端语义等价（自首次请求起的固定窗口）。
 
-    T030 要求“确定性替身”语义等价。若内存版用滑动窗口而 Redis 用固定窗口，
-    测试观察到的行为与生产不一致。这里验证内存版在同一窗口内计数递增，
-    且窗口边界由 window_seconds 对齐（而非按调用时间滑动）。
+    T030 要求“确定性替身”语义等价。Codex 第十五轮审阅发现：旧内存版按
+    epoch 边界对齐窗口，与 Redis 的“自首次 INCR 时刻起”语义不等价。
+    修复后内存版必须采用“自首次 increment 时刻起的固定窗口”：首次 increment
+    记录 window_start=now，窗口内后续 increment 只递增，窗口过期后下次
+    increment 创建新窗口。
+
+    本测试通过冻结时间验证：
+    1. 首次 increment 在 t0 创建窗口，计数为 1；
+    2. t0 + window_seconds - 1（窗口内）increment 计数递增为 2；
+    3. t0 + window_seconds（窗口刚过期）increment 创建新窗口，计数为 1。
     """
+    from datetime import UTC, datetime, timedelta
+    from unittest.mock import patch
+
     backend = InMemoryThrottleBackend()
-    # 同一窗口内三次递增
-    count1 = await backend.increment("key", 900)
-    count2 = await backend.increment("key", 900)
-    count3 = await backend.increment("key", 900)
-    assert (count1, count2, count3) == (1, 2, 3)
-    # storage 存储的是 (window_start, count) 元组，而非 deque 时间戳列表
-    stored = backend.storage["key"]
-    assert isinstance(stored, tuple)
-    assert len(stored) == 2
-    assert stored[1] == 3
+    t0 = datetime(2026, 7, 19, 12, 0, 0, tzinfo=UTC)
+    window_seconds = 900  # 15 分钟
+
+    # 首次 increment 在 t0 创建窗口
+    with patch.object(backend, "_now", return_value=t0):
+        count1 = await backend.increment("key", window_seconds)
+    assert count1 == 1
+    stored_start, stored_count = backend.storage["key"]
+    assert stored_start == t0
+    assert stored_count == 1
+
+    # t0 + 899s（窗口内）increment 计数递增为 2，window_start 不变
+    t1 = t0 + timedelta(seconds=window_seconds - 1)
+    with patch.object(backend, "_now", return_value=t1):
+        count2 = await backend.increment("key", window_seconds)
+    assert count2 == 2
+    assert backend.storage["key"][0] == t0  # window_start 不变
+
+    # t0 + 900s（窗口刚过期）increment 创建新窗口，计数为 1
+    t2 = t0 + timedelta(seconds=window_seconds)
+    with patch.object(backend, "_now", return_value=t2):
+        count3 = await backend.increment("key", window_seconds)
+    assert count3 == 1
+    assert backend.storage["key"][0] == t2  # 新窗口起点
+
+    # get_count 在窗口过期后返回 0
+    t3 = t2 + timedelta(seconds=window_seconds + 1)
+    with patch.object(backend, "_now", return_value=t3):
+        assert await backend.get_count("key", window_seconds) == 0
