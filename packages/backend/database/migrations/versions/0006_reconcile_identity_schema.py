@@ -6,6 +6,7 @@ Create Date: 2026-07-19 00:00:00.000000
 
 """
 
+import unicodedata
 from collections.abc import Sequence
 from uuid import uuid7
 
@@ -19,6 +20,79 @@ revision: str = "0006_reconcile_identity_schema"
 down_revision: str | None = "0005_refresh_family_revoked"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
+
+
+def _normalize_username_nfkc(value: str) -> str:
+    """与应用层 identifiers.normalize_username 一致：NFKC + trim + lower。
+
+    迁移回填必须使用与应用相同的规范化规则，否则旧账号升级后无法按新规范
+    登录（T021/T029 冻结规则）。
+    """
+    return unicodedata.normalize("NFKC", value).strip().lower()
+
+
+def _abort_if_oversized(table: str, column: str, max_length: int) -> None:
+    """检测旧库中存在超长值时以清晰错误阻止升级。
+
+    AGENTS.md 要求数据迁移不得静默截断合法旧数据。这里在收窄字段前先扫描，
+    若存在超出新长度的值，给出可操作错误（包含表、列、最大长度与超长行数），
+    让运维先完成可审计的数据修复再升级。
+    """
+    bind = op.get_bind()
+    oversized = bind.execute(
+        sa.text(f"SELECT COUNT(*) FROM {table} WHERE char_length({column}) > :max_len"),
+        {"max_len": max_length},
+    ).scalar_one()
+    if oversized > 0:
+        msg = (
+            f"无法收窄 {table}.{column} 至 {max_length} 字符：检测到 {oversized} 行"
+            f"超长旧值。请先审计并修复这些行（例如更新为符合新长度的值），"
+            f"再重新执行升级。"
+        )
+        raise RuntimeError(msg)
+
+
+def _backfill_username_normalized() -> None:
+    """按 NFKC+trim+lower 回填 username_normalized 并检测碰撞。
+
+    回填必须使用与应用层 identifiers.normalize_username 相同的规则，否则
+    旧账号升级后无法按新规范登录（例如旧用户名 " Ｔｅａｃｈｅｒ " 经 NFKC
+    应规范化为 "teacher"，而仅 lower() 会得到 " ｔｅａｃｈｅｒ "）。
+
+    若同一园所内多个旧用户名经规范化后碰撞，以清晰错误阻止升级，要求先
+    完成可审计的数据修复（重命名其中一方），不得静默选择保留方。
+    """
+    bind = op.get_bind()
+    rows = bind.execute(sa.text("SELECT id, kindergarten_id, username FROM users")).fetchall()
+    # 先在 Python 侧计算规范化值并检测碰撞。
+    seen: dict[tuple[str, str], str] = {}
+    collisions: list[str] = []
+    updates: list[tuple[str, str, str]] = []
+    for row in rows:
+        user_id, kg_id, username = row
+        normalized = _normalize_username_nfkc(username if username is not None else "")
+        key = (str(kg_id), normalized)
+        if key in seen:
+            collisions.append(
+                f"kindergarten_id={kg_id} normalized='{normalized}'"
+                f" (user_id={seen[key]} 与 user_id={user_id})"
+            )
+            continue
+        seen[key] = str(user_id)
+        updates.append((str(user_id), str(kg_id), normalized))
+    if collisions:
+        msg = (
+            "检测到用户名 NFKC 规范化碰撞，无法安全回填 username_normalized：\n"
+            + "\n".join(collisions)
+            + "\n请先审计并重命名其中一方，再重新执行升级。"
+        )
+        raise RuntimeError(msg)
+    # 逐行回填，避免一次性 UPDATE 使用非确定性 SQL 函数。
+    for user_id, _kg_id, normalized in updates:
+        bind.execute(
+            sa.text("UPDATE users SET username_normalized = :norm WHERE id = :uid"),
+            {"norm": normalized, "uid": user_id},
+        )
 
 
 def _ensure_system_roles() -> None:
@@ -182,6 +256,8 @@ def upgrade() -> None:
 
     # --- kindergartens ---------------------------------------------------------
     # 冻结 Schema §5.1：name VARCHAR(200)。
+    # 0005 允许 255 字符，收窄前必须检测超长旧值，不得静默截断。
+    _abort_if_oversized("kindergartens", "name", 200)
     op.alter_column(
         "kindergartens",
         "name",
@@ -208,6 +284,7 @@ def upgrade() -> None:
     op.drop_constraint("uq_roles_kindergarten_id", "roles", type_="unique")
     op.drop_constraint("uq_roles_kindergarten_code", "roles", type_="unique")
     # 冻结 Schema §5.3：name VARCHAR(120)。
+    _abort_if_oversized("roles", "name", 120)
     op.alter_column(
         "roles",
         "name",
@@ -257,6 +334,9 @@ def upgrade() -> None:
 
     # --- users: 增加规范化/登录/审计字段，调整唯一约束 -------------------------
     # 冻结 Schema §5.2：username/display_name VARCHAR(120)。
+    # 0001 允许 128 字符，收窄前必须检测超长旧值，不得静默截断。
+    _abort_if_oversized("users", "username", 120)
+    _abort_if_oversized("users", "display_name", 120)
     op.alter_column(
         "users",
         "username",
@@ -275,7 +355,11 @@ def upgrade() -> None:
         "users",
         sa.Column("username_normalized", sa.String(120), nullable=True),
     )
-    op.execute(sa.text("UPDATE users SET username_normalized = lower(username)"))
+    # 回填 username_normalized 必须使用与应用层 identifiers.normalize_username
+    # 相同的 NFKC + trim + lower 规则（T021/T029 冻结），否则旧账号升级后无法
+    # 按新规范登录。PostgreSQL 无内置 NFKC，通过 Python 在迁移进程内计算后
+    # 逐行回填。同时检测 NFKC 规范化后的碰撞，碰撞时阻止升级并要求先修复。
+    _backfill_username_normalized()
     op.alter_column("users", "username_normalized", nullable=False)
 
     op.add_column(
@@ -748,6 +832,21 @@ def downgrade() -> None:
     op.execute(
         sa.text(
             "ALTER TABLE audit_events ALTER COLUMN actor_user_id TYPE varchar(36) USING actor_user_id::varchar(36)"
+        )
+    )
+    # audit_events.resource_id：0001 要求 NOT NULL，但 upgrade 阶段已把
+    # 不可转换为 UUID 的旧值（例如 username 字符串）置为 NULL。downgrade
+    # 必须先为这些 NULL 行填充可逆占位值，再恢复 NOT NULL，否则会因
+    # NotNullViolation 失败。占位使用 '00000000-0000-0000-0000-000000000000'
+    # 零值 UUID，并在 resource_type 标注 'legacy_null' 以便后续审计追溯。
+    op.execute(
+        sa.text(
+            """
+            UPDATE audit_events
+            SET resource_id = '00000000-0000-0000-0000-000000000000'::uuid,
+                resource_type = COALESCE(resource_type, 'legacy_null')
+            WHERE resource_id IS NULL
+            """
         )
     )
     op.alter_column(
