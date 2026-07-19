@@ -221,5 +221,6 @@
   "219": "dependencies.py",
   "220": "._validate_role_codes",
   "221": "main.py",
-  "222": ".__init__"
+  "222": ".__init__",
+  "223": "UserRole"
 }
