@@ -234,7 +234,7 @@ erDiagram
 | `token_family_id` | UUID | 一次登录会话的轮换族标识 |
 | `token_hash` | VARCHAR(128) | 唯一，只保存强哈希 |
 | `issued_at` | TIMESTAMPTZ | 非空 |
-| `expires_at` | TIMESTAMPTZ | 非空 |
+| `expires_at` | TIMESTAMPTZ | 非空，所属轮换族首次签发后 7 天的固定绝对到期时间 |
 | `last_used_at` | TIMESTAMPTZ | 可空 |
 | `revoked_at` | TIMESTAMPTZ | 可空 |
 | `revoke_reason` | VARCHAR(64) | 可空，稳定代码 |
@@ -249,7 +249,11 @@ erDiagram
 - `(kindergarten_id, user_id, revoked_at, expires_at)`。
 - `(token_family_id, revoked_at)`。
 
-刷新时旧令牌被撤销并关联新令牌。已撤销令牌重放时撤销整个 family。密码变更、密码重置和账号停用撤销用户全部有效刷新令牌。过期且已撤销记录保留 90 天后可物理清理。
+刷新时旧令牌被撤销并关联新令牌；新令牌沿用旧令牌的 `expires_at`，不得因轮换延长 family
+首次签发后 7 天的绝对期限。已撤销令牌重放时，在同一事务中撤销整个 family 的已有记录。
+密码变更、密码重置和账号停用撤销用户全部有效刷新令牌。首期不增加
+`family_expires_at` 或 `family_revoked_at`：同族固定期限由每条记录一致的 `expires_at`
+表达，family 撤销由同族记录的 `revoked_at` 表达。过期且已撤销记录保留 90 天后可物理清理。
 
 ## 6. 教学设置模型
 
