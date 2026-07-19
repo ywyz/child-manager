@@ -1,6 +1,7 @@
 """Access JWT 与 opaque Refresh 令牌。"""
 
 import hashlib
+import re
 import secrets
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -9,6 +10,10 @@ from uuid import uuid4
 import jwt
 
 _MIN_KEY_LENGTH = 32
+
+# UUIDv4/UUIDv7 等标准 UUID 字符串；parse_refresh_kindergarten_id 用它稳定拒绝
+# 非 UUID 园所前缀，避免将非法值下发到 PostgreSQL UUID 列引发 DataError。
+_UUID_PATTERN = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 
 
 def _require_signing_key(signing_key: str) -> None:
@@ -60,7 +65,12 @@ def generate_refresh_value(*, kindergarten_id: str) -> str:
 
 
 def parse_refresh_kindergarten_id(value: str) -> str | None:
-    """从 Refresh 明文中解析园所 ID；失败返回 None。"""
+    """从 Refresh 明文中解析园所 ID；失败返回 None。
+
+    父 Issue #4 要求对无效 Refresh 稳定拒绝为未认证结果，不得进入数据库
+    类型错误。因此除前缀与分段外，还必须校验园所 ID 是合法 UUID，避免
+    `kg:not-a-uuid:*` 形态把 `InvalidTextRepresentation` 暴露为 500。
+    """
     prefix = "kg:"
     if not value.startswith(prefix):
         return None
@@ -68,7 +78,10 @@ def parse_refresh_kindergarten_id(value: str) -> str | None:
     parts = rest.split(":", 1)
     if len(parts) != 2:
         return None
-    return parts[0]
+    kindergarten_id = parts[0]
+    if not _UUID_PATTERN.fullmatch(kindergarten_id):
+        return None
+    return kindergarten_id
 
 
 def hash_refresh_value(value: str) -> str:
