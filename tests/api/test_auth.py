@@ -572,6 +572,46 @@ def test_login_rate_limit_returns_retry_after(
         assert response.json()["code"] == "auth.login_rate_limited"
         retry_after = response.headers.get("retry-after")
         assert retry_after is not None
-        assert int(retry_after) >= 1
+        # Issue #6：Retry-After 必须落在冻结 OpenAPI [1, 60] 区间内
+        assert 1 <= int(retry_after) <= 60
     finally:
         auth_router._account_sleeper = original_sleeper
+
+
+def test_refresh_with_non_uuid_kindergarten_prefix_returns_unauthenticated(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """带 kg: 前缀但园所 ID 非 UUID 的 Refresh 必须返回 401，不得 500。
+
+    Codex 探针发现 `kg:not-a-uuid:*` 会让 PostgreSQL 抛 InvalidTextRepresentation，
+    通过 API 时变成通用 500。父 Issue #4 要求对无效 Refresh 稳定拒绝为未认证结果。
+    """
+    response = client.post(
+        "/api/v1/auth/refresh",
+        headers=csrf_headers,
+        cookies={"child_manager_refresh": "kg:not-a-uuid:anything", **csrf_cookie},
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_refresh_with_malformed_values_returns_unauthenticated(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """各类 malformed Refresh 值都必须稳定返回 401，不得进入数据库类型错误。"""
+    malformed_values = [
+        "not-a-refresh",
+        "",
+        "kg:",
+        "kg:abc",
+        "kg:abc:",
+        "kgr:00000000-0000-7000-8000-000000000001:token",
+    ]
+    for value in malformed_values:
+        response = client.post(
+            "/api/v1/auth/refresh",
+            headers=csrf_headers,
+            cookies={"child_manager_refresh": value, **csrf_cookie},
+        )
+        assert response.status_code == 401, f"malformed value={value!r}"
+        assert response.json()["code"] == "auth.unauthenticated"

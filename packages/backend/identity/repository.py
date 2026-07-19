@@ -75,9 +75,11 @@ class IdentityRepository:
         return user
 
     def get_user_by_username(self, kindergarten_id: str, username: str) -> User | None:
+        # 调用方（service 层）已通过 normalize_username 完成 NFKC+trim+lower；
+        # 这里直接使用传入值查询，避免在 repository 层重复且不一致地规范化。
         stmt = select(User).where(
             User.kindergarten_id == kindergarten_id,
-            User.username_normalized == username.lower().strip(),
+            User.username_normalized == username,
         )
         return self._session.execute(stmt).scalar_one_or_none()
 
