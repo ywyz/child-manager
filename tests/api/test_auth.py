@@ -201,23 +201,36 @@ def test_logout_revokes_access_token_on_next_request(
     assert me_after_logout.json()["code"] == "auth.unauthenticated"
 
 
-def test_login_rate_limit_after_repeated_failures(
+def test_login_rate_limit_after_repeated_source_failures(
     client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
 ) -> None:
-    for _ in range(5):
-        client.post(
+    """P1-3：来源 30 次/15 分钟失败后触发 429；账号退避不返回 429。"""
+    # 替换休眠器为立即返回，避免账号退避阻塞测试。
+    from apps.api.routers import auth as auth_router
+
+    async def _no_sleep(_: float) -> None:
+        return None
+
+    original_sleeper = auth_router._account_sleeper
+    auth_router._account_sleeper = _no_sleep
+    try:
+        # 30 次失败来自不同账号但同一来源 IP，触发来源硬频控。
+        for i in range(30):
+            client.post(
+                "/api/v1/auth/login",
+                json={"login": f"user-{i}", "password": "wrong"},
+                headers=csrf_headers,
+                cookies=csrf_cookie,
+            )
+        response = client.post(
             "/api/v1/auth/login",
-            json={"login": "admin", "password": "wrong"},
+            json={"login": "any-user", "password": "wrong"},
             headers=csrf_headers,
             cookies=csrf_cookie,
         )
-    response = client.post(
-        "/api/v1/auth/login",
-        json={"login": "admin", "password": "wrong"},
-        headers=csrf_headers,
-        cookies=csrf_cookie,
-    )
-    assert response.status_code == 429
+        assert response.status_code == 429
+    finally:
+        auth_router._account_sleeper = original_sleeper
 
 
 def test_refresh_replay_revokes_family(
@@ -533,22 +546,32 @@ def test_csrf_rejects_different_scheme_origin(
 def test_login_rate_limit_returns_retry_after(
     client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
 ) -> None:
-    """账号级限流触发 429 时必须返回 Retry-After 头。"""
-    for _ in range(5):
-        client.post(
+    """P1-3：来源级限流触发 429 时必须返回 Retry-After 头（900 秒窗口）。"""
+    from apps.api.routers import auth as auth_router
+
+    async def _no_sleep(_: float) -> None:
+        return None
+
+    original_sleeper = auth_router._account_sleeper
+    auth_router._account_sleeper = _no_sleep
+    try:
+        for i in range(30):
+            client.post(
+                "/api/v1/auth/login",
+                json={"login": f"user-{i}", "password": "wrong"},
+                headers=csrf_headers,
+                cookies=csrf_cookie,
+            )
+        response = client.post(
             "/api/v1/auth/login",
-            json={"login": "admin", "password": "wrong"},
+            json={"login": "any-user", "password": "wrong"},
             headers=csrf_headers,
             cookies=csrf_cookie,
         )
-    response = client.post(
-        "/api/v1/auth/login",
-        json={"login": "admin", "password": "wrong"},
-        headers=csrf_headers,
-        cookies=csrf_cookie,
-    )
-    assert response.status_code == 429
-    assert response.json()["code"] == "auth.login_rate_limited"
-    retry_after = response.headers.get("retry-after")
-    assert retry_after is not None
-    assert int(retry_after) >= 1
+        assert response.status_code == 429
+        assert response.json()["code"] == "auth.login_rate_limited"
+        retry_after = response.headers.get("retry-after")
+        assert retry_after is not None
+        assert int(retry_after) >= 1
+    finally:
+        auth_router._account_sleeper = original_sleeper

@@ -1,4 +1,10 @@
-"""登录限流：账号失败计数与来源频控。"""
+"""登录限流：账号失败计数指数退避与来源级硬频控。
+
+T030 规格：
+- 账号 5 次/15 分钟后执行 1～60 秒指数延迟（不返回 429，阻塞请求）。
+- 可信来源 30 次/15 分钟才返回 429 + Retry-After。
+- 失败计数持续演进；成功只清账号退避，不清来源级窗口。
+"""
 
 from collections import deque
 from datetime import UTC, datetime, timedelta
@@ -14,7 +20,7 @@ class _ThrottleBackend(Protocol):
 
 
 class LoginThrottle:
-    """登录限流器接口：账号级指数退避 + 来源级硬频控。"""
+    """登录限流器：账号级指数退避 + 来源级硬频控。"""
 
     _ACCOUNT_THRESHOLD = 5
     _SOURCE_THRESHOLD = 30
@@ -30,29 +36,27 @@ class LoginThrottle:
         return f"login:source:{source_ip}"
 
     async def record_failure(self, *, account_key: str, source_ip: str) -> None:
-        """记录一次登录失败。"""
+        """记录一次登录失败；账号与来源计数均递增。"""
         await self._backend.increment(self._account_key(account_key), self._WINDOW_SECONDS)
         await self._backend.increment(self._source_key(source_ip), self._WINDOW_SECONDS)
 
-    async def is_blocked(self, *, account_key: str, source_ip: str) -> bool:
-        """判断是否应拦截当前请求。"""
-        account_count = await self._backend.get_count(
-            self._account_key(account_key), self._WINDOW_SECONDS
-        )
-        source_count = await self._backend.get_count(
-            self._source_key(source_ip), self._WINDOW_SECONDS
-        )
-        return account_count >= self._ACCOUNT_THRESHOLD or source_count >= self._SOURCE_THRESHOLD
-
     async def is_source_blocked(self, *, source_ip: str) -> bool:
-        """判断来源是否触发硬频控（>= 30 次/15 分钟）。"""
+        """判断来源是否触发硬频控（>= 30 次/15 分钟），触发时返回 429。"""
         source_count = await self._backend.get_count(
             self._source_key(source_ip), self._WINDOW_SECONDS
         )
         return source_count >= self._SOURCE_THRESHOLD
 
+    async def source_retry_after_seconds(self) -> int:
+        """来源被硬频控时的 Retry-After（固定 15 分钟窗口）。"""
+        return self._WINDOW_SECONDS
+
     async def account_backoff_seconds(self, *, account_key: str) -> int:
-        """返回账号级指数退避秒数（0 或 1–60）。"""
+        """返回账号级指数退避秒数（0 或 1–60）。
+
+        账号失败 >= 5 次后，按 2^(n-5) 指数增长，上限 60 秒。
+        退避期间请求被阻塞，但不返回 429，失败计数继续演进。
+        """
         account_count = await self._backend.get_count(
             self._account_key(account_key), self._WINDOW_SECONDS
         )
@@ -60,16 +64,13 @@ class LoginThrottle:
             return 0
         return min(max(2 ** (account_count - self._ACCOUNT_THRESHOLD), 1), 60)
 
-    async def delay_seconds(self, *, account_key: str, source_ip: str) -> int:
-        """返回当前应等待的秒数（账号退避与来源硬频控的较大值）。"""
-        if await self.is_source_blocked(source_ip=source_ip):
-            return self._WINDOW_SECONDS
-        return await self.account_backoff_seconds(account_key=account_key)
-
     async def record_success(self, *, account_key: str, source_ip: str) -> None:
-        """成功登录后清理失败计数。"""
+        """成功登录后只清账号退避，不清来源级窗口。
+
+        来源级窗口用于防止单 IP 暴力尝试，一次成功登录不应重置来源计数。
+        """
+        del source_ip  # 来源计数不清空
         await self._backend.reset(self._account_key(account_key))
-        await self._backend.reset(self._source_key(source_ip))
 
 
 class InMemoryThrottleBackend:

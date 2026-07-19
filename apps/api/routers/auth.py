@@ -1,5 +1,7 @@
 """认证路由。"""
 
+import asyncio
+from collections.abc import Awaitable, Callable
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request, Response, status
@@ -45,6 +47,9 @@ def _build_throttle() -> LoginThrottle:
 
 
 _throttle = _build_throttle()
+
+# P1-3：可替换休眠器，用于账号退避阻塞；测试中替换为立即返回的替身以保持确定性。
+_account_sleeper: Callable[[float], Awaitable[None]] = asyncio.sleep
 
 ACCESS_COOKIE_NAME = "child_manager_access"
 REFRESH_COOKIE_NAME = "child_manager_refresh"
@@ -134,10 +139,18 @@ async def login(
     account_key = normalize_username(body.login)
 
     service = IdentityService(session)
-    if await _throttle.is_blocked(account_key=account_key, source_ip=source_ip):
+
+    # P1-3：来源级硬频控（>= 30 次/15 分钟）返回 429 + Retry-After。
+    if await _throttle.is_source_blocked(source_ip=source_ip):
         service.record_login_rate_limited(username=account_key, source_ip=source_ip)
-        retry_after = await _throttle.delay_seconds(account_key=account_key, source_ip=source_ip)
+        retry_after = await _throttle.source_retry_after_seconds()
         raise LoginRateLimitedError(retry_after=retry_after)
+
+    # P1-3：账号级指数退避（>= 5 次/15 分钟）阻塞请求 1-60 秒，不返回 429。
+    # 退避后继续认证流程，失败计数在认证失败时继续演进。
+    backoff = await _throttle.account_backoff_seconds(account_key=account_key)
+    if backoff > 0:
+        await _account_sleeper(backoff)
 
     result = service.login(username=account_key, password=body.password, source_ip=source_ip)
     if result is None:
