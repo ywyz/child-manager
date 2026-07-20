@@ -496,8 +496,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "apps_api_app_custom_openapi",
-      "community": 34,
-      "community_name": "FastAPI",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "custom_openapi()"
     },
     {
@@ -518,8 +518,8 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "apps_api_app_live_handler",
-      "community": 193,
-      "community_name": "UserRole",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "_live_handler()"
     },
     {
@@ -584,8 +584,8 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "apps_api_app_http_exception_handler",
-      "community": 34,
-      "community_name": "FastAPI",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "_http_exception_handler()"
     },
     {
@@ -595,8 +595,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "starlettehttpexception",
-      "community": 34,
-      "community_name": "FastAPI",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "starlettehttpexception"
     },
     {
@@ -628,8 +628,8 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "apps_api_app_create_app",
-      "community": 193,
-      "community_name": "UserRole",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "create_app()"
     },
     {
@@ -639,8 +639,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_dependencies",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 225,
+      "community_name": "build_health_dependencies",
       "norm_label": "dependencies.py"
     },
     {
@@ -738,8 +738,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_dependencies_py_request",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 225,
+      "community_name": "build_health_dependencies",
       "norm_label": "request"
     },
     {
@@ -760,8 +760,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_dependencies_py_session",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 225,
+      "community_name": "build_health_dependencies",
       "norm_label": "session"
     },
     {
@@ -771,8 +771,8 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "apps_api_dependencies_get_current_user",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 225,
+      "community_name": "build_health_dependencies",
       "norm_label": "get_current_user()"
     },
     {
@@ -782,8 +782,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_dependencies_py_depends",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 225,
+      "community_name": "build_health_dependencies",
       "norm_label": "depends"
     },
     {
@@ -815,8 +815,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_main_py_apps_api_main_0a4ce4",
-      "community": 249,
-      "community_name": "main.py",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "main.py"
     },
     {
@@ -826,8 +826,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_api_main_validate_bind_host",
-      "community": 249,
-      "community_name": "main.py",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "_validate_bind_host()"
     },
     {
@@ -837,8 +837,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "apps_api_main_main",
-      "community": 249,
-      "community_name": "main.py",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "main()"
     },
     {
@@ -2201,8 +2201,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_audit_models",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "models.py"
     },
     {
@@ -2212,8 +2212,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "packages_backend_audit_models_now",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "_now()"
     },
     {
@@ -2223,8 +2223,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_audit_models_py_datetime",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "datetime"
     },
     {
@@ -2234,8 +2234,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "packages_backend_audit_models_uuid",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "_uuid()"
     },
     {
@@ -2245,8 +2245,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "packages_backend_audit_models_auditevent",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "auditevent"
     },
     {
@@ -2256,8 +2256,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_audit_models_rationale_1",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "\u5ba1\u8ba1\u4e8b\u4ef6 orm \u6a21\u578b\u3002  \u672c\u6a21\u578b\u4e0e docs/design/database-schema.md \u00a76 \u51bb\u7ed3 schema \u4fdd\u6301\u4e00\u81f4\u3002"
     },
     {
@@ -2267,8 +2267,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_audit_repository",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "repository.py"
     },
     {
@@ -2278,8 +2278,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_auditrepository",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "auditrepository"
     },
     {
@@ -2289,8 +2289,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_auditrepository_init",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": ".__init__()"
     },
     {
@@ -2300,8 +2300,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_py_any",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "any"
     },
     {
@@ -2311,8 +2311,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_auditrepository_record",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": ".record()"
     },
     {
@@ -2322,8 +2322,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_audit_service",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 51,
+      "community_name": "AuditService",
       "norm_label": "service.py"
     },
     {
@@ -2547,21 +2547,21 @@
       "norm_label": "any"
     },
     {
-      "label": "._production_requires_secure_cookie()",
+      "label": "._non_development_requires_secure_cookie()",
       "file_type": "code",
       "source_file": "packages/backend/config.py",
       "source_location": "L69",
       "_origin": "ast",
-      "id": "packages_backend_config_settings_production_requires_secure_cookie",
+      "id": "packages_backend_config_settings_non_development_requires_secure_cookie",
       "community": 35,
       "community_name": "Settings",
-      "norm_label": "._production_requires_secure_cookie()"
+      "norm_label": "._non_development_requires_secure_cookie()"
     },
     {
       "label": ".validate_loopback_host()",
       "file_type": "code",
       "source_file": "packages/backend/config.py",
-      "source_location": "L76",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "packages_backend_config_settings_validate_loopback_host",
       "community": 35,
@@ -2572,7 +2572,7 @@
       "label": ".validate_cookie_security()",
       "file_type": "code",
       "source_file": "packages/backend/config.py",
-      "source_location": "L87",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "packages_backend_config_settings_validate_cookie_security",
       "community": 35,
@@ -2589,6 +2589,17 @@
       "community": 35,
       "community_name": "Settings",
       "norm_label": "\u4e3a trusted_bff_peers \u4e0e cookie_secure \u5e94\u7528\u73af\u5883\u611f\u77e5\u9ed8\u8ba4\u503c\u3002          \u53ea\u6709\u5f53\u5b57\u6bb5\u672a\u88ab\u663e\u5f0f\u63d0\u4f9b(\u65e2\u65e0 kwargs \u4e5f\u65e0"
+    },
+    {
+      "label": "Codex M2 Final Contract Freeze M2-F03\uff1atest/production \u5f3a\u5236 Secure=true\u3002          \u4ec5",
+      "file_type": "rationale",
+      "source_file": "packages/backend/config.py",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "packages_backend_config_rationale_70",
+      "community": 35,
+      "community_name": "Settings",
+      "norm_label": "codex m2 final contract freeze m2-f03:test/production \u5f3a\u5236 secure=true\u3002          \u4ec5"
     },
     {
       "label": "__init__.py",
@@ -3400,8 +3411,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_identityerror",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "identityerror"
     },
     {
@@ -3411,8 +3422,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_py_exception",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "exception"
     },
     {
@@ -3422,8 +3433,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_identityerror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3444,8 +3455,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_lastadminerror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3466,8 +3477,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_usernotfounderror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3488,8 +3499,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_loginfailederror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3510,8 +3521,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_changepasswordfailederror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3532,8 +3543,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_unauthenticatederror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3543,8 +3554,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_forbiddenerror",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": "forbiddenerror"
     },
     {
@@ -3554,8 +3565,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_forbiddenerror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3576,8 +3587,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_loginratelimitederror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3587,8 +3598,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_conflicterror",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "conflicterror"
     },
     {
@@ -3598,8 +3609,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_conflicterror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3609,8 +3620,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_invalidusernameerror",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "invalidusernameerror"
     },
     {
@@ -3620,8 +3631,8 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_invalidusernameerror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3631,8 +3642,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_invalidphoneerror",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "invalidphoneerror"
     },
     {
@@ -3642,8 +3653,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_invalidphoneerror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3653,8 +3664,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_invalidpassworderror",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "invalidpassworderror"
     },
     {
@@ -3664,8 +3675,8 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_invalidpassworderror_init",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 227,
+      "community_name": ".__init__",
       "norm_label": ".__init__()"
     },
     {
@@ -3686,8 +3697,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_rationale_8",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 73,
+      "community_name": "app.py",
       "norm_label": "\u8eab\u4efd\u57df\u9519\u8bef\u57fa\u7c7b,\u643a\u5e26\u7a33\u5b9a\u9519\u8bef\u7801\u3001\u4e2d\u6587\u6d88\u606f\u4e0e http \u72b6\u6001\u7801\u3002"
     },
     {
@@ -3697,8 +3708,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_rationale_80",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "\u7528\u6237\u540d\u7ecf\u89c4\u8303\u5316\u540e\u4ecd\u4e0d\u6ee1\u8db3\u975e\u7a7a\u6216\u957f\u5ea6\u7ea6\u675f\u65f6\u629b\u51fa\u3002      nfkc \u7ec4\u5408\u5b57\u7b26\u6269\u957f\u4f1a\u628a\u539f\u957f <=120 \u7684\u5951\u7ea6\u5408\u6cd5\u8f93\u5165\u53d8\u6210 >120 \u7684\u503c,     \u82e5\u4e0d\u5728\u7edf\u4e00\u8fb9"
     },
     {
@@ -3708,8 +3719,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_rationale_91",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "\u624b\u673a\u53f7\u7ecf\u89c4\u8303\u5316\u540e\u4ecd\u4e0d\u6ee1\u8db3 e.164 \u5927\u9646\u624b\u673a\u53f7\u683c\u5f0f\u65f6\u629b\u51fa\u3002      codex \u7b2c\u5341\u4e5d\u8f6e\u5ba1\u9605 p0:\u65e7\u7248 ``normalize_phone`` \u7684 ``v"
     },
     {
@@ -3719,8 +3730,8 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "packages_backend_identity_exceptions_rationale_102",
-      "community": 185,
-      "community_name": "models.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "\u5bc6\u7801\u4e0d\u6ee1\u8db3\u957f\u5ea6\u6216\u5f31\u5bc6\u7801\u653f\u7b56\u65f6\u629b\u51fa\u3002      codex \u7b2c\u5341\u4e5d\u8f6e\u5ba1\u9605 p0:\u65e7\u7248 ``validate_password`` \u7684 ``valueerror``"
     },
     {
@@ -4863,8 +4874,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_service",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "service.py"
     },
     {
@@ -4874,8 +4885,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "packages_backend_identity_service_loginresult",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "loginresult"
     },
     {
@@ -4885,8 +4896,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "packages_backend_identity_service_refreshresult",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "refreshresult"
     },
     {
@@ -5050,8 +5061,8 @@
       "source_location": "L318",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_refresh",
-      "community": 52,
-      "community_name": "._record_identity",
+      "community": 102,
+      "community_name": "tokens.py",
       "norm_label": ".refresh()"
     },
     {
@@ -5259,8 +5270,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "packages_backend_identity_service_rationale_52",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 188,
+      "community_name": "validate_password",
       "norm_label": "\u767b\u5f55\u6210\u529f\u540e\u7684\u5b8c\u6574\u7ed3\u679c,\u907f\u514d\u4f7f\u7528\u65e0\u7c7b\u578b\u5b57\u5178\u3002      \u5f53\u524d\u7528\u6237\u5bf9\u8c61\u5728\u4e8b\u52a1\u63d0\u4ea4\u524d\u6784\u9020\u5b8c\u6210,router \u5c42\u4e0d\u518d\u989d\u5916\u67e5\u8be2\u6570\u636e\u5e93\u3002"
     },
     {
@@ -6095,8 +6106,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_identity",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": "identity.py"
     },
     {
@@ -6117,8 +6128,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_identity_py_basemodel",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": "basemodel"
     },
     {
@@ -6139,8 +6150,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "packages_contracts_identity_currentuser",
-      "community": 15,
-      "community_name": "test_session_boundaries.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": "currentuser"
     },
     {
@@ -6150,8 +6161,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "packages_contracts_identity_currentuser_validate_role_codes",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 231,
+      "community_name": "test_change_password_weak_new_password_returns_422",
       "norm_label": "._validate_role_codes()"
     },
     {
@@ -6161,8 +6172,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "packages_contracts_identity_currentuser_validate_capabilities",
-      "community": 15,
-      "community_name": "test_session_boundaries.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": "._validate_capabilities()"
     },
     {
@@ -6172,8 +6183,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "packages_contracts_identity_currentuser_kindergarten_id",
-      "community": 15,
-      "community_name": "test_session_boundaries.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": ".kindergarten_id()"
     },
     {
@@ -6183,8 +6194,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "packages_contracts_identity_currentuser_roles",
-      "community": 15,
-      "community_name": "test_session_boundaries.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": ".roles()"
     },
     {
@@ -6227,8 +6238,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "packages_contracts_identity_validate_role_codes",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": "_validate_role_codes()"
     },
     {
@@ -6238,8 +6249,8 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "packages_contracts_identity_validate_response_role_codes",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 231,
+      "community_name": "test_change_password_weak_new_password_returns_422",
       "norm_label": "_validate_response_role_codes()"
     },
     {
@@ -6260,8 +6271,8 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "packages_contracts_identity_usercreaterequest_validate_roles",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 231,
+      "community_name": "test_change_password_weak_new_password_returns_422",
       "norm_label": "._validate_roles()"
     },
     {
@@ -6337,8 +6348,8 @@
       "source_location": "L198",
       "_origin": "ast",
       "id": "packages_contracts_identity_user_validate_role_codes",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 231,
+      "community_name": "test_change_password_weak_new_password_returns_422",
       "norm_label": "._validate_role_codes()"
     },
     {
@@ -6348,8 +6359,8 @@
       "source_location": "L202",
       "_origin": "ast",
       "id": "packages_contracts_identity_userpage",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": "userpage"
     },
     {
@@ -6359,8 +6370,8 @@
       "source_location": "L213",
       "_origin": "ast",
       "id": "packages_contracts_identity_resetpasswordrequest",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": "resetpasswordrequest"
     },
     {
@@ -6370,8 +6381,8 @@
       "source_location": "L221",
       "_origin": "ast",
       "id": "packages_contracts_identity_userrolesupdaterequest",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": "userrolesupdaterequest"
     },
     {
@@ -6381,8 +6392,8 @@
       "source_location": "L235",
       "_origin": "ast",
       "id": "packages_contracts_identity_userrolesupdaterequest_validate_roles",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 231,
+      "community_name": "test_change_password_weak_new_password_returns_422",
       "norm_label": "._validate_roles()"
     },
     {
@@ -6392,8 +6403,8 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "packages_contracts_identity_rationale_98",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 47,
+      "community_name": "init_admin.py",
       "norm_label": "\u6821\u9a8c\u89d2\u8272\u5217\u8868:\u975e\u7a7a\u3001\u552f\u4e00\u3001\u4ec5\u5141\u8bb8 admin/teacher\u3002"
     },
     {
@@ -6403,8 +6414,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "packages_contracts_identity_rationale_111",
-      "community": 72,
-      "community_name": "test_users_contract.py",
+      "community": 231,
+      "community_name": "test_change_password_weak_new_password_returns_422",
       "norm_label": "\u6821\u9a8c\u54cd\u5e94\u89d2\u8272\u5217\u8868:\u552f\u4e00\u3001\u4ec5\u5141\u8bb8 admin/teacher(\u5141\u8bb8\u7a7a)\u3002"
     },
     {
@@ -6628,7 +6639,7 @@
       "norm_label": "cookie \u5b89\u5168\u914d\u7f6e\u6821\u9a8c(web \u4e0e api \u5171\u4eab)\u3002"
     },
     {
-      "label": "\u6821\u9a8c Cookie Secure \u4e0e\u7ed1\u5b9a\u5730\u5740\u7684\u7ec4\u5408\u662f\u5426\u5408\u6cd5\u3002      \u4ec5\u975e\u751f\u4ea7\u73af\u5883\uff08development/test\uff09\u5141\u8bb8\u5173\u95ed Secure\uff1b\u5173\u95ed Secur",
+      "label": "\u6821\u9a8c Cookie Secure \u4e0e\u7ed1\u5b9a\u5730\u5740\u7684\u7ec4\u5408\u662f\u5426\u5408\u6cd5\u3002      Codex M2 Final Contract Freeze M2-F03\uff1atest \u9ed8",
       "file_type": "rationale",
       "source_file": "packages/security/cookie.py",
       "source_location": "L12",
@@ -6636,7 +6647,7 @@
       "id": "packages_security_cookie_rationale_12",
       "community": 35,
       "community_name": "Settings",
-      "norm_label": "\u6821\u9a8c cookie secure \u4e0e\u7ed1\u5b9a\u5730\u5740\u7684\u7ec4\u5408\u662f\u5426\u5408\u6cd5\u3002      \u4ec5\u975e\u751f\u4ea7\u73af\u5883(development/test)\u5141\u8bb8\u5173\u95ed secure;\u5173\u95ed secur"
+      "norm_label": "\u6821\u9a8c cookie secure \u4e0e\u7ed1\u5b9a\u5730\u5740\u7684\u7ec4\u5408\u662f\u5426\u5408\u6cd5\u3002      codex m2 final contract freeze m2-f03:test \u9ed8"
     },
     {
       "label": "redaction.py",
@@ -6857,8 +6868,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_api_test_auth_client",
-      "community": 193,
-      "community_name": "UserRole",
+      "community": 42,
+      "community_name": "test_auth.py",
       "norm_label": "client()"
     },
     {
@@ -7000,7 +7011,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_disabled_user_cannot_login",
-      "community": 42,
+      "community": 222,
       "community_name": "test_auth.py",
       "norm_label": "test_disabled_user_cannot_login()"
     },
@@ -7077,8 +7088,8 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_change_password_revokes_access_token_on_next_request",
-      "community": 42,
-      "community_name": "test_auth.py",
+      "community": 240,
+      "community_name": "test_login_cookies_carry_secure_flag_in_test_environment",
       "norm_label": "test_change_password_revokes_access_token_on_next_request()"
     },
     {
@@ -7099,8 +7110,8 @@
       "source_location": "L363",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_change_password_weak_new_password_returns_422",
-      "community": 231,
-      "community_name": "test_change_password_weak_new_password_returns_422",
+      "community": 229,
+      "community_name": "test_login_rate_limit_after_repeated_source_failures",
       "norm_label": "test_change_password_weak_new_password_returns_422()"
     },
     {
@@ -7253,8 +7264,8 @@
       "source_location": "L789",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_login_cookies_carry_secure_flag_in_test_environment",
-      "community": 240,
-      "community_name": "test_login_cookies_carry_secure_flag_in_test_environment",
+      "community": 42,
+      "community_name": "test_auth.py",
       "norm_label": "test_login_cookies_carry_secure_flag_in_test_environment()"
     },
     {
@@ -7272,29 +7283,29 @@
       "label": "test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L838",
+      "source_location": "L843",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment",
-      "community": 241,
-      "community_name": "test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment",
+      "community": 42,
+      "community_name": "test_auth.py",
       "norm_label": "test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment()"
     },
     {
       "label": "test_login_missing_password_field_returns_422()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L855",
+      "source_location": "L860",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_login_missing_password_field_returns_422",
-      "community": 42,
-      "community_name": "test_auth.py",
+      "community": 241,
+      "community_name": "test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment",
       "norm_label": "test_login_missing_password_field_returns_422()"
     },
     {
       "label": "test_login_missing_login_field_returns_422()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L872",
+      "source_location": "L877",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_login_missing_login_field_returns_422",
       "community": 242,
@@ -7305,7 +7316,7 @@
       "label": "test_refresh_without_csrf_returns_403_not_401()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L887",
+      "source_location": "L892",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_refresh_without_csrf_returns_403_not_401",
       "community": 243,
@@ -7316,7 +7327,7 @@
       "label": "test_refresh_with_csrf_but_no_cookie_returns_401_not_403()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L905",
+      "source_location": "L910",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_refresh_with_csrf_but_no_cookie_returns_401_not_403",
       "community": 244,
@@ -7327,18 +7338,18 @@
       "label": "test_change_password_missing_fields_returns_422()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L920",
+      "source_location": "L925",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_change_password_missing_fields_returns_422",
-      "community": 245,
-      "community_name": "test_change_password_missing_fields_returns_422",
+      "community": 42,
+      "community_name": "test_auth.py",
       "norm_label": "test_change_password_missing_fields_returns_422()"
     },
     {
       "label": "test_change_password_without_csrf_returns_403()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L945",
+      "source_location": "L950",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_change_password_without_csrf_returns_403",
       "community": 246,
@@ -7349,7 +7360,7 @@
       "label": "test_me_without_access_cookie_returns_401()",
       "file_type": "code",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L970",
+      "source_location": "L975",
       "_origin": "ast",
       "id": "tests_api_test_auth_test_me_without_access_cookie_returns_401",
       "community": 247,
@@ -7396,8 +7407,8 @@
       "source_location": "L309",
       "_origin": "ast",
       "id": "tests_api_test_auth_rationale_309",
-      "community": 42,
-      "community_name": "test_auth.py",
+      "community": 240,
+      "community_name": "test_login_cookies_carry_secure_flag_in_test_environment",
       "norm_label": "\u672c\u4eba\u6539\u5bc6\u540e,\u65e7 access token \u4e0b\u4e00\u8bf7\u6c42\u5fc5\u987b\u8fd4\u56de 401\u3002"
     },
     {
@@ -7418,8 +7429,8 @@
       "source_location": "L366",
       "_origin": "ast",
       "id": "tests_api_test_auth_rationale_366",
-      "community": 231,
-      "community_name": "test_change_password_weak_new_password_returns_422",
+      "community": 229,
+      "community_name": "test_login_rate_limit_after_repeated_source_failures",
       "norm_label": "red \u56de\u5f52:change-password \u65b0\u5bc6\u7801\u4e3a\u5f31\u5bc6\u7801\u5fc5\u987b\u8fd4\u56de 422,\u4e0d\u5f97\u5916\u6cc4\u4e3a 500\u3002      codex \u7b2c\u5341\u4e5d\u8f6e\u5ba1\u9605 p0:\u65e7\u7248 valida"
     },
     {
@@ -7561,12 +7572,12 @@
       "source_location": "L794",
       "_origin": "ast",
       "id": "tests_api_test_auth_rationale_794",
-      "community": 240,
-      "community_name": "test_login_cookies_carry_secure_flag_in_test_environment",
+      "community": 42,
+      "community_name": "test_auth.py",
       "norm_label": "test \u73af\u5883\u9ed8\u8ba4 cookie_secure=true,access/refresh cookie \u5fc5\u987b\u5e26 secure\u3002      \u65e7\u7248 secure=en"
     },
     {
-      "label": "\u663e\u5f0f\u914d\u7f6e cookie_secure=False \u65f6 Cookie \u4e0d\u5e26 Secure\uff08\u6a21\u62df\u5f00\u53d1\u73af\u5883\uff09\u3002",
+      "label": "\u663e\u5f0f\u914d\u7f6e cookie_secure=False \u65f6 Cookie \u4e0d\u5e26 Secure\uff08\u6a21\u62df\u5f00\u53d1\u73af\u5883\uff09\u3002      Codex M2 Final Contrac",
       "file_type": "rationale",
       "source_file": "tests/api/test_auth.py",
       "source_location": "L822",
@@ -7574,37 +7585,37 @@
       "id": "tests_api_test_auth_rationale_822",
       "community": 224,
       "community_name": "MonkeyPatch",
-      "norm_label": "\u663e\u5f0f\u914d\u7f6e cookie_secure=false \u65f6 cookie \u4e0d\u5e26 secure(\u6a21\u62df\u5f00\u53d1\u73af\u5883)\u3002"
+      "norm_label": "\u663e\u5f0f\u914d\u7f6e cookie_secure=false \u65f6 cookie \u4e0d\u5e26 secure(\u6a21\u62df\u5f00\u53d1\u73af\u5883)\u3002      codex m2 final contrac"
     },
     {
       "label": "csrf \u7aef\u70b9\u7b7e\u53d1\u7684 CSRF Cookie \u5728 test \u73af\u5883\u4e5f\u5fc5\u987b\u5e26 Secure\u3002",
       "file_type": "rationale",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L841",
+      "source_location": "L846",
       "_origin": "ast",
-      "id": "tests_api_test_auth_rationale_841",
-      "community": 241,
-      "community_name": "test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment",
+      "id": "tests_api_test_auth_rationale_846",
+      "community": 42,
+      "community_name": "test_auth.py",
       "norm_label": "csrf \u7aef\u70b9\u7b7e\u53d1\u7684 csrf cookie \u5728 test \u73af\u5883\u4e5f\u5fc5\u987b\u5e26 secure\u3002"
     },
     {
       "label": "OpenAPI \u58f0\u660e login 422\uff1b\u7f3a\u5c11 password \u5b57\u6bb5\u5fc5\u987b\u8fd4\u56de 422\uff0c\u4e0d\u5f97 500\u3002",
       "file_type": "rationale",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L860",
+      "source_location": "L865",
       "_origin": "ast",
-      "id": "tests_api_test_auth_rationale_860",
-      "community": 42,
-      "community_name": "test_auth.py",
+      "id": "tests_api_test_auth_rationale_865",
+      "community": 241,
+      "community_name": "test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment",
       "norm_label": "openapi \u58f0\u660e login 422;\u7f3a\u5c11 password \u5b57\u6bb5\u5fc5\u987b\u8fd4\u56de 422,\u4e0d\u5f97 500\u3002"
     },
     {
       "label": "OpenAPI \u58f0\u660e login 422\uff1b\u7f3a\u5c11 login \u5b57\u6bb5\u5fc5\u987b\u8fd4\u56de 422\u3002",
       "file_type": "rationale",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L877",
+      "source_location": "L882",
       "_origin": "ast",
-      "id": "tests_api_test_auth_rationale_877",
+      "id": "tests_api_test_auth_rationale_882",
       "community": 242,
       "community_name": "test_login_missing_login_field_returns_422",
       "norm_label": "openapi \u58f0\u660e login 422;\u7f3a\u5c11 login \u5b57\u6bb5\u5fc5\u987b\u8fd4\u56de 422\u3002"
@@ -7613,9 +7624,9 @@
       "label": "OpenAPI \u58f0\u660e refresh 403\uff08CSRF \u5931\u8d25\uff09\uff1b\u65e0 CSRF \u65f6\u5fc5\u987b 403\uff0c\u4e0d\u5f97 401\u3002      refresh \u540c\u65f6\u58f0\u660e 401 \u4e0e 4",
       "file_type": "rationale",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L891",
+      "source_location": "L896",
       "_origin": "ast",
-      "id": "tests_api_test_auth_rationale_891",
+      "id": "tests_api_test_auth_rationale_896",
       "community": 243,
       "community_name": "test_refresh_without_csrf_returns_403_not_401",
       "norm_label": "openapi \u58f0\u660e refresh 403(csrf \u5931\u8d25);\u65e0 csrf \u65f6\u5fc5\u987b 403,\u4e0d\u5f97 401\u3002      refresh \u540c\u65f6\u58f0\u660e 401 \u4e0e 4"
@@ -7624,9 +7635,9 @@
       "label": "OpenAPI \u58f0\u660e refresh 401\uff08\u8ba4\u8bc1\u5931\u8d25\uff09\uff1bCSRF \u901a\u8fc7\u4f46\u65e0 Refresh Cookie \u5fc5\u987b 401\u3002",
       "file_type": "rationale",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L910",
+      "source_location": "L915",
       "_origin": "ast",
-      "id": "tests_api_test_auth_rationale_910",
+      "id": "tests_api_test_auth_rationale_915",
       "community": 244,
       "community_name": "test_refresh_with_csrf_but_no_cookie_returns_401_not_403",
       "norm_label": "openapi \u58f0\u660e refresh 401(\u8ba4\u8bc1\u5931\u8d25);csrf \u901a\u8fc7\u4f46\u65e0 refresh cookie \u5fc5\u987b 401\u3002"
@@ -7635,20 +7646,20 @@
       "label": "OpenAPI \u58f0\u660e change-password 422\uff1b\u7f3a\u5c11 new_password \u5fc5\u987b\u8fd4\u56de 422\u3002",
       "file_type": "rationale",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L925",
+      "source_location": "L930",
       "_origin": "ast",
-      "id": "tests_api_test_auth_rationale_925",
-      "community": 245,
-      "community_name": "test_change_password_missing_fields_returns_422",
+      "id": "tests_api_test_auth_rationale_930",
+      "community": 42,
+      "community_name": "test_auth.py",
       "norm_label": "openapi \u58f0\u660e change-password 422;\u7f3a\u5c11 new_password \u5fc5\u987b\u8fd4\u56de 422\u3002"
     },
     {
       "label": "OpenAPI \u58f0\u660e change-password 403\uff1b\u5df2\u8ba4\u8bc1\u4f46\u65e0 CSRF \u5fc5\u987b\u8fd4\u56de 403\u3002",
       "file_type": "rationale",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L950",
+      "source_location": "L955",
       "_origin": "ast",
-      "id": "tests_api_test_auth_rationale_950",
+      "id": "tests_api_test_auth_rationale_955",
       "community": 246,
       "community_name": "test_change_password_without_csrf_returns_403",
       "norm_label": "openapi \u58f0\u660e change-password 403;\u5df2\u8ba4\u8bc1\u4f46\u65e0 csrf \u5fc5\u987b\u8fd4\u56de 403\u3002"
@@ -7657,9 +7668,9 @@
       "label": "OpenAPI \u58f0\u660e me 401\uff1b\u65e0 Access Cookie \u5fc5\u987b\u8fd4\u56de 401\u3002",
       "file_type": "rationale",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L975",
+      "source_location": "L980",
       "_origin": "ast",
-      "id": "tests_api_test_auth_rationale_975",
+      "id": "tests_api_test_auth_rationale_980",
       "community": 247,
       "community_name": "test_me_without_access_cookie_returns_401",
       "norm_label": "openapi \u58f0\u660e me 401;\u65e0 access cookie \u5fc5\u987b\u8fd4\u56de 401\u3002"
@@ -7682,8 +7693,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_api_test_csrf_client",
-      "community": 193,
-      "community_name": "UserRole",
+      "community": 209,
+      "community_name": "generate_csrf_token",
       "norm_label": "client()"
     },
     {
@@ -7792,8 +7803,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_api_test_error_handling_true",
-      "community": 193,
-      "community_name": "UserRole",
+      "community": 212,
+      "community_name": "create_app",
       "norm_label": "_true()"
     },
     {
@@ -8221,8 +8232,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_api_test_users_client",
-      "community": 193,
-      "community_name": "UserRole",
+      "community": 61,
+      "community_name": "test_users.py",
       "norm_label": "client()"
     },
     {
@@ -9662,8 +9673,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document",
-      "community": 4,
-      "community_name": "test_openapi_document.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_openapi_document.py"
     },
     {
@@ -9684,8 +9695,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_py_any",
-      "community": 226,
-      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "any"
     },
     {
@@ -9882,8 +9893,8 @@
       "source_location": "L248",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_runtime_paths",
-      "community": 227,
-      "community_name": ".__init__",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "_runtime_paths()"
     },
     {
@@ -9893,8 +9904,8 @@
       "source_location": "L270",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_runtime_health_live_path_responses_match_static",
-      "community": 227,
-      "community_name": ".__init__",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_runtime_health_live_path_responses_match_static()"
     },
     {
@@ -9904,8 +9915,8 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_runtime_health_ready_path_responses_match_static",
-      "community": 227,
-      "community_name": ".__init__",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_runtime_health_ready_path_responses_match_static()"
     },
     {
@@ -9915,8 +9926,8 @@
       "source_location": "L314",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_runtime_health_schema_equivalent_to_static",
-      "community": 4,
-      "community_name": "test_openapi_document.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_runtime_health_schema_equivalent_to_static()"
     },
     {
@@ -9926,8 +9937,8 @@
       "source_location": "L360",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_runtime_full_spec",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "_runtime_full_spec()"
     },
     {
@@ -9937,8 +9948,8 @@
       "source_location": "L382",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_resolve_response",
-      "community": 226,
-      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "_resolve_response()"
     },
     {
@@ -9948,8 +9959,8 @@
       "source_location": "L392",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_response_headers",
-      "community": 226,
-      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "_response_headers()"
     },
     {
@@ -9959,8 +9970,8 @@
       "source_location": "L399",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_response_error_schema_ref",
-      "community": 226,
-      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "_response_error_schema_ref()"
     },
     {
@@ -9970,8 +9981,8 @@
       "source_location": "L408",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_auth_users_runtime_response_status_codes_match_static",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_auth_users_runtime_response_status_codes_match_static()"
     },
     {
@@ -9981,8 +9992,8 @@
       "source_location": "L443",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_auth_users_runtime_response_headers_match_static",
-      "community": 226,
-      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_auth_users_runtime_response_headers_match_static()"
     },
     {
@@ -9992,8 +10003,8 @@
       "source_location": "L469",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_auth_users_runtime_error_responses_use_unified_error_envelope",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_auth_users_runtime_error_responses_use_unified_error_envelope()"
     },
     {
@@ -10003,8 +10014,8 @@
       "source_location": "L491",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_auth_users_runtime_declares_csrf_header_parameter",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_auth_users_runtime_declares_csrf_header_parameter()"
     },
     {
@@ -10014,8 +10025,8 @@
       "source_location": "L523",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_runtime_openapi_declares_cookie_security_schemes",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_runtime_openapi_declares_cookie_security_schemes()"
     },
     {
@@ -10025,8 +10036,8 @@
       "source_location": "L537",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_auth_users_runtime_security_matches_static",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_auth_users_runtime_security_matches_static()"
     },
     {
@@ -10036,8 +10047,8 @@
       "source_location": "L558",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_reset_password_runtime_declares_204",
-      "community": 227,
-      "community_name": ".__init__",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "test_reset_password_runtime_declares_204()"
     },
     {
@@ -10058,8 +10069,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_1",
-      "community": 4,
-      "community_name": "test_openapi_document.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "openapi \u5951\u7ea6\u9501\u5b9a\u6d4b\u8bd5\u3002  \u8bfb\u53d6\u9759\u6001 openapi.yaml \u5e76\u9501\u5b9a\u5173\u952e\u7ed3\u6784,\u9632\u6b62\u540e\u7eed\u5b9e\u73b0\u6f02\u79fb\u3002 \u589e\u52a0\u8fd0\u884c\u65f6 openapi \u4e0e\u9759\u6001\u5951\u7ea6\u7684\u4e00\u81f4\u6027\u95e8\u7981\u3002"
     },
     {
@@ -10256,8 +10267,8 @@
       "source_location": "L249",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_249",
-      "community": 227,
-      "community_name": ".__init__",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "\u83b7\u53d6\u8fd0\u884c\u65f6 openapi \u7684 paths\u3002"
     },
     {
@@ -10267,8 +10278,8 @@
       "source_location": "L271",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_271",
-      "community": 227,
-      "community_name": ".__init__",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "\u8fd0\u884c\u65f6 /health/live \u7684 path responses \u5fc5\u987b\u4e0e\u9759\u6001\u5951\u7ea6\u7b49\u4ef7\u3002"
     },
     {
@@ -10278,8 +10289,8 @@
       "source_location": "L290",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_290",
-      "community": 227,
-      "community_name": ".__init__",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "\u8fd0\u884c\u65f6 /health/ready \u7684 path responses \u5fc5\u987b\u4e0e\u9759\u6001\u5951\u7ea6\u7b49\u4ef7\u3002"
     },
     {
@@ -10289,8 +10300,8 @@
       "source_location": "L315",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_315",
-      "community": 4,
-      "community_name": "test_openapi_document.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "\u8fd0\u884c\u65f6 health schema \u5fc5\u987b\u4e0e\u9759\u6001\u5951\u7ea6\u7ed3\u6784\u7b49\u4ef7\u3002"
     },
     {
@@ -10300,8 +10311,8 @@
       "source_location": "L383",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_383",
-      "community": 226,
-      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "\u82e5 response \u4e3a $ref \u6307\u5411 components/responses,\u5219\u89e3\u5f15\u7528\u8fd4\u56de\u5b8c\u6574\u5bf9\u8c61\u3002"
     },
     {
@@ -10311,8 +10322,8 @@
       "source_location": "L393",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_393",
-      "community": 226,
-      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "\u63d0\u53d6\u54cd\u5e94\u58f0\u660e\u7684 header \u540d\u79f0\u96c6\u5408(\u89e3\u6790 $ref \u540e)\u3002"
     },
     {
@@ -10322,8 +10333,8 @@
       "source_location": "L400",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_400",
-      "community": 226,
-      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "\u63d0\u53d6\u9519\u8bef\u54cd\u5e94 body \u7684 schema $ref(\u89e3\u6790 $ref \u54cd\u5e94\u540e)\u3002"
     },
     {
@@ -10333,8 +10344,8 @@
       "source_location": "L409",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_409",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "m2-f01:\u5168\u90e8 auth/users operation \u7684\u8fd0\u884c\u65f6\u54cd\u5e94\u72b6\u6001\u7801\u96c6\u5408\u5fc5\u987b\u4e0e\u51bb\u7ed3\u9759\u6001\u5951\u7ea6\u4e25\u683c\u5bf9\u7b49\u3002      codex m2 final con"
     },
     {
@@ -10344,8 +10355,8 @@
       "source_location": "L444",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_444",
-      "community": 226,
-      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "m2-f01:auth/users operation \u7684\u8fd0\u884c\u65f6\u54cd\u5e94 header \u96c6\u5408\u5fc5\u987b\u4e0e\u51bb\u7ed3\u9759\u6001\u5951\u7ea6\u5bf9\u7b49\u3002      codex m2-f01:\u8fd0\u884c\u65f6\u6587\u6863"
     },
     {
@@ -10355,8 +10366,8 @@
       "source_location": "L470",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_470",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "m2-f01:auth/users \u7a33\u5b9a\u9519\u8bef\u72b6\u6001\u7801\u7684\u8fd0\u884c\u65f6 body \u5fc5\u987b\u6307\u5411\u7edf\u4e00 error schema\u3002      codex m2-f01:401/40"
     },
     {
@@ -10366,8 +10377,8 @@
       "source_location": "L492",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_492",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "m2-f01:csrf \u4fdd\u62a4\u7684 auth/users operation \u5fc5\u987b\u5728\u8fd0\u884c\u65f6\u6587\u6863\u58f0\u660e x-csrf-token header\u3002      codex"
     },
     {
@@ -10377,8 +10388,8 @@
       "source_location": "L524",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_524",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "m2-f01:\u8fd0\u884c\u65f6 openapi \u5fc5\u987b\u58f0\u660e accesscookie/refreshcookie \u5b89\u5168\u65b9\u6848\u4e0e\u5168\u5c40 security\u3002"
     },
     {
@@ -10388,8 +10399,8 @@
       "source_location": "L538",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_538",
-      "community": 217,
-      "community_name": "test_logout_independent.py",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "m2-f01:auth/users operation \u7684\u8fd0\u884c\u65f6 security \u58f0\u660e\u5fc5\u987b\u4e0e\u51bb\u7ed3\u9759\u6001\u5951\u7ea6\u5bf9\u7b49\u3002"
     },
     {
@@ -10399,8 +10410,8 @@
       "source_location": "L559",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_rationale_559",
-      "community": 227,
-      "community_name": ".__init__",
+      "community": 25,
+      "community_name": "create_app",
       "norm_label": "red \u56de\u5f52:reset-password \u8fd0\u884c\u65f6\u5fc5\u987b\u58f0\u660e 204 \u72b6\u6001\u7801\u3002      codex \u7b2c\u5341\u4e5d\u8f6e\u5ba1\u9605 p1:\u65e7\u7248 reset-password \u88c5\u9970"
     },
     {
@@ -12126,8 +12137,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_repository_test_last_admin_concurrency",
-      "community": 52,
-      "community_name": "._record_identity",
+      "community": 207,
+      "community_name": "_seed_two_admins",
       "norm_label": "test_last_admin_concurrency.py"
     },
     {
@@ -12137,8 +12148,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "tests_repository_test_last_admin_concurrency_isolated_engine",
-      "community": 52,
-      "community_name": "._record_identity",
+      "community": 207,
+      "community_name": "_seed_two_admins",
       "norm_label": "isolated_engine()"
     },
     {
@@ -12159,8 +12170,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "tests_repository_test_last_admin_concurrency_build_current_user",
-      "community": 52,
-      "community_name": "._record_identity",
+      "community": 207,
+      "community_name": "_seed_two_admins",
       "norm_label": "_build_current_user()"
     },
     {
@@ -12181,8 +12192,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_repository_test_last_admin_concurrency_rationale_1",
-      "community": 52,
-      "community_name": "._record_identity",
+      "community": 207,
+      "community_name": "_seed_two_admins",
       "norm_label": "\u6700\u540e\u7ba1\u7406\u5458\u5e76\u53d1\u4fdd\u62a4:\u53cc\u4e8b\u52a1 postgresql \u56de\u5f52\u6d4b\u8bd5\u3002  \u6a21\u62df\u4e24\u4e2a\u5e76\u53d1\u7ba1\u7406\u5458\u4e8b\u52a1\u540c\u65f6\u5c1d\u8bd5\u79fb\u9664\u6700\u540e\u4e00\u4e2a\u6709\u6548\u7ba1\u7406\u5458: \u4f7f\u7528\u4e24\u4e2a\u72ec\u7acb\u6570\u636e\u5e93\u8fde\u63a5\u540c\u65f6\u6253\u5f00\u4e8b\u52a1\u5e76 s"
     },
     {
@@ -12511,8 +12522,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "test_audit_persistence.py"
     },
     {
@@ -12522,8 +12533,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_set_keys",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "_set_keys()"
     },
     {
@@ -12533,8 +12544,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_py_monkeypatch",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "monkeypatch"
     },
     {
@@ -12544,8 +12555,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_service",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "service()"
     },
     {
@@ -12555,8 +12566,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_kindergarten",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "kindergarten()"
     },
     {
@@ -12566,8 +12577,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_audit_count",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "_audit_count()"
     },
     {
@@ -12577,8 +12588,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_commit",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "_commit()"
     },
     {
@@ -12588,8 +12599,8 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_test_login_failure_audit_persisted",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "test_login_failure_audit_persisted()"
     },
     {
@@ -12599,8 +12610,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_test_refresh_replay_audit_persisted",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "test_refresh_replay_audit_persisted()"
     },
     {
@@ -12610,8 +12621,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_test_init_admin_audit_persisted",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "test_init_admin_audit_persisted()"
     },
     {
@@ -12621,8 +12632,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_test_audit_metadata_rejects_unknown_keys",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "test_audit_metadata_rejects_unknown_keys()"
     },
     {
@@ -12632,8 +12643,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_rationale_1",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "\u5ba1\u8ba1\u6301\u4e45\u5316\u6d4b\u8bd5:\u5173\u952e\u8eab\u4efd\u4e8b\u4ef6\u5728\u5931\u8d25\u8def\u5f84\u4e0b\u4ecd\u5199\u5165 audit_events\u3002"
     },
     {
@@ -12643,8 +12654,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_rationale_34",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "\u5728\u5df2\u8fc1\u79fb\u7684\u9694\u79bb schema \u4e0a\u6784\u9020 identityservice\u3002"
     },
     {
@@ -12654,8 +12665,8 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_persistence_rationale_102",
-      "community": 212,
-      "community_name": "create_app",
+      "community": 226,
+      "community_name": "Child Manager \u67b6\u6784\u51b3\u7b56\u8bb0\u5f55",
       "norm_label": "\u51bb\u7ed3 schema \u00a76.2:metadata \u53ea\u5141\u8bb8\u4e8b\u4ef6\u4e13\u7528\u767d\u540d\u5355\u5b57\u6bb5,\u62d2\u7edd\u5bc6\u94a5/\u4ee4\u724c\u7b49\u3002"
     },
     {
@@ -13347,8 +13358,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "test_logout_independent.py"
     },
     {
@@ -13358,8 +13369,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_set_keys",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "_set_keys()"
     },
     {
@@ -13369,8 +13380,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_py_monkeypatch",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "monkeypatch"
     },
     {
@@ -13380,8 +13391,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_service",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "service()"
     },
     {
@@ -13391,8 +13402,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_kindergarten",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "kindergarten()"
     },
     {
@@ -13402,8 +13413,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_login_family",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "_login_family()"
     },
     {
@@ -13413,8 +13424,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_is_access_family_active",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "_is_access_family_active()"
     },
     {
@@ -13424,8 +13435,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_test_logout_with_malformed_refresh_still_revokes_access",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "test_logout_with_malformed_refresh_still_revokes_access()"
     },
     {
@@ -13435,8 +13446,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_test_logout_with_unknown_refresh_still_revokes_access",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "test_logout_with_unknown_refresh_still_revokes_access()"
     },
     {
@@ -13446,8 +13457,8 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_test_logout_with_mismatched_refresh_revokes_access_family",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "test_logout_with_mismatched_refresh_revokes_access_family()"
     },
     {
@@ -13457,8 +13468,8 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_test_logout_with_only_access_revokes_access_family",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "test_logout_with_only_access_revokes_access_family()"
     },
     {
@@ -13468,8 +13479,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_rationale_1",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "\u6ce8\u9500\u72ec\u7acb\u89e3\u6790 access \u4e0e refresh \u7684\u8d1f\u5411\u56de\u5f52\u6d4b\u8bd5\u3002  codex \u7b2c\u5341\u4e8c\u8f6e p0-3:refresh \u65e0\u6548/\u67e5\u65e0/\u9519\u914d\u65f6\u4e0d\u5f97\u963b\u65ad access \u56de"
     },
     {
@@ -13479,8 +13490,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_rationale_57",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "\u767b\u5f55\u5e76\u8fd4\u56de (access_token, refresh_value, family_id)\u3002"
     },
     {
@@ -13490,8 +13501,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_rationale_83",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "\u7578\u5f62 refresh cookie + \u5408\u6cd5 access \u6ce8\u9500\u540e,access family \u5fc5\u987b\u88ab\u64a4\u9500\u3002"
     },
     {
@@ -13501,8 +13512,8 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_rationale_95",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "\u67e5\u65e0\u8bb0\u5f55\u7684 refresh + \u5408\u6cd5 access \u6ce8\u9500\u540e,access family \u5fc5\u987b\u88ab\u64a4\u9500\u3002"
     },
     {
@@ -13512,8 +13523,8 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_rationale_109",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "\u9519\u914d refresh(family b)+ \u5408\u6cd5 access(family a)\u6ce8\u9500\u540e,access family a \u5fc5\u987b\u64a4\u9500\u3002"
     },
     {
@@ -13523,8 +13534,8 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "tests_unit_identity_test_logout_independent_rationale_137",
-      "community": 102,
-      "community_name": "tokens.py",
+      "community": 217,
+      "community_name": "test_logout_independent.py",
       "norm_label": "\u4ec5\u643a\u5e26 access(\u65e0 refresh)\u6ce8\u9500\u540e,access family \u5fc5\u987b\u88ab\u64a4\u9500\u3002"
     },
     {
@@ -13952,8 +13963,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "tests_unit_identity_test_tokens_test_refresh_value_is_random_and_hashed",
-      "community": 202,
-      "community_name": "ADR-0009\uff1a\u529f\u80fd\u5b8c\u6210\u524d\u5ef6\u540e\u751f\u4ea7\u90e8\u7f72\u4e0e\u8bbf\u95ee\u7f51\u7edc\u51b3\u7b56",
+      "community": 102,
+      "community_name": "tokens.py",
       "norm_label": "test_refresh_value_is_random_and_hashed()"
     },
     {
@@ -14059,7 +14070,7 @@
       "label": "test_settings_defaults()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L4",
+      "source_location": "L6",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_settings_defaults",
       "community": 35,
@@ -14070,7 +14081,7 @@
       "label": "test_jwt_settings()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L14",
+      "source_location": "L16",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_jwt_settings",
       "community": 35,
@@ -14081,7 +14092,7 @@
       "label": "test_allowed_hosts()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_allowed_hosts",
       "community": 35,
@@ -14092,7 +14103,7 @@
       "label": "test_database_url()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L26",
+      "source_location": "L28",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_database_url",
       "community": 35,
@@ -14103,7 +14114,7 @@
       "label": "test_redis_url()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L31",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_redis_url",
       "community": 35,
@@ -14114,7 +14125,7 @@
       "label": "test_cookie_security_validation()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L36",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_cookie_security_validation",
       "community": 35,
@@ -14125,7 +14136,7 @@
       "label": "test_cookie_security_production()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L41",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_cookie_security_production",
       "community": 35,
@@ -14136,7 +14147,7 @@
       "label": "test_cookie_security_non_loopback()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L50",
+      "source_location": "L52",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_cookie_security_non_loopback",
       "community": 35,
@@ -14147,7 +14158,7 @@
       "label": "test_environment_rejects_unknown_values()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L59",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_environment_rejects_unknown_values",
       "community": 35,
@@ -14158,7 +14169,7 @@
       "label": "test_trusted_bff_peers_development_default_supports_local()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L73",
+      "source_location": "L75",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_trusted_bff_peers_development_default_supports_local",
       "community": 35,
@@ -14169,7 +14180,7 @@
       "label": "test_trusted_bff_peers_test_default_supports_local()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L80",
+      "source_location": "L82",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_trusted_bff_peers_test_default_supports_local",
       "community": 35,
@@ -14180,7 +14191,7 @@
       "label": "test_trusted_bff_peers_production_default_empty()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L87",
+      "source_location": "L89",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_trusted_bff_peers_production_default_empty",
       "community": 35,
@@ -14191,7 +14202,7 @@
       "label": "test_trusted_bff_peers_can_be_overridden()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L96",
+      "source_location": "L98",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_trusted_bff_peers_can_be_overridden",
       "community": 35,
@@ -14202,7 +14213,7 @@
       "label": "test_cookie_secure_production_defaults_true()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L105",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_cookie_secure_production_defaults_true",
       "community": 35,
@@ -14213,7 +14224,7 @@
       "label": "test_cookie_secure_development_defaults_false()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L111",
+      "source_location": "L113",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_cookie_secure_development_defaults_false",
       "community": 35,
@@ -14224,7 +14235,7 @@
       "label": "test_cookie_secure_test_defaults_true()",
       "file_type": "code",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L117",
+      "source_location": "L119",
       "_origin": "ast",
       "id": "tests_unit_test_config_test_cookie_secure_test_defaults_true",
       "community": 35,
@@ -14232,12 +14243,34 @@
       "norm_label": "test_cookie_secure_test_defaults_true()"
     },
     {
+      "label": "test_cookie_secure_test_env_forces_secure_true()",
+      "file_type": "code",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L130",
+      "_origin": "ast",
+      "id": "tests_unit_test_config_test_cookie_secure_test_env_forces_secure_true",
+      "community": 35,
+      "community_name": "Settings",
+      "norm_label": "test_cookie_secure_test_env_forces_secure_true()"
+    },
+    {
+      "label": "test_cookie_security_test_env_rejects_false()",
+      "file_type": "code",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L143",
+      "_origin": "ast",
+      "id": "tests_unit_test_config_test_cookie_security_test_env_rejects_false",
+      "community": 35,
+      "community_name": "Settings",
+      "norm_label": "test_cookie_security_test_env_rejects_false()"
+    },
+    {
       "label": "environment \u5fc5\u987b\u62d2\u7edd\u975e production/development/test \u7684\u503c\u3002",
       "file_type": "rationale",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L60",
+      "source_location": "L62",
       "_origin": "ast",
-      "id": "tests_unit_test_config_rationale_60",
+      "id": "tests_unit_test_config_rationale_62",
       "community": 35,
       "community_name": "Settings",
       "norm_label": "environment \u5fc5\u987b\u62d2\u7edd\u975e production/development/test \u7684\u503c\u3002"
@@ -14246,9 +14279,9 @@
       "label": "development \u9ed8\u8ba4\u5305\u542b\u56de\u73af\u5730\u5740\uff0c\u652f\u6301\u672c\u5730 BFF \u8f6c\u53d1\u3002",
       "file_type": "rationale",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L74",
+      "source_location": "L76",
       "_origin": "ast",
-      "id": "tests_unit_test_config_rationale_74",
+      "id": "tests_unit_test_config_rationale_76",
       "community": 35,
       "community_name": "Settings",
       "norm_label": "development \u9ed8\u8ba4\u5305\u542b\u56de\u73af\u5730\u5740,\u652f\u6301\u672c\u5730 bff \u8f6c\u53d1\u3002"
@@ -14257,9 +14290,9 @@
       "label": "test \u9ed8\u8ba4\u5305\u542b\u56de\u73af\u5730\u5740\uff0c\u652f\u6301\u672c\u5730\u6d4b\u8bd5 BFF \u8f6c\u53d1\u3002",
       "file_type": "rationale",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L81",
+      "source_location": "L83",
       "_origin": "ast",
-      "id": "tests_unit_test_config_rationale_81",
+      "id": "tests_unit_test_config_rationale_83",
       "community": 35,
       "community_name": "Settings",
       "norm_label": "test \u9ed8\u8ba4\u5305\u542b\u56de\u73af\u5730\u5740,\u652f\u6301\u672c\u5730\u6d4b\u8bd5 bff \u8f6c\u53d1\u3002"
@@ -14268,9 +14301,9 @@
       "label": "production \u9ed8\u8ba4\u4e3a\u7a7a\uff0c\u5fc5\u987b\u663e\u5f0f\u914d\u7f6e\u624d\u80fd\u4fe1\u4efb BFF peer\u3002      \u786c\u7f16\u7801\u56de\u73af\u5730\u5740\u4f1a\u8ba9\u751f\u4ea7\u90e8\u7f72\u5728\u975e\u56de\u73af\u62d3\u6251\u4e0b\u9759\u9ed8\u4fe1\u4efb\u9519\u8bef\u7684\u5185\u90e8\u8f6c\u53d1\u5934\u3002",
       "file_type": "rationale",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L88",
+      "source_location": "L90",
       "_origin": "ast",
-      "id": "tests_unit_test_config_rationale_88",
+      "id": "tests_unit_test_config_rationale_90",
       "community": 35,
       "community_name": "Settings",
       "norm_label": "production \u9ed8\u8ba4\u4e3a\u7a7a,\u5fc5\u987b\u663e\u5f0f\u914d\u7f6e\u624d\u80fd\u4fe1\u4efb bff peer\u3002      \u786c\u7f16\u7801\u56de\u73af\u5730\u5740\u4f1a\u8ba9\u751f\u4ea7\u90e8\u7f72\u5728\u975e\u56de\u73af\u62d3\u6251\u4e0b\u9759\u9ed8\u4fe1\u4efb\u9519\u8bef\u7684\u5185\u90e8\u8f6c\u53d1\u5934\u3002"
@@ -14279,9 +14312,9 @@
       "label": "trusted_bff_peers \u53ef\u901a\u8fc7\u914d\u7f6e\u663e\u5f0f\u8986\u76d6\u3002",
       "file_type": "rationale",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L97",
+      "source_location": "L99",
       "_origin": "ast",
-      "id": "tests_unit_test_config_rationale_97",
+      "id": "tests_unit_test_config_rationale_99",
       "community": 35,
       "community_name": "Settings",
       "norm_label": "trusted_bff_peers \u53ef\u901a\u8fc7\u914d\u7f6e\u663e\u5f0f\u8986\u76d6\u3002"
@@ -14290,9 +14323,9 @@
       "label": "production \u9ed8\u8ba4 Secure=true\u3002",
       "file_type": "rationale",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L106",
+      "source_location": "L108",
       "_origin": "ast",
-      "id": "tests_unit_test_config_rationale_106",
+      "id": "tests_unit_test_config_rationale_108",
       "community": 35,
       "community_name": "Settings",
       "norm_label": "production \u9ed8\u8ba4 secure=true\u3002"
@@ -14301,9 +14334,9 @@
       "label": "development \u5141\u8bb8\u9ed8\u8ba4 Secure=false\u3002",
       "file_type": "rationale",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L112",
+      "source_location": "L114",
       "_origin": "ast",
-      "id": "tests_unit_test_config_rationale_112",
+      "id": "tests_unit_test_config_rationale_114",
       "community": 35,
       "community_name": "Settings",
       "norm_label": "development \u5141\u8bb8\u9ed8\u8ba4 secure=false\u3002"
@@ -14312,12 +14345,34 @@
       "label": "test \u7981\u6b62\u9ed8\u8ba4\u5173\u95ed Secure\uff1b\u9ed8\u8ba4\u5fc5\u987b\u4e3a true\u3002      \u65e7\u7248 secure=environment=='production' \u8ba9 test \u9ed8",
       "file_type": "rationale",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L118",
+      "source_location": "L120",
       "_origin": "ast",
-      "id": "tests_unit_test_config_rationale_118",
+      "id": "tests_unit_test_config_rationale_120",
       "community": 35,
       "community_name": "Settings",
       "norm_label": "test \u7981\u6b62\u9ed8\u8ba4\u5173\u95ed secure;\u9ed8\u8ba4\u5fc5\u987b\u4e3a true\u3002      \u65e7\u7248 secure=environment=='production' \u8ba9 test \u9ed8"
+    },
+    {
+      "label": "test \u73af\u5883\u5f3a\u5236 Secure=true\uff0c\u663e\u5f0f cookie_secure=False \u5fc5\u987b\u88ab\u62d2\u7edd\u3002      Codex M2 Final Contract",
+      "file_type": "rationale",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L131",
+      "_origin": "ast",
+      "id": "tests_unit_test_config_rationale_131",
+      "community": 35,
+      "community_name": "Settings",
+      "norm_label": "test \u73af\u5883\u5f3a\u5236 secure=true,\u663e\u5f0f cookie_secure=false \u5fc5\u987b\u88ab\u62d2\u7edd\u3002      codex m2 final contract"
+    },
+    {
+      "label": "validate_cookie_security \u5728 test \u73af\u5883\u5fc5\u987b\u62d2\u7edd cookie_secure=False\u3002      Codex M2-F03\uff1ate",
+      "file_type": "rationale",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L144",
+      "_origin": "ast",
+      "id": "tests_unit_test_config_rationale_144",
+      "community": 35,
+      "community_name": "Settings",
+      "norm_label": "validate_cookie_security \u5728 test \u73af\u5883\u5fc5\u987b\u62d2\u7edd cookie_secure=false\u3002      codex m2-f03:te"
     },
     {
       "label": "test_config_sensitivity.py",
@@ -14953,8 +15008,8 @@
       "source_location": "L184",
       "_origin": "ast",
       "id": "tests_web_test_auth_smoke_test_bff_full_auth_flow_against_real_api",
-      "community": 193,
-      "community_name": "UserRole",
+      "community": 18,
+      "community_name": "test_auth_smoke.py",
       "norm_label": "test_bff_full_auth_flow_against_real_api()"
     },
     {
@@ -14964,8 +15019,8 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "tests_web_test_auth_smoke_rationale_185",
-      "community": 193,
-      "community_name": "UserRole",
+      "community": 18,
+      "community_name": "test_auth_smoke.py",
       "norm_label": "\u901a\u8fc7 bff \u4ee3\u7406\u8bbf\u95ee\u771f\u5b9e api,\u9a8c\u8bc1\u767b\u5f55-\u5237\u65b0-\u6539\u5bc6-\u9000\u51fa\u5b8c\u6574\u6d41\u7a0b\u3002"
     },
     {
@@ -15159,7 +15214,7 @@
       "label": "test_browser_login_logout_flow()",
       "file_type": "code",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L315",
+      "source_location": "L319",
       "_origin": "ast",
       "id": "tests_web_test_browser_smoke_test_browser_login_logout_flow",
       "community": 212,
@@ -15170,7 +15225,7 @@
       "label": "test_browser_failed_login_shows_error()",
       "file_type": "code",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L362",
+      "source_location": "L366",
       "_origin": "ast",
       "id": "tests_web_test_browser_smoke_test_browser_failed_login_shows_error",
       "community": 212,
@@ -15181,7 +15236,7 @@
       "label": "test_browser_refresh_session_rotates_cookies()",
       "file_type": "code",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L414",
+      "source_location": "L418",
       "_origin": "ast",
       "id": "tests_web_test_browser_smoke_test_browser_refresh_session_rotates_cookies",
       "community": 212,
@@ -15192,7 +15247,7 @@
       "label": "test_browser_change_password_redirects_to_login()",
       "file_type": "code",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L464",
+      "source_location": "L468",
       "_origin": "ast",
       "id": "tests_web_test_browser_smoke_test_browser_change_password_redirects_to_login",
       "community": 212,
@@ -15203,7 +15258,7 @@
       "label": "test_browser_admin_role_navigation()",
       "file_type": "code",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L500",
+      "source_location": "L504",
       "_origin": "ast",
       "id": "tests_web_test_browser_smoke_test_browser_admin_role_navigation",
       "community": 212,
@@ -15214,7 +15269,7 @@
       "label": "test_browser_admin_create_reset_deactivate_user()",
       "file_type": "code",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L531",
+      "source_location": "L535",
       "_origin": "ast",
       "id": "tests_web_test_browser_smoke_test_browser_admin_create_reset_deactivate_user",
       "community": 212,
@@ -15225,7 +15280,7 @@
       "label": "test_browser_teacher_cannot_see_account_management()",
       "file_type": "code",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L608",
+      "source_location": "L612",
       "_origin": "ast",
       "id": "tests_web_test_browser_smoke_test_browser_teacher_cannot_see_account_management",
       "community": 212,
@@ -15236,7 +15291,7 @@
       "label": "test_browser_forged_source_header_stripped_by_bff()",
       "file_type": "code",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L679",
+      "source_location": "L683",
       "_origin": "ast",
       "id": "tests_web_test_browser_smoke_test_browser_forged_source_header_stripped_by_bff",
       "community": 212,
@@ -15247,7 +15302,7 @@
       "label": "test_browser_deactivated_user_loses_access()",
       "file_type": "code",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L748",
+      "source_location": "L752",
       "_origin": "ast",
       "id": "tests_web_test_browser_smoke_test_browser_deactivated_user_loses_access",
       "community": 212,
@@ -15357,9 +15412,9 @@
       "label": "Playwright \u771f\u5b9e\u6d4f\u89c8\u5668\u6d4b\u8bd5\uff1a\u767b\u5f55 -> Cookie \u8bbe\u7f6e -> \u9000\u51fa -> Cookie \u6e05\u9664 -> \u5bfc\u822a\u95ed\u73af\u3002      T025 \u8981\u6c42\u6d4f\u89c8\u5668\u5192\u70df",
       "file_type": "rationale",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L316",
+      "source_location": "L320",
       "_origin": "ast",
-      "id": "tests_web_test_browser_smoke_rationale_316",
+      "id": "tests_web_test_browser_smoke_rationale_320",
       "community": 212,
       "community_name": "create_app",
       "norm_label": "playwright \u771f\u5b9e\u6d4f\u89c8\u5668\u6d4b\u8bd5:\u767b\u5f55 -> cookie \u8bbe\u7f6e -> \u9000\u51fa -> cookie \u6e05\u9664 -> \u5bfc\u822a\u95ed\u73af\u3002      t025 \u8981\u6c42\u6d4f\u89c8\u5668\u5192\u70df"
@@ -15368,9 +15423,9 @@
       "label": "Playwright \u771f\u5b9e\u6d4f\u89c8\u5668\u6d4b\u8bd5\uff1a\u767b\u5f55\u5931\u8d25\u663e\u793a\u4e2d\u6587\u9519\u8bef\u4fe1\u606f\u3002      T025/T034 \u8981\u6c42\u5931\u8d25\u53cd\u9988\u95ed\u73af\u3002\u672c\u6d4b\u8bd5\u9a8c\u8bc1\uff1a     1. \u586b\u5199\u9519\u8bef\u5bc6\u7801\u5e76\u70b9\u51fb",
       "file_type": "rationale",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L365",
+      "source_location": "L369",
       "_origin": "ast",
-      "id": "tests_web_test_browser_smoke_rationale_365",
+      "id": "tests_web_test_browser_smoke_rationale_369",
       "community": 212,
       "community_name": "create_app",
       "norm_label": "playwright \u771f\u5b9e\u6d4f\u89c8\u5668\u6d4b\u8bd5:\u767b\u5f55\u5931\u8d25\u663e\u793a\u4e2d\u6587\u9519\u8bef\u4fe1\u606f\u3002      t025/t034 \u8981\u6c42\u5931\u8d25\u53cd\u9988\u95ed\u73af\u3002\u672c\u6d4b\u8bd5\u9a8c\u8bc1:     1. \u586b\u5199\u9519\u8bef\u5bc6\u7801\u5e76\u70b9\u51fb"
@@ -15379,9 +15434,9 @@
       "label": "T025 \u6d4f\u89c8\u5668\u5192\u70df\uff1a\u5237\u65b0\u4f1a\u8bdd\u8f6e\u6362 Cookie\u3002      \u767b\u5f55\u540e\u70b9\u51fb\u201c\u5237\u65b0\u4f1a\u8bdd\u201d\uff0c/api/v1/auth/refresh \u6210\u529f\u540e\u6d4f\u89c8\u5668\u83b7\u5f97\u65b0\u7684     a",
       "file_type": "rationale",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L417",
+      "source_location": "L421",
       "_origin": "ast",
-      "id": "tests_web_test_browser_smoke_rationale_417",
+      "id": "tests_web_test_browser_smoke_rationale_421",
       "community": 212,
       "community_name": "create_app",
       "norm_label": "t025 \u6d4f\u89c8\u5668\u5192\u70df:\u5237\u65b0\u4f1a\u8bdd\u8f6e\u6362 cookie\u3002      \u767b\u5f55\u540e\u70b9\u51fb\u201c\u5237\u65b0\u4f1a\u8bdd\u201d,/api/v1/auth/refresh \u6210\u529f\u540e\u6d4f\u89c8\u5668\u83b7\u5f97\u65b0\u7684     a"
@@ -15390,9 +15445,9 @@
       "label": "T025 \u6d4f\u89c8\u5668\u5192\u70df\uff1a\u4fee\u6539\u5bc6\u7801\u6210\u529f\u540e\u8df3\u8f6c\u767b\u5f55\u9875\u3002      \u4fee\u6539\u5bc6\u7801\u6210\u529f\u540e API \u6e05\u9664 auth Cookie \u5e76\u8981\u6c42\u91cd\u65b0\u767b\u5f55\uff0c\u6d4f\u89c8\u5668\u5e94\u5bfc\u822a\u5230 /login\u3002",
       "file_type": "rationale",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L467",
+      "source_location": "L471",
       "_origin": "ast",
-      "id": "tests_web_test_browser_smoke_rationale_467",
+      "id": "tests_web_test_browser_smoke_rationale_471",
       "community": 212,
       "community_name": "create_app",
       "norm_label": "t025 \u6d4f\u89c8\u5668\u5192\u70df:\u4fee\u6539\u5bc6\u7801\u6210\u529f\u540e\u8df3\u8f6c\u767b\u5f55\u9875\u3002      \u4fee\u6539\u5bc6\u7801\u6210\u529f\u540e api \u6e05\u9664 auth cookie \u5e76\u8981\u6c42\u91cd\u65b0\u767b\u5f55,\u6d4f\u89c8\u5668\u5e94\u5bfc\u822a\u5230 /login\u3002"
@@ -15401,9 +15456,9 @@
       "label": "T025 \u6d4f\u89c8\u5668\u5192\u70df\uff1a\u6309\u89d2\u8272\u5bfc\u822a\u3002      \u7ba1\u7406\u5458\u767b\u5f55\u540e\u5bfc\u822a\u680f\u5e94\u663e\u793a\u201c\u8d26\u53f7\u7ba1\u7406\u201d\u94fe\u63a5\uff1b\u9996\u9875\u52a0\u8f7d\u65f6\u901a\u8fc7 /api/v1/auth/me     \u83b7\u53d6\u89d2\u8272\u5e76\u6e32\u67d3\u3002",
       "file_type": "rationale",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L503",
+      "source_location": "L507",
       "_origin": "ast",
-      "id": "tests_web_test_browser_smoke_rationale_503",
+      "id": "tests_web_test_browser_smoke_rationale_507",
       "community": 212,
       "community_name": "create_app",
       "norm_label": "t025 \u6d4f\u89c8\u5668\u5192\u70df:\u6309\u89d2\u8272\u5bfc\u822a\u3002      \u7ba1\u7406\u5458\u767b\u5f55\u540e\u5bfc\u822a\u680f\u5e94\u663e\u793a\u201c\u8d26\u53f7\u7ba1\u7406\u201d\u94fe\u63a5;\u9996\u9875\u52a0\u8f7d\u65f6\u901a\u8fc7 /api/v1/auth/me     \u83b7\u53d6\u89d2\u8272\u5e76\u6e32\u67d3\u3002"
@@ -15412,9 +15467,9 @@
       "label": "T025 \u6d4f\u89c8\u5668\u5192\u70df\uff1a\u7ba1\u7406\u5458\u901a\u8fc7 UI \u521b\u5efa/\u91cd\u7f6e/\u505c\u7528\u8d26\u53f7\u3002      \u8986\u76d6 T025 \u8981\u6c42\u7684\u7ba1\u7406\u5458\u8d26\u53f7\u7ba1\u7406\u95ed\u73af\u3002Codex \u7b2c\u5341\u516b\u8f6e\u5ba1\u9605 P1-3\uff1a\u8d26\u53f7\u521b\u5efa",
       "file_type": "rationale",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L534",
+      "source_location": "L538",
       "_origin": "ast",
-      "id": "tests_web_test_browser_smoke_rationale_534",
+      "id": "tests_web_test_browser_smoke_rationale_538",
       "community": 212,
       "community_name": "create_app",
       "norm_label": "t025 \u6d4f\u89c8\u5668\u5192\u70df:\u7ba1\u7406\u5458\u901a\u8fc7 ui \u521b\u5efa/\u91cd\u7f6e/\u505c\u7528\u8d26\u53f7\u3002      \u8986\u76d6 t025 \u8981\u6c42\u7684\u7ba1\u7406\u5458\u8d26\u53f7\u7ba1\u7406\u95ed\u73af\u3002codex \u7b2c\u5341\u516b\u8f6e\u5ba1\u9605 p1-3:\u8d26\u53f7\u521b\u5efa"
@@ -15423,9 +15478,9 @@
       "label": "T025 \u6d4f\u89c8\u5668\u5192\u70df\uff1a\u6559\u5e08\u5bfc\u822a\u8d1f\u4f8b\u3002      Codex \u7b2c\u5341\u516b\u8f6e\u5ba1\u9605 P1-3\uff1a\u6559\u5e08\u767b\u5f55\u540e\u5bfc\u822a\u680f\u4e0d\u5e94\u663e\u793a\u201c\u8d26\u53f7\u7ba1\u7406\u201d\u5165\u53e3\u3002     \u7ba1\u7406\u5458\u5165\u53e3\u53ea\u5bf9 admi",
       "file_type": "rationale",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L611",
+      "source_location": "L615",
       "_origin": "ast",
-      "id": "tests_web_test_browser_smoke_rationale_611",
+      "id": "tests_web_test_browser_smoke_rationale_615",
       "community": 212,
       "community_name": "create_app",
       "norm_label": "t025 \u6d4f\u89c8\u5668\u5192\u70df:\u6559\u5e08\u5bfc\u822a\u8d1f\u4f8b\u3002      codex \u7b2c\u5341\u516b\u8f6e\u5ba1\u9605 p1-3:\u6559\u5e08\u767b\u5f55\u540e\u5bfc\u822a\u680f\u4e0d\u5e94\u663e\u793a\u201c\u8d26\u53f7\u7ba1\u7406\u201d\u5165\u53e3\u3002     \u7ba1\u7406\u5458\u5165\u53e3\u53ea\u5bf9 admi"
@@ -15434,9 +15489,9 @@
       "label": "T025 \u6d4f\u89c8\u5668\u5192\u70df\uff1a\u6d4f\u89c8\u5668\u643a\u5e26\u4f2a\u9020\u5185\u90e8\u6765\u6e90\u5934\u4ecd\u88ab BFF \u91cd\u5efa\u3002      Codex \u7b2c\u5341\u4e5d\u8f6e\u5ba1\u9605 P0\uff1a\u6d4b\u8bd5\u5fc5\u987b\u65ad\u8a00 API \u5b9e\u9645\u89c2\u5bdf\u5230\u7684\u6765\u6e90\u4e0d\u662f\u4f2a\u9020\u503c\uff0c",
       "file_type": "rationale",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L682",
+      "source_location": "L686",
       "_origin": "ast",
-      "id": "tests_web_test_browser_smoke_rationale_682",
+      "id": "tests_web_test_browser_smoke_rationale_686",
       "community": 212,
       "community_name": "create_app",
       "norm_label": "t025 \u6d4f\u89c8\u5668\u5192\u70df:\u6d4f\u89c8\u5668\u643a\u5e26\u4f2a\u9020\u5185\u90e8\u6765\u6e90\u5934\u4ecd\u88ab bff \u91cd\u5efa\u3002      codex \u7b2c\u5341\u4e5d\u8f6e\u5ba1\u9605 p0:\u6d4b\u8bd5\u5fc5\u987b\u65ad\u8a00 api \u5b9e\u9645\u89c2\u5bdf\u5230\u7684\u6765\u6e90\u4e0d\u662f\u4f2a\u9020\u503c,"
@@ -15445,9 +15500,9 @@
       "label": "T025 \u6d4f\u89c8\u5668\u5192\u70df\uff1a\u505c\u7528\u540e\u4e0b\u4e00\u8bf7\u6c42\u5931\u6743\u3002      \u6559\u5e08\u767b\u5f55\u83b7\u5f97\u4f1a\u8bdd\u540e\uff0c\u7ba1\u7406\u5458\u901a\u8fc7 API \u505c\u7528\u8be5\u6559\u5e08\uff1b\u6559\u5e08\u6d4f\u89c8\u5668\u518d\u6b21\u8bf7\u6c42     \u53d7\u4fdd\u62a4\u8d44\u6e90\u65f6\uff0caccess",
       "file_type": "rationale",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L751",
+      "source_location": "L755",
       "_origin": "ast",
-      "id": "tests_web_test_browser_smoke_rationale_751",
+      "id": "tests_web_test_browser_smoke_rationale_755",
       "community": 212,
       "community_name": "create_app",
       "norm_label": "t025 \u6d4f\u89c8\u5668\u5192\u70df:\u505c\u7528\u540e\u4e0b\u4e00\u8bf7\u6c42\u5931\u6743\u3002      \u6559\u5e08\u767b\u5f55\u83b7\u5f97\u4f1a\u8bdd\u540e,\u7ba1\u7406\u5458\u901a\u8fc7 api \u505c\u7528\u8be5\u6559\u5e08;\u6559\u5e08\u6d4f\u89c8\u5668\u518d\u6b21\u8bf7\u6c42     \u53d7\u4fdd\u62a4\u8d44\u6e90\u65f6,access"
@@ -26679,8 +26734,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "specs_001_daily_activity_plan_checklists_requirements",
-      "community": 205,
-      "community_name": "Specification Quality Checklist: \u9996\u671f\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u5b8c\u6574\u95ed\u73af",
+      "community": 7,
+      "community_name": "README.md",
       "norm_label": "requirements.md"
     },
     {
@@ -31533,7 +31588,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L219",
+      "source_location": "L222",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_browser_stack",
@@ -32191,7 +32246,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L220",
+      "source_location": "L223",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_browser_stack",
@@ -37058,7 +37113,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L728",
+      "source_location": "L732",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_forged_source_header_stripped_by_bff",
@@ -37830,7 +37885,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L693",
+      "source_location": "L697",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -37843,7 +37898,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L728",
+      "source_location": "L732",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_forged_source_header_stripped_by_bff",
@@ -38459,7 +38514,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L1",
+      "source_location": "L3",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -38508,7 +38563,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "return_type",
-      "source": "packages_backend_config_settings_production_requires_secure_cookie",
+      "source": "packages_backend_config_settings_non_development_requires_secure_cookie",
       "target": "packages_backend_config_settings",
       "confidence_score": 1.0
     },
@@ -38516,7 +38571,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/config.py",
-      "source_location": "L87",
+      "source_location": "L92",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_config_settings",
@@ -38527,7 +38582,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/config.py",
-      "source_location": "L76",
+      "source_location": "L81",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_config_settings",
@@ -38539,7 +38594,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L1",
+      "source_location": "L3",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -38683,7 +38738,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_allowed_hosts",
@@ -38695,7 +38750,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L113",
+      "source_location": "L115",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_cookie_secure_development_defaults_false",
@@ -38707,7 +38762,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L107",
+      "source_location": "L109",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_cookie_secure_production_defaults_true",
@@ -38719,7 +38774,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L124",
+      "source_location": "L126",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_cookie_secure_test_defaults_true",
@@ -38731,7 +38786,19 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L51",
+      "source_location": "L140",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_test_config_test_cookie_secure_test_env_forces_secure_true",
+      "target": "packages_backend_config_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L53",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_cookie_security_non_loopback",
@@ -38743,7 +38810,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L42",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_cookie_security_production",
@@ -38755,7 +38822,19 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L37",
+      "source_location": "L149",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_test_config_test_cookie_security_test_env_rejects_false",
+      "target": "packages_backend_config_settings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L39",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_cookie_security_validation",
@@ -38767,7 +38846,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L27",
+      "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_database_url",
@@ -38779,7 +38858,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L64",
+      "source_location": "L66",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_environment_rejects_unknown_values",
@@ -38791,7 +38870,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L15",
+      "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_jwt_settings",
@@ -38803,7 +38882,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L32",
+      "source_location": "L34",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_redis_url",
@@ -38815,7 +38894,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L6",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_settings_defaults",
@@ -38827,7 +38906,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L98",
+      "source_location": "L100",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_trusted_bff_peers_can_be_overridden",
@@ -38839,7 +38918,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L75",
+      "source_location": "L77",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_trusted_bff_peers_development_default_supports_local",
@@ -38851,7 +38930,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L92",
+      "source_location": "L94",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_trusted_bff_peers_production_default_empty",
@@ -38863,7 +38942,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L82",
+      "source_location": "L84",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config_test_trusted_bff_peers_test_default_supports_local",
@@ -38891,6 +38970,17 @@
       "_origin": "ast",
       "source": "packages_backend_config_settings_apply_environment_defaults",
       "target": "packages_backend_config_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/backend/config.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "packages_backend_config_rationale_70",
+      "target": "packages_backend_config_settings_non_development_requires_secure_cookie",
       "confidence_score": 1.0
     },
     {
@@ -45576,7 +45666,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L234",
+      "source_location": "L237",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_browser_stack",
@@ -50483,7 +50573,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L920",
+      "source_location": "L925",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth",
@@ -50538,7 +50628,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L945",
+      "source_location": "L950",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth",
@@ -50560,7 +50650,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L838",
+      "source_location": "L843",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth",
@@ -50648,7 +50738,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L872",
+      "source_location": "L877",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth",
@@ -50659,7 +50749,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L855",
+      "source_location": "L860",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth",
@@ -50758,7 +50848,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L970",
+      "source_location": "L975",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth",
@@ -50791,7 +50881,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L905",
+      "source_location": "L910",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth",
@@ -50824,7 +50914,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L887",
+      "source_location": "L892",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth",
@@ -50895,7 +50985,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L920",
+      "source_location": "L925",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth_test_change_password_missing_fields_returns_422",
@@ -50955,7 +51045,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L945",
+      "source_location": "L950",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth_test_change_password_without_csrf_returns_403",
@@ -50979,7 +51069,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L838",
+      "source_location": "L843",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth_test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment",
@@ -51075,7 +51165,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L872",
+      "source_location": "L877",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth_test_login_missing_login_field_returns_422",
@@ -51087,7 +51177,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L855",
+      "source_location": "L860",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth_test_login_missing_password_field_returns_422",
@@ -51195,7 +51285,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L970",
+      "source_location": "L975",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth_test_me_without_access_cookie_returns_401",
@@ -51231,7 +51321,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L905",
+      "source_location": "L910",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth_test_refresh_with_csrf_but_no_cookie_returns_401_not_403",
@@ -51267,7 +51357,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L887",
+      "source_location": "L892",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_api_test_auth_test_refresh_without_csrf_returns_403_not_401",
@@ -51642,10 +51732,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L841",
+      "source_location": "L846",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_api_test_auth_rationale_841",
+      "source": "tests_api_test_auth_rationale_846",
       "target": "tests_api_test_auth_test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment",
       "confidence_score": 1.0
     },
@@ -51653,10 +51743,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L860",
+      "source_location": "L865",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_api_test_auth_rationale_860",
+      "source": "tests_api_test_auth_rationale_865",
       "target": "tests_api_test_auth_test_login_missing_password_field_returns_422",
       "confidence_score": 1.0
     },
@@ -51664,10 +51754,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L877",
+      "source_location": "L882",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_api_test_auth_rationale_877",
+      "source": "tests_api_test_auth_rationale_882",
       "target": "tests_api_test_auth_test_login_missing_login_field_returns_422",
       "confidence_score": 1.0
     },
@@ -51675,10 +51765,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L891",
+      "source_location": "L896",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_api_test_auth_rationale_891",
+      "source": "tests_api_test_auth_rationale_896",
       "target": "tests_api_test_auth_test_refresh_without_csrf_returns_403_not_401",
       "confidence_score": 1.0
     },
@@ -51686,10 +51776,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L910",
+      "source_location": "L915",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_api_test_auth_rationale_910",
+      "source": "tests_api_test_auth_rationale_915",
       "target": "tests_api_test_auth_test_refresh_with_csrf_but_no_cookie_returns_401_not_403",
       "confidence_score": 1.0
     },
@@ -51697,10 +51787,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L925",
+      "source_location": "L930",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_api_test_auth_rationale_925",
+      "source": "tests_api_test_auth_rationale_930",
       "target": "tests_api_test_auth_test_change_password_missing_fields_returns_422",
       "confidence_score": 1.0
     },
@@ -51708,10 +51798,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L950",
+      "source_location": "L955",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_api_test_auth_rationale_950",
+      "source": "tests_api_test_auth_rationale_955",
       "target": "tests_api_test_auth_test_change_password_without_csrf_returns_403",
       "confidence_score": 1.0
     },
@@ -51719,10 +51809,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/api/test_auth.py",
-      "source_location": "L975",
+      "source_location": "L980",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_api_test_auth_rationale_975",
+      "source": "tests_api_test_auth_rationale_980",
       "target": "tests_api_test_auth_test_me_without_access_cookie_returns_401",
       "confidence_score": 1.0
     },
@@ -52072,7 +52162,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L221",
+      "source_location": "L224",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_browser_stack",
@@ -60590,7 +60680,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60601,7 +60691,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L111",
+      "source_location": "L113",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60612,7 +60702,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L105",
+      "source_location": "L107",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60623,7 +60713,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L117",
+      "source_location": "L119",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60634,7 +60724,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L50",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_test_config",
+      "target": "tests_unit_test_config_test_cookie_secure_test_env_forces_secure_true",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60645,7 +60746,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L41",
+      "source_location": "L43",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60656,7 +60757,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L36",
+      "source_location": "L143",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_test_config",
+      "target": "tests_unit_test_config_test_cookie_security_test_env_rejects_false",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L38",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60667,7 +60779,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L26",
+      "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60678,7 +60790,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L59",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60689,7 +60801,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L14",
+      "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60700,7 +60812,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L31",
+      "source_location": "L33",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60711,7 +60823,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L4",
+      "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60722,7 +60834,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L96",
+      "source_location": "L98",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60733,7 +60845,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L73",
+      "source_location": "L75",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60744,7 +60856,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L87",
+      "source_location": "L89",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60755,7 +60867,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L80",
+      "source_location": "L82",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_config",
@@ -60766,10 +60878,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L60",
+      "source_location": "L62",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_unit_test_config_rationale_60",
+      "source": "tests_unit_test_config_rationale_62",
       "target": "tests_unit_test_config_test_environment_rejects_unknown_values",
       "confidence_score": 1.0
     },
@@ -60777,10 +60889,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_unit_test_config_rationale_74",
+      "source": "tests_unit_test_config_rationale_76",
       "target": "tests_unit_test_config_test_trusted_bff_peers_development_default_supports_local",
       "confidence_score": 1.0
     },
@@ -60788,10 +60900,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L81",
+      "source_location": "L83",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_unit_test_config_rationale_81",
+      "source": "tests_unit_test_config_rationale_83",
       "target": "tests_unit_test_config_test_trusted_bff_peers_test_default_supports_local",
       "confidence_score": 1.0
     },
@@ -60799,10 +60911,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L88",
+      "source_location": "L90",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_unit_test_config_rationale_88",
+      "source": "tests_unit_test_config_rationale_90",
       "target": "tests_unit_test_config_test_trusted_bff_peers_production_default_empty",
       "confidence_score": 1.0
     },
@@ -60810,10 +60922,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L97",
+      "source_location": "L99",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_unit_test_config_rationale_97",
+      "source": "tests_unit_test_config_rationale_99",
       "target": "tests_unit_test_config_test_trusted_bff_peers_can_be_overridden",
       "confidence_score": 1.0
     },
@@ -60821,10 +60933,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L106",
+      "source_location": "L108",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_unit_test_config_rationale_106",
+      "source": "tests_unit_test_config_rationale_108",
       "target": "tests_unit_test_config_test_cookie_secure_production_defaults_true",
       "confidence_score": 1.0
     },
@@ -60832,10 +60944,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L112",
+      "source_location": "L114",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_unit_test_config_rationale_112",
+      "source": "tests_unit_test_config_rationale_114",
       "target": "tests_unit_test_config_test_cookie_secure_development_defaults_false",
       "confidence_score": 1.0
     },
@@ -60843,11 +60955,33 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_config.py",
-      "source_location": "L118",
+      "source_location": "L120",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_unit_test_config_rationale_118",
+      "source": "tests_unit_test_config_rationale_120",
       "target": "tests_unit_test_config_test_cookie_secure_test_defaults_true",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L131",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_test_config_rationale_131",
+      "target": "tests_unit_test_config_test_cookie_secure_test_env_forces_secure_true",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_config.py",
+      "source_location": "L144",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_test_config_rationale_144",
+      "target": "tests_unit_test_config_test_cookie_security_test_env_rejects_false",
       "confidence_score": 1.0
     },
     {
@@ -61659,7 +61793,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L531",
+      "source_location": "L535",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -61670,7 +61804,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L500",
+      "source_location": "L504",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -61681,7 +61815,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L464",
+      "source_location": "L468",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -61692,7 +61826,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L748",
+      "source_location": "L752",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -61703,7 +61837,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L362",
+      "source_location": "L366",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -61714,7 +61848,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L679",
+      "source_location": "L683",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -61725,7 +61859,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L315",
+      "source_location": "L319",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -61736,7 +61870,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L414",
+      "source_location": "L418",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -61747,7 +61881,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L608",
+      "source_location": "L612",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke",
@@ -61804,7 +61938,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L254",
+      "source_location": "L257",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_browser_stack",
@@ -61827,7 +61961,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L271",
+      "source_location": "L274",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_browser_stack",
@@ -61873,7 +62007,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L549",
+      "source_location": "L553",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_admin_create_reset_deactivate_user",
@@ -61885,7 +62019,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L515",
+      "source_location": "L519",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_admin_role_navigation",
@@ -61897,7 +62031,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L478",
+      "source_location": "L482",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_change_password_redirects_to_login",
@@ -61909,7 +62043,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L806",
+      "source_location": "L810",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_deactivated_user_loses_access",
@@ -61921,7 +62055,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L381",
+      "source_location": "L385",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_failed_login_shows_error",
@@ -61933,7 +62067,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L704",
+      "source_location": "L708",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_forged_source_header_stripped_by_bff",
@@ -61945,7 +62079,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L329",
+      "source_location": "L333",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_login_logout_flow",
@@ -61957,7 +62091,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L433",
+      "source_location": "L437",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_refresh_session_rotates_cookies",
@@ -61969,7 +62103,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L662",
+      "source_location": "L666",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_teacher_cannot_see_account_management",
@@ -62028,7 +62162,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L553",
+      "source_location": "L557",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_admin_create_reset_deactivate_user",
@@ -62040,7 +62174,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L519",
+      "source_location": "L523",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_admin_role_navigation",
@@ -62052,7 +62186,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L482",
+      "source_location": "L486",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_change_password_redirects_to_login",
@@ -62064,7 +62198,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L811",
+      "source_location": "L815",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_deactivated_user_loses_access",
@@ -62076,7 +62210,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L710",
+      "source_location": "L714",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_forged_source_header_stripped_by_bff",
@@ -62088,7 +62222,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L333",
+      "source_location": "L337",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_login_logout_flow",
@@ -62100,7 +62234,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L437",
+      "source_location": "L441",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_refresh_session_rotates_cookies",
@@ -62112,7 +62246,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L666",
+      "source_location": "L670",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_teacher_cannot_see_account_management",
@@ -62135,7 +62269,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L766",
+      "source_location": "L770",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_deactivated_user_loses_access",
@@ -62147,7 +62281,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L625",
+      "source_location": "L629",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_teacher_cannot_see_account_management",
@@ -62170,7 +62304,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L587",
+      "source_location": "L591",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_admin_create_reset_deactivate_user",
@@ -62193,7 +62327,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L596",
+      "source_location": "L600",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_web_test_browser_smoke_test_browser_admin_create_reset_deactivate_user",
@@ -62215,10 +62349,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L316",
+      "source_location": "L320",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_web_test_browser_smoke_rationale_316",
+      "source": "tests_web_test_browser_smoke_rationale_320",
       "target": "tests_web_test_browser_smoke_test_browser_login_logout_flow",
       "confidence_score": 1.0
     },
@@ -62226,10 +62360,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L365",
+      "source_location": "L369",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_web_test_browser_smoke_rationale_365",
+      "source": "tests_web_test_browser_smoke_rationale_369",
       "target": "tests_web_test_browser_smoke_test_browser_failed_login_shows_error",
       "confidence_score": 1.0
     },
@@ -62237,10 +62371,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L417",
+      "source_location": "L421",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_web_test_browser_smoke_rationale_417",
+      "source": "tests_web_test_browser_smoke_rationale_421",
       "target": "tests_web_test_browser_smoke_test_browser_refresh_session_rotates_cookies",
       "confidence_score": 1.0
     },
@@ -62248,10 +62382,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L467",
+      "source_location": "L471",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_web_test_browser_smoke_rationale_467",
+      "source": "tests_web_test_browser_smoke_rationale_471",
       "target": "tests_web_test_browser_smoke_test_browser_change_password_redirects_to_login",
       "confidence_score": 1.0
     },
@@ -62259,10 +62393,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L503",
+      "source_location": "L507",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_web_test_browser_smoke_rationale_503",
+      "source": "tests_web_test_browser_smoke_rationale_507",
       "target": "tests_web_test_browser_smoke_test_browser_admin_role_navigation",
       "confidence_score": 1.0
     },
@@ -62270,10 +62404,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L534",
+      "source_location": "L538",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_web_test_browser_smoke_rationale_534",
+      "source": "tests_web_test_browser_smoke_rationale_538",
       "target": "tests_web_test_browser_smoke_test_browser_admin_create_reset_deactivate_user",
       "confidence_score": 1.0
     },
@@ -62281,10 +62415,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L611",
+      "source_location": "L615",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_web_test_browser_smoke_rationale_611",
+      "source": "tests_web_test_browser_smoke_rationale_615",
       "target": "tests_web_test_browser_smoke_test_browser_teacher_cannot_see_account_management",
       "confidence_score": 1.0
     },
@@ -62292,10 +62426,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L682",
+      "source_location": "L686",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_web_test_browser_smoke_rationale_682",
+      "source": "tests_web_test_browser_smoke_rationale_686",
       "target": "tests_web_test_browser_smoke_test_browser_forged_source_header_stripped_by_bff",
       "confidence_score": 1.0
     },
@@ -62303,10 +62437,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/web/test_browser_smoke.py",
-      "source_location": "L751",
+      "source_location": "L755",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_web_test_browser_smoke_rationale_751",
+      "source": "tests_web_test_browser_smoke_rationale_755",
       "target": "tests_web_test_browser_smoke_test_browser_deactivated_user_loses_access",
       "confidence_score": 1.0
     },
@@ -78674,5 +78808,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "b134f59d654aa199e59dafd9480e11ea33173e7d"
+  "built_at_commit": "9f9a8f370fead511ce15e3527d6908886d9993dc"
 }

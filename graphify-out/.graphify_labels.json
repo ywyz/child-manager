@@ -244,9 +244,7 @@
   "242": "test_login_missing_login_field_returns_422",
   "243": "test_refresh_without_csrf_returns_403_not_401",
   "244": "test_refresh_with_csrf_but_no_cookie_returns_401_not_403",
-  "245": "test_change_password_missing_fields_returns_422",
   "246": "test_change_password_without_csrf_returns_403",
   "247": "test_me_without_access_cookie_returns_401",
-  "248": "init_admin.py",
-  "249": "main.py"
+  "248": "init_admin.py"
 }
