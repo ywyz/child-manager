@@ -15,6 +15,11 @@ from packages.backend.identity.identifiers import normalize_phone, normalize_use
         ("  teacher@example.com  ", "teacher@example.com"),
         ("　admin\u3000", "admin"),
         ("ＡＢＣ", "abc"),
+        # 冻结 Schema 只要求 NFKC+trim+lower，不限制字符集。
+        # Unicode 旧用户名（如 0006 迁移保留的 ``教师``）必须能登录（T029）。
+        ("教师", "教师"),
+        ("Teacher甲", "teacher甲"),
+        ("用户名", "用户名"),
     ],
 )
 def test_normalize_username_nfkc_trim_lower(raw: str, expected: str) -> None:
@@ -54,21 +59,6 @@ def test_normalize_username_allows_max_length_after_nfkc() -> None:
     """NFKC 后恰好 120 字符的用户名必须被接受。"""
     raw = "a" * 120
     assert normalize_username(raw) == raw
-
-
-@pytest.mark.parametrize(
-    "raw",
-    [
-        "user name",  # 空格不在允许字符集
-        "user/name",
-        "user#name",
-        "user+name",  # + 不在允许字符集（与 E.164 手机号区分）
-        "用户名",
-    ],
-)
-def test_normalize_username_rejects_disallowed_characters(raw: str) -> None:
-    with pytest.raises(ValueError, match="不允许的字符"):
-        normalize_username(raw)
 
 
 @pytest.mark.parametrize(

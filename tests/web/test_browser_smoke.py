@@ -134,11 +134,13 @@ def _fetch_csrf(api_url: str) -> str:
 
 
 async def _wait_for_success_message(page: Any) -> None:
-    """等待账号管理页面的“操作成功”提示出现。
+    """等待账号管理页面的成功提示出现。
 
     NiceGUI 的 message label 初始为空且带 ``text-red-500``；成功时 ``set_text``
-    写入“操作成功”并切到 ``text-green-500``。用 ``wait_for_function`` 轮询
-    避免初始空文本导致 ``inner_text`` 立即返回空值。若出现红色错误信息则
+    写入消息并追加 ``text-green-500``（不替换 ``text-red-500``）。用
+    ``wait_for_function`` 轮询避免初始空文本导致 ``inner_text`` 立即返回空值。
+    判断成功依据元素是否具有 ``text-green-500`` 类，而非具体文本内容
+    （创建成功显示“创建成功”，重置/停用显示“操作成功”）。若出现红色错误信息则
     立即失败并报告错误内容，便于诊断。
     """
     import asyncio as _asyncio
@@ -147,16 +149,14 @@ async def _wait_for_success_message(page: Any) -> None:
     while _asyncio.get_event_loop().time() < deadline:
         error_text = await page.evaluate(
             """() => {
-                const red = document.querySelector('.text-red-500');
-                if (red && red.innerText && red.innerText.trim().length > 0
-                    && !red.innerText.includes('操作成功')) {
-                    return red.innerText.trim();
+                const el = document.querySelector('.text-red-500, .text-green-500');
+                if (!el || !el.innerText || el.innerText.trim().length === 0) {
+                    return null;
                 }
-                const green = document.querySelector('.text-green-500');
-                if (green && green.innerText && green.innerText.includes('操作成功')) {
-                    return '';
+                if (el.classList.contains('text-green-500')) {
+                    return '';  // 成功（任何文本）
                 }
-                return null;
+                return el.innerText.trim();  // 错误
             }"""
         )
         if error_text == "":
@@ -412,6 +412,9 @@ async def test_browser_refresh_session_rotates_cookies(
     登录后点击“刷新会话”，/api/v1/auth/refresh 成功后浏览器获得新的
     access/refresh Cookie 并重载页面。``context.route`` 保证浏览器只经
     Web BFF 访问 API，不直连 API 端口。
+
+    Codex 第十八轮审阅 P1-3：刷新必须同时轮换 access 与 refresh 两条 Cookie，
+    仅断言 access 轮换不能证明 refresh family 正确轮换。
     """
     from playwright.async_api import async_playwright
 
@@ -430,19 +433,21 @@ async def test_browser_refresh_session_rotates_cookies(
                 c.get("name", ""): c.get("value", "") for c in await context.cookies()
             }
             access_before = cookies_before.get("child_manager_access", "")
+            refresh_before = cookies_before.get("child_manager_refresh", "")
 
-            # 点击“刷新会话”；成功后页面 reload，新 access Cookie 由 Set-Cookie 写入。
+            # 点击“刷新会话”；成功后页面 reload，新 access/refresh Cookie 由 Set-Cookie 写入。
             async with page.expect_navigation(timeout=15000):
                 await page.get_by_role("button", name="刷新会话").click()
 
-            cookies_after = {
-                c.get("name", ""): c.get("value", "") for c in await context.cookies()
-            }
+            cookies_after = {c.get("name", ""): c.get("value", "") for c in await context.cookies()}
             assert "child_manager_access" in cookies_after
             assert "child_manager_refresh" in cookies_after
-            # access Cookie 应被轮换为新值。
+            # access 与 refresh Cookie 都必须被轮换为新值。
             assert cookies_after["child_manager_access"] != access_before, (
                 "刷新会话后 access cookie 未轮换"
+            )
+            assert cookies_after["child_manager_refresh"] != refresh_before, (
+                "刷新会话后 refresh cookie 未轮换"
             )
         finally:
             await browser.close()
@@ -519,12 +524,88 @@ async def test_browser_admin_role_navigation(
 async def test_browser_admin_create_reset_deactivate_user(
     browser_stack: tuple[str, str, str],
 ) -> None:
-    """T025 浏览器冒烟：管理员创建/重置/停用账号。
+    """T025 浏览器冒烟：管理员通过 UI 创建/重置/停用账号。
 
-    覆盖 T025 要求的管理员账号管理闭环。用户创建通过 API setup 完成以
-    避免 NiceGUI multi-select 下拉框的脆弱选择器；重置密码与停用账号
-    通过浏览器 UI 按钮完成，``context.route`` 保证不直连 API。创建后的
-    账号在浏览器列表中可见，并可通过 UI 选择后执行重置与停用操作。
+    覆盖 T025 要求的管理员账号管理闭环。Codex 第十八轮审阅 P1-3：账号创建
+    必须真正通过浏览器 UI 完成，不能只由 API setup 代替。本测试通过浏览器
+    填写新建账号表单（用户名、显示名称、密码、角色多选）并提交，验证创建
+    成功后账号出现在列表中，再通过 UI 选择账号执行重置与停用操作。
+    ``context.route`` 保证不直连 API。
+    """
+    from playwright.async_api import async_playwright
+
+    api_url, web_url, password = browser_stack
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
+        context = await browser.new_context()
+        await _block_non_web_origins(context, web_url, api_url)
+        page = await context.new_page()
+
+        try:
+            await _browser_login(page, web_url, "admin", password)
+
+            await page.goto(f"{web_url}/users")
+            await page.wait_for_selector("text=新建账号", timeout=10000)
+
+            # 1. 通过浏览器 UI 创建账号：填写用户名、显示名称、初始密码并选择角色。
+            #    作用域限定在“新建账号”卡片内，避免与“调整角色”字段冲突。
+            create_card = page.locator(".q-card").filter(has_text="新建账号")
+            await (
+                create_card.locator(".q-field")
+                .filter(has_text="用户名")
+                .locator("input")
+                .fill("browser_teacher")
+            )
+            await (
+                create_card.locator(".q-field")
+                .filter(has_text="显示名称")
+                .locator("input")
+                .fill("浏览器教师")
+            )
+            await (
+                create_card.locator(".q-field")
+                .filter(has_text="初始密码")
+                .locator("input")
+                .fill("TeacherPassword2024!")
+            )
+
+            # Quasar QSelect 多选：点击“角色”字段展开下拉，点击 teacher 选项。
+            await create_card.locator(".q-field").filter(has_text="角色").click()
+            await page.locator(".q-item").filter(has_text="teacher").click()
+            # 关闭下拉：点击页面其他位置。
+            await page.locator("body").click(position={"x": 0, "y": 0})
+
+            await page.get_by_role("button", name="创建账号").click()
+            await _wait_for_success_message(page)
+
+            # 2. 验证创建的账号出现在列表中。
+            await page.click("text=刷新列表")
+            await page.wait_for_selector("text=浏览器教师", timeout=15000)
+
+            # 3. 选择账号并重置密码。
+            await page.locator(".q-field").filter(has_text="选择账号").click()
+            await page.locator(".q-item").filter(has_text="浏览器教师").click()
+            await _fill_nicegui_input(page, "新密码", "ResetPassword2025!")
+            await page.get_by_role("button", name="重置密码").click()
+            await _wait_for_success_message(page)
+
+            # 4. 停用账号。
+            await page.get_by_role("button", name="停用账号").click()
+            await _wait_for_success_message(page)
+        finally:
+            await browser.close()
+
+
+@pytest.mark.asyncio
+async def test_browser_teacher_cannot_see_account_management(
+    browser_stack: tuple[str, str, str],
+) -> None:
+    """T025 浏览器冒烟：教师导航负例。
+
+    Codex 第十八轮审阅 P1-3：教师登录后导航栏不应显示“账号管理”入口。
+    管理员入口只对 admin 角色渲染；教师角色不得看到该链接。
+    ``context.route`` 保证浏览器不直连 API。
     """
     import httpx
     from playwright.async_api import async_playwright
@@ -533,7 +614,7 @@ async def test_browser_admin_create_reset_deactivate_user(
     web_port = web_url.rsplit(":", 2)[-1]
     origin = f"http://127.0.0.1:{web_port}"
 
-    # setup：通过 API 创建教师账号（非被测对象，避免 multi-select 脆弱选择器）。
+    # setup：通过 API 创建教师账号（非被测对象）。
     csrf = _fetch_csrf(api_url)
     admin_login = httpx.post(
         f"{api_url}/api/v1/auth/login",
@@ -548,13 +629,12 @@ async def test_browser_admin_create_reset_deactivate_user(
     )
     assert admin_login.status_code == 200
     admin_cookies = admin_login.cookies
-    # 登录响应设置新 CSRF cookie；后续请求必须用新令牌作为 header。
     admin_csrf = admin_cookies.get("child_manager_csrf") or csrf
     create = httpx.post(
         f"{api_url}/api/v1/users",
         json={
-            "username": "browser_teacher",
-            "display_name": "浏览器教师",
+            "username": "nav_teacher",
+            "display_name": "导航教师",
             "phone_e164": None,
             "role_codes": ["teacher"],
             "password": "TeacherPassword2024!",
@@ -576,24 +656,53 @@ async def test_browser_admin_create_reset_deactivate_user(
         page = await context.new_page()
 
         try:
+            await _browser_login(page, web_url, "nav_teacher", "TeacherPassword2024!")
+
+            # 等待导航栏通过 /api/v1/auth/me 加载角色后渲染。
+            await page.wait_for_selector("text=修改密码", timeout=15000)
+
+            # 教师不应看到“账号管理”链接。
+            admin_link = page.locator("a[href='/users']")
+            assert await admin_link.count() == 0, "教师导航栏不应包含账号管理链接"
+        finally:
+            await browser.close()
+
+
+@pytest.mark.asyncio
+async def test_browser_forged_source_header_stripped_by_bff(
+    browser_stack: tuple[str, str, str],
+) -> None:
+    """T025 浏览器冒烟：浏览器携带伪造内部来源头仍被 BFF 重建。
+
+    Codex 第十八轮审阅 P1-3：浏览器即使设置伪造的
+    ``x-child-manager-client-ip`` 头，BFF 也必须剥离并重建为真实 peer IP。
+    本测试通过 ``set_extra_http_headers`` 注入伪造头，验证登录仍正常完成
+    （BFF 不信任浏览器头）。BFF 剥离逻辑的单元证据见
+    ``test_bff_proxy.py::test_proxy_strips_hop_by_hop_and_spoofed_source_headers``。
+    """
+    from playwright.async_api import async_playwright
+
+    api_url, web_url, password = browser_stack
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
+        context = await browser.new_context()
+        # 注入伪造的内部来源头，模拟恶意浏览器尝试伪造客户端 IP。
+        await context.set_extra_http_headers({"x-child-manager-client-ip": "203.0.113.99"})
+        await _block_non_web_origins(context, web_url, api_url)
+        page = await context.new_page()
+
+        try:
+            # BFF 应剥离伪造头并重建为真实 peer IP（127.0.0.1），
+            # 登录流程不受伪造头影响，仍正常导航到首页。
             await _browser_login(page, web_url, "admin", password)
 
-            await page.goto(f"{web_url}/users")
-            await page.wait_for_selector("text=新建账号", timeout=10000)
-
-            # 1. 验证创建的账号出现在列表中。
-            await page.wait_for_selector("text=浏览器教师", timeout=15000)
-
-            # 2. 选择账号并重置密码。
-            await page.locator(".q-field").filter(has_text="选择账号").click()
-            await page.locator(".q-item").filter(has_text="浏览器教师").click()
-            await _fill_nicegui_input(page, "新密码", "ResetPassword2025!")
-            await page.get_by_role("button", name="重置密码").click()
-            await _wait_for_success_message(page)
-
-            # 3. 停用账号。
-            await page.get_by_role("button", name="停用账号").click()
-            await _wait_for_success_message(page)
+            # 验证 auth Cookie 已设置，证明登录成功。
+            cookies = await context.cookies()
+            cookie_names = {c.get("name", "") for c in cookies}
+            assert "child_manager_access" in cookie_names, (
+                f"伪造来源头不应影响登录，缺少 access cookie: {cookie_names}"
+            )
         finally:
             await browser.close()
 

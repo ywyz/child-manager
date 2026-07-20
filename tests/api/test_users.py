@@ -129,14 +129,18 @@ def test_create_user_rejects_nfkc_expanded_username_with_422(client: TestClient)
     assert data["code"] == "auth.invalid_username"
 
 
-def test_create_user_rejects_disallowed_characters_with_422(client: TestClient) -> None:
-    """包含不允许字符的用户名必须在边界返回 422。"""
+def test_create_user_allows_unicode_username(client: TestClient) -> None:
+    """冻结 Schema 只要求 NFKC+trim+lower，Unicode 用户名必须被接受。
+
+    Codex 第十八轮审阅 P1-4：0006 迁移保留的 Unicode 旧用户名（如 ``教师``）
+    升级后必须仍能创建与登录，否则应用层静默锁死既有账号（T029 回归）。
+    """
     cookies = _admin_session(client)
     response = client.post(
         "/api/v1/users",
         json={
-            "username": "user name",
-            "display_name": "非法字符",
+            "username": "教师",
+            "display_name": "Unicode 教师",
             "phone_e164": None,
             "role_codes": ["teacher"],
             "password": "ValidPassword2024!",
@@ -144,8 +148,8 @@ def test_create_user_rejects_disallowed_characters_with_422(client: TestClient) 
         headers=_CSRF_HEADERS,
         cookies=cookies,
     )
-    assert response.status_code == 422
-    assert response.json()["code"] == "auth.invalid_username"
+    assert response.status_code == 201
+    assert response.json()["username"] == "教师"
 
 
 def test_list_users_returns_pagination(client: TestClient) -> None:

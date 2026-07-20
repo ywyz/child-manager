@@ -30,10 +30,10 @@ def get_client_ip(request: Any, trusted_peers: set[str]) -> str:
     peer_host = request.client.host if request.client is not None else None
 
     if _is_trusted_peer(peer_host, trusted_peers):
+        # Starlette ``Headers`` 以字符串 key 读取；bytes key 会触发
+        # ``AttributeError: 'bytes' object has no attribute 'encode'``。
         internal = request.headers.get(_INTERNAL_IP_HEADER)
-        if internal is None:
-            internal = request.headers.get(_INTERNAL_IP_HEADER.encode("ascii"))
         if internal:
-            return internal.decode("ascii") if isinstance(internal, bytes) else str(internal)
+            return str(internal)
 
     return peer_host if peer_host is not None else "127.0.0.1"
