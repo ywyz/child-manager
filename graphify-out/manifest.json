@@ -115,8 +115,8 @@
     "semantic_hash": ""
   },
   "apps/web/main.py": {
-    "mtime": 1784537477.0741022,
-    "ast_hash": "b0ac4c0ca1b199f0c1b9afc197609159",
+    "mtime": 1784544403.5137541,
+    "ast_hash": "84366a9d533c21d2b4a92e1a5692e7c4",
     "semantic_hash": ""
   },
   "apps/web/pages/__init__.py": {
@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "packages/backend/config.py": {
-    "mtime": 1784370048.7430618,
-    "ast_hash": "14095261150fc12708fefbb0550327ee",
+    "mtime": 1784544886.5153043,
+    "ast_hash": "61dade5bdd3a377f91a0811056e2f616",
     "semantic_hash": ""
   },
   "packages/backend/database/__init__.py": {
@@ -790,8 +790,8 @@
     "semantic_hash": ""
   },
   "tests/unit/test_config.py": {
-    "mtime": 1784370048.8480675,
-    "ast_hash": "fb305524effc059cb27aef20e92ebb09",
+    "mtime": 1784544894.8086054,
+    "ast_hash": "07f165251d328e61c2dbdea5589f88bb",
     "semantic_hash": ""
   },
   "tests/contract/test_t005_contracts.py": {
@@ -800,8 +800,8 @@
     "semantic_hash": ""
   },
   "apps/api/routers/auth.py": {
-    "mtime": 1784537149.087393,
-    "ast_hash": "2b5021fee12be861f05b3fca472d4c14",
+    "mtime": 1784544386.6291401,
+    "ast_hash": "3715ec8a1578e3caa717840c83a31e57",
     "semantic_hash": ""
   },
   "apps/api/routers/users.py": {
@@ -890,8 +890,8 @@
     "semantic_hash": ""
   },
   "tests/api/test_auth.py": {
-    "mtime": 1784536546.6683342,
-    "ast_hash": "81dbe9ff1448205d7db127cdcf0dad46",
+    "mtime": 1784544786.1746604,
+    "ast_hash": "244fd23f4e33f02070ea7acf3cb0bc59",
     "semantic_hash": ""
   },
   "tests/api/test_csrf.py": {
@@ -905,8 +905,8 @@
     "semantic_hash": ""
   },
   "tests/api/test_users.py": {
-    "mtime": 1784536535.476878,
-    "ast_hash": "133bf284a3d3fb1923b1d893b0d98cf7",
+    "mtime": 1784544815.5827284,
+    "ast_hash": "0115044b034e5aee6e25f62518d40e56",
     "semantic_hash": ""
   },
   "tests/contract/test_auth_contract.py": {
@@ -1095,8 +1095,8 @@
     "semantic_hash": ""
   },
   "tests/web/test_browser_smoke.py": {
-    "mtime": 1784537256.041876,
-    "ast_hash": "c68b5619f80e6d81c8364fd1fb04849b",
+    "mtime": 1784545167.4065,
+    "ast_hash": "a38876c3696fe655d881a63d6621bd09",
     "semantic_hash": ""
   },
   "docs/\u5ba1\u67e5\u62a5\u544a/20260719-issue6-\u4fee\u590d\u62a5\u544a.md": {
