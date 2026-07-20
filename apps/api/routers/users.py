@@ -21,7 +21,15 @@ from packages.contracts.identity import (
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.post("", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        403: {"description": "CSRF/来源错误或无权限"},
+        409: {"description": "版本、幂等、预览有效性或业务不变量冲突"},
+    },
+)
 async def create_user(
     request: Request,
     body: UserCreateRequest,
@@ -38,7 +46,11 @@ async def create_user(
     )
 
 
-@router.get("", response_model=UserPage)
+@router.get(
+    "",
+    response_model=UserPage,
+    responses={403: {"description": "CSRF/来源错误或无权限"}},
+)
 async def list_users(
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
@@ -50,7 +62,14 @@ async def list_users(
     return UserPage(items=items, page=page, page_size=page_size, total=total)
 
 
-@router.get("/{user_id}", response_model=UserResponse)
+@router.get(
+    "/{user_id}",
+    response_model=UserResponse,
+    responses={
+        403: {"description": "CSRF/来源错误或无权限"},
+        404: {"description": "资源不存在或不应向当前用户暴露"},
+    },
+)
 async def get_user(
     user_id: str,
     current_user: Annotated[CurrentUser, Depends(require_admin)],
@@ -63,7 +82,14 @@ async def get_user(
     return user
 
 
-@router.patch("/{user_id}", response_model=UserResponse)
+@router.patch(
+    "/{user_id}",
+    response_model=UserResponse,
+    responses={
+        403: {"description": "CSRF/来源错误或无权限"},
+        404: {"description": "资源不存在或不应向当前用户暴露"},
+    },
+)
 async def update_user(
     request: Request,
     user_id: str,
@@ -85,7 +111,15 @@ async def update_user(
     return user
 
 
-@router.put("/{user_id}/roles", response_model=UserResponse)
+@router.put(
+    "/{user_id}/roles",
+    response_model=UserResponse,
+    responses={
+        403: {"description": "CSRF/来源错误或无权限"},
+        404: {"description": "资源不存在或不应向当前用户暴露"},
+        409: {"description": "版本、幂等、预览有效性或业务不变量冲突"},
+    },
+)
 async def set_user_roles(
     request: Request,
     user_id: str,
@@ -107,7 +141,14 @@ async def set_user_roles(
     return user
 
 
-@router.post("/{user_id}/activate", response_model=UserResponse)
+@router.post(
+    "/{user_id}/activate",
+    response_model=UserResponse,
+    responses={
+        403: {"description": "CSRF/来源错误或无权限"},
+        404: {"description": "资源不存在或不应向当前用户暴露"},
+    },
+)
 async def activate_user(
     request: Request,
     user_id: str,
@@ -127,7 +168,15 @@ async def activate_user(
     return user
 
 
-@router.post("/{user_id}/deactivate", response_model=UserResponse)
+@router.post(
+    "/{user_id}/deactivate",
+    response_model=UserResponse,
+    responses={
+        403: {"description": "CSRF/来源错误或无权限"},
+        404: {"description": "资源不存在或不应向当前用户暴露"},
+        409: {"description": "版本、幂等、预览有效性或业务不变量冲突"},
+    },
+)
 async def deactivate_user(
     request: Request,
     user_id: str,
@@ -144,7 +193,16 @@ async def deactivate_user(
     )
 
 
-@router.post("/{user_id}/reset-password")
+@router.post(
+    "/{user_id}/reset-password",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        403: {"description": "CSRF/来源错误或无权限"},
+        404: {"description": "用户不存在"},
+        409: {"description": "业务不变量冲突"},
+        422: {"description": "请求字段或业务前置条件无效"},
+    },
+)
 async def reset_password(
     request: Request,
     response: Response,

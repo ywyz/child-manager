@@ -332,3 +332,88 @@ def test_runtime_health_schema_equivalent_to_static() -> None:
     # 两者都不允许额外字段
     assert runtime_health.get("additionalProperties") is False
     assert static_health.get("additionalProperties") is False
+
+
+# Codex 第十九轮审阅 P1：Auth/Users operation 的运行时响应状态集合必须与
+# 冻结静态 OpenAPI 契约对等，不得只验证静态 YAML。
+_AUTH_USERS_OPERATIONS = [
+    ("/api/v1/auth/csrf", "get"),
+    ("/api/v1/auth/login", "post"),
+    ("/api/v1/auth/refresh", "post"),
+    ("/api/v1/auth/logout", "post"),
+    ("/api/v1/auth/me", "get"),
+    ("/api/v1/auth/change-password", "post"),
+    ("/api/v1/users", "get"),
+    ("/api/v1/users", "post"),
+    ("/api/v1/users/{user_id}", "get"),
+    ("/api/v1/users/{user_id}", "patch"),
+    ("/api/v1/users/{user_id}/roles", "put"),
+    ("/api/v1/users/{user_id}/activate", "post"),
+    ("/api/v1/users/{user_id}/deactivate", "post"),
+    ("/api/v1/users/{user_id}/reset-password", "post"),
+]
+
+# FastAPI 会为带 Path/Query 参数校验的路由自动添加 422 响应，即使静态契约未声明。
+# 这些 operation 允许运行时多出 422，只校验运行时包含静态契约的全部状态码。
+
+
+def _fastapi_auto_adds_422(op: dict[str, Any]) -> bool:
+    """判断 FastAPI 是否会为该 operation 自动添加 422 验证响应。"""
+    return any(param.get("in") in ("path", "query") for param in op.get("parameters", []))
+
+
+def test_auth_users_runtime_response_status_codes_match_static() -> None:
+    """RED 回归：全部 Auth/Users operation 的运行时响应状态码集合必须与冻结静态契约对等。
+
+    Codex 第十九轮审阅 P1：独立比较显示 13/13 个 Auth/Users operation 的响应状态
+    集合不同；例如静态 reset-password 为 204/403/404/409/422，运行时为 200/422。
+    """
+    static_paths = _load_spec()["paths"]
+    runtime_paths = _runtime_paths()
+
+    mismatches: list[str] = []
+    for path, method in _AUTH_USERS_OPERATIONS:
+        static_op = static_paths.get(path, {}).get(method)
+        runtime_op = runtime_paths.get(path, {}).get(method)
+        if static_op is None:
+            mismatches.append(f"{method.upper()} {path}: 静态契约缺失")
+            continue
+        if runtime_op is None:
+            mismatches.append(f"{method.upper()} {path}: 运行时缺失")
+            continue
+        static_statuses = set(static_op.get("responses", {}).keys())
+        runtime_statuses = set(runtime_op.get("responses", {}).keys())
+        # FastAPI 会为带 Path/Query 参数的路由自动添加 422；静态契约未声明时
+        # 允许运行时多出 422（且仅允许 422 这一项差异），其余状态码必须严格对等。
+        if (
+            "422" not in static_statuses
+            and "422" in runtime_statuses
+            and _fastapi_auto_adds_422(runtime_op)
+        ):
+            runtime_statuses = runtime_statuses - {"422"}
+        if static_statuses != runtime_statuses:
+            missing = static_statuses - runtime_statuses
+            extra = runtime_statuses - static_statuses
+            mismatches.append(
+                f"{method.upper()} {path}: 静态={sorted(static_statuses)} "
+                f"运行时={sorted(runtime_statuses)} "
+                f"缺失={sorted(missing)} 多余={sorted(extra)}"
+            )
+    assert not mismatches, "Auth/Users 响应状态码集合与静态契约不一致:\n" + "\n".join(mismatches)
+
+
+def test_reset_password_runtime_declares_204() -> None:
+    """RED 回归：reset-password 运行时必须声明 204 状态码。
+
+    Codex 第十九轮审阅 P1：旧版 reset-password 装饰器未声明 status_code=204，
+    导致运行时默认 200，与冻结契约 204 不符。
+    """
+    runtime_paths = _runtime_paths()
+    reset_op = runtime_paths["/api/v1/users/{user_id}/reset-password"]["post"]
+    assert "204" in reset_op["responses"], (
+        f"reset-password 运行时必须声明 204，实际: {sorted(reset_op['responses'].keys())}"
+    )
+    # 成功状态码必须是 204，不是 200。
+    assert "200" not in reset_op["responses"], (
+        "reset-password 运行时不应该有 200 状态码（应为 204）"
+    )

@@ -126,7 +126,15 @@ async def csrf(response: Response) -> CsrfResponse:
     return CsrfResponse(csrf_token=token)
 
 
-@router.post("/login", response_model=CurrentUser)
+@router.post(
+    "/login",
+    response_model=CurrentUser,
+    responses={
+        401: {"description": "未认证或会话无效"},
+        403: {"description": "CSRF/来源错误或无权限"},
+        429: {"description": "登录来源限流"},
+    },
+)
 async def login(
     request: Request,
     response: Response,
@@ -137,7 +145,7 @@ async def login(
 
     source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
     # 登录输入可能是用户名或手机号。normalize_username 在统一边界校验 NFKC 后
-    # 非空、允许字符与长度 <=120；输入不符合用户名格式（例如带 ``+`` 的 E.164
+    # 非空与长度 <=120；输入不符合用户名格式（例如带 ``+`` 的 E.164
     # 手机号）时退化为原始输入的小写形式作为限流键，避免把有效登录请求变成 500。
     try:
         account_key = normalize_username(body.login)
@@ -174,7 +182,14 @@ async def login(
     return result.current_user
 
 
-@router.post("/refresh", response_model=CurrentUser)
+@router.post(
+    "/refresh",
+    response_model=CurrentUser,
+    responses={
+        401: {"description": "未认证或会话无效"},
+        403: {"description": "CSRF/来源错误或无权限"},
+    },
+)
 async def refresh(
     request: Request,
     response: Response,
@@ -200,7 +215,11 @@ async def refresh(
     return result.current_user
 
 
-@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+@router.post(
+    "/logout",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={403: {"description": "CSRF/来源错误或无权限"}},
+)
 async def logout(
     request: Request,
     response: Response,
@@ -224,13 +243,24 @@ async def logout(
     return response
 
 
-@router.get("/me", response_model=CurrentUser)
+@router.get(
+    "/me",
+    response_model=CurrentUser,
+    responses={401: {"description": "未认证或会话无效"}},
+)
 async def me(current_user: Annotated[CurrentUser, Depends(get_current_user)]) -> CurrentUser:
     """返回当前登录用户信息。"""
     return current_user
 
 
-@router.post("/change-password", status_code=status.HTTP_204_NO_CONTENT)
+@router.post(
+    "/change-password",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        401: {"description": "未认证或会话无效"},
+        403: {"description": "CSRF/来源错误或无权限"},
+    },
+)
 async def change_password(
     request: Request,
     response: Response,

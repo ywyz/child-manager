@@ -152,6 +152,102 @@ def test_create_user_allows_unicode_username(client: TestClient) -> None:
     assert response.json()["username"] == "教师"
 
 
+def test_create_user_invalid_phone_returns_422(client: TestClient) -> None:
+    """RED 回归：非法手机号必须返回 422，不得外泄为 500。
+
+    Codex 第十九轮审阅 P0：旧版 normalize_phone 的 ValueError 在 create 路径
+    未被捕获，外泄为 500。冻结 OpenAPI 要求 422 ValidationError。
+    """
+    cookies = _admin_session(client)
+    response = client.post(
+        "/api/v1/users",
+        json={
+            "username": "bad_phone_user",
+            "display_name": "非法手机号",
+            "phone_e164": "abc",
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "auth.invalid_phone"
+
+
+def test_create_user_weak_password_returns_422(client: TestClient) -> None:
+    """RED 回归：SecLists 弱密码必须返回 422，不得外泄为 500。
+
+    Codex 第十九轮审阅 P0：旧版 validate_password 的 ValueError 在 create 路径
+    未被捕获，外泄为 500。使用合法长度但出现在常见弱密码列表中的密码。
+    """
+    cookies = _admin_session(client)
+    # "films+pic+galeries" 是 Codex 报告中提到的 SecLists 弱密码样本，
+    # 长度 17 满足 >=15 但在 10k-most-common 列表中。
+    response = client.post(
+        "/api/v1/users",
+        json={
+            "username": "weak_pw_user",
+            "display_name": "弱密码",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "films+pic+galeries",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "auth.invalid_password"
+
+
+def test_create_user_short_password_returns_422(client: TestClient) -> None:
+    """RED 回归：长度不足的密码必须返回 422。
+
+    短密码（<15）由契约层 minLength 校验拦截，返回 422
+    ``request.validation_failed``；服务层 ``validate_password`` 不会到达。
+    此测试验证短密码不外泄为 500。
+    """
+    cookies = _admin_session(client)
+    response = client.post(
+        "/api/v1/users",
+        json={
+            "username": "short_pw_user",
+            "display_name": "短密码",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "short",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+
+
+def test_create_user_invalid_phone_no_side_effects(client: TestClient) -> None:
+    """非法手机号 422 后事务无副作用：用户未被创建。
+
+    Codex 第十九轮审阅 P0：确认 422 失败后不会留下半写入的用户记录。
+    """
+    cookies = _admin_session(client)
+    response = client.post(
+        "/api/v1/users",
+        json={
+            "username": "no_side_effect_user",
+            "display_name": "事务无副作用",
+            "phone_e164": "invalid",
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    # 用户列表中不应出现该用户名。
+    listing = client.get("/api/v1/users", headers=_CSRF_HEADERS, cookies=cookies)
+    usernames = [u["username"] for u in listing.json()["items"]]
+    assert "no_side_effect_user" not in usernames
+
+
 def test_list_users_returns_pagination(client: TestClient) -> None:
     cookies = _admin_session(client)
     response = client.get("/api/v1/users", headers=_CSRF_HEADERS, cookies=cookies)
@@ -301,6 +397,97 @@ def test_update_user_phone_to_null_clears_phone(client: TestClient) -> None:
     )
     assert get_response.status_code == 200
     assert get_response.json()["phone_e164"] is None
+
+
+def test_update_user_invalid_phone_returns_422(client: TestClient) -> None:
+    """RED 回归：PATCH 非法手机号必须返回 422，不得外泄为 500。
+
+    Codex 第十九轮审阅 P0：旧版 normalize_phone 的 ValueError 在 update 路径
+    未被捕获，外泄为 500。冻结 OpenAPI 要求 422 ValidationError。
+    """
+    cookies = _admin_session(client)
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "teacher_bad_phone_update",
+            "display_name": "教师",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    user_id = create.json()["id"]
+
+    response = client.patch(
+        f"/api/v1/users/{user_id}",
+        json={"phone_e164": "not-a-phone"},
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "auth.invalid_phone"
+
+
+def test_reset_password_weak_password_returns_422(client: TestClient) -> None:
+    """RED 回归：reset-password 弱密码必须返回 422，不得外泄为 500。
+
+    Codex 第十九轮审阅 P0：旧版 validate_password 的 ValueError 在 reset 路径
+    未被捕获，外泄为 500。冻结 OpenAPI 要求 422 ValidationError。
+    """
+    cookies = _admin_session(client)
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "teacher_reset_weak",
+            "display_name": "教师",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    user_id = create.json()["id"]
+
+    response = client.post(
+        f"/api/v1/users/{user_id}/reset-password",
+        json={"new_password": "films+pic+galeries"},
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "auth.invalid_password"
+
+
+def test_reset_password_short_password_returns_422(client: TestClient) -> None:
+    """RED 回归：reset-password 长度不足的密码必须返回 422。
+
+    短密码（<15）由契约层 minLength 校验拦截，返回 422。
+    """
+    cookies = _admin_session(client)
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "teacher_reset_short",
+            "display_name": "教师",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    user_id = create.json()["id"]
+
+    response = client.post(
+        f"/api/v1/users/{user_id}/reset-password",
+        json={"new_password": "short"},
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
 
 
 def test_set_user_roles(client: TestClient) -> None:

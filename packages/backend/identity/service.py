@@ -15,6 +15,8 @@ from packages.backend.config import settings
 from packages.backend.identity.csrf import generate_csrf_token
 from packages.backend.identity.exceptions import (
     ConflictError,
+    InvalidPasswordError,
+    InvalidPhoneError,
     InvalidUsernameError,
     LastAdminError,
     UserNotFoundError,
@@ -23,6 +25,7 @@ from packages.backend.identity.identifiers import normalize_phone, normalize_use
 from packages.backend.identity.models import Kindergarten, User
 from packages.backend.identity.passwords import (
     hash_password,
+    needs_rehash,
     validate_password,
     verify_password,
 )
@@ -108,13 +111,43 @@ class IdentityService:
         """规范化用户名并把边界校验失败转为 422 领域错误，不让 DataError 外泄。
 
         create/update/init 的输入是用户名（非手机号），必须在统一边界校验
-        NFKC 后非空、允许字符与长度 <=120；失败时返回 422 而非让数据库
+        NFKC 后非空与长度 <=120；失败时返回 422 而非让数据库
         ``VARCHAR(120)`` 拒绝写入后外泄为 500。
         """
         try:
             return normalize_username(value)
         except ValueError as exc:
             raise InvalidUsernameError(str(exc)) from exc
+
+    @staticmethod
+    def _normalize_phone_or_raise(value: str) -> str:
+        """规范化手机号并把格式失败转为 422 领域错误。
+
+        Codex 第十九轮审阅 P0：旧版 ``normalize_phone`` 的 ``ValueError`` 在
+        create/update/init 路径未被捕获，外泄为 500。冻结 OpenAPI 要求 422。
+        ``normalize_phone`` 在输入为空字符串时返回 None，但调用方已保证
+        传入非空字符串（``request.phone_e164`` 为真值才调用），此处断言非空。
+        """
+        try:
+            result = normalize_phone(value)
+        except ValueError as exc:
+            raise InvalidPhoneError(str(exc)) from exc
+        if result is None:
+            msg = "手机号格式无效"
+            raise InvalidPhoneError(msg)
+        return result
+
+    @staticmethod
+    def _validate_password_or_raise(password: str) -> None:
+        """校验密码政策并把失败转为 422 领域错误。
+
+        Codex 第十九轮审阅 P0：旧版 ``validate_password`` 的 ``ValueError`` 在
+        create/change/reset 路径未被捕获，外泄为 500。冻结 OpenAPI 要求 422。
+        """
+        try:
+            validate_password(password)
+        except ValueError as exc:
+            raise InvalidPasswordError(str(exc)) from exc
 
     def _get_kindergarten(self) -> Kindergarten | None:
         """M2 单园部署：返回唯一园所。"""
@@ -171,7 +204,7 @@ class IdentityService:
             return None
 
         # 登录输入可能是用户名或手机号。normalize_username 在统一边界校验
-        # NFKC 后非空、允许字符与长度 <=120；输入不符合用户名格式（例如带
+        # NFKC 后非空与长度 <=120；输入不符合用户名格式（例如带
         # ``+`` 的 E.164 手机号）时跳过用户名查找，回退到手机号查找。
         user: User | None = None
         try:
@@ -216,6 +249,16 @@ class IdentityService:
             return None
 
         roles = self._repo.list_user_roles(kg.id, user.id)
+        # 冻结需求（data-model.md §75）：成功登录时按需升级旧参数哈希。
+        # Codex 第十九轮审阅 P0：旧版无 rehash 路径，旧参数哈希永远不会被升级。
+        # needs_rehash 检测哈希编码前缀参数是否与当前冻结值 (m=19456,t=2,p=1) 不同；
+        # 旧参数哈希（如 m=65536,t=3,p=1）返回 True，在同事务内重新哈希并更新。
+        if needs_rehash(user.password_hash):
+            self._repo.update_user(
+                user=user,
+                password_hash=hash_password(password),
+                updated_by=user.id,
+            )
         self._record_identity(
             kindergarten_id=kg.id,
             event_code=audit_events.IDENTITY_LOGIN,
@@ -303,9 +346,26 @@ class IdentityService:
             self._session.commit()
             return None
 
-        # 正常轮换：只撤销当前 token，保留 family；Access Token 携带同一 family_id。
+        # 正常轮换：先创建新行并 flush 获取新 id，再原子撤销旧行并写 replaced_by_id 指针。
+        # Codex 第十九轮 P0-4：CHECK ck_refresh_tokens_replaced_implies_revoked 要求
+        # replaced_by_id 与 revoked_at 在同一 UPDATE 中设置；同事务保证 FK 可见。
+        # 新行 token_family_id 与旧行相同（同 family），expires_at 复制旧行以遵守
+        # 冻结 Schema §5.5 的 7 天绝对期限，不因轮换滑动延长。
+        refresh_value = generate_refresh_value(kindergarten_id=token_row.kindergarten_id)
+        new_hash = hash_refresh_value(refresh_value)
+        expires_at = token_row.expires_at
+        new_token_row = self._repo.create_refresh_token(
+            kindergarten_id=token_row.kindergarten_id,
+            user_id=token_row.user_id,
+            token_family_id=token_row.token_family_id,
+            token_hash=new_hash,
+            expires_at=expires_at,
+        )
         self._repo.revoke_refresh_token(
-            token_row.kindergarten_id, token_hash, revoke_reason="rotation"
+            token_row.kindergarten_id,
+            token_hash,
+            revoke_reason="rotation",
+            replaced_by_id=new_token_row.id,
         )
         roles = self._repo.list_user_roles(token_row.kindergarten_id, token_row.user_id)
         access_token = create_access_token(
@@ -315,18 +375,6 @@ class IdentityService:
             family_id=token_row.token_family_id,
             signing_key=settings.jwt_signing_key,
             expire_minutes=settings.jwt_expire_minutes,
-        )
-        refresh_value = generate_refresh_value(kindergarten_id=token_row.kindergarten_id)
-        new_hash = hash_refresh_value(refresh_value)
-        # 冻结 Schema §5.5：同一 family 的后续 token 必须复制首次签发的 expires_at，
-        # 不得按轮换时间重新计算或延长，保证 family 生命周期上限为 7 天绝对期限。
-        expires_at = token_row.expires_at
-        self._repo.create_refresh_token(
-            kindergarten_id=token_row.kindergarten_id,
-            user_id=token_row.user_id,
-            token_family_id=token_row.token_family_id,
-            token_hash=new_hash,
-            expires_at=expires_at,
         )
         csrf_token = generate_csrf_token(settings.csrf_signing_key)
         self._record_identity(
@@ -438,7 +486,7 @@ class IdentityService:
         user = self._repo.get_user_by_id(kindergarten_id, user_id)
         if user is None or not verify_password(old_password, user.password_hash):
             return False
-        validate_password(new_password)
+        self._validate_password_or_raise(new_password)
         self._repo.update_user(
             user=user,
             password_hash=hash_password(new_password),
@@ -488,8 +536,8 @@ class IdentityService:
         self.ensure_roles()
 
         username = self._normalize_username_or_raise(request.username)
-        phone = normalize_phone(request.phone_e164) if request.phone_e164 else None
-        validate_password(request.password)
+        phone = self._normalize_phone_or_raise(request.phone_e164) if request.phone_e164 else None
+        self._validate_password_or_raise(request.password)
 
         try:
             user = self._repo.create_user(
@@ -561,7 +609,9 @@ class IdentityService:
                 update_kwargs["display_name"] = patch.display_name
             if patch.phone_e164_is_set:
                 update_kwargs["phone_e164"] = (
-                    normalize_phone(patch.phone_e164) if patch.phone_e164 is not None else None
+                    self._normalize_phone_or_raise(patch.phone_e164)
+                    if patch.phone_e164 is not None
+                    else None
                 )
                 update_kwargs["phone_e164_set"] = True
             self._repo.update_user(user=user, **update_kwargs)
@@ -664,7 +714,7 @@ class IdentityService:
         user = self._repo.get_user_by_id(kindergarten_id, target_user_id)
         if user is None:
             return False
-        validate_password(new_password)
+        self._validate_password_or_raise(new_password)
         try:
             self._repo.update_user(
                 user=user,
@@ -727,6 +777,7 @@ class IdentityService:
         if admin_role is None:
             raise RuntimeError("管理员角色初始化失败")
         username = self._normalize_username_or_raise(admin_username)
+        self._validate_password_or_raise(password)
         try:
             user = self._repo.create_user(
                 kindergarten_id=kg.id,

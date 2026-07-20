@@ -1,24 +1,27 @@
 """可信 BFF 客户端地址解析。"""
 
-from ipaddress import ip_address
 from typing import Any
 
 _INTERNAL_IP_HEADER = "x-child-manager-client-ip"
 
 
 def _is_trusted_peer(host: str | None, trusted_peers: set[str]) -> bool:
+    """判断 socket peer 是否为显式配置的可信 BFF peer。
+
+    采用规范化后的**精确成员匹配**：不因“同为 loopback”就互相信任。
+    Codex 第十九轮审阅 P0：旧版只要 trusted_peers 含任一回环地址，就信任
+    所有回环地址（含 127.0.0.2/127.1.1.1），导致配置 127.0.0.1 时
+    socket peer=127.0.0.2 伪造内部头会被错误采用，可分散来源限流。
+
+    规范化规则与配置一致：NFKC+trim+lower。``localhost`` 不再隐式等价于
+    ``127.0.0.1``；若需信任 ``localhost``，必须在 trusted_peers 中显式配置。
+    """
     if host is None:
         return False
-    if host in trusted_peers:
-        return True
-    if host == "localhost":
-        return "127.0.0.1" in trusted_peers or "::1" in trusted_peers
-    try:
-        return ip_address(host).is_loopback and any(
-            ip_address(peer).is_loopback for peer in trusted_peers
-        )
-    except ValueError:
+    normalized = host.strip().lower()
+    if not normalized:
         return False
+    return normalized in {peer.strip().lower() for peer in trusted_peers}
 
 
 def get_client_ip(request: Any, trusted_peers: set[str]) -> str:

@@ -674,21 +674,26 @@ async def test_browser_forged_source_header_stripped_by_bff(
 ) -> None:
     """T025 浏览器冒烟：浏览器携带伪造内部来源头仍被 BFF 重建。
 
-    Codex 第十八轮审阅 P1-3：浏览器即使设置伪造的
-    ``x-child-manager-client-ip`` 头，BFF 也必须剥离并重建为真实 peer IP。
-    本测试通过 ``set_extra_http_headers`` 注入伪造头，验证登录仍正常完成
-    （BFF 不信任浏览器头）。BFF 剥离逻辑的单元证据见
+    Codex 第十九轮审阅 P0：测试必须断言 API 实际观察到的来源不是伪造值，
+    不能只验证登录成功（BFF 原样转发伪造值也会通过）。
+    本测试通过 ``set_extra_http_headers`` 注入伪造头，登录后查询审计事件，
+    断言登录审计记录的 ``source_ip`` 是真实 peer（127.0.0.1），不是伪造值
+    203.0.113.99。BFF 剥离逻辑的单元证据见
     ``test_bff_proxy.py::test_proxy_strips_hop_by_hop_and_spoofed_source_headers``。
     """
     from playwright.async_api import async_playwright
 
+    from packages.backend.audit.models import AuditEvent
+    from packages.backend.database import session as session_module
+
     api_url, web_url, password = browser_stack
+    forged_ip = "203.0.113.99"
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
         context = await browser.new_context()
         # 注入伪造的内部来源头，模拟恶意浏览器尝试伪造客户端 IP。
-        await context.set_extra_http_headers({"x-child-manager-client-ip": "203.0.113.99"})
+        await context.set_extra_http_headers({"x-child-manager-client-ip": forged_ip})
         await _block_non_web_origins(context, web_url, api_url)
         page = await context.new_page()
 
@@ -705,6 +710,31 @@ async def test_browser_forged_source_header_stripped_by_bff(
             )
         finally:
             await browser.close()
+
+    # 查询审计事件，断言 API 实际记录的 source_ip 是真实 peer，不是伪造值。
+    # Codex 第十九轮审阅 P0：只验证登录成功是假阳性，BFF 原样转发伪造值也会通过。
+    session = session_module.SessionLocal()
+    try:
+        from sqlalchemy import select
+
+        stmt = (
+            select(AuditEvent)
+            .where(AuditEvent.event_code == "identity.login")
+            .where(AuditEvent.outcome == "success")
+            .order_by(AuditEvent.occurred_at.desc())
+            .limit(1)
+        )
+        login_event = session.execute(stmt).scalar_one_or_none()
+        assert login_event is not None, "未找到成功的登录审计事件"
+        recorded_ip = login_event.event_metadata.get("source_ip")
+        assert recorded_ip is not None, "登录审计事件未记录 source_ip"
+        assert recorded_ip != forged_ip, f"BFF 未剥离伪造来源头，审计记录了伪造值 {forged_ip}"
+        # 真实 peer 应为回环地址（127.0.0.1 或 ::1）。
+        assert recorded_ip in {"127.0.0.1", "::1", "localhost"}, (
+            f"审计记录的 source_ip 不是真实回环 peer: {recorded_ip}"
+        )
+    finally:
+        session.close()
 
 
 @pytest.mark.asyncio

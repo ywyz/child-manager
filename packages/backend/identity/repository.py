@@ -278,8 +278,18 @@ class IdentityRepository:
         token_hash: str,
         *,
         revoke_reason: str | None = None,
+        replaced_by_id: str | None = None,
     ) -> int:
-        """撤销单个 Refresh Token（用于正常轮换）。"""
+        """撤销单个 Refresh Token（用于正常轮换）。
+
+        Codex 第十九轮 P0-4：轮换时同一 UPDATE 必须同时写 ``revoked_at`` 与
+        ``replaced_by_id``，满足 CHECK ``ck_refresh_tokens_replaced_implies_revoked``
+        （``replaced_by_id IS NULL OR revoked_at IS NOT NULL``）。分两次 UPDATE 会
+        违反该约束，因此 ``replaced_by_id`` 必须随撤销同语句写入。
+        """
+        extra_values: dict[str, str] = (
+            {} if replaced_by_id is None else {"replaced_by_id": replaced_by_id}
+        )
         stmt = (
             update(RefreshToken)
             .where(
@@ -290,6 +300,7 @@ class IdentityRepository:
             .values(
                 revoked_at=datetime.now(UTC),
                 revoke_reason=revoke_reason,
+                **extra_values,
             )
         )
         result = self._session.execute(stmt)

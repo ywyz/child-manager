@@ -56,7 +56,11 @@ def main() -> None:
     api_host = urlsplit(args.api_base_url).hostname or "127.0.0.1"
     _require_loopback(api_host, "API 地址")
 
-    environment = os.environ.get("ENVIRONMENT", "production")
+    # 统一使用 CHILD_MANAGER_ 配置前缀（AGENTS §6.1）。
+    # Codex 第十九轮审阅 HARD：旧版读取裸 ENVIRONMENT 与统一配置体系不一致。
+    # Web 不得导入 packages.backend（T019 依赖方向），因此直接读取环境变量，
+    # 与 packages.backend.config.Settings 的 env_prefix="CHILD_MANAGER_" 一致。
+    environment = os.environ.get("CHILD_MANAGER_ENVIRONMENT", "production")
     validate_cookie_security(
         environment=environment,
         bind_host=args.host,

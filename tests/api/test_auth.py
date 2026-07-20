@@ -360,6 +360,63 @@ def test_change_password_wrong_current_password_returns_auth_login_failed(
     assert "原密码" in data["message"]
 
 
+def test_change_password_weak_new_password_returns_422(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """RED 回归：change-password 新密码为弱密码必须返回 422，不得外泄为 500。
+
+    Codex 第十九轮审阅 P0：旧版 validate_password 的 ValueError 在 change 路径
+    未被捕获，外泄为 500。冻结 OpenAPI 要求 422 ValidationError。
+    """
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert login.status_code == 200
+    access_cookie = login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    response = client.post(
+        "/api/v1/auth/change-password",
+        json={
+            "current_password": "ValidPassword2024!",
+            "new_password": "films+pic+galeries",
+        },
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "auth.invalid_password"
+
+
+def test_change_password_short_new_password_returns_422(
+    client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
+) -> None:
+    """RED 回归：change-password 新密码长度不足必须返回 422。
+
+    短密码（<15）由契约层 minLength 校验拦截，返回 422。
+    """
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert login.status_code == 200
+    access_cookie = login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    response = client.post(
+        "/api/v1/auth/change-password",
+        json={"current_password": "ValidPassword2024!", "new_password": "short"},
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert response.status_code == 422
+
+
 def test_login_with_phone_number(
     client: TestClient, csrf_cookie: dict[str, str], csrf_headers: dict[str, str]
 ) -> None:

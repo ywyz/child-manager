@@ -77,7 +77,7 @@ class ConflictError(IdentityError):
 
 
 class InvalidUsernameError(IdentityError):
-    """用户名经规范化后仍不满足非空、允许字符或长度约束时抛出。
+    """用户名经规范化后仍不满足非空或长度约束时抛出。
 
     NFKC 组合字符扩长会把原长 <=120 的契约合法输入变成 >120 的值，
     若不在统一边界拦截会写入 ``VARCHAR(120)`` 失败并把 DataError 外泄为 500。
@@ -85,3 +85,25 @@ class InvalidUsernameError(IdentityError):
 
     def __init__(self, message: str = "用户名格式无效") -> None:
         super().__init__("auth.invalid_username", message, status_code=422)
+
+
+class InvalidPhoneError(IdentityError):
+    """手机号经规范化后仍不满足 E.164 大陆手机号格式时抛出。
+
+    Codex 第十九轮审阅 P0：旧版 ``normalize_phone`` 的 ``ValueError`` 在
+    create/update/init 路径未被捕获，外泄为 500。冻结 OpenAPI 要求 422。
+    """
+
+    def __init__(self, message: str = "手机号格式无效") -> None:
+        super().__init__("auth.invalid_phone", message, status_code=422)
+
+
+class InvalidPasswordError(IdentityError):
+    """密码不满足长度或弱密码政策时抛出。
+
+    Codex 第十九轮审阅 P0：旧版 ``validate_password`` 的 ``ValueError`` 在
+    create/change/reset 路径未被捕获，外泄为 500。冻结 OpenAPI 要求 422。
+    """
+
+    def __init__(self, message: str = "密码不满足复杂度要求") -> None:
+        super().__init__("auth.invalid_password", message, status_code=422)
