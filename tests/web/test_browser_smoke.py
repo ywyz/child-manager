@@ -206,11 +206,14 @@ def browser_stack(migrated_database_url: str) -> Iterator[tuple[str, str, str]]:
 
     original_web_port = settings_module.web_port
     settings_module.web_port = web_port
-    # Issue #6 M2 Final Fix Area 3：test 默认 cookie_secure=True，但浏览器冒烟
-    # 测试通过 HTTP（非 HTTPS）用 httpx 直连 API 设置数据；httpx 严格遵循
-    # Secure 标记，不会在 HTTP 连接上发送 Secure Cookie。此处显式配置
-    # cookie_secure=False（用户要求：测试需要时必须显式配置）。
+    # Codex M2 Final Contract Freeze M2-F03：test 环境强制 Secure=true；
+    # 仅 development 在回环绑定下允许关闭 Secure。浏览器冒烟测试通过 HTTP
+    # （非 HTTPS）用 httpx 直连 API 设置数据；httpx 严格遵循 Secure 标记，
+    # 不会在 HTTP 连接上发送 Secure Cookie。此处显式切换到 development 环境
+    # 并关闭 Secure，与 validate_cookie_security 的 development 回环例外一致。
+    original_environment = settings_module.environment
     original_cookie_secure = settings_module.cookie_secure
+    settings_module.environment = "development"
     settings_module.cookie_secure = False
 
     async def _true() -> bool:
@@ -306,8 +309,9 @@ def browser_stack(migrated_database_url: str) -> Iterator[tuple[str, str, str]]:
         api_server.should_exit = True
         api_thread.join(timeout=5)
 
-        # 恢复 settings.web_port 避免污染其他测试
+        # 恢复 settings 避免污染其他测试
         settings_module.web_port = original_web_port
+        settings_module.environment = original_environment
         settings_module.cookie_secure = original_cookie_secure
 
 

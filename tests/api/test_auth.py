@@ -819,9 +819,14 @@ def test_login_cookies_secure_false_only_when_explicitly_configured(
     csrf_headers: dict[str, str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """显式配置 cookie_secure=False 时 Cookie 不带 Secure（模拟开发环境）。"""
+    """显式配置 cookie_secure=False 时 Cookie 不带 Secure（模拟开发环境）。
+
+    Codex M2 Final Contract Freeze M2-F03：test 环境强制 Secure=true；
+    仅 development 在回环绑定下允许关闭 Secure。本测试模拟 development 环境。
+    """
     from packages.backend.config import settings
 
+    monkeypatch.setattr(settings, "environment", "development")
     monkeypatch.setattr(settings, "cookie_secure", False)
     response = client.post(
         "/api/v1/auth/login",

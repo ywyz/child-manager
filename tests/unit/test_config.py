@@ -1,3 +1,5 @@
+import pytest
+
 from packages.backend.config import Settings
 
 
@@ -123,3 +125,27 @@ def test_cookie_secure_test_defaults_true() -> None:
     """
     settings = Settings(environment="test")
     assert settings.cookie_secure is True
+
+
+def test_cookie_secure_test_env_forces_secure_true() -> None:
+    """test 环境强制 Secure=true，显式 cookie_secure=False 必须被拒绝。
+
+    Codex M2 Final Contract Freeze M2-F03：test 默认并强制 Secure=true。
+    production/test 均不接受 cookie_secure=False；仅 development 在回环绑定下
+    允许关闭 Secure。
+    """
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        Settings(environment="test", cookie_secure=False)
+
+
+def test_cookie_security_test_env_rejects_false() -> None:
+    """validate_cookie_security 在 test 环境必须拒绝 cookie_secure=False。
+
+    Codex M2-F03：test 强制 Secure=true；仅 development 显式回环本地调试
+    允许 false。test 环境即使绑定回环地址也不得关闭 Secure。
+    """
+    settings = Settings(environment="test")
+    with pytest.raises(ValueError, match="非开发环境必须启用 Cookie Secure"):
+        settings.validate_cookie_security(bind_host="127.0.0.1", cookie_secure=False)

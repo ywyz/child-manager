@@ -11,13 +11,13 @@ def validate_cookie_security(
 ) -> None:
     """校验 Cookie Secure 与绑定地址的组合是否合法。
 
-    仅非生产环境（development/test）允许关闭 Secure；关闭 Secure 时进程必须绑定回环地址。
-    Codex 第十九轮审阅 HARD：Web 从裸 ENVIRONMENT 改为 CHILD_MANAGER_ENVIRONMENT 后，
-    测试环境为 ``test``，必须在回环绑定下允许关闭 Secure（与 API 的 secure=False 一致）。
+    Codex M2 Final Contract Freeze M2-F03：test 默认并强制 Secure=true；
+    development 仅显式回环本地调试允许 false；production 强制 true。
+    因此只有 development 在绑定回环地址时允许关闭 Secure。
     """
     if cookie_secure:
         return
-    if environment not in {"development", "test"}:
+    if environment != "development":
         raise ValueError("非开发环境必须启用 Cookie Secure")
     try:
         is_loopback = ip_address(bind_host).is_loopback

@@ -66,9 +66,14 @@ class Settings(BaseSettings):
         return data
 
     @model_validator(mode="after")
-    def _production_requires_secure_cookie(self) -> Settings:
-        if self.environment == "production" and not self.cookie_secure:
-            raise ValueError("production 环境必须启用 Cookie Secure")
+    def _non_development_requires_secure_cookie(self) -> Settings:
+        """Codex M2 Final Contract Freeze M2-F03：test/production 强制 Secure=true。
+
+        仅 development 允许 cookie_secure=False（仍需回环绑定）；
+        test 与 production 均不接受 cookie_secure=False。
+        """
+        if self.environment in ("production", "test") and not self.cookie_secure:
+            raise ValueError(f"{self.environment} 环境必须启用 Cookie Secure")
         return self
 
     @field_validator("api_host", "web_host")
