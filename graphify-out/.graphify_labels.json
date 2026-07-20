@@ -222,5 +222,7 @@
   "220": "._validate_role_codes",
   "221": "main.py",
   "222": ".__init__",
-  "223": "UserRole"
+  "223": "UserRole",
+  "224": "main.py",
+  "225": "3.5 API、任务状态与幂等"
 }
