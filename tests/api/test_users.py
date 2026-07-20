@@ -650,3 +650,97 @@ def test_reset_password_requires_admin(client: TestClient) -> None:
         cookies=_CSRF_COOKIE,
     )
     assert response.status_code == 401
+
+
+# --- OpenAPI 与 Runtime 一致性（Issue #6 M2 Final Fix Area 1）---
+# 验证 403（CSRF/权限）/422（参数校验）/404（不存在）与冻结 OpenAPI 声明一致。
+
+
+def test_create_user_missing_required_fields_returns_422(client: TestClient) -> None:
+    """OpenAPI 声明 POST /users 422；缺少必填字段必须返回 422，不得 500。"""
+    cookies = _admin_session(client)
+    response = client.post(
+        "/api/v1/users",
+        json={"username": "only_username"},  # 缺少 display_name/password/role_codes
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "request.validation_failed"
+
+
+def test_get_nonexistent_user_returns_404(client: TestClient) -> None:
+    """OpenAPI 声明 GET /users/{user_id} 404；不存在必须返回 404。"""
+    cookies = _admin_session(client)
+    response = client.get(
+        "/api/v1/users/00000000-0000-7000-8000-000000000000",
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 404
+    assert response.json()["code"] == "resource.not_found"
+
+
+def test_create_user_without_csrf_returns_403(client: TestClient) -> None:
+    """OpenAPI 声明 POST /users 403；已认证但无 CSRF 必须返回 403。
+
+    Users 端点的 403 覆盖 CSRF 失败与权限不足两种情况。此处验证已认证
+    管理员缺少 CSRF 头时返回 403（auth.csrf_invalid），而非 401 或 500。
+    """
+    cookies = _admin_session(client)
+    response = client.post(
+        "/api/v1/users",
+        json={
+            "username": "no_csrf_user",
+            "display_name": "无CSRF",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        cookies=cookies,  # 有 access cookie 但故意不传 CSRF 头/origin
+    )
+    assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"
+
+
+def test_update_user_empty_body_returns_422(client: TestClient) -> None:
+    """OpenAPI 声明 PATCH /users/{user_id} 422；空 body 必须返回 422。
+
+    UserPatch 要求 minProperties: 1，空对象不得通过。
+    """
+    cookies = _admin_session(client)
+    create = client.post(
+        "/api/v1/users",
+        json={
+            "username": "patch_empty",
+            "display_name": "教师",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    user_id = create.json()["id"]
+
+    response = client.patch(
+        f"/api/v1/users/{user_id}",
+        json={},
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "request.validation_failed"
+
+
+def test_reset_password_nonexistent_user_returns_404(client: TestClient) -> None:
+    """OpenAPI 声明 POST /users/{user_id}/reset-password 404；不存在必须 404。"""
+    cookies = _admin_session(client)
+    response = client.post(
+        "/api/v1/users/00000000-0000-7000-8000-000000000000/reset-password",
+        json={"new_password": "NewPassword2024!"},
+        headers=_CSRF_HEADERS,
+        cookies=cookies,
+    )
+    assert response.status_code == 404
+    assert response.json()["code"] == "resource.not_found"

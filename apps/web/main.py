@@ -61,10 +61,18 @@ def main() -> None:
     # Web 不得导入 packages.backend（T019 依赖方向），因此直接读取环境变量，
     # 与 packages.backend.config.Settings 的 env_prefix="CHILD_MANAGER_" 一致。
     environment = os.environ.get("CHILD_MANAGER_ENVIRONMENT", "production")
+    # Issue #6 M2 Final Fix Area 3：test 禁止默认关闭 Secure。
+    # development 默认 Secure=false；production 与 test 默认 Secure=true。
+    # 显式 CHILD_MANAGER_COOKIE_SECURE 优先于环境默认值。
+    cookie_secure_env = os.environ.get("CHILD_MANAGER_COOKIE_SECURE")
+    if cookie_secure_env is not None:
+        cookie_secure = cookie_secure_env.strip().lower() in ("true", "1", "yes")
+    else:
+        cookie_secure = environment != "development"
     validate_cookie_security(
         environment=environment,
         bind_host=args.host,
-        cookie_secure=environment == "production",
+        cookie_secure=cookie_secure,
     )
 
     register_web(api_base_url=args.api_base_url)

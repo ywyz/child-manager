@@ -690,3 +690,293 @@ def test_refresh_with_malformed_values_returns_unauthenticated(
         )
         assert response.status_code == 401, f"malformed value={value!r}"
         assert response.json()["code"] == "auth.unauthenticated"
+
+
+# --- Trusted BFF Peer 配置化（Issue #6 M2 Final Fix Area 2）---
+
+
+def test_bff_peer_config_empty_ignores_internal_header(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """trusted_bff_peers 为空时必须忽略伪造的内部转发头。
+
+    production 默认 trusted_bff_peers=[]。此时 x-child-manager-client-ip 头
+    不得影响来源限流键，所有请求归属真实 socket peer（127.0.0.1），
+    30 次失败后第 31 次必须 429。
+    """
+    from apps.api.routers import auth as auth_router
+    from packages.backend.config import settings
+
+    monkeypatch.setattr(settings, "trusted_bff_peers", [])
+
+    async def _no_sleep(_: float) -> None:
+        return None
+
+    original_sleeper = auth_router._account_sleeper
+    auth_router._account_sleeper = _no_sleep
+    try:
+        spoofed_headers = {**csrf_headers, "x-child-manager-client-ip": "203.0.113.77"}
+        for i in range(30):
+            client.post(
+                "/api/v1/auth/login",
+                json={"login": f"user-{i}", "password": "wrong"},
+                headers=spoofed_headers,
+                cookies=csrf_cookie,
+            )
+        # 伪造头被忽略，来源仍为 127.0.0.1，30 次失败后必须 429。
+        response = client.post(
+            "/api/v1/auth/login",
+            json={"login": "any-user", "password": "wrong"},
+            headers=spoofed_headers,
+            cookies=csrf_cookie,
+        )
+        assert response.status_code == 429
+    finally:
+        auth_router._account_sleeper = original_sleeper
+
+
+def test_bff_peer_configured_uses_internal_header(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """trusted_bff_peers 包含 socket peer 时必须信任内部转发头。
+
+    显式配置 TestClient 的 socket peer（"testclient"）后，
+    x-child-manager-client-ip 头被采用，来源限流键漂移到伪造值。
+    30 次失败归属 203.0.113.77；不带伪造头的第 31 次请求来源为真实
+    "testclient"，0 次失败，必须返回 401 而非 429。
+    """
+    from apps.api.routers import auth as auth_router
+    from packages.backend.config import settings
+
+    monkeypatch.setattr(settings, "trusted_bff_peers", ["testclient"])
+
+    async def _no_sleep(_: float) -> None:
+        return None
+
+    original_sleeper = auth_router._account_sleeper
+    auth_router._account_sleeper = _no_sleep
+    try:
+        spoofed_headers = {**csrf_headers, "x-child-manager-client-ip": "203.0.113.77"}
+        for i in range(30):
+            client.post(
+                "/api/v1/auth/login",
+                json={"login": f"user-{i}", "password": "wrong"},
+                headers=spoofed_headers,
+                cookies=csrf_cookie,
+            )
+        # 不带伪造头的请求来源为真实 testclient，未积累失败，必须 401。
+        response = client.post(
+            "/api/v1/auth/login",
+            json={"login": "any-user", "password": "wrong"},
+            headers=csrf_headers,
+            cookies=csrf_cookie,
+        )
+        assert response.status_code == 401
+        assert response.json()["code"] == "auth.login_failed"
+    finally:
+        auth_router._account_sleeper = original_sleeper
+
+
+# --- Cookie Secure Policy（Issue #6 M2 Final Fix Area 3）---
+
+
+def test_login_cookies_carry_secure_flag_in_test_environment(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+) -> None:
+    """test 环境默认 cookie_secure=True，access/refresh Cookie 必须带 Secure。
+
+    旧版 secure=environment=='production' 让 test 默认 Secure=false，
+    无法发现 Secure 相关回归。
+    """
+    from packages.backend.config import settings
+
+    assert settings.cookie_secure is True
+
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 200
+    cookies = response.headers.get_list("set-cookie")
+    secure_cookies = [c for c in cookies if "Secure" in c]
+    # access + refresh + csrf 三条 Cookie 都必须带 Secure。
+    assert len(secure_cookies) == 3
+
+
+def test_login_cookies_secure_false_only_when_explicitly_configured(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """显式配置 cookie_secure=False 时 Cookie 不带 Secure（模拟开发环境）。"""
+    from packages.backend.config import settings
+
+    monkeypatch.setattr(settings, "cookie_secure", False)
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 200
+    cookies = response.headers.get_list("set-cookie")
+    secure_cookies = [c for c in cookies if "Secure" in c]
+    assert secure_cookies == []
+
+
+def test_csrf_endpoint_cookie_carries_secure_flag_in_test_environment(
+    client: TestClient,
+) -> None:
+    """csrf 端点签发的 CSRF Cookie 在 test 环境也必须带 Secure。"""
+    response = client.get("/api/v1/auth/csrf")
+    assert response.status_code == 200
+    cookies = response.headers.get_list("set-cookie")
+    csrf_cookies = [c for c in cookies if c.startswith("child_manager_csrf=")]
+    assert len(csrf_cookies) == 1
+    assert "Secure" in csrf_cookies[0]
+
+
+# --- OpenAPI 与 Runtime 一致性（Issue #6 M2 Final Fix Area 1）---
+# 验证 401（认证失败）/403（CSRF 或权限失败）/422（参数校验）/429（限流）
+# 在运行时的实际返回与冻结 OpenAPI 声明一致。
+
+
+def test_login_missing_password_field_returns_422(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+) -> None:
+    """OpenAPI 声明 login 422；缺少 password 字段必须返回 422，不得 500。"""
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin"},  # 缺少 password
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 422
+    data = response.json()
+    assert data["code"] == "request.validation_failed"
+
+
+def test_login_missing_login_field_returns_422(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+) -> None:
+    """OpenAPI 声明 login 422；缺少 login 字段必须返回 422。"""
+    response = client.post(
+        "/api/v1/auth/login",
+        json={"password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 422
+
+
+def test_refresh_without_csrf_returns_403_not_401(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+) -> None:
+    """OpenAPI 声明 refresh 403（CSRF 失败）；无 CSRF 时必须 403，不得 401。
+
+    refresh 同时声明 401 与 403：401 用于无有效 Refresh Cookie，403 用于
+    CSRF/来源错误。CSRF 校验先于 Cookie 校验，无 CSRF 必须返回 403。
+    """
+    response = client.post(
+        "/api/v1/auth/refresh",
+        cookies=csrf_cookie,
+        # 故意不传 origin/x-csrf-token
+    )
+    assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"
+
+
+def test_refresh_with_csrf_but_no_cookie_returns_401_not_403(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+) -> None:
+    """OpenAPI 声明 refresh 401（认证失败）；CSRF 通过但无 Refresh Cookie 必须 401。"""
+    response = client.post(
+        "/api/v1/auth/refresh",
+        headers=csrf_headers,
+        cookies=csrf_cookie,  # 有 CSRF Cookie 但无 refresh Cookie
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_change_password_missing_fields_returns_422(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+) -> None:
+    """OpenAPI 声明 change-password 422；缺少 new_password 必须返回 422。"""
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    access_cookie = login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    response = client.post(
+        "/api/v1/auth/change-password",
+        json={"current_password": "ValidPassword2024!"},  # 缺少 new_password
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert response.status_code == 422
+    assert response.json()["code"] == "request.validation_failed"
+
+
+def test_change_password_without_csrf_returns_403(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+) -> None:
+    """OpenAPI 声明 change-password 403；已认证但无 CSRF 必须返回 403。"""
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    access_cookie = login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    response = client.post(
+        "/api/v1/auth/change-password",
+        json={"current_password": "ValidPassword2024!", "new_password": "NewPassword2024!"},
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+        # 故意不传 origin/x-csrf-token
+    )
+    assert response.status_code == 403
+    assert response.json()["code"] == "auth.csrf_invalid"
+
+
+def test_me_without_access_cookie_returns_401(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+) -> None:
+    """OpenAPI 声明 me 401；无 Access Cookie 必须返回 401。"""
+    response = client.get(
+        "/api/v1/auth/me",
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"

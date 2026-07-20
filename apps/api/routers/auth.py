@@ -33,8 +33,6 @@ from packages.contracts.identity import (
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-_TRUSTED_BFF_PEERS = {"127.0.0.1", "::1", "localhost"}
-
 
 def _build_throttle() -> LoginThrottle:
     if settings.environment == "test":
@@ -56,12 +54,21 @@ REFRESH_COOKIE_NAME = "child_manager_refresh"
 CSRF_COOKIE_NAME = "child_manager_csrf"
 
 
+def _trusted_bff_peers() -> set[str]:
+    """从配置读取可信 BFF peer 集合。
+
+    Issue #6 M2 Final Fix：删除硬编码回环地址常量，改由 settings.trusted_bff_peers
+    驱动。development/test 默认支持本地回环；production 必须显式配置。
+    """
+    return {peer.strip().lower() for peer in settings.trusted_bff_peers if peer.strip()}
+
+
 def _set_csrf_cookie(response: Response, csrf_token: str) -> None:
     response.set_cookie(
         key=CSRF_COOKIE_NAME,
         value=csrf_token,
         httponly=False,
-        secure=settings.environment == "production",
+        secure=settings.cookie_secure,
         samesite="lax",
         path="/",
         max_age=7 * 24 * 60 * 60,
@@ -80,7 +87,7 @@ def _set_auth_cookies(
         value=access_token,
         max_age=settings.jwt_expire_minutes * 60,
         httponly=True,
-        secure=settings.environment == "production",
+        secure=settings.cookie_secure,
         samesite="lax",
         path="/",
     )
@@ -89,7 +96,7 @@ def _set_auth_cookies(
         value=refresh_token,
         max_age=7 * 24 * 60 * 60,
         httponly=True,
-        secure=settings.environment == "production",
+        secure=settings.cookie_secure,
         samesite="lax",
         path="/",
     )
@@ -103,7 +110,7 @@ def _clear_auth_cookies(response: Response) -> None:
             value="",
             max_age=0,
             httponly=True,
-            secure=settings.environment == "production",
+            secure=settings.cookie_secure,
             samesite="lax",
             path="/",
         )
@@ -112,7 +119,7 @@ def _clear_auth_cookies(response: Response) -> None:
         value="",
         max_age=0,
         httponly=False,
-        secure=settings.environment == "production",
+        secure=settings.cookie_secure,
         samesite="lax",
         path="/",
     )
@@ -143,7 +150,7 @@ async def login(
 ) -> CurrentUser:
     check_csrf(request)
 
-    source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
+    source_ip = get_client_ip(request, trusted_peers=_trusted_bff_peers())
     # 登录输入可能是用户名或手机号。normalize_username 在统一边界校验 NFKC 后
     # 非空与长度 <=120；输入不符合用户名格式（例如带 ``+`` 的 E.164
     # 手机号）时退化为原始输入的小写形式作为限流键，避免把有效登录请求变成 500。
@@ -229,7 +236,7 @@ async def logout(
 
     access_cookie = request.cookies.get(ACCESS_COOKIE_NAME)
     refresh_cookie = request.cookies.get(REFRESH_COOKIE_NAME)
-    source_ip = get_client_ip(request, trusted_peers=_TRUSTED_BFF_PEERS)
+    source_ip = get_client_ip(request, trusted_peers=_trusted_bff_peers())
     service = IdentityService(session)
     service.logout(
         access_token=access_cookie,

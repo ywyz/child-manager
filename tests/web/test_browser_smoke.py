@@ -206,6 +206,12 @@ def browser_stack(migrated_database_url: str) -> Iterator[tuple[str, str, str]]:
 
     original_web_port = settings_module.web_port
     settings_module.web_port = web_port
+    # Issue #6 M2 Final Fix Area 3：test 默认 cookie_secure=True，但浏览器冒烟
+    # 测试通过 HTTP（非 HTTPS）用 httpx 直连 API 设置数据；httpx 严格遵循
+    # Secure 标记，不会在 HTTP 连接上发送 Secure Cookie。此处显式配置
+    # cookie_secure=False（用户要求：测试需要时必须显式配置）。
+    original_cookie_secure = settings_module.cookie_secure
+    settings_module.cookie_secure = False
 
     async def _true() -> bool:
         return True
@@ -302,6 +308,7 @@ def browser_stack(migrated_database_url: str) -> Iterator[tuple[str, str, str]]:
 
         # 恢复 settings.web_port 避免污染其他测试
         settings_module.web_port = original_web_port
+        settings_module.cookie_secure = original_cookie_secure
 
 
 @pytest.mark.asyncio

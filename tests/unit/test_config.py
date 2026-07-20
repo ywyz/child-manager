@@ -65,3 +65,61 @@ def test_environment_rejects_unknown_values():
         raise AssertionError("应该抛出 ValidationError")
     except ValidationError:
         pass
+
+
+# --- Trusted BFF Peer 配置化（Issue #6 M2 Final Fix Area 2）---
+
+
+def test_trusted_bff_peers_development_default_supports_local() -> None:
+    """development 默认包含回环地址，支持本地 BFF 转发。"""
+    settings = Settings(environment="development")
+    peers = {p.strip().lower() for p in settings.trusted_bff_peers}
+    assert "127.0.0.1" in peers
+
+
+def test_trusted_bff_peers_test_default_supports_local() -> None:
+    """test 默认包含回环地址，支持本地测试 BFF 转发。"""
+    settings = Settings(environment="test")
+    peers = {p.strip().lower() for p in settings.trusted_bff_peers}
+    assert "127.0.0.1" in peers
+
+
+def test_trusted_bff_peers_production_default_empty() -> None:
+    """production 默认为空，必须显式配置才能信任 BFF peer。
+
+    硬编码回环地址会让生产部署在非回环拓扑下静默信任错误的内部转发头。
+    """
+    settings = Settings(environment="production")
+    assert settings.trusted_bff_peers == []
+
+
+def test_trusted_bff_peers_can_be_overridden() -> None:
+    """trusted_bff_peers 可通过配置显式覆盖。"""
+    settings = Settings(environment="production", trusted_bff_peers=["10.0.0.5"])
+    assert settings.trusted_bff_peers == ["10.0.0.5"]
+
+
+# --- Cookie Secure Policy（Issue #6 M2 Final Fix Area 3）---
+
+
+def test_cookie_secure_production_defaults_true() -> None:
+    """production 默认 Secure=true。"""
+    settings = Settings(environment="production")
+    assert settings.cookie_secure is True
+
+
+def test_cookie_secure_development_defaults_false() -> None:
+    """development 允许默认 Secure=false。"""
+    settings = Settings(environment="development")
+    assert settings.cookie_secure is False
+
+
+def test_cookie_secure_test_defaults_true() -> None:
+    """test 禁止默认关闭 Secure；默认必须为 true。
+
+    旧版 secure=environment=='production' 让 test 默认 Secure=false，
+    无法发现 Secure 相关回归。test 默认必须与 production 一致为 true；
+    如测试确实需要关闭，必须显式配置。
+    """
+    settings = Settings(environment="test")
+    assert settings.cookie_secure is True
