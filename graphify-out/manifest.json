@@ -65,8 +65,8 @@
     "semantic_hash": ""
   },
   "apps/api/app.py": {
-    "mtime": 1784550220.6558638,
-    "ast_hash": "fb426c674018bc0150012bf612233e35",
+    "mtime": 1784558998.0741565,
+    "ast_hash": "2d51c9929fa953b9b137e72ea990950d",
     "semantic_hash": ""
   },
   "apps/api/dependencies.py": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "packages/contracts/common.py": {
-    "mtime": 1784124161.9892719,
-    "ast_hash": "8a780809cbfa3b9552db29b680b6cbde",
+    "mtime": 1784558840.4423244,
+    "ast_hash": "f0af19edd22ae501550621635a1b7072",
     "semantic_hash": ""
   },
   "packages/contracts/exports.py": {
@@ -295,8 +295,8 @@
     "semantic_hash": ""
   },
   "packages/contracts/identity.py": {
-    "mtime": 1784549926.7423937,
-    "ast_hash": "e25d3ed249a75ff2d211089692f6917c",
+    "mtime": 1784559325.9298887,
+    "ast_hash": "762f279865562a97d58027ea746fee9e",
     "semantic_hash": ""
   },
   "packages/contracts/jobs.py": {
@@ -380,8 +380,8 @@
     "semantic_hash": ""
   },
   "tests/contract/test_common_contracts.py": {
-    "mtime": 1784121192.7981756,
-    "ast_hash": "0d12b27a9b3e5ff70449b5186a66c24c",
+    "mtime": 1784559220.301094,
+    "ast_hash": "168ee614aec8e96604145e8a74721f5c",
     "semantic_hash": ""
   },
   "tests/contract/test_idempotency.py": {
@@ -390,8 +390,8 @@
     "semantic_hash": ""
   },
   "tests/contract/test_openapi_document.py": {
-    "mtime": 1784550566.3148575,
-    "ast_hash": "b310f2b9b580938e64a02f4a599832dd",
+    "mtime": 1784560000.7943368,
+    "ast_hash": "3cf0da3c4fdb3a828484dd92cfdc864d",
     "semantic_hash": ""
   },
   "tests/database_config.py": {
@@ -795,18 +795,18 @@
     "semantic_hash": ""
   },
   "tests/contract/test_t005_contracts.py": {
-    "mtime": 1784550014.5926697,
-    "ast_hash": "999c920c08cbac68c9095643ff4e5da2",
+    "mtime": 1784559337.3322957,
+    "ast_hash": "e7fadeeb3d7f0b6b6ef3171a560c1a7a",
     "semantic_hash": ""
   },
   "apps/api/routers/auth.py": {
-    "mtime": 1784550384.2484772,
-    "ast_hash": "13054ff3bbecf3c4988b0422df9d05a2",
+    "mtime": 1784558949.3474295,
+    "ast_hash": "95594e2a72423b88849952ce59da41d3",
     "semantic_hash": ""
   },
   "apps/api/routers/users.py": {
-    "mtime": 1784550566.3718596,
-    "ast_hash": "d028c173c558151c8959051c4846b636",
+    "mtime": 1784558891.9884057,
+    "ast_hash": "7bc9dd3ea0f6d6f5298484151948a7ed",
     "semantic_hash": ""
   },
   "apps/web/components/navigation.py": {
@@ -890,8 +890,8 @@
     "semantic_hash": ""
   },
   "tests/api/test_auth.py": {
-    "mtime": 1784553571.6556556,
-    "ast_hash": "a1a9c3a36a176de82c650f4a691853f3",
+    "mtime": 1784559035.7894974,
+    "ast_hash": "0cabd8a419684b7cf72e890c20f94bf5",
     "semantic_hash": ""
   },
   "tests/api/test_csrf.py": {
@@ -910,13 +910,13 @@
     "semantic_hash": ""
   },
   "tests/contract/test_auth_contract.py": {
-    "mtime": 1784425391.4030378,
-    "ast_hash": "3fa0c15afdc10c7f9eb0760970f18b49",
+    "mtime": 1784559352.6118267,
+    "ast_hash": "4246a04a98f3cbf2368f71fc8a4e05fe",
     "semantic_hash": ""
   },
   "tests/contract/test_users_contract.py": {
-    "mtime": 1784550577.7072604,
-    "ast_hash": "951d162d1945279b293f9a5b3a566ef7",
+    "mtime": 1784559022.595028,
+    "ast_hash": "431bfdb183c4b0cc9d1e69512f6598ab",
     "semantic_hash": ""
   },
   "tests/migrations/test_0001_identity.py": {
@@ -955,8 +955,8 @@
     "semantic_hash": ""
   },
   "tests/web/test_auth_smoke.py": {
-    "mtime": 1784364388.0436413,
-    "ast_hash": "1a2264a2ba69bc9ae6c902ad549ff897",
+    "mtime": 1784559188.0739384,
+    "ast_hash": "63afdfa2ee25a1687625a08f862e64f7",
     "semantic_hash": ""
   },
   "docs/development/m2-issue-drafts.md": {
@@ -980,8 +980,8 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/service.py": {
-    "mtime": 1784550641.6114962,
-    "ast_hash": "0214074456b5068e168654787e463764",
+    "mtime": 1784558879.9029808,
+    "ast_hash": "addc24e21a76ae75b96b20014163efc8",
     "semantic_hash": ""
   },
   "packages/security/cookie.py": {
@@ -1095,13 +1095,13 @@
     "semantic_hash": ""
   },
   "tests/web/test_browser_smoke.py": {
-    "mtime": 1784553633.313694,
-    "ast_hash": "181d6df7f8d71c5181804d45191c4935",
+    "mtime": 1784559861.8785088,
+    "ast_hash": "108f41ca8c7eb164525991aaabcf25bf",
     "semantic_hash": ""
   },
   "apps/api/openapi_responses.py": {
-    "mtime": 1784550084.7032852,
-    "ast_hash": "3f38c04a558ef03dd66a03e708298e3f",
+    "mtime": 1784558958.490753,
+    "ast_hash": "ec64f31df03e282f584a3e56726f98f0",
     "semantic_hash": ""
   }
 }

@@ -30,16 +30,25 @@ class KindergartenSnapshot(BaseModel):
 
 
 class CurrentUser(BaseModel):
-    """当前登录用户。"""
+    """当前登录用户。
+
+    required 集合按冻结 OpenAPI 契约 ``#/components/schemas/CurrentUser`` 收敛：
+    username 不在 required 中（可选属性）。
+    """
 
     model_config = ConfigDict(extra="forbid")
 
-    id: str = Field(..., pattern=_UUID_RE, description="用户ID")
-    username: str = Field(..., min_length=1, max_length=120, description="用户名")
+    id: str = Field(
+        ...,
+        pattern=_UUID_RE,
+        json_schema_extra={"format": "uuid"},
+        description="用户ID",
+    )
+    username: str | None = Field(default=None, max_length=120, description="用户名")
     display_name: str = Field(..., min_length=1, max_length=120, description="显示名称")
     kindergarten: KindergartenSnapshot = Field(..., description="所属园所快照")
-    role_codes: list[str] = Field(default_factory=list, description="角色代码列表")
-    capabilities: list[str] = Field(default_factory=list, description="能力标签列表")
+    role_codes: list[str] = Field(..., description="角色代码列表")
+    capabilities: list[str] = Field(..., description="能力标签列表")
 
     @field_validator("role_codes")
     @classmethod
@@ -118,8 +127,11 @@ def _validate_response_role_codes(value: list[str]) -> list[str]:
     return codes
 
 
-class UserCreateRequest(BaseModel):
-    """创建用户请求。"""
+class CreateUserRequest(BaseModel):
+    """创建用户请求。
+
+    Schema 名称按冻结 OpenAPI 契约 ``#/components/schemas/CreateUserRequest`` 收敛。
+    """
 
     model_config = ConfigDict(extra="forbid")
 
@@ -175,15 +187,16 @@ class User(BaseModel):
     """用户响应。
 
     Schema 名称与字段约束按冻结 OpenAPI 契约 `#/components/schemas/User` 收敛：
-    id 为 UUID 格式、role_codes 唯一且枚举 admin/teacher、items 必填。
+    id 为 UUID 格式（运行时 pattern 校验）、phone_e164 为 required nullable、
+    role_codes 唯一且枚举 admin/teacher、items 必填。
     """
 
     model_config = ConfigDict(extra="forbid")
 
-    id: str = Field(..., json_schema_extra={"format": "uuid"}, description="用户ID")
+    id: str = Field(..., pattern=_UUID_RE, description="用户ID")
     username: str = Field(..., min_length=1, max_length=120, description="用户名")
     display_name: str = Field(..., min_length=1, max_length=120, description="显示名称")
-    phone_e164: str | None = Field(default=None, max_length=32, description="手机号(E.164)")
+    phone_e164: str | None = Field(..., max_length=32, description="手机号(E.164)")
     role_codes: list[RoleCode] = Field(
         ...,
         json_schema_extra={"uniqueItems": True},

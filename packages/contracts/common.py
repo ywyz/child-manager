@@ -9,7 +9,12 @@ from pydantic import BaseModel, ConfigDict, Field
 T = TypeVar("T")
 
 
-class FieldError(BaseModel):
+class ErrorField(BaseModel):
+    """字段级错误项。
+
+    Schema 名称与冻结 OpenAPI 契约 ``#/components/schemas/ErrorField`` 对齐。
+    """
+
     model_config = ConfigDict(extra="forbid")
 
     field: str = Field(..., description="字段路径")
@@ -27,7 +32,7 @@ class ErrorResponse(BaseModel):
     )
     message: str = Field(..., description="中文错误消息")
     request_id: UUID = Field(..., description="请求 ID (UUID)")
-    field_errors: list[FieldError] = Field(..., description="字段级错误")
+    field_errors: list[ErrorField] = Field(..., description="字段级错误")
 
 
 class PaginatedResponse[T](BaseModel):

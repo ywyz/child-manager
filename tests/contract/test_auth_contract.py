@@ -97,6 +97,7 @@ def test_current_user_rejects_duplicate_role_codes() -> None:
                 name="实验幼儿园",
             ),
             role_codes=["admin", "admin"],
+            capabilities=[],
         )
 
 
@@ -111,6 +112,7 @@ def test_current_user_rejects_unknown_role_codes() -> None:
                 name="实验幼儿园",
             ),
             role_codes=["superadmin"],
+            capabilities=[],
         )
 
 
@@ -124,5 +126,6 @@ def test_current_user_rejects_duplicate_capabilities() -> None:
                 id="22222222-2222-2222-2222-222222222222",
                 name="实验幼儿园",
             ),
+            role_codes=["teacher"],
             capabilities=["read", "read"],
         )

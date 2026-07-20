@@ -91,8 +91,12 @@ def _set_auth_cookies(
     *,
     access_token: str,
     refresh_token: str,
-    csrf_token: str,
 ) -> None:
+    """设置 access + refresh 两条 Cookie。
+
+    M2-F01：冻结契约 AuthSetCookies 要求恰好 2 条 Set-Cookie；
+    CSRF Cookie 由独立的 /auth/csrf 端点签发，不在登录/刷新中重复设置。
+    """
     response.set_cookie(
         key=ACCESS_COOKIE_NAME,
         value=access_token,
@@ -111,10 +115,14 @@ def _set_auth_cookies(
         samesite="lax",
         path="/",
     )
-    _set_csrf_cookie(response, csrf_token)
 
 
 def _clear_auth_cookies(response: Response) -> None:
+    """清除 access + refresh 两条 Cookie。
+
+    M2-F01：冻结契约 ClearAuthCookies 要求恰好 2 条 Set-Cookie；
+    CSRF Cookie 不在退出中清除，由浏览器自然过期或由下次 /auth/csrf 覆盖。
+    """
     for name in (ACCESS_COOKIE_NAME, REFRESH_COOKIE_NAME):
         response.set_cookie(
             key=name,
@@ -125,15 +133,6 @@ def _clear_auth_cookies(response: Response) -> None:
             samesite="lax",
             path="/",
         )
-    response.set_cookie(
-        key=CSRF_COOKIE_NAME,
-        value="",
-        max_age=0,
-        httponly=False,
-        secure=settings.cookie_secure,
-        samesite="lax",
-        path="/",
-    )
 
 
 @router.get(
@@ -203,7 +202,6 @@ async def login(
         response,
         access_token=result.access_token,
         refresh_token=result.refresh_value,
-        csrf_token=result.csrf_token,
     )
     return result.current_user
 
@@ -241,7 +239,6 @@ async def refresh(
         response,
         access_token=result.access_token,
         refresh_token=result.refresh_value,
-        csrf_token=result.csrf_token,
     )
     return result.current_user
 

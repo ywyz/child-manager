@@ -809,8 +809,8 @@ def test_login_cookies_carry_secure_flag_in_test_environment(
     assert response.status_code == 200
     cookies = response.headers.get_list("set-cookie")
     secure_cookies = [c for c in cookies if "Secure" in c]
-    # access + refresh + csrf 三条 Cookie 都必须带 Secure。
-    assert len(secure_cookies) == 3
+    # access + refresh 两条 Cookie 都必须带 Secure（CSRF 由独立端点签发）。
+    assert len(secure_cookies) == 2
 
 
 def test_login_cookies_secure_false_only_when_explicitly_configured(

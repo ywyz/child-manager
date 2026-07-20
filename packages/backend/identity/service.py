@@ -39,9 +39,9 @@ from packages.backend.identity.tokens import (
 )
 from packages.contracts import audit as audit_events
 from packages.contracts.identity import (
+    CreateUserRequest,
     CurrentUser,
     KindergartenSnapshot,
-    UserCreateRequest,
     UserPatch,
 )
 from packages.contracts.identity import User as UserResponse
@@ -532,7 +532,7 @@ class IdentityService:
         *,
         kindergarten_id: str,
         creator: CurrentUser,
-        request: UserCreateRequest,
+        request: CreateUserRequest,
     ) -> UserResponse:
         self.ensure_roles()
 

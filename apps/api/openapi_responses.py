@@ -91,19 +91,3 @@ CSRF_HEADER_PARAM: dict[str, Any] = {
     "description": "必须与签名 child_manager_csrf Cookie 匹配;同时校验 Origin/Referer",
     "schema": {"type": "string", "minLength": 32, "maxLength": 512},
 }
-
-# Cookie 安全方案（与 components/securitySchemes 对齐）。
-SECURITY_SCHEMES: dict[str, Any] = {
-    "accessCookie": {
-        "type": "apiKey",
-        "in": "cookie",
-        "name": "child_manager_access",
-        "description": "15 分钟 HS256 JWT;Secure、HttpOnly、SameSite=Lax、Path=/",
-    },
-    "refreshCookie": {
-        "type": "apiKey",
-        "in": "cookie",
-        "name": "child_manager_refresh",
-        "description": "7 天绝对期限的随机 opaque token;只保存强哈希并每次轮换",
-    },
-}

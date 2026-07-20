@@ -17,10 +17,10 @@ from apps.api.openapi_responses import (
 from packages.backend.identity.exceptions import UserNotFoundError
 from packages.backend.identity.service import IdentityService
 from packages.contracts.identity import (
+    CreateUserRequest,
     CurrentUser,
     ResetPasswordRequest,
     User,
-    UserCreateRequest,
     UserPage,
     UserPatch,
     UserRolesUpdateRequest,
@@ -57,7 +57,7 @@ _USER_PAGE = {
 )
 async def create_user(
     request: Request,
-    body: UserCreateRequest,
+    body: CreateUserRequest,
     current_user: Annotated[CurrentUser, Depends(require_admin)],
     session: Annotated[Session, Depends(get_db)],
 ) -> User:

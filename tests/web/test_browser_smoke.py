@@ -640,7 +640,9 @@ async def test_browser_teacher_cannot_see_account_management(
     )
     assert admin_login.status_code == 200
     admin_cookies = admin_login.cookies
-    admin_csrf = admin_cookies.get("child_manager_csrf") or csrf
+    # M2-F01：login 不再设置 CSRF cookie；继续使用 /csrf 端点签发的原始令牌。
+    admin_csrf = csrf
+    admin_cookies.set("child_manager_csrf", admin_csrf, domain="127.0.0.1")
     create = httpx.post(
         f"{api_url}/api/v1/users",
         json={
@@ -781,8 +783,9 @@ async def test_browser_deactivated_user_loses_access(
     )
     assert admin_login.status_code == 200
     admin_cookies = admin_login.cookies
-    # 登录响应设置新 CSRF cookie；后续请求必须用新令牌作为 header。
-    admin_csrf = admin_cookies.get("child_manager_csrf") or admin_csrf
+    # M2-F01：login 不再设置 CSRF cookie；继续使用 /csrf 端点签发的原始令牌。
+    admin_csrf = admin_csrf
+    admin_cookies.set("child_manager_csrf", admin_csrf, domain="127.0.0.1")
 
     create = httpx.post(
         f"{api_url}/api/v1/users",

@@ -4,9 +4,9 @@ import pytest
 from pydantic import BaseModel, ValidationError
 
 from packages.contracts.identity import (
+    CreateUserRequest,
     ResetPasswordRequest,
     User,
-    UserCreateRequest,
     UserPatch,
 )
 
@@ -16,7 +16,7 @@ def _schema_fields(model: type[BaseModel]) -> set[str]:
 
 
 def test_user_create_request_has_identity_fields() -> None:
-    fields = _schema_fields(UserCreateRequest)
+    fields = _schema_fields(CreateUserRequest)
     required = {"username", "display_name", "phone_e164", "role_codes", "password"}
     assert required <= fields
 
@@ -43,7 +43,7 @@ def test_reset_password_request_has_new_password() -> None:
 
 def test_user_create_request_requires_at_least_one_role() -> None:
     with pytest.raises(ValidationError):
-        UserCreateRequest(
+        CreateUserRequest(
             username="teacher",
             display_name="教师",
             phone_e164=None,
@@ -54,7 +54,7 @@ def test_user_create_request_requires_at_least_one_role() -> None:
 
 def test_user_create_request_rejects_unknown_roles() -> None:
     with pytest.raises(ValidationError):
-        UserCreateRequest.model_validate(
+        CreateUserRequest.model_validate(
             {
                 "username": "teacher",
                 "display_name": "教师",
@@ -67,7 +67,7 @@ def test_user_create_request_rejects_unknown_roles() -> None:
 
 def test_user_create_request_rejects_duplicate_roles() -> None:
     with pytest.raises(ValidationError):
-        UserCreateRequest.model_validate(
+        CreateUserRequest.model_validate(
             {
                 "username": "teacher",
                 "display_name": "教师",
@@ -101,7 +101,7 @@ def test_user_patch_rejects_display_name_null() -> None:
 
 def test_user_create_request_requires_role_codes() -> None:
     with pytest.raises(ValidationError):
-        UserCreateRequest.model_validate(
+        CreateUserRequest.model_validate(
             {
                 "username": "teacher",
                 "display_name": "教师",
@@ -113,7 +113,7 @@ def test_user_create_request_requires_role_codes() -> None:
 
 def test_user_create_request_rejects_short_password() -> None:
     with pytest.raises(ValidationError):
-        UserCreateRequest(
+        CreateUserRequest(
             username="teacher",
             display_name="教师",
             phone_e164=None,

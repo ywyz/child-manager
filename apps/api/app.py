@@ -77,11 +77,29 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
             "field_errors": {
                 "type": "array",
                 "maxItems": 0,
-                "items": {"$ref": "#/components/schemas/FieldError"},
+                "items": {"$ref": "#/components/schemas/ErrorField"},
             },
         },
     }
     schemas["UnavailableError"] = unavailable_schema
+
+    # M2-F01：添加冻结契约中的 Uuid/Password 可复用组件，并将 User/CurrentUser.id
+    # 替换为 $ref，使运行时 schema 与冻结 OpenAPI 严格对齐。
+    schemas["Uuid"] = {"type": "string", "format": "uuid"}
+    schemas["Password"] = {
+        "type": "string",
+        "minLength": 15,
+        "maxLength": 128,
+        "writeOnly": True,
+        "description": "允许 Unicode、空格与粘贴；无字符组合规则；不得在日志或响应出现",
+    }
+    for schema_name in ("User", "CurrentUser"):
+        schema_obj = schemas.get(schema_name)
+        if isinstance(schema_obj, dict):
+            props = schema_obj.get("properties", {})
+            id_prop = props.get("id")
+            if isinstance(id_prop, dict) and id_prop.get("type") == "string":
+                props["id"] = {"$ref": "#/components/schemas/Uuid"}
 
     components["schemas"] = schemas
     # 安全方案与全局 security（与冻结契约 components/securitySchemes 对齐）。
@@ -100,6 +118,40 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
         },
     }
     openapi_schema["security"] = [{"accessCookie": []}]
+
+    # M2-F01：将 roles/reset-password 请求体替换为与冻结契约一致的 inline schema，
+    # 并从 components/schemas 中移除对应的命名组件。
+    paths = openapi_schema.get("paths", {})
+    roles_op = paths.get("/api/v1/users/{user_id}/roles", {}).get("put", {})
+    roles_body = roles_op.get("requestBody", {})
+    if roles_body:
+        roles_body["content"]["application/json"]["schema"] = {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["role_codes"],
+            "properties": {
+                "role_codes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": True,
+                    "items": {"type": "string", "enum": ["admin", "teacher"]},
+                }
+            },
+        }
+    reset_op = paths.get("/api/v1/users/{user_id}/reset-password", {}).get("post", {})
+    reset_body = reset_op.get("requestBody", {})
+    if reset_body:
+        reset_body["content"]["application/json"]["schema"] = {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["new_password"],
+            "properties": {
+                "new_password": {"$ref": "#/components/schemas/Password"},
+            },
+        }
+    for stale in ("UserRolesUpdateRequest", "ResetPasswordRequest"):
+        schemas.pop(stale, None)
+
     components["responses"] = {
         "ErrorResponse": {
             "description": "错误响应",

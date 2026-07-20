@@ -48,6 +48,7 @@ class TestIdentitySkeleton:
                 id=kg_id, name="实验幼儿园", timezone="Asia/Shanghai"
             ),
             role_codes=["teacher"],
+            capabilities=[],
         )
         assert user.id == user_id
         assert user.role_codes == ["teacher"]
@@ -145,7 +146,7 @@ class TestPublicClassScope:
                     "CsrfResponse",
                     "LoginRequest",
                     "ChangePasswordRequest",
-                    "UserCreateRequest",
+                    "CreateUserRequest",
                     "UserPatch",
                     "User",
                     "UserPage",

@@ -5,8 +5,8 @@ import pytest
 from pydantic import ValidationError
 
 from packages.contracts.common import (
+    ErrorField,
     ErrorResponse,
-    FieldError,
     HealthResponse,
     PaginatedResponse,
     RequestContext,
@@ -39,7 +39,7 @@ def test_error_response_missing_code() -> None:
 
 
 def test_field_error_validation() -> None:
-    error = FieldError(field="username", code="required", message="用户名不能为空")
+    error = ErrorField(field="username", code="required", message="用户名不能为空")
     assert error.field == "username"
     assert error.code == "required"
 
@@ -170,9 +170,9 @@ def test_paginated_response_rejects_extra_fields() -> None:
 
 
 def test_field_error_rejects_extra_fields() -> None:
-    """FieldError 不接受额外字段。"""
+    """ErrorField 不接受额外字段。"""
     with pytest.raises(ValidationError):
-        FieldError(
+        ErrorField(
             field="name",
             code="required",
             message="必填",

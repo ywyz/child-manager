@@ -7,6 +7,7 @@
 from pathlib import Path
 from typing import Any
 
+import pytest
 import yaml
 from fastapi.testclient import TestClient
 
@@ -576,11 +577,14 @@ def test_runtime_user_schema_aligned_to_frozen_contract() -> None:
     """M2-F01：运行时 User schema 必须按冻结契约收敛。
 
     Codex M2-F01：冻结 UserId 为 UUID；运行时为普通 string。本测试确保运行时
-    User.id 为 format uuid、role_codes 唯一且枚举 admin/teacher、UserPage.items 必填。
+    User.id 使用 $ref Uuid、role_codes 唯一且枚举 admin/teacher、UserPage.items 必填。
     """
     schemas = _runtime_schemas()
     user = schemas["User"]
-    assert user["properties"]["id"].get("format") == "uuid", "User.id 必须为 uuid 格式"
+    # M2-F01：id 改为 $ref Uuid，与冻结契约对齐
+    assert user["properties"]["id"].get("$ref") == "#/components/schemas/Uuid", (
+        "User.id 必须为 $ref Uuid"
+    )
     role_codes = user["properties"]["role_codes"]
     assert role_codes.get("uniqueItems") is True, "User.role_codes 必须唯一"
     items = role_codes.get("items", {})
@@ -590,3 +594,300 @@ def test_runtime_user_schema_aligned_to_frozen_contract() -> None:
     user_page = schemas["UserPage"]
     assert "items" in user_page.get("required", []), "UserPage.items 必填"
     assert user_page["properties"]["items"]["items"]["$ref"] == "#/components/schemas/User"
+
+
+# --- M2-F01 收紧 parity 测试：解引用 schema、实际 HTTP header、request body 名称 ---
+
+
+def _resolve_schema(spec: dict[str, Any], schema: dict[str, Any]) -> dict[str, Any]:
+    """递归解引用 $ref，返回完整 schema 对象。"""
+    if not isinstance(schema, dict):
+        return schema
+    if "$ref" in schema:
+        ref_path = schema["$ref"].split("/")[1:]
+        resolved = spec
+        for part in ref_path:
+            resolved = resolved.get(part, {})
+        return _resolve_schema(spec, resolved)
+    return schema
+
+
+def test_runtime_user_phone_e164_is_required_nullable() -> None:
+    """M2-F01：User.phone_e164 必须为 required nullable（冻结契约要求）。"""
+    schemas = _runtime_schemas()
+    user = schemas["User"]
+    assert "phone_e164" in user.get("required", []), "User.phone_e164 必须在 required 中"
+    phone_prop = user["properties"]["phone_e164"]
+    # 运行时生成 anyOf: [string, null] 或 type: [string, null]
+    assert phone_prop is not None
+
+
+def test_runtime_current_user_username_not_required() -> None:
+    """M2-F01：CurrentUser.username 不在 required 中（冻结契约 required 集合）。"""
+    schemas = _runtime_schemas()
+    current_user = schemas["CurrentUser"]
+    required = set(current_user.get("required", []))
+    assert "username" not in required, "CurrentUser.username 不应在 required 中"
+    assert required == {"id", "display_name", "kindergarten", "role_codes", "capabilities"}
+
+
+def test_runtime_error_field_errors_references_error_field() -> None:
+    """M2-F01：Error.field_errors 的 items 必须引用 ErrorField（不是 FieldError）。"""
+    schemas = _runtime_schemas()
+    error = schemas["Error"]
+    field_errors = error["properties"]["field_errors"]
+    items_ref = field_errors["items"].get("$ref", "")
+    assert items_ref == "#/components/schemas/ErrorField", (
+        f"Error.field_errors 应引用 ErrorField，实际: {items_ref}"
+    )
+    assert "ErrorField" in schemas, "components/schemas 必须包含 ErrorField"
+    assert "FieldError" not in schemas, "components/schemas 不应包含 FieldError"
+
+
+def test_runtime_user_id_rejects_non_uuid() -> None:
+    """M2-F01：User.id 必须在运行时拒绝非 UUID 字符串。"""
+    from datetime import UTC, datetime
+
+    from pydantic import ValidationError
+
+    from packages.contracts.identity import User
+
+    with pytest.raises(ValidationError):
+        User(
+            id="not-a-uuid",
+            username="teacher",
+            display_name="教师",
+            phone_e164=None,
+            role_codes=["teacher"],
+            is_active=True,
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
+        )
+
+
+def test_runtime_uuid_component_present() -> None:
+    """M2-F01：运行时必须包含 Uuid 可复用组件。"""
+    schemas = _runtime_schemas()
+    assert "Uuid" in schemas
+    uuid_schema = schemas["Uuid"]
+    assert uuid_schema.get("type") == "string"
+    assert uuid_schema.get("format") == "uuid"
+
+
+def test_runtime_password_component_present() -> None:
+    """M2-F01：运行时必须包含 Password 可复用组件。"""
+    schemas = _runtime_schemas()
+    assert "Password" in schemas
+    pw = schemas["Password"]
+    assert pw.get("type") == "string"
+    assert pw.get("minLength") == 15
+    assert pw.get("maxLength") == 128
+
+
+def test_runtime_user_id_uses_uuid_ref() -> None:
+    """M2-F01：User.id 必须使用 $ref: Uuid（与冻结契约对齐）。"""
+    schemas = _runtime_schemas()
+    user = schemas["User"]
+    id_prop = user["properties"]["id"]
+    assert id_prop.get("$ref") == "#/components/schemas/Uuid", (
+        f"User.id 应为 $ref Uuid，实际: {id_prop}"
+    )
+
+
+def test_runtime_current_user_id_uses_uuid_ref() -> None:
+    """M2-F01：CurrentUser.id 必须使用 $ref: Uuid（与冻结契约对齐）。"""
+    schemas = _runtime_schemas()
+    current_user = schemas["CurrentUser"]
+    id_prop = current_user["properties"]["id"]
+    assert id_prop.get("$ref") == "#/components/schemas/Uuid", (
+        f"CurrentUser.id 应为 $ref Uuid，实际: {id_prop}"
+    )
+
+
+def test_post_users_request_body_references_create_user_request() -> None:
+    """M2-F01：POST /api/v1/users request body 必须引用 CreateUserRequest。"""
+    spec = _runtime_full_spec()
+    body = spec["paths"]["/api/v1/users"]["post"]["requestBody"]
+    schema = body["content"]["application/json"]["schema"]
+    assert schema.get("$ref") == "#/components/schemas/CreateUserRequest", (
+        f"POST /users request body 应引用 CreateUserRequest，实际: {schema}"
+    )
+    assert "CreateUserRequest" in spec["components"]["schemas"]
+
+
+def test_put_roles_request_body_is_inline_schema() -> None:
+    """M2-F01：PUT /api/v1/users/{user_id}/roles request body 必须为 inline schema。"""
+    spec = _runtime_full_spec()
+    body = spec["paths"]["/api/v1/users/{user_id}/roles"]["put"]["requestBody"]
+    schema = body["content"]["application/json"]["schema"]
+    assert "$ref" not in schema, "roles request body 不应为 $ref"
+    assert schema["type"] == "object"
+    assert schema["additionalProperties"] is False
+    assert schema["required"] == ["role_codes"]
+    assert schema["properties"]["role_codes"]["minItems"] == 1
+    assert schema["properties"]["role_codes"]["uniqueItems"] is True
+
+
+def test_reset_password_request_body_is_inline_schema() -> None:
+    """M2-F01：POST /api/v1/users/{user_id}/reset-password request body 必须为 inline schema。"""
+    spec = _runtime_full_spec()
+    body = spec["paths"]["/api/v1/users/{user_id}/reset-password"]["post"]["requestBody"]
+    schema = body["content"]["application/json"]["schema"]
+    assert "$ref" not in schema, "reset-password request body 不应为 $ref"
+    assert schema["type"] == "object"
+    assert schema["additionalProperties"] is False
+    assert schema["required"] == ["new_password"]
+    assert schema["properties"]["new_password"]["$ref"] == "#/components/schemas/Password"
+
+
+def test_runtime_schemas_no_stale_components() -> None:
+    """M2-F01：components/schemas 不应包含已移除的命名组件。"""
+    schemas = _runtime_schemas()
+    assert "UserRolesUpdateRequest" not in schemas
+    assert "ResetPasswordRequest" not in schemas
+
+
+def test_runtime_user_required_set_matches_frozen() -> None:
+    """M2-F01：User required 集合必须与冻结契约严格一致。"""
+    static_spec = _load_spec()
+    runtime_schemas = _runtime_schemas()
+    static_required = set(static_spec["components"]["schemas"]["User"].get("required", []))
+    runtime_required = set(runtime_schemas["User"].get("required", []))
+    assert runtime_required == static_required, (
+        f"User required 不一致: 冻结={sorted(static_required)} 运行时={sorted(runtime_required)}"
+    )
+
+
+def test_runtime_current_user_required_set_matches_frozen() -> None:
+    """M2-F01：CurrentUser required 集合必须与冻结契约严格一致。"""
+    static_spec = _load_spec()
+    runtime_schemas = _runtime_schemas()
+    static_required = set(static_spec["components"]["schemas"]["CurrentUser"].get("required", []))
+    runtime_required = set(runtime_schemas["CurrentUser"].get("required", []))
+    assert runtime_required == static_required, (
+        f"CurrentUser required 不一致: 冻结={sorted(static_required)} "
+        f"运行时={sorted(runtime_required)}"
+    )
+
+
+def test_runtime_error_required_set_matches_frozen() -> None:
+    """M2-F01：Error required 集合必须与冻结契约严格一致。"""
+    static_spec = _load_spec()
+    runtime_schemas = _runtime_schemas()
+    static_required = set(static_spec["components"]["schemas"]["Error"].get("required", []))
+    runtime_required = set(runtime_schemas["Error"].get("required", []))
+    assert runtime_required == static_required, (
+        f"Error required 不一致: 冻结={sorted(static_required)} 运行时={sorted(runtime_required)}"
+    )
+
+
+def test_login_actual_set_cookie_count_is_two(migrated_database_url: str) -> None:
+    """M2-F01：login 实际 HTTP 响应必须恰好返回 2 条 Set-Cookie。"""
+    from fastapi.testclient import TestClient
+
+    from apps.api.app import create_app
+    from apps.api.dependencies import HealthDependencies
+    from packages.backend.database import session as session_module
+    from packages.backend.identity.service import IdentityService
+
+    async def _ok() -> bool:
+        return True
+
+    deps = HealthDependencies(
+        database=_ok,
+        redis=_ok,
+        ai=_ok,
+        calendar=_ok,
+        template=_ok,
+        export_storage=_ok,
+        security_ready=True,
+    )
+    app = create_app(dependencies=deps)
+
+    session = session_module.SessionLocal()
+    try:
+        service = IdentityService(session)
+        service.init_admin(kg_name="测试园", admin_username="admin", password="ValidPassword2024!")
+        session.commit()
+    finally:
+        session.close()
+
+    client = TestClient(app)
+    csrf_resp = client.get("/api/v1/auth/csrf")
+    csrf_token = csrf_resp.json()["csrf_token"]
+
+    login_resp = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers={"X-CSRF-Token": csrf_token, "Origin": "http://127.0.0.1:28080"},
+        cookies={"child_manager_csrf": csrf_token},
+    )
+    assert login_resp.status_code == 200
+    set_cookies = login_resp.headers.get_list("set-cookie")
+    assert len(set_cookies) == 2, (
+        f"login 应返回恰好 2 条 Set-Cookie（access+refresh），实际: {len(set_cookies)}"
+    )
+    assert any("child_manager_access=" in c for c in set_cookies)
+    assert any("child_manager_refresh=" in c for c in set_cookies)
+    assert not any("child_manager_csrf=" in c for c in set_cookies)
+
+
+def test_logout_actual_set_cookie_count_is_two(migrated_database_url: str) -> None:
+    """M2-F01：logout 实际 HTTP 响应必须恰好返回 2 条 Set-Cookie。"""
+    from fastapi.testclient import TestClient
+
+    from apps.api.app import create_app
+    from apps.api.dependencies import HealthDependencies
+    from packages.backend.database import session as session_module
+    from packages.backend.identity.service import IdentityService
+
+    async def _ok() -> bool:
+        return True
+
+    deps = HealthDependencies(
+        database=_ok,
+        redis=_ok,
+        ai=_ok,
+        calendar=_ok,
+        template=_ok,
+        export_storage=_ok,
+        security_ready=True,
+    )
+    app = create_app(dependencies=deps)
+
+    session = session_module.SessionLocal()
+    try:
+        service = IdentityService(session)
+        service.init_admin(kg_name="测试园", admin_username="admin", password="ValidPassword2024!")
+        session.commit()
+    finally:
+        session.close()
+
+    client = TestClient(app)
+    csrf_resp = client.get("/api/v1/auth/csrf")
+    csrf_token = csrf_resp.json()["csrf_token"]
+
+    login_resp = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers={"X-CSRF-Token": csrf_token, "Origin": "http://127.0.0.1:28080"},
+        cookies={"child_manager_csrf": csrf_token},
+    )
+    login_cookies = login_resp.headers.get_list("set-cookie")
+    cookie_jar = {}
+    for cookie in login_cookies:
+        name = cookie.split("=")[0]
+        value = cookie.split("=", 1)[1].split(";")[0]
+        cookie_jar[name] = value
+
+    logout_resp = client.post(
+        "/api/v1/auth/logout",
+        headers={"X-CSRF-Token": csrf_token, "Origin": "http://127.0.0.1:28080"},
+        cookies={**cookie_jar, "child_manager_csrf": csrf_token},
+    )
+    assert logout_resp.status_code == 204
+    set_cookies = logout_resp.headers.get_list("set-cookie")
+    assert len(set_cookies) == 2, (
+        f"logout 应返回恰好 2 条 Set-Cookie（access+refresh），实际: {len(set_cookies)}"
+    )
+    assert all("Max-Age=0" in c for c in set_cookies)

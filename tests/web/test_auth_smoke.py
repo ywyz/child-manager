@@ -253,16 +253,14 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
     assert login_body["id"]
     assert "admin" in login_body["role_codes"]
     set_cookies = [v for n, v in login.headers if n.lower() == b"set-cookie"]
-    assert len(set_cookies) == 3
+    # M2-F01：冻结契约要求恰好 2 条 Set-Cookie（access + refresh），CSRF 不在其中。
+    assert len(set_cookies) == 2
     cookie_header = b"; ".join(set_cookies)
+    # CSRF Cookie 来自 /csrf 端点，login 不再重复设置；拼接原始 CSRF Cookie 供后续请求使用。
+    cookie_header = cookie_header + b"; " + csrf_cookie
 
-    def _extract_cookie(cookies: bytes, name: bytes) -> bytes:
-        for part in cookies.split(b"; "):
-            if part.startswith(name + b"="):
-                return part.split(b"=", 1)[1].split(b";", 1)[0]
-        return b""
-
-    csrf_after_login = _extract_cookie(cookie_header, b"child_manager_csrf").decode("ascii")
+    # CSRF token 不随 login 轮换；继续使用 /csrf 端点签发的原始 token。
+    csrf_after_login = csrf_token
     refresh_headers = (
         (b"origin", origin.encode("ascii")),
         (b"x-csrf-token", csrf_after_login.encode("ascii")),
@@ -283,11 +281,9 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
     refresh_body = json.loads(refresh.body)
     assert refresh_body["id"] == login_body["id"]
     refresh_cookies = [v for n, v in refresh.headers if n.lower() == b"set-cookie"]
-    assert len(refresh_cookies) == 3
-    refresh_cookie_header = b"; ".join(refresh_cookies)
-    csrf_after_refresh = _extract_cookie(refresh_cookie_header, b"child_manager_csrf").decode(
-        "ascii"
-    )
+    assert len(refresh_cookies) == 2
+    refresh_cookie_header = b"; ".join(refresh_cookies) + b"; " + csrf_cookie
+    csrf_after_refresh = csrf_token
     state_headers = (
         (b"origin", origin.encode("ascii")),
         (b"x-csrf-token", csrf_after_refresh.encode("ascii")),
@@ -321,11 +317,9 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
     )
     assert re_login.status_code == 200
     re_login_cookies = [v for n, v in re_login.headers if n.lower() == b"set-cookie"]
-    assert len(re_login_cookies) == 3
-    re_login_cookie_header = b"; ".join(re_login_cookies)
-    csrf_after_re_login = _extract_cookie(re_login_cookie_header, b"child_manager_csrf").decode(
-        "ascii"
-    )
+    assert len(re_login_cookies) == 2
+    re_login_cookie_header = b"; ".join(re_login_cookies) + b"; " + csrf_cookie
+    csrf_after_re_login = csrf_token
     admin_headers = (
         (b"origin", origin.encode("ascii")),
         (b"x-csrf-token", csrf_after_re_login.encode("ascii")),
@@ -445,5 +439,5 @@ async def test_bff_full_auth_flow_against_real_api(migrated_database_url: str) -
     )
     assert logout.status_code == 204
     logout_cookies = [v for n, v in logout.headers if n.lower() == b"set-cookie"]
-    assert len(logout_cookies) == 3
+    assert len(logout_cookies) == 2
     assert all(b"Max-Age=0" in c for c in logout_cookies)
