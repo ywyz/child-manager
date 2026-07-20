@@ -43,8 +43,8 @@ from packages.contracts.identity import (
     KindergartenSnapshot,
     UserCreateRequest,
     UserPatch,
-    UserResponse,
 )
+from packages.contracts.identity import User as UserResponse
 
 
 @dataclass(frozen=True)
@@ -511,7 +511,8 @@ class IdentityService:
             username=user.username,
             display_name=user.display_name,
             phone_e164=user.phone_e164,
-            role_codes=self._repo.list_user_roles(user.kindergarten_id, user.id),
+            # 仓库返回 list[str]，User 校验器保证仅 admin/teacher
+            role_codes=self._repo.list_user_roles(user.kindergarten_id, user.id),  # type: ignore[arg-type]
             is_active=user.is_active,
             created_at=user.created_at,
             updated_at=user.updated_at,

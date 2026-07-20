@@ -84,6 +84,22 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
     schemas["UnavailableError"] = unavailable_schema
 
     components["schemas"] = schemas
+    # 安全方案与全局 security（与冻结契约 components/securitySchemes 对齐）。
+    components["securitySchemes"] = {
+        "accessCookie": {
+            "type": "apiKey",
+            "in": "cookie",
+            "name": "child_manager_access",
+            "description": "15 分钟 HS256 JWT；Secure、HttpOnly、SameSite=Lax、Path=/",
+        },
+        "refreshCookie": {
+            "type": "apiKey",
+            "in": "cookie",
+            "name": "child_manager_refresh",
+            "description": "7 天绝对期限的随机 opaque token；只保存强哈希并每次轮换",
+        },
+    }
+    openapi_schema["security"] = [{"accessCookie": []}]
     components["responses"] = {
         "ErrorResponse": {
             "description": "错误响应",

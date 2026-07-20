@@ -353,23 +353,69 @@ _AUTH_USERS_OPERATIONS = [
     ("/api/v1/users/{user_id}/reset-password", "post"),
 ]
 
-# FastAPI 会为带 Path/Query 参数校验的路由自动添加 422 响应，即使静态契约未声明。
-# 这些 operation 允许运行时多出 422，只校验运行时包含静态契约的全部状态码。
+# 稳定错误状态码：运行时与静态契约都必须以统一 Error envelope 描述 body。
+_ERROR_STATUS_CODES = {"401", "403", "404", "409", "422", "429"}
 
 
-def _fastapi_auto_adds_422(op: dict[str, Any]) -> bool:
-    """判断 FastAPI 是否会为该 operation 自动添加 422 验证响应。"""
-    return any(param.get("in") in ("path", "query") for param in op.get("parameters", []))
+def _runtime_full_spec() -> dict[str, Any]:
+    """获取运行时完整 OpenAPI 文档。"""
+
+    async def _ok() -> bool:
+        return True
+
+    deps = HealthDependencies(
+        database=_ok,
+        redis=_ok,
+        ai=_ok,
+        calendar=_ok,
+        template=_ok,
+        export_storage=_ok,
+        security_ready=True,
+    )
+    app = create_app(dependencies=deps)
+    client = TestClient(app)
+    resp = client.get("/openapi.json")
+    assert resp.status_code == 200
+    return resp.json()
+
+
+def _resolve_response(spec: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]:
+    """若 response 为 $ref 指向 components/responses，则解引用返回完整对象。"""
+    if isinstance(response, dict) and "$ref" in response:
+        ref_name = response["$ref"].split("/")[-1]
+        comp_responses = spec.get("components", {}).get("responses", {})
+        resolved = comp_responses.get(ref_name, {})
+        return resolved if isinstance(resolved, dict) else {}
+    return response if isinstance(response, dict) else {}
+
+
+def _response_headers(spec: dict[str, Any], response: dict[str, Any]) -> set[str]:
+    """提取响应声明的 header 名称集合（解析 $ref 后）。"""
+    resolved = _resolve_response(spec, response)
+    headers = resolved.get("headers", {})
+    return set(headers.keys()) if isinstance(headers, dict) else set()
+
+
+def _response_error_schema_ref(spec: dict[str, Any], response: dict[str, Any]) -> str | None:
+    """提取错误响应 body 的 schema $ref（解析 $ref 响应后）。"""
+    resolved = _resolve_response(spec, response)
+    content = resolved.get("content", {})
+    json_content = content.get("application/json", {}) if isinstance(content, dict) else {}
+    schema = json_content.get("schema", {}) if isinstance(json_content, dict) else {}
+    return schema.get("$ref") if isinstance(schema, dict) else None
 
 
 def test_auth_users_runtime_response_status_codes_match_static() -> None:
-    """RED 回归：全部 Auth/Users operation 的运行时响应状态码集合必须与冻结静态契约对等。
+    """M2-F01：全部 Auth/Users operation 的运行时响应状态码集合必须与冻结静态契约严格对等。
 
-    Codex 第十九轮审阅 P1：独立比较显示 13/13 个 Auth/Users operation 的响应状态
-    集合不同；例如静态 reset-password 为 204/403/404/409/422，运行时为 200/422。
+    Codex M2 Final Contract Freeze M2-F01：禁止删除运行时 422 后再比较的宽松做法；
+    运行时与静态契约的状态码集合必须严格相等。冻结契约已在 main docs-only 提交
+    （578c12f）补齐用户接口合法 422，运行时已声明对应 422。
     """
-    static_paths = _load_spec()["paths"]
-    runtime_paths = _runtime_paths()
+    static_spec = _load_spec()
+    runtime_spec = _runtime_full_spec()
+    static_paths = static_spec["paths"]
+    runtime_paths = runtime_spec["paths"]
 
     mismatches: list[str] = []
     for path, method in _AUTH_USERS_OPERATIONS:
@@ -383,14 +429,6 @@ def test_auth_users_runtime_response_status_codes_match_static() -> None:
             continue
         static_statuses = set(static_op.get("responses", {}).keys())
         runtime_statuses = set(runtime_op.get("responses", {}).keys())
-        # FastAPI 会为带 Path/Query 参数的路由自动添加 422；静态契约未声明时
-        # 允许运行时多出 422（且仅允许 422 这一项差异），其余状态码必须严格对等。
-        if (
-            "422" not in static_statuses
-            and "422" in runtime_statuses
-            and _fastapi_auto_adds_422(runtime_op)
-        ):
-            runtime_statuses = runtime_statuses - {"422"}
         if static_statuses != runtime_statuses:
             missing = static_statuses - runtime_statuses
             extra = runtime_statuses - static_statuses
@@ -400,6 +438,121 @@ def test_auth_users_runtime_response_status_codes_match_static() -> None:
                 f"缺失={sorted(missing)} 多余={sorted(extra)}"
             )
     assert not mismatches, "Auth/Users 响应状态码集合与静态契约不一致:\n" + "\n".join(mismatches)
+
+
+def test_auth_users_runtime_response_headers_match_static() -> None:
+    """M2-F01：Auth/Users operation 的运行时响应 header 集合必须与冻结静态契约对等。
+
+    Codex M2-F01：运行时文档缺冻结契约中的 Set-Cookie header；429 缺 Retry-After。
+    本测试逐状态码比较 header 名称集合（解析 $ref 响应后），确保 Set-Cookie 与
+    Retry-After 在运行时文档中声明。
+    """
+    static_spec = _load_spec()
+    runtime_spec = _runtime_full_spec()
+
+    mismatches: list[str] = []
+    for path, method in _AUTH_USERS_OPERATIONS:
+        static_resp = static_spec["paths"][path][method].get("responses", {})
+        runtime_resp = runtime_spec["paths"][path][method].get("responses", {})
+        codes = set(static_resp.keys()) | set(runtime_resp.keys())
+        for code in codes:
+            s_hdr = _response_headers(static_spec, static_resp.get(code, {}))
+            r_hdr = _response_headers(runtime_spec, runtime_resp.get(code, {}))
+            if s_hdr != r_hdr:
+                mismatches.append(
+                    f"{method.upper()} {path} {code}: 静态header={sorted(s_hdr)} "
+                    f"运行时header={sorted(r_hdr)}"
+                )
+    assert not mismatches, "Auth/Users 响应 header 与静态契约不一致:\n" + "\n".join(mismatches)
+
+
+def test_auth_users_runtime_error_responses_use_unified_error_envelope() -> None:
+    """M2-F01：Auth/Users 稳定错误状态码的运行时 body 必须指向统一 Error schema。
+
+    Codex M2-F01：401/403/404/409 多数只声明 description、没有统一 Error body；
+    自动 422 仍指向 FastAPI HTTPValidationError。本测试确保运行时全部错误状态码
+    的 body schema $ref 指向 #/components/schemas/Error，而非 HTTPValidationError。
+    """
+    runtime_spec = _runtime_full_spec()
+
+    mismatches: list[str] = []
+    for path, method in _AUTH_USERS_OPERATIONS:
+        runtime_resp = runtime_spec["paths"][path][method].get("responses", {})
+        for code in _ERROR_STATUS_CODES & set(runtime_resp.keys()):
+            ref = _response_error_schema_ref(runtime_spec, runtime_resp[code])
+            if ref != "#/components/schemas/Error":
+                mismatches.append(
+                    f"{method.upper()} {path} {code}: 错误 body schema={ref!r}，"
+                    f"应为 #/components/schemas/Error"
+                )
+    assert not mismatches, "Auth/Users 错误响应未使用统一 Error envelope:\n" + "\n".join(mismatches)
+
+
+def test_auth_users_runtime_declares_csrf_header_parameter() -> None:
+    """M2-F01：CSRF 保护的 Auth/Users operation 必须在运行时文档声明 X-CSRF-Token header。
+
+    Codex M2-F01：多个状态变更端点的运行时 OpenAPI 未声明冻结的 CSRF header。
+    本测试确保 login/refresh/logout/change-password 与 users 写操作均声明 CSRF header 参数。
+    """
+    runtime_spec = _runtime_full_spec()
+    csrf_protected = [
+        ("/api/v1/auth/login", "post"),
+        ("/api/v1/auth/refresh", "post"),
+        ("/api/v1/auth/logout", "post"),
+        ("/api/v1/auth/change-password", "post"),
+        ("/api/v1/users", "post"),
+        ("/api/v1/users/{user_id}", "patch"),
+        ("/api/v1/users/{user_id}/roles", "put"),
+        ("/api/v1/users/{user_id}/activate", "post"),
+        ("/api/v1/users/{user_id}/deactivate", "post"),
+        ("/api/v1/users/{user_id}/reset-password", "post"),
+    ]
+    missing: list[str] = []
+    for path, method in csrf_protected:
+        params = runtime_spec["paths"][path][method].get("parameters", [])
+        has_csrf = any(
+            p.get("name") == "X-CSRF-Token" and p.get("in") == "header"
+            for p in params
+            if isinstance(p, dict)
+        )
+        if not has_csrf:
+            missing.append(f"{method.upper()} {path}")
+    assert not missing, "缺少 CSRF header 参数声明:\n" + "\n".join(missing)
+
+
+def test_runtime_openapi_declares_cookie_security_schemes() -> None:
+    """M2-F01：运行时 OpenAPI 必须声明 accessCookie/refreshCookie 安全方案与全局 security。"""
+    runtime_spec = _runtime_full_spec()
+    schemes = runtime_spec.get("components", {}).get("securitySchemes", {})
+    assert "accessCookie" in schemes, "缺少 accessCookie 安全方案"
+    assert "refreshCookie" in schemes, "缺少 refreshCookie 安全方案"
+    assert schemes["accessCookie"]["type"] == "apiKey"
+    assert schemes["accessCookie"]["in"] == "cookie"
+    assert schemes["accessCookie"]["name"] == "child_manager_access"
+    # 全局 security 默认要求 accessCookie。
+    global_security = runtime_spec.get("security", [])
+    assert any("accessCookie" in req for req in global_security), "缺少全局 accessCookie security"
+
+
+def test_auth_users_runtime_security_matches_static() -> None:
+    """M2-F01：Auth/Users operation 的运行时 security 声明必须与冻结静态契约对等。"""
+    static_spec = _load_spec()
+    runtime_spec = _runtime_full_spec()
+
+    mismatches: list[str] = []
+    for path, method in _AUTH_USERS_OPERATIONS:
+        static_sec = static_spec["paths"][path][method].get("security", "(inherit)")
+        runtime_sec = runtime_spec["paths"][path][method].get("security", "(inherit)")
+        # 静态契约未显式声明 security 时表示继承全局 accessCookie。
+        if static_sec == "(inherit)":
+            static_sec = static_spec.get("security", [])
+        if runtime_sec == "(inherit)":
+            runtime_sec = runtime_spec.get("security", [])
+        if static_sec != runtime_sec:
+            mismatches.append(
+                f"{method.upper()} {path}: 静态security={static_sec} 运行时security={runtime_sec}"
+            )
+    assert not mismatches, "Auth/Users security 与静态契约不一致:\n" + "\n".join(mismatches)
 
 
 def test_reset_password_runtime_declares_204() -> None:
@@ -417,3 +570,23 @@ def test_reset_password_runtime_declares_204() -> None:
     assert "200" not in reset_op["responses"], (
         "reset-password 运行时不应该有 200 状态码（应为 204）"
     )
+
+
+def test_runtime_user_schema_aligned_to_frozen_contract() -> None:
+    """M2-F01：运行时 User schema 必须按冻结契约收敛。
+
+    Codex M2-F01：冻结 UserId 为 UUID；运行时为普通 string。本测试确保运行时
+    User.id 为 format uuid、role_codes 唯一且枚举 admin/teacher、UserPage.items 必填。
+    """
+    schemas = _runtime_schemas()
+    user = schemas["User"]
+    assert user["properties"]["id"].get("format") == "uuid", "User.id 必须为 uuid 格式"
+    role_codes = user["properties"]["role_codes"]
+    assert role_codes.get("uniqueItems") is True, "User.role_codes 必须唯一"
+    items = role_codes.get("items", {})
+    assert items.get("enum") == ["admin", "teacher"], "User.role_codes 必须枚举 admin/teacher"
+    assert "role_codes" in user.get("required", []), "User.role_codes 必填"
+
+    user_page = schemas["UserPage"]
+    assert "items" in user_page.get("required", []), "UserPage.items 必填"
+    assert user_page["properties"]["items"]["items"]["$ref"] == "#/components/schemas/User"

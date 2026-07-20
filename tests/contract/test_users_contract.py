@@ -5,9 +5,9 @@ from pydantic import BaseModel, ValidationError
 
 from packages.contracts.identity import (
     ResetPasswordRequest,
+    User,
     UserCreateRequest,
     UserPatch,
-    UserResponse,
 )
 
 
@@ -22,7 +22,7 @@ def test_user_create_request_has_identity_fields() -> None:
 
 
 def test_user_response_matches_database_shape() -> None:
-    fields = _schema_fields(UserResponse)
+    fields = _schema_fields(User)
     required = {
         "id",
         "username",
@@ -131,7 +131,7 @@ def test_user_response_rejects_duplicate_role_codes() -> None:
     from datetime import UTC, datetime
 
     with pytest.raises(ValidationError):
-        UserResponse(
+        User(
             id="11111111-1111-1111-1111-111111111111",
             username="teacher",
             display_name="教师",
@@ -147,12 +147,12 @@ def test_user_response_rejects_unknown_role_codes() -> None:
     from datetime import UTC, datetime
 
     with pytest.raises(ValidationError):
-        UserResponse(
+        User(
             id="11111111-1111-1111-1111-111111111111",
             username="teacher",
             display_name="教师",
             phone_e164=None,
-            role_codes=["superadmin"],
+            role_codes=["superadmin"],  # type: ignore[list-item]  # 故意非法角色触发校验
             is_active=True,
             created_at=datetime.now(UTC),
             updated_at=datetime.now(UTC),

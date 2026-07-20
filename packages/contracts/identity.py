@@ -171,16 +171,24 @@ class UserPatch(BaseModel):
         return "phone_e164" in self.model_fields_set
 
 
-class UserResponse(BaseModel):
-    """用户响应。"""
+class User(BaseModel):
+    """用户响应。
+
+    Schema 名称与字段约束按冻结 OpenAPI 契约 `#/components/schemas/User` 收敛：
+    id 为 UUID 格式、role_codes 唯一且枚举 admin/teacher、items 必填。
+    """
 
     model_config = ConfigDict(extra="forbid")
 
-    id: str = Field(..., pattern=_UUID_RE, description="用户ID")
+    id: str = Field(..., json_schema_extra={"format": "uuid"}, description="用户ID")
     username: str = Field(..., min_length=1, max_length=120, description="用户名")
     display_name: str = Field(..., min_length=1, max_length=120, description="显示名称")
     phone_e164: str | None = Field(default=None, max_length=32, description="手机号(E.164)")
-    role_codes: list[str] = Field(default_factory=list, description="角色代码列表")
+    role_codes: list[RoleCode] = Field(
+        ...,
+        json_schema_extra={"uniqueItems": True},
+        description="角色代码列表",
+    )
     is_active: bool = Field(..., description="是否启用")
     created_at: datetime = Field(..., description="创建时间")
     updated_at: datetime = Field(..., description="更新时间")
@@ -196,7 +204,7 @@ class UserPage(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    items: list[UserResponse] = Field(default_factory=list, description="账号列表")
+    items: list[User] = Field(..., description="账号列表")
     page: int = Field(..., ge=1, description="当前页码")
     page_size: int = Field(..., ge=1, le=100, description="每页大小")
     total: int = Field(..., ge=0, description="总记录数")

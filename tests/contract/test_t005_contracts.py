@@ -147,7 +147,7 @@ class TestPublicClassScope:
                     "ChangePasswordRequest",
                     "UserCreateRequest",
                     "UserPatch",
-                    "UserResponse",
+                    "User",
                     "UserPage",
                     "ResetPasswordRequest",
                     "UserRolesUpdateRequest",

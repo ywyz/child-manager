@@ -8,6 +8,17 @@ from fastapi import APIRouter, Depends, Request, Response, status
 from sqlalchemy.orm import Session
 
 from apps.api.dependencies import check_csrf, get_current_user, get_db
+from apps.api.openapi_responses import (
+    CSRF_HEADER_PARAM,
+    FORBIDDEN,
+    LOGIN_FAILED,
+    TOO_MANY_REQUESTS,
+    UNAUTHORIZED,
+    VALIDATION_ERROR,
+    auth_cookies_response,
+    clear_cookies_response,
+    csrf_cookie_response,
+)
 from packages.backend.config import settings
 from packages.backend.identity.client_ip import get_client_ip
 from packages.backend.identity.csrf import generate_csrf_token
@@ -125,7 +136,12 @@ def _clear_auth_cookies(response: Response) -> None:
     )
 
 
-@router.get("/csrf", response_model=CsrfResponse)
+@router.get(
+    "/csrf",
+    response_model=CsrfResponse,
+    responses={200: csrf_cookie_response("CSRF Cookie 已签发")},
+    openapi_extra={"security": []},
+)
 async def csrf(response: Response) -> CsrfResponse:
     """签发签名双提交 CSRF Cookie。"""
     token = generate_csrf_token(settings.csrf_signing_key)
@@ -137,10 +153,13 @@ async def csrf(response: Response) -> CsrfResponse:
     "/login",
     response_model=CurrentUser,
     responses={
-        401: {"description": "未认证或会话无效"},
-        403: {"description": "CSRF/来源错误或无权限"},
-        429: {"description": "登录来源限流"},
+        200: auth_cookies_response("登录成功并设置 access/refresh Cookie"),
+        401: LOGIN_FAILED,
+        403: FORBIDDEN,
+        422: VALIDATION_ERROR,
+        429: TOO_MANY_REQUESTS,
     },
+    openapi_extra={"parameters": [CSRF_HEADER_PARAM], "security": []},
 )
 async def login(
     request: Request,
@@ -193,8 +212,13 @@ async def login(
     "/refresh",
     response_model=CurrentUser,
     responses={
-        401: {"description": "未认证或会话无效"},
-        403: {"description": "CSRF/来源错误或无权限"},
+        200: auth_cookies_response("刷新成功并设置 access/refresh Cookie"),
+        401: UNAUTHORIZED,
+        403: FORBIDDEN,
+    },
+    openapi_extra={
+        "parameters": [CSRF_HEADER_PARAM],
+        "security": [{"refreshCookie": []}],
     },
 )
 async def refresh(
@@ -225,7 +249,14 @@ async def refresh(
 @router.post(
     "/logout",
     status_code=status.HTTP_204_NO_CONTENT,
-    responses={403: {"description": "CSRF/来源错误或无权限"}},
+    responses={
+        204: clear_cookies_response("已退出并清除 access/refresh Cookie"),
+        403: FORBIDDEN,
+    },
+    openapi_extra={
+        "parameters": [CSRF_HEADER_PARAM],
+        "security": [{"refreshCookie": []}],
+    },
 )
 async def logout(
     request: Request,
@@ -253,7 +284,7 @@ async def logout(
 @router.get(
     "/me",
     response_model=CurrentUser,
-    responses={401: {"description": "未认证或会话无效"}},
+    responses={401: UNAUTHORIZED},
 )
 async def me(current_user: Annotated[CurrentUser, Depends(get_current_user)]) -> CurrentUser:
     """返回当前登录用户信息。"""
@@ -264,9 +295,12 @@ async def me(current_user: Annotated[CurrentUser, Depends(get_current_user)]) ->
     "/change-password",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
-        401: {"description": "未认证或会话无效"},
-        403: {"description": "CSRF/来源错误或无权限"},
+        204: {"description": "已修改密码"},
+        401: UNAUTHORIZED,
+        403: FORBIDDEN,
+        422: VALIDATION_ERROR,
     },
+    openapi_extra={"parameters": [CSRF_HEADER_PARAM]},
 )
 async def change_password(
     request: Request,
