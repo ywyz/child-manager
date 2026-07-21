@@ -1,6 +1,8 @@
 # Implementation Plan: [FEATURE]
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Specification Branch**: `docs` | **Implementation Branch**: `dev` | **Date**: [DATE] | **Spec**: [immutable docs commit link]
+
+**Issue**: [GitHub Issue linked to the confirmed docs commit]
 
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
@@ -40,7 +42,10 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] The Issue pins a confirmed `docs` commit and links all relevant PRD/ADR/contracts.
+- [ ] Scope, non-goals, acceptance criteria, risks, and validation commands are explicit.
+- [ ] Implementation is targeted only at `dev`; `main` and `docs` receive no temporary business code.
+- [ ] Gates determined from the remaining constitution principles are satisfied.
 
 ## Project Structure
 

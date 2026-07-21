@@ -1,8 +1,10 @@
 # Child Manager 双 Agent 独立开发协议
 
+> **历史文档 / 已退役**：本协议记录 2026-07-12 至 2026-07-21 使用的 Codex/Trae 双实现流程。自 2026-07-21 起，当前开发遵循 [`single-implementation-development.md`](single-implementation-development.md) 的 `main/docs/dev` 单实现流程。本文只用于审计历史，不再授权或约束新的开发工作。
+
 文档版本：v1.0
 
-状态：已确认
+状态：已退役，仅供历史审计
 
 日期：2026-07-12
 

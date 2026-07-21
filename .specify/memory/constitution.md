@@ -1,32 +1,26 @@
 <!--
 Sync Impact Report
-- Version change: template -> 1.0.0
+- Version change: 1.0.0 -> 2.0.0
 - Modified principles:
-  - Template placeholders -> I. 事实来源与范围忠实
-  - Template placeholders -> II. 服务边界与单向依赖
-  - Template placeholders -> III. 园所隔离与服务端授权
-  - Template placeholders -> IV. 权威状态、事务与可恢复性
-  - Template placeholders -> V. 教师控制、AI 与 Word 保真
-  - Template placeholders -> VI. 可执行验证与真实证据
-- Added sections:
-  - 技术、安全与范围约束
-  - 开发工作流与质量门禁
-- Removed sections: none; template examples and placeholder comments were replaced
+  - I. 事实来源与范围忠实 -> 明确 docs 分支、Issue 与实现证据的领域职责
+  - 开发工作流与质量门禁 -> 由 main/codex/trae 双实现改为 main/docs/dev 单实现
+- Added sections: none
+- Removed sections: none; 历史双实现规则由单实现规则取代
 - Templates reviewed:
-  - ✅ .specify/templates/plan-template.md
-  - ✅ .specify/templates/spec-template.md
-  - ✅ .specify/templates/tasks-template.md
-  - ✅ .specify/templates/checklist-template.md
-  - ✅ .specify/templates/constitution-template.md
+  - ✅ .specify/templates/plan-template.md（增加 docs 基线与 Issue 门禁）
+  - ✅ .specify/templates/spec-template.md（明确 docs 规格分支）
+  - ✅ .specify/templates/tasks-template.md（明确 dev 单实现与固定 docs 提交）
+  - ✅ .specify/templates/checklist-template.md（无需修改）
+  - ✅ .specify/templates/constitution-template.md（无需修改）
 - Runtime guidance reviewed:
   - ✅ AGENTS.md
   - ✅ CONTEXT.md
   - ✅ README.md
+  - ✅ CONTRIBUTING.md
   - ✅ docs/ROADMAP.md
-  - ✅ docs/development/dual-agent-development.md
+  - ✅ docs/development/single-implementation-development.md
 - Command templates: .specify/templates/commands/ is not present in this installation
-- Follow-up TODOs: none in this constitution; feature-level conflicts must be clarified
-  before planning rather than encoded as constitution placeholders
+- Follow-up TODOs: none
 -->
 # Child Manager 项目宪章
 
@@ -35,8 +29,9 @@ Sync Impact Report
 ### I. 事实来源与范围忠实
 
 每项规格、计划、任务和实现都必须先依据其领域事实来源：`AGENTS.md` 管理开发过程，
-`CONTEXT.md` 与 `README.md` 管理当前状态和产品范围，经确认的 `docs/` 管理需求与架构，
-Word 模板及其说明管理导出版式。旧仓库只能提供经验，不能成为本项目需求。若来源冲突，
+`docs` 分支中的 `docs/`、`specs/`、OpenAPI 契约和 `templates/` 管理产品、架构、稳定契约与
+导出版式，`README.md` 管理稳定概览与导航，GitHub Issue 管理执行状态与验收证据。
+旧仓库只能提供经验，不能成为本项目需求。若来源冲突，
 必须指出位置和影响，并停止会固化冲突的工作，直到获得明确确认。实现必须保持当前任务
 的最小范围；不得预建照片、视觉、对象存储、审批、多园运营或生产部署空壳。
 
@@ -104,12 +99,16 @@ Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测
 
 ## 开发工作流与质量门禁
 
-1. 工作开始前必须按 `AGENTS.md`、`CONTEXT.md`、`README.md`、`docs/ROADMAP.md`、任务
-   对应 PRD/设计/ADR/模板、迁移和测试的顺序建立事实底稿；仓库可查信息不得转问用户。
-2. 多步骤任务必须先列出最短计划，并为每步给出可执行验证。设计、文档、Issue 和实现
-   边界必须按用户授权保持，不得从一种工作擅自扩展到另一种。
-3. `main` 只承载共享文档、模板、架构约束和变更记录；业务实现仅在经授权创建的 `codex`
-   或 `trae` 分支进行。未经明确授权不得切换/创建分支、提交、推送、创建 PR 或改写历史。
+1. 工作开始前必须按 `AGENTS.md`、`README.md`、`CONTEXT.md`、`CONTRIBUTING.md`、`docs`
+   分支中任务对应的 Roadmap/PRD/设计/ADR/规格/契约/模板、GitHub Issue、迁移和测试的顺序
+   建立事实底稿；仓库可查信息不得转问用户。
+2. 多步骤任务必须先列出最短计划，并为每步给出可执行验证。正式实现 Issue 必须固定引用
+   已确认的 `docs` 提交，并包含范围、非目标、验收标准和验证方式；缺少任一项不得开始实现。
+3. 长期分支固定为：`main` 保存稳定版本与发布基线，禁止临时开发；`docs` 保存 PRD、架构、
+   ADR、Context、Development Guide、共享规格、OpenAPI 和模板，禁止修改业务代码、迁移、
+   实现测试或依赖锁；`dev` 是 Codex 唯一实现与集成分支。流程必须是
+   `Design -> docs -> Issue -> dev -> 测试 -> Review -> main`。未经明确授权不得切换/创建
+   分支、提交、推送、创建 PR、合并或改写历史。
 4. 从工程骨架建立后，每个相关实现阶段至少执行：
 
    ```bash
@@ -121,7 +120,7 @@ Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测
    ```
 
    尚未配置的命令必须如实报告；数据库、Worker、Word 和真实 UI 流程还必须执行对应专项
-   检查。业务代码变化后应运行 `graphify update .`，失败时记录原因。
+   检查。业务代码或活跃治理/架构文档变化后应运行 `graphify update .`，失败时记录原因。
 5. 评审必须逐项检查本宪章、PRD 验收、服务依赖、园所隔离、权限、迁移、事务、任务幂等、
    数据最小化、模板哈希和非目标。任何未解释的宪章违反都必须在进入实现前消除。
 
@@ -137,4 +136,4 @@ Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测
 计划评审、任务生成和实现交付都必须再次执行宪章检查；复杂度例外必须在计划中列出更简单
 方案及其被拒理由。
 
-**Version**: 1.0.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-12
+**Version**: 2.0.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-21

@@ -6,13 +6,13 @@
 
 日期：2026-07-12
 
-适用分支：`main`、`codex`、`trae`
+适用分支：`main`、`docs`、`dev`
 
 ## 1. 文档目的
 
 本文定义 Child Manager 从共享设计基线到首期功能验收、再到生产部署复审的里程碑顺序、依赖、入口条件、出口门禁和验证证据。
 
-本文是 `codex` 与 `trae` 两个独立实现的共享产品路线，不规定内部类名、函数名或页面组件。两个实现可以采用不同内部组织，但必须遵守同一阶段依赖、业务不变量和可观测验收结果。
+本文是 `docs` 设计基线与 `dev` 唯一实现共同遵循的产品路线，不规定内部类名、函数名或页面组件。Codex 的实现必须遵守阶段依赖、业务不变量和可观测验收结果。
 
 本文不是：
 
@@ -95,9 +95,10 @@ uv run pytest
 
 ### 4.4 分支与 Issue 管理
 
-- `main` 只维护共享文档、模板与架构约束，不实现业务。
-- `codex` 和 `trae` 必须从同一个共享基线提交创建，不互相合并实现。
-- 只在阶段进入 `ready` 后将其拆成可独立领取的纵向 Issue。
+- `main` 只保存完成测试和 Review 的稳定版本与发布基线，不进行临时开发。
+- `docs` 保存 PRD、架构、ADR、Context、开发指南、共享规格、OpenAPI 和模板，是产品与设计的单一事实来源。
+- `dev` 是 Codex 唯一实现与集成分支；每次实现必须固定引用已确认的 `docs` 提交。
+- 只在阶段进入 `ready`、设计文档确认后，将其拆成可独立领取的纵向 Issue。
 - 每个 Issue 尽量交付一条可验证纵向能力，不默认按“所有模型”、“所有 Repository”、“所有页面”水平分层拆分。
 - 未经明确授权不创建分支、提交、推送或 Pull Request。
 
@@ -125,7 +126,7 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 
 ### 目标
 
-确保两个实现分支从同一组已审阅事实来源开始，在写代码前冻结首期范围、架构、数据库、Word 模板和开发规则。
+在写代码前冻结首期范围、架构、数据库、Word 模板和开发规则，并形成可追溯的共享事实来源。
 
 ### 已具备
 
@@ -139,17 +140,17 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 - [x] 模板历史隐私清理完成，清理后的远端历史与对象状态已复核。
 - [x] `main` 中共享基线形成单一目的提交，并完成清理后专项验证。
 
-### 完成后的授权动作
+### 历史完成后的授权动作
 
-- [x] 经明确授权后，`codex` 和 `trae` 已从同一最终 `main` 提交创建。
-- [x] 两个分支均记录共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`，不带未审阅业务代码。
+- [x] 2026-07-14 经明确授权后，历史 `codex` 和 `trae` 从同一最终 `main` 提交创建。
+- [x] 两个历史分支均记录共同基线 `c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7`，不带未审阅业务代码。
 
 以上两项属于 T003 和 M1 启动，不属于 M0 出口门禁；M0 完成不会自动授权分支或实现操作。
 
 ### 明确不做
 
-- 不在 `main` 创建 Python 业务骨架。
-- 不创建长期 `docs` 分支。
+- 不在 `main` 进行临时 Python 开发。
+- 不在 `docs` 修改业务代码、迁移、实现测试或依赖锁。
 - 不提前建设生产部署或未来子系统空壳。
 
 ## 7. M1：工程骨架与质量基线
@@ -169,7 +170,7 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 
 - [x] `uv sync --locked` 可在干净环境完成。
 - [x] 三个运行入口可独立启动并返回存活状态。
-- [x] Codex、Trae 各自完成分支内 M1 验证后，两套实现可按共享本地档位在同一开发机同时启动；工作树、Compose 项目、回环端口、数据库和运行时目录互不影响，停止一方不影响另一方。
+- [x] 历史 Codex、Trae 分支各自完成了 M1 验证和双环境隔离验收；该项保留为历史证据，不再构成当前单实现流程要求。
 - [x] API 就绪检查可区分 PostgreSQL、Redis 和外部 AI 的不同失败；AI 不可用不得令 API 整体不就绪。
 - [x] 静态架构检查能阻止 Web 绕过 API。
 - [x] 标准五条质量命令全部通过。
@@ -371,18 +372,18 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 
 ## 16. 当前状态快照
 
-状态日期：2026-07-16
+状态日期：2026-07-21
 
 | 里程碑 | 状态 | 当前证据 | 下一个解锁动作 |
 | --- | --- | --- | --- |
-| M0 共享基线 | `complete` | M0-G1～M0-G8 已关闭；历史隐私清理完成，脱敏模板和最终 docs-only `main` 基线已通过专项验证与远端重克隆复核 | 保持 `main` 为共享文档基线；后续共享文档按独立授权同步 |
-| M1 | `complete` | [Issue #1](https://github.com/ywyz/child-manager/issues/1) 最终只读复核通过并关闭；[#2](https://github.com/ywyz/child-manager/issues/2)、[#3](https://github.com/ywyz/child-manager/issues/3) 均已关闭，双环境同时启动与互不影响门禁已取得证据 | 保留验收记录；不据此自动授权 M2 实现 |
-| M2 | `ready` | M1 已 `complete`，入口条件满足；任务边界已固定为 T021～T035；[M2 Issue 草稿与执行记录](development/m2-issue-drafts.md) 已完成只读复核；父 Issue [#4](https://github.com/ywyz/child-manager/issues/4) 与子 Issue [#5](https://github.com/ywyz/child-manager/issues/5)、[#6](https://github.com/ywyz/child-manager/issues/6) 已创建；M1→M2 docs-only 内容已发布到 `main`，尚未同步实现分支或授权实现 | 单独申请将包含本文的 `main` HEAD 同步到两个实现分支；实现仍需后续独立授权 |
+| M0 共享基线 | `complete` | M0-G1～M0-G8 已关闭；历史隐私清理完成，脱敏模板和共享文档基线已通过专项验证与远端重克隆复核 | 由 `docs` 维护后续文档与契约基线 |
+| M1 | `complete` | [Issue #1](https://github.com/ywyz/child-manager/issues/1) 与历史实现 Issue [#2](https://github.com/ywyz/child-manager/issues/2)、[#3](https://github.com/ywyz/child-manager/issues/3) 已关闭 | 保留历史验收记录 |
+| M2 | `in_progress` | 历史 Codex Issue [#5](https://github.com/ywyz/child-manager/issues/5) 已关闭；Trae Issue [#6](https://github.com/ywyz/child-manager/issues/6) 因工作流重置按 `not planned` 归档；[#4](https://github.com/ywyz/child-manager/issues/4) 改为 `dev` 单实现验收入口 | `dev` 对齐当前 `docs` 契约，重新执行 M2 完整门禁和 Review；通过后形成首个稳定 `main` 应用基线 |
 | M3 | `pending` | 任务边界已固定为 T036～T045；尚未开始实现 | 等待 M2 `complete` |
 | M4–M8 | `pending` | 尚未开始实现 | 等待前序里程碑完成 |
 | M9 生产复审 | `pending` | ADR-0009 明确延后 | 等待 M8 `complete` |
 
-该快照只能根据实际分支、文件、命令与验收证据更新。不得根据另一实现分支、计划文件或未执行命令猜测状态。
+该快照只能根据实际分支、文件、命令与验收证据更新。不得根据历史分支、计划文件或未执行命令猜测状态。
 
 ## 17. Roadmap 更新规则
 

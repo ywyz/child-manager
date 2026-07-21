@@ -2,10 +2,11 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Current repository state**: `main` 只有文档、模板与 Spec Kit 产物；Codex、Trae 分支均已
-完成 M1 T004～T020 与共享出口验收，可执行锁定安装、本地依赖、迁移及 API、Worker、Web
-工程入口。M2 当前为 `ready`，但 Issue 创建与实现尚未授权；下列命令覆盖 M1～M8 验收
-合同，超出已完成 M1 的业务初始化与用户故事步骤仍不可执行，也不表示已经通过。
+**Updated**: 2026-07-21
+**Current repository state**: `main` 仍是迁移前 docs-only 基线；`docs` 是当前文档、规格、
+OpenAPI 和模板的单一事实来源；`dev` 以历史 Codex `ca2d393` 为实现起点。M1 已完成，M2
+为 `in_progress`，必须在 `dev` 对齐当前 docs 并重新完成验收。下列命令覆盖 M1～M8 验收
+合同，尚未完成的用户故事步骤不可执行，也不表示已经通过。
 
 ## 1. 前提与反目标
 
@@ -15,9 +16,9 @@
 本 quickstart 不创建或验收生产 Caddy/Compose 拓扑、DNS、证书、Tailscale、生产密钥
 托管、备份或发布流程，也不包含 PDF、照片、OCR、对象存储、审批和后续业务子系统。
 `compose.dev.yaml` 若由 M1 创建，只允许启动本地测试 PostgreSQL/Redis，不代表生产拓扑。
-Codex 与 Trae 同机并行时必须先按
+本地启动必须先按
 [`local-development-environments.md`](../../docs/development/local-development-environments.md)
-进入各自 worktree 并加载对应档位。下列命令统一引用档位变量，不再假定共享固定端口。
+进入 `dev` worktree 并加载 Dev 档位。下列命令统一引用档位变量，不再假定共享固定端口。
 
 ## 2. 锁定安装与本地依赖
 

@@ -1,12 +1,12 @@
 # Feature Specification: 首期一日活动计划完整闭环
 
-**Feature Branch**: `main`（共享规格）；实现分支 `codex`、`trae` 已从同一基线创建
+**Feature Branch**: `docs`（共享规格）；`dev`（唯一实现）
 
 **Feature Directory**: `specs/001-daily-activity-plan`
 
 **Created**: 2026-07-12
 
-**Status**: M0、M1 `complete` / M2 `ready` — M1 Issues #1～#3 已关闭；M2 Issue 创建与实现尚未授权
+**Status**: M0、M1 `complete` / M2 `in_progress` — #4 是 `dev` 的当前单实现验收入口
 
 **Input**: 将 Child Manager 首期 M1–M8 作为一个完整 feature，交付工程与安全基础、
 认证授权、必要设置、AI 模型与提示词、手工教案、异步 AI、固定 Word 导出和功能验收。

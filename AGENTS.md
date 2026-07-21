@@ -9,7 +9,9 @@
 按内容所属领域使用事实来源，不要把某一个文件当作所有问题的唯一真相：
 
 - `AGENTS.md`：开发过程、修改边界和验证规则。
-- `README.md` 与经确认的 `docs/`：产品范围、架构决策和协作方式。
+- `docs` 分支中的 `docs/`、`specs/`、OpenAPI 契约和 `templates/`：产品需求、架构决策、稳定契约和模板的单一事实来源。
+- `README.md`：产品概览、稳定版本状态和文档导航。
+- GitHub Issue：执行范围、当前状态、阻塞与验收证据；Issue 不得改写已确认的产品或架构规则。
 - `templates/teacherplan/teacherplan.docx`：Word 导出的实际版式。
 - `templates/teacherplan/一日活动计划系统说明.md`：字段含义、内容格式和生成要求。
 - Alembic 迁移与自动化测试：当前已实现行为的证据，但不能自行推翻已确认需求。
@@ -26,7 +28,8 @@
 
 ### 2.1 先理解再编码
 
-- 阅读任务直接涉及的 README、需求、模板、迁移、测试和局部 `AGENTS.md`。
+- 先阅读根目录 `AGENTS.md`，再阅读 `README.md`、`CONTEXT.md`、当前任务在 `docs` 分支中的 PRD、ADR、架构、规格、契约、模板和对应 GitHub Issue；实现任务还要阅读迁移、测试和局部 `AGENTS.md`。
+- 实现 Issue 必须固定引用已确认的 `docs` 提交 ID；不得只引用会继续移动的分支名。
 - 明确说明会影响实现的假设；存在多种合理解释时不得静默选择。
 - 能从仓库中查明的信息先自行查明，不向用户重复提问。
 - 发现更简单且满足需求的方案时应主动说明。
@@ -64,17 +67,18 @@
 
 ## 4. 分支与 Git 规则
 
-当前分支职责：
+长期分支职责：
 
-- `main`：维护根目录说明、`docs/`、共享 `specs/`、模板、架构约束和变更记录，当前不承载业务实现。
-- `codex`：Codex 的完整独立实现、迁移和测试；生产部署文件等功能完成后另行设计。
-- `trae`：Trae 的完整独立实现、迁移和测试；生产部署文件等功能完成后另行设计。
+- `main`：稳定版本与发布基线，只接收已经完成测试和 Review 的 `dev` 结果；当前迁移完成前仍是历史 docs-only 基线，不得提前宣称为可发布应用。
+- `docs`：PRD、Architecture、ADR、Context、Development Guide、共享 `specs/`、OpenAPI 契约和 `templates/` 的单一事实来源。该分支可以包含从 `main` 继承的稳定代码快照，但提交不得修改业务代码、迁移、实现测试或依赖锁。
+- `dev`：Codex 负责的唯一实现与集成分支，承载 Python 代码、数据库迁移、NiceGUI UI、测试和依赖锁。
 
 执行规则：
 
-- 不创建长期 `docs` 分支。
-- `main` 的文档、共享规格与模板更新应形成只包含根目录说明、`docs/`、`specs/` 或 `templates/` 的独立提交，再 cherry-pick 到实现分支。
-- 不得自行在 `codex` 与 `trae` 之间合并代码，也不得自行把实现合并回 `main`。
+- 所有业务实现必须由 GitHub Issue 驱动。Issue 必须包含固定的 `docs` 提交 ID、范围、非目标、验收标准和验证方式；缺少任一项时不得开始实现。
+- 流程固定为 `Design -> docs 确认 -> Issue -> dev 实现 -> 测试 -> Review -> main`。实现发现需求缺口时，停止受影响工作，先修订并确认 `docs`，再更新 Issue 的文档基线。
+- `docs` 的提交只允许修改根目录治理说明、`.github/ISSUE_TEMPLATE/`、`.specify/memory/constitution.md`、`.specify/templates/`、`docs/`、共享 `specs/`、OpenAPI 契约、`templates/` 或由工具生成的 `graphify-out/`；同步到 `dev` 后必须重新运行受影响验证。
+- `dev` 不得反向修改已确认需求来迁就现有实现。`main` 禁止临时开发和未验收提交。
 - 未经明确授权，不得提交、推送、创建 Pull Request、切换分支或改写 Git 历史。
 - 禁止使用 `git reset --hard`、强制推送或其他破坏性命令。
 - 提交应保持单一目的。Commit 使用 Conventional Commits 类型，主题中文优先，例如 `feat: 增加教案归档`。
@@ -275,7 +279,7 @@
 
 ## 16. 标准验证命令
 
-实现分支统一使用：
+`dev` 实现分支统一使用：
 
 ```bash
 uv sync --locked
@@ -307,7 +311,7 @@ uv run pytest
 - 只有架构综述或查询结果不足时再阅读完整 `GRAPH_REPORT.md`。
 - `graphify-out/` 因查询或更新产生改动是正常现象，不能据此跳过图谱。
 - 不得手工编辑生成的图谱文件。
-- 修改业务代码后运行 `graphify update .`；若工具不可用或更新失败，在交付说明中报告。
+- 修改业务代码或活跃治理/架构文档后运行 `graphify update .`；若工具不可用或更新失败，在交付说明中报告。
 
 ## 18. 完成交付
 
