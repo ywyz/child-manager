@@ -1,5 +1,7 @@
 # Child Manager 文档交叉审计合并结论
 
+> **历史记录**：本文记录工作流重置前的双 Agent 文档审计过程，不再定义当前分支、Issue 或实施流程。当前规则见 [`../development/single-implementation-development.md`](../development/single-implementation-development.md)。
+
 > 状态：产品、业务、架构与安全选项已经完成用户确认；M0、M1 均为 `complete`，M1 Issues #1～#3 已关闭且共享双环境门禁已通过；M2 为 `ready`，父 Issue #4 与子 Issue #5、#6 已创建，共享基线同步与实现尚未授权。
 >
 > 本文是 Codex 与 Trae 审计结果的合并执行索引，不替代 PRD、ADR、设计文档、Spec Kit、OpenAPI 或 Word 模板。

@@ -164,7 +164,10 @@ paths:
               $ref: "#/components/schemas/ChangePasswordRequest"
       responses:
         "204":
-          description: 密码已修改；全部会话已撤销
+          description: 密码已修改；全部会话已撤销；清除 access/refresh Cookie
+          headers:
+            Set-Cookie:
+              $ref: "#/components/headers/ClearAuthCookies"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -182,8 +185,12 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UserPage"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
     post:
       tags: [Users]
       summary: 创建管理员或教师账号
@@ -198,6 +205,8 @@ paths:
       responses:
         "201":
           $ref: "#/components/responses/UserCreated"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "409":
@@ -213,10 +222,14 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UserOk"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
     patch:
       tags: [Users]
       summary: 修改账号非凭证字段
@@ -231,6 +244,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UserOk"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
@@ -261,12 +276,16 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UserOk"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/ValidationError"
   /api/v1/users/{user_id}/activate:
     post:
       tags: [Users]
@@ -277,10 +296,14 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UserOk"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
   /api/v1/users/{user_id}/deactivate:
     post:
       tags: [Users]
@@ -291,12 +314,16 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/UserOk"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
         "409":
           $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/ValidationError"
   /api/v1/users/{user_id}/reset-password:
     post:
       tags: [Users]
@@ -318,6 +345,8 @@ paths:
       responses:
         "204":
           description: 已重置
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":

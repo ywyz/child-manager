@@ -1,5 +1,7 @@
 # M2 认证、授权与身份审计 Issue 草稿与执行记录
 
+> **历史记录**：本文保留 M2 双实现阶段最初的 Issue 草稿，正文中的 `pending/ready`、分支 HEAD 与下一步不再代表实时状态。当前 M2 状态以 GitHub Issue #4 和 [`single-implementation-development.md`](single-implementation-development.md) 为准。
+
 > 草稿日期：2026-07-16
 > 当前状态：Issue #4～#6 已创建并建立父子关系，尚未授权共享基线同步或业务实现
 > 草稿核对时 `main` HEAD：`96920309c92f1ffa95903cd6bf90919ab5fee140`，与远端 `main` 一致

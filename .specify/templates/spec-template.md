@@ -1,6 +1,8 @@
 # Feature Specification: [FEATURE NAME]
 
-**Feature Branch**: `[###-feature-name]`
+**Specification Branch**: `docs`
+
+**Implementation Target**: `dev`（only after this specification is confirmed and an Issue pins its commit）
 
 **Created**: [DATE]
 

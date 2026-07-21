@@ -7,11 +7,15 @@ description: "Task list template for feature implementation"
 
 **Input**: Design documents from `/specs/[###-feature-name]/`
 
+**Docs Baseline**: `[CONFIRMED_DOCS_COMMIT]` | **Issue**: `[GITHUB_ISSUE_URL]` | **Implementation Branch**: `dev`
+
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
 **Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
+
+**Authorization**: Tasks do not authorize implementation by themselves. Do not begin until the linked Issue pins a confirmed docs commit and implementation on `dev` is authorized.
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -167,8 +171,8 @@ Examples of foundational tasks (adjust based on your project):
 - **Setup (Phase 1)**: No dependencies - can start immediately
 - **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
 - **User Stories (Phase 3+)**: All depend on Foundational phase completion
-  - User stories can then proceed in parallel (if staffed)
-  - Or sequentially in priority order (P1 → P2 → P3)
+  - Independent user stories may be scheduled in parallel only when file/dependency boundaries are safe
+  - The single Codex implementation otherwise proceeds sequentially by priority (P1 → P2 → P3)
 - **Polish (Final Phase)**: Depends on all desired user stories being complete
 
 ### User Story Dependencies
@@ -192,7 +196,7 @@ Examples of foundational tasks (adjust based on your project):
 - Once Foundational phase completes, all user stories can start in parallel (if team capacity allows)
 - All tests for a user story marked [P] can run in parallel
 - Models within a story marked [P] can run in parallel
-- Different user stories can be worked on in parallel by different team members
+- Different user stories may be interleaved only when one Codex implementation can preserve clear dependencies and verification evidence
 
 ---
 
@@ -228,16 +232,12 @@ Task: "Create [Entity2] model in src/models/[entity2].py"
 4. Add User Story 3 → Test independently → Deploy/Demo
 5. Each story adds value without breaking previous stories
 
-### Parallel Team Strategy
+### Single Implementer Strategy
 
-With multiple developers:
-
-1. Team completes Setup + Foundational together
-2. Once Foundational is done:
-   - Developer A: User Story 1
-   - Developer B: User Story 2
-   - Developer C: User Story 3
-3. Stories complete and integrate independently
+1. Codex completes Setup + Foundational and verifies the checkpoint.
+2. Codex implements user stories in priority/dependency order on `dev`.
+3. `[P]` marks dependency-safe work, not authorization for a second implementation branch.
+4. Each story is reviewed and tested independently before the next release gate.
 
 ---
 

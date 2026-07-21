@@ -1,5 +1,7 @@
 # M1 工程骨架与质量基线 Issue 草稿与执行记录
 
+> **历史记录**：本文保留 M1 双实现阶段的 Issue 草稿与执行证据，不再定义当前分支或 Issue 流程。当前规则见 [`single-implementation-development.md`](single-implementation-development.md)。
+
 > 草稿日期：2026-07-14
 > 草稿复核基线：`ba81925a8b0a9f1a74951358bdf37cd45f8c529b`
 > 状态同步日期：2026-07-16

@@ -1,0 +1,95 @@
+name: 实现任务
+description: 基于已确认 docs 基线创建 Codex 实现或缺陷修复任务
+title: "[实现] "
+body:
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: 任务类型
+      options:
+        - 新功能
+        - 缺陷修复
+        - 技术债与有边界重构
+        - 治理或文档同步
+    validations:
+      required: true
+  - type: input
+    id: docs_commit
+    attributes:
+      label: 已确认 docs 提交
+      description: 填写完整提交 SHA；不得只填写浮动分支名。
+      placeholder: 40 位 commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: 事实来源
+      description: 列出 PRD、ADR、Architecture、规格、OpenAPI 或模板的固定链接。
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: 目标与用户可观察结果
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 范围
+      description: 明确包含的纵向能力和受影响模块。
+    validations:
+      required: true
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: 非目标
+      description: 明确本 Issue 不实现、不重构和不提前建设的内容。
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      description: 使用可执行清单，包含成功、错误、权限、隔离和必要 UI 路径。
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: 影响面
+      options:
+        - label: API / OpenAPI
+        - label: PostgreSQL / Alembic
+        - label: NiceGUI Web
+        - label: Worker / Redis
+        - label: 权限、园所隔离或安全隐私
+        - label: Word 模板或文件导出
+        - label: 文档或契约
+  - type: textarea
+    id: plan
+    attributes:
+      label: 实现与验证计划
+      description: 说明 RED 测试、最小实现、专项验证和完整门禁。
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: 风险、阻塞与未决项
+    validations:
+      required: true
+  - type: checkboxes
+    id: readiness
+    attributes:
+      label: 开始实现前确认
+      options:
+        - label: 我已阅读 AGENTS.md、CONTRIBUTING.md 和对应 docs。
+          required: true
+        - label: 文档冲突和高影响歧义已经解决。
+          required: true
+        - label: 目标实现分支为 dev，不在 main 或 docs 编写业务代码。
+          required: true

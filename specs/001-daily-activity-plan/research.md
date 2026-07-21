@@ -2,8 +2,8 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Updated**: 2026-07-16
-**Status**: 研究决策已收敛；M1 已完成两个实现的分支内验收与共享双环境门禁，M2 为 `ready` 但尚未授权创建 Issue 或实现
+**Updated**: 2026-07-21
+**Status**: 研究决策已收敛；M1 `complete`；M2 `in_progress`，由 `dev` 按 #4 单实现验收
 
 ## 1. 研究方法与决策优先级
 
