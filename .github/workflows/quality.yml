@@ -3,7 +3,7 @@ name: quality
 on:
   pull_request:
   push:
-    branches: [main, codex, trae]
+    branches: [main, dev]
 
 permissions:
   contents: read
