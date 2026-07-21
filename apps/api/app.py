@@ -37,6 +37,116 @@ def _error_response(
     return response
 
 
+def _align_current_user(schemas: dict[str, object]) -> None:
+    """对齐 CurrentUser：username 去除 anyOf/null，role_codes/capabilities 补 uniqueItems。"""
+    current_user = schemas.get("CurrentUser")
+    if not isinstance(current_user, dict):
+        return
+    props = current_user.get("properties", {})
+    if not isinstance(props, dict):
+        return
+    username = props.get("username")
+    if isinstance(username, dict):
+        props["username"] = {
+            "type": "string",
+            "maxLength": 120,
+            "description": "用户名",
+        }
+    role_codes = props.get("role_codes")
+    if isinstance(role_codes, dict):
+        role_codes["uniqueItems"] = True
+        items = role_codes.get("items")
+        if isinstance(items, dict):
+            items["enum"] = ["admin", "teacher"]
+    capabilities = props.get("capabilities")
+    if isinstance(capabilities, dict):
+        capabilities["uniqueItems"] = True
+
+
+def _align_kindergarten_snapshot(schemas: dict[str, object]) -> None:
+    """对齐 KindergartenSnapshot：timezone 必须 required + const Asia/Shanghai。"""
+    kg = schemas.get("KindergartenSnapshot")
+    if not isinstance(kg, dict):
+        return
+    props = kg.get("properties", {})
+    if isinstance(props, dict) and "timezone" in props:
+        props["timezone"] = {"type": "string", "const": "Asia/Shanghai"}
+    required = kg.setdefault("required", [])
+    if isinstance(required, list) and "timezone" not in required:
+        required.append("timezone")
+
+
+def _align_user_patch(schemas: dict[str, object]) -> None:
+    """对齐 UserPatch：minProperties: 1，username/display_name 去除 anyOf/null。"""
+    user_patch = schemas.get("UserPatch")
+    if not isinstance(user_patch, dict):
+        return
+    user_patch["minProperties"] = 1
+    props = user_patch.get("properties", {})
+    if not isinstance(props, dict):
+        return
+    for field_name in ("username", "display_name"):
+        field = props.get(field_name)
+        if not isinstance(field, dict) or "anyOf" not in field:
+            continue
+        string_clause = next(
+            (c for c in field["anyOf"] if isinstance(c, dict) and c.get("type") == "string"),
+            None,
+        )
+        if string_clause is not None:
+            props[field_name] = {
+                "type": "string",
+                "minLength": string_clause.get("minLength", 1),
+                "maxLength": string_clause.get("maxLength", 120),
+                "description": field.get("description", ""),
+            }
+
+
+def _align_password_fields(schemas: dict[str, object]) -> None:
+    """对齐请求体密码字段：writeOnly + $ref Password（按冻结契约）。"""
+    login_request = schemas.get("LoginRequest")
+    if isinstance(login_request, dict):
+        props = login_request.get("properties", {})
+        if isinstance(props, dict) and isinstance(props.get("password"), dict):
+            props["password"]["writeOnly"] = True
+
+    change_password = schemas.get("ChangePasswordRequest")
+    if isinstance(change_password, dict):
+        props = change_password.get("properties", {})
+        if isinstance(props, dict):
+            current_pw = props.get("current_password")
+            if isinstance(current_pw, dict):
+                current_pw["writeOnly"] = True
+            if "new_password" in props:
+                props["new_password"] = {"$ref": "#/components/schemas/Password"}
+
+    create_user = schemas.get("CreateUserRequest")
+    if isinstance(create_user, dict):
+        props = create_user.get("properties", {})
+        if isinstance(props, dict) and "password" in props:
+            props["password"] = {"$ref": "#/components/schemas/Password"}
+
+
+def _align_runtime_schemas(schemas: dict[str, object]) -> None:
+    """将 Pydantic 生成的运行时 schema 与冻结 OpenAPI 深层语义对齐。
+
+    覆盖范围按 Codex M2 Final Contract Freeze `97251dc` P0/P1 清单：
+    - CurrentUser.username：去掉 anyOf/null，改为 type: string
+    - CurrentUser.role_codes：补 uniqueItems 与 items.enum
+    - CurrentUser.capabilities：补 uniqueItems
+    - KindergartenSnapshot.timezone：补 required 并改 const: Asia/Shanghai
+    - UserPatch：补 minProperties: 1，username/display_name 改 type: string
+    - LoginRequest.password：补 writeOnly: true
+    - ChangePasswordRequest.current_password：补 writeOnly: true
+    - ChangePasswordRequest.new_password：改 $ref Password
+    - CreateUserRequest.password：改 $ref Password
+    """
+    _align_current_user(schemas)
+    _align_kindergarten_snapshot(schemas)
+    _align_user_patch(schemas)
+    _align_password_fields(schemas)
+
+
 def custom_openapi(application: FastAPI) -> dict[str, object]:
     if application.openapi_schema:
         return application.openapi_schema
@@ -100,6 +210,11 @@ def custom_openapi(application: FastAPI) -> dict[str, object]:
             id_prop = props.get("id")
             if isinstance(id_prop, dict) and id_prop.get("type") == "string":
                 props["id"] = {"$ref": "#/components/schemas/Uuid"}
+
+    # M2-F01：补齐冻结契约深层语义（Codex M2 Final Contract Freeze P0/P1）。
+    # Pydantic 默认 schema 与冻结 OpenAPI 在 nullable/enum/uniqueItems/writeOnly/
+    # minProperties/const 等结构上仍有差异；此处统一覆写为冻结语义。
+    _align_runtime_schemas(schemas)
 
     components["schemas"] = schemas
     # 安全方案与全局 security（与冻结契约 components/securitySchemes 对齐）。

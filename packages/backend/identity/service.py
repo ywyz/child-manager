@@ -12,7 +12,6 @@ from sqlalchemy.orm import Session
 
 from packages.backend.audit.service import AuditService
 from packages.backend.config import settings
-from packages.backend.identity.csrf import generate_csrf_token
 from packages.backend.identity.exceptions import (
     ConflictError,
     InvalidPasswordError,
@@ -52,6 +51,7 @@ class LoginResult:
     """登录成功后的完整结果，避免使用无类型字典。
 
     当前用户对象在事务提交前构造完成，Router 层不再额外查询数据库。
+    CSRF Token 不在登录响应中生成；CSRF Cookie 由独立 ``/auth/csrf`` 端点签发。
     """
 
     user: User
@@ -60,13 +60,15 @@ class LoginResult:
     family_id: str
     access_token: str
     refresh_value: str
-    csrf_token: str
     current_user: CurrentUser
 
 
 @dataclass(frozen=True)
 class RefreshResult:
-    """刷新成功后的完整结果。"""
+    """刷新成功后的完整结果。
+
+    CSRF Token 不在刷新响应中生成；CSRF Cookie 由独立 ``/auth/csrf`` 端点签发。
+    """
 
     user_id: str
     kindergarten_id: str
@@ -74,7 +76,6 @@ class RefreshResult:
     roles: list[str]
     access_token: str
     refresh_value: str
-    csrf_token: str
     current_user: CurrentUser
 
 
@@ -300,7 +301,6 @@ class IdentityService:
             expires_at=expires_at,
         )
         self._repo.record_login(user)
-        csrf_token = generate_csrf_token(settings.csrf_signing_key)
         current_user = self.build_current_user(user)
         response = LoginResult(
             user=user,
@@ -309,7 +309,6 @@ class IdentityService:
             family_id=family_id,
             access_token=access_token,
             refresh_value=refresh_value,
-            csrf_token=csrf_token,
             current_user=current_user,
         )
         self._session.commit()
@@ -376,7 +375,6 @@ class IdentityService:
             signing_key=settings.jwt_signing_key,
             expire_minutes=settings.jwt_expire_minutes,
         )
-        csrf_token = generate_csrf_token(settings.csrf_signing_key)
         self._record_identity(
             kindergarten_id=token_row.kindergarten_id,
             event_code=audit_events.IDENTITY_REFRESH,
@@ -393,7 +391,6 @@ class IdentityService:
             roles=roles,
             access_token=access_token,
             refresh_value=refresh_value,
-            csrf_token=csrf_token,
             current_user=current_user,
         )
         self._session.commit()

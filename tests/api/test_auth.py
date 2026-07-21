@@ -985,3 +985,42 @@ def test_me_without_access_cookie_returns_401(
     )
     assert response.status_code == 401
     assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_change_password_actual_set_cookie_count_is_two(
+    client: TestClient,
+    csrf_cookie: dict[str, str],
+    csrf_headers: dict[str, str],
+) -> None:
+    """M2-F01：change-password 实际 HTTP 响应必须恰好返回 2 条 Set-Cookie。
+
+    Codex 第十九轮审阅 P1：静态 OpenAPI 已声明 204 的 ClearAuthCookies header，
+    运行时 OpenAPI 已通过 clear_cookies_response 声明 Set-Cookie，但缺少 HTTP 层
+    实际 header 回归。本测试验证实际响应恰好返回 2 条 Set-Cookie（access+refresh），
+    且都为 Max-Age=0 清除语义；CSRF Cookie 不在 change-password 中清除。
+    """
+    login = client.post(
+        "/api/v1/auth/login",
+        json={"login": "admin", "password": "ValidPassword2024!"},
+        headers=csrf_headers,
+        cookies=csrf_cookie,
+    )
+    assert login.status_code == 200
+    access_cookie = login.cookies.get("child_manager_access")
+    assert access_cookie is not None
+
+    response = client.post(
+        "/api/v1/auth/change-password",
+        json={"current_password": "ValidPassword2024!", "new_password": "NewPassword2024!"},
+        headers=csrf_headers,
+        cookies={"child_manager_access": access_cookie, **csrf_cookie},
+    )
+    assert response.status_code == 204
+    set_cookies = response.headers.get_list("set-cookie")
+    assert len(set_cookies) == 2, (
+        f"change-password 应返回恰好 2 条 Set-Cookie（access+refresh），实际: {len(set_cookies)}"
+    )
+    assert any("child_manager_access=" in c for c in set_cookies)
+    assert any("child_manager_refresh=" in c for c in set_cookies)
+    assert all("Max-Age=0" in c for c in set_cookies)
+    assert not any("child_manager_csrf=" in c for c in set_cookies)

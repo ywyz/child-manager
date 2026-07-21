@@ -781,6 +781,49 @@ def test_runtime_error_required_set_matches_frozen() -> None:
     )
 
 
+def test_runtime_ref_properties_resolve_to_frozen_constraints() -> None:
+    """M2-F01：通过 $ref 引用 Uuid/Password 的字段，解引用后必须与冻结契约约束一致。
+
+    Codex 第十九轮审阅 P2：``_resolve_schema`` 已定义但没有任何测试调用，
+    parity 比较直接读取 schema 对象而不递归解引用 ``$ref``。本测试通过
+    ``_resolve_schema`` 解引用 User.id、CurrentUser.id、CreateUserRequest.password、
+    ChangePasswordRequest.new_password 等 ``$ref`` 字段，比较解引用后的 type/format、
+    minLength/maxLength 等深层语义，确保运行时与冻结契约严格对齐。
+    """
+    static_spec = _load_spec()
+    runtime_spec = _runtime_full_spec()
+
+    # 收集 (schema_name, property_name) 二元组，这些字段在运行时通过 $ref 引用
+    # Uuid 或 Password 可复用组件，需要解引用后比较约束。
+    ref_fields: list[tuple[str, str]] = [
+        ("User", "id"),
+        ("CurrentUser", "id"),
+        ("CreateUserRequest", "password"),
+        ("ChangePasswordRequest", "new_password"),
+    ]
+
+    mismatches: list[str] = []
+    for schema_name, prop_name in ref_fields:
+        static_schema = static_spec["components"]["schemas"].get(schema_name, {})
+        runtime_schema = runtime_spec["components"]["schemas"].get(schema_name, {})
+        static_prop = static_schema.get("properties", {}).get(prop_name, {})
+        runtime_prop = runtime_schema.get("properties", {}).get(prop_name, {})
+        # 递归解引用 $ref 后比较深层约束
+        static_resolved = _resolve_schema(static_spec, static_prop)
+        runtime_resolved = _resolve_schema(runtime_spec, runtime_prop)
+        for key in ("type", "format", "minLength", "maxLength", "writeOnly"):
+            static_value = static_resolved.get(key)
+            runtime_value = runtime_resolved.get(key)
+            if static_value != runtime_value:
+                mismatches.append(
+                    f"{schema_name}.{prop_name} 解引用后 {key}: "
+                    f"冻结={static_value!r} 运行时={runtime_value!r}"
+                )
+    assert not mismatches, "通过 $ref 引用的字段解引用后与冻结契约约束不一致:\n" + "\n".join(
+        mismatches
+    )
+
+
 def test_login_actual_set_cookie_count_is_two(migrated_database_url: str) -> None:
     """M2-F01：login 实际 HTTP 响应必须恰好返回 2 条 Set-Cookie。"""
     from fastapi.testclient import TestClient

@@ -744,3 +744,106 @@ def test_reset_password_nonexistent_user_returns_404(client: TestClient) -> None
     )
     assert response.status_code == 404
     assert response.json()["code"] == "resource.not_found"
+
+
+# --- M2-F01 收紧 HTTP 矩阵测试：8 个 Users operation 未认证必须返回 401 ---
+# Codex 第十九轮审阅 P1：静态与运行时 OpenAPI 已声明 401，但缺少 HTTP 层
+# 实际行为回归。本组测试对全部 8 个 Users operation 在未携带 access cookie 的
+# 情况下发送请求，验证实际返回 401 而非 403/422/500，且 body 使用统一 Error envelope。
+
+
+_USER_ID_PLACEHOLDER = "00000000-0000-7000-8000-000000000000"
+
+
+def test_get_users_unauthenticated_returns_401(client: TestClient) -> None:
+    """OpenAPI 声明 GET /api/v1/users 401；未认证必须返回 401。"""
+    response = client.get("/api/v1/users", headers=_CSRF_HEADERS, cookies=_CSRF_COOKIE)
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_post_users_unauthenticated_returns_401(client: TestClient) -> None:
+    """OpenAPI 声明 POST /api/v1/users 401；未认证必须返回 401。"""
+    response = client.post(
+        "/api/v1/users",
+        json={
+            "username": "ghost",
+            "display_name": "幽灵",
+            "phone_e164": None,
+            "role_codes": ["teacher"],
+            "password": "ValidPassword2024!",
+        },
+        headers=_CSRF_HEADERS,
+        cookies=_CSRF_COOKIE,
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_get_user_by_id_unauthenticated_returns_401(client: TestClient) -> None:
+    """OpenAPI 声明 GET /api/v1/users/{user_id} 401；未认证必须返回 401。"""
+    response = client.get(
+        f"/api/v1/users/{_USER_ID_PLACEHOLDER}",
+        headers=_CSRF_HEADERS,
+        cookies=_CSRF_COOKIE,
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_patch_user_unauthenticated_returns_401(client: TestClient) -> None:
+    """OpenAPI 声明 PATCH /api/v1/users/{user_id} 401；未认证必须返回 401。"""
+    response = client.patch(
+        f"/api/v1/users/{_USER_ID_PLACEHOLDER}",
+        json={"display_name": "改名"},
+        headers=_CSRF_HEADERS,
+        cookies=_CSRF_COOKIE,
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_put_user_roles_unauthenticated_returns_401(client: TestClient) -> None:
+    """OpenAPI 声明 PUT /api/v1/users/{user_id}/roles 401；未认证必须返回 401。"""
+    response = client.put(
+        f"/api/v1/users/{_USER_ID_PLACEHOLDER}/roles",
+        json={"role_codes": ["teacher"]},
+        headers=_CSRF_HEADERS,
+        cookies=_CSRF_COOKIE,
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_activate_user_unauthenticated_returns_401(client: TestClient) -> None:
+    """OpenAPI 声明 POST /api/v1/users/{user_id}/activate 401；未认证必须返回 401。"""
+    response = client.post(
+        f"/api/v1/users/{_USER_ID_PLACEHOLDER}/activate",
+        headers=_CSRF_HEADERS,
+        cookies=_CSRF_COOKIE,
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_deactivate_user_unauthenticated_returns_401(client: TestClient) -> None:
+    """OpenAPI 声明 POST /api/v1/users/{user_id}/deactivate 401；未认证必须返回 401。"""
+    response = client.post(
+        f"/api/v1/users/{_USER_ID_PLACEHOLDER}/deactivate",
+        headers=_CSRF_HEADERS,
+        cookies=_CSRF_COOKIE,
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"
+
+
+def test_reset_password_unauthenticated_returns_401(client: TestClient) -> None:
+    """OpenAPI 声明 POST /api/v1/users/{user_id}/reset-password 401；未认证必须返回 401。"""
+    response = client.post(
+        f"/api/v1/users/{_USER_ID_PLACEHOLDER}/reset-password",
+        json={"new_password": "NewPassword2024!"},
+        headers=_CSRF_HEADERS,
+        cookies=_CSRF_COOKIE,
+    )
+    assert response.status_code == 401
+    assert response.json()["code"] == "auth.unauthenticated"

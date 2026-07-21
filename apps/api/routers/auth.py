@@ -292,7 +292,7 @@ async def me(current_user: Annotated[CurrentUser, Depends(get_current_user)]) ->
     "/change-password",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
-        204: {"description": "已修改密码"},
+        204: clear_cookies_response("密码已修改；全部会话已撤销；清除 access/refresh Cookie"),
         401: UNAUTHORIZED,
         403: FORBIDDEN,
         422: VALIDATION_ERROR,

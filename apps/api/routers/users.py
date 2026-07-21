@@ -12,6 +12,7 @@ from apps.api.openapi_responses import (
     CSRF_HEADER_PARAM,
     FORBIDDEN,
     NOT_FOUND,
+    UNAUTHORIZED,
     VALIDATION_ERROR,
 )
 from packages.backend.identity.exceptions import UserNotFoundError
@@ -49,6 +50,7 @@ _USER_PAGE = {
     status_code=status.HTTP_201_CREATED,
     responses={
         201: _USER_CREATED,
+        401: UNAUTHORIZED,
         403: FORBIDDEN,
         409: CONFLICT,
         422: VALIDATION_ERROR,
@@ -76,6 +78,7 @@ async def create_user(
     response_model=UserPage,
     responses={
         200: _USER_PAGE,
+        401: UNAUTHORIZED,
         403: FORBIDDEN,
         422: VALIDATION_ERROR,
     },
@@ -96,6 +99,7 @@ async def list_users(
     response_model=User,
     responses={
         200: _USER_OK,
+        401: UNAUTHORIZED,
         403: FORBIDDEN,
         404: NOT_FOUND,
         422: VALIDATION_ERROR,
@@ -118,6 +122,7 @@ async def get_user(
     response_model=User,
     responses={
         200: _USER_OK,
+        401: UNAUTHORIZED,
         403: FORBIDDEN,
         404: NOT_FOUND,
         422: VALIDATION_ERROR,
@@ -150,6 +155,7 @@ async def update_user(
     response_model=User,
     responses={
         200: _USER_OK,
+        401: UNAUTHORIZED,
         403: FORBIDDEN,
         404: NOT_FOUND,
         409: CONFLICT,
@@ -183,6 +189,7 @@ async def set_user_roles(
     response_model=User,
     responses={
         200: _USER_OK,
+        401: UNAUTHORIZED,
         403: FORBIDDEN,
         404: NOT_FOUND,
         422: VALIDATION_ERROR,
@@ -213,6 +220,7 @@ async def activate_user(
     response_model=User,
     responses={
         200: _USER_OK,
+        401: UNAUTHORIZED,
         403: FORBIDDEN,
         404: NOT_FOUND,
         409: CONFLICT,
@@ -241,6 +249,7 @@ async def deactivate_user(
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         204: {"description": "已重置"},
+        401: UNAUTHORIZED,
         403: FORBIDDEN,
         404: NOT_FOUND,
         409: CONFLICT,
