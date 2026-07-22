@@ -48,7 +48,7 @@ def main() -> None:
     api_host = urlsplit(args.api_base_url).hostname or ""
     _require_loopback(api_host, "API 地址")
     register_web(api_base_url=args.api_base_url)
-    ui.run(host=args.host, port=args.port, show=False, reload=False)
+    ui.run(host=args.host, port=args.port, show=False, reload=False, proxy_headers=False)
 
 
 if __name__ == "__main__":

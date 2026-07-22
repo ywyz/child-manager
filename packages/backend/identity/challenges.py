@@ -1,10 +1,14 @@
 """WebAuthn ceremony challenge 的公共领域 seam。"""
 
+import base64
+import hmac
+import secrets
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import StrEnum
-from uuid import UUID
+from hashlib import sha256
+from uuid import UUID, uuid7
 
 
 class ChallengePurpose(StrEnum):
@@ -46,18 +50,19 @@ def issue_challenge(
     *,
     binding: ChallengeBinding,
     now: datetime,
-    random_bytes: Callable[[int], bytes],
+    random_bytes: Callable[[int], bytes] = secrets.token_bytes,
 ) -> IssuedChallenge:
-    """T029 将用高熵随机值和摘要替换当前中性 skeleton。"""
+    """签发绑定上下文、五分钟有效且只保存摘要的 challenge。"""
 
-    del random_bytes
+    raw = random_bytes(32)
+    challenge = base64.urlsafe_b64encode(raw).rstrip(b"=").decode("ascii")
     return IssuedChallenge(
-        challenge="",
+        challenge=challenge,
         record=ChallengeRecord(
-            ceremony_id=UUID(int=0),
-            challenge_digest="",
+            ceremony_id=uuid7(),
+            challenge_digest=sha256(raw).hexdigest(),
             binding=binding,
-            expires_at=now,
+            expires_at=now + timedelta(minutes=5),
         ),
     )
 
@@ -69,7 +74,15 @@ def consume_challenge(
     binding: ChallengeBinding,
     now: datetime,
 ) -> bool:
-    """T029 将实现绑定校验和单次消费。"""
+    """常量时间校验绑定并在成功时消费一次。"""
 
-    del record, challenge, binding, now
-    return False
+    if record.consumed_at is not None or now > record.expires_at or record.binding != binding:
+        return False
+    try:
+        raw = base64.urlsafe_b64decode(challenge + "=" * (-len(challenge) % 4))
+    except ValueError, TypeError:
+        return False
+    if not hmac.compare_digest(sha256(raw).hexdigest(), record.challenge_digest):
+        return False
+    record.consumed_at = now
+    return True

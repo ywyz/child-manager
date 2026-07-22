@@ -2,22 +2,22 @@
 
 import os
 from collections.abc import Awaitable, Callable
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 import structlog
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from redis.asyncio import Redis
+from redis import Redis as SyncRedis
 from starlette.exceptions import HTTPException
 
 from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from apps.api.middleware import RequestContextMiddleware
 from apps.api.routers.auth import router as auth_router
 from apps.api.routers.users import router as users_router
+from packages.backend.identity.auth_throttle import MemoryAuthThrottle, RedisAuthThrottle
 from packages.backend.identity.client_ip import parse_trusted_bff_peers
-from packages.backend.identity.login_throttle import MemoryLoginThrottle, RedisLoginThrottle
 from packages.backend.identity.service import IdentityError
 from packages.contracts.common import (
     CONFIGURATION_UNAVAILABLE,
@@ -29,15 +29,19 @@ from packages.contracts.common import (
 LOGGER = structlog.get_logger(__name__)
 
 
-def _login_throttle() -> MemoryLoginThrottle | RedisLoginThrottle | None:
-    backend = os.environ.get("CHILD_MANAGER_LOGIN_THROTTLE_BACKEND", "redis")
+def _auth_throttle() -> MemoryAuthThrottle | RedisAuthThrottle | None:
+    backend = os.environ.get("CHILD_MANAGER_AUTH_THROTTLE_BACKEND", "redis")
+    failure_limit = int(os.environ.get("CHILD_MANAGER_AUTH_THROTTLE_FAILURE_LIMIT", "5"))
+    window = timedelta(minutes=1)
     redis_url = os.environ.get("CHILD_MANAGER_REDIS_URL")
     if backend == "memory":
-        return MemoryLoginThrottle()
+        return MemoryAuthThrottle(failure_limit=failure_limit, window=window)
     if backend != "redis":
-        raise ValueError("CHILD_MANAGER_LOGIN_THROTTLE_BACKEND 必须为 redis 或 memory")
+        raise ValueError("CHILD_MANAGER_AUTH_THROTTLE_BACKEND 必须为 redis 或 memory")
     if redis_url:
-        return RedisLoginThrottle(Redis.from_url(redis_url))
+        return RedisAuthThrottle(
+            SyncRedis.from_url(redis_url), failure_limit=failure_limit, window=window
+        )
     # Redis 未配置时不得静默退化为进程内计数
     return None
 
@@ -74,7 +78,7 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
     health = dependencies or build_health_dependencies()
     application = FastAPI(title="Child Manager API")
     application.add_middleware(RequestContextMiddleware)
-    application.state.login_throttle = _login_throttle()
+    application.state.auth_throttle = _auth_throttle()
     application.state.trusted_bff_peers = parse_trusted_bff_peers(
         os.environ.get("CHILD_MANAGER_TRUSTED_BFF_PEERS")
     )

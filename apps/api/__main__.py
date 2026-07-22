@@ -23,7 +23,7 @@ def main() -> None:
         bind_host=args.host,
         cookie_secure=cookie_secure_value == "true",
     )
-    uvicorn.run("apps.api.app:app", host=args.host, port=args.port)
+    uvicorn.run("apps.api.app:app", host=args.host, port=args.port, proxy_headers=False)
 
 
 if __name__ == "__main__":

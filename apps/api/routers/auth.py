@@ -1,7 +1,5 @@
-"""同源 Cookie 认证、Refresh 轮换与 CSRF 端点。"""
+"""同源 Cookie、WebAuthn、邀请、恢复与会话端点。"""
 
-import asyncio
-import inspect
 import os
 from urllib.parse import urlsplit
 from uuid import UUID
@@ -11,18 +9,29 @@ from fastapi import APIRouter, Request, Response
 from apps.api.dependencies import CurrentSessionDependency, IdentityServiceDependency
 from packages.backend.identity.client_ip import resolve_client_ip
 from packages.backend.identity.csrf import issue_csrf_token, verify_csrf_token
-from packages.backend.identity.login_throttle import ThrottleDecision
-from packages.backend.identity.service import (
-    AuthResult,
-    IdentityError,
-    IdentityService,
-    SessionUser,
-)
+from packages.backend.identity.repository import CredentialRecord
+from packages.backend.identity.service import AuthResult, IdentityError, SessionUser
 from packages.contracts.identity import (
-    ChangePasswordRequest,
+    AuthenticationResult,
+    AuthenticationVerifyRequest,
+    BootstrapRegistrationOptionsRequest,
+    Credential,
+    CredentialList,
+    CredentialPatch,
     CsrfResponse,
     CurrentUser,
-    LoginRequest,
+    InvitationRegistrationOptionsRequest,
+    RecoveryCodeIssued,
+    RecoveryCompleted,
+    RecoveryRegistrationOptionsRequest,
+    RecoveryRequestAccepted,
+    RecoveryRequestCreate,
+    RegistrationPending,
+    RegistrationVerifyRequest,
+    SessionList,
+    StepUpResult,
+    WebAuthnAuthenticationOptions,
+    WebAuthnRegistrationOptions,
 )
 
 router = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
@@ -40,12 +49,25 @@ def _cookie_secure() -> bool:
     return os.environ.get("CHILD_MANAGER_COOKIE_SECURE", "true").lower() == "true"
 
 
-def _allowed_origins(request: Request) -> set[str]:
+def _loopback_aliases(origin: str) -> set[str]:
+    parsed = urlsplit(origin)
+    aliases = {origin.rstrip("/")}
+    if parsed.hostname in {"127.0.0.1", "localhost"}:
+        alternate = "localhost" if parsed.hostname == "127.0.0.1" else "127.0.0.1"
+        port = f":{parsed.port}" if parsed.port is not None else ""
+        aliases.add(f"{parsed.scheme}://{alternate}{port}")
+    return aliases
+
+
+def _allowed_origins() -> set[str]:
     configured = os.environ.get("CHILD_MANAGER_ALLOWED_ORIGINS")
     if configured:
-        return {value.strip().rstrip("/") for value in configured.split(",") if value.strip()}
-    environment = os.environ.get("CHILD_MANAGER_ENV", "production")
-    if environment not in {"development", "test"}:
+        result: set[str] = set()
+        for value in configured.split(","):
+            if value.strip():
+                result.update(_loopback_aliases(value.strip()))
+        return result
+    if os.environ.get("CHILD_MANAGER_ENV", "production") not in {"development", "test"}:
         return set()
     web_port = os.environ.get("CHILD_MANAGER_WEB_PORT", "18080")
     return {
@@ -55,26 +77,31 @@ def _allowed_origins(request: Request) -> set[str]:
     }
 
 
-def require_csrf(request: Request) -> None:
+def _origin(request: Request) -> str:
     origin = request.headers.get("origin")
     if origin is None:
         referer = request.headers.get("referer")
         if referer:
             parsed = urlsplit(referer)
             origin = f"{parsed.scheme}://{parsed.netloc}"
+    if origin is None or origin.rstrip("/") not in _allowed_origins():
+        raise IdentityError(403, "auth.csrf_invalid", "请求来源或 CSRF 校验失败。")
+    return origin.rstrip("/")
+
+
+def require_csrf(request: Request) -> None:
+    origin = _origin(request)
+    del origin
     token = request.headers.get("x-csrf-token")
     cookie = request.cookies.get(CSRF_COOKIE)
     signing_key = os.environ.get("CHILD_MANAGER_CSRF_SIGNING_KEY", "")
-    valid = (
-        origin is not None
-        and origin.rstrip("/") in _allowed_origins(request)
-        and token is not None
-        and cookie is not None
+    if not (
+        token
+        and cookie
         and token == cookie
-        and bool(signing_key)
+        and signing_key
         and verify_csrf_token(token, signing_key)
-    )
-    if not valid:
+    ):
         raise IdentityError(403, "auth.csrf_invalid", "请求来源或 CSRF 校验失败。")
 
 
@@ -90,7 +117,7 @@ def _clear_auth_cookies(response: Response) -> None:
     response.delete_cookie(REFRESH_COOKIE, **common)
 
 
-def _payload(service: IdentityService, session: SessionUser) -> dict[str, object]:
+def _payload(service: IdentityServiceDependency, session: SessionUser) -> dict[str, object]:
     return {
         "id": session.user.id,
         "username": session.user.username,
@@ -98,31 +125,51 @@ def _payload(service: IdentityService, session: SessionUser) -> dict[str, object
         "kindergarten": service.kindergarten_summary(session.user.kindergarten_id),
         "role_codes": session.role_codes,
         "capabilities": session.capabilities,
+        "session_id": session.session_id,
+        "last_reauthenticated_at": session.last_reauthenticated_at,
     }
 
 
-async def _throttle_failure(request: Request, *, account: str, source: str) -> ThrottleDecision:
-    throttle = request.app.state.login_throttle
-    if throttle is None:
-        raise IdentityError(503, "configuration.unavailable", "登录服务暂不可用，请稍后重试。")
-    decision = throttle.record_failure(
-        account=account, source=source, now=request.app.state.clock()
+def _credential(record: CredentialRecord) -> dict[str, object]:
+    return {
+        "id": record.id,
+        "label": record.label,
+        "transports": record.transports,
+        "backup_eligible": record.backup_eligible,
+        "backup_state": record.backup_state,
+        "created_via": record.created_via,
+        "created_at": record.created_at,
+        "last_used_at": record.last_used_at,
+        "revoked_at": record.revoked_at,
+    }
+
+
+def _source(request: Request) -> str:
+    socket_peer = request.client.host if request.client else "127.0.0.1"
+    return resolve_client_ip(
+        socket_peer=socket_peer,
+        internal_client_ip=request.headers.get("x-child-manager-client-ip"),
+        trusted_bff_peers=request.app.state.trusted_bff_peers,
     )
-    if inspect.isawaitable(decision):
-        decision = await decision
-    if decision.delay_seconds:
-        await asyncio.sleep(decision.delay_seconds)
-    return decision
 
 
-async def _throttle_check(request: Request, *, account: str, source: str) -> ThrottleDecision:
-    throttle = request.app.state.login_throttle
+def _check_public_throttle(request: Request, purpose: str) -> str:
+    source = _source(request)
+    throttle = request.app.state.auth_throttle
     if throttle is None:
         raise IdentityError(503, "configuration.unavailable", "登录服务暂不可用，请稍后重试。")
-    decision = throttle.check(account=account, source=source, now=request.app.state.clock())
-    if inspect.isawaitable(decision):
-        decision = await decision
-    return decision
+    now = request.app.state.clock()
+    decision = throttle.check(source=source, purpose=purpose, now=now)
+    if not decision.allowed:
+        raise IdentityError(429, "auth.rate_limited", "尝试过多，请稍后重试。")
+    throttle.record_failure(source=source, purpose=purpose, now=now)
+    return source
+
+
+def _clear_public_throttle(request: Request, purpose: str, source: str) -> None:
+    request.app.state.auth_throttle.record_success(
+        source=source, purpose=purpose, now=request.app.state.clock()
+    )
 
 
 @router.get("/csrf", response_model=CsrfResponse)
@@ -143,66 +190,110 @@ def csrf(response: Response) -> dict[str, str]:
     return {"csrf_token": token}
 
 
-@router.post("/login", response_model=CurrentUser)
-async def login(
-    body: LoginRequest,
+@router.post("/bootstrap/registration/options", response_model=WebAuthnRegistrationOptions)
+def bootstrap_options(
+    body: BootstrapRegistrationOptionsRequest,
+    request: Request,
+    service: IdentityServiceDependency,
+) -> dict[str, object]:
+    require_csrf(request)
+    return service.bootstrap_registration_options(body.bootstrap_token, origin=_origin(request))
+
+
+@router.post("/bootstrap/registration/verify", response_model=RegistrationPending)
+def bootstrap_verify(
+    body: RegistrationVerifyRequest,
+    request: Request,
+    service: IdentityServiceDependency,
+) -> dict[str, object]:
+    require_csrf(request)
+    credential, user_id = service.verify_bootstrap_registration(
+        ceremony_id=body.ceremony_id,
+        credential=body.credential.model_dump(exclude_none=True),
+        label=body.label,
+    )
+    return {"user_id": user_id, "credential_id": credential.id}
+
+
+@router.post("/invitation/registration/options", response_model=WebAuthnRegistrationOptions)
+def invitation_options(
+    body: InvitationRegistrationOptionsRequest,
+    request: Request,
+    service: IdentityServiceDependency,
+) -> dict[str, object]:
+    require_csrf(request)
+    return service.invitation_registration_options(body.invitation_token, origin=_origin(request))
+
+
+@router.post("/invitation/registration/verify", response_model=RegistrationPending)
+def invitation_verify(
+    body: RegistrationVerifyRequest,
+    request: Request,
+    service: IdentityServiceDependency,
+) -> dict[str, object]:
+    require_csrf(request)
+    credential, user_id = service.verify_invitation_registration(
+        ceremony_id=body.ceremony_id,
+        credential=body.credential.model_dump(exclude_none=True),
+        label=body.label,
+    )
+    return {"user_id": user_id, "credential_id": credential.id}
+
+
+@router.post("/authentication/options", response_model=WebAuthnAuthenticationOptions)
+def authentication_start(request: Request, service: IdentityServiceDependency) -> dict[str, object]:
+    require_csrf(request)
+    _check_public_throttle(request, "authentication")
+    return service.authentication_options(origin=_origin(request))
+
+
+@router.post("/authentication/verify", response_model=AuthenticationResult)
+def authentication_verify(
+    body: AuthenticationVerifyRequest,
     request: Request,
     response: Response,
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    socket_peer = request.client.host if request.client else "127.0.0.1"
-    source = resolve_client_ip(
-        socket_peer=socket_peer,
-        internal_client_ip=request.headers.get("x-child-manager-client-ip"),
-        trusted_bff_peers=request.app.state.trusted_bff_peers,
+    source = _source(request)
+    result = service.verify_authentication(
+        ceremony_id=body.ceremony_id,
+        credential=body.credential.model_dump(exclude_none=False),
+        source=source,
+        request_id=_request_id(request),
     )
-    account_key = service.safe_login_key(body.login)
-    initial_decision = await _throttle_check(request, account=account_key, source=source)
-    if initial_decision.source_limited:
-        service.record_login_rate_limited(
-            login=body.login,
-            source=source,
-            request_id=_request_id(request),
-        )
-        raise IdentityError(429, "auth.login_rate_limited", "登录尝试过多，请稍后重试。")
-    try:
-        result = service.login(
-            login=body.login,
-            password=body.password,
-            request_id=_request_id(request),
-            source=source,
-        )
-    except IdentityError as exc:
-        if exc.code != "auth.login_failed":
-            raise
-        decision = await _throttle_failure(request, account=account_key, source=source)
-        if decision.source_limited:
-            service.record_login_rate_limited(
-                login=body.login,
-                source=source,
-                request_id=_request_id(request),
-            )
-            raise IdentityError(
-                429, "auth.login_rate_limited", "登录尝试过多，请稍后重试。"
-            ) from None
-        raise
-    throttle = request.app.state.login_throttle
-    assert throttle is not None
-    completed = throttle.record_success(
-        account=account_key, source=source, now=request.app.state.clock()
-    )
-    if inspect.isawaitable(completed):
-        await completed
+    _clear_public_throttle(request, "authentication", source)
     _set_auth_cookies(response, result)
-    return _payload(service, result.session)
+    return {"user": _payload(service, result.session), "recovery_code": result.recovery_code}
+
+
+@router.post("/step-up/options", response_model=WebAuthnAuthenticationOptions)
+def step_up_options(
+    request: Request, session: CurrentSessionDependency, service: IdentityServiceDependency
+) -> dict[str, object]:
+    require_csrf(request)
+    return service.step_up_options(session, origin=_origin(request))
+
+
+@router.post("/step-up/verify", response_model=StepUpResult)
+def step_up_verify(
+    body: AuthenticationVerifyRequest,
+    request: Request,
+    session: CurrentSessionDependency,
+    service: IdentityServiceDependency,
+) -> dict[str, object]:
+    require_csrf(request)
+    verified_at, valid_until = service.verify_step_up(
+        session,
+        ceremony_id=body.ceremony_id,
+        credential=body.credential.model_dump(exclude_none=False),
+    )
+    return {"verified_at": verified_at, "valid_until": valid_until}
 
 
 @router.post("/refresh", response_model=CurrentUser)
 def refresh(
-    request: Request,
-    response: Response,
-    service: IdentityServiceDependency,
+    request: Request, response: Response, service: IdentityServiceDependency
 ) -> dict[str, object]:
     require_csrf(request)
     raw = request.cookies.get(REFRESH_COOKIE)
@@ -214,11 +305,7 @@ def refresh(
 
 
 @router.post("/logout", status_code=204)
-def logout(
-    request: Request,
-    response: Response,
-    service: IdentityServiceDependency,
-) -> None:
+def logout(request: Request, response: Response, service: IdentityServiceDependency) -> None:
     require_csrf(request)
     service.logout(
         request.cookies.get(REFRESH_COOKIE),
@@ -229,24 +316,148 @@ def logout(
 
 
 @router.get("/me", response_model=CurrentUser)
-def me(
-    session: CurrentSessionDependency,
-    service: IdentityServiceDependency,
-) -> dict[str, object]:
+def me(session: CurrentSessionDependency, service: IdentityServiceDependency) -> dict[str, object]:
     return _payload(service, session)
 
 
-@router.post("/change-password", status_code=204)
-def change_password(
-    body: ChangePasswordRequest,
+@router.get("/credentials", response_model=CredentialList)
+def credentials(
+    session: CurrentSessionDependency, service: IdentityServiceDependency
+) -> dict[str, object]:
+    return {"items": [_credential(item) for item in service.list_credentials(session)]}
+
+
+@router.post("/credentials/registration/options", response_model=WebAuthnRegistrationOptions)
+def credential_options(
+    request: Request, session: CurrentSessionDependency, service: IdentityServiceDependency
+) -> dict[str, object]:
+    require_csrf(request)
+    return service.self_add_registration_options(session, origin=_origin(request))
+
+
+@router.post("/credentials/registration/verify", response_model=Credential)
+def credential_verify(
+    body: RegistrationVerifyRequest,
     request: Request,
-    service: IdentityServiceDependency,
     session: CurrentSessionDependency,
+    service: IdentityServiceDependency,
+) -> dict[str, object]:
+    require_csrf(request)
+    return _credential(
+        service.verify_self_add_registration(
+            session,
+            ceremony_id=body.ceremony_id,
+            credential=body.credential.model_dump(exclude_none=True),
+            label=body.label,
+        )
+    )
+
+
+@router.patch("/credentials/{credential_id}", response_model=Credential)
+def credential_patch(
+    credential_id: UUID,
+    body: CredentialPatch,
+    request: Request,
+    session: CurrentSessionDependency,
+    service: IdentityServiceDependency,
+) -> dict[str, object]:
+    require_csrf(request)
+    return _credential(service.rename_credential(session, credential_id, body.label))
+
+
+@router.delete("/credentials/{credential_id}", status_code=204)
+def credential_revoke(
+    credential_id: UUID,
+    request: Request,
+    session: CurrentSessionDependency,
+    service: IdentityServiceDependency,
 ) -> None:
     require_csrf(request)
-    service.change_password(
-        session,
-        current_password=body.current_password,
-        new_password=body.new_password,
-        request_id=_request_id(request),
+    service.revoke_own_credential(session, credential_id)
+
+
+@router.post("/recovery/requests", status_code=202, response_model=RecoveryRequestAccepted)
+def recovery_request(
+    body: RecoveryRequestCreate,
+    request: Request,
+    response: Response,
+    service: IdentityServiceDependency,
+) -> dict[str, str]:
+    require_csrf(request)
+    service.submit_recovery_request(login=body.login, recovery_code=body.recovery_code)
+    if request.cookies.get(ACCESS_COOKIE) or request.cookies.get(REFRESH_COOKIE):
+        _clear_auth_cookies(response)
+    return {"message": "如果账号和恢复材料有效，我们会按既定带外方式继续核验。"}
+
+
+@router.post("/recovery/registration/options", response_model=WebAuthnRegistrationOptions)
+def recovery_options(
+    body: RecoveryRegistrationOptionsRequest,
+    request: Request,
+    service: IdentityServiceDependency,
+) -> dict[str, object]:
+    require_csrf(request)
+    return service.recovery_registration_options(body.enrollment_token, origin=_origin(request))
+
+
+@router.post("/recovery/registration/verify", response_model=RecoveryCompleted)
+def recovery_verify(
+    body: RegistrationVerifyRequest,
+    request: Request,
+    service: IdentityServiceDependency,
+) -> dict[str, object]:
+    require_csrf(request)
+    credential, recovery_code = service.verify_recovery_registration(
+        ceremony_id=body.ceremony_id,
+        credential=body.credential.model_dump(exclude_none=True),
+        label=body.label,
     )
+    return {
+        "credential": _credential(credential),
+        "recovery_code": recovery_code,
+        "sessions_revoked": 0,
+    }
+
+
+@router.post("/recovery-code/rotate", response_model=RecoveryCodeIssued)
+def recovery_code_rotate(
+    request: Request, session: CurrentSessionDependency, service: IdentityServiceDependency
+) -> dict[str, object]:
+    require_csrf(request)
+    recovery_code, issued_at = service.rotate_recovery_code(session)
+    return {"recovery_code": recovery_code, "issued_at": issued_at}
+
+
+@router.get("/sessions", response_model=SessionList)
+def sessions(
+    session: CurrentSessionDependency, service: IdentityServiceDependency
+) -> dict[str, object]:
+    items = []
+    for item in service.list_sessions(session):
+        items.append(
+            {
+                "id": item.token_family_id,
+                "is_current": item.token_family_id == session.token_family_id,
+                "created_at": item.issued_at,
+                "last_seen_at": item.last_used_at or item.issued_at,
+                "expires_at": item.expires_at,
+                "revoked_at": item.revoked_at,
+                "client_ip_hint": None,
+                "user_agent_summary": None,
+            }
+        )
+    return {"items": items}
+
+
+@router.delete("/sessions/{session_id}", status_code=204)
+def session_revoke(
+    session_id: UUID,
+    request: Request,
+    response: Response,
+    session: CurrentSessionDependency,
+    service: IdentityServiceDependency,
+) -> None:
+    require_csrf(request)
+    service.revoke_session(session, session_id)
+    if session_id == session.token_family_id:
+        _clear_auth_cookies(response)

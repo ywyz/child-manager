@@ -7,10 +7,10 @@ from alembic.config import Config
 from alembic.script import ScriptDirectory
 
 
-def test_identity_revision_is_declared_as_head() -> None:
+def test_passkey_contract_revision_is_declared_as_head() -> None:
     heads = ScriptDirectory.from_config(Config("alembic.ini")).get_heads()
 
-    assert heads == ["0001_identity_and_audit"]
+    assert heads == ["0003_passkey_contract"]
 
 
 def test_empty_database_can_upgrade_to_identity_head(isolated_database_url: str) -> None:
@@ -32,7 +32,7 @@ def test_empty_database_can_upgrade_to_identity_head(isolated_database_url: str)
 
     assert upgrade.returncode == 0, upgrade.stderr
     assert current.returncode == 0, current.stderr
-    assert "0001_identity_and_audit" in current.stdout
+    assert "0003_passkey_contract" in current.stdout
 
 
 def test_migrations_reject_missing_database_url() -> None:

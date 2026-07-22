@@ -1,37 +1,22 @@
-"""管理员账号管理页面；不导入后端模型或 Repository。"""
+"""管理员账号、邀请、凭据和恢复核验页面。"""
 
 from nicegui import ui
 
-from apps.web.pages.auth import post_same_origin
+from apps.web.pages.auth import api_request, post_same_origin
 
 
 def users_page_text() -> tuple[str, ...]:
-    return ("账号管理", "创建账号", "重置密码", "停用账号")
-
-
-async def _get_users() -> dict[str, object]:
-    result = await ui.run_javascript(
-        """
-        let response = await fetch(
-          '/api/v1/users?page=1&page_size=100', {credentials: 'same-origin'}
-        );
-        if (response.status === 401) {
-          const csrfResponse = await fetch('/api/v1/auth/csrf', {credentials: 'same-origin'});
-          const csrf = await csrfResponse.json();
-          const refreshed = await fetch('/api/v1/auth/refresh', {
-            method: 'POST', credentials: 'same-origin',
-            headers: {'X-CSRF-Token': csrf.csrf_token}
-          });
-          if (refreshed.ok) response = await fetch(
-            '/api/v1/users?page=1&page_size=100', {credentials: 'same-origin'}
-          );
-        }
-        const body = await response.json();
-        return {ok: response.ok, body};
-        """,
-        timeout=10.0,
+    return (
+        "账号管理",
+        "签发邀请",
+        "通行密钥",
+        "新增通行密钥",
+        "命名通行密钥",
+        "撤销通行密钥",
+        "重新邀请",
+        "撤销会话",
+        "恢复申请",
     )
-    return result if isinstance(result, dict) else {"ok": False}
 
 
 def register_users_page() -> None:
@@ -40,45 +25,141 @@ def register_users_page() -> None:
         ui.label("账号管理").classes("text-h5")
         username = ui.input("用户名")
         display_name = ui.input("姓名")
-        password = ui.input("初始密码", password=True, password_toggle_button=True)
+        status = ui.label("")
+        one_time_values = ui.column()
+        actions = ui.column()
+        rendered: set[str] = set()
+
+        def render_user(user_id: str) -> None:
+            if user_id in rendered:
+                return
+            rendered.add(user_id)
+            with actions:
+
+                async def issue(target: str = user_id) -> None:
+                    result = await post_same_origin(
+                        f"/api/v1/users/{target}/invitations", {"expires_in_hours": 24}
+                    )
+                    body = result.get("body", {})
+                    token = body.get("invitation_token") if isinstance(body, dict) else None
+                    with one_time_values:
+                        ui.label(str(token or "")).props('data-testid="invitation-token-once"')
+                    status.set_text("邀请已签发" if result.get("ok") else "签发邀请失败")
+
+                async def activate(target: str = user_id) -> None:
+                    result = await post_same_origin(
+                        f"/api/v1/users/{target}/activate",
+                        {"verification_confirmed": True, "verification_note": "已带外核验"},
+                    )
+                    status.set_text("账号已激活" if result.get("ok") else "激活失败")
+
+                ui.button("签发邀请", on_click=issue).props(
+                    f'data-testid="issue-invitation-{user_id}"'
+                )
+                ui.button("激活账号", on_click=activate).props(
+                    f'data-testid="activate-user-{user_id}"'
+                )
 
         async def create() -> None:
             result = await post_same_origin(
                 "/api/v1/users",
                 {
-                    "username": username.value,
-                    "display_name": display_name.value,
-                    "password": password.value,
+                    "username": username.value or "",
+                    "display_name": display_name.value or "",
                     "role_codes": ["teacher"],
                 },
             )
-            ui.notify("账号已创建。" if result.get("ok") else "创建账号失败。")
+            body = result.get("body", {})
+            if result.get("ok") and isinstance(body, dict) and body.get("id"):
+                user_id = str(body["id"])
+                with one_time_values:
+                    ui.label(user_id).props('data-testid="created-user-id"')
+                render_user(user_id)
+                status.set_text("账号已创建")
+            else:
+                status.set_text("创建账号失败")
+
+        async def load() -> None:
+            result = await api_request("/api/v1/users?page=1&page_size=100")
+            body = result.get("body", {})
+            if result.get("ok") and isinstance(body, dict):
+                for item in body.get("items", []):
+                    if isinstance(item, dict) and item.get("id"):
+                        render_user(str(item["id"]))
 
         ui.button("创建账号", on_click=create)
-        target_id = ui.input("账号 ID")
-        reset_password = ui.input("重置后的密码", password=True, password_toggle_button=True)
+        ui.timer(0.1, load, once=True)
 
-        async def reset() -> None:
-            result = await post_same_origin(
-                f"/api/v1/users/{target_id.value}/reset-password",
-                {"new_password": reset_password.value},
-            )
-            ui.notify("密码已重置。" if result.get("ok") else "重置密码失败。")
+    @ui.page("/users/{user_id}/security")
+    def user_security_page(user_id: str) -> None:
+        ui.label("通行密钥与会话").classes("text-h5")
+        status = ui.label("")
+        one_time_values = ui.column()
+        credential_id: list[str] = []
 
-        async def deactivate() -> None:
-            result = await post_same_origin(f"/api/v1/users/{target_id.value}/deactivate", {})
-            ui.notify("账号已停用。" if result.get("ok") else "停用账号失败。")
-
-        ui.button("重置密码", on_click=reset)
-        ui.button("停用账号", on_click=deactivate)
-
-        async def list_accounts() -> None:
-            result = await _get_users()
+        async def load() -> None:
+            result = await api_request(f"/api/v1/users/{user_id}/credentials")
             body = result.get("body", {})
-            if result.get("ok"):
-                total = body.get("total", 0) if isinstance(body, dict) else 0
-                ui.notify(f"共 {total} 个账号")
-            else:
-                ui.notify("读取账号失败。", type="negative")
+            if result.get("ok") and isinstance(body, dict):
+                credential_id[:] = [
+                    str(item["id"])
+                    for item in body.get("items", [])
+                    if isinstance(item, dict) and item.get("id")
+                ]
 
-        ui.button("刷新账号列表", on_click=list_accounts)
+        async def revoke_last() -> None:
+            if not credential_id:
+                await load()
+            if not credential_id:
+                status.set_text("没有可撤销的通行密钥")
+                return
+            result = await api_request(
+                f"/api/v1/users/{user_id}/credentials/{credential_id[-1]}", method="DELETE"
+            )
+            body = result.get("body", {})
+            reinvitation = body.get("reinvitation") if isinstance(body, dict) else None
+            token = reinvitation.get("invitation_token") if isinstance(reinvitation, dict) else None
+            with one_time_values:
+                ui.label(str(token or "")).props('data-testid="invitation-token-once"')
+            status.set_text("已撤销并重新邀请" if result.get("ok") else "撤销失败")
+
+        ui.button("撤销教师最后凭据并重新邀请", on_click=revoke_last)
+        ui.timer(0.1, load, once=True)
+
+    @ui.page("/users/{user_id}/recovery")
+    def user_recovery_page(user_id: str) -> None:
+        ui.label("恢复申请").classes("text-h5")
+        status = ui.label("")
+        one_time_values = ui.column()
+        request_id: list[str] = []
+
+        async def load() -> None:
+            result = await api_request(f"/api/v1/users/{user_id}/recovery-requests")
+            body = result.get("body", {})
+            if result.get("ok") and isinstance(body, dict):
+                pending = [
+                    item
+                    for item in body.get("items", [])
+                    if isinstance(item, dict) and item.get("status") == "pending_verification"
+                ]
+                if pending:
+                    request_id[:] = [str(pending[-1]["id"])]
+
+        async def approve() -> None:
+            if not request_id:
+                await load()
+            if not request_id:
+                status.set_text("没有待批准的恢复申请")
+                return
+            result = await post_same_origin(
+                f"/api/v1/users/{user_id}/recovery-requests/{request_id[0]}/approve",
+                {"verification_confirmed": True, "verification_note": "已带外核验"},
+            )
+            body = result.get("body", {})
+            token = body.get("enrollment_token") if isinstance(body, dict) else None
+            with one_time_values:
+                ui.label(str(token or "")).props('data-testid="recovery-enrollment-token-once"')
+            status.set_text("恢复登记已批准" if result.get("ok") else "批准失败")
+
+        ui.button("批准恢复登记", on_click=approve)
+        ui.timer(0.1, load, once=True)

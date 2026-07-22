@@ -34,7 +34,7 @@ def register_web(*, api_base_url: str) -> None:
 
     @ui.page("/")
     def index() -> None:
-        ui.label("Child Manager")
+        ui.label("首页")
         navigation = ui.row()
 
         async def load_session() -> None:
@@ -67,9 +67,11 @@ def register_web(*, api_base_url: str) -> None:
             safe_capabilities = [str(value) for value in capabilities]
             with navigation:
                 for label in navigation_for_capabilities(safe_capabilities):
-                    target = "/users" if label == "账号管理" else "/"
+                    target = {
+                        "账号管理": "/users",
+                        "通行密钥与会话": "/account/security",
+                    }.get(label, "/")
                     ui.link(label, target)
-                ui.link("修改密码", "/change-password")
 
                 async def logout() -> None:
                     await post_same_origin("/api/v1/auth/logout", {})

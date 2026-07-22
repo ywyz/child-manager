@@ -122,6 +122,7 @@ def upgrade() -> None:
         sa.Column("issued_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("expires_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("last_used_at", sa.DateTime(timezone=True)),
+        sa.Column("last_reauthenticated_at", sa.DateTime(timezone=True)),
         sa.Column("revoked_at", sa.DateTime(timezone=True)),
         sa.Column("revoke_reason", sa.String(64)),
         sa.Column("replaced_by_id", postgresql.UUID(as_uuid=True)),
