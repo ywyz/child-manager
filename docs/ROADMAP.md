@@ -187,12 +187,13 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 ### 交付范围
 
 - Alembic 启用 `btree_gist`，建立园所、用户、角色、用户角色、WebAuthn 凭据、邀请、恢复码、刷新令牌和审计事件表。
-- 幂等种子 `admin` 和 `teacher`，通过部署控制台一次性初始化待激活首位管理员并发放首个邀请。
+- 幂等种子 `admin` 和 `teacher`；部署控制台 CLI 生成 15 分钟单次初始化凭据，浏览器在
+  HTTPS/`localhost` 完成首个通行密钥登记，双人带外核验后再由 CLI 激活首位管理员。
 - WebAuthn 通行密钥、短期 access token、可轮换/撤销 refresh token、重放检测和账号停用。
 - 同源 HttpOnly Cookie、CSRF、来源校验与 API 服务端授权。
 - 管理员创建、启停、邀请、核验激活和查看账号；用户可以绑定多个通行密钥。
 - 离线恢复码加人工核验；最后管理员恢复采用预登记园所负责人和独立运维/安全责任人双人核验。
-- 从第一次初始化、登录和权限变更开始写入审计。
+- 从第一次初始化、通行密钥登记/认证和权限变更开始写入审计。
 
 ### 出口门禁
 
@@ -200,7 +201,11 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 - [ ] 不开放公众注册，不允许停用或移除最后一个有效管理员。
 - [ ] WebAuthn challenge、Origin/RP ID、UV、签名、过期、重放和账号枚举负向矩阵全部被拒绝。
 - [ ] 邀请过期/撤销/重放、恢复码单独使用、缺少人工核验或最后管理员缺少双人核验时不能建立会话。
+- [ ] 本人可查看、命名、新增和撤销非最后凭据；管理员撤销教师最后凭据时原子撤销会话并
+      重新邀请，且本人最后凭据和最后管理员保护不能被绕过。
 - [ ] 未登录、停用账号、过期/撤销/重放刷新令牌和缺少 CSRF 的请求被 API 拒绝。
+- [ ] 退出、本人/管理员会话撤销和凭据恢复使对应 `sid` 在下一请求立即失效；Refresh 轮换
+      不延长 family 的 7 天绝对期限。
 - [ ] Cookie 不进入 JavaScript、NiceGUI 持久化存储或日志。
 - [ ] 显式开发配置仅能在回环地址使用 `Secure=false`；非回环绑定必须拒绝启动。
 - [ ] PostgreSQL 证明园所组合外键、用户名/手机号唯一性和刷新令牌轮换事务。
@@ -385,7 +390,7 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 | --- | --- | --- | --- |
 | M0 共享基线 | `complete` | M0-G1～M0-G8 已关闭；历史隐私清理完成，脱敏模板和共享文档基线已通过专项验证与远端重克隆复核 | 由 `docs` 维护后续文档与契约基线 |
 | M1 | `complete` | [Issue #1](https://github.com/ywyz/child-manager/issues/1) 与历史实现 Issue [#2](https://github.com/ywyz/child-manager/issues/2)、[#3](https://github.com/ywyz/child-manager/issues/3) 已关闭 | 保留历史验收记录 |
-| M2 | `in_progress` | 历史 Codex Issue [#5](https://github.com/ywyz/child-manager/issues/5) 已关闭；Trae Issue [#6](https://github.com/ywyz/child-manager/issues/6) 因工作流重置按 `not planned` 归档；[#4](https://github.com/ywyz/child-manager/issues/4) 改为 `dev` 单实现验收入口；ADR-0010 已改变认证目标 | `docs` 先完成 WebAuthn、邀请、恢复的数据模型、规格、OpenAPI 与任务迁移设计并固定新提交；随后更新 Issue，`dev` 才能迁移实现并重跑 M2 门禁 |
+| M2 | `in_progress` | 历史 Codex Issue [#5](https://github.com/ywyz/child-manager/issues/5) 已关闭；Trae Issue [#6](https://github.com/ywyz/child-manager/issues/6) 因工作流重置按 `not planned` 归档；[#4](https://github.com/ywyz/child-manager/issues/4) 改为 `dev` 单实现验收入口；ADR-0010 已改变认证目标；WebAuthn 详细规格与契约已在 `docs` 重写，待固定提交 | 固定本次文档提交并更新 Issue #4，`dev` 随后迁移实现并重跑 M2 门禁 |
 | M3 | `pending` | 任务边界已固定为 T036～T045；尚未开始实现 | 等待 M2 `complete` |
 | M4–M8 | `pending` | 尚未开始实现 | 等待前序里程碑完成 |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |

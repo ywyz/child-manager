@@ -62,15 +62,15 @@
 
 ### 先写失败测试
 
-- [x] T009 [P] 在 `tests/architecture/test_dependency_boundaries.py`、`tests/web/test_bff_proxy.py` 编写依赖方向测试；逐项测试 BFF 方法/路径/query/body、Cookie、Origin/Referer、CSRF、Content-Type、Request ID、hop-by-hop/伪造来源头，以及登录/刷新各两条、退出两条过期 `Set-Cookie` 按 raw header 原样转发且不逗号折叠；验证：`uv run pytest --collect-only tests/architecture/test_dependency_boundaries.py tests/web/test_bff_proxy.py` 退出 0，再运行两文件并因依赖方向或 BFF 转发断言未满足而 RED
-- [x] T010 [P] 在 `tests/contract/test_common_contracts.py`、`tests/contract/test_idempotency.py` 与 `tests/contract/test_openapi_document.py` 编写统一错误、分页、Request ID、幂等 fingerprint 及 OpenAPI 3.1 校验测试；锁定跨实际 path 冲突、两个 503 code，以及登录/刷新 repeated auth Cookie 与退出 repeated clear Cookie 的机器契约；验证：`uv run pytest --collect-only tests/contract/test_common_contracts.py tests/contract/test_idempotency.py tests/contract/test_openapi_document.py` 退出 0，再运行同三文件并因错误、分页、幂等、Cookie header 或 503 断言未满足而 RED
+- [x] T009 [P] 在 `tests/architecture/test_dependency_boundaries.py`、`tests/web/test_bff_proxy.py` 编写依赖方向测试；逐项测试 BFF 方法/路径/query/body、Cookie、Origin/Referer、CSRF、Content-Type、Request ID、hop-by-hop/伪造来源头，以及认证完成/刷新各两条、退出两条过期 `Set-Cookie` 按 raw header 原样转发且不逗号折叠；验证：`uv run pytest --collect-only tests/architecture/test_dependency_boundaries.py tests/web/test_bff_proxy.py` 退出 0，再运行两文件并因依赖方向或 BFF 转发断言未满足而 RED
+- [x] T010 [P] 在 `tests/contract/test_common_contracts.py`、`tests/contract/test_idempotency.py` 与 `tests/contract/test_openapi_document.py` 编写统一错误、分页、Request ID、幂等 fingerprint 及 OpenAPI 3.1 校验测试；锁定跨实际 path 冲突、两个 503 code，以及认证完成/刷新 repeated auth Cookie 与退出 repeated clear Cookie 的机器契约；验证：`uv run pytest --collect-only tests/contract/test_common_contracts.py tests/contract/test_idempotency.py tests/contract/test_openapi_document.py` 退出 0，再运行同三文件并因错误、分页、幂等、Cookie header 或 503 断言未满足而 RED
 - [x] T011 [P] 在 `tests/unit/test_config.py`、`tests/unit/test_observability.py` 与 `tests/api/test_health.py` 编写敏感配置、日志脱敏、回环保护及 live/ready 测试；PostgreSQL 与全局 JWT/CSRF 安全配置故障分别返回 503 两码，Redis/AI/日历/模板/导出存储故障整体 200 且对应 check degraded；验证：`uv run pytest --collect-only tests/unit/test_config.py tests/unit/test_observability.py tests/api/test_health.py` 退出 0，再运行三文件并因回环、脱敏、分项健康或稳定错误码断言未满足而 RED
 - [x] T012 [P] 在 `tests/unit/database/test_session_boundaries.py` 与 `tests/migrations/test_alembic_bootstrap.py` 编写 Repository 不自行提交、应用事务回滚和 Alembic 空库升级基础测试；验证：`uv run pytest --collect-only tests/unit/database/test_session_boundaries.py tests/migrations/test_alembic_bootstrap.py` 退出 0，再运行两文件并因事务边界或空库升级行为断言未满足而 RED
 
 ### 实现共享基础
 
 - [x] T013 在 `packages/contracts/common.py` 实现 `ErrorResponse`、`FieldError`、两个稳定 503 code、可增长列表分页、Request ID、幂等头/scope 和含实际 path/query/body 的 canonical fingerprint 契约，并让 `tests/contract/test_openapi_document.py` 使用锁定的 OpenAPI 3.1 校验器读取 `specs/001-daily-activity-plan/contracts/openapi.yaml`；验证：`uv run pytest tests/contract/test_common_contracts.py tests/contract/test_idempotency.py tests/contract/test_openapi_document.py` 通过
-- [x] T014 [P] 在 `packages/backend/config.py`、`packages/backend/observability.py`、`apps/api/middleware.py`、`apps/api/__main__.py` 实现分级配置、启动时回环绑定保护、结构化日志及 `request_id/trace_id` 传播和脱敏；验证：`uv run pytest tests/unit/test_config.py tests/unit/test_observability.py` 通过，开发环境关闭 Cookie Secure 且绑定非回环地址时 API 在启动服务器前失败，日志替身中完整密钥和密码命中数为 0
+- [x] T014 [P] 在 `packages/backend/config.py`、`packages/backend/observability.py`、`apps/api/middleware.py`、`apps/api/__main__.py` 实现分级配置、启动时回环绑定保护、结构化日志及 `request_id/trace_id` 传播和脱敏；验证：`uv run pytest tests/unit/test_config.py tests/unit/test_observability.py` 通过，开发环境关闭 Cookie Secure 且绑定非回环地址时 API 在启动服务器前失败，日志替身中完整密钥、身份秘密和令牌命中数为 0
 - [x] T015 [P] 在 `packages/backend/database/base.py`、`packages/backend/database/session.py`、`packages/backend/database/migrations/env.py`、`alembic.ini` 建立 SQLAlchemy 2.x、PostgreSQL 事务和 Alembic 基础；验证：`uv run alembic upgrade head && uv run alembic current && uv run pytest tests/unit/database/test_session_boundaries.py tests/migrations/test_alembic_bootstrap.py` 通过
 - [x] T016 [P] 在 `tests/conftest.py`、`tests/database_config.py`、`tests/fixtures/clock.py`、`tests/fixtures/calendar.py`、`tests/fixtures/ai.py`、`tests/fixtures/redis.py` 建立显式测试数据库、逐测试隔离 schema、固定时钟、日历/AI/消息替身和禁网保护；验证：缺失 `CHILD_MANAGER_TEST_DATABASE_URL` 时清晰失败，Alembic 空库升级使用临时 schema，断网运行 `uv run pytest tests/unit tests/contract --collect-only` 可收集且不发起外部请求
 - [x] T017 在 `apps/api/app.py`、`apps/api/__main__.py`、`apps/api/dependencies.py` 实现 API 装配、统一异常转换及 `/health/live`、`/health/ready`；验证：`uv run pytest tests/api/test_health.py` 通过，DB/全局安全配置故障分别返回两个稳定 503 code，AI/Redis/日历/模板/导出存储只令分项 degraded 且整体 200
@@ -91,32 +91,39 @@ US1 保持一个端到端故事，但按 Roadmap 分成 M2、M3 两个顺序 che
 
 **Goal**: 安全初始化首位管理员，建立实时账号/角色授权、同源 Cookie 会话、CSRF、会话撤销、园所隔离和身份审计基础。
 
-**Requirements covered**: FR-001–FR-003；FR-004、FR-057–FR-060 的身份/园所/安全部分；FR-068–FR-070；SC-002 的未登录/跨园部分、SC-009 的认证秘密部分、SC-011。
+**Requirements covered**: FR-001–FR-003；FR-004、FR-057–FR-060 的身份/园所/安全部分；
+FR-068–FR-070、FR-073–FR-077；SC-002 的未登录/跨园部分、SC-009 的认证秘密部分、
+SC-011、SC-018。
 
-**Independent Test**: 从空 PostgreSQL 连续运行交互 CLI 两次，创建一名教师并完成登录、刷新、退出、改密、重置、停用和最后管理员保护；跨园、伪造来源、缺失 CSRF、弱密码及重放 Refresh 请求全部被拒绝。此门禁不创建学期、班级或区域。
+**Independent Test**: 从空 PostgreSQL 由 CLI 生成短时单次初始化凭据，在 HTTPS/`localhost`
+浏览器完成首位管理员通行密钥登记与双人核验激活；随后完成教师邀请、首个凭据登记、无用户名
+认证、本人凭据管理、管理员撤销并重新邀请、恢复码轮换/恢复，以及刷新、退出和会话撤销。
+Challenge、邀请、恢复码、Refresh 的过期/撤销/跨用途/并发重放，跨园、伪造来源和缺失 CSRF
+全部被拒绝。此门禁不创建学期、班级或区域。
 
 #### M2 Tests（先 RED）
 
-- [ ] T021 [P] [US1] 在 `tests/unit/identity/test_identifiers.py`、`tests/unit/identity/test_client_ip.py`、`tests/unit/identity/test_passwords.py`、`tests/unit/identity/test_tokens.py`、`tests/unit/identity/test_login_throttle.py` 编写用户名 `" Ｔｅａｃｈｅｒ " -> "teacher"` 的 NFKC+trim+lower、手机号 E.164/空值、15–128 字符密码、令牌和限流测试；客户端地址覆盖仅配置回环 BFF peer 可信内部头、其他 peer/伪造 Forwarded/XFF/内部头均按 socket peer；验证：`uv run pytest --collect-only tests/unit/identity` 退出 0，再运行 `uv run pytest tests/unit/identity` 并因标识规范化、客户端地址、密码、令牌或限流行为断言未满足而 RED
-- [ ] T022 [P] [US1] 在 `tests/migrations/test_0001_identity.py`、`tests/repository/test_identity_isolation.py` 编写园所/用户/角色/刷新令牌/审计迁移、同园唯一、组合外键、最后管理员、Refresh family 事务和跨园负向测试；验证：`uv run pytest --collect-only tests/migrations/test_0001_identity.py tests/repository/test_identity_isolation.py` 退出 0，再运行两文件并因迁移约束或跨园行为断言未满足而 RED
-- [ ] T023 [P] [US1] 在 `tests/contract/test_auth_contract.py`、`tests/contract/test_users_contract.py` 编写 Cookie/CSRF、统一错误、分页及 Auth/Users OpenAPI 契约测试，锁定登录/刷新两条 auth Set-Cookie 与退出两条过期 Set-Cookie；验证：`uv run pytest --collect-only tests/contract/test_auth_contract.py tests/contract/test_users_contract.py` 退出 0，再运行两文件并因 Cookie header 或身份契约断言未满足而 RED
-- [ ] T024 [P] [US1] 在 `tests/api/test_init_admin_cli.py`、`tests/api/test_auth.py`、`tests/api/test_csrf.py`、`tests/api/test_users.py` 编写初始化、规范化登录、手机号唯一、登录/刷新/退出/改密、重置/停用撤销、通用失败、最后管理员和 CSRF 测试；raw headers 必须分别证明登录/刷新设置两条独立 Cookie、退出清除两条且不逗号折叠；验证：`uv run pytest --collect-only tests/api/test_init_admin_cli.py tests/api/test_auth.py tests/api/test_csrf.py tests/api/test_users.py` 退出 0，再运行四文件并因 CLI、标识、Cookie 或 API 行为断言未满足而 RED
-- [ ] T025 [P] [US1] 在 `tests/web/test_auth_smoke.py` 编写登录、刷新、退出、改密、按角色导航、管理员创建/重置/停用账号、停用后下一请求失权及伪造来源头无效的浏览器冒烟；验证：`uv run pytest --collect-only tests/web/test_auth_smoke.py` 退出 0，再运行该文件并因认证/账号页面流程或来源边界未满足而 RED
+- [ ] T021 [P] [US1] 在 `tests/unit/identity/test_identifiers.py`、`tests/unit/identity/test_client_ip.py`、`tests/unit/identity/test_webauthn.py`、`tests/unit/identity/test_secret_tokens.py`、`tests/unit/identity/test_auth_throttle.py` 编写用户名 NFKC+trim+lower、手机号 E.164/空值，32 字节 challenge 的 5 分钟单次消费与 purpose/context/RP ID/Origin/UV 绑定，初始化/邀请/恢复秘密仅存摘要，以及公开身份端点限流测试；客户端地址覆盖只有配置的回环 BFF peer 可提供可信内部头；验证：`uv run pytest --collect-only tests/unit/identity` 退出 0，再运行该目录并因 ceremony、秘密状态机或来源边界尚未实现而 RED
+- [ ] T022 [P] [US1] 在 `tests/migrations/test_0001_identity.py`、`tests/migrations/test_password_to_passkey.py`、`tests/repository/test_identity_isolation.py` 编写 12 张身份表、同园唯一/组合外键、凭据/邀请/恢复/Refresh 并发消费、最后管理员及 expand→enroll→contract 升降级测试；验证：collect-only 退出 0，再运行三文件并因迁移、约束、旧密码端点停用或 contract 字段断言未满足而 RED
+- [ ] T023 [P] [US1] 在 `tests/contract/test_auth_contract.py`、`tests/contract/test_users_contract.py` 编写 OpenAPI 契约测试，锁定注册/认证 options/verify、初始化、邀请、本人凭据、管理员撤销/重新邀请、恢复码、会话端点及浏览器可直接传给 WebAuthn API 的字段；断言旧登录/改密/重置路径和密码 Schema 不存在，认证完成/刷新各有两条 auth `Set-Cookie`、退出有两条过期 Cookie；验证：collect-only 退出 0，再运行两文件并因新契约未实现而 RED
+- [ ] T024 [P] [US1] 在 `tests/api/test_init_admin_cli.py`、`tests/api/test_auth_webauthn.py`、`tests/api/test_invitations.py`、`tests/api/test_credentials.py`、`tests/api/test_recovery.py`、`tests/api/test_sessions.py`、`tests/api/test_csrf.py`、`tests/api/test_users.py` 编写首位管理员初始化/双人激活、邀请、注册/认证负向矩阵、本人及管理员凭据撤销、重新邀请、恢复码轮换/恢复、Refresh 重放、退出/会话撤销、停用和最后管理员测试；验证：collect-only 退出 0，再运行这些文件并因状态机、Cookie 或 API 行为尚未实现而 RED
+- [ ] T025 [P] [US1] 在 `tests/web/test_auth_smoke.py` 以浏览器虚拟认证器编写初始化登记、无用户名认证、教师邀请登记、增加/命名/撤销本人凭据、管理员撤销教师最后凭据并重新邀请、恢复和会话撤销冒烟；网络记录不得直连 API，伪造来源头无效；验证：collect-only 退出 0，再运行该文件并因 ceremony 或账号页面尚未实现而 RED
 
 #### M2 Implementation
 
-- [ ] T026 [P] [US1] 将 SecLists release `2026.1`、commit `190c6f7bd58c847ceadfe57d9853592737f059e8` 的 `Passwords/Common-Credentials/10k-most-common.txt` 和 MIT 来源说明保存到 `packages/backend/identity/data/10k-most-common.txt` 与 `packages/backend/identity/data/NOTICE.md`；验证：`sha256sum packages/backend/identity/data/10k-most-common.txt` 精确为 `4adb3f0afb4a10cf19ebe48d8c69a46f934bbc8d77c694c210564f9583e7f4ba`，`wc -l -c packages/backend/identity/data/10k-most-common.txt` 精确为 `10000 73017`，且 `uv run pytest tests/unit/identity/test_passwords.py -k weak` 禁网通过
-- [ ] T027 [P] [US1] 在 `packages/contracts/identity.py` 实现 Auth/Users 请求响应、能力和可增长列表分页契约；在 `packages/contracts/audit.py` 只定义身份操作早期写入所需的稳定事件代码和最小资源引用，不实现管理员查询、分页、详情或 metadata 响应；验证：`uv run pytest tests/contract/test_auth_contract.py tests/contract/test_users_contract.py` 通过
-- [ ] T028 [US1] 在 `packages/backend/identity/models.py`、`packages/backend/audit/models.py`、`packages/backend/database/migrations/versions/0001_identity_and_audit.py` 实现园所、用户、角色、用户角色、刷新令牌、审计表及幂等 `admin/teacher` 种子；验证：`uv run alembic upgrade head && uv run pytest tests/migrations/test_0001_identity.py` 通过且重复升级不重复种子
-- [ ] T029 [P] [US1] 在 `packages/backend/identity/identifiers.py`、`packages/backend/identity/passwords.py`、`packages/backend/identity/tokens.py`、`packages/backend/identity/csrf.py` 实现用户名 NFKC+trim+lower、首期大陆手机号 E.164/空值、密码政策、Argon2id、最小 HS256 JWT、opaque Refresh 轮换/重放和签名双提交 CSRF；验证：`uv run pytest tests/unit/identity/test_identifiers.py tests/unit/identity/test_passwords.py tests/unit/identity/test_tokens.py tests/api/test_csrf.py` 通过
-- [ ] T030 [P] [US1] 在 `packages/backend/identity/client_ip.py`、`packages/backend/identity/login_throttle.py` 实现只对显式配置回环 BFF socket peer 信任内部 client-IP 头的解析器，以及账号 5 次/15 分钟后 1–60 秒指数延迟、可信来源 30 次/15 分钟 429，并提供 Redis 实现和确定性替身；验证：`uv run pytest tests/unit/identity/test_client_ip.py tests/unit/identity/test_login_throttle.py` 通过，伪造头不能分散来源计数且不泄露账号存在性
-- [ ] T031 [US1] 在 `packages/backend/identity/repository.py`、`packages/backend/identity/service.py`、`packages/backend/audit/repository.py`、`packages/backend/audit/service.py` 实现同园 Repository、账号/角色实时授权、最后管理员、会话撤销和身份白名单审计；验证：`uv run pytest tests/repository/test_identity_isolation.py tests/api/test_auth.py` 通过
-- [ ] T032 [US1] 在 `packages/backend/bootstrap/__main__.py`、`packages/backend/bootstrap/init_admin.py` 实现密码不回显的交互式 CLI，并在单事务创建园所、角色、首位管理员和分配；验证：`uv run pytest tests/api/test_init_admin_cli.py` 通过，隔离库连续运行两次时第二次只显示“系统已初始化”
-- [ ] T033 [US1] 在 `apps/api/dependencies.py`、`apps/api/routers/auth.py`、`apps/api/routers/users.py` 接入可信会话、CSRF、登录限流、Auth/Users 端点和统一中文错误；登录/刷新分别追加两条 auth Cookie，退出追加两条过期 Cookie；验证：`uv run pytest tests/api/test_auth.py tests/api/test_csrf.py tests/api/test_users.py tests/contract/test_auth_contract.py tests/contract/test_users_contract.py` 通过
-- [ ] T034 [US1] 在 `apps/web/pages/auth.py`、`apps/web/pages/users.py`、`apps/web/components/navigation.py`、`apps/web/api_client.py` 实现中文登录页、账号创建/重置/停用、Cookie/CSRF 交换、按角色导航和可信来源转发；raw multi-header 必须保留登录/刷新/退出的两条 Cookie，伪造来源头被丢弃重建，Web 不缓存授权；验证：`uv run pytest tests/web/test_auth_smoke.py tests/web/test_bff_proxy.py tests/unit/identity/test_client_ip.py` 通过，网络记录无直连本档位 `CHILD_MANAGER_API_PORT` 的请求且无 Cookie 折叠
-- [ ] T035 [US1] 完成 M2 独立验收并更新 `graphify-out/graph.json`；验证：先运行 `uv run pytest tests/unit/identity tests/contract/test_auth_contract.py tests/contract/test_users_contract.py tests/migrations/test_0001_identity.py tests/repository/test_identity_isolation.py tests/api/test_init_admin_cli.py tests/api/test_auth.py tests/api/test_csrf.py tests/api/test_users.py tests/web/test_bff_proxy.py tests/web/test_auth_smoke.py`，再逐条运行五条标准命令 `uv sync --locked`、`uv run ruff format --check .`、`uv run ruff check .`、`uv run pyright`、`uv run pytest`，最后运行 `graphify update .`；所有质量命令退出 0、跨园/认证负向矩阵通过且无真实外网调用时，M2 才可标记 `complete`
+- [ ] T026 [P] [US1] 在 `pyproject.toml` 引入并锁定 `webauthn` 3.x，配置测试浏览器虚拟认证器与确定性 ceremony/时钟替身；验证：`uv sync --locked`、Python 3.14 导入冒烟和 `uv run pytest tests/unit/identity/test_webauthn.py tests/web/test_auth_smoke.py --collect-only` 通过，常规测试禁网且不依赖实体安全密钥
+- [ ] T027 [P] [US1] 在 `packages/contracts/identity.py` 实现 OpenAPI 对应的 WebAuthn options/credential、邀请、凭据、恢复、会话和 Users 模型；在 `packages/contracts/audit.py` 定义身份事件代码与最小资源引用；验证：Auth/Users 契约测试通过且运行时 OpenAPI 与冻结契约逐路径、状态、Schema、Header 一致
+- [ ] T028 [US1] 在 `packages/backend/identity/models.py`、`packages/backend/audit/models.py` 和 Alembic 迁移实现 12 张身份表、审计表、`admin/teacher` 幂等种子及 expand→enroll→contract 迁移；验证：空库升级、数据承载升级/降级、并发消费和 contract 后旧字段缺失测试通过
+- [ ] T029 [P] [US1] 在 `packages/backend/identity/webauthn.py`、`packages/backend/identity/challenges.py`、`packages/backend/identity/secret_tokens.py`、`packages/backend/identity/tokens.py`、`packages/backend/identity/csrf.py` 实现浏览器可用 options、严格 verify、摘要秘密、短期 access、固定 7 天 Refresh family 轮换/重放及签名双提交 CSRF；验证：identity 单元测试和 CSRF API 测试通过
+- [ ] T030 [P] [US1] 在 `packages/backend/identity/client_ip.py`、`packages/backend/identity/auth_throttle.py` 实现只信任显式回环 BFF socket peer 的内部 client-IP 解析，以及按可信来源、ceremony purpose 和不泄露账号存在性的公开身份端点限流，并提供 Redis 实现与确定性替身；验证：对应单元/API 429 测试通过，伪造头不能分散计数
+- [ ] T031 [US1] 在 `packages/backend/identity/repository.py`、`packages/backend/identity/service.py`、`packages/backend/audit/repository.py`、`packages/backend/audit/service.py` 实现同园 Repository、凭据/邀请/恢复状态机、最后管理员、会话实时撤销、重新邀请和身份白名单审计；验证：Repository 隔离及邀请、凭据、恢复、会话 API 测试通过
+- [ ] T032 [US1] 在 `packages/backend/bootstrap/__main__.py`、`packages/backend/bootstrap/init_admin.py` 实现 `init-admin start` 生成 15 分钟单次初始化凭据、浏览器登记后 `init-admin activate --bootstrap-id` 核验双人带外批准并激活；CLI 不创建通行密钥、不接收 credential JSON、不输出含秘密 URL；同时提供 `migrate-passkeys` 为旧账号发放迁移邀请；验证：初始化 CLI 与迁移测试通过，过期/并发重放和第二次初始化不改数据
+- [ ] T033 [US1] 在 `apps/api/dependencies.py`、`apps/api/routers/auth.py`、`apps/api/routers/users.py` 接入可信会话、CSRF、注册/认证 ceremony、邀请、本人/管理员凭据、恢复、会话和 Users 端点及统一中文错误；认证完成/刷新追加两条 auth Cookie，退出追加两条过期 Cookie，注册/恢复不建会话；验证：全部 M2 API/契约测试通过
+- [ ] T034 [US1] 在 `apps/web/pages/auth.py`、`apps/web/pages/users.py`、`apps/web/components/navigation.py`、`apps/web/api_client.py` 实现中文通行密钥认证、初始化/邀请登记、凭据管理、管理员撤销/重新邀请、恢复和会话页；raw multi-header 保留认证/刷新/退出 Cookie，BFF 重建可信来源且不缓存授权；验证：浏览器虚拟认证器冒烟、BFF 和来源测试通过
+- [ ] T035 [US1] 完成 M2 独立验收并更新 `graphify-out/graph.json`；验证：先运行 `uv run pytest tests/unit/identity tests/contract/test_auth_contract.py tests/contract/test_users_contract.py tests/migrations/test_0001_identity.py tests/migrations/test_password_to_passkey.py tests/repository/test_identity_isolation.py tests/api/test_init_admin_cli.py tests/api/test_auth_webauthn.py tests/api/test_invitations.py tests/api/test_credentials.py tests/api/test_recovery.py tests/api/test_sessions.py tests/api/test_csrf.py tests/api/test_users.py tests/web/test_bff_proxy.py tests/web/test_auth_smoke.py`，再运行五条标准命令和 `graphify update .`；所有质量命令、WebAuthn/邀请/恢复/Refresh 负向矩阵及运行时 OpenAPI parity 通过且无真实外网调用时，M2 才可标记 `complete`
 
-**M2 Checkpoint**: 安全初始化、账号/角色管理、同源 Cookie 会话、CSRF、园所隔离和身份审计可独立运行；不依赖学期、班级或区域设置。
+**M2 Checkpoint**: 短时初始化凭据、通行密钥、邀请、凭据/恢复/会话管理、账号/角色、同源
+Cookie、CSRF、园所隔离和身份审计可独立运行；没有密码或公众注册入口，不依赖学期、班级或区域设置。
 
 ### M3：首期必要设置
 
@@ -356,10 +363,10 @@ T050/T055/T061 验收且 T146/T157 回归，SC-017 由各故事 Web 测试及 T1
 - [ ] T142 [P] [US7] 在 `tests/contract/test_audit_contract.py` 编写管理员分页、默认 20/最大 100、事件/操作者/资源/结果/日期筛选、详情和统一错误契约测试；验证：`uv run pytest --collect-only tests/contract/test_audit_contract.py` 退出 0，再运行该文件并因查询、分页或 metadata 契约断言未满足而 RED
 - [ ] T143 [P] [US7] 在 `tests/repository/test_audit_repository.py` 覆盖强制园所、只插入不可更新/删除、时间倒序、固定 metadata Schema、至少一年保留和跨园不泄露；验证：`uv run pytest --collect-only tests/repository/test_audit_repository.py` 退出 0，再运行该文件并因只插入、保留或隔离行为断言未满足而 RED
 - [ ] T144 [P] [US7] 在 `tests/api/test_audit.py` 覆盖未登录/教师拒绝、管理员筛选/详情、分页、不存在/跨园不暴露及响应无秘密/正文/路径，并证明管理员授权由 service 而非 router 决定；验证：`uv run pytest --collect-only tests/api/test_audit.py` 退出 0，再运行该文件并因审计查询授权或响应行为断言未满足而 RED
-- [ ] T145 [P] [US7] 在 `tests/api/test_audit_coverage.py` 逐项断言登录、账号/角色、所有设置、模型、提示词、AI、手动保存、归档/恢复、历史、导出和下载产生白名单审计；验证：`uv run pytest --collect-only tests/api/test_audit_coverage.py` 退出 0，再运行该文件并因事件覆盖或 metadata 最小化断言未满足而 RED
+- [ ] T145 [P] [US7] 在 `tests/api/test_audit_coverage.py` 逐项断言通行密钥注册/认证、邀请、凭据/恢复/会话、账号/角色、所有设置、模型、提示词、AI、手动保存、归档/恢复、历史、导出和下载产生白名单审计；验证：`uv run pytest --collect-only tests/api/test_audit_coverage.py` 退出 0，再运行该文件并因事件覆盖或 metadata 最小化断言未满足而 RED
 - [ ] T146 [P] [US7] 在 `tests/api/test_degraded_operations.py`、`tests/worker/test_failure_recovery.py` 注入故障矩阵：PostgreSQL 提交前失败为 503 `database.unavailable` 且零任务；所有核心请求共同依赖的全局 JWT/CSRF 安全配置失败可令 `/health/ready` 返回 503 `configuration.unavailable`；AI、Redis、Worker、日历、Word 模板或导出存储失败只令分项 degraded 且 ready 仍 200，依赖该资源的业务端点才返回 `configuration.unavailable`；提交后 Redis 失败仍 202；日历为 `unknown/unavailable`，正文保留且无半成品；验证：`uv run pytest --collect-only tests/api/test_degraded_operations.py tests/worker/test_failure_recovery.py` 退出 0，再运行两文件并因故障隔离、稳定错误码或受理语义断言未满足而 RED
 - [ ] T147 [P] [US7] 在 `tests/api/test_request_trace_correlation.py` 证明 Web/API/Worker 的 `request_id/trace_id/job_id` 可关联且不复制正文；验证：`uv run pytest --collect-only tests/api/test_request_trace_correlation.py` 退出 0，再运行该文件并因关联标识传播断言未满足而 RED
-- [ ] T148 [P] [US7] 在 `tests/architecture/test_sensitive_data_boundaries.py` 扫描 contracts、日志、异常、Redis、审计和测试快照，要求密码/Cookie/token/API Key/主密钥/完整正文/绝对路径暴露为 0；验证：`uv run pytest --collect-only tests/architecture/test_sensitive_data_boundaries.py` 退出 0，再运行该文件并因敏感数据边界断言未满足而 RED
+- [ ] T148 [P] [US7] 在 `tests/architecture/test_sensitive_data_boundaries.py` 扫描 contracts、日志、异常、Redis、审计和测试快照，要求 challenge、初始化/邀请/恢复明文、WebAuthn assertion、Cookie/token、API Key、主密钥、完整正文和绝对路径暴露为 0；验证：`uv run pytest --collect-only tests/architecture/test_sensitive_data_boundaries.py` 退出 0，再运行该文件并因敏感数据边界断言未满足而 RED
 - [ ] T149 [P] [US7] 在 `tests/web/test_audit_and_degradation.py` 编写审计侧边栏、筛选/分页/空状态、按故障矩阵继续手工操作、中文错误、非纯颜色状态、键盘焦点冒烟；验证：`uv run pytest --collect-only tests/web/test_audit_and_degradation.py` 退出 0，再运行该文件并因审计/降级页面或无障碍行为断言未满足而 RED
 
 ### Implementation for User Story 7
@@ -382,10 +389,10 @@ T050/T055/T061 验收且 T146/T157 回归，SC-017 由各故事 Web 测试及 T1
 
 **Purpose**: 完成全量质量、权限、性能、安全、无障碍和文档验收；不引入生产部署或未来子系统。
 
-- [ ] T159 [P] 只在 `tests/web/test_first_release_acceptance.py` 补充登录、必要设置、手工教案、AI 采用、集体活动、Word 和审计的完整浏览器验收，使用固定替身和虚构身份；本任务不得修改业务实现，任何 RED 必须回到对应用户故事新增独立修复任务后重跑；验证：`uv run pytest --collect-only tests/web/test_first_release_acceptance.py` 退出 0，随后 `uv run pytest tests/web/test_first_release_acceptance.py` 退出 0，否则阻断 T163–T169
+- [ ] T159 [P] 只在 `tests/web/test_first_release_acceptance.py` 补充通行密钥认证/恢复、必要设置、手工教案、AI 采用、集体活动、Word 和审计的完整浏览器验收，使用虚拟认证器、固定替身和虚构身份；本任务不得修改业务实现，任何 RED 必须回到对应用户故事新增独立修复任务后重跑；验证：`uv run pytest --collect-only tests/web/test_first_release_acceptance.py` 退出 0，随后 `uv run pytest tests/web/test_first_release_acceptance.py` 退出 0，否则阻断 T163–T169
 - [ ] T160 [P] 在 `tests/web/test_performance_acceptance.py`、`tests/api/test_performance_acceptance.py`、`tests/worker/test_queue_capacity.py` 建立并完成 SC-008 性能验收：固定本地 PostgreSQL/Redis、回环 Web/API、禁外网 AI 替身、100 账号、30 个并发浏览器会话和 100 个排队任务；每类先预热 10 次，再分别采集 200 次页面/列表、200 次保存和 100 次任务受理的客户端单调时钟耗时，按升序样本 `ceil(0.95*n)-1` 最近秩计算 P95，页面以操作开始到稳定 UI 标记、保存以提交到成功响应、任务受理以提交到含任务 ID 的 202 为边界；验证：`uv run pytest tests/web/test_performance_acceptance.py tests/api/test_performance_acceptance.py tests/worker/test_queue_capacity.py` 退出 0，页面 P95≤2 秒、保存 P95≤1 秒、任务受理 P95≤2 秒，并将环境、样本数和原始统计摘要写入 `specs/001-daily-activity-plan/checklists/m8-acceptance.md`
 - [ ] T161 [P] 在 `tests/web/test_accessibility.py`、`specs/001-daily-activity-plan/checklists/accessibility.md` 完成 SC-017 的核心流程 WCAG 2.2 AA 自动扫描和完整键盘人工清单；验证：`uv run pytest tests/web/test_accessibility.py` 退出 0，且 `rg -n '^\- \[ \]' specs/001-daily-activity-plan/checklists/accessibility.md` 无输出，人工结果含浏览器、日期、执行人和证据
-- [ ] T162 [P] 在 `tests/architecture/test_security_acceptance.py` 完成 SC-011 的跨流程安全矩阵汇总，覆盖 CSRF/Origin、Cookie、refresh 重放、弱密码/限流、SSRF、跨园、上传、敏感信息和依赖方向；验证：`uv run pytest tests/architecture/test_security_acceptance.py tests/architecture/test_sensitive_data_boundaries.py` 通过
+- [ ] T162 [P] 在 `tests/architecture/test_security_acceptance.py` 完成 SC-011 的跨流程安全矩阵汇总，覆盖 WebAuthn challenge/RP ID/Origin/UV、邀请与恢复秘密、凭据和会话撤销、CSRF/Cookie/Refresh 重放、限流、SSRF、跨园、上传、敏感信息和依赖方向；验证：`uv run pytest tests/architecture/test_security_acceptance.py tests/architecture/test_sensitive_data_boundaries.py` 通过
 - [ ] T163 执行 `tests/architecture/` 与 `tests/contract/` 门禁；验证：`uv run pytest tests/architecture tests/contract` 退出 0，OpenAPI 可解析、实际响应匹配 envelope 且无 Web→backend/ORM 越界
 - [ ] T164 执行 `tests/migrations/` 与 `tests/repository/` 的 PostgreSQL、组合外键、园所隔离和并发门禁；验证：`uv run pytest tests/migrations tests/repository` 退出 0，SQLite 结果不替代 PostgreSQL 证据
 - [ ] T165 执行 `tests/api/`、`tests/worker/`、`tests/word/`、`tests/web/` 专项门禁；验证：`uv run pytest tests/api tests/worker tests/word tests/web` 退出 0，无真实 AI/节假日/其他外网调用和未解释跳过
@@ -463,7 +470,7 @@ flowchart LR
 ### US1 / M2 / M3 / US2
 
 ```text
-M2 红测 T021-T025 可并行；T029 密码/令牌与 T030 登录限流可并行。
+M2 红测 T021-T025 可并行；T029 WebAuthn/令牌与 T030 公开身份端点限流可并行。
 M3 红测 T036-T039 可并行；M2 T035 通过后再开始 M3 实现。
 US2 红测 T046-T051 可并行；T052 contracts、T053 领域规则、T055 日历集成在依赖满足后可并行。
 ```

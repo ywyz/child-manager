@@ -46,6 +46,10 @@
   prompt tests reject revision drift with zero external calls instead of mixing a new key with an old address.
   Group-activity add-step generation is explicitly available only after the split preview is adopted and saved,
   and the batch response field name is consistently `attempt_count/max_attempts`.
+- Validation iteration 6: the 2026-07-22 identity rewrite removes password login/change/reset requirements and
+  freezes browser WebAuthn registration/authentication ceremonies, short-lived first-admin initialization,
+  single-use invitations, self/admin credential operations, offline recovery plus human verification, Refresh
+  rotation and real-time session revocation. Data migration and negative acceptance paths are explicit.
 - Product-level ambiguities are resolved. The specification retains only confirmed architecture, API, security
   and data boundaries that materially define acceptance; library choices and operational tunables belong to
   `research.md`, contracts and the implementation plan.
