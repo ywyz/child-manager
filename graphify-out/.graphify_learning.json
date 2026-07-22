@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22T10:49:05.444989+00:00",
+  "generated_at": "2026-07-22T11:11:04.324723+00:00",
   "nodes": {
     "graphify_out_memory_query_20260710_131311_agents_md_ywyz_kindergartenmanager_gi_class_teacher_configuration": {
       "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
@@ -17,7 +17,7 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 1.519487864,
+      "score": 1.518952047,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2
