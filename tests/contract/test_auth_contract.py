@@ -1,103 +1,176 @@
 from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml
 from fastapi.routing import APIRoute
 
 from apps.api.routers.auth import router as auth_router
-from packages.contracts.identity import (
-    ChangePasswordRequest,
-    CsrfResponse,
-    CurrentUser,
-    KindergartenSummary,
-    LoginRequest,
-)
+from packages.contracts import identity as identity_contracts
 
 OPENAPI = yaml.safe_load(
     Path("specs/001-daily-activity-plan/contracts/openapi.yaml").read_text(encoding="utf-8")
 )
 
+AUTH_PATHS = {
+    "/api/v1/auth/csrf",
+    "/api/v1/auth/bootstrap/registration/options",
+    "/api/v1/auth/bootstrap/registration/verify",
+    "/api/v1/auth/invitation/registration/options",
+    "/api/v1/auth/invitation/registration/verify",
+    "/api/v1/auth/authentication/options",
+    "/api/v1/auth/authentication/verify",
+    "/api/v1/auth/step-up/options",
+    "/api/v1/auth/step-up/verify",
+    "/api/v1/auth/refresh",
+    "/api/v1/auth/logout",
+    "/api/v1/auth/me",
+    "/api/v1/auth/credentials",
+    "/api/v1/auth/credentials/registration/options",
+    "/api/v1/auth/credentials/registration/verify",
+    "/api/v1/auth/credentials/{credential_id}",
+    "/api/v1/auth/recovery/requests",
+    "/api/v1/auth/recovery/registration/options",
+    "/api/v1/auth/recovery/registration/verify",
+    "/api/v1/auth/recovery-code/rotate",
+    "/api/v1/auth/sessions",
+    "/api/v1/auth/sessions/{session_id}",
+}
 
-def test_auth_contract_has_no_public_registration_or_http_initialization() -> None:
-    paths = OPENAPI["paths"]
-    assert "/api/v1/register" not in paths
-    assert "/api/v1/auth/init-admin" not in paths
+
+def _resolve(reference_or_value: dict[str, Any]) -> dict[str, Any]:
+    reference = reference_or_value.get("$ref")
+    if reference is None:
+        return reference_or_value
+    current: Any = OPENAPI
+    for part in str(reference).removeprefix("#/").split("/"):
+        current = current[part]
+    assert isinstance(current, dict)
+    return current
 
 
-def test_auth_contract_locks_two_raw_auth_cookie_headers() -> None:
-    headers = OPENAPI["components"]["headers"]
-    assert headers["AuthSetCookies"]["schema"]["minItems"] == 2
-    assert headers["AuthSetCookies"]["schema"]["maxItems"] == 2
-    assert headers["ClearAuthCookies"]["schema"]["minItems"] == 2
-    assert "逗号折叠" in headers["AuthSetCookies"]["description"]
+def _runtime_routes() -> dict[tuple[str, str], APIRoute]:
+    routes: dict[tuple[str, str], APIRoute] = {}
+    for route in auth_router.routes:
+        if not isinstance(route, APIRoute) or route.methods is None:
+            continue
+        for method in route.methods:
+            routes[(route.path, method)] = route
+    return routes
 
 
-def test_auth_request_models_reject_extra_fields_and_short_new_password() -> None:
-    assert LoginRequest(login="teacher", password="secret").model_dump() == {
-        "login": "teacher",
-        "password": "secret",
+def test_auth_openapi_contains_complete_passkey_lifecycle_and_no_password_paths() -> None:
+    paths = set(OPENAPI["paths"])
+
+    assert paths >= AUTH_PATHS
+    assert {
+        "/api/v1/auth/login",
+        "/api/v1/auth/change-password",
+        "/api/v1/register",
+    }.isdisjoint(paths)
+    assert not any(path.endswith("/reset-password") for path in paths)
+    assert not any("password" in name.lower() for name in OPENAPI["components"]["schemas"])
+
+
+def test_registration_and_authentication_options_are_browser_ready() -> None:
+    schemas = OPENAPI["components"]["schemas"]
+    registration = schemas["WebAuthnRegistrationOptions"]["properties"]["publicKey"]
+    authentication = schemas["WebAuthnAuthenticationOptions"]["properties"]["publicKey"]
+
+    assert registration["required"] == [
+        "challenge",
+        "rp",
+        "user",
+        "pubKeyCredParams",
+        "timeout",
+        "excludeCredentials",
+        "authenticatorSelection",
+        "attestation",
+    ]
+    assert registration["properties"]["timeout"]["const"] == 300_000
+    assert registration["properties"]["attestation"]["const"] == "none"
+    assert registration["properties"]["authenticatorSelection"]["properties"] == {
+        "residentKey": {"type": "string", "const": "required"},
+        "requireResidentKey": {"type": "boolean", "const": True},
+        "userVerification": {"type": "string", "const": "required"},
     }
-    try:
-        ChangePasswordRequest.model_validate(
-            {"current_password": "old", "new_password": "too-short", "role": "admin"}
-        )
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("短密码或额外角色字段必须被契约拒绝")
+    assert authentication["properties"]["allowCredentials"]["type"] == "array"
+    assert authentication["properties"]["userVerification"]["const"] == "required"
+
+
+def test_browser_credential_json_has_all_array_buffer_fields_as_base64url() -> None:
+    schemas = OPENAPI["components"]["schemas"]
+    registration_response = schemas["RegistrationCredential"]["properties"]["response"]
+    authentication_response = schemas["AuthenticationCredential"]["properties"]["response"]
+
+    assert registration_response["required"] == ["clientDataJSON", "attestationObject"]
+    assert authentication_response["required"] == [
+        "clientDataJSON",
+        "authenticatorData",
+        "signature",
+        "userHandle",
+    ]
+    for schema_name in ("RegistrationCredential", "AuthenticationCredential"):
+        assert schemas[schema_name]["required"] == [
+            "id",
+            "rawId",
+            "type",
+            "response",
+            "clientExtensionResults",
+        ]
+        assert schemas[schema_name]["properties"]["rawId"] == {
+            "$ref": "#/components/schemas/Base64Url"
+        }
 
 
 @pytest.mark.parametrize(
-    "payload",
+    ("path", "method", "status", "header_component"),
     [
-        {"login": "", "password": "secret"},
-        {"login": "teacher", "password": ""},
-        {"login": "x" * 121, "password": "secret"},
-        {"login": "teacher", "password": "x" * 129},
+        ("/api/v1/auth/authentication/verify", "post", "200", "AuthSetCookies"),
+        ("/api/v1/auth/refresh", "post", "200", "AuthSetCookies"),
+        ("/api/v1/auth/logout", "post", "204", "ClearAuthCookies"),
     ],
 )
-def test_login_request_matches_openapi_length_bounds(payload: dict[str, str]) -> None:
-    with pytest.raises(ValueError):
-        LoginRequest.model_validate(payload)
+def test_auth_success_and_logout_lock_two_raw_cookie_headers(
+    path: str, method: str, status: str, header_component: str
+) -> None:
+    response = _resolve(OPENAPI["paths"][path][method]["responses"][status])
+    header = _resolve(response["headers"]["Set-Cookie"])
+
+    assert header is OPENAPI["components"]["headers"][header_component]
+    assert header["schema"]["type"] == "array"
+    assert header["schema"]["minItems"] == 2
+    assert header["schema"]["maxItems"] == 2
+    assert "逗号折叠" in header["description"]
 
 
-def test_current_user_matches_required_and_unique_openapi_contract() -> None:
-    with pytest.raises(ValueError):
-        CurrentUser.model_validate(
-            {"id": "00000000-0000-7000-8000-000000000001", "display_name": "教师"}
-        )
-    with pytest.raises(ValueError):
-        KindergartenSummary.model_validate(
-            {
-                "id": "00000000-0000-7000-8000-000000000001",
-                "name": "测试幼儿园",
-                "timezone": "UTC",
-            }
-        )
-    with pytest.raises(ValueError):
-        CurrentUser.model_validate(
-            {
-                "id": "00000000-0000-7000-8000-000000000001",
-                "username": "teacher",
-                "display_name": "教师",
-                "kindergarten": {
-                    "id": "00000000-0000-7000-8000-000000000002",
-                    "name": "测试幼儿园",
-                    "timezone": "Asia/Shanghai",
-                },
-                "role_codes": ["teacher", "teacher"],
-                "capabilities": ["plans:view", "plans:view"],
-            }
-        )
-
-
-def test_auth_routes_bind_runtime_responses_to_shared_contracts() -> None:
-    response_models = {
-        route.path: route.response_model
-        for route in auth_router.routes
-        if isinstance(route, APIRoute)
+def test_identity_contract_models_match_frozen_passkey_names() -> None:
+    required_models = {
+        "WebAuthnRegistrationOptions",
+        "WebAuthnAuthenticationOptions",
+        "RegistrationCredential",
+        "AuthenticationCredential",
+        "RegistrationVerifyRequest",
+        "AuthenticationVerifyRequest",
+        "AuthenticationResult",
+        "Credential",
+        "Invitation",
+        "RecoveryCompleted",
+        "Session",
     }
-    assert response_models["/api/v1/auth/csrf"] is CsrfResponse
-    assert response_models["/api/v1/auth/login"] is CurrentUser
-    assert response_models["/api/v1/auth/refresh"] is CurrentUser
-    assert response_models["/api/v1/auth/me"] is CurrentUser
+
+    assert required_models <= set(dir(identity_contracts))
+    assert {"LoginRequest", "ChangePasswordRequest", "PasswordResetRequest"}.isdisjoint(
+        dir(identity_contracts)
+    )
+
+
+def test_runtime_auth_router_matches_frozen_passkey_paths() -> None:
+    routes = _runtime_routes()
+    runtime_paths = {path for path, _method in routes}
+
+    assert runtime_paths >= AUTH_PATHS
+    assert {
+        "/api/v1/auth/login",
+        "/api/v1/auth/change-password",
+    }.isdisjoint(runtime_paths)

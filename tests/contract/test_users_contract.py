@@ -1,79 +1,107 @@
 from datetime import UTC, datetime
-from uuid import uuid4
+from pathlib import Path
+from uuid import UUID
 
 import pytest
+import yaml
 from fastapi.routing import APIRoute
 
 from apps.api.routers.users import router as users_router
-from packages.contracts.identity import (
-    CreateUserRequest,
-    RoleUpdate,
-    UserPage,
-    UserPatch,
-    UserResponse,
+from packages.contracts import identity as identity_contracts
+
+OPENAPI = yaml.safe_load(
+    Path("specs/001-daily-activity-plan/contracts/openapi.yaml").read_text(encoding="utf-8")
 )
 
 
-def test_create_user_contract_never_accepts_kindergarten_or_password_response() -> None:
+def _runtime_routes() -> set[tuple[str, str]]:
+    return {
+        (route.path, method)
+        for route in users_router.routes
+        if isinstance(route, APIRoute) and route.methods is not None
+        for method in route.methods
+    }
+
+
+def test_create_user_uses_roles_without_accepting_password_or_kindergarten() -> None:
+    create_user = identity_contracts.CreateUserRequest.model_validate(
+        {
+            "username": " teacher ",
+            "display_name": "测试教师",
+            "phone_e164": "+8613800138000",
+            "role_codes": ["teacher"],
+        }
+    )
+
+    assert create_user.model_dump()["role_codes"] == ["teacher"]
     with pytest.raises(ValueError):
-        CreateUserRequest.model_validate(
+        identity_contracts.CreateUserRequest.model_validate(
             {
                 "username": "teacher",
-                "display_name": "教师",
-                "password": "足够长的安全密码 2026",
+                "display_name": "测试教师",
                 "role_codes": ["teacher"],
-                "kindergarten_id": str(uuid4()),
+                "password": "不得存在的密码",
             }
         )
-    assert "password" not in UserResponse.model_fields
+    with pytest.raises(ValueError):
+        identity_contracts.CreateUserRequest.model_validate(
+            {
+                "username": "teacher",
+                "display_name": "测试教师",
+                "role_codes": ["teacher"],
+                "kindergarten_id": "00000000-0000-7000-8000-000000000001",
+            }
+        )
 
 
-def test_user_page_uses_bounded_standard_envelope() -> None:
-    now = datetime.now(UTC)
-    user = UserResponse(
-        id=uuid4(),
+def test_user_contract_exposes_account_status_and_credential_count_without_password() -> None:
+    user_model = identity_contracts.__dict__["User"]
+    now = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
+    user = user_model(
+        id=UUID("00000000-0000-7000-8000-000000000001"),
         username="teacher",
         phone_e164=None,
-        display_name="教师",
+        display_name="测试教师",
         role_codes=["teacher"],
-        is_active=True,
+        status="pending_registration",
+        credential_count=0,
+        activated_at=None,
         created_at=now,
         updated_at=now,
     )
-    page = UserPage(items=[user], page=1, page_size=20, total=1)
-    assert page.model_dump()["page_size"] == 20
-    with pytest.raises(ValueError):
-        UserPage(items=[], page=1, page_size=101, total=0)
+
+    assert user.model_dump()["status"] == "pending_registration"
+    assert {"password", "password_hash", "password_changed_at"}.isdisjoint(user.model_fields)
 
 
-def test_user_write_models_match_openapi_non_empty_and_unique_constraints() -> None:
-    with pytest.raises(ValueError):
-        CreateUserRequest(
-            username="teacher",
-            display_name="",
-            password="足够长的安全密码 2026",
-            role_codes=["teacher"],
-        )
-    with pytest.raises(ValueError):
-        UserPatch()
-    with pytest.raises(ValueError):
-        RoleUpdate(role_codes=["teacher", "teacher"])
+def test_users_openapi_covers_invitation_credentials_recovery_and_session_revocation() -> None:
+    paths = set(OPENAPI["paths"])
+    required = {
+        "/api/v1/users/{user_id}/activate",
+        "/api/v1/users/{user_id}/deactivate",
+        "/api/v1/users/{user_id}/invitations",
+        "/api/v1/users/{user_id}/invitations/{invitation_id}/revoke",
+        "/api/v1/users/{user_id}/credentials",
+        "/api/v1/users/{user_id}/credentials/{credential_id}",
+        "/api/v1/users/{user_id}/sessions/revoke",
+        "/api/v1/users/{user_id}/recovery-requests",
+        "/api/v1/users/{user_id}/recovery-requests/{recovery_request_id}/approve",
+    }
+
+    assert required <= paths
+    assert "/api/v1/users/{user_id}/reset-password" not in paths
 
 
-def test_user_routes_bind_runtime_responses_to_shared_contracts() -> None:
-    response_models: dict[tuple[str, str], object] = {}
-    for route in users_router.routes:
-        if not isinstance(route, APIRoute) or route.methods is None:
-            continue
-        for method in route.methods:
-            response_models[(route.path, method)] = route.response_model
-    assert response_models[("/api/v1/users", "GET")] is UserPage
-    assert response_models[("/api/v1/users", "POST")] is UserResponse
-    for path, method in (
-        ("/api/v1/users/{user_id}", "GET"),
-        ("/api/v1/users/{user_id}", "PATCH"),
-        ("/api/v1/users/{user_id}/roles", "PUT"),
-        ("/api/v1/users/{user_id}/activate", "POST"),
-        ("/api/v1/users/{user_id}/deactivate", "POST"),
-    ):
-        assert response_models[(path, method)] is UserResponse
+def test_runtime_users_router_matches_frozen_identity_management_paths() -> None:
+    routes = _runtime_routes()
+    required = {
+        ("/api/v1/users/{user_id}/invitations", "GET"),
+        ("/api/v1/users/{user_id}/invitations", "POST"),
+        ("/api/v1/users/{user_id}/credentials", "GET"),
+        ("/api/v1/users/{user_id}/credentials/{credential_id}", "DELETE"),
+        ("/api/v1/users/{user_id}/sessions/revoke", "POST"),
+        ("/api/v1/users/{user_id}/recovery-requests", "GET"),
+    }
+
+    assert required <= routes
+    assert ("/api/v1/users/{user_id}/reset-password", "POST") not in routes

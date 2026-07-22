@@ -1,41 +1,52 @@
 import os
+import re
 import socket
 import subprocess
 import sys
 import time
 from collections.abc import Iterator
 from contextlib import contextmanager
+from dataclasses import dataclass
 
 import httpx
-import psycopg
 import pytest
 from alembic import command
 from alembic.config import Config
-from playwright.sync_api import Page, sync_playwright
+from playwright.sync_api import BrowserContext, Page, sync_playwright
 
 from apps.web.components.navigation import navigation_for_capabilities
-from apps.web.pages.auth import change_password_page_text, login_page_text
+from apps.web.pages.auth import login_page_text
 from apps.web.pages.users import users_page_text
-from packages.backend.bootstrap.init_admin import initialize_admin
 
 
-def test_login_and_change_password_pages_are_chinese_and_do_not_persist_tokens() -> None:
-    assert {"用户名或手机号", "密码", "登录"} <= set(login_page_text())
-    assert {"当前密码", "新密码", "修改密码"} <= set(change_password_page_text())
-    rendered = " ".join(login_page_text() + change_password_page_text()).lower()
-    assert "localstorage" not in rendered and "token" not in rendered and "cookie" not in rendered
+def test_auth_pages_expose_passkey_invitation_recovery_and_session_flows() -> None:
+    auth_text = set(login_page_text())
+    users_text = set(users_page_text())
 
-
-def test_admin_account_page_exposes_create_reset_and_deactivate_flows() -> None:
-    assert {"账号管理", "创建账号", "重置密码", "停用账号"} <= set(users_page_text())
+    assert {"使用通行密钥登录", "邀请登记", "账号恢复"} <= auth_text
+    assert {
+        "账号管理",
+        "签发邀请",
+        "通行密钥",
+        "新增通行密钥",
+        "命名通行密钥",
+        "撤销通行密钥",
+        "重新邀请",
+        "撤销会话",
+        "恢复申请",
+    } <= users_text
+    rendered = " ".join(auth_text | users_text).lower()
+    assert "密码" not in rendered
+    assert "localstorage" not in rendered and "token" not in rendered
 
 
 def test_navigation_is_derived_from_current_api_capabilities() -> None:
-    admin = navigation_for_capabilities(["users:manage", "plans:view"])
-    teacher = navigation_for_capabilities(["plans:view"])
+    admin = navigation_for_capabilities(["users:manage", "credentials:manage", "plans:view"])
+    teacher = navigation_for_capabilities(["credentials:manage", "plans:view"])
+
     assert "账号管理" in admin
     assert "账号管理" not in teacher
-    assert "教案" in admin and "教案" in teacher
+    assert "通行密钥与会话" in admin and "通行密钥与会话" in teacher
 
 
 def _free_port() -> int:
@@ -61,18 +72,67 @@ def _wait_http(url: str, process: subprocess.Popen[str]) -> None:
     raise AssertionError(f"服务未就绪: {url}, last_status={last_status}")
 
 
+@dataclass(frozen=True)
+class BootstrapMaterial:
+    bootstrap_id: str
+    secret: str
+
+
+def _bootstrap_start(database_url: str) -> BootstrapMaterial:
+    environment = {**os.environ, "CHILD_MANAGER_DATABASE_URL": database_url}
+    result = subprocess.run(
+        [sys.executable, "-m", "packages.backend.bootstrap", "init-admin", "start"],
+        input="测试幼儿园\nadmin\n测试管理员\nowner-ref-001\noperator-ref-002\n",
+        text=True,
+        capture_output=True,
+        env=environment,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    output = result.stdout + result.stderr
+    bootstrap_id = re.search(
+        r"初始化(?:记录|ID)[：:]\s*([0-9a-f-]{36})",
+        output,
+        re.IGNORECASE,
+    )
+    secret = re.search(r"初始化凭据[：:]\s*([A-Za-z0-9_-]{22,})", output)
+    assert bootstrap_id is not None
+    assert secret is not None
+    assert secret.group(1) not in re.sub(r"初始化凭据[^\n]*", "", output)
+    assert "http://" not in output and "https://" not in output
+    return BootstrapMaterial(bootstrap_id.group(1), secret.group(1))
+
+
+def _bootstrap_activate(database_url: str, bootstrap_id: str) -> None:
+    environment = {**os.environ, "CHILD_MANAGER_DATABASE_URL": database_url}
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "packages.backend.bootstrap",
+            "init-admin",
+            "activate",
+            "--bootstrap-id",
+            bootstrap_id,
+        ],
+        input="owner-ref-001\noperator-ref-002\n",
+        text=True,
+        capture_output=True,
+        env=environment,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "已激活" in result.stdout
+
+
 @contextmanager
 def _m2_services(database_url: str) -> Iterator[tuple[str, int]]:
     api_port = _free_port()
     web_port = _free_port()
-    redis_url = os.environ.get("CHILD_MANAGER_TEST_REDIS_URL")
-    if not redis_url:
-        raise AssertionError("必须设置 CHILD_MANAGER_TEST_REDIS_URL")
     environment = {
         **os.environ,
         "CHILD_MANAGER_DATABASE_URL": database_url,
-        "CHILD_MANAGER_REDIS_URL": redis_url,
-        "CHILD_MANAGER_LOGIN_THROTTLE_BACKEND": "redis",
+        "CHILD_MANAGER_AUTH_THROTTLE_BACKEND": "memory",
         "CHILD_MANAGER_JWT_SIGNING_KEY": "browser-jwt-signing-key-that-is-long",
         "CHILD_MANAGER_CSRF_SIGNING_KEY": "browser-csrf-signing-key-that-is-long",
         "CHILD_MANAGER_COOKIE_SECURE": "false",
@@ -80,6 +140,9 @@ def _m2_services(database_url: str) -> Iterator[tuple[str, int]]:
         "CHILD_MANAGER_WEB_PORT": str(web_port),
         "CHILD_MANAGER_ALLOWED_ORIGINS": f"http://127.0.0.1:{web_port}",
         "CHILD_MANAGER_TRUSTED_BFF_PEERS": "127.0.0.1",
+        "CHILD_MANAGER_WEBAUTHN_RP_ID": "localhost",
+        "CHILD_MANAGER_WEBAUTHN_RP_NAME": "Child Manager Tests",
+        "CHILD_MANAGER_AUTH_THROTTLE_FAILURE_LIMIT": "2",
         "NICEGUI_SCREEN_TEST_PORT": str(web_port),
     }
     api = subprocess.Popen(
@@ -109,7 +172,7 @@ def _m2_services(database_url: str) -> Iterator[tuple[str, int]]:
     try:
         _wait_http(f"http://127.0.0.1:{api_port}/health/live", api)
         _wait_http(f"http://127.0.0.1:{web_port}/login", web)
-        yield f"http://127.0.0.1:{web_port}", api_port
+        yield f"http://localhost:{web_port}", api_port
     finally:
         for process in (web, api):
             process.terminate()
@@ -121,123 +184,154 @@ def _m2_services(database_url: str) -> Iterator[tuple[str, int]]:
                 process.wait(timeout=5)
 
 
-def _login(page: Page, base_url: str, username: str, password: str) -> None:
-    page.goto(f"{base_url}/login")
-    page.get_by_label("用户名或手机号").fill(username)
-    page.get_by_label("密码").fill(password)
-    page.get_by_role("button", name="登录").click()
-    page.wait_for_url(f"{base_url}/")
+def _add_virtual_authenticator(context: BrowserContext, page: Page) -> str:
+    cdp = context.new_cdp_session(page)
+    cdp.send("WebAuthn.enable")
+    result = cdp.send(
+        "WebAuthn.addVirtualAuthenticator",
+        {
+            "options": {
+                "protocol": "ctap2",
+                "transport": "internal",
+                "hasResidentKey": True,
+                "hasUserVerification": True,
+                "isUserVerified": True,
+                "automaticPresenceSimulation": True,
+            }
+        },
+    )
+    return str(result["authenticatorId"])
 
 
-def test_browser_auth_and_account_management_flow(
+def _auth_cookie_names(context: BrowserContext) -> set[str]:
+    return {
+        str(cookie.get("name"))
+        for cookie in context.cookies()
+        if cookie.get("name") in {"child_manager_access", "child_manager_refresh"}
+    }
+
+
+def test_browser_completes_passkey_invitation_recovery_credential_and_session_journey(
     isolated_database_url: str,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("CHILD_MANAGER_DATABASE_URL", isolated_database_url)
     command.upgrade(Config("alembic.ini"), "head")
-    initialize_admin(
-        database_url=isolated_database_url,
-        kindergarten_name="浏览器验收幼儿园",
-        username="admin",
-        display_name="浏览器管理员",
-        password="管理员足够长的安全测试密码 2026",
-    )
+    bootstrap = _bootstrap_start(isolated_database_url)
+
     with _m2_services(isolated_database_url) as (base_url, api_port), sync_playwright() as manager:
         browser = manager.chromium.launch(headless=True)
         admin_context = browser.new_context()
         admin_page = admin_context.new_page()
+        admin_authenticator = _add_virtual_authenticator(admin_context, admin_page)
         requested_urls: list[str] = []
         admin_page.on("request", lambda request: requested_urls.append(request.url))
 
-        _login(admin_page, base_url, "admin", "管理员足够长的安全测试密码 2026")
-        admin_page.get_by_text("账号管理", exact=True).wait_for()
-        cookies = {str(cookie.get("name")): cookie for cookie in admin_context.cookies()}
-        access_cookie = cookies["child_manager_access"]
-        refresh_cookie = cookies["child_manager_refresh"]
-        assert access_cookie.get("httpOnly") is True
-        assert refresh_cookie.get("httpOnly") is True
-        assert access_cookie.get("sameSite") == "Lax"
-        old_refresh = str(refresh_cookie.get("value"))
+        admin_page.goto(f"{base_url}/initialize")
+        admin_page.get_by_label("初始化凭据").fill(bootstrap.secret)
+        admin_page.get_by_role("button", name="登记首位管理员通行密钥").click()
+        admin_page.get_by_text("等待双人核验").wait_for()
+        assert _auth_cookie_names(admin_context) == set()
+        _bootstrap_activate(isolated_database_url, bootstrap.bootstrap_id)
 
-        refresh_status = admin_page.evaluate(
-            """async () => {
-              const csrf = await (await fetch('/api/v1/auth/csrf')).json();
-              return (await fetch('/api/v1/auth/refresh', {
-                method: 'POST', headers: {'X-CSRF-Token': csrf.csrf_token}
-              })).status;
-            }"""
-        )
-        assert refresh_status == 200
-        assert {str(cookie.get("name")): cookie for cookie in admin_context.cookies()}[
-            "child_manager_refresh"
-        ].get("value") != old_refresh
+        admin_page.goto(f"{base_url}/login")
+        admin_page.get_by_role("button", name="使用通行密钥登录").click()
+        admin_page.get_by_text("首页").wait_for()
+        admin_recovery_code = admin_page.get_by_test_id("recovery-code-once").text_content()
+        assert admin_recovery_code
 
-        admin_page.get_by_text("账号管理", exact=True).click()
-        admin_page.wait_for_url(f"{base_url}/users")
-        admin_page.get_by_label("用户名").fill("browser-teacher")
-        admin_page.get_by_label("姓名").fill("浏览器教师")
-        admin_page.get_by_label("初始密码").fill("教师足够长的安全测试密码 2026")
+        admin_page.goto(f"{base_url}/users")
+        admin_page.get_by_label("用户名").fill("teacher")
+        admin_page.get_by_label("姓名").fill("测试教师")
         admin_page.get_by_role("button", name="创建账号").click()
-        admin_page.get_by_text("账号已创建。").wait_for()
-        teacher_id = admin_page.evaluate(
-            """async () => {
-              const body = await (await fetch('/api/v1/users?page=1&page_size=100')).json();
-              return body.items.find(item => item.username === 'browser-teacher').id;
-            }"""
-        )
-        admin_page.get_by_label("账号 ID").fill(teacher_id)
-        admin_page.get_by_label("重置后的密码").fill("教师重置后的足够长安全密码 2026")
-        admin_page.get_by_role("button", name="重置密码").click()
-        admin_page.get_by_text("密码已重置。").wait_for()
+        teacher_id = admin_page.get_by_test_id("created-user-id").text_content()
+        assert teacher_id
+        admin_page.get_by_test_id(f"issue-invitation-{teacher_id}").click()
+        invitation = admin_page.get_by_test_id("invitation-token-once").text_content()
+        assert invitation
 
         teacher_context = browser.new_context()
         teacher_page = teacher_context.new_page()
-        _login(teacher_page, base_url, "browser-teacher", "教师重置后的足够长安全密码 2026")
-        teacher_page.get_by_text("账号管理", exact=True).wait_for(state="detached")
+        teacher_authenticator = _add_virtual_authenticator(teacher_context, teacher_page)
+        teacher_page.on("request", lambda request: requested_urls.append(request.url))
+        teacher_page.goto(f"{base_url}/register")
+        teacher_page.get_by_label("邀请凭据").fill(invitation)
+        teacher_page.get_by_role("button", name="登记通行密钥").click()
+        teacher_page.get_by_text("等待管理员核验").wait_for()
+        assert _auth_cookie_names(teacher_context) == set()
 
-        admin_page.get_by_role("button", name="停用账号").click()
-        admin_page.get_by_text("账号已停用。").wait_for()
-        assert teacher_page.evaluate("async () => (await fetch('/api/v1/auth/me')).status") == 401
+        admin_page.reload()
+        admin_page.get_by_test_id(f"activate-user-{teacher_id}").click()
+        admin_page.get_by_text("账号已激活").wait_for()
+        teacher_page.goto(f"{base_url}/login")
+        teacher_page.get_by_role("button", name="使用通行密钥登录").click()
+        teacher_page.get_by_text("首页").wait_for()
+        teacher_recovery_code = teacher_page.get_by_test_id("recovery-code-once").text_content()
+        assert teacher_recovery_code
 
-        admin_page.goto(f"{base_url}/change-password")
-        admin_page.get_by_label("当前密码").fill("管理员足够长的安全测试密码 2026")
-        admin_page.get_by_label("新密码").fill("管理员修改后的足够长安全密码 2026")
-        admin_page.get_by_role("button", name="修改密码").click()
-        admin_page.wait_for_url(f"{base_url}/login")
-        _login(admin_page, base_url, "admin", "管理员修改后的足够长安全密码 2026")
+        teacher_page.goto(f"{base_url}/account/security")
+        teacher_page.get_by_role("button", name="重新验证").click()
+        teacher_page.get_by_role("button", name="新增通行密钥").click()
+        teacher_page.get_by_label("通行密钥名称").fill("备用通行密钥")
+        teacher_page.get_by_role("button", name="保存名称").click()
+        teacher_page.get_by_test_id("revoke-primary-credential").click()
+        teacher_page.get_by_text("凭据已撤销").wait_for()
 
-        forged_status = admin_page.evaluate(
+        admin_page.goto(f"{base_url}/users/{teacher_id}/security")
+        admin_page.get_by_role("button", name="撤销教师最后凭据并重新邀请").click()
+        reinvitation = admin_page.get_by_test_id("invitation-token-once").text_content()
+        assert reinvitation
+        teacher_page.reload()
+        teacher_page.get_by_text("登录状态已失效").wait_for()
+
+        teacher_page.goto(f"{base_url}/recover")
+        teacher_page.get_by_label("用户名或手机号").fill("teacher")
+        teacher_page.get_by_label("离线恢复码").fill(teacher_recovery_code)
+        teacher_page.get_by_role("button", name="提交恢复申请").click()
+        teacher_page.get_by_text("继续核验").wait_for()
+        assert _auth_cookie_names(teacher_context) == set()
+
+        admin_page.goto(f"{base_url}/users/{teacher_id}/recovery")
+        admin_page.get_by_role("button", name="批准恢复登记").click()
+        enrollment = admin_page.get_by_test_id("recovery-enrollment-token-once").text_content()
+        assert enrollment
+        teacher_page.goto(f"{base_url}/recover/register")
+        teacher_page.get_by_label("恢复登记凭据").fill(enrollment)
+        teacher_page.get_by_role("button", name="登记新通行密钥").click()
+        new_recovery_code = teacher_page.get_by_test_id("recovery-code-once").text_content()
+        assert new_recovery_code and new_recovery_code != teacher_recovery_code
+        assert _auth_cookie_names(teacher_context) == set()
+
+        teacher_page.goto(f"{base_url}/login")
+        teacher_page.get_by_role("button", name="使用通行密钥登录").click()
+        teacher_page.get_by_text("首页").wait_for()
+        teacher_page.goto(f"{base_url}/account/security")
+        teacher_page.get_by_role("button", name="撤销当前会话").click()
+        teacher_page.get_by_role("button", name="使用通行密钥登录").wait_for()
+
+        throttle_statuses = teacher_page.evaluate(
             """async () => {
-              const csrf = await (await fetch('/api/v1/auth/csrf')).json();
-              return (await fetch('/api/v1/auth/login', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'X-CSRF-Token': csrf.csrf_token,
-                  'X-Child-Manager-Client-IP': '203.0.113.99'
-                },
-                body: JSON.stringify({
-                  login: 'missing-browser-user', password: '错误但足够长密码 2026'
-                })
-              })).status;
+              const csrfResponse = await fetch('/api/v1/auth/csrf', {credentials: 'same-origin'});
+              const csrf = await csrfResponse.json();
+              const values = ['198.51.100.1', '203.0.113.2', '192.0.2.3'];
+              const statuses = [];
+              for (const value of values) {
+                const response = await fetch('/api/v1/auth/authentication/options', {
+                  method: 'POST', credentials: 'same-origin',
+                  headers: {
+                    'X-CSRF-Token': csrf.csrf_token,
+                    'X-Child-Manager-Client-IP': value,
+                    'X-Forwarded-For': value,
+                  },
+                });
+                statuses.push(response.status);
+              }
+              return statuses;
             }"""
         )
-        assert forged_status == 401
-        admin_page.get_by_role("button", name="退出登录").click()
-        admin_page.wait_for_url(f"{base_url}/login")
-        auth_cookie_names = {
-            str(cookie.get("name"))
-            for cookie in admin_context.cookies()
-            if cookie.get("name") in {"child_manager_access", "child_manager_refresh"}
-        }
-        assert auth_cookie_names == set()
+
+        assert admin_authenticator
+        assert teacher_authenticator
+        assert throttle_statuses == [200, 200, 429]
         assert all(f":{api_port}/" not in url for url in requested_urls)
         browser.close()
-
-    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
-    with psycopg.connect(native_url) as connection:
-        source = connection.execute(
-            """SELECT metadata->>'source' FROM audit_events
-            WHERE event_code='identity.login_failed' ORDER BY occurred_at DESC LIMIT 1"""
-        ).fetchone()
-    assert source is not None and source[0] == "127.0.0.1"

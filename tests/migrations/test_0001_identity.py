@@ -31,6 +31,13 @@ def test_identity_migration_creates_tables_extension_and_role_seeds(
     assert {
         "kindergartens",
         "users",
+        "webauthn_credentials",
+        "webauthn_challenges",
+        "bootstrap_initializations",
+        "account_invitations",
+        "recovery_codes",
+        "account_recovery_requests",
+        "identity_verification_approvals",
         "roles",
         "user_roles",
         "refresh_tokens",
@@ -59,6 +66,7 @@ def test_identity_migration_creates_tables_extension_and_role_seeds(
         "issued_at",
         "expires_at",
         "last_used_at",
+        "last_reauthenticated_at",
         "revoked_at",
         "revoke_reason",
         "replaced_by_id",
@@ -66,6 +74,21 @@ def test_identity_migration_creates_tables_extension_and_role_seeds(
         "created_at",
         "updated_at",
     )
+
+    user_columns = {
+        row[0]
+        for row in migrated_database.execute(
+            """SELECT column_name FROM information_schema.columns
+            WHERE table_schema=current_schema() AND table_name='users'"""
+        ).fetchall()
+    }
+    assert {
+        "webauthn_user_handle",
+        "status",
+        "activated_at",
+        "last_login_at",
+    } <= user_columns
+    assert {"password_hash", "password_changed_at", "is_active"}.isdisjoint(user_columns)
 
 
 def test_identity_migration_is_idempotent(

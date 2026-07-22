@@ -2,11 +2,12 @@
 
 from fastapi.testclient import TestClient
 
-from tests.api.identity_helpers import csrf_headers, identity_client  # noqa: F401
+from tests.api.passkey_helpers import csrf_headers, passkey_client  # noqa: F401
 
 
-def test_csrf_cookie_is_signed_readable_and_not_httponly(identity_client: TestClient) -> None:
-    response = identity_client.get("/api/v1/auth/csrf")
+def test_csrf_cookie_is_signed_readable_and_not_httponly(passkey_client: TestClient) -> None:
+    response = passkey_client.get("/api/v1/auth/csrf")
+
     assert response.status_code == 200
     cookie = response.headers.get_list("set-cookie")[0]
     assert cookie.startswith("child_manager_csrf=")
@@ -14,28 +15,27 @@ def test_csrf_cookie_is_signed_readable_and_not_httponly(identity_client: TestCl
     assert "HttpOnly" not in cookie
 
 
-def test_state_change_rejects_missing_csrf_and_wrong_origin(identity_client: TestClient) -> None:
-    missing = identity_client.post(
-        "/api/v1/auth/login",
-        json={"login": "admin", "password": "管理员足够长的安全测试密码 2026"},
-    )
+def test_passkey_state_change_rejects_missing_csrf_and_wrong_origin(
+    passkey_client: TestClient,
+) -> None:
+    missing = passkey_client.post("/api/v1/auth/authentication/options")
     assert missing.status_code == 403
-    headers = csrf_headers(identity_client)
+
+    headers = csrf_headers(passkey_client)
     headers["Origin"] = "https://evil.example"
-    wrong_origin = identity_client.post(
-        "/api/v1/auth/login",
-        json={"login": "admin", "password": "管理员足够长的安全测试密码 2026"},
+    wrong_origin = passkey_client.post(
+        "/api/v1/auth/authentication/options",
         headers=headers,
     )
     assert wrong_origin.status_code == 403
     assert wrong_origin.json()["code"] == "auth.csrf_invalid"
 
 
-def test_state_change_rejects_malformed_csrf_token(identity_client: TestClient) -> None:
-    identity_client.cookies.set("child_manager_csrf", "a.a")
-    response = identity_client.post(
-        "/api/v1/auth/login",
-        json={"login": "admin", "password": "管理员足够长的安全测试密码 2026"},
+def test_recovery_rejects_malformed_signed_double_submit_token(passkey_client: TestClient) -> None:
+    passkey_client.cookies.set("child_manager_csrf", "a.a")
+    response = passkey_client.post(
+        "/api/v1/auth/recovery/requests",
+        json={"login": "teacher", "recovery_code": "not-a-real-code"},
         headers={"Origin": "http://testserver", "X-CSRF-Token": "a.a"},
     )
 
