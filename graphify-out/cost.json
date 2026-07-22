@@ -11,8 +11,17 @@
       "input_tokens": 20350,
       "output_tokens": 6820,
       "files": 6
+    },
+    {
+      "date": "2026-07-22T10:48:06.876137+00:00",
+      "input_tokens": 228019,
+      "output_tokens": 95127,
+      "files": 36,
+      "backend": "openai",
+      "model": "mimo-v2.5-pro",
+      "note": "includes discarded coarse security re-extraction and community labeling; inline security quality correction uses no API tokens"
     }
   ],
-  "total_input_tokens": 22836,
-  "total_output_tokens": 10674
+  "total_input_tokens": 250855,
+  "total_output_tokens": 105801
 }

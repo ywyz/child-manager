@@ -300,9 +300,9 @@ uv run pytest
 - 不得声称未实际执行的测试已经通过。
 - 最终说明应列出已执行检查、结果和未执行原因。
 
-## 17. graphify 知识图谱
+## 17. 知识图谱与代码图谱
 
-仓库存在 `graphify-out/graph.json` 时，代码库问题优先使用已安装的 graphify 查询能力：
+仓库存在 `graphify-out/graph.json` 时，跨文档、架构决策和产品规则问题优先使用已安装的 graphify 查询能力：
 
 - 广泛关系查询：`graphify query "<问题>"`
 - 两个概念的路径：`graphify path "<A>" "<B>"`
@@ -315,6 +315,16 @@ uv run pytest
 - `graphify-out/` 因查询或更新产生改动是正常现象，不能据此跳过图谱。
 - 不得手工编辑生成的图谱文件。
 - 修改业务代码或活跃治理/架构文档后运行 `graphify update .`；若工具不可用或更新失败，在交付说明中报告。
+
+代码结构问题按以下顺序使用 codebase-memory MCP：
+
+1. `search_graph`：查找函数、类、路由和变量。
+2. `trace_path`：分析调用、数据流和跨服务影响。
+3. `get_code_snippet`：读取已定位符号的实现。
+4. `query_graph`：执行复杂多跳或聚合查询。
+5. `get_architecture`：获取高层架构、边界和热点概览。
+
+`codegraph` 仅用于需要本地静态依赖图、HTML 或 CSV 导出时的一次性分析；它不处理文档语义，也不替代 graphify 或 codebase-memory MCP。除非任务明确要求，不得把 `codegraph.html`、CSV 或其他临时导出物提交到仓库。代码图谱描述的是当前实现；若与已确认的 ADR、规格或契约冲突，必须先报告冲突，不能用实现现状改写设计事实。
 
 ## 18. 完成交付
 
@@ -339,7 +349,7 @@ uv run pytest
 ### 已安装工具与技能
 
 - 当前环境已安装 `fdfind`、`rg`、`sg` 与 graphify；文件名搜索、文本搜索和 AST 搜索仍分别遵循上述优先级。
-- 代码库、架构或文档关系问题优先使用 graphify；存在 `graphify-out/graph.json` 时先查询，业务代码或重大文档变更后运行 `graphify update .` 并报告失败原因。
+- 跨文档和架构决策关系优先使用 graphify；代码符号、调用与影响分析优先使用 codebase-memory MCP；只有需要本地静态图或导出物时才使用 codegraph。业务代码或重大文档变更后运行 `graphify update .` 并报告失败原因。
 - 已安装 Spec Kit 技能（`.agents/skills/speckit-*`），适用于规格、计划、任务及其一致性审查；生成 `tasks.md` 后，实施前应运行 `speckit-analyze`。
 - 已安装 Superpowers 与 `mattpocock/skills` 工程技能集合。任务命中其适用范围时，应先阅读对应 `SKILL.md` 并按其流程执行；技能不改变本文件的安全、数据隔离、Git 与验证要求。
 
