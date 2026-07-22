@@ -1,10 +1,10 @@
 # Child Manager PostgreSQL 数据库 Schema
 
-文档版本：v1.0
+文档版本：v1.1
 
 状态：已确认，待 Alembic 实现
 
-日期：2026-07-12
+日期：2026-07-22
 
 适用范围：Cloud 首期单园功能数据库
 
@@ -101,7 +101,7 @@ ON DELETE RESTRICT
 
 | 领域 | 表 | 数量 |
 | --- | --- | ---: |
-| 园所与身份 | `kindergartens`、`users`、`roles`、`user_roles`、`refresh_tokens` | 5 |
+| 园所与身份 | `kindergartens`、`users`、`webauthn_credentials`、`webauthn_challenges`、`bootstrap_initializations`、`account_invitations`、`recovery_codes`、`account_recovery_requests`、`identity_verification_approvals`、`roles`、`user_roles`、`refresh_tokens` | 12 |
 | 教学设置 | `age_groups`、`classes`、`class_teachers`、`semesters`、`class_areas` | 5 |
 | AI 模型 | `ai_model_profiles`、`ai_model_profile_capabilities` | 2 |
 | 提示词 | `prompt_definitions`、`prompt_versions`、`prompt_test_runs` | 3 |
@@ -109,7 +109,7 @@ ON DELETE RESTRICT
 | 任务与 AI 结果 | `background_jobs`、`ai_generation_results` | 2 |
 | 导出 | `daily_activity_plan_exports` | 1 |
 | 系统支撑 | `workday_cache`、`audit_events` | 2 |
-| **合计** |  | **24** |
+| **合计** |  | **31** |
 
 首期不创建幼儿、年级组、审批、批注、照片、对象存储、平台租户或生产部署元数据表。
 
@@ -137,9 +137,9 @@ username VARCHAR(120) NOT NULL
 username_normalized VARCHAR(120) NOT NULL
 phone_e164 VARCHAR(32) NULL
 display_name VARCHAR(120) NOT NULL
-password_hash TEXT NOT NULL
-is_active BOOLEAN NOT NULL DEFAULT true
-password_changed_at TIMESTAMPTZ NOT NULL
+webauthn_user_handle BYTEA NOT NULL
+status VARCHAR(32) NOT NULL DEFAULT 'pending_registration'
+activated_at TIMESTAMPTZ NULL
 last_login_at TIMESTAMPTZ NULL
 created_by UUID NULL
 updated_by UUID NULL
@@ -151,12 +151,171 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 
 - `UNIQUE (kindergarten_id, id)`。
 - `UNIQUE (kindergarten_id, username_normalized)`。
+- `UNIQUE (webauthn_user_handle)` 与 `CHECK (octet_length(webauthn_user_handle) = 32)`。
 - 部分唯一索引 `(kindergarten_id, phone_e164) WHERE phone_e164 IS NOT NULL`。
-- 索引 `(kindergarten_id, is_active)`。
+- `CHECK (status IN ('pending_registration','pending_verification','active','suspended'))`。
+- 索引 `(kindergarten_id, status)`。
 - `(kindergarten_id, created_by)` 和 `(kindergarten_id, updated_by)` 组合自外键，首位管理员初始化时允许空。
 - 停用账号仍占用用户名与手机号。
 
-### 5.3 `roles`
+本表不包含密码字段。`active` 账号必须至少存在一个未撤销 WebAuthn 凭据由应用锁事务校验；
+注册成功只进入 `pending_verification`，带外核验完成后才进入 `active`。
+
+### 5.3 `webauthn_credentials`
+
+```text
+id UUID PK
+kindergarten_id UUID NOT NULL
+user_id UUID NOT NULL
+credential_id BYTEA NOT NULL
+public_key_cose BYTEA NOT NULL
+sign_count BIGINT NOT NULL DEFAULT 0
+transports JSONB NOT NULL DEFAULT '[]'::jsonb
+aaguid UUID NULL
+backup_eligible BOOLEAN NOT NULL
+backup_state BOOLEAN NOT NULL
+attestation_format VARCHAR(32) NULL
+label VARCHAR(120) NOT NULL
+created_via VARCHAR(32) NOT NULL
+last_used_at TIMESTAMPTZ NULL
+revoked_at TIMESTAMPTZ NULL
+revoke_reason VARCHAR(64) NULL
+created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+```
+
+约束：`UNIQUE (kindergarten_id, id)`、`UNIQUE (kindergarten_id, credential_id)`、同园用户组合
+外键、`sign_count >= 0`、`label = btrim(label)` 且非空、`created_via` 枚举 CHECK。`transports`
+只允许字符串数组由应用 Schema 校验；撤销记录不删除。
+
+### 5.4 `webauthn_challenges`
+
+```text
+id UUID PK
+kindergarten_id UUID NOT NULL FK -> kindergartens.id
+user_id UUID NULL
+purpose VARCHAR(40) NOT NULL
+challenge_hash VARCHAR(128) NOT NULL UNIQUE
+authorization_context_id UUID NULL
+expected_rp_id VARCHAR(253) NOT NULL
+expected_origin VARCHAR(2048) NOT NULL
+expires_at TIMESTAMPTZ NOT NULL
+consumed_at TIMESTAMPTZ NULL
+failed_attempts SMALLINT NOT NULL DEFAULT 0
+created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+```
+
+`purpose` 只允许 `bootstrap_registration/invitation_registration/self_add/recovery_registration/
+authentication/step_up`；`CHECK (expires_at > created_at)`、`failed_attempts >= 0`，索引
+`(kindergarten_id, purpose, expires_at, consumed_at)`。`user_id` 非空时使用同园组合外键；
+`authorization_context_id` 的目标由 purpose 决定并由应用锁事务验证。
+
+### 5.5 `bootstrap_initializations`
+
+```text
+id UUID PK
+kindergarten_id UUID NOT NULL
+user_id UUID NOT NULL
+token_hash VARCHAR(128) NOT NULL UNIQUE
+purpose VARCHAR(24) NOT NULL
+expires_at TIMESTAMPTZ NOT NULL
+consumed_at TIMESTAMPTZ NULL
+credential_id UUID NULL
+activated_at TIMESTAMPTZ NULL
+created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+```
+
+同园组合外键分别指向 `users` 与 `webauthn_credentials`；`purpose` 只允许
+`empty_system/migration_admin`。空系统通过部分唯一索引或串行化事务保证只创建一条链路；
+`migration_admin` 还需迁移窗口和零 WebAuthn active 管理员应用门禁。
+
+### 5.6 `account_invitations`
+
+```text
+id UUID PK
+kindergarten_id UUID NOT NULL
+user_id UUID NOT NULL
+issued_by UUID NOT NULL
+token_hash VARCHAR(128) NOT NULL UNIQUE
+expires_at TIMESTAMPTZ NOT NULL
+consumed_at TIMESTAMPTZ NULL
+revoked_at TIMESTAMPTZ NULL
+revoke_reason VARCHAR(64) NULL
+registered_credential_id UUID NULL
+created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+```
+
+目标、签发人和注册凭据均使用同园组合外键；`CHECK (expires_at > created_at)`、
+`CHECK (NOT (consumed_at IS NOT NULL AND revoked_at IS NOT NULL))`。索引
+`(kindergarten_id, user_id, consumed_at, revoked_at, expires_at)`；重新签发在事务内撤销旧邀请。
+
+### 5.7 `recovery_codes`
+
+```text
+id UUID PK
+kindergarten_id UUID NOT NULL
+user_id UUID NOT NULL
+code_hash VARCHAR(128) NOT NULL UNIQUE
+issued_at TIMESTAMPTZ NOT NULL
+consumed_at TIMESTAMPTZ NULL
+revoked_at TIMESTAMPTZ NULL
+replaced_by_id UUID NULL
+created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+```
+
+同园用户和自引用组合外键；`CHECK (NOT (consumed_at IS NOT NULL AND revoked_at IS NOT NULL))`。
+部分唯一索引 `(kindergarten_id, user_id) WHERE consumed_at IS NULL AND revoked_at IS NULL` 保证
+每个账号至多一个有效恢复码；账号激活后的首次成功通行密钥认证必须在签发会话的同一事务
+插入首个恢复码并只向该用户返回原始值。
+
+### 5.8 `account_recovery_requests`
+
+```text
+id UUID PK
+kindergarten_id UUID NOT NULL
+user_id UUID NOT NULL
+recovery_code_id UUID NOT NULL
+state VARCHAR(32) NOT NULL
+approval_expires_at TIMESTAMPTZ NOT NULL
+registration_token_hash VARCHAR(128) NULL UNIQUE
+registration_expires_at TIMESTAMPTZ NULL
+completed_at TIMESTAMPTZ NULL
+created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+```
+
+同园组合外键指向用户与恢复码；状态只允许 `pending_verification/approved/
+registration_pending/completed/rejected/expired`。`registration_token_hash` 与到期时间必须同时空
+或同时非空。部分唯一索引保证每个账号至多一个未终结请求；完成事务执行全量旧凭据、会话、
+邀请和恢复码撤销并签发新恢复码。
+
+### 5.9 `identity_verification_approvals`
+
+```text
+id UUID PK
+kindergarten_id UUID NOT NULL
+subject_user_id UUID NOT NULL
+context_type VARCHAR(24) NOT NULL
+context_id UUID NOT NULL
+verifier_type VARCHAR(32) NOT NULL
+verifier_user_id UUID NULL
+verifier_reference VARCHAR(160) NOT NULL
+decision VARCHAR(16) NOT NULL
+decided_at TIMESTAMPTZ NOT NULL
+created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+```
+
+主体和可选管理员核验人使用同园组合外键；`context_type` 只允许 `bootstrap/invitation/recovery`，
+`verifier_type` 只允许 `admin/kindergarten_owner/deployment_operator/security_operator`，decision
+只允许 `approved/rejected`。唯一 `(kindergarten_id, context_type, context_id, verifier_type,
+verifier_reference)`；双人核验的不同自然人约束由应用事务和审计证明。
+
+### 5.10 `roles`
 
 ```text
 id UUID PK
@@ -167,7 +326,7 @@ is_system BOOLEAN NOT NULL DEFAULT true
 
 首期幂等种子只包含 `admin` 和 `teacher`。该表不含园所、审计与时间戳，因为它是由迁移管理的全局只读代码字典，不是园所业务数据。
 
-### 5.4 `user_roles`
+### 5.11 `user_roles`
 
 ```text
 kindergarten_id UUID NOT NULL
@@ -182,7 +341,7 @@ PK (kindergarten_id, user_id, role_id)
 
 组合外键指向同园 `users` 的 `user_id` 与 `assigned_by`。“不能移除最后一个有效管理员”需锁定相关用户/角色行并在应用事务中校验，不使用触发器。
 
-### 5.5 `refresh_tokens`
+### 5.12 `refresh_tokens`
 
 ```text
 id UUID PK
@@ -193,6 +352,7 @@ token_hash VARCHAR(128) NOT NULL UNIQUE
 issued_at TIMESTAMPTZ NOT NULL
 expires_at TIMESTAMPTZ NOT NULL
 last_used_at TIMESTAMPTZ NULL
+last_reauthenticated_at TIMESTAMPTZ NULL
 revoked_at TIMESTAMPTZ NULL
 revoke_reason VARCHAR(64) NULL
 replaced_by_id UUID NULL
@@ -215,6 +375,9 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 - 撤销整个 family 时，撤销事务必须将该 family 已存在记录的 `revoked_at` 和
   `revoke_reason` 一并更新。首期不增加 `family_expires_at` 或 `family_revoked_at`；前者由同族
   记录共享的 `expires_at` 表达，后者由同族记录的 `revoked_at` 表达。
+- Access Token 的 `sid` 必须等于 `token_family_id`；每次 API 请求实时确认该 family 仍有
+  未过期、未撤销的当前记录。WebAuthn step-up 更新当前记录的 `last_reauthenticated_at`，轮换
+  时复制到新记录；高风险操作只接受 5 分钟内的值。
 
 ## 6. 教学设置 Schema
 
@@ -768,6 +931,13 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 | 子表 | 父关系 |
 | --- | --- |
 | `users` | `kindergartens`；同园 `users(created_by/updated_by)` |
+| `webauthn_credentials` | 同园 `users` |
+| `webauthn_challenges` | `kindergartens`；同园可选 `users`；purpose 绑定的授权上下文 |
+| `bootstrap_initializations` | 同园 `users`、`webauthn_credentials` |
+| `account_invitations` | 同园 `users(user_id/issued_by)`、`webauthn_credentials` |
+| `recovery_codes` | 同园 `users`；同园自引用 `replaced_by_id` |
+| `account_recovery_requests` | 同园 `users`、`recovery_codes` |
+| `identity_verification_approvals` | 同园 `users(subject_user_id/verifier_user_id)`；context 由类型约束 |
 | `user_roles` | 同园 `users(user_id/assigned_by)`；全局 `roles` |
 | `refresh_tokens` | 同园 `users`；同园自引用 `replaced_by_id` |
 | `age_groups` | `kindergartens` |
@@ -795,6 +965,10 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 以下规则需要锁定多行或结合权限上下文，不用触发器复制：
 
 - 不能停用最后一个有效管理员，也不能移除其 `admin` 角色。
+- 不能由自助操作撤销本人最后一个有效凭据，也不能撤销最后管理员的最后凭据。
+- 邀请注册在一个事务保存凭据、消费邀请并推进到 `pending_verification`；人工核验后才激活。
+- 首位管理员与最后管理员恢复的两项核验必须来自不同自然人及规定责任类型。
+- 恢复完成必须原子撤销旧凭据、会话、邀请和恢复码，签发新恢复码但不创建登录会话。
 - `class_teachers.user_id` 必须拥有 `teacher` 角色。
 - 教案至少一名作者，且每位作者都是当前班级关联教师。
 - 班级使用 AI 区域生成前至少有一个已启用室内区域和一个已启用户外区域。
@@ -805,9 +979,11 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 
 ## 15. Alembic 迁移顺序
 
-不要在单个迁移中一次创建全部 24 张表。建议使用下列可独立验证的迁移序列：
+不要在单个迁移中一次创建全部 31 张表。建议使用下列可独立验证的迁移序列：
 
-1. 启用 `btree_gist`，创建 `kindergartens`、`users`、`roles`、`user_roles`、`refresh_tokens` 和 `audit_events`，幂等种子角色。审计表必须从首位管理员初始化与首次登录开始可用。
+1. 启用 `btree_gist`，创建或扩展 `kindergartens`、`users`、WebAuthn/初始化/邀请/恢复七张表、
+   `roles`、`user_roles`、`refresh_tokens` 和 `audit_events`，幂等种子角色。审计表必须从首位
+   管理员初始化与首次 ceremony 开始可用。
 2. 创建 `age_groups`、`classes`、`class_teachers`、`semesters`、`class_areas` 和 `workday_cache`，种子四个年龄段。工作日缓存必须在日期规则与手工教案闭环之前可用。
 3. 创建 `ai_model_profiles` 与能力关联表。
 4. 创建提示词定义、版本与测试表，然后增加 `active_custom_version_id` 外键并幂等种子 7 个系统定义/默认版本。
@@ -815,6 +991,12 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 6. 创建 `background_jobs` 与 `ai_generation_results`。
 7. 创建 Word 导出记录。
 8. 在空库和包含典型种子数据的 PostgreSQL 库上分别运行完整 `upgrade head`。
+
+旧密码实现采用三段迁移：expand 阶段新增以上结构、禁用密码端点并撤销旧 Refresh family；
+enroll 阶段只允许在无 WebAuthn active 管理员时由本机 CLI 为一个既有管理员签发短时
+`migration_admin` 登记凭据；contract 阶段确认账号登记门禁后删除 `password_hash`、
+`password_changed_at` 和 `is_active`。contract downgrade 只可重建空列，不恢复密码认证；
+迁移前数据恢复依赖停机备份，不得把旧密码路由作为回滚方案。
 
 每个迁移必须同时包含本次表的组合外键、检查约束、部分索引与回归测试，不先创建弱约束表再长期拖延补强。
 
@@ -831,12 +1013,19 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 | 乐观锁并发更新 | 不充分 | 是 |
 | Worker `SKIP LOCKED`/条件领取 | 否 | 是 |
 | Alembic 完整升级 | 可作辅助 | 是 |
+| WebAuthn challenge/邀请/恢复并发消费 | 不充分 | 是，行锁与唯一索引 |
 
 ## 17. 必须实现的 Schema 验收测试
 
 - 每张园所范围子表存在 `kindergarten_id`、`created_at`、`updated_at`；园所根表 `kindergartens` 无自引用园所列，全局 `roles` 代码字典不受该规则约束。
 - 任意伪造跨园父子 ID 组合都被组合外键拒绝。
 - 同园用户名、非空手机号、班级规范化名称、提示词代码和模型档案名称按预期唯一。
+- Credential ID、challenge hash、邀请/初始化/恢复摘要唯一；每个账号至多一个有效恢复码、
+  一个未终结恢复请求，重复消费只有一个事务成功。
+- 含旧密码用户和 Refresh family 的 expand/enroll/contract 升级按设计收敛；contract 后物理
+  Schema 不含 `password_hash`、`password_changed_at` 或 `is_active`。
+- 邀请注册不激活账号，带外核验前不能登录；激活后的首次认证原子签发首个恢复码且管理员/
+  CLI 不接触原始值；恢复完成撤销旧认证材料且不直接创建会话。
 - 每班最多一名主班教师、每园最多一个当前学期与一个已启用默认模型档案。
 - 有效学期日期范围不能重叠，边界日包含在范围内。
 - 归档教案仍阻止同班同日创建第二份教案。

@@ -1,10 +1,10 @@
 # Child Manager 数据模型设计
 
-文档版本：v1.0
+文档版本：v1.1
 
 状态：已确认，待实现
 
-日期：2026-07-12
+日期：2026-07-22
 
 适用范围：Cloud 首期单园部署及后续业务子系统扩展
 
@@ -95,7 +95,8 @@
 
 ### 3.6 停用、归档与不可变历史
 
-- 用户、班级、年龄段、学期、班级区域和 AI 模型档案使用 `is_active` 或对应业务状态停用，不提供物理删除。
+- 用户使用 `status` 状态机，班级、年龄段、学期、班级区域和 AI 模型档案使用 `is_active`
+  或对应业务状态停用，不提供物理删除。
 - 教案只使用 `archived_at` 与 `archived_by`，不增加 `deleted_at`。
 - 审计事件、教案快照和已发布提示词版本不可更新、不可删除。
 - 草稿和测试结果仅按本文明确规则修改或清理，不引入通用软删除框架。
@@ -106,7 +107,7 @@
 
 | 领域 | 表 |
 | --- | --- |
-| 园所与身份 | `kindergartens`、`users`、`roles`、`user_roles`、`refresh_tokens` |
+| 园所与身份 | `kindergartens`、`users`、`webauthn_credentials`、`webauthn_challenges`、`bootstrap_initializations`、`account_invitations`、`recovery_codes`、`account_recovery_requests`、`identity_verification_approvals`、`roles`、`user_roles`、`refresh_tokens` |
 | 教学设置 | `age_groups`、`classes`、`class_teachers`、`semesters`、`class_areas` |
 | AI 设置 | `ai_model_profiles`、`ai_model_profile_capabilities` |
 | 提示词 | `prompt_definitions`、`prompt_versions`、`prompt_test_runs` |
@@ -122,6 +123,13 @@
 ```mermaid
 erDiagram
     KINDERGARTENS ||--o{ USERS : contains
+    USERS ||--o{ WEBAUTHN_CREDENTIALS : owns
+    USERS ||--o{ WEBAUTHN_CHALLENGES : binds
+    USERS ||--o{ ACCOUNT_INVITATIONS : receives
+    USERS ||--o{ RECOVERY_CODES : rotates
+    USERS ||--o{ ACCOUNT_RECOVERY_REQUESTS : requests
+    ACCOUNT_RECOVERY_REQUESTS ||--o{ IDENTITY_VERIFICATION_APPROVALS : requires
+    USERS ||--o{ REFRESH_TOKENS : sessions
     USERS }o--o{ ROLES : user_roles
     USERS }o--o{ CLASSES : class_teachers
     KINDERGARTENS ||--o{ AGE_GROUPS : defines
@@ -172,12 +180,12 @@ erDiagram
 | `id` | UUID | UUIDv7 主键 |
 | `kindergarten_id` | UUID | 园所外键 |
 | `username` | VARCHAR(120) | 展示值，非空 |
-| `username_normalized` | VARCHAR(120) | NFKC、trim、lower 后的登录值 |
+| `username_normalized` | VARCHAR(120) | NFKC、trim、lower 后的账号查找值，不是认证秘密 |
 | `phone_e164` | VARCHAR(32) | 可空，首期大陆手机号保存为 `+86...` |
 | `display_name` | VARCHAR(120) | 非空，不要求唯一 |
-| `password_hash` | TEXT | Argon2id 哈希，禁止保存密码明文 |
-| `is_active` | BOOLEAN | 非空，默认 true |
-| `password_changed_at` | TIMESTAMPTZ | 非空 |
+| `webauthn_user_handle` | BYTEA | 非空，服务端随机 32 字节且全局唯一，不含 PII |
+| `status` | VARCHAR(32) | `pending_registration/pending_verification/active/suspended` |
+| `activated_at` | TIMESTAMPTZ | 可空；首次人工核验激活时间 |
 | `last_login_at` | TIMESTAMPTZ | 可空 |
 | `created_by` | UUID | 可空；首位管理员初始化时为空 |
 | `updated_by` | UUID | 可空 |
@@ -188,12 +196,184 @@ erDiagram
 
 - 唯一 `(kindergarten_id, username_normalized)`。
 - `phone_e164 IS NOT NULL` 时唯一 `(kindergarten_id, phone_e164)`。
-- 园所与启用状态索引 `(kindergarten_id, is_active)`。
+- 全局唯一 `webauthn_user_handle`，长度固定 32 字节。
+- 园所与账号状态索引 `(kindergarten_id, status)`。
 - 停用账号继续占用用户名和手机号。
 
-`created_by`、`updated_by` 必须指向同园用户。禁止级联删除用户。
+`created_by`、`updated_by` 必须指向同园用户。禁止级联删除用户。账号状态只允许：
 
-### 5.3 `roles`
+```text
+pending_registration -> pending_verification -> active -> suspended
+pending_verification -> pending_registration   # 注册凭据被管理员撤销后重新邀请
+active -> pending_registration                  # 管理员撤销教师最后一个凭据并重新邀请
+suspended -> active                             # 仍有有效凭据且管理员重新启用
+suspended -> pending_registration               # 无有效凭据时重新启用并邀请
+```
+
+注册成功不等于激活；只有满足对应带外核验后才能从 `pending_verification` 进入 `active`。
+`users` 不包含 `password_hash`、`password_changed_at` 或其他密码兼容字段。
+
+### 5.3 `webauthn_credentials`
+
+| 字段 | 类型 | 约束与用途 |
+| --- | --- | --- |
+| `id` | UUID | UUIDv7 主键 |
+| `kindergarten_id` | UUID | 园所外键 |
+| `user_id` | UUID | 同园账号外键 |
+| `credential_id` | BYTEA | 认证器生成的 Credential ID |
+| `public_key_cose` | BYTEA | 验证 assertion 的 COSE 公钥 |
+| `sign_count` | BIGINT | 非空，最近成功 assertion 的签名计数 |
+| `transports` | JSONB | 字符串数组；只保存 WebAuthn 标准 transport 值 |
+| `aaguid` | UUID | 可空，认证器 AAGUID |
+| `backup_eligible` | BOOLEAN | 注册时 BE 标志 |
+| `backup_state` | BOOLEAN | 最近 ceremony 的 BS 标志 |
+| `attestation_format` | VARCHAR(32) | 可空；首期请求 `none`，仅保存实际最小结果 |
+| `label` | VARCHAR(120) | 用户可修改的设备名称，NFKC/trim 后非空 |
+| `created_via` | VARCHAR(32) | `bootstrap/invitation/self_add/recovery/migration` |
+| `last_used_at` | TIMESTAMPTZ | 可空 |
+| `revoked_at` | TIMESTAMPTZ | 可空 |
+| `revoke_reason` | VARCHAR(64) | 可空，稳定代码 |
+| `created_at`、`updated_at` | TIMESTAMPTZ | 非空 |
+
+约束与不变量：
+
+- 唯一 `(kindergarten_id, credential_id)`；`credential_id` 与公钥不是 PII 展示字段。
+- 组合外键 `(kindergarten_id, user_id)` 指向 `users`。
+- 只保存公钥、凭据 ID 和 W3C 推荐的最小验证元数据；认证器私钥、生物特征和本地 PIN
+  永不离开认证器，也不得进入本表。
+- 注册固定 `residentKey=required`、`userVerification=required`；新增本人凭据时排除该用户
+  既有有效 Credential ID。
+- 非零签名计数倒退或重复属于高风险异常，拒绝 assertion 并记录审计；始终为 0 的同步
+  通行密钥不能只因计数为 0 被拒绝，仍必须通过全部其他验证。
+- 撤销凭据不可物理删除。自助撤销不能移除本人最后一个有效凭据；管理员撤销教师最后一个
+  有效凭据时必须在同一事务撤销会话并把账号转为 `pending_registration`。
+
+### 5.4 `webauthn_challenges`
+
+| 字段 | 类型 | 约束与用途 |
+| --- | --- | --- |
+| `id` | UUID | UUIDv7 ceremony 标识 |
+| `kindergarten_id` | UUID | 园所外键；由单园实例或授权材料确定 |
+| `user_id` | UUID | 可空；可发现凭据认证开始时尚未识别账号 |
+| `purpose` | VARCHAR(40) | `bootstrap_registration/invitation_registration/self_add/recovery_registration/authentication/step_up` |
+| `challenge_hash` | VARCHAR(128) | 服务端随机至少 32 字节 challenge 的强哈希 |
+| `authorization_context_id` | UUID | 可空；绑定初始化、邀请、恢复请求或当前 session/family |
+| `expected_rp_id` | VARCHAR(253) | 签发时冻结的 RP ID |
+| `expected_origin` | VARCHAR(2048) | 签发时冻结的精确 HTTPS Origin；开发仅允许 `localhost` 例外 |
+| `expires_at` | TIMESTAMPTZ | 非空，签发后最长 5 分钟 |
+| `consumed_at` | TIMESTAMPTZ | 可空；成功或最终失败验证后消费 |
+| `failed_attempts` | SMALLINT | 非空，默认 0 |
+| `created_at`、`updated_at` | TIMESTAMPTZ | 非空 |
+
+challenge 必须高熵、短时、单次并绑定 purpose。完成 ceremony 时在行锁内核对未过期、未消费、
+authorization context 仍有效，再验证 `type/challenge/origin/rpIdHash/UP/UV/signature`；成功后
+和凭据/会话状态变更在同一事务消费。不同 purpose 的 challenge 不可互换。过期或已消费记录
+保留 30 天用于脱敏诊断后清理。
+
+### 5.5 `bootstrap_initializations`
+
+| 字段 | 类型 | 约束与用途 |
+| --- | --- | --- |
+| `id` | UUID | UUIDv7 主键 |
+| `kindergarten_id` | UUID | 新建园所外键 |
+| `user_id` | UUID | 待注册首位管理员 |
+| `token_hash` | VARCHAR(128) | 唯一，只保存初始化凭据摘要 |
+| `purpose` | VARCHAR(24) | `empty_system/migration_admin` |
+| `expires_at` | TIMESTAMPTZ | 非空，默认签发后 15 分钟 |
+| `consumed_at` | TIMESTAMPTZ | 可空；首个凭据注册成功时写入 |
+| `credential_id` | UUID | 可空，成功注册的凭据记录 |
+| `activated_at` | TIMESTAMPTZ | 可空；所需人工核验完成时间 |
+| `created_at`、`updated_at` | TIMESTAMPTZ | 非空 |
+
+空系统最多存在一个初始化链路；创建园所、角色种子、用户、管理员角色和本行必须单事务完成。
+CLI 只生成原始凭据并在终端单独展示一次，不生成 WebAuthn 密钥、不把秘密放入 URL。注册后
+账号保持 `pending_verification`，园所负责人和部署责任人两项不同责任核验完成后才激活。
+`migration_admin` 只允许在迁移窗口、当前不存在 WebAuthn `active` 管理员且目标是既有管理员时
+签发；它不是常规恢复后门。
+
+### 5.6 `account_invitations`
+
+| 字段 | 类型 | 约束与用途 |
+| --- | --- | --- |
+| `id` | UUID | UUIDv7 主键 |
+| `kindergarten_id` | UUID | 园所外键 |
+| `user_id` | UUID | 目标账号 |
+| `issued_by` | UUID | 同园有效管理员 |
+| `token_hash` | VARCHAR(128) | 唯一，只保存至少 128 位随机令牌的摘要 |
+| `expires_at` | TIMESTAMPTZ | 非空，默认且最长签发后 24 小时 |
+| `consumed_at` | TIMESTAMPTZ | 可空 |
+| `revoked_at` | TIMESTAMPTZ | 可空 |
+| `revoke_reason` | VARCHAR(64) | 可空 |
+| `registered_credential_id` | UUID | 可空，消费时创建的凭据 |
+| `created_at`、`updated_at` | TIMESTAMPTZ | 非空 |
+
+签发只在响应中展示一次原始令牌。重新签发必须在同一事务撤销该账号其他未消费邀请；只有
+未过期、未撤销、未消费邀请可以生成 `invitation_registration` challenge。完成注册时保存凭据、
+消费邀请并把账号转为 `pending_verification`，但不签发会话。状态 `pending/expired/revoked/
+consumed` 由时间和字段派生，不另存可漂移状态列。
+
+### 5.7 `recovery_codes`
+
+| 字段 | 类型 | 约束与用途 |
+| --- | --- | --- |
+| `id` | UUID | UUIDv7 主键 |
+| `kindergarten_id` | UUID | 园所外键 |
+| `user_id` | UUID | 同园账号 |
+| `code_hash` | VARCHAR(128) | 唯一，只保存至少 128 位随机码摘要 |
+| `issued_at` | TIMESTAMPTZ | 非空 |
+| `consumed_at` | TIMESTAMPTZ | 可空；恢复完成时写入 |
+| `revoked_at` | TIMESTAMPTZ | 可空；主动轮换或安全事件写入 |
+| `replaced_by_id` | UUID | 可空，同园自引用新恢复码 |
+| `created_at`、`updated_at` | TIMESTAMPTZ | 非空 |
+
+每个账号至多一个 `consumed_at IS NULL AND revoked_at IS NULL` 的有效恢复码。激活后的首次
+成功通行密钥认证、主动轮换和恢复完成都在事务中签发新码并作废旧码；原始值只在该次用户
+响应展示一次，管理员激活响应和 CLI 不接触原始码。主动轮换要求最近
+5 分钟 WebAuthn 重新验证。恢复码校验使用固定时间比较和限流，任何日志或审计只记录结果和
+记录 ID，不记录原始码或摘要。
+
+### 5.8 `account_recovery_requests`
+
+| 字段 | 类型 | 约束与用途 |
+| --- | --- | --- |
+| `id` | UUID | UUIDv7 主键 |
+| `kindergarten_id` | UUID | 园所外键 |
+| `user_id` | UUID | 同园账号 |
+| `recovery_code_id` | UUID | 校验通过的当前恢复码；对外不暴露 |
+| `state` | VARCHAR(32) | `pending_verification/approved/registration_pending/completed/rejected/expired` |
+| `approval_expires_at` | TIMESTAMPTZ | 人工核验完成前的请求期限，默认 24 小时 |
+| `registration_token_hash` | VARCHAR(128) | 可空，审批后生成的 15 分钟单次登记凭据摘要 |
+| `registration_expires_at` | TIMESTAMPTZ | 可空 |
+| `completed_at` | TIMESTAMPTZ | 可空 |
+| `created_at`、`updated_at` | TIMESTAMPTZ | 非空 |
+
+提交账号标识和恢复码的公开接口始终返回相同 202；只有有效组合才创建本行。恢复码在请求期间
+被逻辑保留但到成功完成才消费，且同一账号同一恢复码最多一个未终结请求。审批通过后才生成
+短时登记凭据。完成新凭据注册的单一事务必须：保存新凭据、撤销全部旧凭据和 Refresh family、
+撤销未使用邀请、消费旧恢复码、签发新恢复码、标记请求完成并写审计；恢复不签发登录会话。
+
+### 5.9 `identity_verification_approvals`
+
+| 字段 | 类型 | 约束与用途 |
+| --- | --- | --- |
+| `id` | UUID | UUIDv7 主键 |
+| `kindergarten_id` | UUID | 园所外键 |
+| `subject_user_id` | UUID | 被核验账号 |
+| `context_type` | VARCHAR(24) | `bootstrap/invitation/recovery` |
+| `context_id` | UUID | 对应初始化、邀请或恢复请求 ID |
+| `verifier_type` | VARCHAR(32) | `admin/kindergarten_owner/deployment_operator/security_operator` |
+| `verifier_user_id` | UUID | 可空；管理员核验时为同园用户 |
+| `verifier_reference` | VARCHAR(160) | 外部责任人的预登记脱敏标识或证据引用，不保存证件内容 |
+| `decision` | VARCHAR(16) | `approved/rejected` |
+| `decided_at` | TIMESTAMPTZ | 非空 |
+| `created_at`、`updated_at` | TIMESTAMPTZ | 非空 |
+
+普通邀请激活和普通恢复需要一项有效管理员批准；首位管理员初始化需要园所负责人和部署责任人
+两项批准；最后管理员恢复需要园所负责人和独立运维/安全责任人两项批准。两项责任必须映射到
+不同自然人，由应用事务校验并写不可变审计。本表只保存最小证明引用，不保存证件照片、完整
+通话记录或其他高敏感核验材料。
+
+### 5.10 `roles`
 
 系统级只读角色字典，不包含 `kindergarten_id`：
 
@@ -211,7 +391,7 @@ erDiagram
 
 未来可以增加 `grade_leader`、`academic_director`、`principal`，但首期不创建年级组或检查流程。
 
-### 5.4 `user_roles`
+### 5.11 `user_roles`
 
 | 字段 | 类型 | 约束与用途 |
 | --- | --- | --- |
@@ -224,7 +404,7 @@ erDiagram
 
 组合主键 `(kindergarten_id, user_id, role_id)`。同一个用户可以同时拥有管理员和教师角色。不允许移除最后一个有效管理员的 `admin` 角色，该规则在应用事务中校验并测试。
 
-### 5.5 `refresh_tokens`
+### 5.12 `refresh_tokens`
 
 | 字段 | 类型 | 约束与用途 |
 | --- | --- | --- |
@@ -236,6 +416,7 @@ erDiagram
 | `issued_at` | TIMESTAMPTZ | 非空 |
 | `expires_at` | TIMESTAMPTZ | 非空，所属轮换族首次签发后 7 天的固定绝对到期时间 |
 | `last_used_at` | TIMESTAMPTZ | 可空 |
+| `last_reauthenticated_at` | TIMESTAMPTZ | 可空，该 family 最近 WebAuthn 重新验证时间 |
 | `revoked_at` | TIMESTAMPTZ | 可空 |
 | `revoke_reason` | VARCHAR(64) | 可空，稳定代码 |
 | `replaced_by_id` | UUID | 可空，指向同族新令牌 |
@@ -251,7 +432,9 @@ erDiagram
 
 刷新时旧令牌被撤销并关联新令牌；新令牌沿用旧令牌的 `expires_at`，不得因轮换延长 family
 首次签发后 7 天的绝对期限。已撤销令牌重放时，在同一事务中撤销整个 family 的已有记录。
-密码变更、密码重置和账号停用撤销用户全部有效刷新令牌。首期不增加
+退出、本人/管理员会话撤销、账号停用、管理员撤销最后凭据和恢复完成会撤销相应或全部
+有效刷新令牌。Access Token 必须包含 `sid=token_family_id`，API 每次请求都校验该 family
+仍有未过期且未撤销的当前记录，使会话撤销在下一请求生效。首期不增加
 `family_expires_at` 或 `family_revoked_at`：同族固定期限由每条记录一致的 `expires_at`
 表达，family 撤销由同族记录的 `revoked_at` 表达。过期且已撤销记录保留 90 天后可物理清理。
 
@@ -824,6 +1007,11 @@ expired
 - `active_custom_version_id` 必须指向同一提示词定义的已发布自定义版本。
 - 班级教师关联只能指向具有 `teacher` 角色的用户。
 - 用户和角色变更后必须始终保留至少一个有效管理员。
+- 首位管理员初始化、邀请激活和最后管理员恢复必须满足各自要求的不同责任人核验组合。
+- 每个账号至多一个有效恢复码、一个未终结恢复请求和一个未消费邀请；重新签发/轮换必须
+  在事务中先撤销旧记录。
+- 活跃账号必须至少有一个未撤销 WebAuthn 凭据；管理员撤销教师最后一个凭据时必须同步
+  撤销会话并将账号转为 `pending_registration`。
 
 ## 17. 索引原则
 
@@ -849,6 +1037,11 @@ expired
 - 采用 AI 结果：检查权限与版本、创建快照、更新正文、标记结果和审计。
 - 完成 Word 导出元数据；文件写入采用临时文件、原子改名和失败补偿，不能让数据库成功记录指向半成品。
 - 刷新令牌轮换与重放检测。
+- WebAuthn challenge 消费与注册凭据保存或认证会话签发。
+- 邀请注册：保存首个凭据、消费邀请并把账号转为 `pending_verification`。
+- 人工核验激活：写核验批准、账号状态和首次离线恢复码。
+- 凭据撤销与相应会话撤销；最后凭据和最后管理员保护必须在锁内校验。
+- 恢复完成：新凭据、旧凭据/会话/邀请/恢复码撤销、新恢复码和审计一次提交。
 
 跨 PostgreSQL 与 Redis、文件系统的操作不假装成分布式原子事务，按系统架构中的权威状态、恢复扫描和幂等补偿处理。
 
@@ -866,6 +1059,11 @@ expired
 | 提示词测试运行 | 每个提示词最近 20 条，可由管理员清空 |
 | Word 导出记录与副本 | 首期长期保留，不自动清理 |
 | 刷新令牌记录 | 过期且撤销后保留 90 天 |
+| WebAuthn challenge | 过期或消费后保留 30 天，只保留摘要和最小诊断字段 |
+| WebAuthn 凭据 | 撤销后长期保留最小公钥元数据和审计关联，不物理删除 |
+| 初始化与邀请 | 终结后至少保留 1 年；原始秘密从不落库 |
+| 恢复码与恢复请求 | 历史摘要和请求至少保留 1 年；原始恢复码从不落库 |
+| 人工核验批准 | 至少保留 1 年，只保存脱敏责任人与证据引用 |
 | 审计事件 | 至少 1 年 |
 | 工作日缓存 | 按 `expires_at` 更新或清理 |
 
@@ -875,7 +1073,7 @@ expired
 
 初始实现可以按依赖拆为以下迁移，具体编号由实现分支当前迁移链决定：
 
-1. PostgreSQL 扩展、园所、用户、角色和刷新令牌。
+1. PostgreSQL 扩展、园所、用户、WebAuthn/初始化/邀请/恢复、角色和刷新令牌。
 2. 年龄段、班级、教师关联、学期和班级区域。
 3. AI 模型档案及能力。
 4. 提示词定义、版本和测试运行。
@@ -893,11 +1091,27 @@ expired
 - PostgreSQL 约束名称稳定且可诊断。
 - 除明确支持的回滚外，不承诺破坏性数据迁移自动降级；必须提供备份恢复说明。
 
+现有密码实现必须使用 expand → enroll → contract 三阶段迁移：
+
+1. **Expand**：新增 `status`、`webauthn_user_handle` 和身份新表；旧 `password_hash`、
+   `password_changed_at` 暂时保留但应用立即停止读写，删除 `/auth/login`、改密和重置密码路由，
+   并撤销全部既有 Refresh family。原 `is_active=true` 账号转为 `pending_registration`，原停用
+   账号转为 `suspended`。
+2. **Enroll**：仅在尚无 WebAuthn `active` 管理员的迁移窗口，允许本机 CLI 为一个既有管理员
+   签发 `migration_admin` 短时单次登记凭据；其 HTTPS 注册和带外核验完成后，由该管理员邀请
+   其他账号。该入口在出现首个有效管理员后永久关闭。
+3. **Contract**：门禁确认密码端点为 404/不存在、所有需登录账号已有通行密钥、旧会话均已
+   撤销且密码字段零读写后，物理删除 `password_hash`、`password_changed_at` 和 `is_active`。
+   本阶段 downgrade 只能重建空列，不能恢复秘密或重新启用密码认证；需要恢复迁移前数据时
+   使用备份并保持应用停机，随后仍重新执行 WebAuthn 迁移。
+
 ## 21. 测试与验收
 
 ### 21.1 单元测试
 
-- 用户名 NFKC、大小写和手机号 E.164 规范化。
+- 用户名 NFKC、大小写和手机号 E.164 规范化；随机 user handle 不包含账号标识。
+- challenge 高熵/过期/purpose 绑定，WebAuthn Base64URL 编解码与 UV/计数器判定。
+- 初始化、邀请、恢复码和登记凭据的状态机与固定时间摘要比较。
 - 学期周次、日期文本和季节计算。
 - 教案 Pydantic Schema 与 JSON 版本转换。
 - 提示词变量白名单和版本生命周期。
@@ -912,17 +1126,24 @@ expired
 - 乐观锁只能让一个并发更新成功。
 - 任务租约、恢复扫描和幂等键在并发下不重复执行结果。
 - 提示词发布版本和教案快照不可变。
+- Credential ID、有效恢复码、未终结恢复请求、邀请和 challenge 消费的唯一/并发约束。
+- 邀请消费与首个凭据保存、恢复完成全量撤销、Refresh 轮换/重放在并发下只有一个提交成功。
 
 ### 21.3 迁移测试
 
 - 空 PostgreSQL 升级到最新版本。
 - 每个支持的前一版本升级到最新版本。
+- expand/enroll/contract 分阶段升级覆盖含现有密码用户和 Refresh 数据的数据库；旧密码端点在
+  expand 后即不可达，contract 后不存在 `password_hash/password_changed_at/is_active`。
+- contract downgrade 只重建空兼容列且 WebAuthn 应用仍拒绝密码认证；备份恢复路径单独演练。
 - 种子过程重复运行不产生重复角色、年龄段或系统提示词。
 - SQLite 测试明确跳过或替代 PostgreSQL 专用约束，不得声称等价覆盖。
 
 ### 21.4 安全测试
 
-- 数据库、日志、任务消息和审计中不存在明文密码、令牌或 API Key。
+- 数据库、URL、日志、任务消息和审计中不存在初始化/邀请/恢复原始秘密、会话令牌或 API Key。
+- WebAuthn 注册/认证拒绝错误 challenge、purpose、Origin、RP ID、UV、签名、凭据归属和重放。
+- 邀请、恢复和最后管理员流程拒绝缺失/重复人工核验及同一自然人兼任双人核验。
 - 刷新令牌重放撤销整个 family。
 - 停用用户和解除班级关联后不能访问新请求。
 - 管理员只有同时具有教师角色和班级关联时才能编辑正文或调用 AI。
@@ -953,7 +1174,8 @@ expired
 以下内容不阻塞本数据模型，但必须在相应设计中冻结后才能实现完整功能：
 
 - API 请求、响应、错误码和分页契约。
-- access token 与 refresh token 的具体有效期、Cookie 和 CSRF 参数。
+- WebAuthn 服务端库的锁定版本、支持算法集合和浏览器支持矩阵；不得改变本文已冻结的
+  challenge、RP/Origin、UV、邀请、恢复和会话语义。
 - AI 密文算法、封装格式和主密钥轮换操作流程。
 - Dramatiq 租约时长、扫描周期和 Worker 并发参数。
 - 功能完成后的访问网络、生产拓扑、备份工具和告警实现（见 ADR-0009）。

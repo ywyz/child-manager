@@ -2,7 +2,7 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Updated**: 2026-07-21
+**Updated**: 2026-07-22
 **Status**: 研究决策已收敛；M1 `complete`；M2 `in_progress`，由 `dev` 按 #4 单实现验收
 
 ## 1. 研究方法与决策优先级
@@ -39,7 +39,7 @@
 ### 2.3 技术基线与依赖
 
 - **Decision**: Python 3.14+、NiceGUI 3.x、FastAPI、Pydantic 2、SQLAlchemy 2、
-  Alembic、Psycopg 3、Dramatiq 2 + Redis、HTTPX、PyJWT、argon2-cffi、cryptography、
+  Alembic、Psycopg 3、Dramatiq 2 + Redis、HTTPX、PyJWT、webauthn 3.x、cryptography、
   python-docx 和 chinesecalendar；`uv` 管理 `pyproject.toml` 与 `uv.lock`。生产数据使用
   PostgreSQL，SQLite 仅限确定性的单元/开发测试且业务代码不得依赖其特性。
 - **Rationale**: 这些依赖直接对应已确认的 UI、API、数据、任务、认证、加密、Word 和
@@ -296,50 +296,82 @@
 
 ## 6. 认证、会话与密钥安全
 
-### 6.1 首位管理员、密码与登录保护
+### 6.1 WebAuthn 依赖、Ceremony 与兼容边界
 
-- **Decision**: 一次性交互式 CLI 在终端隐藏读取密码，并在一个事务中创建园所、角色、
-  管理员及角色分配；重复运行只报告已初始化，不提供 Web 初始化。密码 15–128 字符，允许
-  Unicode、空格和粘贴，无组合规则和定期轮换；拒绝本地常见/泄露密码清单。Argon2id 使用
-  `m=19456 KiB,t=2,p=1`，成功登录时按需升级旧哈希。规范化账号在 15 分钟内失败 5 次后
-  采用 1–60 秒指数延迟；同来源 15 分钟 30 次后返回 429；不永久自动锁定，用户提示保持
-  通用且所有结果写脱敏审计。
-  登录来源只取可信客户端地址：BFF 必须丢弃浏览器提供的 `Forwarded`、
-  `X-Forwarded-For` 和配置的内部 client-IP 头，按浏览器真实 socket peer 重建内部头；API
-  只有在直连 socket peer 是显式配置的回环 BFF 时才信任该内部头，否则忽略它并使用 API
-  看到的 socket peer。首期不推断或设计生产代理链。
-- **Rationale**: 关闭公开初始化入口；长密码、内存硬哈希、弱密码拦截和双维度限速共同
-  限制猜测攻击，同时避免攻击者用永久锁定制造拒绝服务。
-- **Alternatives considered**: Web 初始化、环境变量明文初始化、复杂字符组合、定期改密、
-  固定时长账号锁定。
-- **Denylist source**: M2 固定采用 SecLists MIT 许可的 release `2026.1`、commit
-  `190c6f7bd58c847ceadfe57d9853592737f059e8` 中
-  `Passwords/Common-Credentials/10k-most-common.txt`；目标文件必须为 10,000 行、73,017 字节，
-  SHA-256 为 `72ee26e7cb8f510a11bc303b7a967c2a375fe436b5c8a72822ee9ccbfe235043`。
-  仓库附 MIT 许可、来源 URL、release、commit 与哈希；运行时不联网。来源更新必须是显式、
-  可审查的依赖更新。
-- **Primary references**: [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)、
-  [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)、
-  [SecLists](https://github.com/danielmiessler/SecLists)。
+- **Decision**: 服务端采用 `webauthn` 3.x（Duo Labs `py_webauthn`，BSD-3-Clause）完成选项
+  生成和响应验证；实现 Issue 必须在 `uv.lock` 锁定具体版本并执行 Python 3.14 冒烟。注册
+  使用可发现凭据、`residentKey=required`、`userVerification=required`、attestation `none`；
+  认证不先提交用户名，`allowCredentials` 为空或省略，由 Credential ID/user handle 识别账号，
+  同样要求 UV。浏览器与 API 之间所有 ArrayBuffer 使用无填充 Base64URL JSON。
+  challenge 由服务端随机生成 32 字节，最长 5 分钟、单次使用，保存摘要并绑定 purpose、
+  RP ID、精确 Origin、园所、账号或授权上下文。完成时验证 type、challenge、Origin、
+  RP ID hash、UP/UV、签名、Credential ID、user handle 和账号状态；不同 purpose 不可互换。
+- **Rationale**: W3C WebAuthn 要求可信 RP 生成不可预测 challenge 并匹配返回值；可发现凭据
+  避免登录前账号枚举。成熟服务端库减少自写 CBOR/COSE/签名验证的安全风险，其 3.0.0 wheel
+  由 CPython 3.14 构建且声明 Python >=3.10，但项目仍需按自身 3.14 锁定环境验证。
+- **Alternatives considered**: 自行解析 CBOR/COSE；要求用户名后返回 `allowCredentials`；
+  `userVerification=preferred`；为旧浏览器保留密码登录。前两项增加实现/枚举风险，后两项
+  违反 ADR-0010。
+- **Primary references**: [W3C Web Authentication Level 3](https://www.w3.org/TR/webauthn-3/)、
+  [PyPI webauthn](https://pypi.org/project/webauthn/)。
 
-### 6.2 Access/Refresh Token 与 CSRF
+### 6.2 初始化、邀请、凭据与恢复
+
+- **Decision**: 空系统 CLI 只在事务中创建园所、角色和 `pending_registration` 首位管理员，
+  再生成至少 128 位随机熵、15 分钟过期的单次初始化凭据；CLI 分开显示 HTTPS 入口和原始
+  凭据，不生成通行密钥、不把秘密放入 URL。浏览器完成注册后账号仍是
+  `pending_verification`，园所负责人和部署责任人两项带外核验后才激活。
+  后续账号邀请最长 24 小时、可撤销、重签即撤销旧邀请，注册凭据与消费邀请同事务但不创建
+  会话。本人增加/命名/撤销凭据、主动轮换恢复码和高风险管理操作要求 5 分钟内 WebAuthn
+  step-up；本人不能撤销最后凭据。管理员可撤销教师最后凭据、全部会话并重新邀请。
+  激活后的首次成功通行密钥认证向用户签发首个离线恢复码；此后每个 active 账号只有一个
+  有效恢复码，管理员和 CLI 不接触原始码。紧急恢复请求同时要求恢复码和人工核验；最后
+  管理员要求园所负责人和独立运维/安全责任人两个不同自然人。恢复登记成功后原子撤销旧
+  凭据、会话、邀请和恢复码，签发新码但不创建登录会话。
+- **Rationale**: 初始化、邀请或恢复的单一秘密泄露都不能直接产生业务会话；CLI 只建立
+  短时授权而不越过浏览器/认证器的 WebAuthn 安全边界。恢复后强制重新登录避免恢复登记
+  能力升级为长期会话。
+- **Alternatives considered**: CLI 直接写入凭据；公开 Web 初始化；邀请注册即激活；恢复码
+  单独登录；管理员设置临时密码；万能恢复码或数据库改值。全部违反 ADR-0010 的双条件和
+  无后门边界。
+- **Primary references**: [ADR-0010](../../docs/ADR/ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md)、
+  [首期安全威胁模型](../../docs/security/threat-model.md)。
+
+### 6.3 Access/Refresh Token 与 CSRF
 
 - **Decision**: Access Token 是 15 分钟 HS256 JWT，签名密钥为数据库外随机 256 位值，
-  claims 仅 `iss/aud/sub/jti/iat/nbf/exp/kindergarten_id`；角色和班级每次由服务端查询。
-  Refresh Token 为随机 256 位不透明值，只保存强哈希，绝对有效期 7 天，每次刷新轮换；
-  退出、改密、重置、停用或重放撤销，重放撤销整个 family。认证 Cookie 使用 Secure、
-  HttpOnly、SameSite=Lax；状态变更同时校验 Origin/Referer，并使用签名双提交 CSRF Cookie
-  与 `X-CSRF-Token`。只有显式开发配置且绑定回环地址时可将 Secure 设为 false。登录和刷新
-  必须各发送两条独立 `Set-Cookie` 字段设置 access/refresh，退出必须发送两条独立过期字段；
-  BFF 与 raw-header 契约测试不得用逗号折叠它们。
-- **Rationale**: 短访问窗口、轮换和服务端实时授权限制令牌泄露与权限陈旧；Cookie 自动
-  携带需要分层 CSRF 防护。
-- **Alternatives considered**: 将角色写入长寿命 JWT；保存明文 Refresh Token；只依赖
-  SameSite；在非回环开发地址关闭 Secure。
-- **Primary references**: [OWASP REST Security](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html)、
+  claims 仅 `iss/aud/sub/jti/sid/iat/nbf/exp/kindergarten_id`；`sid` 绑定 Refresh Token family，
+  角色、班级、账号和 family 撤销状态每次由服务端查询。Refresh Token 为随机 256 位不透明值，
+  只保存强哈希，绝对有效期 7 天，每次刷新轮换；退出、本人/管理员会话撤销、停用、最后凭据
+  撤销、恢复或重放撤销相应 family，重放撤销整个 family。认证 Cookie 使用 Secure、HttpOnly、
+  SameSite=Lax；状态变更同时校验 Origin/Referer，并使用签名双提交 CSRF Cookie 与
+  `X-CSRF-Token`。只有显式开发配置且绑定回环地址时可将 Secure 设为 false。认证完成和刷新
+  必须各发送两条独立 `Set-Cookie` 字段，退出/当前会话撤销必须发送两条独立过期字段；BFF
+  与 raw-header 契约测试不得用逗号折叠它们。
+- **Rationale**: WebAuthn 证明用户控制凭据，但不替代服务端可撤销会话。`sid` 实时检查让
+  管理员撤销或恢复后的旧 Access Token 在下一请求失效；Refresh 轮换可检测重放。
+- **Alternatives considered**: 把角色写入长寿命 JWT；只等待 15 分钟 Access 过期；保存明文
+  Refresh Token；只依赖 SameSite；在非回环开发地址关闭 Secure。
+- **Primary references**: [RFC 9700 OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html)、
+  [OWASP REST Security](https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html)、
   [OWASP CSRF Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)。
 
-### 6.3 AI Key envelope 与模型地址 SSRF
+### 6.4 旧密码数据迁移与不可逆回滚边界
+
+- **Decision**: 身份迁移分 expand/enroll/contract。Expand 新增账号状态和 WebAuthn/邀请/
+  恢复表，应用同时删除密码登录、改密和重置路由，停止读写旧密码列并撤销全部旧 Refresh
+  family；原 active 账号转 `pending_registration`。Enroll 只在没有 WebAuthn active 管理员的
+  迁移窗口允许本机 CLI 为一个既有管理员签发 `migration_admin` 短时登记凭据。Contract 在
+  密码路由不存在、所需账号完成登记和旧字段零读写门禁后删除 `password_hash`、
+  `password_changed_at`、`is_active`。Contract downgrade 只重建空列，不能恢复秘密或密码
+  登录；历史数据回退使用迁移前停机备份，恢复后仍重新执行 WebAuthn 迁移。
+- **Rationale**: 直接先删密码列会让现有管理员无法完成通行密钥登记；把旧密码登录保留到
+  全员迁移又会违反 ADR 并留下隐藏兼容路径。分阶段迁移允许恢复结构问题，但明确密码秘密
+  删除后不可逆。
+- **Alternatives considered**: 一次性 drop 并手工改库；无限期保留只读哈希；contract downgrade
+  重新启用旧应用。前两项形成锁死或残留风险，后一项重新引入已废止认证路径。
+
+### 6.5 AI Key envelope 与模型地址 SSRF
 
 - **Decision**: API Key 使用 AES-256-GCM，每次随机 96 位 nonce，AAD 绑定
   `kindergarten_id/profile_id/envelope_version`；封装保存 version、key_id、nonce、

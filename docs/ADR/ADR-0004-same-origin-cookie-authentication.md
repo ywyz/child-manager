@@ -2,7 +2,9 @@
 
 日期：2026-07-11
 
-状态：已接受
+状态：部分被 [ADR-0010](ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md) 取代
+
+取代范围：本记录第 3 项“用户名或手机号加密码登录”，以及密码初始化、修改、重置相关后果与实施约束失效。浏览器同源入口、HttpOnly Cookie、API 统一授权、CSRF、会话轮换/撤销和开发环境回环限制继续有效。
 
 ## 背景
 

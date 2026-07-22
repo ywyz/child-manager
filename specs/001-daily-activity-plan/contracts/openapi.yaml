@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Child Manager 一日活动计划 API
-  version: 1.0.0
+  version: 2.0.0
   description: |
     首期 M1-M8 的稳定 HTTP 契约。园所、角色和班级权限只能来自服务端会话；
     Redis/Dramatiq 不作为任务事实来源。浏览器只访问当前实现档位的 NiceGUI Web，同源 BFF
@@ -68,37 +68,122 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CsrfResponse"
-  /api/v1/auth/login:
+  /api/v1/auth/bootstrap/registration/options:
     post:
       tags: [Auth]
-      summary: 用户名或手机号登录
+      summary: 验证初始化凭据并生成首位管理员注册挑战
+      description: 初始化凭据最长 15 分钟、单次使用且数据库只保存摘要；入口与凭据分开交付。
       security: []
-      parameters:
-        - $ref: "#/components/parameters/CsrfHeader"
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
       requestBody:
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LoginRequest"
+        content: { application/json: { schema: { $ref: "#/components/schemas/BootstrapRegistrationOptionsRequest" } } }
       responses:
-        "200":
-          description: 登录成功并设置 access/refresh Cookie
-          headers:
-            Set-Cookie:
-              $ref: "#/components/headers/AuthSetCookies"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CurrentUser"
-        "401":
-          $ref: "#/components/responses/LoginFailed"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "422":
-          $ref: "#/components/responses/ValidationError"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
+        "200": { $ref: "#/components/responses/RegistrationOptionsOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "410": { $ref: "#/components/responses/CeremonyUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/bootstrap/registration/verify:
+    post:
+      tags: [Auth]
+      summary: 完成首位管理员通行密钥登记
+      description: 登记后进入 pending_verification；不签发会话，等待双人带外核验和 CLI 激活。
+      security: []
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/RegistrationVerifyRequest" } } }
+      responses:
+        "200": { $ref: "#/components/responses/RegistrationPending" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "410": { $ref: "#/components/responses/CeremonyUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/invitation/registration/options:
+    post:
+      tags: [Auth]
+      summary: 验证管理员邀请并生成首个通行密钥注册挑战
+      security: []
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/InvitationRegistrationOptionsRequest" } } }
+      responses:
+        "200": { $ref: "#/components/responses/RegistrationOptionsOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "410": { $ref: "#/components/responses/InvitationUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/invitation/registration/verify:
+    post:
+      tags: [Auth]
+      summary: 完成受邀账号首个通行密钥登记
+      description: 登记后进入 pending_verification；不签发会话，等待管理员带外核验并激活。
+      security: []
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/RegistrationVerifyRequest" } } }
+      responses:
+        "200": { $ref: "#/components/responses/RegistrationPending" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "410": { $ref: "#/components/responses/CeremonyUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/authentication/options:
+    post:
+      tags: [Auth]
+      summary: 生成无用户名通行密钥认证挑战
+      description: allowCredentials 为空，浏览器使用可发现凭据；响应不得泄露账号是否存在。
+      security: []
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      responses:
+        "200": { $ref: "#/components/responses/AuthenticationOptionsOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/authentication/verify:
+    post:
+      tags: [Auth]
+      summary: 完成通行密钥认证并建立会话
+      security: []
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/AuthenticationVerifyRequest" } } }
+      responses:
+        "200": { $ref: "#/components/responses/Authenticated" }
+        "401": { $ref: "#/components/responses/AuthenticationFailed" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "410": { $ref: "#/components/responses/CeremonyUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/step-up/options:
+    post:
+      tags: [Auth]
+      summary: 为高风险操作生成新近用户验证挑战
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      responses:
+        "200": { $ref: "#/components/responses/AuthenticationOptionsOk" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/step-up/verify:
+    post:
+      tags: [Auth]
+      summary: 完成新近用户验证
+      description: 成功后仅把当前会话标记为 5 分钟内已重新认证，不签发新会话。
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/AuthenticationVerifyRequest" } } }
+      responses:
+        "200": { $ref: "#/components/responses/StepUpOk" }
+        "401": { $ref: "#/components/responses/AuthenticationFailed" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "410": { $ref: "#/components/responses/CeremonyUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /api/v1/auth/refresh:
     post:
       tags: [Auth]
@@ -150,30 +235,143 @@ paths:
                 $ref: "#/components/schemas/CurrentUser"
         "401":
           $ref: "#/components/responses/Unauthorized"
-  /api/v1/auth/change-password:
+  /api/v1/auth/credentials:
+    get:
+      tags: [Auth]
+      summary: 查看本人通行密钥凭据
+      responses:
+        "200": { $ref: "#/components/responses/CredentialListOk" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/auth/credentials/registration/options:
     post:
       tags: [Auth]
-      summary: 修改本人密码并撤销全部 Refresh Token
-      parameters:
-        - $ref: "#/components/parameters/CsrfHeader"
+      summary: 生成本人新增通行密钥注册挑战
+      description: 要求当前会话在 5 分钟内完成过 WebAuthn step-up。
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      responses:
+        "200": { $ref: "#/components/responses/RegistrationOptionsOk" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/credentials/registration/verify:
+    post:
+      tags: [Auth]
+      summary: 完成本人新增通行密钥登记
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
       requestBody:
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ChangePasswordRequest"
+        content: { application/json: { schema: { $ref: "#/components/schemas/RegistrationVerifyRequest" } } }
+      responses:
+        "201": { $ref: "#/components/responses/CredentialCreated" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "410": { $ref: "#/components/responses/CeremonyUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/auth/credentials/{credential_id}:
+    parameters: [{ $ref: "#/components/parameters/CredentialId" }]
+    patch:
+      tags: [Auth]
+      summary: 命名本人通行密钥凭据
+      description: 要求当前会话在 5 分钟内完成过 WebAuthn step-up。
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/CredentialPatch" } } }
+      responses:
+        "200": { $ref: "#/components/responses/CredentialOk" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+    delete:
+      tags: [Auth]
+      summary: 撤销本人非最后一个有效凭据
+      description: 要求 5 分钟内 step-up；不得撤销本人最后一个有效凭据。
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      responses:
+        "204": { description: 凭据已撤销 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/auth/recovery/requests:
+    post:
+      tags: [Auth]
+      summary: 提交账号恢复申请
+      description: 无论账号或恢复码是否存在都返回同一 202；恢复码本身不建立会话。
+      security: []
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/RecoveryRequestCreate" } } }
+      responses:
+        "202": { $ref: "#/components/responses/RecoveryRequestAccepted" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/recovery/registration/options:
+    post:
+      tags: [Auth]
+      summary: 生成人工核验通过后的恢复注册挑战
+      security: []
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/RecoveryRegistrationOptionsRequest" } } }
+      responses:
+        "200": { $ref: "#/components/responses/RegistrationOptionsOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "410": { $ref: "#/components/responses/RecoveryUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/recovery/registration/verify:
+    post:
+      tags: [Auth]
+      summary: 完成恢复凭据登记并轮换恢复码
+      description: 原子撤销旧凭据、全部会话、待处理邀请和旧恢复码；返回新恢复码但不建立会话。
+      security: []
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/RegistrationVerifyRequest" } } }
+      responses:
+        "200": { $ref: "#/components/responses/RecoveryCompleted" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "410": { $ref: "#/components/responses/RecoveryUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/auth/recovery-code/rotate:
+    post:
+      tags: [Auth]
+      summary: 主动轮换本人离线恢复码
+      description: 要求当前会话在 5 分钟内完成过 WebAuthn step-up；旧恢复码立即失效。
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      responses:
+        "200": { $ref: "#/components/responses/RecoveryCodeIssued" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /api/v1/auth/sessions:
+    get:
+      tags: [Auth]
+      summary: 查看本人有效会话
+      responses:
+        "200": { $ref: "#/components/responses/SessionListOk" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/auth/sessions/{session_id}:
+    delete:
+      tags: [Auth]
+      summary: 撤销本人指定会话
+      description: 撤销当前会话时同时清除 access/refresh Cookie。
+      parameters:
+        - $ref: "#/components/parameters/SessionId"
+        - $ref: "#/components/parameters/CsrfHeader"
       responses:
         "204":
-          description: 密码已修改；全部会话已撤销；清除 access/refresh Cookie
+          description: 会话已撤销
           headers:
-            Set-Cookie:
-              $ref: "#/components/headers/ClearAuthCookies"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "422":
-          $ref: "#/components/responses/ValidationError"
+            Set-Cookie: { $ref: "#/components/headers/ClearAuthCookies" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
 
   /api/v1/users:
     get:
@@ -289,10 +487,13 @@ paths:
   /api/v1/users/{user_id}/activate:
     post:
       tags: [Users]
-      summary: 启用账号
+      summary: 管理员核验并激活已登记账号
       parameters:
         - $ref: "#/components/parameters/UserId"
         - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/AccountActivationRequest" } } }
       responses:
         "200":
           $ref: "#/components/responses/UserOk"
@@ -324,37 +525,110 @@ paths:
           $ref: "#/components/responses/Conflict"
         "422":
           $ref: "#/components/responses/ValidationError"
-  /api/v1/users/{user_id}/reset-password:
+  /api/v1/users/{user_id}/invitations:
+    parameters: [{ $ref: "#/components/parameters/UserId" }]
+    get:
+      tags: [Users]
+      summary: 查看账号邀请历史
+      responses:
+        "200": { $ref: "#/components/responses/InvitationListOk" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
     post:
       tags: [Users]
-      summary: 管理员重置密码并撤销会话
+      summary: 签发单次账号邀请
+      description: 最长有效 24 小时；明文只返回一次，数据库只保存摘要且不得返回含秘密 URL。
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/InvitationCreateRequest" } } }
+      responses:
+        "201": { $ref: "#/components/responses/InvitationIssued" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/users/{user_id}/invitations/{invitation_id}/revoke:
+    post:
+      tags: [Users]
+      summary: 撤销未消费邀请
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - $ref: "#/components/parameters/InvitationId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "204": { description: 邀请已撤销；重复调用保持幂等 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/users/{user_id}/credentials:
+    get:
+      tags: [Users]
+      summary: 管理员查看账号凭据元数据
+      parameters: [{ $ref: "#/components/parameters/UserId" }]
+      responses:
+        "200": { $ref: "#/components/responses/CredentialListOk" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/users/{user_id}/credentials/{credential_id}:
+    delete:
+      tags: [Users]
+      summary: 管理员撤销教师凭据并在必要时重新邀请
+      description: 撤销教师最后有效凭据时原子撤销全部会话并返回一次性重新邀请；禁止撤销最后管理员。
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - $ref: "#/components/parameters/CredentialId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "200": { $ref: "#/components/responses/AdminCredentialRevoked" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/users/{user_id}/sessions/revoke:
+    post:
+      tags: [Users]
+      summary: 管理员撤销账号全部会话
       parameters:
         - $ref: "#/components/parameters/UserId"
         - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "204": { description: 全部会话已撤销；重复调用保持幂等 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/users/{user_id}/recovery-requests:
+    get:
+      tags: [Users]
+      summary: 管理员查看账号待核验恢复申请
+      parameters: [{ $ref: "#/components/parameters/UserId" }]
+      responses:
+        "200": { $ref: "#/components/responses/RecoveryRequestListOk" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /api/v1/users/{user_id}/recovery-requests/{recovery_request_id}/approve:
+    post:
+      tags: [Users]
+      summary: 管理员批准教师恢复登记
+      description: 记录带外核验并签发 15 分钟恢复登记凭据；最后管理员必须改走 CLI 双人核验。
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - $ref: "#/components/parameters/RecoveryRequestId"
+        - $ref: "#/components/parameters/CsrfHeader"
       requestBody:
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: false
-              required: [new_password]
-              properties:
-                new_password:
-                  $ref: "#/components/schemas/Password"
+        content: { application/json: { schema: { $ref: "#/components/schemas/RecoveryApprovalRequest" } } }
       responses:
-        "204":
-          description: 已重置
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "409":
-          $ref: "#/components/responses/Conflict"
-        "422":
-          $ref: "#/components/responses/ValidationError"
+        "200": { $ref: "#/components/responses/RecoveryEnrollmentIssued" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
 
   /api/v1/settings/kindergarten:
     get:
@@ -1358,6 +1632,10 @@ components:
       name: page_size
       schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
     UserId: { in: path, name: user_id, required: true, schema: { type: string, format: uuid } }
+    CredentialId: { in: path, name: credential_id, required: true, schema: { type: string, format: uuid } }
+    SessionId: { in: path, name: session_id, required: true, schema: { type: string, format: uuid } }
+    InvitationId: { in: path, name: invitation_id, required: true, schema: { type: string, format: uuid } }
+    RecoveryRequestId: { in: path, name: recovery_request_id, required: true, schema: { type: string, format: uuid } }
     SemesterId: { in: path, name: semester_id, required: true, schema: { type: string, format: uuid } }
     ClassId: { in: path, name: class_id, required: true, schema: { type: string, format: uuid } }
     ProfileId: { in: path, name: profile_id, required: true, schema: { type: string, format: uuid } }
@@ -1490,8 +1768,61 @@ components:
       content:
         application/json:
           schema: { $ref: "#/components/schemas/ExportPage" }
-    LoginFailed:
-      description: 通用登录失败，不暴露账号是否存在或停用
+    RegistrationOptionsOk:
+      description: 5 分钟单次 WebAuthn 注册 options；publicKey 可直接传给浏览器 API
+      content: { application/json: { schema: { $ref: "#/components/schemas/WebAuthnRegistrationOptions" } } }
+    AuthenticationOptionsOk:
+      description: 5 分钟单次 WebAuthn 认证 options；publicKey 可直接传给浏览器 API
+      content: { application/json: { schema: { $ref: "#/components/schemas/WebAuthnAuthenticationOptions" } } }
+    RegistrationPending:
+      description: 凭据登记完成，等待带外核验；未建立会话
+      content: { application/json: { schema: { $ref: "#/components/schemas/RegistrationPending" } } }
+    Authenticated:
+      description: 通行密钥认证成功并设置 access/refresh Cookie；激活后首次成功认证只向用户返回一次恢复码
+      headers:
+        Set-Cookie: { $ref: "#/components/headers/AuthSetCookies" }
+      content: { application/json: { schema: { $ref: "#/components/schemas/AuthenticationResult" } } }
+    StepUpOk:
+      description: 当前会话的新近用户验证已更新
+      content: { application/json: { schema: { $ref: "#/components/schemas/StepUpResult" } } }
+    CredentialOk:
+      description: 脱敏通行密钥凭据元数据
+      content: { application/json: { schema: { $ref: "#/components/schemas/Credential" } } }
+    CredentialCreated:
+      description: 通行密钥凭据已登记
+      content: { application/json: { schema: { $ref: "#/components/schemas/Credential" } } }
+    CredentialListOk:
+      description: 当前目标账号的凭据元数据；不返回公钥、credential 原文或 assertion
+      content: { application/json: { schema: { $ref: "#/components/schemas/CredentialList" } } }
+    InvitationIssued:
+      description: 邀请已签发；明文 token 仅在本响应展示一次，不返回含 token 的 URL
+      content: { application/json: { schema: { $ref: "#/components/schemas/InvitationIssued" } } }
+    InvitationListOk:
+      description: 邀请状态列表；不返回 token 或摘要
+      content: { application/json: { schema: { $ref: "#/components/schemas/InvitationList" } } }
+    AdminCredentialRevoked:
+      description: 凭据已撤销；若撤销教师最后凭据则同时撤销会话并返回一次性重新邀请
+      content: { application/json: { schema: { $ref: "#/components/schemas/AdminCredentialRevocationResult" } } }
+    RecoveryRequestAccepted:
+      description: 统一恢复申请响应；不确认账号或恢复码是否存在
+      content: { application/json: { schema: { $ref: "#/components/schemas/RecoveryRequestAccepted" } } }
+    RecoveryRequestListOk:
+      description: 待核验恢复申请列表；不返回恢复码或摘要
+      content: { application/json: { schema: { $ref: "#/components/schemas/RecoveryRequestList" } } }
+    RecoveryEnrollmentIssued:
+      description: 人工核验完成并签发短时恢复登记 token；明文只展示一次
+      content: { application/json: { schema: { $ref: "#/components/schemas/RecoveryEnrollmentIssued" } } }
+    RecoveryCompleted:
+      description: 恢复完成；新恢复码只展示一次且未建立会话
+      content: { application/json: { schema: { $ref: "#/components/schemas/RecoveryCompleted" } } }
+    RecoveryCodeIssued:
+      description: 新离线恢复码只展示一次
+      content: { application/json: { schema: { $ref: "#/components/schemas/RecoveryCodeIssued" } } }
+    SessionListOk:
+      description: 本人有效会话列表
+      content: { application/json: { schema: { $ref: "#/components/schemas/SessionList" } } }
+    AuthenticationFailed:
+      description: 通用认证失败，不暴露凭据、账号、停用或签名失败原因
       content:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
@@ -1520,13 +1851,22 @@ components:
       content:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
+    CeremonyUnavailable:
+      description: Ceremony 已过期、已消费、跨用途或上下文不匹配
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+    InvitationUnavailable:
+      description: 邀请过期、撤销或已消费，不细分状态
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+    RecoveryUnavailable:
+      description: 恢复材料或登记授权过期、撤销或已消费，不细分状态
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
     ValidationError:
       description: 请求字段或业务前置条件无效
       content:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
     TooManyRequests:
-      description: 登录来源限流
+      description: 公开身份端点按可信来源和 ceremony purpose 限流
       headers:
         Retry-After:
           schema: { type: integer, minimum: 1, maximum: 60 }
@@ -1543,12 +1883,24 @@ components:
     Uuid:
       type: string
       format: uuid
-    Password:
+    Base64Url:
       type: string
-      minLength: 15
-      maxLength: 128
+      minLength: 1
+      maxLength: 4096
+      pattern: "^[A-Za-z0-9_-]+$"
+      description: 无填充 base64url；服务端解码后仍须执行各字段的字节长度限制
+    SecretInput:
+      type: string
+      minLength: 22
+      maxLength: 512
       writeOnly: true
-      description: 允许 Unicode、空格与粘贴；无字符组合规则；不得在日志或响应出现
+      description: 只从受控入口输入；数据库只保存带服务端 pepper 的摘要
+    OneTimeSecret:
+      type: string
+      minLength: 22
+      maxLength: 512
+      readOnly: true
+      description: 只在本次成功响应展示一次；不得进入 URL、日志、审计或后续读取响应
     ErrorField:
       type: object
       additionalProperties: false
@@ -1599,24 +1951,191 @@ components:
       required: [csrf_token]
       properties:
         csrf_token: { type: string, minLength: 32, maxLength: 512 }
-    LoginRequest:
+    BootstrapRegistrationOptionsRequest:
       type: object
       additionalProperties: false
-      required: [login, password]
+      required: [bootstrap_token]
       properties:
-        login: { type: string, minLength: 1, maxLength: 120 }
-        password: { type: string, minLength: 1, maxLength: 128, writeOnly: true }
-    ChangePasswordRequest:
+        bootstrap_token: { $ref: "#/components/schemas/SecretInput" }
+    InvitationRegistrationOptionsRequest:
       type: object
       additionalProperties: false
-      required: [current_password, new_password]
+      required: [invitation_token]
       properties:
-        current_password: { type: string, minLength: 1, maxLength: 128, writeOnly: true }
-        new_password: { $ref: "#/components/schemas/Password" }
+        invitation_token: { $ref: "#/components/schemas/SecretInput" }
+    RecoveryRegistrationOptionsRequest:
+      type: object
+      additionalProperties: false
+      required: [enrollment_token]
+      properties:
+        enrollment_token: { $ref: "#/components/schemas/SecretInput" }
+    PublicKeyCredentialDescriptor:
+      type: object
+      additionalProperties: false
+      required: [type, id]
+      properties:
+        type: { type: string, const: public-key }
+        id: { $ref: "#/components/schemas/Base64Url" }
+        transports:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [usb, nfc, ble, internal, hybrid] }
+    WebAuthnRegistrationOptions:
+      type: object
+      additionalProperties: false
+      required: [ceremony_id, expires_at, publicKey]
+      properties:
+        ceremony_id: { $ref: "#/components/schemas/Uuid" }
+        expires_at: { type: string, format: date-time }
+        publicKey:
+          type: object
+          additionalProperties: false
+          required: [challenge, rp, user, pubKeyCredParams, timeout, excludeCredentials, authenticatorSelection, attestation]
+          properties:
+            challenge: { $ref: "#/components/schemas/Base64Url" }
+            rp:
+              type: object
+              additionalProperties: false
+              required: [id, name]
+              properties:
+                id: { type: string, minLength: 1, maxLength: 253 }
+                name: { type: string, minLength: 1, maxLength: 120 }
+            user:
+              type: object
+              additionalProperties: false
+              required: [id, name, displayName]
+              properties:
+                id:
+                  allOf: [{ $ref: "#/components/schemas/Base64Url" }]
+                  description: 32 字节随机不透明 user handle，不含用户名、手机号或其他个人信息
+                name: { type: string, minLength: 1, maxLength: 120 }
+                displayName: { type: string, minLength: 1, maxLength: 120 }
+            pubKeyCredParams:
+              type: array
+              minItems: 1
+              items:
+                type: object
+                additionalProperties: false
+                required: [type, alg]
+                properties:
+                  type: { type: string, const: public-key }
+                  alg: { type: integer, enum: [-7, -257] }
+            timeout: { type: integer, const: 300000 }
+            excludeCredentials:
+              type: array
+              items: { $ref: "#/components/schemas/PublicKeyCredentialDescriptor" }
+            authenticatorSelection:
+              type: object
+              additionalProperties: false
+              required: [residentKey, requireResidentKey, userVerification]
+              properties:
+                residentKey: { type: string, const: required }
+                requireResidentKey: { type: boolean, const: true }
+                userVerification: { type: string, const: required }
+            attestation: { type: string, const: none }
+            extensions:
+              type: object
+              additionalProperties: false
+              properties:
+                credProps: { type: boolean, const: true }
+    WebAuthnAuthenticationOptions:
+      type: object
+      additionalProperties: false
+      required: [ceremony_id, expires_at, publicKey]
+      properties:
+        ceremony_id: { $ref: "#/components/schemas/Uuid" }
+        expires_at: { type: string, format: date-time }
+        publicKey:
+          type: object
+          additionalProperties: false
+          required: [challenge, rpId, timeout, allowCredentials, userVerification]
+          properties:
+            challenge: { $ref: "#/components/schemas/Base64Url" }
+            rpId: { type: string, minLength: 1, maxLength: 253 }
+            timeout: { type: integer, const: 300000 }
+            allowCredentials:
+              type: array
+              description: 常规无用户名认证为空；step-up 可只包含当前账号有效凭据
+              items: { $ref: "#/components/schemas/PublicKeyCredentialDescriptor" }
+            userVerification: { type: string, const: required }
+    RegistrationCredential:
+      type: object
+      additionalProperties: false
+      required: [id, rawId, type, response, clientExtensionResults]
+      properties:
+        id: { $ref: "#/components/schemas/Base64Url" }
+        rawId: { $ref: "#/components/schemas/Base64Url" }
+        type: { type: string, const: public-key }
+        authenticatorAttachment: { type: [string, "null"], enum: [platform, cross-platform, null] }
+        response:
+          type: object
+          additionalProperties: false
+          required: [clientDataJSON, attestationObject]
+          properties:
+            clientDataJSON: { $ref: "#/components/schemas/Base64Url" }
+            attestationObject: { $ref: "#/components/schemas/Base64Url" }
+            transports:
+              type: array
+              uniqueItems: true
+              items: { type: string, enum: [usb, nfc, ble, internal, hybrid] }
+        clientExtensionResults: { type: object, additionalProperties: true }
+    AuthenticationCredential:
+      type: object
+      additionalProperties: false
+      required: [id, rawId, type, response, clientExtensionResults]
+      properties:
+        id: { $ref: "#/components/schemas/Base64Url" }
+        rawId: { $ref: "#/components/schemas/Base64Url" }
+        type: { type: string, const: public-key }
+        authenticatorAttachment: { type: [string, "null"], enum: [platform, cross-platform, null] }
+        response:
+          type: object
+          additionalProperties: false
+          required: [clientDataJSON, authenticatorData, signature, userHandle]
+          properties:
+            clientDataJSON: { $ref: "#/components/schemas/Base64Url" }
+            authenticatorData: { $ref: "#/components/schemas/Base64Url" }
+            signature: { $ref: "#/components/schemas/Base64Url" }
+            userHandle:
+              oneOf:
+                - $ref: "#/components/schemas/Base64Url"
+                - type: "null"
+        clientExtensionResults: { type: object, additionalProperties: true }
+    RegistrationVerifyRequest:
+      type: object
+      additionalProperties: false
+      required: [ceremony_id, credential]
+      properties:
+        ceremony_id: { $ref: "#/components/schemas/Uuid" }
+        label: { type: [string, "null"], minLength: 1, maxLength: 120 }
+        credential: { $ref: "#/components/schemas/RegistrationCredential" }
+    AuthenticationVerifyRequest:
+      type: object
+      additionalProperties: false
+      required: [ceremony_id, credential]
+      properties:
+        ceremony_id: { $ref: "#/components/schemas/Uuid" }
+        credential: { $ref: "#/components/schemas/AuthenticationCredential" }
+    RegistrationPending:
+      type: object
+      additionalProperties: false
+      required: [user_id, status, credential_id, verification_required]
+      properties:
+        user_id: { $ref: "#/components/schemas/Uuid" }
+        status: { type: string, const: pending_verification }
+        credential_id: { $ref: "#/components/schemas/Uuid" }
+        verification_required: { type: boolean, const: true }
+    StepUpResult:
+      type: object
+      additionalProperties: false
+      required: [verified_at, valid_until]
+      properties:
+        verified_at: { type: string, format: date-time }
+        valid_until: { type: string, format: date-time, description: 恰好为 verified_at 后 5 分钟 }
     CurrentUser:
       type: object
       additionalProperties: false
-      required: [id, display_name, kindergarten, role_codes, capabilities]
+      required: [id, display_name, kindergarten, role_codes, capabilities, session_id, last_reauthenticated_at]
       properties:
         id: { $ref: "#/components/schemas/Uuid" }
         username: { type: string }
@@ -1637,15 +2156,27 @@ components:
           type: array
           uniqueItems: true
           items: { type: string }
+        session_id: { $ref: "#/components/schemas/Uuid" }
+        last_reauthenticated_at: { type: [string, "null"], format: date-time }
+    AuthenticationResult:
+      type: object
+      additionalProperties: false
+      required: [user, recovery_code]
+      properties:
+        user: { $ref: "#/components/schemas/CurrentUser" }
+        recovery_code:
+          description: 仅激活后的首次成功认证返回；后续认证为 null
+          oneOf:
+            - $ref: "#/components/schemas/OneTimeSecret"
+            - type: "null"
     CreateUserRequest:
       type: object
       additionalProperties: false
-      required: [username, display_name, password, role_codes]
+      required: [username, display_name, role_codes]
       properties:
         username: { type: string, minLength: 1, maxLength: 120 }
         phone_e164: { type: [string, "null"], maxLength: 32 }
         display_name: { type: string, minLength: 1, maxLength: 120 }
-        password: { $ref: "#/components/schemas/Password" }
         role_codes:
           type: array
           minItems: 1
@@ -1654,7 +2185,7 @@ components:
     User:
       type: object
       additionalProperties: false
-      required: [id, username, phone_e164, display_name, role_codes, is_active, created_at, updated_at]
+      required: [id, username, phone_e164, display_name, role_codes, status, credential_count, activated_at, created_at, updated_at]
       properties:
         id: { $ref: "#/components/schemas/Uuid" }
         username: { type: string, maxLength: 120 }
@@ -1664,7 +2195,9 @@ components:
           type: array
           uniqueItems: true
           items: { type: string, enum: [admin, teacher] }
-        is_active: { type: boolean }
+        status: { type: string, enum: [pending_registration, pending_verification, active, suspended] }
+        credential_count: { type: integer, minimum: 0 }
+        activated_at: { type: [string, "null"], format: date-time }
         created_at: { type: string, format: date-time }
         updated_at: { type: string, format: date-time }
     UserPatch:
@@ -1684,6 +2217,164 @@ components:
         page: { type: integer, minimum: 1 }
         page_size: { type: integer, minimum: 1, maximum: 100 }
         total: { type: integer, minimum: 0 }
+    AccountActivationRequest:
+      type: object
+      additionalProperties: false
+      required: [verification_confirmed]
+      properties:
+        verification_confirmed: { type: boolean, const: true }
+        verification_note: { type: [string, "null"], maxLength: 500 }
+    Credential:
+      type: object
+      additionalProperties: false
+      required: [id, label, transports, backup_eligible, backup_state, created_via, created_at, last_used_at, revoked_at]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        label: { type: string, minLength: 1, maxLength: 120 }
+        transports:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [usb, nfc, ble, internal, hybrid] }
+        backup_eligible: { type: boolean }
+        backup_state: { type: boolean }
+        created_via: { type: string, enum: [bootstrap, invitation, self_add, recovery, migration] }
+        created_at: { type: string, format: date-time }
+        last_used_at: { type: [string, "null"], format: date-time }
+        revoked_at: { type: [string, "null"], format: date-time }
+    CredentialPatch:
+      type: object
+      additionalProperties: false
+      required: [label]
+      properties:
+        label: { type: string, minLength: 1, maxLength: 120 }
+    CredentialList:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Credential" } }
+    InvitationCreateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        expires_in_hours: { type: integer, minimum: 1, maximum: 24, default: 24 }
+    Invitation:
+      type: object
+      additionalProperties: false
+      required: [id, user_id, status, expires_at, issued_at, consumed_at, revoked_at]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        user_id: { $ref: "#/components/schemas/Uuid" }
+        status: { type: string, enum: [pending, consumed, expired, revoked] }
+        expires_at: { type: string, format: date-time }
+        issued_at: { type: string, format: date-time }
+        consumed_at: { type: [string, "null"], format: date-time }
+        revoked_at: { type: [string, "null"], format: date-time }
+    InvitationIssued:
+      allOf:
+        - $ref: "#/components/schemas/Invitation"
+        - type: object
+          required: [invitation_token]
+          properties:
+            invitation_token: { $ref: "#/components/schemas/OneTimeSecret" }
+    InvitationList:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Invitation" } }
+    AdminCredentialRevocationResult:
+      type: object
+      additionalProperties: false
+      required: [credential_id, sessions_revoked, reinvitation]
+      properties:
+        credential_id: { $ref: "#/components/schemas/Uuid" }
+        sessions_revoked: { type: integer, minimum: 0 }
+        reinvitation:
+          oneOf:
+            - $ref: "#/components/schemas/InvitationIssued"
+            - type: "null"
+    RecoveryRequestCreate:
+      type: object
+      additionalProperties: false
+      required: [login, recovery_code]
+      properties:
+        login: { type: string, minLength: 1, maxLength: 120 }
+        recovery_code: { $ref: "#/components/schemas/SecretInput" }
+    RecoveryRequestAccepted:
+      type: object
+      additionalProperties: false
+      required: [message]
+      properties:
+        message:
+          type: string
+          const: 如果账号和恢复材料有效，我们会按既定带外方式继续核验。
+    RecoveryRequest:
+      type: object
+      additionalProperties: false
+      required: [id, user_id, status, requested_at, expires_at, approved_at]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        user_id: { $ref: "#/components/schemas/Uuid" }
+        status: { type: string, enum: [pending_verification, approved, registration_pending, completed, rejected, expired] }
+        requested_at: { type: string, format: date-time }
+        expires_at: { type: string, format: date-time }
+        approved_at: { type: [string, "null"], format: date-time }
+    RecoveryRequestList:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/RecoveryRequest" } }
+    RecoveryApprovalRequest:
+      type: object
+      additionalProperties: false
+      required: [verification_confirmed]
+      properties:
+        verification_confirmed: { type: boolean, const: true }
+        verification_note: { type: [string, "null"], maxLength: 500 }
+    RecoveryEnrollmentIssued:
+      type: object
+      additionalProperties: false
+      required: [recovery_request_id, enrollment_token, expires_at]
+      properties:
+        recovery_request_id: { $ref: "#/components/schemas/Uuid" }
+        enrollment_token: { $ref: "#/components/schemas/OneTimeSecret" }
+        expires_at: { type: string, format: date-time }
+    RecoveryCodeIssued:
+      type: object
+      additionalProperties: false
+      required: [recovery_code, issued_at]
+      properties:
+        recovery_code: { $ref: "#/components/schemas/OneTimeSecret" }
+        issued_at: { type: string, format: date-time }
+    RecoveryCompleted:
+      type: object
+      additionalProperties: false
+      required: [credential, recovery_code, sessions_revoked]
+      properties:
+        credential: { $ref: "#/components/schemas/Credential" }
+        recovery_code: { $ref: "#/components/schemas/OneTimeSecret" }
+        sessions_revoked: { type: integer, minimum: 0 }
+    Session:
+      type: object
+      additionalProperties: false
+      required: [id, is_current, created_at, last_seen_at, expires_at, revoked_at, client_ip_hint, user_agent_summary]
+      properties:
+        id: { $ref: "#/components/schemas/Uuid" }
+        is_current: { type: boolean }
+        created_at: { type: string, format: date-time }
+        last_seen_at: { type: string, format: date-time }
+        expires_at: { type: string, format: date-time, description: Refresh family 首次签发后固定 7 天 }
+        revoked_at: { type: [string, "null"], format: date-time }
+        client_ip_hint: { type: [string, "null"], maxLength: 80 }
+        user_agent_summary: { type: [string, "null"], maxLength: 200 }
+    SessionList:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Session" } }
     Kindergarten:
       type: object
       additionalProperties: false

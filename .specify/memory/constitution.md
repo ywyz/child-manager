@@ -1,15 +1,14 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 -> 2.0.0
+- Version change: 2.0.0 -> 2.1.0
 - Modified principles:
-  - I. 事实来源与范围忠实 -> 明确 docs 分支、Issue 与实现证据的领域职责
-  - 开发工作流与质量门禁 -> 由 main/codex/trae 双实现改为 main/docs/dev 单实现
+  - 技术、安全与范围约束 -> 以 WebAuthn、单次邀请和双条件恢复取代密码认证
 - Added sections: none
-- Removed sections: none; 历史双实现规则由单实现规则取代
+- Removed sections: none
 - Templates reviewed:
-  - ✅ .specify/templates/plan-template.md（增加 docs 基线与 Issue 门禁）
-  - ✅ .specify/templates/spec-template.md（明确 docs 规格分支）
-  - ✅ .specify/templates/tasks-template.md（明确 dev 单实现与固定 docs 提交）
+  - ✅ .specify/templates/plan-template.md（无需修改）
+  - ✅ .specify/templates/spec-template.md（无需修改）
+  - ✅ .specify/templates/tasks-template.md（无需修改）
   - ✅ .specify/templates/checklist-template.md（无需修改）
   - ✅ .specify/templates/constitution-template.md（无需修改）
 - Runtime guidance reviewed:
@@ -20,7 +19,7 @@ Sync Impact Report
   - ✅ docs/ROADMAP.md
   - ✅ docs/development/single-implementation-development.md
 - Command templates: .specify/templates/commands/ is not present in this installation
-- Follow-up TODOs: none
+- Follow-up TODOs: dev 必须依据新的 docs 固定提交迁移旧密码实现
 -->
 # Child Manager 项目宪章
 
@@ -86,11 +85,13 @@ Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测
   的迁移、组合外键、部分索引、GiST、并发和事务验证。
 - 首期仅有管理员和教师，界面使用简体中文；业务日期按 `Asia/Shanghai` 计算，时间点以
   UTC 存储。
-- 密码必须使用 Argon2id。访问与刷新令牌只能通过安全的 HttpOnly Cookie 传递；状态变更
-  必须具备 SameSite、来源校验和 CSRF 防护。开发关闭 Cookie `Secure` 仅允许显式配置与
-  回环地址绑定。
-- AI Key 必须由服务端认证加密保存；密码、令牌、API Key、主密钥、完整敏感教案和未来
-  照片不得进入 Git、Redis 消息、日志、异常、审计或测试快照。
+- WebAuthn 通行密钥是唯一常规登录方式，不得保留密码、OTP、默认管理员或万能恢复码弱兜底。
+  首位管理员和后续账号分别使用本机短时初始化凭据或管理员单次邀请绑定首个通行密钥；
+  紧急恢复必须同时满足离线恢复码与人工核验。访问与刷新令牌只能通过安全的 HttpOnly
+  Cookie 传递；状态变更必须具备 SameSite、来源校验和 CSRF 防护。开发关闭 Cookie
+  `Secure` 仅允许显式配置与回环地址绑定。
+- AI Key 必须由服务端认证加密保存；初始化/邀请/恢复秘密、令牌、API Key、主密钥、完整
+  敏感教案和未来照片不得进入 Git、Redis 消息、日志、异常、审计或测试快照。
 - 首期功能验收完成前，不得设计、创建或验收生产 Caddyfile、生产 Compose、公网 DNS、
   证书、端口映射、Tailscale、生产密钥托管、生产备份任务或发布流程。ADR-0007 中相关
   旧结论已由 ADR-0009 取代。
@@ -136,4 +137,4 @@ Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测
 计划评审、任务生成和实现交付都必须再次执行宪章检查；复杂度例外必须在计划中列出更简单
 方案及其被拒理由。
 
-**Version**: 2.0.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-21
+**Version**: 2.1.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-22
