@@ -6,6 +6,7 @@
 
 - `提议`：尚未确认，不得作为实现基线。
 - `已接受`：当前实现必须遵守。
+- `部分被取代`：部分条款由后续 ADR 替代，未明确取代的条款继续有效。
 - `已取代`：由后续 ADR 替代，保留历史背景。
 - `已废弃`：不再适用，且没有直接替代方案。
 
@@ -18,12 +19,13 @@
 | [ADR-0001](ADR-0001-cloud-only.md) | 只交付 Cloud 版本，首期单园运行并保留园所隔离边界 | 已接受 |
 | [ADR-0002](ADR-0002-separate-web-api-worker-modular-monolith.md) | 采用独立 Web、API、Worker 运行单元的模块化单体 | 已接受 |
 | [ADR-0003](ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md) | PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行 | 已接受 |
-| [ADR-0004](ADR-0004-same-origin-cookie-authentication.md) | 采用同源入口、HttpOnly Cookie 与 API 统一授权 | 已接受 |
+| [ADR-0004](ADR-0004-same-origin-cookie-authentication.md) | 采用同源入口、HttpOnly Cookie 与 API 统一授权 | 部分被 ADR-0010 取代（密码部分失效） |
 | [ADR-0005](ADR-0005-provider-neutral-ai-and-central-prompts.md) | AI 供应商中立，并建立管理员专用提示词系统 | 已接受 |
 | [ADR-0006](ADR-0006-fixed-word-template-export-boundary.md) | 一日活动计划采用固定 Word 模板导出边界 | 已接受 |
 | [ADR-0007](ADR-0007-caddy-compose-and-file-secrets.md) | 采用 Caddy、Docker Compose 与文件挂载 Secrets | 已被 ADR-0009 取代（保留历史与安全结果） |
 | [ADR-0008](ADR-0008-degradable-calendar-and-external-services.md) | 日期与外部服务采用本地优先和软降级 | 已接受 |
-| [ADR-0009](ADR-0009-defer-production-deployment-until-feature-complete.md) | 功能完成前延后生产部署与访问网络决策 | 已接受 |
+| [ADR-0009](ADR-0009-defer-production-deployment-until-feature-complete.md) | 功能完成前延后生产部署与访问网络决策 | 部分被 ADR-0010 取代（生产部署延后继续有效） |
+| [ADR-0010](ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md) | 采用受限公网 B/S 入口、WebAuthn 通行密钥与双条件恢复 | 已接受 |
 
 ## 与旧仓库 ADR 的关系
 

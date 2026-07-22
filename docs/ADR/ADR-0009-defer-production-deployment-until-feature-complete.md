@@ -2,7 +2,9 @@
 
 日期：2026-07-12
 
-状态：已接受
+状态：部分被 [ADR-0010](ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md) 取代
+
+取代范围：访问网络方向、NiceGUI Web/BFF 唯一公网应用入口、WebAuthn 常规认证及紧急恢复不再等待功能验收后选择。生产部署实施、反向代理产品、域名证书、拓扑、生产密钥托管、备份、发布和恢复演练继续延后。
 
 ## 背景
 
