@@ -1,42 +1,41 @@
-# Graph Report - .  (2026-07-22)
+# Graph Report - .  (2026-07-23)
 
 ## Corpus Check
 - cluster-only mode — file stats not available
 
 ## Summary
-- 644 nodes · 704 edges · 196 communities (25 shown, 171 thin omitted)
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 58 edges (avg confidence: 0.92)
+- 659 nodes · 710 edges · 195 communities (24 shown, 171 thin omitted)
+- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 49 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f893618b`
+- Built from commit: `c0fc15dd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - First Release Feature Specification
 - First Release Research
-- Child Manager System Architecture
 - ADR-0010：受限公网、通行密钥与双条件恢复
+- 首期一日活动计划任务计划
 - M2 Issue Drafts
 - Local Development Environments
 - README.md - 产品总纲
-- First Release Tasks
+- Child Manager Product and Engineering Roadmap
 - Shell Utility Functions
 - Secrets Management Strategy
-- Development Rules & Guidelines
+- Lesson Management PRD
+- Child Manager Agent Development Rules
 - ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行
 - ADR-0005：AI 供应商中立，并建立管理员专用提示词系统
-- Child Manager Product and Engineering Roadmap
 - Modular Monolith Architecture
 - Word Export Templates
 - Calendar & Service Degradation
-- Word Export Story
+- Child Manager Data Model
+- Child Manager System Architecture
+- API v1 Contract Guide
 - Child Manager Project Constitution
-- Teacher Controlled AI Story
 - 完整 SDD 工作流
-- Group Activity Import Story
-- M7 Word Export and History
 - Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务
 - create-new-feature.sh
 - Spec Kit 任务模板
@@ -212,9 +211,9 @@
 - Ruff
 
 ## God Nodes (most connected - your core abstractions)
-1. `First Release Research` - 66 edges
-2. `First Release Feature Specification` - 64 edges
-3. `First Release Tasks` - 32 edges
+1. `First Release Research` - 65 edges
+2. `First Release Feature Specification` - 63 edges
+3. `首期一日活动计划任务计划` - 22 edges
 4. `Child Manager Product and Engineering Roadmap` - 21 edges
 5. `ADR-0010：受限公网、通行密钥与双条件恢复` - 19 edges
 6. `M2 Issue Drafts` - 15 edges
@@ -224,23 +223,26 @@
 10. `Child Manager 首期安全威胁模型` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `M2 Security Baseline Rebuild` --semantically_similar_to--> `M2 Authentication Authorization and Identity Audit`  [INFERRED] [semantically similar]
-  CONTEXT.md → docs/ROADMAP.md
 - `Teacher Control and Word Fidelity` --semantically_similar_to--> `Teacher Controlled AI Story`  [INFERRED] [semantically similar]
   .specify/memory/constitution.md → specs/001-daily-activity-plan/spec.md
 - `Manual Lesson Plan Loop` --semantically_similar_to--> `Manual Lesson Plan Story`  [INFERRED] [semantically similar]
   docs/PRD/lesson-management.md → specs/001-daily-activity-plan/spec.md
 - `Teacher Controlled AI Workflow` --semantically_similar_to--> `Teacher Controlled AI Story`  [INFERRED] [semantically similar]
   docs/PRD/lesson-management.md → specs/001-daily-activity-plan/spec.md
-- `Fixed Word Export` --semantically_similar_to--> `Word Export Story`  [INFERRED] [semantically similar]
-  docs/PRD/lesson-management.md → specs/001-daily-activity-plan/spec.md
+- `Kindergarten Isolation and Server Authorization` --semantically_similar_to--> `Kindergarten Scoped Domain Model`  [INFERRED] [semantically similar]
+  .specify/memory/constitution.md → docs/design/data-model.md
+- `Authoritative State and Recoverability` --semantically_similar_to--> `PostgreSQL Authoritative Task State`  [INFERRED] [semantically similar]
+  .specify/memory/constitution.md → docs/design/system-architecture.md
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
+- **三个独立运行单元** — specs_001_daily_activity_plan_tasks_api_service, specs_001_daily_activity_plan_tasks_worker_service, specs_001_daily_activity_plan_tasks_web_service [EXTRACTED 1.00]
+- **无 AI 手工教案 MVP 依赖链** — specs_001_daily_activity_plan_tasks_phase_1_setup, specs_001_daily_activity_plan_tasks_phase_2_foundational, specs_001_daily_activity_plan_tasks_us1_m2_identity, specs_001_daily_activity_plan_tasks_us1_m3_settings, specs_001_daily_activity_plan_tasks_us2_manual_plan [EXTRACTED 1.00]
+- **M8 跨故事完整验收** — specs_001_daily_activity_plan_tasks_us7_audit_degradation, specs_001_daily_activity_plan_tasks_phase_10_polish, specs_001_daily_activity_plan_tasks_standard_quality_gate, specs_001_daily_activity_plan_tasks_graphify_checkpoint [EXTRACTED 1.00]
 - **Three Independent Runtime Units** — docs_design_system_architecture_nicegui_web, docs_design_system_architecture_fastapi_api, docs_design_system_architecture_dramatiq_worker [EXTRACTED 1.00]
-- **Single First Release Specification Set** — specs_001_daily_activity_plan_spec_first_release_feature_specification, specs_001_daily_activity_plan_plan_first_release_implementation_plan, specs_001_daily_activity_plan_tasks_first_release_tasks [EXTRACTED 1.00]
+- **Single First Release Specification Set** — specs_001_daily_activity_plan_spec_first_release_feature_specification, specs_001_daily_activity_plan_plan_first_release_implementation_plan [EXTRACTED 1.00]
 - **First Release Business Delivery Loop** — docs_prd_lesson_management_manual_lesson_plan_loop, docs_prd_lesson_management_teacher_controlled_ai_workflow, docs_prd_lesson_management_fixed_word_export [EXTRACTED 1.00]
 - **First Release Runtime Stack** — specs_001_daily_activity_plan_research_nicegui_3, specs_001_daily_activity_plan_research_fastapi, specs_001_daily_activity_plan_research_dramatiq_2, specs_001_daily_activity_plan_research_postgresql_production_database, specs_001_daily_activity_plan_research_redis [EXTRACTED 1.00]
 - **Seven Prompt Task Catalog** — specs_001_daily_activity_plan_research_morning_activity_prompt_task, specs_001_daily_activity_plan_research_morning_talk_prompt_task, specs_001_daily_activity_plan_research_group_activity_split_prompt_task, specs_001_daily_activity_plan_research_group_activity_add_step_prompt_task, specs_001_daily_activity_plan_research_indoor_area_game_prompt_task, specs_001_daily_activity_plan_research_afternoon_outdoor_game_prompt_task, specs_001_daily_activity_plan_research_daily_reflection_prompt_task [EXTRACTED 1.00]
@@ -268,39 +270,39 @@
 - **Specify Plan Tasks Implement 全周期** — _agents_skills_speckit_specify_skill_speckit_specify, _agents_skills_speckit_plan_skill_speckit_plan, _agents_skills_speckit_tasks_skill_speckit_tasks, _agents_skills_speckit_implement_skill_speckit_implement [EXTRACTED 1.00]
 - **一日活动计划范围、架构与数据边界知识链** — graphify_out_memory_query_20260711_020708_docs_prd_lesson_management_m_prd_scope, graphify_out_memory_query_20260711_024218_service_architecture_sequence, graphify_out_memory_query_20260712_071357_corrected_data_model [INFERRED 0.75]
 
-## Communities (196 total, 171 thin omitted)
+## Communities (195 total, 171 thin omitted)
 
 ### Community 0 - "First Release Feature Specification"
-Cohesion: 0.06
-Nodes (56): Feature Readiness, Specification Quality Checklist, Bootstrap Initialization, Expand Enroll Contract Password Migration, Lesson Plan Snapshot Policy, Offline Recovery and Human Verification, Account Invitation Entity, Account Recovery Request Entity (+48 more)
+Cohesion: 0.05
+Nodes (63): Feature Readiness, Specification Quality Checklist, Bootstrap Initialization, DOCX Extraction Limits, Expand Enroll Contract Password Migration, Frozen Prompt Test Inputs, Lesson Plan Snapshot Policy, Offline Recovery and Human Verification (+55 more)
 
 ### Community 1 - "First Release Research"
 Cohesion: 0.06
-Nodes (56): Access JWT Session, Afternoon Outdoor Game Prompt Task, AI Key Envelope Encryption, Alembic, API Idempotency Scope and Fingerprint, Ceremony Challenge Binding, chinesecalendar, Column Level Preview Validity (+48 more)
+Nodes (62): Access JWT Session, Afternoon Outdoor Game Prompt Task, AI Key Envelope Encryption, Alembic, API Idempotency Scope and Fingerprint, Ceremony Challenge Binding, chinesecalendar, Column Level Preview Validity (+54 more)
 
-### Community 2 - "Child Manager System Architecture"
-Cohesion: 0.05
-Nodes (47): Authoritative State and Recoverability, Kindergarten Isolation and Server Authorization, Background Job and AI Result Model, Child Manager Data Model, Kindergarten Scoped Domain Model, Relational Header and JSONB Content, Alembic Migration Sequence, Child Manager PostgreSQL Database Schema (+39 more)
-
-### Community 3 - "ADR-0010：受限公网、通行密钥与双条件恢复"
+### Community 2 - "ADR-0010：受限公网、通行密钥与双条件恢复"
 Cohesion: 0.06
 Nodes (44): 管理员创建账号并发放单次邀请, ADR-0010：受限公网、通行密钥与双条件恢复, API、Worker、Redis、PostgreSQL 不单独暴露公网, 继续采用 B/S, 控制台一次性首位管理员初始化, 最后管理员双人带外核验, 合法导出后外传是残余风险, 多通行密钥与高风险操作重新验证 (+36 more)
 
+### Community 3 - "首期一日活动计划任务计划"
+Cohesion: 0.08
+Nodes (41): 安全 AI 模型档案与提示词生命周期, AI 任务预览采用拒绝与重试, FastAPI API 运行单元, 脱敏审计与外部边界故障隔离, 执行授权边界, 共享契约 contracts, 数据模型 data-model.md, 未完成代码仅在 dev 实现 (+33 more)
+
 ### Community 4 - "M2 Issue Drafts"
-Cohesion: 0.14
-Nodes (30): archive/trae-m2-20260721 Tag, Codex Branch (Historical), Dev Branch, Docs Branch, Main Branch, Trae Branch (Archived), Dual Agent Development (Historical), M0 Milestone (+22 more)
+Cohesion: 0.15
+Nodes (29): archive/trae-m2-20260721 Tag, Codex Branch (Historical), Dev Branch, Docs Branch, Main Branch, Trae Branch (Archived), Dual Agent Development (Historical), M0 Milestone (+21 more)
 
 ### Community 5 - "Local Development Environments"
-Cohesion: 0.13
-Nodes (21): Git Worktree Isolation, Loopback-Only Port Binding, CERNET PyPI Mirror, compose.dev.yaml, Dev Profile Environment Variables, github.ywyz.tech Docker Mirror, PyPI, pyproject.toml (+13 more)
+Cohesion: 0.12
+Nodes (22): Git Worktree Isolation, Loopback-Only Port Binding, CERNET PyPI Mirror, compose.dev.yaml, Dev Profile Environment Variables, github.ywyz.tech Docker Mirror, PyPI, pyproject.toml (+14 more)
 
 ### Community 6 - "README.md - 产品总纲"
 Cohesion: 0.13
 Nodes (20): ADR-0001: Cloud-only 单园部署, ADR-0004: 同源 Cookie 认证, ADR-0009: 延后生产部署, AI 异步生成, Alembic 数据库迁移, Dramatiq 后台 Worker, FastAPI API 服务, Graphify Knowledge Graph (+12 more)
 
-### Community 7 - "First Release Tasks"
-Cohesion: 0.11
-Nodes (19): Milestone Dependency Graph, Frozen Prompt Test Inputs, Identity Negative Acceptance Matrix, Accessibility Acceptance, Architecture and Contract Gates, Browser Flow Gates, Dependency Order, First Release Tasks (+11 more)
+### Community 7 - "Child Manager Product and Engineering Roadmap"
+Cohesion: 0.19
+Nodes (17): M2 Security Baseline Rebuild, Branch and Issue Governance, Child Manager Product and Engineering Roadmap, Evidence Based Milestone Gates, M0 Shared Design Baseline, M1 Engineering Skeleton and Quality Baseline, M2 Authentication Authorization and Identity Audit, M3 Essential Settings (+9 more)
 
 ### Community 8 - "Shell Utility Functions"
 Cohesion: 0.13
@@ -310,21 +312,21 @@ Nodes (5): get_feature_paths(), get_repo_root(), _persist_feature_json(), resolv
 Cohesion: 0.12
 Nodes (16): 备选方案, 背景, 首期接入云厂商密钥管理服务, 后果, 决策, ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets, 将所有 Secrets 放入 .env, 实施约束 (+8 more)
 
-### Community 10 - "Development Rules & Guidelines"
+### Community 10 - "Lesson Management PRD"
+Cohesion: 0.15
+Nodes (16): Daily Activity Plan, Fixed Word Export, Lesson Management PRD, Passkey Identity Lifecycle, Teacher Controlled AI Workflow, Authentication and Identity Endpoints, Daily Activity Plan OpenAPI Contract, Jobs and Preview Endpoints (+8 more)
+
+### Community 11 - "Child Manager Agent Development Rules"
 Cohesion: 0.18
 Nodes (15): AI and Prompt Rules, Background Worker, Branch and Git Rules, Child Manager Agent Development Rules, Daily Activity Plan Business Invariants, Data Model and Kindergarten Isolation, FastAPI API, Knowledge Graph and Code Graph (+7 more)
 
-### Community 11 - "ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行"
+### Community 12 - "ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行"
 Cohesion: 0.14
 Nodes (13): ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行, API 同步执行 AI 和 Word, Celery + Redis, PostgreSQL 直接充当轮询任务队列, Redis 作为任务最终状态存储, 决策, 后果, 备选方案 (+5 more)
 
-### Community 12 - "ADR-0005：AI 供应商中立，并建立管理员专用提示词系统"
+### Community 13 - "ADR-0005：AI 供应商中立，并建立管理员专用提示词系统"
 Cohesion: 0.15
 Nodes (12): ADR-0005：AI 供应商中立，并建立管理员专用提示词系统, AI 直接写入教案当前内容, 允许提示词定义输出 Schema, 决策, 只配置一个全局模型, 后果, 备选方案, 复审触发条件 (+4 more)
-
-### Community 13 - "Child Manager Product and Engineering Roadmap"
-Cohesion: 0.24
-Nodes (13): Branch and Issue Governance, Child Manager Product and Engineering Roadmap, Evidence Based Milestone Gates, M0 Shared Design Baseline, M1 Engineering Skeleton and Quality Baseline, M2 Authentication Authorization and Identity Audit, M3 Essential Settings, M4 AI Model and Prompt Foundation (+5 more)
 
 ### Community 14 - "Modular Monolith Architecture"
 Cohesion: 0.17
@@ -338,40 +340,36 @@ Nodes (11): ADR-0006：一日活动计划采用固定 Word 模板导出边界, U
 Cohesion: 0.17
 Nodes (11): ADR-0008：日期与外部服务采用本地优先和软降级, 决策, 后果, 在线节假日 API 优先, 备选方案, 复审触发条件, 外部服务失败时默认普通工作日, 实施约束 (+3 more)
 
-### Community 17 - "Word Export Story"
-Cohesion: 0.25
-Nodes (8): Fixed Word Export, Fixed Teacher Plan Word Template, Immutable Export Input Snapshot, python docx, Word Export Requirements, Word Export Story, Word Template Fidelity, Word Export Atomic Storage
+### Community 17 - "Child Manager Data Model"
+Cohesion: 0.20
+Nodes (11): Background Job and AI Result Model, Child Manager Data Model, Relational Header and JSONB Content, Alembic Migration Sequence, Child Manager PostgreSQL Database Schema, Kindergarten Composite Foreign Keys, AI Generation Result, Phase One Data Model (+3 more)
 
-### Community 18 - "Child Manager Project Constitution"
-Cohesion: 0.29
-Nodes (7): Child Manager Project Constitution, Source Fidelity and Scope, Unidirectional Service Boundaries, Child Manager Project Context, Deferred Production Implementation, First Release Delivery Loop, M2 Security Baseline Rebuild
+### Community 18 - "Child Manager System Architecture"
+Cohesion: 0.22
+Nodes (10): Authoritative State and Recoverability, Child Manager System Architecture, Dramatiq Worker, FastAPI API, Idempotent Task Recovery, NiceGUI Web, PostgreSQL Authoritative Task State, Same Origin BFF Session Boundary (+2 more)
 
-### Community 19 - "Teacher Controlled AI Story"
-Cohesion: 0.29
-Nodes (7): Teacher Control and Word Fidelity, AI Preview Adoption Lifecycle, AI Retry Policy, Asynchronous AI Requirements, Teacher Controlled AI Story, AI Preview Adoption Lifecycle, AI Retry Classification
+### Community 19 - "API v1 Contract Guide"
+Cohesion: 0.20
+Nodes (10): Manual Lesson Plan Loop, API Permission Matrix, API v1 Contract Guide, Cookie Token and CSRF Contract, Idempotency Key Contract, Optimistic Lock Contract, Unified Error Envelope, Design and Contract Outputs (+2 more)
 
-### Community 20 - "完整 SDD 工作流"
+### Community 20 - "Child Manager Project Constitution"
+Cohesion: 0.22
+Nodes (9): Child Manager Project Constitution, Kindergarten Isolation and Server Authorization, Source Fidelity and Scope, Teacher Control and Word Fidelity, Unidirectional Service Boundaries, Child Manager Project Context, Deferred Production Implementation, First Release Delivery Loop (+1 more)
+
+### Community 21 - "完整 SDD 工作流"
 Cohesion: 0.33
 Nodes (6): Spec Kit 任务实施, Spec Kit 实施规划, Spec Kit 功能规格生成, Spec Kit 任务生成, 规格与计划评审门禁, 完整 SDD 工作流
 
-### Community 21 - "Group Activity Import Story"
-Cohesion: 0.33
-Nodes (6): Group Activity Two Phase Generation, Group Activity Import Story, Group Activity Requirements, Group Activity Split and Add Step, Group Activity Two Phase Adoption, M6 Async AI Task Slice
-
-### Community 22 - "M7 Word Export and History"
-Cohesion: 0.40
-Nodes (5): M7 Word Export and History, M8 First Release Functional Acceptance, M9 Production Security and Deployment Review, M7 Word Export Task Slice, M8 Acceptance Task Slice
-
-### Community 23 - "Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
+### Community 22 - "Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务, Source Nodes
 
-### Community 25 - "Spec Kit 任务模板"
+### Community 24 - "Spec Kit 任务模板"
 Cohesion: 0.67
 Nodes (3): Spec Kit 计划模板, Spec Kit 规格模板, Spec Kit 任务模板
 
 ## Knowledge Gaps
-- **287 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+282 more)
+- **299 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+294 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **171 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -386,17 +384,17 @@ Nodes (3): Spec Kit 计划模板, Spec Kit 规格模板, Spec Kit 任务模板
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `First Release Research` connect `First Release Research` to `First Release Feature Specification`, `Child Manager System Architecture`, `First Release Tasks`, `Word Export Story`, `Group Activity Import Story`?**
-  _High betweenness centrality (0.053) - this node is a cross-community bridge._
-- **Why does `First Release Feature Specification` connect `First Release Feature Specification` to `First Release Research`, `Child Manager System Architecture`, `First Release Tasks`, `Word Export Story`, `Teacher Controlled AI Story`, `Group Activity Import Story`?**
-  _High betweenness centrality (0.048) - this node is a cross-community bridge._
-- **Why does `First Release Tasks` connect `First Release Tasks` to `First Release Feature Specification`, `First Release Research`, `Child Manager System Architecture`, `Child Manager Product and Engineering Roadmap`, `Word Export Story`, `Teacher Controlled AI Story`, `Group Activity Import Story`, `M7 Word Export and History`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Why does `First Release Research` connect `First Release Research` to `First Release Feature Specification`, `Child Manager System Architecture`, `API v1 Contract Guide`?**
+  _High betweenness centrality (0.042) - this node is a cross-community bridge._
+- **Why does `First Release Feature Specification` connect `First Release Feature Specification` to `Child Manager Data Model`, `Lesson Management PRD`, `API v1 Contract Guide`, `First Release Research`?**
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
+- **Why does `First Release Implementation Plan` connect `API v1 Contract Guide` to `First Release Feature Specification`, `Child Manager Data Model`, `Lesson Management PRD`, `First Release Research`?**
+  _High betweenness centrality (0.028) - this node is a cross-community bridge._
 - **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
-  _287 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _299 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `First Release Feature Specification` be split into smaller, more focused modules?**
-  _Cohesion score 0.05974025974025974 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05069124423963134 - nodes in this community are weakly interconnected._
 - **Should `First Release Research` be split into smaller, more focused modules?**
-  _Cohesion score 0.06493506493506493 - nodes in this community are weakly interconnected._
-- **Should `Child Manager System Architecture` be split into smaller, more focused modules?**
-  _Cohesion score 0.0545790934320074 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05764145954521417 - nodes in this community are weakly interconnected._
+- **Should `ADR-0010：受限公网、通行密钥与双条件恢复` be split into smaller, more focused modules?**
+  _Cohesion score 0.05919661733615222 - nodes in this community are weakly interconnected._
