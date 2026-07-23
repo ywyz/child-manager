@@ -384,7 +384,7 @@ Cookie、token、API Key 或服务器路径。
 | 422 | `lesson_plan.current_semester_required` | 无当前学期 |
 | 422 | `ai.required_area_missing` | 目标类别区域缺失 |
 | 422 | `ai.reflection_inputs_incomplete` | 五个上游栏不完整 |
-| 429 | `auth.rate_limited` | 公开身份端点按可信来源和 purpose 限流 |
+| 429 | `auth.rate_limited` | 公开身份端点按可信来源、账号或授权材料摘要及端点全局三层独立限流 |
 | 503 | `database.unavailable` | 权威任务/业务数据无法保存 |
 | 503 | `configuration.unavailable` | 请求所需服务端本地配置或固定资源缺失/无效 |
 
