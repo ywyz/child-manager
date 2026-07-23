@@ -185,6 +185,7 @@ paths:
         "200": { $ref: "#/components/responses/StepUpOk" }
         "401": { $ref: "#/components/responses/AuthenticationFailed" }
         "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
         "410": { $ref: "#/components/responses/CeremonyUnavailable" }
         "422": { $ref: "#/components/responses/ValidationError" }
         "429": { $ref: "#/components/responses/TooManyRequests" }
@@ -216,6 +217,7 @@ paths:
       summary: 撤销当前令牌族并清除 Cookie
       security:
         - refreshCookie: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/CsrfHeader"
       responses:
