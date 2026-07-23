@@ -270,9 +270,9 @@
     "semantic_hash": "96ee1447952fbae509a3399aec5dfc12"
   },
   "specs/001-daily-activity-plan/contracts/README.md": {
-    "mtime": 1784802243.0839772,
-    "ast_hash": "ec05f7f1111882889ce39aaff77e8348",
-    "semantic_hash": "ec05f7f1111882889ce39aaff77e8348"
+    "mtime": 1784805379.811946,
+    "ast_hash": "3a910b77670244ddff7c8667c50c8756",
+    "semantic_hash": ""
   },
   "specs/001-daily-activity-plan/contracts/job-state-machine.md": {
     "mtime": 1784802243.0839772,
@@ -280,8 +280,8 @@
     "semantic_hash": "ea5f2d9c0829029b712e1c8f439f0a0d"
   },
   "specs/001-daily-activity-plan/contracts/openapi.yaml": {
-    "mtime": 1784802302.0089755,
-    "ast_hash": "0787d481ff59713a23bc881f3285eea1",
+    "mtime": 1784805379.810946,
+    "ast_hash": "69cd207d68007d43f514443bb8cda981",
     "semantic_hash": ""
   },
   "specs/001-daily-activity-plan/data-model.md": {
