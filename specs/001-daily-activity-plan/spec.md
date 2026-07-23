@@ -6,9 +6,9 @@
 
 **Created**: 2026-07-12
 
-**Updated**: 2026-07-22
+**Updated**: 2026-07-23
 
-**Status**: M0、M1 `complete` / M2 `in_progress` — #4 是 `dev` 的当前单实现验收入口
+**Status**: M0、M1、M2 `complete` / M3 `ready` — #4 已关闭，#7 固定 T036–T045
 
 **Input**: 将 Child Manager 首期 M1–M8 作为一个完整 feature，交付工程与安全基础、
 认证授权、必要设置、AI 模型与提示词、手工教案、异步 AI、固定 Word 导出和功能验收。

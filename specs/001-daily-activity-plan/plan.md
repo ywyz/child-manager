@@ -51,13 +51,13 @@ WCAG 2.2 AA 可验证要求
 
 ## Constitution Check
 
-*GATE: M0、M1 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用 `main/docs/dev` 单实现流程。M2 为 `in_progress`，#4 是 `dev` 的唯一当前验收入口；M3 在 M2 完成前保持 `pending`。*
+*GATE: M0、M1、M2 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用 `main/docs/dev` 单实现流程。#4 已完成并关闭；M3 #7 固定 T036–T045 与 `docs@bd98a1a`，当前为 `ready`。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
 | I. 事实来源与范围忠实 | PASS | **PASS（M0）** | canonical 文档、历史清理与最终共享基线均已验证 |
 | II. 服务边界与单向依赖 | PASS | **PASS（M1）** | 历史 Codex、Trae 实现均通过 BFF/API/Worker 边界与依赖方向验证；当前 `dev` 仍须维持该门禁 |
-| III. 园所隔离与服务端授权 | PASS | **PENDING（M2+）** | 31 实体、组合外键、Repository 参数和 API 权限矩阵已设计；M1 不实现业务数据与授权 |
+| III. 园所隔离与服务端授权 | PASS | **PASS（M2 身份）/ PENDING（M3+ 业务）** | M2 已验证身份与会话园所隔离；设置及后续业务实体仍按里程碑验收 |
 | IV. 权威状态、事务与可恢复性 | PASS | **PASS（M1 基础）** | 历史实现已建立 PostgreSQL 事务与迁移基础；业务幂等、租约、恢复扫描和文件补偿由后续里程碑实现 |
 | V. 教师控制、AI 与 Word 保真 | PASS | **PENDING（M4+）** | 固定 Schema、栏目级预览、采用事务、模板副本/哈希和红字边界已设计，尚未进入对应里程碑 |
 | VI. 可执行验证与真实证据 | PASS | **PASS（M1）** | M1 工程入口与质量门禁已有历史证据；当前和后续用户故事仍须在 `dev` 按对应里程碑重新验收 |
@@ -291,7 +291,7 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
   手工教案、并发、任务恢复、AI 采用、集体部分成功、
   Word 样式与审计，并明确生产部署和未来子系统反目标。
 
-**Post-design Constitution Check**: 内部设计、T002 最终 Pre-M1 审查、M0-G1～M0-G8、T003 与 M1 T004～T020 均已完成，M0、M1 为 `complete`。M2 已进入 `in_progress`，后续由 #4 与 `dev` 单实现门禁验收。
+**Post-design Constitution Check**: 内部设计、T002 最终 Pre-M1 审查、M0-G1～M0-G8、T003、M1 T004～T020 与 M2 T021～T035 均已完成，M0、M1、M2 为 `complete`。M3 已由 #7 解锁，先执行 RED 测试。
 
 ## Phase 2: Task Generation Strategy
 
