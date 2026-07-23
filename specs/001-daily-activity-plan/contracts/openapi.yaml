@@ -135,7 +135,9 @@ paths:
     post:
       tags: [Auth]
       summary: 生成无用户名通行密钥认证挑战
-      description: allowCredentials 为空，浏览器使用可发现凭据；响应不得泄露账号是否存在。
+      description: |
+        allowCredentials 为空，浏览器使用可发现凭据；响应不得泄露账号是否存在。
+        成功生成 options 不增加认证失败计数；只有后续 verify 失败才计入 ceremony 失败。
       security: []
       parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
       responses:
@@ -163,6 +165,7 @@ paths:
     post:
       tags: [Auth]
       summary: 为高风险操作生成新近用户验证挑战
+      description: 成功生成 options 不增加认证失败计数；只有后续 verify 失败才计入 ceremony 失败。
       parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
       responses:
         "200": { $ref: "#/components/responses/AuthenticationOptionsOk" }
@@ -613,8 +616,13 @@ paths:
   /api/v1/users/{user_id}/recovery-requests/{recovery_request_id}/approve:
     post:
       tags: [Users]
-      summary: 管理员批准教师恢复登记
-      description: 记录带外核验并签发 15 分钟恢复登记凭据；最后管理员必须改走 CLI 双人核验。
+      summary: 管理员批准普通账号恢复登记
+      description: |
+        有效管理员记录普通账号的带外核验并签发 15 分钟恢复登记凭据。
+        若目标是最后一名有效管理员，必须返回
+        `409 identity.last_admin_recovery_requires_cli`，且不得写批准、推进请求或签发登记凭据；
+        最后管理员只能改走部署控制台
+        `init-admin recover-last-admin --recovery-request-id <uuid>` 双人核验。
       parameters:
         - $ref: "#/components/parameters/UserId"
         - $ref: "#/components/parameters/RecoveryRequestId"
@@ -627,7 +635,7 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
-        "409": { $ref: "#/components/responses/Conflict" }
+        "409": { $ref: "#/components/responses/LastAdminRecoveryRequiresCli" }
         "422": { $ref: "#/components/responses/ValidationError" }
 
   /api/v1/settings/kindergarten:
@@ -1843,6 +1851,13 @@ components:
           schema: { $ref: "#/components/schemas/Error" }
     Conflict:
       description: 版本、幂等、预览有效性或业务不变量冲突
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    LastAdminRecoveryRequiresCli:
+      description: |
+        目标是最后一名有效管理员，Web/API 不得审批；响应 code 固定为
+        `identity.last_admin_recovery_requires_cli`，必须改走部署控制台双人核验。
       content:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }

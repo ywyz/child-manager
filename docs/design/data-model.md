@@ -279,6 +279,8 @@ authorization context 仍有效，再验证 `type/challenge/origin/rpIdHash/UP/U
 | `user_id` | UUID | 待注册首位管理员 |
 | `token_hash` | VARCHAR(128) | 唯一，只保存初始化凭据摘要 |
 | `purpose` | VARCHAR(24) | `empty_system/migration_admin` |
+| `owner_reference` | VARCHAR(160) | 预登记园所负责人脱敏引用；不得保存证件或完整核验材料 |
+| `operator_reference` | VARCHAR(160) | 预登记独立运维/安全责任人脱敏引用 |
 | `expires_at` | TIMESTAMPTZ | 非空，默认签发后 15 分钟 |
 | `consumed_at` | TIMESTAMPTZ | 可空；首个凭据注册成功时写入 |
 | `credential_id` | UUID | 可空，成功注册的凭据记录 |
@@ -288,6 +290,8 @@ authorization context 仍有效，再验证 `type/challenge/origin/rpIdHash/UP/U
 空系统最多存在一个初始化链路；创建园所、角色种子、用户、管理员角色和本行必须单事务完成。
 CLI 只生成原始凭据并在终端单独展示一次，不生成 WebAuthn 密钥、不把秘密放入 URL。注册后
 账号保持 `pending_verification`，园所负责人和部署责任人两项不同责任核验完成后才激活。
+两项引用由 `init-admin start` 交互采集并保存在本行，值必须非空且不同；不得经 argv、环境、
+日志或审计传递。它们同时作为最后管理员恢复 CLI 的唯一预登记匹配基线。
 `migration_admin` 只允许在迁移窗口、当前不存在 WebAuthn `active` 管理员且目标是既有管理员时
 签发；它不是常规恢复后门。
 
@@ -349,7 +353,14 @@ consumed` 由时间和字段派生，不另存可漂移状态列。
 
 提交账号标识和恢复码的公开接口始终返回相同 202；只有有效组合才创建本行。恢复码在请求期间
 被逻辑保留但到成功完成才消费，且同一账号同一恢复码最多一个未终结请求。审批通过后才生成
-短时登记凭据。完成新凭据注册的单一事务必须：保存新凭据、撤销全部旧凭据和 Refresh family、
+短时登记凭据。普通账号由有效管理员通过 Web/API 审批；若目标是最后一名有效管理员，
+Web/API 必须返回 `409 identity.last_admin_recovery_requires_cli`，且不得写批准、推进请求或
+生成登记凭据。部署控制台只能以
+`init-admin recover-last-admin --recovery-request-id <uuid>` 处理该请求；CLI 交互匹配
+`bootstrap_initializations` 中的两项预登记责任人引用，确认系统不存在其他有效管理员后，在
+一个事务中写入两项不可变批准、推进请求并生成 15 分钟单次登记凭据。CLI 不接收恢复码、
+credential JSON、预登记引用参数或相应环境变量。完成新凭据注册的单一事务必须：保存新凭据、
+撤销全部旧凭据和 Refresh family、
 撤销未使用邀请、消费旧恢复码、签发新恢复码、标记请求完成并写审计；恢复不签发登录会话。
 
 ### 5.9 `identity_verification_approvals`
@@ -370,8 +381,9 @@ consumed` 由时间和字段派生，不另存可漂移状态列。
 
 普通邀请激活和普通恢复需要一项有效管理员批准；首位管理员初始化需要园所负责人和部署责任人
 两项批准；最后管理员恢复需要园所负责人和独立运维/安全责任人两项批准。两项责任必须映射到
-不同自然人，由应用事务校验并写不可变审计。本表只保存最小证明引用，不保存证件照片、完整
-通话记录或其他高敏感核验材料。
+不同自然人，由部署控制台在写入前匹配初始化记录中的预登记引用，并与恢复请求推进及登记凭据
+签发处于同一事务。批准记录一经写入不可更新或删除；任一步失败不得留下部分批准。本表只保存
+最小证明引用，不保存证件照片、完整通话记录或其他高敏感核验材料。
 
 ### 5.10 `roles`
 

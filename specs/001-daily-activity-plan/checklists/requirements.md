@@ -50,6 +50,10 @@
   freezes browser WebAuthn registration/authentication ceremonies, short-lived first-admin initialization,
   single-use invitations, self/admin credential operations, offline recovery plus human verification, Refresh
   rotation and real-time session revocation. Data migration and negative acceptance paths are explicit.
+- Validation iteration 7: the 2026-07-23 recovery clarification separates ordinary Web/API approval from the
+  last-admin deployment-console path, freezes `identity.last_admin_recovery_requires_cli` and
+  `init-admin recover-last-admin --recovery-request-id`, requires atomic immutable dual approval, and confirms
+  that successful authentication options do not consume the failed-attempt budget.
 - Product-level ambiguities are resolved. The specification retains only confirmed architecture, API, security
   and data boundaries that materially define acceptance; library choices and operational tunables belong to
   `research.md`, contracts and the implementation plan.

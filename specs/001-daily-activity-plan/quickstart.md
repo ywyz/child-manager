@@ -82,7 +82,9 @@ uv run python -m packages.backend.bootstrap init-admin start
 # 在下节启动 Web/API 后，通过 CLI 展示的入口输入单独展示的一次性初始化凭据，
 # 在 HTTPS 或 localhost 浏览器完成首个通行密钥登记与双人带外核验，再执行：
 uv run python -m packages.backend.bootstrap init-admin activate --bootstrap-id <bootstrap_uuid>
-uv run python -m packages.backend.bootstrap init-admin start
+# 最后管理员已有有效待核验恢复请求时，改由部署控制台执行：
+uv run python -m packages.backend.bootstrap init-admin recover-last-admin \
+  --recovery-request-id <recovery_request_uuid>
 ```
 
 `start` 交互询问园所名称、管理员用户名、显示名，以及预登记园所负责人和独立运维/安全
@@ -96,6 +98,14 @@ uv run python -m packages.backend.bootstrap init-admin start
 激活账号但不接触离线恢复码；账号首次成功通行密钥认证时才在该用户响应中一次性签发。
 过期、已消费或并发重放一律失败；系统激活后再次运行
 `start` 只显示“系统已初始化”，不新增账号或修改原数据。任一步注入失败时事务回滚。
+
+普通账号的恢复请求由有效管理员通过 Web/API 核验。若目标是最后一名有效管理员，Web/API
+必须返回 `409 identity.last_admin_recovery_requires_cli`，不得写批准、推进请求或签发登记
+凭据。`recover-last-admin` 只接受恢复请求 ID，交互匹配 `start` 时保存的园所负责人和独立
+运维/安全责任人预登记引用；CLI 不接收恢复码、credential JSON、预登记引用参数或相应环境
+变量。只有请求有效、目标确为最后管理员、不存在其他有效管理员且两项责任属于不同自然人时，
+命令才在一个事务中写入两条不可变批准、推进请求并签发 15 分钟单次登记凭据；秘密只显示一次，
+不进入 URL、日志或审计。通行密钥仍必须由用户在 HTTPS/`localhost` 浏览器登记。
 
 ## 4. 启动三个独立进程
 
@@ -200,7 +210,7 @@ git status --short -- templates/teacherplan/teacherplan.docx
 | 认证 ceremony | 无需先提交用户名；verify 成功设置独立 access/refresh Cookie，激活后首次成功认证只向用户返回一次恢复码 | 未知/撤销凭据、错误 userHandle、签名/计数器异常、账号停用；统一失败不枚举账号 |
 | 本人凭据 | 查看、命名、新增及撤销非最后一个凭据；新增/撤销要求 5 分钟内 step-up | 重名、跨账号、撤销最后有效凭据、step-up 过期 |
 | 管理员撤销 | 管理员撤销教师凭据；撤销最后凭据时同时撤销会话并签发新邀请 | 普通教师操作、跨园、误撤最后管理员凭据、非原子“已撤销但未邀请” |
-| 离线恢复 | 有效恢复码 + 人工核验后登记新凭据，撤销旧凭据/会话/邀请/恢复码并签发新码 | 只凭恢复码建会话、普通账号缺管理员核验、最后管理员缺双人核验、旧码重放 |
+| 离线恢复 | 有效恢复码 + 人工核验后登记新凭据，撤销旧凭据/会话/邀请/恢复码并签发新码；最后管理员仅由 CLI 双人原子批准 | 只凭恢复码建会话、普通账号缺管理员核验、最后管理员 Web/API 未返回稳定 409、CLI 接收请求 ID 外秘密、单人/同人批准、旧码重放 |
 | 恢复码轮换 | 已认证用户在 step-up 后主动轮换，新码只展示一次 | 旧码轮换后仍可用、响应/日志泄露摘要或明文 |
 | 会话生命周期 | 刷新原子轮换且不延长 family 7 天绝对期限；可查看/撤销本人会话，退出清 Cookie | 旧 Refresh 重放后 family 未全撤销、已撤销 `sid` 仍凭 access JWT 访问、越权撤销会话 |
 
