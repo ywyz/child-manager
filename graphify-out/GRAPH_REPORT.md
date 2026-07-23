@@ -1,16 +1,16 @@
 # Graph Report - child-manager  (2026-07-23)
 
 ## Corpus Check
-- 204 files · ~127,657 words
+- 204 files · ~129,274 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1654 nodes · 3304 edges · 261 communities (81 shown, 180 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 213 edges (avg confidence: 0.67)
+- 1676 nodes · 3403 edges · 261 communities (81 shown, 180 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 221 edges (avg confidence: 0.67)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2fe745ec`
+- Built from commit: `299983a8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -249,15 +249,15 @@
 - test_users_contract.py
 
 ## God Nodes (most connected - your core abstractions)
-1. `IdentityRepository` - 96 edges
+1. `IdentityRepository` - 97 edges
 2. `ContractModel` - 70 edges
-3. `First Release Research` - 66 edges
-4. `First Release Feature Specification` - 64 edges
-5. `IdentityService` - 63 edges
-6. `IdentityError` - 50 edges
-7. `csrf_headers()` - 50 edges
-8. `SessionUser` - 42 edges
-9. `AuditRepository` - 41 edges
+3. `IdentityService` - 66 edges
+4. `First Release Research` - 66 edges
+5. `First Release Feature Specification` - 64 edges
+6. `csrf_headers()` - 58 edges
+7. `IdentityError` - 53 edges
+8. `AuditRepository` - 43 edges
+9. `SessionUser` - 43 edges
 10. `require_csrf()` - 35 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -339,16 +339,16 @@ Cohesion: 0.06
 Nodes (44): 管理员创建账号并发放单次邀请, ADR-0010：受限公网、通行密钥与双条件恢复, API、Worker、Redis、PostgreSQL 不单独暴露公网, 继续采用 B/S, 控制台一次性首位管理员初始化, 最后管理员双人带外核验, 合法导出后外传是残余风险, 多通行密钥与高风险操作重新验证 (+36 more)
 
 ### Community 8 - "IdentityError"
-Cohesion: 0.08
-Nodes (41): admin_session(), current_session(), identity_service(), CurrentSessionDependency, IdentityServiceDependency, Cookie, Exception, AuditRepository (+33 more)
+Cohesion: 0.06
+Nodes (70): admin_session(), identity_service(), CurrentSessionDependency, AuditRepository, Connection, UUID, ChallengeBinding, ChallengePurpose (+62 more)
 
 ### Community 9 - "test_auth.py"
 Cohesion: 0.05
 Nodes (129): AdminSessionDependency, _allowed_origins(), authentication_start(), authentication_verify(), bootstrap_options(), bootstrap_verify(), _check_public_throttle(), _clear_auth_cookies() (+121 more)
 
 ### Community 10 - "IdentityRepository"
-Cohesion: 0.07
-Nodes (26): ChallengeRecord, _credential(), CredentialRecord, IdentityRepository, Connection, datetime, UUID, 所有查询和写入都显式绑定 ``kindergarten_id`` 的身份 Repository。 (+18 more)
+Cohesion: 0.08
+Nodes (12): ChallengeRecord, _credential(), CredentialRecord, IdentityRepository, Connection, datetime, UUID, 所有查询和写入都显式绑定 ``kindergarten_id`` 的身份 Repository。 (+4 more)
 
 ### Community 11 - "Child Manager System Architecture"
 Cohesion: 0.18
@@ -399,8 +399,8 @@ Cohesion: 0.12
 Nodes (16): 备选方案, 背景, 首期接入云厂商密钥管理服务, 后果, 决策, ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets, 将所有 Secrets 放入 .env, 实施约束 (+8 more)
 
 ### Community 23 - "ports.py"
-Cohesion: 0.16
-Nodes (11): _calendar_library_available(), AiClient, Clock, DependencyCheck, JobBroker, date, datetime, UUID (+3 more)
+Cohesion: 0.17
+Nodes (10): AiClient, Clock, DependencyCheck, JobBroker, date, datetime, UUID, M1 外部边界所需的最小 Protocol。 (+2 more)
 
 ### Community 24 - "Child Manager Agent Development Rules"
 Cohesion: 0.18
@@ -436,7 +436,7 @@ Nodes (12): ADR-0005：AI 供应商中立，并建立管理员专用提示词系
 
 ### Community 32 - "hash_refresh_token"
 Cohesion: 0.06
-Nodes (88): create_access_token(), decode_access_token(), generate_refresh_token(), hash_refresh_token(), Any, datetime, Access JWT 与 opaque Refresh token 接缝。, ActorFixture (+80 more)
+Nodes (86): current_session(), IdentityServiceDependency, Cookie, create_access_token(), decode_access_token(), generate_refresh_token(), hash_refresh_token(), Any (+78 more)
 
 ### Community 33 - "ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体"
 Cohesion: 0.17
@@ -455,12 +455,12 @@ Cohesion: 0.22
 Nodes (9): Fixed Word Export, Fixed Teacher Plan Word Template, Immutable Export Input Snapshot, python docx, Word Export Requirements, Word Export Story, Word Template Fidelity, M7 Word Export Task Slice (+1 more)
 
 ### Community 37 - "identity/service.py"
-Cohesion: 0.06
-Nodes (47): _auth_throttle(), MemoryAuthThrottle, datetime, Redis, 公开身份 ceremony 的来源限流公共 seam。, 按可信来源和 ceremony purpose 分区的确定性滑动窗口替身。, 多进程 API 使用的 Redis 固定窗口实现。, RedisAuthThrottle (+39 more)
+Cohesion: 0.09
+Nodes (37): _auth_throttle(), MemoryAuthThrottle, datetime, Redis, 公开身份 ceremony 的来源限流公共 seam。, 按可信来源和 ceremony purpose 分区的确定性滑动窗口替身。, 多进程 API 使用的 Redis 固定窗口实现。, RedisAuthThrottle (+29 more)
 
 ### Community 38 - "transactional_session"
-Cohesion: 0.11
-Nodes (40): CompletedProcess, activate_initialization(), migrate_passkeys(), _native_url(), datetime, UUID, 首位管理员的部署控制台初始化与双人核验激活。, 仅在通行密钥已登记并完成两位预登记人员核验后激活。 (+32 more)
+Cohesion: 0.08
+Nodes (55): CompletedProcess, activate_initialization(), migrate_passkeys(), _native_url(), datetime, UUID, 首位管理员的部署控制台初始化与双人核验激活。, 仅在通行密钥已登记并完成两位预登记人员核验后激活。 (+47 more)
 
 ### Community 39 - "Manual Lesson Plan Story"
 Cohesion: 0.27
@@ -491,8 +491,8 @@ Cohesion: 0.21
 Nodes (9): _error_response(), FastAPI, Request, UUID, FastAPI 应用装配、统一异常转换与健康端点。, _request_id(), JSONResponse, FakeJobBroker (+1 more)
 
 ### Community 51 - "test_alembic_bootstrap.py"
-Cohesion: 0.24
-Nodes (13): _ai_unconfigured(), build_health_dependencies(), _database_check(), _file_check(), _path_check(), Path, 从进程环境构造真实、无副作用的本地就绪检查。, _redis_check() (+5 more)
+Cohesion: 0.23
+Nodes (14): _ai_unconfigured(), build_health_dependencies(), _calendar_library_available(), _database_check(), _file_check(), _path_check(), Path, 从进程环境构造真实、无副作用的本地就绪检查。 (+6 more)
 
 ### Community 53 - "0000_foundation.py"
 Cohesion: 0.67
@@ -530,16 +530,16 @@ Nodes (5): Any, Column, _tenant_identity_columns(), _timestamps(), upgrade()
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `IdentityRepository` connect `IdentityRepository` to `IdentityError`, `test_auth.py`, `transactional_session`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+- **Why does `IdentityRepository` connect `IdentityRepository` to `IdentityError`, `test_auth.py`, `identity/service.py`, `transactional_session`?**
+  _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Why does `ContractModel` connect `test_auth.py` to `IdentityError`, `test_foundation.py`, `Child Manager System Architecture`, `test_auth_smoke.py`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Why does `Page` connect `test_auth_smoke.py` to `test_auth.py`, `Child Manager System Architecture`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Are the 56 inferred relationships involving `ContractModel` (e.g. with `AuditEventReference` and `IdentityAuditEventCode`) actually correct?**
   _`ContractModel` has 56 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 6 inferred relationships involving `IdentityService` (e.g. with `HealthDependencies` and `AuditRepository`) actually correct?**
-  _`IdentityService` has 6 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 7 inferred relationships involving `IdentityService` (e.g. with `HealthDependencies` and `AuditRepository`) actually correct?**
+  _`IdentityService` has 7 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
   _323 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `test_foundation.py` be split into smaller, more focused modules?**
