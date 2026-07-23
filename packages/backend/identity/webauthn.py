@@ -24,6 +24,10 @@ from webauthn.helpers.structs import (
 from webauthn.registration.verify_registration_response import VerifiedRegistration
 
 
+class CredentialCounterAnomaly(Exception):
+    """已通过其余认证校验的非备份凭据签名计数异常。"""
+
+
 def registration_options(
     *,
     challenge: str,
@@ -118,15 +122,25 @@ def verify_authentication(
     expected_origin: str,
     credential_public_key: bytes,
     credential_current_sign_count: int,
+    credential_backup_eligible: bool,
 ) -> VerifiedAuthentication:
     """校验 assertion、用户验证、签名和签名计数器。"""
 
-    return verify_authentication_response(
+    verified = verify_authentication_response(
         credential=credential,
         expected_challenge=base64url_to_bytes(expected_challenge),
         expected_rp_id=expected_rp_id,
         expected_origin=expected_origin,
         credential_public_key=credential_public_key,
-        credential_current_sign_count=credential_current_sign_count,
+        # 上游库在签名校验前检查计数器; 直接传当前值会允许伪造 assertion 触发风险处置。
+        # 先完成签名校验; 再在下方对非备份凭据执行单调性判定。
+        credential_current_sign_count=0,
         require_user_verification=True,
     )
+    if (
+        not credential_backup_eligible
+        and (verified.new_sign_count > 0 or credential_current_sign_count > 0)
+        and verified.new_sign_count <= credential_current_sign_count
+    ):
+        raise CredentialCounterAnomaly
+    return verified

@@ -5,12 +5,15 @@ from base64 import urlsafe_b64decode, urlsafe_b64encode
 from datetime import UTC, datetime, timedelta
 from hashlib import sha256
 from types import SimpleNamespace
+from typing import cast
 from uuid import UUID, uuid4
 
 import psycopg
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from packages.backend.identity.auth_throttle import subject_throttle_source
 from packages.backend.identity.secret_tokens import SecretPurpose, issue_secret
 from packages.backend.identity.tokens import hash_refresh_token
 from tests.api.passkey_helpers import (  # noqa: F401
@@ -99,8 +102,10 @@ def test_recovery_request_is_generic_for_unknown_and_invalid_material(
 
 
 def test_invalid_recovery_request_material_is_rate_limited_without_enumeration(
-    passkey_client: TestClient,
+    admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
 ) -> None:
+    passkey_client, _actor = admin_client
     payload = {"login": "unknown", "recovery_code": "invalid-recovery-code-material"}
     statuses: list[int] = []
     for forged_source in ("198.51.100.1", "203.0.113.2", "192.0.2.3"):
@@ -123,6 +128,46 @@ def test_invalid_recovery_request_material_is_rate_limited_without_enumeration(
             assert payload["recovery_code"] not in response.text
 
     assert statuses == [202, 202, 429]
+    native_url = _native_url(isolated_database_url)
+    with psycopg.connect(native_url) as connection:
+        audits = connection.execute(
+            """SELECT event_code, outcome, resource_type, resource_id, metadata::text
+            FROM audit_events WHERE outcome='failure' ORDER BY occurred_at"""
+        ).fetchall()
+    assert len(audits) == 2
+    assert all(
+        row[:4] == ("identity.recovery_requested", "failure", "authorization", None)
+        for row in audits
+    )
+    assert all(payload["login"] not in row[4] for row in audits)
+    assert all(payload["recovery_code"] not in row[4] for row in audits)
+
+
+def test_recovery_account_bucket_applies_across_recovery_code_guesses(
+    admin_client: tuple[TestClient, ActorFixture],
+) -> None:
+    client, _actor = admin_client
+    app = cast(FastAPI, client.app)
+    throttle = app.state.auth_throttle
+    now = app.state.clock()
+    subject_source = subject_throttle_source(purpose="recovery_request", subject="unknown")
+    for _attempt in range(2):
+        throttle.record_failure(
+            source=subject_source,
+            purpose="recovery_request",
+            now=now,
+        )
+
+    response = client.post(
+        "/api/v1/auth/recovery/requests",
+        json={
+            "login": "unknown",
+            "recovery_code": "different-invalid-recovery-code",
+        },
+        headers=csrf_headers(client),
+    )
+
+    assert response.status_code == 429
 
 
 def test_recovery_registration_never_establishes_a_session(passkey_client: TestClient) -> None:

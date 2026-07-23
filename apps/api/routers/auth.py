@@ -1,13 +1,16 @@
 """同源 Cookie、WebAuthn、邀请、恢复与会话端点。"""
 
 import os
-from hashlib import sha256
 from urllib.parse import urlsplit
 from uuid import UUID
 
 from fastapi import APIRouter, Request, Response
 
 from apps.api.dependencies import CurrentSessionDependency, IdentityServiceDependency
+from packages.backend.identity.auth_throttle import (
+    GLOBAL_THROTTLE_SOURCE,
+    subject_throttle_source,
+)
 from packages.backend.identity.client_ip import resolve_client_ip
 from packages.backend.identity.csrf import issue_csrf_token, verify_csrf_token
 from packages.backend.identity.repository import CredentialRecord
@@ -154,33 +157,66 @@ def _source(request: Request) -> str:
     )
 
 
-def _check_public_throttle(request: Request, purpose: str) -> str:
+ThrottleBucket = tuple[str, str, bool]
+
+
+def _check_public_throttle(
+    request: Request,
+    purpose: str,
+    *,
+    material: str | None = None,
+    subject: str | None = None,
+) -> tuple[str, tuple[ThrottleBucket, ...]]:
     source = _source(request)
     throttle = request.app.state.auth_throttle
     if throttle is None:
         raise IdentityError(503, "configuration.unavailable", "登录服务暂不可用，请稍后重试。")
     now = request.app.state.clock()
-    decision = throttle.check(source=source, purpose=purpose, now=now)
-    if not decision.allowed:
-        raise IdentityError(429, "auth.rate_limited", "尝试过多，请稍后重试。")
-    return source
-
-
-def _record_public_failure(request: Request, purpose: str, source: str) -> None:
-    request.app.state.auth_throttle.record_failure(
-        source=source, purpose=purpose, now=request.app.state.clock()
+    subject_values = tuple(
+        dict.fromkeys(value for value in (subject, material) if value is not None)
     )
-
-
-def _clear_public_throttle(request: Request, purpose: str, source: str) -> None:
-    request.app.state.auth_throttle.record_success(
-        source=source, purpose=purpose, now=request.app.state.clock()
+    buckets: tuple[ThrottleBucket, ...] = (
+        (source, purpose, True),
+        *(
+            (
+                subject_throttle_source(purpose=purpose, subject=value),
+                purpose,
+                True,
+            )
+            for value in subject_values
+        ),
+        (GLOBAL_THROTTLE_SOURCE, purpose, False),
     )
+    for bucket_source, bucket_purpose, _reset_on_success in buckets:
+        decision = throttle.check(
+            source=bucket_source,
+            purpose=bucket_purpose,
+            now=now,
+        )
+        if not decision.allowed:
+            raise IdentityError(429, "auth.rate_limited", "尝试过多，请稍后重试。")
+    return source, buckets
 
 
-def _material_throttle_purpose(purpose: str, material: str) -> str:
-    digest = sha256(f"child-manager:{purpose}:{material}".encode()).hexdigest()
-    return f"{purpose}:{digest}"
+def _record_public_failure(request: Request, buckets: tuple[ThrottleBucket, ...]) -> None:
+    now = request.app.state.clock()
+    for source, purpose, _reset_on_success in buckets:
+        request.app.state.auth_throttle.record_failure(
+            source=source,
+            purpose=purpose,
+            now=now,
+        )
+
+
+def _clear_public_throttle(request: Request, buckets: tuple[ThrottleBucket, ...]) -> None:
+    now = request.app.state.clock()
+    for source, purpose, reset_on_success in buckets:
+        if reset_on_success:
+            request.app.state.auth_throttle.record_success(
+                source=source,
+                purpose=purpose,
+                now=now,
+            )
 
 
 @router.get("/csrf", response_model=CsrfResponse)
@@ -212,17 +248,23 @@ def bootstrap_options(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    purpose = _material_throttle_purpose("bootstrap_options", body.bootstrap_token)
-    source = _check_public_throttle(request, purpose)
+    source, buckets = _check_public_throttle(
+        request, "bootstrap_options", material=body.bootstrap_token
+    )
     try:
         result = service.bootstrap_registration_options(
             body.bootstrap_token, origin=_origin(request)
         )
     except IdentityError as exc:
         if exc.code == "identity.material_unavailable":
-            _record_public_failure(request, purpose, source)
+            _record_public_failure(request, buckets)
+            service.record_public_authorization_failure(
+                purpose="bootstrap_options",
+                source=source,
+                request_id=_request_id(request),
+            )
         raise
-    _clear_public_throttle(request, purpose, source)
+    _clear_public_throttle(request, buckets)
     return result
 
 
@@ -233,8 +275,9 @@ def bootstrap_verify(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    purpose = _material_throttle_purpose("bootstrap_verify", str(body.ceremony_id))
-    source = _check_public_throttle(request, purpose)
+    source, buckets = _check_public_throttle(
+        request, "bootstrap_verify", material=str(body.ceremony_id)
+    )
     try:
         credential, user_id = service.verify_bootstrap_registration(
             ceremony_id=body.ceremony_id,
@@ -245,9 +288,9 @@ def bootstrap_verify(
         )
     except IdentityError as exc:
         if exc.code == "identity.material_unavailable":
-            _record_public_failure(request, purpose, source)
+            _record_public_failure(request, buckets)
         raise
-    _clear_public_throttle(request, purpose, source)
+    _clear_public_throttle(request, buckets)
     return {
         "user_id": user_id,
         "status": "pending_verification",
@@ -267,17 +310,23 @@ def invitation_options(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    purpose = _material_throttle_purpose("invitation_options", body.invitation_token)
-    source = _check_public_throttle(request, purpose)
+    source, buckets = _check_public_throttle(
+        request, "invitation_options", material=body.invitation_token
+    )
     try:
         result = service.invitation_registration_options(
             body.invitation_token, origin=_origin(request)
         )
     except IdentityError as exc:
         if exc.code == "identity.material_unavailable":
-            _record_public_failure(request, purpose, source)
+            _record_public_failure(request, buckets)
+            service.record_public_authorization_failure(
+                purpose="invitation_options",
+                source=source,
+                request_id=_request_id(request),
+            )
         raise
-    _clear_public_throttle(request, purpose, source)
+    _clear_public_throttle(request, buckets)
     return result
 
 
@@ -288,8 +337,9 @@ def invitation_verify(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    purpose = _material_throttle_purpose("invitation_verify", str(body.ceremony_id))
-    source = _check_public_throttle(request, purpose)
+    source, buckets = _check_public_throttle(
+        request, "invitation_verify", material=str(body.ceremony_id)
+    )
     try:
         credential, user_id = service.verify_invitation_registration(
             ceremony_id=body.ceremony_id,
@@ -300,9 +350,9 @@ def invitation_verify(
         )
     except IdentityError as exc:
         if exc.code == "identity.material_unavailable":
-            _record_public_failure(request, purpose, source)
+            _record_public_failure(request, buckets)
         raise
-    _clear_public_throttle(request, purpose, source)
+    _clear_public_throttle(request, buckets)
     return {
         "user_id": user_id,
         "status": "pending_verification",
@@ -326,7 +376,11 @@ def authentication_verify(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    source = _check_public_throttle(request, "authentication")
+    source, buckets = _check_public_throttle(
+        request,
+        "authentication",
+        subject=body.credential.id,
+    )
     try:
         result = service.verify_authentication(
             ceremony_id=body.ceremony_id,
@@ -335,10 +389,10 @@ def authentication_verify(
             request_id=_request_id(request),
         )
     except IdentityError as exc:
-        if exc.code == "auth.authentication_failed":
-            _record_public_failure(request, "authentication", source)
+        if exc.code in {"auth.authentication_failed", "auth.ceremony_expired"}:
+            _record_public_failure(request, buckets)
         raise
-    _clear_public_throttle(request, "authentication", source)
+    _clear_public_throttle(request, buckets)
     _set_auth_cookies(response, result)
     return {"user": _payload(service, result.session), "recovery_code": result.recovery_code}
 
@@ -348,7 +402,7 @@ def step_up_options(
     request: Request, session: CurrentSessionDependency, service: IdentityServiceDependency
 ) -> dict[str, object]:
     require_csrf(request)
-    _check_public_throttle(request, "step_up")
+    _check_public_throttle(request, "step_up", subject=str(session.user.id))
     return service.step_up_options(session, origin=_origin(request))
 
 
@@ -360,7 +414,11 @@ def step_up_verify(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    source = _check_public_throttle(request, "step_up")
+    source, buckets = _check_public_throttle(
+        request,
+        "step_up",
+        subject=str(session.user.id),
+    )
     try:
         verified_at, valid_until = service.verify_step_up(
             session,
@@ -370,10 +428,10 @@ def step_up_verify(
             request_id=_request_id(request),
         )
     except IdentityError as exc:
-        if exc.code == "auth.authentication_failed":
-            _record_public_failure(request, "step_up", source)
+        if exc.code in {"auth.authentication_failed", "auth.ceremony_expired"}:
+            _record_public_failure(request, buckets)
         raise
-    _clear_public_throttle(request, "step_up", source)
+    _clear_public_throttle(request, buckets)
     return {"verified_at": verified_at, "valid_until": valid_until}
 
 
@@ -383,9 +441,31 @@ def refresh(
 ) -> dict[str, object]:
     require_csrf(request)
     raw = request.cookies.get(REFRESH_COOKIE)
+    source, buckets = _check_public_throttle(
+        request,
+        "refresh",
+        material=raw or "<missing>",
+    )
     if not raw:
+        _record_public_failure(request, buckets)
+        service.record_public_authorization_failure(
+            purpose="refresh",
+            source=source,
+            request_id=_request_id(request),
+        )
         raise IdentityError(401, "auth.unauthenticated", "刷新会话已失效，请重新登录。")
-    result = service.refresh(raw, request_id=_request_id(request))
+    try:
+        result = service.refresh(raw, request_id=_request_id(request))
+    except IdentityError as exc:
+        if exc.status_code == 401:
+            _record_public_failure(request, buckets)
+            service.record_public_authorization_failure(
+                purpose="refresh",
+                source=source,
+                request_id=_request_id(request),
+            )
+        raise
+    _clear_public_throttle(request, buckets)
     _set_auth_cookies(response, result)
     return _payload(service, result.session)
 
@@ -422,8 +502,11 @@ def credential_options(
     request: Request, session: CurrentSessionDependency, service: IdentityServiceDependency
 ) -> dict[str, object]:
     require_csrf(request)
-    purpose = _material_throttle_purpose("credential_registration", str(session.token_family_id))
-    _check_public_throttle(request, purpose)
+    _check_public_throttle(
+        request,
+        "credential_registration",
+        material=str(session.token_family_id),
+    )
     return service.self_add_registration_options(session, origin=_origin(request))
 
 
@@ -435,8 +518,11 @@ def credential_verify(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    purpose = _material_throttle_purpose("credential_registration", str(session.token_family_id))
-    source = _check_public_throttle(request, purpose)
+    source, buckets = _check_public_throttle(
+        request,
+        "credential_registration",
+        material=str(session.token_family_id),
+    )
     try:
         credential = service.verify_self_add_registration(
             session,
@@ -448,9 +534,9 @@ def credential_verify(
         )
     except IdentityError as exc:
         if exc.code == "identity.material_unavailable":
-            _record_public_failure(request, purpose, source)
+            _record_public_failure(request, buckets)
         raise
-    _clear_public_throttle(request, purpose, source)
+    _clear_public_throttle(request, buckets)
     return _credential(credential)
 
 
@@ -485,15 +571,23 @@ def recovery_request(
     service: IdentityServiceDependency,
 ) -> dict[str, str]:
     require_csrf(request)
-    purpose = _material_throttle_purpose(
-        "recovery_request", f"{service.safe_login_key(body.login)}\0{body.recovery_code}"
+    login_key = service.safe_login_key(body.login)
+    source, buckets = _check_public_throttle(
+        request,
+        "recovery_request",
+        material=f"{login_key}\0{body.recovery_code}",
+        subject=login_key or "<invalid-login>",
     )
-    source = _check_public_throttle(request, purpose)
     accepted = service.submit_recovery_request(login=body.login, recovery_code=body.recovery_code)
     if accepted:
-        _clear_public_throttle(request, purpose, source)
+        _clear_public_throttle(request, buckets)
     else:
-        _record_public_failure(request, purpose, source)
+        _record_public_failure(request, buckets)
+        service.record_public_authorization_failure(
+            purpose="recovery_request",
+            source=source,
+            request_id=_request_id(request),
+        )
     if request.cookies.get(ACCESS_COOKIE) or request.cookies.get(REFRESH_COOKIE):
         _clear_auth_cookies(response)
     return {"message": "如果账号和恢复材料有效，我们会按既定带外方式继续核验。"}
@@ -510,17 +604,23 @@ def recovery_options(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    purpose = _material_throttle_purpose("recovery_options", body.enrollment_token)
-    source = _check_public_throttle(request, purpose)
+    source, buckets = _check_public_throttle(
+        request, "recovery_options", material=body.enrollment_token
+    )
     try:
         result = service.recovery_registration_options(
             body.enrollment_token, origin=_origin(request)
         )
     except IdentityError as exc:
         if exc.code == "identity.material_unavailable":
-            _record_public_failure(request, purpose, source)
+            _record_public_failure(request, buckets)
+            service.record_public_authorization_failure(
+                purpose="recovery_options",
+                source=source,
+                request_id=_request_id(request),
+            )
         raise
-    _clear_public_throttle(request, purpose, source)
+    _clear_public_throttle(request, buckets)
     return result
 
 
@@ -531,8 +631,9 @@ def recovery_verify(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    purpose = _material_throttle_purpose("recovery_verify", str(body.ceremony_id))
-    source = _check_public_throttle(request, purpose)
+    source, buckets = _check_public_throttle(
+        request, "recovery_verify", material=str(body.ceremony_id)
+    )
     try:
         credential, recovery_code, sessions_revoked = service.verify_recovery_registration(
             ceremony_id=body.ceremony_id,
@@ -543,9 +644,9 @@ def recovery_verify(
         )
     except IdentityError as exc:
         if exc.code == "identity.material_unavailable":
-            _record_public_failure(request, purpose, source)
+            _record_public_failure(request, buckets)
         raise
-    _clear_public_throttle(request, purpose, source)
+    _clear_public_throttle(request, buckets)
     return {
         "credential": _credential(credential),
         "recovery_code": recovery_code,

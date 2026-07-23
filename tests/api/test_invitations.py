@@ -3,10 +3,12 @@
 import json
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from datetime import UTC, datetime, timedelta
+from typing import cast
 from uuid import UUID
 
 import psycopg
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from tests.api.passkey_helpers import (  # noqa: F401
@@ -144,7 +146,10 @@ def test_unknown_expired_revoked_and_consumed_invitation_share_one_public_failur
     cases.append(str(consumed["invitation_token"]))
 
     failures: list[dict[str, object]] = []
-    for token in cases:
+    app = cast(FastAPI, client.app)
+    throttle_window_start = app.state.clock()
+    for index, token in enumerate(cases):
+        app.state.clock = lambda index=index: throttle_window_start + timedelta(minutes=2 * index)
         response = client.post(
             "/api/v1/auth/invitation/registration/options",
             json={"invitation_token": token},

@@ -1,6 +1,9 @@
 from base64 import urlsafe_b64decode
 from datetime import UTC, datetime, timedelta
+from types import SimpleNamespace
 from uuid import UUID
+
+import pytest
 
 from packages.backend.identity.challenges import (
     ChallengeBinding,
@@ -8,7 +11,12 @@ from packages.backend.identity.challenges import (
     consume_challenge,
     issue_challenge,
 )
-from packages.backend.identity.webauthn import authentication_options, registration_options
+from packages.backend.identity.webauthn import (
+    CredentialCounterAnomaly,
+    authentication_options,
+    registration_options,
+    verify_authentication,
+)
 
 NOW = datetime(2026, 7, 22, 12, 0, tzinfo=UTC)
 KINDERGARTEN_ID = UUID("00000000-0000-7000-8000-000000000001")
@@ -31,6 +39,47 @@ def _binding(**overrides: object) -> ChallengeBinding:
     }
     values.update(overrides)
     return ChallengeBinding(**values)  # type: ignore[arg-type]
+
+
+def test_valid_non_backup_assertion_with_repeated_counter_is_an_anomaly(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "packages.backend.identity.webauthn.verify_authentication_response",
+        lambda **_kwargs: SimpleNamespace(new_sign_count=7),
+    )
+
+    with pytest.raises(CredentialCounterAnomaly):
+        verify_authentication(
+            credential={},
+            expected_challenge="Y2hhbGxlbmdl",
+            expected_rp_id="example.test",
+            expected_origin="https://example.test",
+            credential_public_key=b"public-key",
+            credential_current_sign_count=7,
+            credential_backup_eligible=False,
+        )
+
+
+def test_backup_eligible_assertion_does_not_use_monotonic_counter_as_sole_rejection(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "packages.backend.identity.webauthn.verify_authentication_response",
+        lambda **_kwargs: SimpleNamespace(new_sign_count=3),
+    )
+
+    verified = verify_authentication(
+        credential={},
+        expected_challenge="Y2hhbGxlbmdl",
+        expected_rp_id="example.test",
+        expected_origin="https://example.test",
+        credential_public_key=b"public-key",
+        credential_current_sign_count=7,
+        credential_backup_eligible=True,
+    )
+
+    assert verified.new_sign_count == 3
 
 
 def test_challenge_is_32_bytes_hashed_and_expires_after_five_minutes() -> None:

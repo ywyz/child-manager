@@ -40,6 +40,8 @@ def passkey_client(
     monkeypatch.setenv("CHILD_MANAGER_BIND_HOST", "127.0.0.1")
     monkeypatch.setenv("CHILD_MANAGER_AUTH_THROTTLE_BACKEND", "memory")
     monkeypatch.setenv("CHILD_MANAGER_AUTH_THROTTLE_FAILURE_LIMIT", "2")
+    monkeypatch.setenv("CHILD_MANAGER_AUTH_THROTTLE_SUBJECT_FAILURE_LIMIT", "2")
+    monkeypatch.setenv("CHILD_MANAGER_AUTH_THROTTLE_GLOBAL_FAILURE_LIMIT", "2")
     monkeypatch.setenv("CHILD_MANAGER_ALLOWED_ORIGINS", "http://testserver")
     monkeypatch.setenv("CHILD_MANAGER_WEBAUTHN_RP_ID", "testserver")
     monkeypatch.setenv("CHILD_MANAGER_WEBAUTHN_RP_NAME", "Child Manager Tests")

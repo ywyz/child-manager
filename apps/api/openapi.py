@@ -231,7 +231,10 @@ _RESPONSES = {
     "RecoveryUnavailable": _response("恢复材料或登记授权过期、撤销或已消费，不细分状态", "Error"),
     "ValidationError": _response("请求字段或业务前置条件无效", "Error"),
     "TooManyRequests": {
-        **_response("公开身份端点按可信来源和 ceremony purpose 限流", "Error"),
+        **_response(
+            "公开身份端点按可信来源、账号或授权材料摘要及端点全局三层独立限流",
+            "Error",
+        ),
         "headers": {
             "Retry-After": {
                 "schema": {"type": "integer", "minimum": 1, "maximum": 60},
@@ -300,6 +303,7 @@ _OPERATION_RESPONSES: dict[OperationKey, dict[str, str]] = {
         "200": "StepUpOk",
         "401": "AuthenticationFailed",
         "403": "Forbidden",
+        "409": "Conflict",
         "410": "CeremonyUnavailable",
         "422": "ValidationError",
         "429": "TooManyRequests",
@@ -543,9 +547,10 @@ def _apply_operation_contract(document: dict[str, Any], key: OperationKey) -> No
         operation["security"] = []
     elif key in {
         ("/api/v1/auth/refresh", "post"),
-        ("/api/v1/auth/logout", "post"),
     }:
         operation["security"] = [{"refreshCookie": []}]
+    elif key == ("/api/v1/auth/logout", "post"):
+        operation["security"] = [{"refreshCookie": []}, {}]
     else:
         operation.pop("security", None)
 

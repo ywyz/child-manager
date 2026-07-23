@@ -33,15 +33,30 @@ LOGGER = structlog.get_logger(__name__)
 def _auth_throttle() -> MemoryAuthThrottle | RedisAuthThrottle | None:
     backend = os.environ.get("CHILD_MANAGER_AUTH_THROTTLE_BACKEND", "redis")
     failure_limit = int(os.environ.get("CHILD_MANAGER_AUTH_THROTTLE_FAILURE_LIMIT", "5"))
+    subject_failure_limit = int(
+        os.environ.get("CHILD_MANAGER_AUTH_THROTTLE_SUBJECT_FAILURE_LIMIT", "10")
+    )
+    global_failure_limit = int(
+        os.environ.get("CHILD_MANAGER_AUTH_THROTTLE_GLOBAL_FAILURE_LIMIT", "100")
+    )
     window = timedelta(minutes=1)
     redis_url = os.environ.get("CHILD_MANAGER_REDIS_URL")
     if backend == "memory":
-        return MemoryAuthThrottle(failure_limit=failure_limit, window=window)
+        return MemoryAuthThrottle(
+            failure_limit=failure_limit,
+            subject_failure_limit=subject_failure_limit,
+            global_failure_limit=global_failure_limit,
+            window=window,
+        )
     if backend != "redis":
         raise ValueError("CHILD_MANAGER_AUTH_THROTTLE_BACKEND 必须为 redis 或 memory")
     if redis_url:
         return RedisAuthThrottle(
-            SyncRedis.from_url(redis_url), failure_limit=failure_limit, window=window
+            SyncRedis.from_url(redis_url),
+            failure_limit=failure_limit,
+            subject_failure_limit=subject_failure_limit,
+            global_failure_limit=global_failure_limit,
+            window=window,
         )
     # Redis 未配置时不得静默退化为进程内计数
     return None

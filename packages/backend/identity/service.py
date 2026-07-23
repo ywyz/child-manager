@@ -33,6 +33,7 @@ from packages.backend.identity.tokens import (
     hash_refresh_token,
 )
 from packages.backend.identity.webauthn import (
+    CredentialCounterAnomaly,
     authentication_options,
     registration_options,
     verify_authentication,
@@ -178,6 +179,38 @@ class IdentityService:
             return cls.normalize_login_key(value)
         except ValueError:
             return ""
+
+    def record_public_authorization_failure(
+        self,
+        *,
+        purpose: str,
+        source: str,
+        request_id: UUID | None,
+    ) -> None:
+        event_codes = {
+            "bootstrap_options": IdentityAuditEventCode.CREDENTIAL_REGISTERED,
+            "invitation_options": IdentityAuditEventCode.CREDENTIAL_REGISTERED,
+            "recovery_options": IdentityAuditEventCode.CREDENTIAL_REGISTERED,
+            "recovery_request": IdentityAuditEventCode.RECOVERY_REQUESTED,
+            "refresh": IdentityAuditEventCode.TOKEN_REFRESHED,
+        }
+        event_code = event_codes.get(purpose)
+        if event_code is None:
+            raise ValueError(f"不支持的公开授权失败 purpose: {purpose}")
+        with self._connect() as connection, connection.transaction():
+            kindergarten_id = self._optional_kindergarten_id(connection)
+            if kindergarten_id is None:
+                return
+            AuditRepository(connection, kindergarten_id).append(
+                event_code=event_code,
+                actor_user_id=None,
+                actor_role_codes=[],
+                resource_type="authorization",
+                resource_id=None,
+                request_id=request_id,
+                outcome="failure",
+                metadata={"reason": purpose, "source": source},
+            )
 
     @staticmethod
     def require_admin(session: SessionUser) -> None:
@@ -784,8 +817,22 @@ class IdentityService:
                 source=source,
                 request_id=request_id,
             )
+        except CredentialCounterAnomaly:
+            self._persist_counter_anomaly(
+                ceremony_id=ceremony_id,
+                raw_credential_id=_decode_base64url(str(credential.get("rawId", ""))),
+                source=source,
+                request_id=request_id,
+                kindergarten_id=None,
+                expected_user_id=None,
+            )
+            raise IdentityError(
+                409,
+                "auth.credential_counter_anomaly",
+                "通行密钥计数异常，相关凭据和会话已停用。",
+            ) from None
         except IdentityError as exc:
-            if exc.code == "auth.authentication_failed":
+            if exc.code in {"auth.authentication_failed", "auth.ceremony_expired"}:
                 self._persist_authentication_failure(
                     ceremony_id=ceremony_id,
                     source=source,
@@ -793,6 +840,71 @@ class IdentityService:
                     kindergarten_id=None,
                 )
             raise
+
+    def _persist_counter_anomaly(
+        self,
+        *,
+        ceremony_id: UUID,
+        raw_credential_id: bytes,
+        source: str,
+        request_id: UUID | None,
+        kindergarten_id: UUID | None,
+        expected_user_id: UUID | None,
+    ) -> None:
+        with self._connect() as connection, connection.transaction():
+            resolved_kindergarten_id = kindergarten_id or self._optional_kindergarten_id(connection)
+            if resolved_kindergarten_id is None:
+                return
+            repository = IdentityRepository(connection, resolved_kindergarten_id)
+            repository.get_challenge(ceremony_id, lock=True)
+            stored = repository.get_credential_by_raw_id(raw_credential_id)
+            if stored is None or (
+                expected_user_id is not None and stored.user_id != expected_user_id
+            ):
+                return
+            repository.consume_challenge(ceremony_id, now=datetime.now(UTC))
+            repository.revoke_credential(
+                stored.user_id,
+                stored.id,
+                reason="counter_anomaly",
+                allow_last=True,
+            )
+            sessions_revoked = repository.revoke_user_sessions(
+                stored.user_id, reason="counter_anomaly"
+            )
+            roles = repository.roles_for_user(stored.user_id)
+            audit = AuditRepository(connection, resolved_kindergarten_id)
+            audit.append(
+                event_code=IdentityAuditEventCode.AUTHENTICATION_FAILED,
+                actor_user_id=stored.user_id,
+                actor_role_codes=roles,
+                resource_type="webauthn_credential",
+                resource_id=stored.id,
+                request_id=request_id,
+                outcome="failure",
+                metadata={"reason": "counter_anomaly", "source": source},
+            )
+            audit.append(
+                event_code=IdentityAuditEventCode.CREDENTIAL_REVOKED,
+                actor_user_id=stored.user_id,
+                actor_role_codes=roles,
+                resource_type="webauthn_credential",
+                resource_id=stored.id,
+                request_id=request_id,
+                outcome="success",
+                metadata={"reason": "counter_anomaly"},
+            )
+            if sessions_revoked:
+                audit.append(
+                    event_code=IdentityAuditEventCode.SESSION_REVOKED,
+                    actor_user_id=stored.user_id,
+                    actor_role_codes=roles,
+                    resource_type="user",
+                    resource_id=stored.user_id,
+                    request_id=request_id,
+                    outcome="success",
+                    metadata={"reason": "counter_anomaly"},
+                )
 
     def _persist_authentication_failure(
         self,
@@ -843,10 +955,10 @@ class IdentityService:
                 or challenge.consumed_at is not None
                 or challenge.expires_at <= now
             ):
-                raise IdentityError(401, "auth.authentication_failed", "通行密钥认证失败。")
+                raise IdentityError(410, "auth.ceremony_expired", "认证仪式无效或已失效。")
             raw_challenge = _client_challenge(credential)
             if challenge.challenge_hash != _challenge_digest(raw_challenge):
-                raise IdentityError(401, "auth.authentication_failed", "通行密钥认证失败。")
+                raise IdentityError(410, "auth.ceremony_expired", "认证仪式无效或已失效。")
             repository.consume_challenge(ceremony_id, now=now)
             raw_credential_id = _decode_base64url(str(credential.get("rawId", "")))
             stored = repository.get_credential_by_raw_id(raw_credential_id)
@@ -863,12 +975,20 @@ class IdentityService:
                     expected_origin=challenge.expected_origin,
                     credential_public_key=stored.public_key_cose,
                     credential_current_sign_count=stored.sign_count,
+                    credential_backup_eligible=stored.backup_eligible,
                 )
+            except CredentialCounterAnomaly:
+                raise
             except Exception as exc:
                 raise IdentityError(
                     401, "auth.authentication_failed", "通行密钥认证失败。"
                 ) from exc
-            repository.update_credential_use(stored.id, sign_count=verified.new_sign_count, now=now)
+            sign_count = (
+                max(stored.sign_count, verified.new_sign_count)
+                if stored.backup_eligible
+                else verified.new_sign_count
+            )
+            repository.update_credential_use(stored.id, sign_count=sign_count, now=now)
             family_id = uuid7()
             raw_refresh = generate_refresh_token()
             repository.create_refresh(
@@ -958,8 +1078,22 @@ class IdentityService:
             return self._verify_step_up_transaction(
                 session, ceremony_id=ceremony_id, credential=credential
             )
+        except CredentialCounterAnomaly:
+            self._persist_counter_anomaly(
+                ceremony_id=ceremony_id,
+                raw_credential_id=_decode_base64url(str(credential.get("rawId", ""))),
+                source=source,
+                request_id=request_id,
+                kindergarten_id=session.user.kindergarten_id,
+                expected_user_id=session.user.id,
+            )
+            raise IdentityError(
+                409,
+                "auth.credential_counter_anomaly",
+                "通行密钥计数异常，相关凭据和会话已停用。",
+            ) from None
         except IdentityError as exc:
-            if exc.code == "auth.authentication_failed":
+            if exc.code in {"auth.authentication_failed", "auth.ceremony_expired"}:
                 self._persist_authentication_failure(
                     ceremony_id=ceremony_id,
                     source=source,
@@ -983,10 +1117,10 @@ class IdentityService:
                 or challenge.consumed_at is not None
                 or challenge.expires_at <= now
             ):
-                raise IdentityError(401, "auth.authentication_failed", "通行密钥认证失败。")
+                raise IdentityError(410, "auth.ceremony_expired", "认证仪式无效或已失效。")
             raw_challenge = _client_challenge(credential)
             if challenge.challenge_hash != _challenge_digest(raw_challenge):
-                raise IdentityError(401, "auth.authentication_failed", "通行密钥认证失败。")
+                raise IdentityError(410, "auth.ceremony_expired", "认证仪式无效或已失效。")
             repository.consume_challenge(ceremony_id, now=now)
             stored = repository.get_credential_by_raw_id(
                 _decode_base64url(str(credential.get("rawId", "")))
@@ -1001,12 +1135,20 @@ class IdentityService:
                     expected_origin=challenge.expected_origin,
                     credential_public_key=stored.public_key_cose,
                     credential_current_sign_count=stored.sign_count,
+                    credential_backup_eligible=stored.backup_eligible,
                 )
+            except CredentialCounterAnomaly:
+                raise
             except Exception as exc:
                 raise IdentityError(
                     401, "auth.authentication_failed", "通行密钥认证失败。"
                 ) from exc
-            repository.update_credential_use(stored.id, sign_count=verified.new_sign_count, now=now)
+            sign_count = (
+                max(stored.sign_count, verified.new_sign_count)
+                if stored.backup_eligible
+                else verified.new_sign_count
+            )
+            repository.update_credential_use(stored.id, sign_count=sign_count, now=now)
             connection.execute(
                 """UPDATE refresh_tokens SET last_reauthenticated_at=%s, updated_at=now()
                 WHERE kindergarten_id=%s AND user_id=%s AND token_family_id=%s

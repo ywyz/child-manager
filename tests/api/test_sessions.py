@@ -36,6 +36,36 @@ def test_refresh_without_valid_family_is_rejected_without_new_cookies(
     assert response.headers.get_list("set-cookie") == []
 
 
+def test_rotating_invalid_refresh_tokens_cannot_bypass_source_endpoint_limit(
+    admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
+) -> None:
+    passkey_client, _actor = admin_client
+    invalid_tokens = [f"invalid-refresh-{index}" for index in range(3)]
+    statuses: list[int] = []
+    for invalid_token in invalid_tokens:
+        passkey_client.cookies.set("child_manager_refresh", invalid_token)
+        response = passkey_client.post(
+            "/api/v1/auth/refresh",
+            headers=csrf_headers(passkey_client),
+        )
+        statuses.append(response.status_code)
+        assert response.headers.get_list("set-cookie") == []
+
+    assert statuses == [401, 401, 429]
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    with psycopg.connect(native_url) as connection:
+        audits = connection.execute(
+            """SELECT event_code, outcome, resource_type, metadata::text
+            FROM audit_events WHERE outcome='failure' ORDER BY occurred_at"""
+        ).fetchall()
+    assert len(audits) == 2
+    assert all(
+        row[:3] == ("identity.token_refreshed", "failure", "authorization") for row in audits
+    )
+    assert all(token not in row[3] for row in audits for token in invalid_tokens)
+
+
 def test_invalid_access_token_is_rejected(passkey_client: TestClient) -> None:
     passkey_client.cookies.set("child_manager_access", "not-a-jwt")
 
