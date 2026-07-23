@@ -599,8 +599,9 @@ AI 和在线节假日服务。
   账号或授权上下文。注册必须要求 discoverable credential 与 `userVerification=required`，
   认证和重新验证也必须要求 UV；完成时必须校验 type、challenge、Origin、RP ID hash、UP/UV、
   签名、凭据归属和账号状态，purpose 不匹配或重放必须失败。
-- **FR-069**: challenge 生成、ceremony 验证、初始化、邀请和恢复接口必须按可信客户端来源
-  与授权材料摘要限流，失败使用通用提示且不得自动永久锁定。来源地址不得信任浏览器提供的
+- **FR-069**: challenge 生成、ceremony 验证、初始化、邀请、恢复和会话刷新接口必须按
+  可信客户端来源、账号或授权材料摘要及端点全局三层限流，各层阈值独立；失败使用通用提示
+  且不得自动永久锁定。来源地址不得信任浏览器提供的
   `Forwarded`、`X-Forwarded-For` 或内部头；只有 API 直连对端为显式配置的回环 Web BFF 时
   才信任由 BFF 按浏览器 socket peer 重建的内部地址，否则使用 API 看到的 socket peer。
   成功生成 authentication/step-up options 不得增加失败计数；只有 ceremony verify 失败或

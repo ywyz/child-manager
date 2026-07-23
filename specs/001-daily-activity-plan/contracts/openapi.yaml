@@ -1888,7 +1888,7 @@ components:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
     TooManyRequests:
-      description: 公开身份端点按可信来源和 ceremony purpose 限流
+      description: 公开身份端点按可信来源、账号或授权材料摘要及端点全局三层独立限流
       headers:
         Retry-After:
           schema: { type: integer, minimum: 1, maximum: 60 }
