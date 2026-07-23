@@ -270,8 +270,8 @@
     "semantic_hash": "96ee1447952fbae509a3399aec5dfc12"
   },
   "specs/001-daily-activity-plan/contracts/README.md": {
-    "mtime": 1784805379.811946,
-    "ast_hash": "3a910b77670244ddff7c8667c50c8756",
+    "mtime": 1784805916.4929304,
+    "ast_hash": "a646e24b2e38c803af8100369c7a3ba4",
     "semantic_hash": ""
   },
   "specs/001-daily-activity-plan/contracts/job-state-machine.md": {
@@ -280,8 +280,8 @@
     "semantic_hash": "ea5f2d9c0829029b712e1c8f439f0a0d"
   },
   "specs/001-daily-activity-plan/contracts/openapi.yaml": {
-    "mtime": 1784805379.810946,
-    "ast_hash": "69cd207d68007d43f514443bb8cda981",
+    "mtime": 1784805916.4959304,
+    "ast_hash": "a9ea93b06f25615d4a5ab9e534ec3031",
     "semantic_hash": ""
   },
   "specs/001-daily-activity-plan/data-model.md": {
@@ -305,14 +305,14 @@
     "semantic_hash": "d7ef6023b26100513a7fa22d7fe5e8b4"
   },
   "specs/001-daily-activity-plan/spec.md": {
-    "mtime": 1784802243.0869772,
-    "ast_hash": "016ab8a46ffb92181e879a908fa8ffb3",
-    "semantic_hash": "016ab8a46ffb92181e879a908fa8ffb3"
+    "mtime": 1784805916.4909303,
+    "ast_hash": "2ccf581146383768790b2302d447e342",
+    "semantic_hash": ""
   },
   "specs/001-daily-activity-plan/tasks.md": {
-    "mtime": 1784802243.0879772,
-    "ast_hash": "eb6c78a9df90e5b27aedb5060043fe4b",
-    "semantic_hash": "eb6c78a9df90e5b27aedb5060043fe4b"
+    "mtime": 1784805916.4929304,
+    "ast_hash": "db98d6327d3f7dd12ed913f9115dea1a",
+    "semantic_hash": ""
   },
   "docs/faq/combined-audit.md": {
     "mtime": 1784802243.0729773,
