@@ -312,6 +312,7 @@ _OPERATION_RESPONSES: dict[OperationKey, dict[str, str]] = {
         "200": "CurrentUserRefreshed",
         "401": "Unauthorized",
         "403": "Forbidden",
+        "429": "TooManyRequests",
     },
     ("/api/v1/auth/logout", "post"): {"204": "", "403": "Forbidden"},
     ("/api/v1/auth/me", "get"): {"200": "CurrentUserOk", "401": "Unauthorized"},
