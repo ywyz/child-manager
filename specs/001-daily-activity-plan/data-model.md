@@ -98,8 +98,11 @@ registration、authentication 或 step-up；不同 purpose 不可互换，完成
 
 ### 3.5 `bootstrap_initializations`
 
-保存空系统或迁移管理员的短时单次初始化凭据摘要、目标园所/账号、到期、消费、注册凭据和
-激活时间。默认 15 分钟；CLI 只展示一次原始凭据，不创建通行密钥，不输出含秘密 URL。
+保存空系统或迁移管理员的短时单次初始化凭据摘要、目标园所/账号、到期、消费、注册凭据、
+激活时间，以及非空且不同的园所负责人和独立运维/安全责任人脱敏预登记引用。默认 15 分钟；
+两项引用由 `init-admin start` 交互采集，不得从 argv、环境、日志或审计读取，并作为首位管理员
+激活及最后管理员恢复的固定匹配基线。CLI 只展示一次原始凭据，不创建通行密钥，不输出含秘密
+URL。
 
 ### 3.6 `account_invitations`
 
@@ -116,13 +119,19 @@ registration、authentication 或 step-up；不同 purpose 不可互换，完成
 
 保存账号、当前恢复码记录、`pending_verification/approved/registration_pending/completed/
 rejected/expired` 状态、24 小时人工核验期限及审批后 15 分钟单次登记凭据摘要。恢复完成原子
-撤销旧凭据、全部 Refresh family、未使用邀请和旧恢复码，签发新码但不建立会话。
+撤销旧凭据、全部 Refresh family、未使用邀请和旧恢复码，签发新码但不建立会话。普通恢复
+由有效管理员通过 Web/API 审批；最后管理员 Web/API 审批返回
+`409 identity.last_admin_recovery_requires_cli` 且不改变请求。
 
 ### 3.9 `identity_verification_approvals`
 
 保存 bootstrap/invitation/recovery 上下文、被核验用户、管理员或外部责任人类型、脱敏预登记
 引用、决定和时间。普通激活/恢复需一项管理员核验；首位管理员初始化和最后管理员恢复需两项
-规定责任且不同自然人。
+规定责任且不同自然人。部署控制台
+`init-admin recover-last-admin --recovery-request-id <uuid>` 只接受请求 ID，交互匹配
+`bootstrap_initializations` 中两项预登记引用；两条不可变批准、恢复请求推进和 15 分钟单次
+登记凭据签发必须在同一事务中完成，失败时不得留下部分批准。CLI 不接收恢复码、credential
+JSON、预登记引用参数或相应环境变量。
 
 ### 3.10 `roles`
 

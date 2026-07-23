@@ -219,6 +219,8 @@ kindergarten_id UUID NOT NULL
 user_id UUID NOT NULL
 token_hash VARCHAR(128) NOT NULL UNIQUE
 purpose VARCHAR(24) NOT NULL
+owner_reference VARCHAR(160) NOT NULL
+operator_reference VARCHAR(160) NOT NULL
 expires_at TIMESTAMPTZ NOT NULL
 consumed_at TIMESTAMPTZ NULL
 credential_id UUID NULL
@@ -229,7 +231,9 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 
 同园组合外键分别指向 `users` 与 `webauthn_credentials`；`purpose` 只允许
 `empty_system/migration_admin`。空系统通过部分唯一索引或串行化事务保证只创建一条链路；
-`migration_admin` 还需迁移窗口和零 WebAuthn active 管理员应用门禁。
+`migration_admin` 还需迁移窗口和零 WebAuthn active 管理员应用门禁。两项预登记引用必须非空
+且不同，由 `init-admin start` 交互采集，不得从 argv、环境、日志或审计读取；它们是首位
+管理员激活和最后管理员恢复双人匹配的固定基线。
 
 ### 5.6 `account_invitations`
 
@@ -291,7 +295,11 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 同园组合外键指向用户与恢复码；状态只允许 `pending_verification/approved/
 registration_pending/completed/rejected/expired`。`registration_token_hash` 与到期时间必须同时空
 或同时非空。部分唯一索引保证每个账号至多一个未终结请求；完成事务执行全量旧凭据、会话、
-邀请和恢复码撤销并签发新恢复码。
+邀请和恢复码撤销并签发新恢复码。普通账号由有效管理员通过 Web/API 审批；最后管理员的
+Web/API 审批返回 `409 identity.last_admin_recovery_requires_cli` 且不得改变本表。部署控制台
+`init-admin recover-last-admin --recovery-request-id <uuid>` 仅接受请求 ID，交互匹配
+`bootstrap_initializations` 的两项预登记引用，并在同一事务中写入两项批准、把请求推进至
+`registration_pending`、保存 15 分钟单次登记凭据摘要；失败时三项变更全部回滚。
 
 ### 5.9 `identity_verification_approvals`
 
@@ -313,7 +321,8 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 主体和可选管理员核验人使用同园组合外键；`context_type` 只允许 `bootstrap/invitation/recovery`，
 `verifier_type` 只允许 `admin/kindergarten_owner/deployment_operator/security_operator`，decision
 只允许 `approved/rejected`。唯一 `(kindergarten_id, context_type, context_id, verifier_type,
-verifier_reference)`；双人核验的不同自然人约束由应用事务和审计证明。
+verifier_reference)`；双人核验的不同自然人约束由应用事务和审计证明。批准行是不可变事实，
+最后管理员恢复的两行批准必须与恢复请求推进及登记凭据签发在同一事务中写入。
 
 ### 5.10 `roles`
 

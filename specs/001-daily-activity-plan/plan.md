@@ -171,7 +171,8 @@ tests/
 `packages/backend/*` 的应用用例拥有授权、事务、幂等与审计；Repository 不自行提交事务；
 `packages/contracts` 不含 ORM、Repository、业务逻辑或供应商客户端。M1 创建 API、Worker、
 Web 三个可执行入口，并冻结后续初始化 CLI 的命令名称，供 quickstart 和自动化引用；
-`init-admin start/activate` 的真实业务行为仍由 T032 实现，不在 M1 提供误导性的空操作。Web 的
+`init-admin start/activate/recover-last-admin` 的真实业务行为仍由 T032 实现，不在 M1 提供
+误导性的空操作。Web 的
 `--api-base-url` 仅供 BFF 在服务器侧访问
 内部 API；浏览器唯一入口是当前实现档位的 `CHILD_MANAGER_WEB_PORT`，其 `/api/v1/*` 请求由
 BFF 转发。Dev 固定档位见
@@ -182,6 +183,9 @@ BFF 转发。Dev 固定档位见
 uv run python -m packages.backend.bootstrap init-admin start
 # 浏览器完成首个通行密钥登记和双人带外核验后：
 uv run python -m packages.backend.bootstrap init-admin activate --bootstrap-id <uuid>
+# 已形成有效待核验恢复请求且目标确为最后管理员时：
+uv run python -m packages.backend.bootstrap init-admin recover-last-admin \
+  --recovery-request-id <uuid>
 # Dev 分支相应实现完成后可执行：
 uv run python -m apps.api --host 127.0.0.1 --port "$CHILD_MANAGER_API_PORT"
 uv run python -m apps.worker
@@ -279,7 +283,9 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 
 - 当前 `main` 无 `pyproject.toml`、代码、迁移或测试，quickstart 只能描述实现后的可执行
   验收，不得声称命令已通过。
-- M1 后使用 API、Worker、Web 三个可执行入口；T032 完成后再使用已冻结的初始化子命令；
+- M1 后使用 API、Worker、Web 三个可执行入口；T032 完成后再使用已冻结的初始化与最后管理员
+  恢复子命令；后者只接受恢复请求 ID，交互匹配初始化时保存的两项预登记引用，Web/API 对
+  最后管理员审批只返回 `identity.last_admin_recovery_requires_cli`；
   WebAuthn 使用浏览器虚拟认证器或 `localhost` 安全上下文，AI/节假日使用固定替身。
 - 覆盖初始化凭据、注册/认证 ceremony、邀请、凭据撤销/重新邀请、恢复码与会话、园所隔离、
   手工教案、并发、任务恢复、AI 采用、集体部分成功、
