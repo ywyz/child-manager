@@ -2,11 +2,11 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Updated**: 2026-07-22
+**Updated**: 2026-07-23
 **Current repository state**: `main` 仍是迁移前 docs-only 基线；`docs` 是当前文档、规格、
-OpenAPI 和模板的单一事实来源；`dev` 以历史 Codex `ca2d393` 为实现起点。M1 已完成，M2
-为 `in_progress`，必须在 `dev` 对齐当前 docs 并重新完成验收。下列命令覆盖 M1～M8 验收
-合同，尚未完成的用户故事步骤不可执行，也不表示已经通过。
+OpenAPI 和模板的单一事实来源；`dev@fb4f076` 已完成 M2，#4 已关闭。M3 #7 固定
+`docs@bd98a1a`，当前从 T037 RED 测试开始。下列命令覆盖 M1～M8 验收合同，尚未完成的
+用户故事步骤不可执行，也不表示已经通过。
 
 ## 1. 前提与反目标
 

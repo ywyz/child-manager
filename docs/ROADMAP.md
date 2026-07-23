@@ -200,21 +200,21 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 
 ### 出口门禁
 
-- [ ] 空库 `alembic upgrade head` 创建身份与审计 Schema，再次运行幂等。
-- [ ] 不开放公众注册，不允许停用或移除最后一个有效管理员。
-- [ ] WebAuthn challenge、Origin/RP ID、UV、签名、过期、重放和账号枚举负向矩阵全部被拒绝。
-- [ ] 邀请过期/撤销/重放、恢复码单独使用、缺少人工核验或最后管理员缺少双人核验时不能
+- [x] 空库 `alembic upgrade head` 创建身份与审计 Schema，再次运行幂等。
+- [x] 不开放公众注册，不允许停用或移除最后一个有效管理员。
+- [x] WebAuthn challenge、Origin/RP ID、UV、签名、过期、重放和账号枚举负向矩阵全部被拒绝。
+- [x] 邀请过期/撤销/重放、恢复码单独使用、缺少人工核验或最后管理员缺少双人核验时不能
       建立会话；最后管理员 Web/API 审批稳定拒绝且不能签发登记凭据，CLI 参数、环境、日志和
       审计均不出现预登记引用或明文秘密。
-- [ ] 本人可查看、命名、新增和撤销非最后凭据；管理员撤销教师最后凭据时原子撤销会话并
+- [x] 本人可查看、命名、新增和撤销非最后凭据；管理员撤销教师最后凭据时原子撤销会话并
       重新邀请，且本人最后凭据和最后管理员保护不能被绕过。
-- [ ] 未登录、停用账号、过期/撤销/重放刷新令牌和缺少 CSRF 的请求被 API 拒绝。
-- [ ] 退出、本人/管理员会话撤销和凭据恢复使对应 `sid` 在下一请求立即失效；Refresh 轮换
+- [x] 未登录、停用账号、过期/撤销/重放刷新令牌和缺少 CSRF 的请求被 API 拒绝。
+- [x] 退出、本人/管理员会话撤销和凭据恢复使对应 `sid` 在下一请求立即失效；Refresh 轮换
       不延长 family 的 7 天绝对期限。
-- [ ] Cookie 不进入 JavaScript、NiceGUI 持久化存储或日志。
-- [ ] 显式开发配置仅能在回环地址使用 `Secure=false`；非回环绑定必须拒绝启动。
-- [ ] PostgreSQL 证明园所组合外键、用户名/手机号唯一性和刷新令牌轮换事务。
-- [ ] 浏览器冒烟覆盖通行密钥登录、退出、账号邀请/激活、多凭据、恢复与停用后会话失效。
+- [x] Cookie 不进入 JavaScript、NiceGUI 持久化存储或日志。
+- [x] 显式开发配置仅能在回环地址使用 `Secure=false`；非回环绑定必须拒绝启动。
+- [x] PostgreSQL 证明园所组合外键、用户名/手机号唯一性和刷新令牌轮换事务。
+- [x] 浏览器冒烟覆盖通行密钥登录、退出、账号邀请/激活、多凭据、恢复与停用后会话失效。
 
 ## 9. M3：首期必要设置
 
@@ -389,14 +389,14 @@ M4 和 M5 在 M3 完成后具备并行设计条件，但 M6 必须同时等待 A
 
 ## 16. 当前状态快照
 
-状态日期：2026-07-22
+状态日期：2026-07-23
 
 | 里程碑 | 状态 | 当前证据 | 下一个解锁动作 |
 | --- | --- | --- | --- |
 | M0 共享基线 | `complete` | M0-G1～M0-G8 已关闭；历史隐私清理完成，脱敏模板和共享文档基线已通过专项验证与远端重克隆复核 | 由 `docs` 维护后续文档与契约基线 |
 | M1 | `complete` | [Issue #1](https://github.com/ywyz/child-manager/issues/1) 与历史实现 Issue [#2](https://github.com/ywyz/child-manager/issues/2)、[#3](https://github.com/ywyz/child-manager/issues/3) 已关闭 | 保留历史验收记录 |
-| M2 | `in_progress` | 历史 Codex Issue [#5](https://github.com/ywyz/child-manager/issues/5) 已关闭；Trae Issue [#6](https://github.com/ywyz/child-manager/issues/6) 因工作流重置按 `not planned` 归档；[#4](https://github.com/ywyz/child-manager/issues/4) 改为 `dev` 单实现验收入口；ADR-0010 已改变认证目标；WebAuthn 详细规格与契约已在 `docs` 重写，待固定提交 | 固定本次文档提交并更新 Issue #4，`dev` 随后迁移实现并重跑 M2 门禁 |
-| M3 | `pending` | 任务边界已固定为 T036～T045；尚未开始实现 | 等待 M2 `complete` |
+| M2 | `complete` | [#4](https://github.com/ywyz/child-manager/issues/4) 已按 `completed` 关闭；最终基线 `docs@bb025b2`、`dev@fb4f076`，M2 专项 133 项、完整 192 项、双轴 Review 与 Quality Gates `30006114394` 均通过 | 保留验收记录；`main` 合并仍需单独授权 |
+| M3 | `ready` | [#7](https://github.com/ywyz/child-manager/issues/7) 固定 T036～T045 与 `docs@bd98a1a`；M2 入口门禁已满足 | 同步完成状态到 `dev`，编写 T037 RED |
 | M4–M8 | `pending` | 尚未开始实现 | 等待前序里程碑完成 |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 
