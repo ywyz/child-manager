@@ -6,6 +6,7 @@ from hashlib import sha256
 from uuid import UUID
 
 import psycopg
+import pytest
 from fastapi.testclient import TestClient
 
 from tests.api.passkey_helpers import (  # noqa: F401
@@ -216,3 +217,45 @@ def test_forged_source_headers_cannot_partition_public_authentication_limit(
         terminal_statuses.append(failed.status_code)
 
     assert terminal_statuses == [401, 401, 429]
+
+
+@pytest.mark.parametrize(
+    ("path", "field", "material"),
+    [
+        (
+            "/api/v1/auth/bootstrap/registration/options",
+            "bootstrap_token",
+            "invalid-bootstrap-material",
+        ),
+        (
+            "/api/v1/auth/invitation/registration/options",
+            "invitation_token",
+            "invalid-invitation-material",
+        ),
+        (
+            "/api/v1/auth/recovery/registration/options",
+            "enrollment_token",
+            "invalid-recovery-enrollment",
+        ),
+    ],
+)
+def test_invalid_public_registration_material_is_throttled_by_trusted_source_and_digest(
+    passkey_client: TestClient,
+    path: str,
+    field: str,
+    material: str,
+) -> None:
+    statuses: list[int] = []
+    for forged_source in ("198.51.100.1", "203.0.113.2", "192.0.2.3"):
+        headers = csrf_headers(passkey_client)
+        headers.update(
+            {
+                "X-Child-Manager-Client-IP": forged_source,
+                "X-Forwarded-For": forged_source,
+            }
+        )
+        response = passkey_client.post(path, json={field: material}, headers=headers)
+        statuses.append(response.status_code)
+        assert material not in response.text
+
+    assert statuses == [410, 410, 429]

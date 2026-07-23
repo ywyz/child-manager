@@ -98,6 +98,33 @@ def test_recovery_request_is_generic_for_unknown_and_invalid_material(
     assert response.headers.get_list("set-cookie") == []
 
 
+def test_invalid_recovery_request_material_is_rate_limited_without_enumeration(
+    passkey_client: TestClient,
+) -> None:
+    payload = {"login": "unknown", "recovery_code": "invalid-recovery-code"}
+    statuses: list[int] = []
+    for forged_source in ("198.51.100.1", "203.0.113.2", "192.0.2.3"):
+        headers = csrf_headers(passkey_client)
+        headers.update(
+            {
+                "X-Child-Manager-Client-IP": forged_source,
+                "X-Forwarded-For": forged_source,
+            }
+        )
+        response = passkey_client.post(
+            "/api/v1/auth/recovery/requests",
+            json=payload,
+            headers=headers,
+        )
+        statuses.append(response.status_code)
+        if response.status_code == 202:
+            assert response.json() == {"message": GENERIC_RECOVERY_MESSAGE}
+            assert payload["login"] not in response.text
+            assert payload["recovery_code"] not in response.text
+
+    assert statuses == [202, 202, 429]
+
+
 def test_recovery_registration_never_establishes_a_session(passkey_client: TestClient) -> None:
     response = passkey_client.post(
         "/api/v1/auth/recovery/registration/options",
@@ -273,12 +300,33 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
             FROM account_invitations WHERE kindergarten_id=%s AND user_id=%s""",
             (actor.kindergarten_id, teacher_id),
         ).fetchone() == (0, 1)
-        assert connection.execute(
-            """SELECT count(*) FILTER (WHERE revoked_at IS NULL AND consumed_at IS NULL),
-                      count(*) FILTER (WHERE revoked_at IS NOT NULL OR consumed_at IS NOT NULL)
-            FROM recovery_codes WHERE kindergarten_id=%s AND user_id=%s""",
+        recovery_rows = connection.execute(
+            """SELECT id, consumed_at, revoked_at, replaced_by_id
+            FROM recovery_codes WHERE kindergarten_id=%s AND user_id=%s ORDER BY issued_at""",
             (actor.kindergarten_id, teacher_id),
-        ).fetchone() == (1, 1)
+        ).fetchall()
+        assert len(recovery_rows) == 2
+        assert recovery_rows[0][1] is not None
+        assert recovery_rows[0][2] is not None
+        assert recovery_rows[0][3] == recovery_rows[1][0]
+        assert recovery_rows[1][1:] == (None, None, None)
+        revoked_audits = connection.execute(
+            """SELECT event_code, resource_id, metadata->>'reason'
+            FROM audit_events
+            WHERE kindergarten_id=%s
+              AND event_code IN ('identity.credential_revoked','identity.invitation_revoked')
+              AND metadata->>'reason'='account_recovered'
+            ORDER BY event_code""",
+            (actor.kindergarten_id,),
+        ).fetchall()
+        assert revoked_audits == [
+            ("identity.credential_revoked", old_credential_id, "account_recovered"),
+            (
+                "identity.invitation_revoked",
+                UUID(invitation.json()["id"]),
+                "account_recovered",
+            ),
+        ]
 
     old_invitation = client.post(
         "/api/v1/auth/invitation/registration/options",

@@ -14,6 +14,7 @@ from starlette.exceptions import HTTPException
 
 from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from apps.api.middleware import RequestContextMiddleware
+from apps.api.openapi import configure_openapi
 from apps.api.routers.auth import router as auth_router
 from apps.api.routers.users import router as users_router
 from packages.backend.identity.auth_throttle import MemoryAuthThrottle, RedisAuthThrottle
@@ -171,6 +172,7 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
             message="服务暂时不可用，请稍后重试。",
         )
 
+    application.openapi = configure_openapi(application)
     return application
 
 

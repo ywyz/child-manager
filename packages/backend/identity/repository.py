@@ -636,22 +636,24 @@ class IdentityRepository:
 
     def revoke_other_credentials(
         self, user_id: UUID, *, keep_credential_id: UUID, reason: str
-    ) -> int:
-        cursor = self.connection.execute(
+    ) -> list[UUID]:
+        rows = self.connection.execute(
             """UPDATE webauthn_credentials SET revoked_at=COALESCE(revoked_at, now()),
             revoke_reason=COALESCE(revoke_reason,%s), updated_at=now()
-            WHERE kindergarten_id=%s AND user_id=%s AND id<>%s AND revoked_at IS NULL""",
+            WHERE kindergarten_id=%s AND user_id=%s AND id<>%s AND revoked_at IS NULL
+            RETURNING id""",
             (reason, self.kindergarten_id, user_id, keep_credential_id),
-        )
-        return cursor.rowcount
+        ).fetchall()
+        return [row[0] for row in rows]  # type: ignore[misc]
 
-    def revoke_active_invitations(self, user_id: UUID) -> None:
-        self.connection.execute(
+    def revoke_active_invitations(self, user_id: UUID) -> list[UUID]:
+        rows = self.connection.execute(
             """UPDATE account_invitations SET revoked_at=COALESCE(revoked_at, now()),
             updated_at=now() WHERE kindergarten_id=%s AND user_id=%s
-            AND consumed_at IS NULL AND revoked_at IS NULL""",
+            AND consumed_at IS NULL AND revoked_at IS NULL RETURNING id""",
             (self.kindergarten_id, user_id),
-        )
+        ).fetchall()
+        return [row[0] for row in rows]  # type: ignore[misc]
 
     def create_invitation(
         self, *, user_id: UUID, issued_by: UUID, token_hash: str, expires_at: datetime
@@ -728,16 +730,17 @@ class IdentityRepository:
 
     def rotate_recovery_code(self, user_id: UUID, *, code_hash: str) -> UUID:
         new_id = uuid7()
-        old = self.connection.execute(
+        old_rows = self.connection.execute(
             """SELECT id FROM recovery_codes WHERE kindergarten_id=%s AND user_id=%s
-            AND consumed_at IS NULL AND revoked_at IS NULL FOR UPDATE""",
+            AND revoked_at IS NULL FOR UPDATE""",
             (self.kindergarten_id, user_id),
-        ).fetchone()
-        if old:
+        ).fetchall()
+        if old_rows:
             self.connection.execute(
-                """UPDATE recovery_codes SET revoked_at=now(),
-                updated_at=now() WHERE kindergarten_id=%s AND id=%s""",
-                (self.kindergarten_id, old[0]),
+                """UPDATE recovery_codes SET revoked_at=COALESCE(revoked_at, now()),
+                updated_at=now()
+                WHERE kindergarten_id=%s AND user_id=%s AND revoked_at IS NULL""",
+                (self.kindergarten_id, user_id),
             )
         self.connection.execute(
             """INSERT INTO recovery_codes
@@ -745,11 +748,11 @@ class IdentityRepository:
             VALUES (%s,%s,%s,%s,now())""",
             (new_id, self.kindergarten_id, user_id, code_hash),
         )
-        if old:
+        if old_rows:
             self.connection.execute(
                 """UPDATE recovery_codes SET replaced_by_id=%s, updated_at=now()
-                WHERE kindergarten_id=%s AND id=%s""",
-                (new_id, self.kindergarten_id, old[0]),
+                WHERE kindergarten_id=%s AND id=ANY(%s)""",
+                (new_id, self.kindergarten_id, [row[0] for row in old_rows]),
             )
         return new_id
 

@@ -235,11 +235,11 @@ def test_recover_last_admin_matches_pre_registered_approvers_and_issues_once(
             ("owner", "owner-ref-001", "approved"),
         ]
         audit_metadata = connection.execute(
-            """SELECT metadata::text FROM audit_events
+            """SELECT actor_user_id, actor_role_codes, metadata::text FROM audit_events
             WHERE event_code='identity.recovery_approved' AND resource_id=%s""",
             (recovery_request_id,),
         ).fetchone()
-        assert audit_metadata == ("{}",)
+        assert audit_metadata == (None, [], "{}")
 
     replay = _run_cli(
         isolated_database_url,

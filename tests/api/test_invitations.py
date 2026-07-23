@@ -1,10 +1,12 @@
 # ruff: noqa: F811
 
-from base64 import urlsafe_b64decode
+import json
+from base64 import urlsafe_b64decode, urlsafe_b64encode
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 import psycopg
+import pytest
 from fastapi.testclient import TestClient
 
 from tests.api.passkey_helpers import (  # noqa: F401
@@ -42,6 +44,33 @@ def _issue(client: TestClient, user_id: object) -> dict[str, object]:
 def _secret_bytes(value: object) -> bytes:
     text = str(value)
     return urlsafe_b64decode(text + "=" * (-len(text) % 4))
+
+
+def _base64url(value: bytes) -> str:
+    return urlsafe_b64encode(value).rstrip(b"=").decode("ascii")
+
+
+def _registration_credential(*, credential_id: str, challenge: str) -> dict[str, object]:
+    client_data = json.dumps(
+        {
+            "type": "webauthn.create",
+            "challenge": challenge,
+            "origin": "http://testserver",
+            "crossOrigin": False,
+        },
+        separators=(",", ":"),
+    ).encode()
+    return {
+        "id": credential_id,
+        "rawId": credential_id,
+        "type": "public-key",
+        "response": {
+            "clientDataJSON": _base64url(client_data),
+            "attestationObject": _base64url(b"stub-attestation"),
+            "transports": ["internal"],
+        },
+        "clientExtensionResults": {},
+    }
 
 
 def test_invitation_management_requires_an_authenticated_admin(passkey_client: TestClient) -> None:
@@ -163,3 +192,57 @@ def test_invitation_registration_verify_never_creates_a_session(passkey_client: 
 
     assert response.status_code == 410
     assert response.headers.get_list("set-cookie") == []
+
+
+def test_registration_verify_failure_persists_challenge_count_and_sanitized_audit(
+    admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client, _actor = admin_client
+    teacher = _create_teacher(client)
+    invitation = _issue(client, teacher["id"])
+    options = client.post(
+        "/api/v1/auth/invitation/registration/options",
+        json={"invitation_token": invitation["invitation_token"]},
+        headers=csrf_headers(client),
+    )
+    assert options.status_code == 200
+    monkeypatch.setattr(
+        "packages.backend.identity.service.verify_registration",
+        lambda **_kwargs: (_ for _ in ()).throw(ValueError("sensitive verifier detail")),
+    )
+
+    failed = client.post(
+        "/api/v1/auth/invitation/registration/verify",
+        json={
+            "ceremony_id": options.json()["ceremony_id"],
+            "credential": _registration_credential(
+                credential_id=_base64url(b"failed-registration-credential"),
+                challenge=options.json()["publicKey"]["challenge"],
+            ),
+        },
+        headers=csrf_headers(client),
+    )
+
+    assert failed.status_code == 410
+    assert "sensitive verifier detail" not in failed.text
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    with psycopg.connect(native_url) as connection:
+        assert connection.execute(
+            "SELECT failure_count, consumed_at FROM webauthn_challenges WHERE id=%s",
+            (options.json()["ceremony_id"],),
+        ).fetchone() == (1, None)
+        audit = connection.execute(
+            """SELECT event_code, outcome, resource_type, resource_id, metadata::text
+            FROM audit_events
+            WHERE event_code='identity.credential_registered' AND outcome='failure'"""
+        ).fetchone()
+    assert audit is not None
+    assert audit[:4] == (
+        "identity.credential_registered",
+        "failure",
+        "webauthn_challenge",
+        UUID(options.json()["ceremony_id"]),
+    )
+    assert "sensitive verifier detail" not in audit[4]

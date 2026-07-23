@@ -273,8 +273,8 @@ def recover_last_admin(
             raise ValueError("恢复申请无效或状态已变化。")
         AuditRepository(connection, kindergarten_id).append(
             event_code=IdentityAuditEventCode.RECOVERY_APPROVED,
-            actor_user_id=user_id,
-            actor_role_codes=["admin"],
+            actor_user_id=None,
+            actor_role_codes=[],
             resource_type="account_recovery_request",
             resource_id=recovery_request_id,
             outcome="success",

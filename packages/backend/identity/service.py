@@ -412,6 +412,69 @@ class IdentityService:
         expected_purpose: ChallengePurpose,
         expected_user_id: UUID | None = None,
         expected_authorization_context: str | None = None,
+        source: str,
+        request_id: UUID | None,
+    ) -> _RegistrationResult:
+        try:
+            return self._verify_registration_transaction(
+                ceremony_id=ceremony_id,
+                credential=credential,
+                label=label,
+                expected_purpose=expected_purpose,
+                expected_user_id=expected_user_id,
+                expected_authorization_context=expected_authorization_context,
+            )
+        except IdentityError as exc:
+            if exc.code not in {"identity.material_unavailable", "auth.authentication_failed"}:
+                raise
+            self._persist_registration_failure(
+                ceremony_id=ceremony_id,
+                expected_purpose=expected_purpose,
+                source=source,
+                request_id=request_id,
+            )
+            raise IdentityError(
+                410, "identity.material_unavailable", "登记凭据无效或已失效。"
+            ) from exc
+
+    def _persist_registration_failure(
+        self,
+        *,
+        ceremony_id: UUID,
+        expected_purpose: ChallengePurpose,
+        source: str,
+        request_id: UUID | None,
+    ) -> None:
+        with self._connect() as connection, connection.transaction():
+            kindergarten_id = self._optional_kindergarten_id(connection)
+            repository = IdentityRepository(connection, kindergarten_id)
+            challenge = repository.get_challenge(ceremony_id, lock=True)
+            repository.record_challenge_failure(ceremony_id)
+            if kindergarten_id is None:
+                return
+            actor_user_id = challenge.user_id if challenge is not None else None
+            AuditRepository(connection, kindergarten_id).append(
+                event_code=IdentityAuditEventCode.CREDENTIAL_REGISTERED,
+                actor_user_id=actor_user_id,
+                actor_role_codes=(
+                    repository.roles_for_user(actor_user_id) if actor_user_id is not None else []
+                ),
+                resource_type="webauthn_challenge",
+                resource_id=ceremony_id,
+                request_id=request_id,
+                outcome="failure",
+                metadata={"reason": expected_purpose.value, "source": source},
+            )
+
+    def _verify_registration_transaction(
+        self,
+        *,
+        ceremony_id: UUID,
+        credential: dict[str, Any],
+        label: str | None,
+        expected_purpose: ChallengePurpose,
+        expected_user_id: UUID | None = None,
+        expected_authorization_context: str | None = None,
     ) -> _RegistrationResult:
         now = datetime.now(UTC)
         with self._connect() as connection, connection.transaction():
@@ -443,7 +506,6 @@ class IdentityService:
                     )
             raw_challenge = _client_challenge(credential)
             if challenge.challenge_hash != _challenge_digest(raw_challenge):
-                repository.record_challenge_failure(ceremony_id)
                 raise IdentityError(410, "identity.material_unavailable", "登记凭据无效或已失效。")
             context_id = UUID(str(challenge.authorization_context))
             source_queries: dict[ChallengePurpose, LiteralString] = {
@@ -531,12 +593,12 @@ class IdentityService:
             elif expected_purpose is ChallengePurpose.RECOVERY_REGISTRATION:
                 material = issue_secret(SecretPurpose.RECOVERY_CODE)
                 repository.rotate_recovery_code(challenge.user_id, code_hash=material.record.digest)
-                repository.revoke_other_credentials(
+                revoked_credential_ids = repository.revoke_other_credentials(
                     challenge.user_id,
                     keep_credential_id=created.id,
                     reason="account_recovered",
                 )
-                repository.revoke_active_invitations(challenge.user_id)
+                revoked_invitation_ids = repository.revoke_active_invitations(challenge.user_id)
                 sessions_revoked = repository.revoke_user_sessions(
                     challenge.user_id, reason="account_recovered"
                 )
@@ -566,6 +628,26 @@ class IdentityService:
                     outcome="success",
                     metadata={"reason": "account_recovered"},
                 )
+                for revoked_credential_id in revoked_credential_ids:
+                    recovery_audit.append(
+                        event_code=IdentityAuditEventCode.CREDENTIAL_REVOKED,
+                        actor_user_id=challenge.user_id,
+                        actor_role_codes=repository.roles_for_user(challenge.user_id),
+                        resource_type="webauthn_credential",
+                        resource_id=revoked_credential_id,
+                        outcome="success",
+                        metadata={"reason": "account_recovered"},
+                    )
+                for revoked_invitation_id in revoked_invitation_ids:
+                    recovery_audit.append(
+                        event_code=IdentityAuditEventCode.INVITATION_REVOKED,
+                        actor_user_id=challenge.user_id,
+                        actor_role_codes=repository.roles_for_user(challenge.user_id),
+                        resource_type="account_invitation",
+                        resource_id=revoked_invitation_id,
+                        outcome="success",
+                        metadata={"reason": "account_recovered"},
+                    )
                 if sessions_revoked:
                     recovery_audit.append(
                         event_code=IdentityAuditEventCode.SESSION_REVOKED,
@@ -587,24 +669,40 @@ class IdentityService:
             return _RegistrationResult(created, recovery_code, sessions_revoked)
 
     def verify_bootstrap_registration(
-        self, *, ceremony_id: UUID, credential: dict[str, Any], label: str | None
+        self,
+        *,
+        ceremony_id: UUID,
+        credential: dict[str, Any],
+        label: str | None,
+        source: str,
+        request_id: UUID | None,
     ) -> tuple[CredentialRecord, UUID]:
         result = self._verify_registration(
             ceremony_id=ceremony_id,
             credential=credential,
             label=label,
             expected_purpose=ChallengePurpose.BOOTSTRAP_REGISTRATION,
+            source=source,
+            request_id=request_id,
         )
         return result.credential, result.credential.user_id
 
     def verify_invitation_registration(
-        self, *, ceremony_id: UUID, credential: dict[str, Any], label: str | None
+        self,
+        *,
+        ceremony_id: UUID,
+        credential: dict[str, Any],
+        label: str | None,
+        source: str,
+        request_id: UUID | None,
     ) -> tuple[CredentialRecord, UUID]:
         result = self._verify_registration(
             ceremony_id=ceremony_id,
             credential=credential,
             label=label,
             expected_purpose=ChallengePurpose.INVITATION_REGISTRATION,
+            source=source,
+            request_id=request_id,
         )
         return result.credential, result.credential.user_id
 
@@ -615,6 +713,8 @@ class IdentityService:
         ceremony_id: UUID,
         credential: dict[str, Any],
         label: str | None,
+        source: str,
+        request_id: UUID | None,
     ) -> CredentialRecord:
         self.require_recent_verification(session)
         result = self._verify_registration(
@@ -624,17 +724,27 @@ class IdentityService:
             expected_purpose=ChallengePurpose.SELF_ADD_REGISTRATION,
             expected_user_id=session.user.id,
             expected_authorization_context=str(session.token_family_id),
+            source=source,
+            request_id=request_id,
         )
         return result.credential
 
     def verify_recovery_registration(
-        self, *, ceremony_id: UUID, credential: dict[str, Any], label: str | None
+        self,
+        *,
+        ceremony_id: UUID,
+        credential: dict[str, Any],
+        label: str | None,
+        source: str,
+        request_id: UUID | None,
     ) -> tuple[CredentialRecord, str, int]:
         result = self._verify_registration(
             ceremony_id=ceremony_id,
             credential=credential,
             label=label,
             expected_purpose=ChallengePurpose.RECOVERY_REGISTRATION,
+            source=source,
+            request_id=request_id,
         )
         assert result.recovery_code is not None
         return result.credential, result.recovery_code, result.sessions_revoked
@@ -1420,20 +1530,20 @@ class IdentityService:
                 )
             return sessions, reinvitation
 
-    def submit_recovery_request(self, *, login: str, recovery_code: str) -> None:
+    def submit_recovery_request(self, *, login: str, recovery_code: str) -> bool:
         normalized = self.safe_login_key(login)
         with self._connect() as connection, connection.transaction():
             kindergarten_id = self._optional_kindergarten_id(connection)
             if kindergarten_id is None:
-                return
+                return False
             repository = IdentityRepository(connection, kindergarten_id)
             user = repository.find_user_by_login(normalized) if normalized else None
             if user is None:
-                return
+                return False
             digest = sha256(f"child-manager:recovery_code:{recovery_code}".encode()).hexdigest()
             code_id = repository.find_recovery_code(user.id, digest)
             if code_id is None or not repository.consume_recovery_code(code_id):
-                return
+                return False
             recovery_request_id = repository.create_recovery_request(
                 user_id=user.id,
                 recovery_code_id=code_id,
@@ -1447,6 +1557,7 @@ class IdentityService:
                 resource_id=recovery_request_id,
                 outcome="success",
             )
+            return True
 
     def list_recovery_requests(
         self, session: SessionUser, user_id: UUID
