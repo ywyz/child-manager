@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-07-23)
+# Graph Report - child-manager-docs-m2  (2026-07-23)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 76 files · ~84,554 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 809 nodes · 1009 edges · 205 communities (34 shown, 171 thin omitted)
+- 809 nodes · 1009 edges · 206 communities (35 shown, 171 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 102 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bd98a1a1`
+- Built from commit: `a0524e7f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -42,6 +43,7 @@
 - Daily Activity Plan Entity
 - 完整 SDD 工作流
 - init-admin recover-last-admin CLI
+- Daily Activity Plan Entity
 - Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务
 - create-new-feature.sh
 - Manual Lesson Plan Story
@@ -241,8 +243,8 @@
   docs/PRD/lesson-management.md → specs/001-daily-activity-plan/spec.md
 - `Teacher Controlled AI Workflow` --semantically_similar_to--> `Teacher Controlled AI Story`  [INFERRED] [semantically similar]
   docs/PRD/lesson-management.md → specs/001-daily-activity-plan/spec.md
-- `公网与私有运行单元信任边界` --semantically_similar_to--> `受限公网 Web/BFF 唯一入口`  [INFERRED] [semantically similar]
-  docs/security/threat-model.md → CONTEXT.md
+- `受限公网 Web/BFF 唯一入口` --semantically_similar_to--> `公网与私有运行单元信任边界`  [INFERRED] [semantically similar]
+  CONTEXT.md → docs/security/threat-model.md
 
 ## Import Cycles
 - None detected.
@@ -275,7 +277,7 @@
 - **Specify Plan Tasks Implement 全周期** — _agents_skills_speckit_specify_skill_speckit_specify, _agents_skills_speckit_plan_skill_speckit_plan, _agents_skills_speckit_tasks_skill_speckit_tasks, _agents_skills_speckit_implement_skill_speckit_implement [EXTRACTED 1.00]
 - **一日活动计划范围、架构与数据边界知识链** — graphify_out_memory_query_20260711_020708_docs_prd_lesson_management_m_prd_scope, graphify_out_memory_query_20260711_024218_service_architecture_sequence, graphify_out_memory_query_20260712_071357_corrected_data_model [INFERRED 0.75]
 
-## Communities (205 total, 171 thin omitted)
+## Communities (206 total, 171 thin omitted)
 
 ### Community 0 - "First Release Research"
 Cohesion: 0.06
@@ -326,8 +328,8 @@ Cohesion: 0.13
 Nodes (20): ADR-0001: Cloud-only 单园部署, ADR-0004: 同源 Cookie 认证, ADR-0009: 延后生产部署, AI 异步生成, Alembic 数据库迁移, Dramatiq 后台 Worker, FastAPI API 服务, Graphify Knowledge Graph (+12 more)
 
 ### Community 12 - "Child Manager System Architecture"
-Cohesion: 0.21
-Nodes (13): AI 预览采用事务边界, Word 导出原子文件流程, 后台任务状态机, Child Manager System Architecture, 后端深模块接口边界, Dramatiq Worker, FastAPI API, NiceGUI Web (+5 more)
+Cohesion: 0.17
+Nodes (17): AI 预览采用事务边界, 两项不可变批准原子写入, Word 导出原子文件流程, 后台任务状态机, Child Manager System Architecture, 后端深模块接口边界, Dramatiq Worker, FastAPI API (+9 more)
 
 ### Community 13 - "common.sh"
 Cohesion: 0.13
@@ -342,8 +344,8 @@ Cohesion: 0.18
 Nodes (15): AI and Prompt Rules, Background Worker, Branch and Git Rules, Child Manager Agent Development Rules, Daily Activity Plan Business Invariants, Data Model and Kindergarten Isolation, FastAPI API, Knowledge Graph and Code Graph (+7 more)
 
 ### Community 16 - "Lesson Management PRD"
-Cohesion: 0.21
-Nodes (14): kindergarten_id 园所隔离边界, 园所与班级隔离, 管理员与教师权限边界, AI 预览后人工采用边界, 双批准、请求推进与登记凭据原子事务, 教案系统实施依赖顺序, 园所与班级授权, 最后管理员 Web/API 稳定 409 (+6 more)
+Cohesion: 0.19
+Nodes (15): kindergarten_id 园所隔离边界, 双批准原子写入, 园所与班级隔离, 管理员与教师权限边界, AI 预览后人工采用边界, 双批准、请求推进与登记凭据原子事务, 教案系统实施依赖顺序, 园所与班级授权 (+7 more)
 
 ### Community 17 - "ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行"
 Cohesion: 0.14
@@ -374,20 +376,24 @@ Cohesion: 0.31
 Nodes (11): Child Manager 产品与工程路线图, 固定 docs 提交的 Issue 驱动 dev, 可重复证据出口门禁, M0 至 M9 阶段依赖图, M2 双批准原子记录, M2 认证授权与身份审计, M2 最后管理员稳定 409 门禁, M2 最后管理员 CLI 恢复 (+3 more)
 
 ### Community 24 - "User and Role Entity"
-Cohesion: 0.18
-Nodes (11): Ceremony Challenge Binding, One Time Invitation Lifecycle, Account Invitation Entity, Audit Event Entity, Class Entity, Class Teacher Association Entity, Kindergarten Entity, Plan Author Entity (+3 more)
+Cohesion: 0.22
+Nodes (9): Ceremony Challenge Binding, One Time Invitation Lifecycle, Account Invitation Entity, Audit Event Entity, Kindergarten Entity, Plan Author Entity, User and Role Entity, WebAuthn Challenge Entity (+1 more)
 
 ### Community 25 - "Daily Activity Plan Entity"
-Cohesion: 0.21
-Nodes (12): Frozen Prompt Test Inputs, AI Generation Preview Entity, AI Model Profile Entity, Background Job Entity, Daily Activity Plan Entity, Plan Snapshot Entity, Prompt Definition Entity, Prompt Test Run Entity (+4 more)
+Cohesion: 0.32
+Nodes (8): Frozen Prompt Test Inputs, AI Generation Preview Entity, AI Model Profile Entity, Background Job Entity, Prompt Definition Entity, Prompt Test Run Entity, Prompt Version Entity, Word Export Record Entity
 
 ### Community 26 - "完整 SDD 工作流"
 Cohesion: 0.33
 Nodes (6): Spec Kit 任务实施, Spec Kit 实施规划, Spec Kit 功能规格生成, Spec Kit 任务生成, 规格与计划评审门禁, 完整 SDD 工作流
 
 ### Community 27 - "init-admin recover-last-admin CLI"
-Cohesion: 0.22
-Nodes (11): 最后管理员部署控制台恢复, 最后管理员 Web/API 稳定 409 冲突, 双批准原子写入, CLI 仅接收恢复请求 ID, 409 identity.last_admin_recovery_requires_cli, 预登记责任人引用, init-admin recover-last-admin CLI, 两项不可变批准原子写入 (+3 more)
+Cohesion: 0.33
+Nodes (6): 最后管理员部署控制台恢复, 最后管理员 Web/API 稳定 409 冲突, CLI 仅接收恢复请求 ID, 409 identity.last_admin_recovery_requires_cli, 预登记责任人引用, init-admin recover-last-admin CLI
+
+### Community 28 - "Daily Activity Plan Entity"
+Cohesion: 0.33
+Nodes (6): Class Entity, Class Teacher Association Entity, Daily Activity Plan Entity, Plan Snapshot Entity, Semester Entity, Workday Cache Entity
 
 ### Community 29 - "Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
 Cohesion: 0.40
@@ -429,7 +435,7 @@ Nodes (3): Spec Kit 计划模板, Spec Kit 规格模板, Spec Kit 任务模板
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Child Manager System Architecture` connect `Child Manager System Architecture` to `Child Manager Product and Engineering Roadmap`, `Child Manager 首期安全威胁模型`, `ADR-0010：受限公网、通行密钥与双条件恢复`, `API v1 Contract Guide`, `Lesson Management PRD`, `Child Manager Project Context`, `Child Manager 产品与工程路线图`, `init-admin recover-last-admin CLI`?**
+- **Why does `Child Manager System Architecture` connect `Child Manager System Architecture` to `Child Manager Product and Engineering Roadmap`, `Child Manager 首期安全威胁模型`, `ADR-0010：受限公网、通行密钥与双条件恢复`, `API v1 Contract Guide`, `Lesson Management PRD`, `Child Manager Project Context`, `Child Manager 产品与工程路线图`?**
   _High betweenness centrality (0.076) - this node is a cross-community bridge._
 - **Why does `First Release Implementation Plan` connect `API v1 Contract Guide` to `First Release Research`, `FR-075 Recovery and Last-Administrator Control`, `Child Manager Product and Engineering Roadmap`, `First Release Feature Specification`?**
   _High betweenness centrality (0.060) - this node is a cross-community bridge._

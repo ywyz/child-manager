@@ -392,10 +392,10 @@
         "kind": "file"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_check_prerequisites",
       "community": 38,
       "community_name": "check-prerequisites.sh",
-      "norm_label": "check-prerequisites.sh",
-      "id": "specify_scripts_bash_check_prerequisites"
+      "norm_label": "check-prerequisites.sh"
     },
     {
       "label": "check-prerequisites.sh script",
@@ -407,10 +407,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_check_prerequisites_sh__entry",
       "community": 38,
       "community_name": "check-prerequisites.sh",
-      "norm_label": "check-prerequisites.sh script",
-      "id": "specify_scripts_bash_check_prerequisites_sh__entry"
+      "norm_label": "check-prerequisites.sh script"
     },
     {
       "label": "common.sh",
@@ -422,10 +422,10 @@
         "kind": "file"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "common.sh",
-      "id": "specify_scripts_bash_common"
+      "norm_label": "common.sh"
     },
     {
       "label": "common.sh script",
@@ -437,10 +437,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_sh__entry",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "common.sh script",
-      "id": "specify_scripts_bash_common_sh__entry"
+      "norm_label": "common.sh script"
     },
     {
       "label": "find_specify_root()",
@@ -452,10 +452,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_find_specify_root",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "find_specify_root()",
-      "id": "specify_scripts_bash_common_find_specify_root"
+      "norm_label": "find_specify_root()"
     },
     {
       "label": "resolve_specify_init_dir()",
@@ -467,10 +467,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_resolve_specify_init_dir",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "resolve_specify_init_dir()",
-      "id": "specify_scripts_bash_common_resolve_specify_init_dir"
+      "norm_label": "resolve_specify_init_dir()"
     },
     {
       "label": "get_repo_root()",
@@ -482,10 +482,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_get_repo_root",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "get_repo_root()",
-      "id": "specify_scripts_bash_common_get_repo_root"
+      "norm_label": "get_repo_root()"
     },
     {
       "label": "get_current_branch()",
@@ -497,10 +497,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_get_current_branch",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "get_current_branch()",
-      "id": "specify_scripts_bash_common_get_current_branch"
+      "norm_label": "get_current_branch()"
     },
     {
       "label": "read_feature_json_feature_directory()",
@@ -512,10 +512,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_read_feature_json_feature_directory",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "read_feature_json_feature_directory()",
-      "id": "specify_scripts_bash_common_read_feature_json_feature_directory"
+      "norm_label": "read_feature_json_feature_directory()"
     },
     {
       "label": "_persist_feature_json()",
@@ -527,10 +527,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_persist_feature_json",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "_persist_feature_json()",
-      "id": "specify_scripts_bash_common_persist_feature_json"
+      "norm_label": "_persist_feature_json()"
     },
     {
       "label": "get_feature_paths()",
@@ -542,10 +542,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_get_feature_paths",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "get_feature_paths()",
-      "id": "specify_scripts_bash_common_get_feature_paths"
+      "norm_label": "get_feature_paths()"
     },
     {
       "label": "has_jq()",
@@ -557,10 +557,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_has_jq",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "has_jq()",
-      "id": "specify_scripts_bash_common_has_jq"
+      "norm_label": "has_jq()"
     },
     {
       "label": "get_invoke_separator()",
@@ -572,10 +572,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_get_invoke_separator",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "get_invoke_separator()",
-      "id": "specify_scripts_bash_common_get_invoke_separator"
+      "norm_label": "get_invoke_separator()"
     },
     {
       "label": "format_speckit_command()",
@@ -587,10 +587,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_format_speckit_command",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "format_speckit_command()",
-      "id": "specify_scripts_bash_common_format_speckit_command"
+      "norm_label": "format_speckit_command()"
     },
     {
       "label": "json_escape()",
@@ -602,10 +602,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_json_escape",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "json_escape()",
-      "id": "specify_scripts_bash_common_json_escape"
+      "norm_label": "json_escape()"
     },
     {
       "label": "check_file()",
@@ -617,10 +617,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_check_file",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "check_file()",
-      "id": "specify_scripts_bash_common_check_file"
+      "norm_label": "check_file()"
     },
     {
       "label": "check_dir()",
@@ -632,10 +632,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_check_dir",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "check_dir()",
-      "id": "specify_scripts_bash_common_check_dir"
+      "norm_label": "check_dir()"
     },
     {
       "label": "resolve_template()",
@@ -647,10 +647,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_resolve_template",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "resolve_template()",
-      "id": "specify_scripts_bash_common_resolve_template"
+      "norm_label": "resolve_template()"
     },
     {
       "label": "resolve_template_content()",
@@ -662,10 +662,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_resolve_template_content",
       "community": 13,
       "community_name": "common.sh",
-      "norm_label": "resolve_template_content()",
-      "id": "specify_scripts_bash_common_resolve_template_content"
+      "norm_label": "resolve_template_content()"
     },
     {
       "label": "create-new-feature.sh",
@@ -677,10 +677,10 @@
         "kind": "file"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_create_new_feature",
       "community": 30,
       "community_name": "create-new-feature.sh",
-      "norm_label": "create-new-feature.sh",
-      "id": "specify_scripts_bash_create_new_feature"
+      "norm_label": "create-new-feature.sh"
     },
     {
       "label": "create-new-feature.sh script",
@@ -692,10 +692,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_create_new_feature_sh__entry",
       "community": 30,
       "community_name": "create-new-feature.sh",
-      "norm_label": "create-new-feature.sh script",
-      "id": "specify_scripts_bash_create_new_feature_sh__entry"
+      "norm_label": "create-new-feature.sh script"
     },
     {
       "label": "get_highest_from_specs()",
@@ -707,10 +707,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_create_new_feature_get_highest_from_specs",
       "community": 30,
       "community_name": "create-new-feature.sh",
-      "norm_label": "get_highest_from_specs()",
-      "id": "specify_scripts_bash_create_new_feature_get_highest_from_specs"
+      "norm_label": "get_highest_from_specs()"
     },
     {
       "label": "clean_branch_name()",
@@ -722,10 +722,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_create_new_feature_clean_branch_name",
       "community": 30,
       "community_name": "create-new-feature.sh",
-      "norm_label": "clean_branch_name()",
-      "id": "specify_scripts_bash_create_new_feature_clean_branch_name"
+      "norm_label": "clean_branch_name()"
     },
     {
       "label": "generate_branch_name()",
@@ -737,10 +737,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_create_new_feature_generate_branch_name",
       "community": 30,
       "community_name": "create-new-feature.sh",
-      "norm_label": "generate_branch_name()",
-      "id": "specify_scripts_bash_create_new_feature_generate_branch_name"
+      "norm_label": "generate_branch_name()"
     },
     {
       "label": "setup-plan.sh",
@@ -752,10 +752,10 @@
         "kind": "file"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_setup_plan",
       "community": 39,
       "community_name": "setup-plan.sh",
-      "norm_label": "setup-plan.sh",
-      "id": "specify_scripts_bash_setup_plan"
+      "norm_label": "setup-plan.sh"
     },
     {
       "label": "setup-plan.sh script",
@@ -767,10 +767,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_setup_plan_sh__entry",
       "community": 39,
       "community_name": "setup-plan.sh",
-      "norm_label": "setup-plan.sh script",
-      "id": "specify_scripts_bash_setup_plan_sh__entry"
+      "norm_label": "setup-plan.sh script"
     },
     {
       "label": "setup-tasks.sh",
@@ -782,10 +782,10 @@
         "kind": "file"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_setup_tasks",
       "community": 40,
       "community_name": "setup-tasks.sh",
-      "norm_label": "setup-tasks.sh",
-      "id": "specify_scripts_bash_setup_tasks"
+      "norm_label": "setup-tasks.sh"
     },
     {
       "label": "setup-tasks.sh script",
@@ -797,10 +797,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_setup_tasks_sh__entry",
       "community": 40,
       "community_name": "setup-tasks.sh",
-      "norm_label": "setup-tasks.sh script",
-      "id": "specify_scripts_bash_setup_tasks_sh__entry"
+      "norm_label": "setup-tasks.sh script"
     },
     {
       "label": "ADR-0002-separate-web-api-worker-modular-monolith.md",
@@ -808,10 +808,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "adr-0002-separate-web-api-worker-modular-monolith.md",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith"
+      "norm_label": "adr-0002-separate-web-api-worker-modular-monolith.md"
     },
     {
       "label": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
@@ -819,10 +819,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "adr-0002:\u91c7\u7528\u72ec\u7acb web\u3001api\u3001worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53"
+      "norm_label": "adr-0002:\u91c7\u7528\u72ec\u7acb web\u3001api\u3001worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53"
     },
     {
       "label": "\u80cc\u666f",
@@ -830,10 +830,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u80cc\u666f",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -841,10 +841,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L11",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u51b3\u7b56",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -852,10 +852,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L21",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "NiceGUI \u4e00\u4f53\u5316\u8fdb\u7a0b",
@@ -863,10 +863,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L23",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_nicegui_\u4e00\u4f53\u5316\u8fdb\u7a0b",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "nicegui \u4e00\u4f53\u5316\u8fdb\u7a0b",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_nicegui_\u4e00\u4f53\u5316\u8fdb\u7a0b"
+      "norm_label": "nicegui \u4e00\u4f53\u5316\u8fdb\u7a0b"
     },
     {
       "label": "\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab Repository",
@@ -874,10 +874,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L27",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab_repository",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab repository",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab_repository"
+      "norm_label": "\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab repository"
     },
     {
       "label": "\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316",
@@ -885,10 +885,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L31",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316"
+      "norm_label": "\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316"
     },
     {
       "label": "React/TypeScript \u72ec\u7acb\u524d\u7aef",
@@ -896,10 +896,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L35",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_react_typescript_\u72ec\u7acb\u524d\u7aef",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "react/typescript \u72ec\u7acb\u524d\u7aef",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_react_typescript_\u72ec\u7acb\u524d\u7aef"
+      "norm_label": "react/typescript \u72ec\u7acb\u524d\u7aef"
     },
     {
       "label": "\u540e\u679c",
@@ -907,10 +907,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L39",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u540e\u679c",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -918,10 +918,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L54",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5b9e\u65bd\u7ea6\u675f",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -929,10 +929,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L60",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 20,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
       "label": "ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
@@ -940,10 +940,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "adr-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs"
+      "norm_label": "adr-0003-postgresql-authoritative-dramatiq-redis-jobs.md"
     },
     {
       "label": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
@@ -951,10 +951,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "adr-0003:postgresql \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001,dramatiq \u4e0e redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c"
+      "norm_label": "adr-0003:postgresql \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001,dramatiq \u4e0e redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c"
     },
     {
       "label": "\u80cc\u666f",
@@ -962,10 +962,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u80cc\u666f",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -973,10 +973,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L13",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u51b3\u7b56",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -984,10 +984,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L24",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "API \u540c\u6b65\u6267\u884c AI \u548c Word",
@@ -995,10 +995,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L26",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_api_\u540c\u6b65\u6267\u884c_ai_\u548c_word",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "api \u540c\u6b65\u6267\u884c ai \u548c word",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_api_\u540c\u6b65\u6267\u884c_ai_\u548c_word"
+      "norm_label": "api \u540c\u6b65\u6267\u884c ai \u548c word"
     },
     {
       "label": "Celery + Redis",
@@ -1006,10 +1006,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L30",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_celery_redis",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "celery + redis",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_celery_redis"
+      "norm_label": "celery + redis"
     },
     {
       "label": "Redis \u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8",
@@ -1017,10 +1017,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L34",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_redis_\u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "redis \u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_redis_\u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8"
+      "norm_label": "redis \u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8"
     },
     {
       "label": "PostgreSQL \u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217",
@@ -1028,10 +1028,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L38",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_\u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "postgresql \u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_\u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217"
+      "norm_label": "postgresql \u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217"
     },
     {
       "label": "\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216 Kafka",
@@ -1039,10 +1039,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L42",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216_kafka",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216 kafka",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216_kafka"
+      "norm_label": "\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216 kafka"
     },
     {
       "label": "\u9996\u671f\u4f7f\u7528 SSE \u6216 WebSocket \u63a8\u9001",
@@ -1050,10 +1050,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L46",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u9996\u671f\u4f7f\u7528_sse_\u6216_websocket_\u63a8\u9001",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u9996\u671f\u4f7f\u7528 sse \u6216 websocket \u63a8\u9001",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u9996\u671f\u4f7f\u7528_sse_\u6216_websocket_\u63a8\u9001"
+      "norm_label": "\u9996\u671f\u4f7f\u7528 sse \u6216 websocket \u63a8\u9001"
     },
     {
       "label": "\u540e\u679c",
@@ -1061,10 +1061,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L50",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u540e\u679c",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -1072,10 +1072,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L64",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5b9e\u65bd\u7ea6\u675f",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -1083,10 +1083,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L71",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 17,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
       "label": "ADR-0005-provider-neutral-ai-and-central-prompts.md",
@@ -1094,10 +1094,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "adr-0005-provider-neutral-ai-and-central-prompts.md",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts"
+      "norm_label": "adr-0005-provider-neutral-ai-and-central-prompts.md"
     },
     {
       "label": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
@@ -1105,10 +1105,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "adr-0005:ai \u4f9b\u5e94\u5546\u4e2d\u7acb,\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf"
+      "norm_label": "adr-0005:ai \u4f9b\u5e94\u5546\u4e2d\u7acb,\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf"
     },
     {
       "label": "\u80cc\u666f",
@@ -1116,10 +1116,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u80cc\u666f",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -1127,10 +1127,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L11",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u51b3\u7b56",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -1138,10 +1138,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L22",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546 SDK",
@@ -1149,10 +1149,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L24",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546_sdk",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546 sdk",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546_sdk"
+      "norm_label": "\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546 sdk"
     },
     {
       "label": "\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b",
@@ -1160,10 +1160,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L28",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b"
+      "norm_label": "\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b"
     },
     {
       "label": "\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d",
@@ -1171,10 +1171,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L32",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d"
+      "norm_label": "\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d"
     },
     {
       "label": "\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa Schema",
@@ -1182,10 +1182,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L36",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa_schema",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa schema",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa_schema"
+      "norm_label": "\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa schema"
     },
     {
       "label": "AI \u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9",
@@ -1193,10 +1193,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L40",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_ai_\u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "ai \u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_ai_\u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9"
+      "norm_label": "ai \u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9"
     },
     {
       "label": "\u540e\u679c",
@@ -1204,10 +1204,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L44",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u540e\u679c",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -1215,10 +1215,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L59",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5b9e\u65bd\u7ea6\u675f",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -1226,10 +1226,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L66",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 18,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
       "label": "ADR-0006-fixed-word-template-export-boundary.md",
@@ -1237,10 +1237,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "adr-0006-fixed-word-template-export-boundary.md",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary"
+      "norm_label": "adr-0006-fixed-word-template-export-boundary.md"
     },
     {
       "label": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
@@ -1248,10 +1248,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "adr-0006:\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c"
+      "norm_label": "adr-0006:\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c"
     },
     {
       "label": "\u80cc\u666f",
@@ -1259,10 +1259,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u80cc\u666f",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -1270,10 +1270,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L11",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u51b3\u7b56",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -1281,10 +1281,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L22",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "\u901a\u7528\u6a21\u677f\u5e73\u53f0",
@@ -1292,10 +1292,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L24",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u901a\u7528\u6a21\u677f\u5e73\u53f0",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u901a\u7528\u6a21\u677f\u5e73\u53f0",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u901a\u7528\u6a21\u677f\u5e73\u53f0"
+      "norm_label": "\u901a\u7528\u6a21\u677f\u5e73\u53f0"
     },
     {
       "label": "\u4ece\u96f6\u751f\u6210 Word \u6392\u7248",
@@ -1303,10 +1303,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L28",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u4ece\u96f6\u751f\u6210_word_\u6392\u7248",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u4ece\u96f6\u751f\u6210 word \u6392\u7248",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u4ece\u96f6\u751f\u6210_word_\u6392\u7248"
+      "norm_label": "\u4ece\u96f6\u751f\u6210 word \u6392\u7248"
     },
     {
       "label": "UI \u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d",
@@ -1314,10 +1314,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L32",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_ui_\u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "ui \u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_ui_\u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d"
+      "norm_label": "ui \u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d"
     },
     {
       "label": "\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6",
@@ -1325,10 +1325,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L36",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6"
+      "norm_label": "\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6"
     },
     {
       "label": "\u540e\u679c",
@@ -1336,10 +1336,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L40",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u540e\u679c",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -1347,10 +1347,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L54",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5b9e\u65bd\u7ea6\u675f",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -1358,10 +1358,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L61",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 21,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
       "label": "ADR-0008-degradable-calendar-and-external-services.md",
@@ -1369,10 +1369,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "adr-0008-degradable-calendar-and-external-services.md",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services"
+      "norm_label": "adr-0008-degradable-calendar-and-external-services.md"
     },
     {
       "label": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
@@ -1380,10 +1380,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "adr-0008:\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7"
+      "norm_label": "adr-0008:\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7"
     },
     {
       "label": "\u80cc\u666f",
@@ -1391,10 +1391,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u80cc\u666f",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -1402,10 +1402,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L13",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u51b3\u7b56",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -1413,10 +1413,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L23",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "\u5728\u7ebf\u8282\u5047\u65e5 API \u4f18\u5148",
@@ -1424,10 +1424,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L25",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5728\u7ebf\u8282\u5047\u65e5_api_\u4f18\u5148",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u5728\u7ebf\u8282\u5047\u65e5 api \u4f18\u5148",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5728\u7ebf\u8282\u5047\u65e5_api_\u4f18\u5148"
+      "norm_label": "\u5728\u7ebf\u8282\u5047\u65e5 api \u4f18\u5148"
     },
     {
       "label": "\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5",
@@ -1435,10 +1435,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L29",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5"
+      "norm_label": "\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5"
     },
     {
       "label": "\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848",
@@ -1446,10 +1446,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L33",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848"
+      "norm_label": "\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848"
     },
     {
       "label": "\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e",
@@ -1457,10 +1457,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L37",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e"
+      "norm_label": "\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e"
     },
     {
       "label": "\u540e\u679c",
@@ -1468,10 +1468,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L41",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u540e\u679c",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -1479,10 +1479,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L55",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5b9e\u65bd\u7ea6\u675f",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -1490,10 +1490,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L62",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 22,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
       "label": "query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
@@ -1501,10 +1501,10 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0",
       "community": 29,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0"
+      "norm_label": "query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md"
     },
     {
       "label": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
@@ -1512,10 +1512,10 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L10",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
       "community": 29,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0,\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0,\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1"
+      "norm_label": "q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0,\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0,\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1"
     },
     {
       "label": "Answer",
@@ -1523,10 +1523,10 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L12",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_answer",
       "community": 29,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "answer",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_answer"
+      "norm_label": "answer"
     },
     {
       "label": "Outcome",
@@ -1534,10 +1534,10 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L16",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_outcome",
       "community": 29,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "outcome",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_outcome"
+      "norm_label": "outcome"
     },
     {
       "label": "Source Nodes",
@@ -1545,10 +1545,10 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L20",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_source_nodes",
       "community": 29,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "source nodes",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_source_nodes"
+      "norm_label": "source nodes"
     },
     {
       "label": "AGENTS.md \u8865\u5145\u5efa\u8bae\u67e5\u8be2",
@@ -8064,8 +8064,8 @@
       "author": null,
       "contributor": null,
       "norm_label": "class entity",
-      "community": 24,
-      "community_name": "User and Role Entity",
+      "community": 28,
+      "community_name": "Daily Activity Plan Entity",
       "id": "specs_001_daily_activity_plan_spec_class_entity"
     },
     {
@@ -8078,8 +8078,8 @@
       "author": null,
       "contributor": null,
       "norm_label": "class teacher association entity",
-      "community": 24,
-      "community_name": "User and Role Entity",
+      "community": 28,
+      "community_name": "Daily Activity Plan Entity",
       "id": "specs_001_daily_activity_plan_spec_class_teacher_association_entity"
     },
     {
@@ -8092,7 +8092,7 @@
       "author": null,
       "contributor": null,
       "norm_label": "semester entity",
-      "community": 25,
+      "community": 28,
       "community_name": "Daily Activity Plan Entity",
       "id": "specs_001_daily_activity_plan_spec_semester_entity"
     },
@@ -8176,7 +8176,7 @@
       "author": null,
       "contributor": null,
       "norm_label": "daily activity plan entity",
-      "community": 25,
+      "community": 28,
       "community_name": "Daily Activity Plan Entity",
       "id": "specs_001_daily_activity_plan_spec_daily_activity_plan_entity"
     },
@@ -8204,7 +8204,7 @@
       "author": null,
       "contributor": null,
       "norm_label": "plan snapshot entity",
-      "community": 25,
+      "community": 28,
       "community_name": "Daily Activity Plan Entity",
       "id": "specs_001_daily_activity_plan_spec_plan_snapshot_entity"
     },
@@ -8274,7 +8274,7 @@
       "author": null,
       "contributor": null,
       "norm_label": "workday cache entity",
-      "community": 25,
+      "community": 28,
       "community_name": "Daily Activity Plan Entity",
       "id": "specs_001_daily_activity_plan_spec_workday_cache_entity"
     },
@@ -9470,9 +9470,9 @@
       "author": null,
       "contributor": null,
       "rationale": "\u6279\u51c6\u8bb0\u5f55\u3001\u8bf7\u6c42\u63a8\u8fdb\u548c\u767b\u8bb0\u51ed\u636e\u7b7e\u53d1\u5fc5\u987b\u540c\u6210\u540c\u8d25\uff0c\u907f\u514d\u6b8b\u7559\u90e8\u5206\u6279\u51c6\u3002",
-      "community": 27,
+      "community": 16,
       "norm_label": "\u53cc\u6279\u51c6\u539f\u5b50\u5199\u5165",
-      "community_name": "init-admin recover-last-admin CLI",
+      "community_name": "Lesson Management PRD",
       "id": "docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_atomic_two_immutable_approvals"
     },
     {
@@ -9877,9 +9877,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 12,
       "norm_label": "\u901a\u884c\u5bc6\u94a5\u4e0e\u670d\u52a1\u7aef\u4f1a\u8bdd\u94fe\u8def",
-      "community_name": "init-admin recover-last-admin CLI",
+      "community_name": "Child Manager System Architecture",
       "id": "docs_design_system_architecture_passkey_and_session_chain"
     },
     {
@@ -9891,9 +9891,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 12,
       "norm_label": "\u6700\u540e\u7ba1\u7406\u5458 web/api \u7a33\u5b9a 409",
-      "community_name": "init-admin recover-last-admin CLI",
+      "community_name": "Child Manager System Architecture",
       "id": "docs_design_system_architecture_last_admin_stable_409"
     },
     {
@@ -9905,9 +9905,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 12,
       "norm_label": "\u6700\u540e\u7ba1\u7406\u5458\u90e8\u7f72\u63a7\u5236\u53f0 cli",
-      "community_name": "init-admin recover-last-admin CLI",
+      "community_name": "Child Manager System Architecture",
       "id": "docs_design_system_architecture_recover_last_admin_cli"
     },
     {
@@ -9919,9 +9919,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 12,
       "norm_label": "\u4e24\u9879\u4e0d\u53ef\u53d8\u6279\u51c6\u539f\u5b50\u5199\u5165",
-      "community_name": "init-admin recover-last-admin CLI",
+      "community_name": "Child Manager System Architecture",
       "id": "docs_design_system_architecture_atomic_two_immutable_approvals"
     },
     {
@@ -11412,9 +11412,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_check_prerequisites",
-      "target": "specify_scripts_bash_check_prerequisites_sh__entry"
+      "target": "specify_scripts_bash_check_prerequisites_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11423,9 +11423,9 @@
       "source_location": "L399",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_check_dir"
+      "target": "specify_scripts_bash_common_check_dir",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11434,9 +11434,9 @@
       "source_location": "L398",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_check_file"
+      "target": "specify_scripts_bash_common_check_file",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11445,9 +11445,9 @@
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_find_specify_root"
+      "target": "specify_scripts_bash_common_find_specify_root",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11456,9 +11456,9 @@
       "source_location": "L350",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_format_speckit_command"
+      "target": "specify_scripts_bash_common_format_speckit_command",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11467,9 +11467,9 @@
       "source_location": "L79",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_get_current_branch"
+      "target": "specify_scripts_bash_common_get_current_branch",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11478,9 +11478,9 @@
       "source_location": "L163",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_get_feature_paths"
+      "target": "specify_scripts_bash_common_get_feature_paths",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11489,9 +11489,9 @@
       "source_location": "L238",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_get_invoke_separator"
+      "target": "specify_scripts_bash_common_get_invoke_separator",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11500,9 +11500,9 @@
       "source_location": "L56",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_get_repo_root"
+      "target": "specify_scripts_bash_common_get_repo_root",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11511,9 +11511,9 @@
       "source_location": "L234",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_has_jq"
+      "target": "specify_scripts_bash_common_has_jq",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11522,9 +11522,9 @@
       "source_location": "L372",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_json_escape"
+      "target": "specify_scripts_bash_common_json_escape",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11533,9 +11533,9 @@
       "source_location": "L135",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_persist_feature_json"
+      "target": "specify_scripts_bash_common_persist_feature_json",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11544,9 +11544,9 @@
       "source_location": "L95",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_read_feature_json_feature_directory"
+      "target": "specify_scripts_bash_common_read_feature_json_feature_directory",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11555,9 +11555,9 @@
       "source_location": "L38",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_resolve_specify_init_dir"
+      "target": "specify_scripts_bash_common_resolve_specify_init_dir",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11566,9 +11566,9 @@
       "source_location": "L406",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_resolve_template"
+      "target": "specify_scripts_bash_common_resolve_template",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11577,9 +11577,9 @@
       "source_location": "L490",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_resolve_template_content"
+      "target": "specify_scripts_bash_common_resolve_template_content",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11588,9 +11588,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_sh__entry"
+      "target": "specify_scripts_bash_common_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -11600,9 +11600,9 @@
       "weight": 1.0,
       "context": "call",
       "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "specify_scripts_bash_common_resolve_specify_init_dir",
-      "target": "specify_scripts_bash_common_get_repo_root"
+      "source": "specify_scripts_bash_common_get_repo_root",
+      "target": "specify_scripts_bash_common_resolve_specify_init_dir",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -11612,9 +11612,9 @@
       "weight": 1.0,
       "context": "call",
       "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "specify_scripts_bash_common_persist_feature_json",
-      "target": "specify_scripts_bash_common_get_feature_paths"
+      "source": "specify_scripts_bash_common_get_feature_paths",
+      "target": "specify_scripts_bash_common_persist_feature_json",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11623,9 +11623,9 @@
       "source_location": "L117",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_create_new_feature",
-      "target": "specify_scripts_bash_create_new_feature_clean_branch_name"
+      "target": "specify_scripts_bash_create_new_feature_clean_branch_name",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11634,9 +11634,9 @@
       "source_location": "L136",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_create_new_feature",
-      "target": "specify_scripts_bash_create_new_feature_generate_branch_name"
+      "target": "specify_scripts_bash_create_new_feature_generate_branch_name",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -11645,9 +11645,9 @@
       "source_location": "L94",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_create_new_feature",
-      "target": "specify_scripts_bash_create_new_feature_get_highest_from_specs"
+      "target": "specify_scripts_bash_create_new_feature_get_highest_from_specs",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11656,9 +11656,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_create_new_feature",
-      "target": "specify_scripts_bash_create_new_feature_sh__entry"
+      "target": "specify_scripts_bash_create_new_feature_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11667,9 +11667,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_setup_plan",
-      "target": "specify_scripts_bash_setup_plan_sh__entry"
+      "target": "specify_scripts_bash_setup_plan_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11678,9 +11678,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_setup_tasks",
-      "target": "specify_scripts_bash_setup_tasks_sh__entry"
+      "target": "specify_scripts_bash_setup_tasks_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11689,9 +11689,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11700,9 +11700,9 @@
       "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u51b3\u7b56"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11711,9 +11711,9 @@
       "source_location": "L39",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u540e\u679c"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11722,9 +11722,9 @@
       "source_location": "L21",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11733,9 +11733,9 @@
       "source_location": "L60",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11744,9 +11744,9 @@
       "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11755,9 +11755,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u80cc\u666f"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11766,9 +11766,9 @@
       "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_nicegui_\u4e00\u4f53\u5316\u8fdb\u7a0b"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_nicegui_\u4e00\u4f53\u5316\u8fdb\u7a0b",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11777,9 +11777,9 @@
       "source_location": "L35",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_react_typescript_\u72ec\u7acb\u524d\u7aef"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_react_typescript_\u72ec\u7acb\u524d\u7aef",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11788,9 +11788,9 @@
       "source_location": "L31",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11799,9 +11799,9 @@
       "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab_repository"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab_repository",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11810,9 +11810,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11821,9 +11821,9 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u51b3\u7b56"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11832,9 +11832,9 @@
       "source_location": "L50",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u540e\u679c"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11843,9 +11843,9 @@
       "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11854,9 +11854,9 @@
       "source_location": "L71",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11865,9 +11865,9 @@
       "source_location": "L64",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11876,9 +11876,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u80cc\u666f"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11887,9 +11887,9 @@
       "source_location": "L26",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_api_\u540c\u6b65\u6267\u884c_ai_\u548c_word"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_api_\u540c\u6b65\u6267\u884c_ai_\u548c_word",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11898,9 +11898,9 @@
       "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_celery_redis"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_celery_redis",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11909,9 +11909,9 @@
       "source_location": "L38",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_\u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_\u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11920,9 +11920,9 @@
       "source_location": "L34",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_redis_\u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_redis_\u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11931,9 +11931,9 @@
       "source_location": "L42",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216_kafka"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216_kafka",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11942,9 +11942,9 @@
       "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u9996\u671f\u4f7f\u7528_sse_\u6216_websocket_\u63a8\u9001"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u9996\u671f\u4f7f\u7528_sse_\u6216_websocket_\u63a8\u9001",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11953,9 +11953,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11964,9 +11964,9 @@
       "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u51b3\u7b56"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11975,9 +11975,9 @@
       "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u540e\u679c"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11986,9 +11986,9 @@
       "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11997,9 +11997,9 @@
       "source_location": "L66",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12008,9 +12008,9 @@
       "source_location": "L59",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12019,9 +12019,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u80cc\u666f"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12030,9 +12030,9 @@
       "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_ai_\u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_ai_\u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12041,9 +12041,9 @@
       "source_location": "L36",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa_schema"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa_schema",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12052,9 +12052,9 @@
       "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12063,9 +12063,9 @@
       "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12074,9 +12074,9 @@
       "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546_sdk"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546_sdk",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12085,9 +12085,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12096,9 +12096,9 @@
       "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u51b3\u7b56"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12107,9 +12107,9 @@
       "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u540e\u679c"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12118,9 +12118,9 @@
       "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12129,9 +12129,9 @@
       "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12140,9 +12140,9 @@
       "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12151,9 +12151,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u80cc\u666f"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12162,9 +12162,9 @@
       "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_ui_\u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_ui_\u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12173,9 +12173,9 @@
       "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u4ece\u96f6\u751f\u6210_word_\u6392\u7248"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u4ece\u96f6\u751f\u6210_word_\u6392\u7248",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12184,9 +12184,9 @@
       "source_location": "L36",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12195,9 +12195,9 @@
       "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u901a\u7528\u6a21\u677f\u5e73\u53f0"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u901a\u7528\u6a21\u677f\u5e73\u53f0",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12206,9 +12206,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12217,9 +12217,9 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u51b3\u7b56"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12228,9 +12228,9 @@
       "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u540e\u679c"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12239,9 +12239,9 @@
       "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12250,9 +12250,9 @@
       "source_location": "L62",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12261,9 +12261,9 @@
       "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12272,9 +12272,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u80cc\u666f"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12283,9 +12283,9 @@
       "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5728\u7ebf\u8282\u5047\u65e5_api_\u4f18\u5148"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5728\u7ebf\u8282\u5047\u65e5_api_\u4f18\u5148",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12294,9 +12294,9 @@
       "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12305,9 +12305,9 @@
       "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12316,9 +12316,9 @@
       "source_location": "L33",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12327,9 +12327,9 @@
       "source_location": "L10",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0",
-      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1"
+      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12338,9 +12338,9 @@
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_answer"
+      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_answer",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12349,9 +12349,9 @@
       "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_outcome"
+      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_outcome",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -12360,9 +12360,9 @@
       "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_source_nodes"
+      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_source_nodes",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -12578,16 +12578,6 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "docs/faq/combined-audit.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "readme_md",
-      "target": "docs_faq_combined_audit"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "README.md",
       "source_location": null,
       "weight": 1.0,
@@ -12643,6 +12633,16 @@
       "weight": 1.0,
       "source": "readme_md",
       "target": "concept_nicegui_web"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/faq/combined-audit.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "docs_faq_combined_audit"
     },
     {
       "relation": "references",
@@ -12818,26 +12818,6 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "docs/development/dual-agent-development.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_development_dual_agent_development",
-      "target": "docs_development_single_implementation_development"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/development/dual-agent-development.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_development_dual_agent_development",
-      "target": "root_readme_md"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "docs/development/m1-issue-drafts.md",
       "source_location": null,
       "weight": 1.0,
@@ -12858,6 +12838,16 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "docs/development/dual-agent-development.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_development_dual_agent_development",
+      "target": "docs_development_single_implementation_development"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "docs/development/single-implementation-development.md",
       "source_location": null,
       "weight": 1.0,
@@ -12873,6 +12863,16 @@
       "weight": 1.0,
       "source": "docs_development_dual_agent_development",
       "target": "docs_development_workflow_reset_20260721_workflow_reset"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/development/dual-agent-development.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_development_dual_agent_development",
+      "target": "root_readme_md"
     },
     {
       "relation": "references",
@@ -13108,16 +13108,6 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "docs/development/local-development-environments.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_development_single_implementation_development_single_implementation_development",
-      "target": "docs_development_local_dev_environments"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "docs/development/single-implementation-development.md",
       "source_location": null,
       "weight": 1.0,
@@ -13173,6 +13163,16 @@
       "weight": 1.0,
       "source": "docs_development_single_implementation_development_single_implementation_development",
       "target": "concept_tdd"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/development/local-development-environments.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_development_single_implementation_development_single_implementation_development",
+      "target": "docs_development_local_dev_environments"
     },
     {
       "relation": "conceptually_related_to",
@@ -13542,16 +13542,6 @@
       "source_location": null,
       "weight": 1.0,
       "source": "tool_uv",
-      "target": "config_pyproject_toml"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/development/local-development-environments.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "tool_uv",
       "target": "config_cernet_mirror"
     },
     {
@@ -13571,8 +13561,8 @@
       "source_file": "docs/development/local-development-environments.md",
       "source_location": null,
       "weight": 1.0,
-      "source": "config_compose_dev",
-      "target": "config_github_ywyz_tech"
+      "source": "tool_uv",
+      "target": "config_pyproject_toml"
     },
     {
       "relation": "shares_data_with",
@@ -13583,6 +13573,16 @@
       "weight": 1.0,
       "source": "config_compose_dev",
       "target": "config_dev_profile"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/development/local-development-environments.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "config_compose_dev",
+      "target": "config_github_ywyz_tech"
     },
     {
       "relation": "references",
@@ -14275,16 +14275,6 @@
       "target": "docs_security_threat_model_personal_device_session_controls"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/security/threat-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_security_threat_model_legitimate_export_exfiltration",
-      "target": "docs_security_threat_model_child_manager_threat_model"
-    },
-    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -14293,6 +14283,16 @@
       "weight": 1.0,
       "source": "docs_security_threat_model_legitimate_export_exfiltration",
       "target": "docs_security_threat_model_authorized_short_lived_export_download"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/threat-model.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_security_threat_model_legitimate_export_exfiltration",
+      "target": "docs_security_threat_model_child_manager_threat_model"
     },
     {
       "relation": "rationale_for",
@@ -14325,16 +14325,6 @@
       "target": "docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_passkey_only_login"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/security/threat-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_security_threat_model_no_weak_authentication_fallback",
-      "target": "docs_security_threat_model_child_manager_threat_model"
-    },
-    {
       "relation": "semantically_similar_to",
       "confidence": "INFERRED",
       "confidence_score": 0.95,
@@ -14343,6 +14333,16 @@
       "weight": 1.0,
       "source": "docs_security_threat_model_no_weak_authentication_fallback",
       "target": "docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_passkey_only_login"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/security/threat-model.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_security_threat_model_no_weak_authentication_fallback",
+      "target": "docs_security_threat_model_child_manager_threat_model"
     },
     {
       "relation": "implements",
@@ -14718,16 +14718,6 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "docs/ADR/ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md",
-      "source_location": "\u80cc\u666f\uff1b\u5b9e\u65bd\u4e0e\u9a8c\u8bc1\u7ea6\u675f",
-      "weight": 1.0,
-      "source": "docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_adr_0010",
-      "target": "docs_security_threat_model_child_manager_threat_model"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "docs/design/system-architecture.md",
       "source_location": "\u00a71\uff1b\u00a76.3\uff1b\u00a715",
       "weight": 1.0,
@@ -14753,6 +14743,16 @@
       "weight": 1.0,
       "source": "docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_adr_0010",
       "target": "docs_roadmap_child_manager_roadmap"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ADR/ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md",
+      "source_location": "\u80cc\u666f\uff1b\u5b9e\u65bd\u4e0e\u9a8c\u8bc1\u7ea6\u675f",
+      "weight": 1.0,
+      "source": "docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_adr_0010",
+      "target": "docs_security_threat_model_child_manager_threat_model"
     },
     {
       "relation": "conceptually_related_to",
@@ -15235,16 +15235,6 @@
       "target": "specs_001_daily_activity_plan_contracts_openapi_lesson_plan_endpoints"
     },
     {
-      "relation": "semantically_similar_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "docs/PRD/lesson-management.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_prd_lesson_management_passkey_identity_lifecycle",
-      "target": "specs_001_daily_activity_plan_quickstart_webauthn_recovery_and_session_acceptance"
-    },
-    {
       "relation": "implements",
       "confidence": "INFERRED",
       "confidence_score": 0.95,
@@ -15261,8 +15251,8 @@
       "source_file": "docs/PRD/lesson-management.md",
       "source_location": null,
       "weight": 1.0,
-      "source": "docs_prd_lesson_management_manual_lesson_plan_loop",
-      "target": "specs_001_daily_activity_plan_spec_manual_lesson_plan_story"
+      "source": "docs_prd_lesson_management_passkey_identity_lifecycle",
+      "target": "specs_001_daily_activity_plan_quickstart_webauthn_recovery_and_session_acceptance"
     },
     {
       "relation": "conceptually_related_to",
@@ -15281,8 +15271,8 @@
       "source_file": "docs/PRD/lesson-management.md",
       "source_location": null,
       "weight": 1.0,
-      "source": "docs_prd_lesson_management_teacher_controlled_ai_workflow",
-      "target": "specs_001_daily_activity_plan_spec_teacher_controlled_ai_story"
+      "source": "docs_prd_lesson_management_manual_lesson_plan_loop",
+      "target": "specs_001_daily_activity_plan_spec_manual_lesson_plan_story"
     },
     {
       "relation": "implements",
@@ -15293,6 +15283,16 @@
       "weight": 1.0,
       "source": "docs_prd_lesson_management_teacher_controlled_ai_workflow",
       "target": "specs_001_daily_activity_plan_contracts_openapi_jobs_and_preview_endpoints"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/PRD/lesson-management.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_prd_lesson_management_teacher_controlled_ai_workflow",
+      "target": "specs_001_daily_activity_plan_spec_teacher_controlled_ai_story"
     },
     {
       "relation": "semantically_similar_to",
@@ -15535,16 +15535,6 @@
       "target": "docs_design_data_model_relational_header_and_jsonb_content"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_data_model_child_manager_data_model",
-      "target": "docs_design_system_architecture_child_manager_system_architecture"
-    },
-    {
       "relation": "implements",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -15553,6 +15543,16 @@
       "weight": 1.0,
       "source": "docs_design_data_model_child_manager_data_model",
       "target": "docs_design_database_schema_child_manager_postgresql_database_schema"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_data_model_child_manager_data_model",
+      "target": "docs_design_system_architecture_child_manager_system_architecture"
     },
     {
       "relation": "semantically_similar_to",
@@ -15808,6 +15808,16 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "docs/ROADMAP.md",
+      "source_location": "\u00a72",
+      "weight": 1.0,
+      "source": "docs_design_system_architecture_child_manager_system_architecture",
+      "target": "docs_roadmap_child_manager_roadmap"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "docs/design/system-architecture.md",
       "source_location": "\u00a76.3",
       "weight": 1.0,
@@ -15833,16 +15843,6 @@
       "weight": 1.0,
       "source": "docs_design_system_architecture_child_manager_system_architecture",
       "target": "specs_001_daily_activity_plan_contracts_readme_api_v1_contract_guide"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/ROADMAP.md",
-      "source_location": "\u00a72",
-      "weight": 1.0,
-      "source": "docs_design_system_architecture_child_manager_system_architecture",
-      "target": "docs_roadmap_child_manager_roadmap"
     },
     {
       "relation": "semantically_similar_to",
@@ -16038,21 +16038,21 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_data_model_phase_one_data_model",
-      "target": "specs_001_daily_activity_plan_spec_first_release_feature_specification"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "specs/001-daily-activity-plan/plan.md",
       "source_location": null,
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_data_model_phase_one_data_model",
       "target": "specs_001_daily_activity_plan_plan_first_release_implementation_plan"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/data-model.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_data_model_phase_one_data_model",
+      "target": "specs_001_daily_activity_plan_spec_first_release_feature_specification"
     },
     {
       "relation": "conceptually_related_to",
@@ -16125,16 +16125,6 @@
       "target": "specs_001_daily_activity_plan_tasks_dependency_ordered_tasks"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/plan.md",
-      "source_location": "lines 301-315",
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_plan_milestone_gates",
-      "target": "specs_001_daily_activity_plan_tasks_t035_m2_independent_acceptance"
-    },
-    {
       "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -16143,6 +16133,16 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_plan_milestone_gates",
       "target": "specs_001_daily_activity_plan_tasks_incremental_delivery_strategy"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/plan.md",
+      "source_location": "lines 301-315",
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_plan_milestone_gates",
+      "target": "specs_001_daily_activity_plan_tasks_t035_m2_independent_acceptance"
     },
     {
       "relation": "conceptually_related_to",
@@ -18075,16 +18075,6 @@
       "target": "specs_001_daily_activity_plan_spec_immutable_lesson_plan_history"
     },
     {
-      "relation": "semantically_similar_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "specs/001-daily-activity-plan/research.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_research_fixed_teacher_plan_word_template",
-      "target": "specs_001_daily_activity_plan_spec_word_template_fidelity"
-    },
-    {
       "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -18093,6 +18083,16 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_research_fixed_teacher_plan_word_template",
       "target": "specs_001_daily_activity_plan_research_immutable_export_input_snapshot"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "specs/001-daily-activity-plan/research.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_research_fixed_teacher_plan_word_template",
+      "target": "specs_001_daily_activity_plan_spec_word_template_fidelity"
     },
     {
       "relation": "conceptually_related_to",
@@ -18215,16 +18215,6 @@
       "target": "specs_001_daily_activity_plan_spec_webauthn_challenge_entity"
     },
     {
-      "relation": "semantically_similar_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "specs/001-daily-activity-plan/research.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_research_bootstrap_initialization",
-      "target": "specs_001_daily_activity_plan_spec_bootstrap_initialization_entity"
-    },
-    {
       "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -18233,6 +18223,16 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_research_bootstrap_initialization",
       "target": "specs_001_daily_activity_plan_research_expand_enroll_contract_password_migration"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "specs/001-daily-activity-plan/research.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_research_bootstrap_initialization",
+      "target": "specs_001_daily_activity_plan_spec_bootstrap_initialization_entity"
     },
     {
       "relation": "semantically_similar_to",
@@ -18985,16 +18985,6 @@
       "target": "specs_001_daily_activity_plan_tasks_us7_audit_degradation"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_us3_ai_configuration",
-      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
-    },
-    {
       "relation": "implements",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -19003,6 +18993,16 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_tasks_us3_ai_configuration",
       "target": "specs_001_daily_activity_plan_tasks_ai_model_prompt_domain"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_us3_ai_configuration",
+      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
     },
     {
       "relation": "conceptually_related_to",
@@ -19025,16 +19025,6 @@
       "target": "specs_001_daily_activity_plan_tasks_us7_audit_degradation"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_us4_teacher_controlled_ai",
-      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
-    },
-    {
       "relation": "implements",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -19043,6 +19033,16 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_tasks_us4_teacher_controlled_ai",
       "target": "specs_001_daily_activity_plan_tasks_ai_preview_adoption_domain"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_us4_teacher_controlled_ai",
+      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
     },
     {
       "relation": "conceptually_related_to",
@@ -19065,16 +19065,6 @@
       "target": "specs_001_daily_activity_plan_tasks_us7_audit_degradation"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_us5_group_activity",
-      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
-    },
-    {
       "relation": "implements",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -19083,6 +19073,16 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_tasks_us5_group_activity",
       "target": "specs_001_daily_activity_plan_tasks_group_activity_two_stage_flow"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_us5_group_activity",
+      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
     },
     {
       "relation": "conceptually_related_to",
@@ -19105,16 +19105,6 @@
       "target": "specs_001_daily_activity_plan_tasks_us7_audit_degradation"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_us6_word_export",
-      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
-    },
-    {
       "relation": "implements",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -19123,6 +19113,16 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_tasks_us6_word_export",
       "target": "specs_001_daily_activity_plan_tasks_fixed_word_delivery"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_us6_word_export",
+      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
     },
     {
       "relation": "conceptually_related_to",
@@ -19135,16 +19135,6 @@
       "target": "specs_001_daily_activity_plan_tasks_us7_audit_degradation"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_us7_audit_degradation",
-      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
-    },
-    {
       "relation": "implements",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -19153,6 +19143,16 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_tasks_us7_audit_degradation",
       "target": "specs_001_daily_activity_plan_tasks_audit_and_fault_isolation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_us7_audit_degradation",
+      "target": "specs_001_daily_activity_plan_tasks_incremental_delivery"
     },
     {
       "relation": "conceptually_related_to",
@@ -20148,16 +20148,6 @@
       "relation": "semantically_similar_to",
       "confidence": "INFERRED",
       "confidence_score": 0.95,
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_data_model_preregistered_responsibility_references",
-      "target": "specs_001_daily_activity_plan_data_model_bootstrap_preregistered_references"
-    },
-    {
-      "relation": "semantically_similar_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
       "source_file": "docs/design/database-schema.md",
       "source_location": null,
       "weight": 1.0,
@@ -20173,6 +20163,16 @@
       "weight": 1.0,
       "source": "docs_design_data_model_preregistered_responsibility_references",
       "target": "specs_001_daily_activity_plan_contracts_readme_last_admin_cli_recovery_contract"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_data_model_preregistered_responsibility_references",
+      "target": "specs_001_daily_activity_plan_data_model_bootstrap_preregistered_references"
     },
     {
       "relation": "implements",
@@ -20245,6 +20245,16 @@
       "target": "specs_001_daily_activity_plan_data_model_account_recovery_requests"
     },
     {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_data_model_immutable_dual_approvals",
+      "target": "docs_design_data_model_immutable_history"
+    },
+    {
       "relation": "semantically_similar_to",
       "confidence": "INFERRED",
       "confidence_score": 0.95,
@@ -20273,16 +20283,6 @@
       "weight": 1.0,
       "source": "docs_design_data_model_immutable_dual_approvals",
       "target": "specs_001_daily_activity_plan_data_model_immutable_dual_approvals"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_data_model_immutable_dual_approvals",
-      "target": "docs_design_data_model_immutable_history"
     },
     {
       "relation": "semantically_similar_to",
@@ -21075,16 +21075,6 @@
       "target": "specs_001_daily_activity_plan_spec_last_admin_stable_conflict_edge_case"
     },
     {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/quickstart.md",
-      "source_location": "lines 102-108",
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_quickstart_last_admin_recovery_cli_flow",
-      "target": "specs_001_daily_activity_plan_tasks_t033_stable_recovery_conflict_api"
-    },
-    {
       "relation": "implements",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -21093,6 +21083,16 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_quickstart_last_admin_recovery_cli_flow",
       "target": "specs_001_daily_activity_plan_tasks_t032_last_admin_cli_implementation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/quickstart.md",
+      "source_location": "lines 102-108",
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_quickstart_last_admin_recovery_cli_flow",
+      "target": "specs_001_daily_activity_plan_tasks_t033_stable_recovery_conflict_api"
     },
     {
       "relation": "implements",
@@ -21963,5 +21963,5 @@
       "source_file": "graphify-out/memory/query_20260712_071357_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u7684\u6570\u636e\u5b9e\u4f53_\u5173\u7cfb_\u552f\u4e00\u7ea6\u675f_\u5386\u53f2\u7248\u672c_\u5f02\u6b65\u4efb\u52a1\u548c\u5b89\u5168\u8fb9\u754c\u662f\u4ec0\u4e48.md"
     }
   ],
-  "built_at_commit": "e1d10e9826d520601f2ecc46e614da1df1ed30aa"
+  "built_at_commit": "a0524e7ff0621944b8e9b15d598191a52d7d1116"
 }
