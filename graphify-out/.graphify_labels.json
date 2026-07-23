@@ -43,7 +43,6 @@
   "41": "test_openapi_document.py",
   "42": "完整 SDD 工作流",
   "43": "0001_identity_and_audit.py",
-  "44": "test_0001_identity.py",
   "45": "_run_cli",
   "46": "Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务",
   "47": "create-new-feature.sh",
@@ -258,11 +257,7 @@
   "256": "Ruff",
   "257": "middleware.py",
   "258": "resolve_client_ip",
-  "259": "Manual Lesson Plan Story",
-  "260": "test_password_to_passkey.py",
-  "261": "API v1 Contract Guide",
   "262": "0002_passkey_expand.py",
   "263": "test_users_contract.py",
-  "264": "csrf.py",
   "265": "0003_passkey_contract.py"
 }
