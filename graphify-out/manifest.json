@@ -1053,5 +1053,40 @@
     "mtime": 1784803638.9189963,
     "ast_hash": "4b21741956d62c8f048544ce538d994e",
     "semantic_hash": "4b21741956d62c8f048544ce538d994e"
+  },
+  "packages/backend/settings/__init__.py": {
+    "mtime": 1784811710.786924,
+    "ast_hash": "76440404e5aabad75a0689ffe71aebc1",
+    "semantic_hash": ""
+  },
+  "packages/backend/settings/repository.py": {
+    "mtime": 1784811710.786924,
+    "ast_hash": "cbfec38fb082113cd909e7eb8a06670e",
+    "semantic_hash": ""
+  },
+  "packages/backend/settings/service.py": {
+    "mtime": 1784811710.786924,
+    "ast_hash": "bdd08bed824936e28a88f1fad953b0ce",
+    "semantic_hash": ""
+  },
+  "tests/migrations/test_0004_settings.py": {
+    "mtime": 1784811884.4129188,
+    "ast_hash": "21ef64b7055c70458849da21f0a95d33",
+    "semantic_hash": ""
+  },
+  "tests/repository/test_settings_isolation.py": {
+    "mtime": 1784811956.5289168,
+    "ast_hash": "0e44aff410087d622930f1f09f72f9e8",
+    "semantic_hash": ""
+  },
+  "tests/unit/settings/__init__.py": {
+    "mtime": 1784811710.786924,
+    "ast_hash": "a90804efbc05a166b5de2df530da617e",
+    "semantic_hash": ""
+  },
+  "tests/unit/settings/test_rules.py": {
+    "mtime": 1784811864.8049195,
+    "ast_hash": "adfd3e2483570dce6682b7fb0371d341",
+    "semantic_hash": ""
   }
 }
