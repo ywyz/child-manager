@@ -1,8 +1,8 @@
 {
   "README.md": {
-    "mtime": 1784724932.4628968,
-    "ast_hash": "889239baa527126ff30f7b71f12f55dd",
-    "semantic_hash": "889239baa527126ff30f7b71f12f55dd"
+    "mtime": 1784811065.7739425,
+    "ast_hash": "330477ed933b7052bd763779a64861bc",
+    "semantic_hash": "330477ed933b7052bd763779a64861bc"
   },
   "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md": {
     "mtime": 1784629027.3279848,
@@ -15,9 +15,9 @@
     "semantic_hash": "f64ebe1efd082efc7daf0596be85a3b4"
   },
   "CONTEXT.md": {
-    "mtime": 1784798423.4418106,
-    "ast_hash": "0b45fa43e38d452fdf600dbba8645885",
-    "semantic_hash": ""
+    "mtime": 1784811065.7729425,
+    "ast_hash": "224428e8155ad409765dd9c2606c79c3",
+    "semantic_hash": "224428e8155ad409765dd9c2606c79c3"
   },
   "graphify-out/memory/query_20260710_131311_\u8bf7\u9605\u8bfb\u4ee5\u4e0a\u5185\u5bb9\u548c\u73b0\u6709\u7684agents_md_\u8fd8\u6709ywyz_kindergartenmanager_gi.md": {
     "mtime": 1784629027.3239849,
@@ -67,17 +67,17 @@
   "docs/PRD/lesson-management.md": {
     "mtime": 1784798423.4428105,
     "ast_hash": "42e6be59b34a6d6e40ed0d49ac48a077",
-    "semantic_hash": ""
+    "semantic_hash": "42e6be59b34a6d6e40ed0d49ac48a077"
   },
   "docs/design/data-model.md": {
     "mtime": 1784798423.4438107,
     "ast_hash": "acaa6966e6643589a690582f347b5177",
-    "semantic_hash": ""
+    "semantic_hash": "acaa6966e6643589a690582f347b5177"
   },
   "docs/design/system-architecture.md": {
     "mtime": 1784798423.4448106,
     "ast_hash": "043f012682729f37bd612a28d5aef5e0",
-    "semantic_hash": ""
+    "semantic_hash": "043f012682729f37bd612a28d5aef5e0"
   },
   "graphify-out/memory/query_20260711_020708_\u8bf7\u6839\u636e\u73b0\u6709\u6587\u6863_\u548c\u65e7\u4ed3\u5e93\u7684\u6587\u4ef6\u601d\u8003\u5982\u4f55\u64b0\u5199_docs_prd_lesson_management_m.md": {
     "mtime": 1784629027.3239849,
@@ -112,12 +112,12 @@
   "docs/design/database-schema.md": {
     "mtime": 1784798423.4448106,
     "ast_hash": "614791c7ced7a616ab3c47b9d49576ba",
-    "semantic_hash": ""
+    "semantic_hash": "614791c7ced7a616ab3c47b9d49576ba"
   },
   "docs/ROADMAP.md": {
-    "mtime": 1784798423.4438107,
-    "ast_hash": "12a754265e2fa530b5efb5b3f64e3d82",
-    "semantic_hash": ""
+    "mtime": 1784811065.7739425,
+    "ast_hash": "f307a676ac3769a7becef9ba0a69d19b",
+    "semantic_hash": "f307a676ac3769a7becef9ba0a69d19b"
   },
   "docs/development/dual-agent-development.md": {
     "mtime": 1784710674.5599632,
@@ -267,7 +267,7 @@
   "specs/001-daily-activity-plan/checklists/requirements.md": {
     "mtime": 1784798423.4458106,
     "ast_hash": "96ee1447952fbae509a3399aec5dfc12",
-    "semantic_hash": ""
+    "semantic_hash": "96ee1447952fbae509a3399aec5dfc12"
   },
   "specs/001-daily-activity-plan/contracts/README.md": {
     "mtime": 1784808434.3209717,
@@ -287,32 +287,32 @@
   "specs/001-daily-activity-plan/data-model.md": {
     "mtime": 1784798423.4478106,
     "ast_hash": "ec3ecd0429f301ee8843a8f537fd85c0",
-    "semantic_hash": ""
+    "semantic_hash": "ec3ecd0429f301ee8843a8f537fd85c0"
   },
   "specs/001-daily-activity-plan/plan.md": {
-    "mtime": 1784798423.4488106,
-    "ast_hash": "23d4eaca0e1c951444637ef02bf5ae19",
-    "semantic_hash": ""
+    "mtime": 1784811065.7749426,
+    "ast_hash": "4dca8db560c2eeae1889589f15dec322",
+    "semantic_hash": "4dca8db560c2eeae1889589f15dec322"
   },
   "specs/001-daily-activity-plan/quickstart.md": {
-    "mtime": 1784798423.4488106,
-    "ast_hash": "640af6497231d72c2e787a02561adc85",
-    "semantic_hash": ""
+    "mtime": 1784811065.7749426,
+    "ast_hash": "8636f324b6bc8ec389146c86eed512c0",
+    "semantic_hash": "8636f324b6bc8ec389146c86eed512c0"
   },
   "specs/001-daily-activity-plan/research.md": {
     "mtime": 1784798423.4498107,
     "ast_hash": "d7ef6023b26100513a7fa22d7fe5e8b4",
-    "semantic_hash": ""
+    "semantic_hash": "d7ef6023b26100513a7fa22d7fe5e8b4"
   },
   "specs/001-daily-activity-plan/spec.md": {
-    "mtime": 1784805990.0889282,
-    "ast_hash": "2ccf581146383768790b2302d447e342",
-    "semantic_hash": ""
+    "mtime": 1784811065.7759426,
+    "ast_hash": "a0a12c9bf68cfa4f7a6acef4b0027d2c",
+    "semantic_hash": "a0a12c9bf68cfa4f7a6acef4b0027d2c"
   },
   "specs/001-daily-activity-plan/tasks.md": {
-    "mtime": 1784806051.1729264,
-    "ast_hash": "b10e0aad7ce0b99bbf1172d50d95058c",
-    "semantic_hash": ""
+    "mtime": 1784811093.2529418,
+    "ast_hash": "52c66087937a3b3cf1d10b8b0f6e28bc",
+    "semantic_hash": "52c66087937a3b3cf1d10b8b0f6e28bc"
   },
   "docs/faq/combined-audit.md": {
     "mtime": 1784710674.5609632,
@@ -957,12 +957,12 @@
   "docs/ADR/ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md": {
     "mtime": 1784798423.4428105,
     "ast_hash": "f75c687c9c62d6279db9c154cbaa606d",
-    "semantic_hash": ""
+    "semantic_hash": "f75c687c9c62d6279db9c154cbaa606d"
   },
   "docs/security/threat-model.md": {
     "mtime": 1784798423.4458106,
     "ast_hash": "bf18bf9b80a24feebc4548cbb1db3d17",
-    "semantic_hash": ""
+    "semantic_hash": "bf18bf9b80a24feebc4548cbb1db3d17"
   },
   "packages/backend/database/migrations/versions/0002_passkey_expand.py": {
     "mtime": 1784798411.383811,
