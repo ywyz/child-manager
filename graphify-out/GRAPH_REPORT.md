@@ -4,53 +4,50 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 838 nodes · 1044 edges · 211 communities (37 shown, 174 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 109 edges (avg confidence: 0.93)
+- 822 nodes · 863 edges · 206 communities (34 shown, 172 thin omitted)
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 75 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7d870507`
+- Built from commit: `c6010b20`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - First Release Research
-- 账号恢复请求
-- FR-075 Recovery and Last-Administrator Control
-- 首期一日活动计划任务计划
-- Child Manager Product and Engineering Roadmap
-- Child Manager 首期安全威胁模型
-- M2 Issue Drafts
-- First Release Feature Specification
-- TooManyRequests 响应
-- Local Development Environments
 - ADR-0010：受限公网、通行密钥与双条件恢复
-- API v1 Contract Guide
-- README.md - 产品总纲
+- 账号恢复请求
+- Child Manager 当前状态与交接上下文
+- M2 Issue Drafts
+- Child Manager 幼儿园教育管理系统概览
+- M2 认证授权与身份审计 complete
+- TooManyRequests 响应
+- 首期一日活动计划完整闭环规格
+- Local Development Environments
+- M2 认证、授权与身份审计 T021–T035（已完成）
+- Child Manager System Architecture
+- NiceGUI Web、FastAPI API 与 Dramatiq Worker 三个独立运行单元
+- 可靠 AI 投递、四栏批次、重试、预览采用与反思验收
 - common.sh
 - ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets
 - Child Manager Agent Development Rules
-- Child Manager System Architecture
 - Lesson Management PRD
 - ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行
 - ADR-0005：AI 供应商中立，并建立管理员专用提示词系统
-- Child Manager Project Context
 - ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体
 - ADR-0006：一日活动计划采用固定 Word 模板导出边界
 - ADR-0008：日期与外部服务采用本地优先和软降级
-- Child Manager 产品与工程路线图
-- User and Role Entity
-- AI Generation Preview Entity
-- init-admin recover-last-admin CLI
+- Child Manager Data Model
+- Child Manager Project Constitution
+- ADR 目录索引
+- Daily Activity Plan OpenAPI Contract
+- API v1 Contract Guide
+- Daily Activity Plan Design Research
 - 完整 SDD 工作流
-- Daily Activity Plan Entity
 - Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务
 - create-new-feature.sh
-- Manual Lesson Plan Story
-- 409 identity.last_admin_recovery_requires_cli
-- Bootstrap Initialization
-- Group Activity Two Phase Generation
-- Account Recovery Request Entity
+- Specification Quality Gate
+- 首期一日活动计划完整闭环任务清单
 - Spec Kit 任务模板
 - CONTRIBUTING.md - 贡献指南
 - check-prerequisites.sh
@@ -87,8 +84,6 @@
 - Spec Kit 任务转 GitHub Issue
 - 检查清单模板
 - 项目宪章模板
-- packages/contracts 共享契约
-- 提示词管理系统
 - 避免日期专用文档提交
 - Codex 实现子 Issue
 - 共同基线分支创建
@@ -227,43 +222,49 @@
 - Ruff
 
 ## God Nodes (most connected - your core abstractions)
-1. `First Release Research` - 65 edges
-2. `First Release Feature Specification` - 63 edges
-3. `ADR-0010：受限公网、通行密钥与双条件恢复` - 34 edges
-4. `Child Manager System Architecture` - 30 edges
-5. `Lesson Management PRD` - 24 edges
-6. `Child Manager 首期安全威胁模型` - 24 edges
-7. `首期一日活动计划任务计划` - 22 edges
-8. `Child Manager Product and Engineering Roadmap` - 21 edges
-9. `Child Manager Project Context` - 19 edges
-10. `M2 Issue Drafts` - 15 edges
+1. `First Release Research` - 64 edges
+2. `ADR-0010：受限公网、通行密钥与双条件恢复` - 31 edges
+3. `Child Manager System Architecture` - 27 edges
+4. `Child Manager 首期安全威胁模型` - 23 edges
+5. `Lesson Management PRD` - 21 edges
+6. `M2 Issue Drafts` - 15 edges
+7. `Child Manager 当前状态与交接上下文` - 14 edges
+8. `Repository Workflow Reset 2026-07-21` - 13 edges
+9. `Local Development Environments` - 12 edges
+10. `M1 Issue Drafts` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Teacher Control and Word Fidelity` --semantically_similar_to--> `Teacher Controlled AI Story`  [INFERRED] [semantically similar]
-  .specify/memory/constitution.md → specs/001-daily-activity-plan/spec.md
-- `Manual Lesson Plan Loop` --semantically_similar_to--> `Manual Lesson Plan Story`  [INFERRED] [semantically similar]
-  docs/PRD/lesson-management.md → specs/001-daily-activity-plan/spec.md
-- `Teacher Controlled AI Workflow` --semantically_similar_to--> `Teacher Controlled AI Story`  [INFERRED] [semantically similar]
-  docs/PRD/lesson-management.md → specs/001-daily-activity-plan/spec.md
-- `受限公网 Web/BFF 唯一入口` --semantically_similar_to--> `公网与私有运行单元信任边界`  [INFERRED] [semantically similar]
-  CONTEXT.md → docs/security/threat-model.md
-- `通行密钥唯一登录与双条件恢复` --semantically_similar_to--> `WebAuthn 通行密钥唯一常规登录`  [INFERRED] [semantically similar]
-  CONTEXT.md → docs/ADR/ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md
+- `恢复完成全量认证材料撤销` --semantically_similar_to--> `恢复登记全量原子撤销`  [INFERRED] [semantically similar]
+  docs/design/data-model.md → specs/001-daily-activity-plan/contracts/openapi.yaml
+- `恢复完成全量认证材料撤销` --semantically_similar_to--> `恢复完成全量撤销契约`  [INFERRED] [semantically similar]
+  docs/design/data-model.md → specs/001-daily-activity-plan/contracts/README.md
+- `恢复完成全量认证材料撤销` --semantically_similar_to--> `Feature 恢复全量撤销`  [INFERRED] [semantically similar]
+  docs/design/data-model.md → specs/001-daily-activity-plan/data-model.md
+- `Kindergarten Isolation and Server Authorization` --semantically_similar_to--> `Kindergarten Scoped Domain Model`  [INFERRED] [semantically similar]
+  .specify/memory/constitution.md → docs/design/data-model.md
+- `Authoritative State and Recoverability` --semantically_similar_to--> `PostgreSQL Authoritative Task State`  [INFERRED] [semantically similar]
+  .specify/memory/constitution.md → docs/design/system-architecture.md
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
-- **跨文档最后管理员稳定 409 契约** — context_last_admin_stable_409, docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_last_admin_stable_409, docs_prd_lesson_management_last_admin_stable_409, docs_roadmap_m2_last_admin_stable_409_gate, docs_design_system_architecture_last_admin_stable_409, docs_security_threat_model_last_admin_stable_409 [EXTRACTED 1.00]
-- **跨文档最后管理员 CLI 恢复契约** — context_last_admin_cli_recovery, docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_recover_last_admin_cli, docs_prd_lesson_management_recover_last_admin_cli, docs_roadmap_m2_recover_last_admin_cli, docs_design_system_architecture_recover_last_admin_cli, docs_security_threat_model_recover_last_admin_cli_boundary [EXTRACTED 1.00]
-- **跨文档双批准原子性契约** — docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_atomic_two_immutable_approvals, docs_prd_lesson_management_atomic_dual_approval_and_credential, docs_roadmap_m2_atomic_dual_approval, docs_design_system_architecture_atomic_two_immutable_approvals, docs_security_threat_model_atomic_dual_approval [EXTRACTED 1.00]
+- **M2 最终验收证据集合** — readme_m2_complete, readme_issue_4_completed, readme_m2_docs_baseline, readme_m2_dev_baseline, readme_m2_quality_gates [EXTRACTED 1.00]
+- **M3 RED 启动门禁** — context_m2_complete, context_m3_ready, context_issue_7, context_m3_docs_baseline, context_t037_red_next [EXTRACTED 1.00]
+- **M0 至 M9 产品工程里程碑链** — docs_roadmap_m0_complete, docs_roadmap_m1_complete, docs_roadmap_m2_complete, docs_roadmap_m3_ready, docs_roadmap_m4_pending, docs_roadmap_m5_pending, docs_roadmap_m6_pending, docs_roadmap_m7_pending, docs_roadmap_m8_pending, docs_roadmap_m9_pending [EXTRACTED 1.00]
+- **教师控制的可靠 AI 生成与采用流程** — specs_001_daily_activity_plan_spec_authoritative_background_jobs, specs_001_daily_activity_plan_spec_teacher_controlled_preview, specs_001_daily_activity_plan_spec_manual_save_autosave_history [EXTRACTED 1.00]
+- **可靠三运行单元架构** — specs_001_daily_activity_plan_plan_three_runtime_units, specs_001_daily_activity_plan_plan_postgresql_authority_redis_delivery, specs_001_daily_activity_plan_plan_transaction_idempotency_design [EXTRACTED 1.00]
+- **首期本地实现与验收链** — specs_001_daily_activity_plan_quickstart_local_development_profile, specs_001_daily_activity_plan_quickstart_three_process_startup, specs_001_daily_activity_plan_quickstart_quality_gate_commands, specs_001_daily_activity_plan_quickstart_identity_acceptance_matrix, specs_001_daily_activity_plan_quickstart_manual_plan_acceptance, specs_001_daily_activity_plan_quickstart_reliable_ai_acceptance, specs_001_daily_activity_plan_quickstart_word_export_acceptance [EXTRACTED 1.00]
+- **M2 已完成的 RED、实现与独立验收闭环** — specs_001_daily_activity_plan_tasks_m2_red_tests_complete, specs_001_daily_activity_plan_tasks_m2_implementation_complete, specs_001_daily_activity_plan_tasks_m2_checkpoint_complete [EXTRACTED 1.00]
+- **M3 已具备启动前提但测试、实现与验收仍待执行** — specs_001_daily_activity_plan_tasks_m2_checkpoint_complete, specs_001_daily_activity_plan_tasks_m3_red_tests_pending, specs_001_daily_activity_plan_tasks_m3_implementation_pending, specs_001_daily_activity_plan_tasks_m3_checkpoint_pending [INFERRED 0.95]
+- **跨文档最后管理员稳定 409 契约** — docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_last_admin_stable_409, docs_prd_lesson_management_last_admin_stable_409, docs_design_system_architecture_last_admin_stable_409, docs_security_threat_model_last_admin_stable_409 [EXTRACTED 1.00]
+- **跨文档最后管理员 CLI 恢复契约** — docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_recover_last_admin_cli, docs_prd_lesson_management_recover_last_admin_cli, docs_design_system_architecture_recover_last_admin_cli, docs_security_threat_model_recover_last_admin_cli_boundary [EXTRACTED 1.00]
+- **跨文档双批准原子性契约** — docs_adr_adr_0010_restricted_public_entry_passkey_authentication_and_recovery_atomic_two_immutable_approvals, docs_prd_lesson_management_atomic_dual_approval_and_credential, docs_design_system_architecture_atomic_two_immutable_approvals, docs_security_threat_model_atomic_dual_approval [EXTRACTED 1.00]
 - **最后管理员恢复安全链** — docs_design_data_model_preregistered_responsibility_references, docs_design_data_model_account_recovery_requests, docs_design_data_model_immutable_dual_approvals, docs_design_data_model_fifteen_minute_registration_credential, specs_001_daily_activity_plan_contracts_readme_stable_409_last_admin_recovery, docs_design_data_model_recovery_full_revocation [INFERRED 0.85]
 - **园所隔离契约层次** — docs_design_data_model_kindergarten_isolation, docs_design_database_schema_composite_kindergarten_foreign_keys, specs_001_daily_activity_plan_data_model_tenant_isolation [INFERRED 0.85]
-- **设计到 API 的契约追溯** — docs_design_data_model_domain_model_contract, docs_design_database_schema_physical_schema_contract, specs_001_daily_activity_plan_contracts_readme_api_contract_catalog, specs_001_daily_activity_plan_contracts_openapi_api_v1_contract, specs_001_daily_activity_plan_data_model_feature_data_model [INFERRED 0.85]
-- **Last-Administrator Recovery Contract Chain** — specs_001_daily_activity_plan_checklists_requirements_recovery_clarification_validation, specs_001_daily_activity_plan_plan_frozen_bootstrap_cli_commands, specs_001_daily_activity_plan_quickstart_last_admin_recovery_cli_flow, specs_001_daily_activity_plan_research_last_admin_recovery_decision, specs_001_daily_activity_plan_spec_fr_075_recovery_and_last_admin_control, specs_001_daily_activity_plan_tasks_t032_last_admin_cli_implementation, specs_001_daily_activity_plan_tasks_t033_stable_recovery_conflict_api [EXTRACTED 1.00]
-- **Authentication Failure Count Persistence Chain** — specs_001_daily_activity_plan_checklists_requirements_recovery_clarification_validation, specs_001_daily_activity_plan_spec_fr_069_authentication_failure_count_semantics, specs_001_daily_activity_plan_tasks_t030_authentication_failure_count_implementation [EXTRACTED 1.00]
-- **M2 Identity Acceptance Trace** — specs_001_daily_activity_plan_checklists_requirements_identity_rewrite_validation, specs_001_daily_activity_plan_plan_milestone_gates, specs_001_daily_activity_plan_quickstart_identity_acceptance_matrix, specs_001_daily_activity_plan_spec_security_and_quality_success_criteria, specs_001_daily_activity_plan_tasks_t024_last_admin_recovery_acceptance_tests, specs_001_daily_activity_plan_tasks_t035_m2_independent_acceptance [INFERRED 0.95]
-- **Web/API/Worker 服务边界架构** — concept_nicegui_web, concept_fastapi_api, concept_dramatiq_worker, concept_contracts [EXTRACTED 1.00]
+- **设计到 API 的契约追溯** — docs_design_data_model_domain_model_contract, docs_design_database_schema_physical_schema_contract, specs_001_daily_activity_plan_contracts_openapi_api_v1_contract, specs_001_daily_activity_plan_data_model_feature_data_model [INFERRED 0.85]
+- **Last-Administrator Recovery Contract Chain** — specs_001_daily_activity_plan_checklists_requirements_recovery_clarification_validation, specs_001_daily_activity_plan_research_last_admin_recovery_decision [EXTRACTED 1.00]
+- **Authentication Failure Count Persistence Chain** — specs_001_daily_activity_plan_checklists_requirements_recovery_clarification_validation [EXTRACTED 1.00]
 - **认证与安全 ADR 决策群** — adr_0004, adr_0009 [EXTRACTED 1.00]
 - **M1 Engineering Skeleton Technology Stack** — tool_python, tool_nicegui, tool_fastapi, tool_postgresql, tool_redis, tool_sqlalchemy, tool_alembic, tool_dramatiq, tool_docker_compose, tool_uv [EXTRACTED 1.00]
 - **Quality Gate Toolchain** — tool_ruff, tool_pyright, tool_pytest, tool_python, tool_docker_compose [EXTRACTED 1.00]
@@ -284,79 +285,79 @@
 - **OpenAPI 公开身份端点三层限流阈值** — specs_001_daily_activity_plan_contracts_openapi_trusted_source_threshold, specs_001_daily_activity_plan_contracts_openapi_account_or_authorization_material_digest_threshold, specs_001_daily_activity_plan_contracts_openapi_endpoint_global_threshold [EXTRACTED 1.00]
 - **Refresh 轮换与限流响应契约** — specs_001_daily_activity_plan_contracts_openapi_refresh_endpoint, specs_001_daily_activity_plan_contracts_openapi_auth_set_cookies, specs_001_daily_activity_plan_contracts_openapi_too_many_requests_response [EXTRACTED 1.00]
 
-## Communities (211 total, 174 thin omitted)
+## Communities (206 total, 172 thin omitted)
 
 ### Community 0 - "First Release Research"
 Cohesion: 0.06
-Nodes (60): Access JWT Session, Afternoon Outdoor Game Prompt Task, AI Key Envelope Encryption, Alembic, API Idempotency Scope and Fingerprint, chinesecalendar, Column Level Preview Validity, Credential Management and Step Up (+52 more)
+Nodes (64): Access JWT Session, Afternoon Outdoor Game Prompt Task, AI Key Envelope Encryption, Alembic, API Idempotency Scope and Fingerprint, Bootstrap Initialization, Ceremony Challenge Binding, chinesecalendar (+56 more)
 
-### Community 1 - "账号恢复请求"
+### Community 1 - "ADR-0010：受限公网、通行密钥与双条件恢复"
+Cohesion: 0.05
+Nodes (59): 管理员创建账号并发放单次邀请, ADR-0010：受限公网、通行密钥与双条件恢复, API、Worker、Redis、PostgreSQL 不单独暴露公网, 双批准原子写入, 继续采用 B/S, CLI 仅接收恢复请求 ID, 控制台一次性首位管理员初始化, 个人设备与导出残余风险 (+51 more)
+
+### Community 2 - "账号恢复请求"
 Cohesion: 0.07
-Nodes (48): 账号恢复请求, 首位管理员初始化记录, 首期领域数据模型契约, 十五分钟单次恢复登记凭据, 最后管理员不可变双批准, 不可变业务历史, 园所数据隔离, 预登记双责任人引用 (+40 more)
+Nodes (44): 账号恢复请求, 首位管理员初始化记录, 首期领域数据模型契约, 十五分钟单次恢复登记凭据, 最后管理员不可变双批准, 不可变业务历史, 园所数据隔离, 预登记双责任人引用 (+36 more)
 
-### Community 2 - "FR-075 Recovery and Last-Administrator Control"
-Cohesion: 0.10
-Nodes (42): Feature Readiness, Identity Rewrite Validation, Recovery Clarification Validation, Specification Quality Gate, API and Task Contracts, Data and Transaction Design, Frozen Bootstrap and Recovery CLI Commands, Daily Activity Plan Implementation Plan (+34 more)
+### Community 3 - "Child Manager 当前状态与交接上下文"
+Cohesion: 0.06
+Nodes (34): Cloud-only 首期单园与未来多园隔离, 当前上下文分支 docs, 首期非目标边界, dev 为 Codex 唯一实现与集成分支, docs 与 dev 漂移风险, docs 为文档契约与模板单一事实来源, 设计编码前固定事实来源阅读顺序, Issue #4 completed 关闭 (+26 more)
 
-### Community 3 - "首期一日活动计划任务计划"
-Cohesion: 0.08
-Nodes (41): 安全 AI 模型档案与提示词生命周期, AI 任务预览采用拒绝与重试, FastAPI API 运行单元, 脱敏审计与外部边界故障隔离, 执行授权边界, 共享契约 contracts, 数据模型 data-model.md, 未完成代码仅在 dev 实现 (+33 more)
-
-### Community 4 - "Child Manager Product and Engineering Roadmap"
-Cohesion: 0.07
-Nodes (38): Authoritative State and Recoverability, Child Manager Project Constitution, Kindergarten Isolation and Server Authorization, Source Fidelity and Scope, Teacher Control and Word Fidelity, Unidirectional Service Boundaries, M2 Security Baseline Rebuild, Background Job and AI Result Model (+30 more)
-
-### Community 5 - "Child Manager 首期安全威胁模型"
-Cohesion: 0.08
-Nodes (32): 双批准原子性, 合法导出后外传残余风险, 逐次授权的短时导出下载, Child Manager 首期安全威胁模型, 个人设备失陷残余风险, 网络、权限和恢复默认拒绝, 外部依赖故障时失败安全, 恢复后的全量撤销 (+24 more)
-
-### Community 6 - "M2 Issue Drafts"
+### Community 4 - "M2 Issue Drafts"
 Cohesion: 0.15
-Nodes (29): archive/trae-m2-20260721 Tag, Codex Branch (Historical), Dev Branch, Docs Branch, Main Branch, Trae Branch (Archived), Dual Agent Development (Historical), M0 Milestone (+21 more)
+Nodes (30): archive/trae-m2-20260721 Tag, Codex Branch (Historical), Dev Branch, Docs Branch, Main Branch, Trae Branch (Archived), Dual Agent Development (Historical), Graphify Knowledge Graph (+22 more)
 
-### Community 7 - "First Release Feature Specification"
-Cohesion: 0.10
-Nodes (26): Fixed Word Export, Administrator Security and Settings Story, Age Group Entity, AI Retry Policy, Asynchronous AI Requirements, Audit and Degradation Story, Audit and Fault Degradation, Authentication Session Entity (+18 more)
+### Community 5 - "Child Manager 幼儿园教育管理系统概览"
+Cohesion: 0.07
+Nodes (29): 里程碑出口门禁可重复证据, pending ready in_progress blocked complete 状态语义, ADR-0010 受限公网通行密钥与恢复边界, 结构化预览驱动的异步 AI 栏目生成, main docs dev 三长期分支模型, Child Manager 幼儿园教育管理系统概览, 一日活动计划完整业务闭环, Design docs Issue dev tests Review main 工作流 (+21 more)
 
-### Community 8 - "TooManyRequests 响应"
-Cohesion: 0.13
-Nodes (23): Access 与 Refresh 独立 Set-Cookie 响应头, 通行密钥认证端点, 首位管理员注册端点, Child Manager 一日活动计划 API 2.0.0, 新增通行密钥凭据端点, X-CSRF-Token 请求头, 邀请注册端点, 通行密钥身份 API (+15 more)
+### Community 6 - "M2 认证授权与身份审计 complete"
+Cohesion: 0.07
+Nodes (28): 一日活动计划保存归档快照与乐观锁不变量, 生产部署实现延后至功能完成后复审, Issue #4 completed 关闭, Issue #7 固定 T036 至 T045, M0 共享设计基线 complete, M1 工程骨架与质量基线 complete, M2 WebAuthn 邀请恢复会话授权与审计范围, M2 认证授权与身份审计 complete (+20 more)
+
+### Community 7 - "TooManyRequests 响应"
+Cohesion: 0.11
+Nodes (26): Access 与 Refresh 独立 Set-Cookie 响应头, 通行密钥认证端点, 首位管理员注册端点, Child Manager 一日活动计划 API 2.0.0, 新增通行密钥凭据端点, X-CSRF-Token 请求头, 邀请注册端点, 通行密钥身份 API (+18 more)
+
+### Community 8 - "首期一日活动计划完整闭环规格"
+Cohesion: 0.09
+Nodes (25): 关键操作审计与敏感数据最小化, PostgreSQL 权威后台任务、pending_dispatch、租约与幂等, AI、Redis、Worker、日历、模板与存储故障隔离, 首期一日活动计划完整闭环规格, 首期必要设置：园所、学期、班级、年龄段、教师关联与区域, 五栏完整后的显式反思生成事务, 首期 M1–M8 完整 Feature 范围，M9 生产部署复审排除, 集体活动拆分采用后独立新增适龄环节 (+17 more)
 
 ### Community 9 - "Local Development Environments"
 Cohesion: 0.12
 Nodes (22): Git Worktree Isolation, Loopback-Only Port Binding, CERNET PyPI Mirror, compose.dev.yaml, Dev Profile Environment Variables, github.ywyz.tech Docker Mirror, PyPI, pyproject.toml (+14 more)
 
-### Community 10 - "ADR-0010：受限公网、通行密钥与双条件恢复"
-Cohesion: 0.13
-Nodes (22): 通行密钥唯一登录与双条件恢复, 管理员创建账号并发放单次邀请, ADR-0010：受限公网、通行密钥与双条件恢复, API、Worker、Redis、PostgreSQL 不单独暴露公网, 继续采用 B/S, 控制台一次性首位管理员初始化, 个人设备与导出残余风险, 合法导出后外传是残余风险 (+14 more)
+### Community 10 - "M2 认证、授权与身份审计 T021–T035（已完成）"
+Cohesion: 0.11
+Nodes (22): Foundational T009–T020（已完成）, M2 Checkpoint T035（已完成）, Auth/Users OpenAPI 与运行时契约一致性 T023/T027/T033/T035, M2 实现 T026–T034（已完成）, M2 认证、授权与身份审计 T021–T035（已完成）, M2 RED 测试 T021–T025（已完成）, Refresh family 轮换、重放检测与会话撤销 T022–T024/T029/T031/T033, 公开身份端点三层独立限流 T021/T030 (+14 more)
 
-### Community 11 - "API v1 Contract Guide"
-Cohesion: 0.10
-Nodes (21): Daily Activity Plan, Manual Lesson Plan Loop, Passkey Identity Lifecycle, Teacher Controlled AI Workflow, Authentication and Identity Endpoints, Daily Activity Plan OpenAPI Contract, Jobs and Preview Endpoints, Lesson Plan Endpoints (+13 more)
+### Community 11 - "Child Manager System Architecture"
+Cohesion: 0.14
+Nodes (20): 409 identity.last_admin_recovery_requires_cli, 生产实现继续延后, 两项不可变批准原子写入, Word 导出原子文件流程, 后台任务状态机, Child Manager System Architecture, 后端深模块接口边界, Dramatiq Worker (+12 more)
 
-### Community 12 - "README.md - 产品总纲"
-Cohesion: 0.13
-Nodes (20): ADR-0001: Cloud-only 单园部署, ADR-0004: 同源 Cookie 认证, ADR-0009: 延后生产部署, AI 异步生成, Alembic 数据库迁移, Dramatiq 后台 Worker, FastAPI API 服务, Graphify Knowledge Graph (+12 more)
+### Community 12 - "NiceGUI Web、FastAPI API 与 Dramatiq Worker 三个独立运行单元"
+Cohesion: 0.14
+Nodes (18): docs 固定提交驱动、dev 唯一实现与历史证据不替代当前门禁, 首期一日活动计划实现计划, 身份迁移 expand → enroll → contract, 核心就绪失败与功能分项 degraded 语义, AI 结果占位与 Word 导出不可变输入快照, Pre-M1 与 M1–M8 可执行里程碑门禁, M0、M1、M2 complete；M3 ready；#4 已关闭；#7 固定 docs@bd98a1a 与 T036–T045, apps、contracts 与 backend 深模块结构 (+10 more)
 
-### Community 13 - "common.sh"
+### Community 13 - "可靠 AI 投递、四栏批次、重试、预览采用与反思验收"
+Cohesion: 0.14
+Nodes (18): 审计覆盖与秘密、正文、路径零暴露扫描, 同源 BFF 代理、可信来源重建与多 Set-Cookie 验证, 首期实现与验收合同 Quickstart, 仅当前 Shell 生成开发 JWT 与 CSRF 密钥, 初始化、邀请、WebAuthn、凭据、恢复与会话验收矩阵, init-admin start、activate 与 recover-last-admin 验收流程, Dev 档位、隔离 PostgreSQL/Redis 与运行时目录, 手工教案唯一性、自动保存、冲突、归档与历史验收 (+10 more)
+
+### Community 14 - "common.sh"
 Cohesion: 0.13
 Nodes (5): get_feature_paths(), get_repo_root(), _persist_feature_json(), resolve_specify_init_dir(), common.sh script
 
-### Community 14 - "ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets"
+### Community 15 - "ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets"
 Cohesion: 0.12
 Nodes (16): 备选方案, 背景, 首期接入云厂商密钥管理服务, 后果, 决策, ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets, 将所有 Secrets 放入 .env, 实施约束 (+8 more)
 
-### Community 15 - "Child Manager Agent Development Rules"
+### Community 16 - "Child Manager Agent Development Rules"
 Cohesion: 0.18
 Nodes (15): AI and Prompt Rules, Background Worker, Branch and Git Rules, Child Manager Agent Development Rules, Daily Activity Plan Business Invariants, Data Model and Kindergarten Isolation, FastAPI API, Knowledge Graph and Code Graph (+7 more)
 
-### Community 16 - "Child Manager System Architecture"
-Cohesion: 0.18
-Nodes (15): AI 预览采用事务边界, Word 导出原子文件流程, 后台任务状态机, Child Manager System Architecture, 后端深模块接口边界, Dramatiq Worker, FastAPI API, 最后管理员 Web/API 稳定 409 (+7 more)
-
 ### Community 17 - "Lesson Management PRD"
-Cohesion: 0.21
-Nodes (14): kindergarten_id 园所隔离边界, 园所与班级隔离, 管理员与教师权限边界, AI 预览后人工采用边界, 双批准、请求推进与登记凭据原子事务, 教案系统实施依赖顺序, 园所与班级授权, 最后管理员 Web/API 稳定 409 (+6 more)
+Cohesion: 0.19
+Nodes (15): AI 预览采用事务边界, 园所与班级隔离, 管理员与教师权限边界, AI 预览后人工采用边界, 双批准、请求推进与登记凭据原子事务, Fixed Word Export, 教案系统实施依赖顺序, 园所与班级授权 (+7 more)
 
 ### Community 18 - "ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行"
 Cohesion: 0.14
@@ -366,78 +367,66 @@ Nodes (13): ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 
 Cohesion: 0.15
 Nodes (12): ADR-0005：AI 供应商中立，并建立管理员专用提示词系统, AI 直接写入教案当前内容, 允许提示词定义输出 Schema, 决策, 只配置一个全局模型, 后果, 备选方案, 复审触发条件 (+4 more)
 
-### Community 20 - "Child Manager Project Context"
-Cohesion: 0.24
-Nodes (12): Child Manager Project Context, 一日活动计划交付闭环, Deferred Production Implementation, Design→docs→Issue→dev→测试→Review→main, First Release Delivery Loop, M1 至 M9 共同实施路线, 生产部署实现延后, 受限公网 Web/BFF 唯一入口 (+4 more)
-
-### Community 21 - "ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体"
+### Community 20 - "ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体"
 Cohesion: 0.17
 Nodes (11): ADR-0002：采用独立 Web、API、Worker 运行单元的模块化单体, NiceGUI 一体化进程, React/TypeScript 独立前端, 从首期开始全面微服务化, 决策, 前端直接访问数据库或共享 Repository, 后果, 备选方案 (+3 more)
 
-### Community 22 - "ADR-0006：一日活动计划采用固定 Word 模板导出边界"
+### Community 21 - "ADR-0006：一日活动计划采用固定 Word 模板导出边界"
 Cohesion: 0.17
 Nodes (11): ADR-0006：一日活动计划采用固定 Word 模板导出边界, UI 直接修改模板并下载, 从零生成 Word 排版, 决策, 只向浏览器返回临时文件, 后果, 备选方案, 复审触发条件 (+3 more)
 
-### Community 23 - "ADR-0008：日期与外部服务采用本地优先和软降级"
+### Community 22 - "ADR-0008：日期与外部服务采用本地优先和软降级"
 Cohesion: 0.17
 Nodes (11): ADR-0008：日期与外部服务采用本地优先和软降级, 决策, 后果, 在线节假日 API 优先, 备选方案, 复审触发条件, 外部服务失败时默认普通工作日, 实施约束 (+3 more)
 
-### Community 24 - "Child Manager 产品与工程路线图"
-Cohesion: 0.31
-Nodes (11): Child Manager 产品与工程路线图, 固定 docs 提交的 Issue 驱动 dev, 可重复证据出口门禁, M0 至 M9 阶段依赖图, M2 双批准原子记录, M2 认证授权与身份审计, M2 最后管理员稳定 409 门禁, M2 最后管理员 CLI 恢复 (+3 more)
+### Community 23 - "Child Manager Data Model"
+Cohesion: 0.20
+Nodes (11): Background Job and AI Result Model, Child Manager Data Model, Relational Header and JSONB Content, Alembic Migration Sequence, Child Manager PostgreSQL Database Schema, Kindergarten Composite Foreign Keys, AI Generation Result, Phase One Data Model (+3 more)
 
-### Community 25 - "User and Role Entity"
-Cohesion: 0.22
-Nodes (9): Ceremony Challenge Binding, One Time Invitation Lifecycle, Account Invitation Entity, Audit Event Entity, Kindergarten Entity, Plan Author Entity, User and Role Entity, WebAuthn Challenge Entity (+1 more)
+### Community 24 - "Child Manager Project Constitution"
+Cohesion: 0.20
+Nodes (10): Authoritative State and Recoverability, Child Manager Project Constitution, Kindergarten Isolation and Server Authorization, Source Fidelity and Scope, Teacher Control and Word Fidelity, Unidirectional Service Boundaries, Kindergarten Scoped Domain Model, Idempotent Task Recovery (+2 more)
 
-### Community 26 - "AI Generation Preview Entity"
-Cohesion: 0.32
-Nodes (8): Frozen Prompt Test Inputs, AI Generation Preview Entity, AI Model Profile Entity, Background Job Entity, Prompt Definition Entity, Prompt Test Run Entity, Prompt Version Entity, Word Export Record Entity
+### Community 25 - "ADR 目录索引"
+Cohesion: 0.25
+Nodes (9): ADR-0001: Cloud-only 单园部署, ADR-0004: 同源 Cookie 认证, ADR-0009: 延后生产部署, kindergarten_id 园所隔离, M0 验收门禁, ADR-0001 Cloud Only, ADR 目录索引, Single Implementation Development Rules (+1 more)
 
-### Community 27 - "init-admin recover-last-admin CLI"
-Cohesion: 0.33
-Nodes (7): 最后管理员部署控制台恢复, 双批准原子写入, CLI 仅接收恢复请求 ID, 预登记责任人引用, init-admin recover-last-admin CLI, 两项不可变批准原子写入, 最后管理员部署控制台 CLI
+### Community 26 - "Daily Activity Plan OpenAPI Contract"
+Cohesion: 0.25
+Nodes (8): Daily Activity Plan, Passkey Identity Lifecycle, Teacher Controlled AI Workflow, Authentication and Identity Endpoints, Daily Activity Plan OpenAPI Contract, Jobs and Preview Endpoints, Lesson Plan Endpoints, Settings Prompts Exports and Audit Endpoints
 
-### Community 28 - "完整 SDD 工作流"
+### Community 27 - "API v1 Contract Guide"
+Cohesion: 0.29
+Nodes (7): Manual Lesson Plan Loop, API Permission Matrix, API v1 Contract Guide, Cookie Token and CSRF Contract, Idempotency Key Contract, Optimistic Lock Contract, Unified Error Envelope
+
+### Community 28 - "Daily Activity Plan Design Research"
+Cohesion: 0.29
+Nodes (7): Daily Activity Plan Design Research, DOCX, Word, and Workday Boundaries, Last Administrator Recovery Decision, Independent Runtime Units with Modular Backend, PostgreSQL-Authoritative Reliable Background Jobs, Revocable Session and CSRF Decision, WebAuthn Ceremony Decision
+
+### Community 29 - "完整 SDD 工作流"
 Cohesion: 0.33
 Nodes (6): Spec Kit 任务实施, Spec Kit 实施规划, Spec Kit 功能规格生成, Spec Kit 任务生成, 规格与计划评审门禁, 完整 SDD 工作流
-
-### Community 29 - "Daily Activity Plan Entity"
-Cohesion: 0.33
-Nodes (6): Class Entity, Class Teacher Association Entity, Daily Activity Plan Entity, Plan Snapshot Entity, Semester Entity, Workday Cache Entity
 
 ### Community 30 - "Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务, Source Nodes
 
-### Community 32 - "Manual Lesson Plan Story"
-Cohesion: 0.40
-Nodes (5): Lesson Plan Snapshot Policy, Immutable Lesson Plan History, Manual Lesson Plan Requirements, Manual Lesson Plan Story, Optimistic Concurrency Control
-
-### Community 33 - "409 identity.last_admin_recovery_requires_cli"
+### Community 32 - "Specification Quality Gate"
 Cohesion: 0.50
-Nodes (4): 最后管理员 Web/API 稳定 409 冲突, 最后管理员双人带外核验, 409 identity.last_admin_recovery_requires_cli, 离线恢复码加人工核验
+Nodes (4): Feature Readiness, Identity Rewrite Validation, Recovery Clarification Validation, Specification Quality Gate
 
-### Community 34 - "Bootstrap Initialization"
+### Community 33 - "首期一日活动计划完整闭环任务清单"
 Cohesion: 0.50
-Nodes (4): Bootstrap Initialization, Expand Enroll Contract Password Migration, Bootstrap Initialization Entity, Password Migration Requirement
+Nodes (4): 执行授权边界, 阶段依赖顺序, 首期一日活动计划完整闭环任务清单, 有效 RED 与配对实现门禁
 
-### Community 35 - "Group Activity Two Phase Generation"
-Cohesion: 0.50
-Nodes (4): Group Activity Two Phase Generation, Group Activity Import Story, Group Activity Requirements, Group Activity Split and Add Step
-
-### Community 36 - "Account Recovery Request Entity"
-Cohesion: 0.50
-Nodes (4): Offline Recovery and Human Verification, Account Recovery Request Entity, Identity Verification Approval Entity, Recovery Code Entity
-
-### Community 37 - "Spec Kit 任务模板"
+### Community 34 - "Spec Kit 任务模板"
 Cohesion: 0.67
 Nodes (3): Spec Kit 计划模板, Spec Kit 规格模板, Spec Kit 任务模板
 
 ## Knowledge Gaps
-- **317 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+312 more)
+- **343 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+338 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **174 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **172 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
@@ -450,17 +439,17 @@ Nodes (3): Spec Kit 计划模板, Spec Kit 规格模板, Spec Kit 任务模板
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Child Manager System Architecture` connect `Child Manager System Architecture` to `Child Manager Product and Engineering Roadmap`, `Child Manager 首期安全威胁模型`, `ADR-0010：受限公网、通行密钥与双条件恢复`, `API v1 Contract Guide`, `Lesson Management PRD`, `Child Manager Project Context`, `Child Manager 产品与工程路线图`, `init-admin recover-last-admin CLI`?**
-  _High betweenness centrality (0.071) - this node is a cross-community bridge._
-- **Why does `First Release Implementation Plan` connect `API v1 Contract Guide` to `First Release Research`, `FR-075 Recovery and Last-Administrator Control`, `Child Manager Product and Engineering Roadmap`, `First Release Feature Specification`?**
-  _High betweenness centrality (0.056) - this node is a cross-community bridge._
-- **Why does `First Release Research` connect `First Release Research` to `Manual Lesson Plan Story`, `Bootstrap Initialization`, `Group Activity Two Phase Generation`, `Account Recovery Request Entity`, `Child Manager Product and Engineering Roadmap`, `API v1 Contract Guide`, `User and Role Entity`, `AI Generation Preview Entity`?**
-  _High betweenness centrality (0.054) - this node is a cross-community bridge._
+- **Why does `Child Manager System Architecture` connect `Child Manager System Architecture` to `ADR-0010：受限公网、通行密钥与双条件恢复`, `Lesson Management PRD`, `Child Manager Data Model`, `Child Manager Project Constitution`, `Daily Activity Plan OpenAPI Contract`, `API v1 Contract Guide`?**
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+- **Why does `First Release Research` connect `First Release Research` to `Child Manager Project Constitution`?**
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+- **Why does `Reliable PostgreSQL Task Delivery` connect `Child Manager Project Constitution` to `First Release Research`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
-  _317 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _343 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `First Release Research` be split into smaller, more focused modules?**
-  _Cohesion score 0.059322033898305086 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05555555555555555 - nodes in this community are weakly interconnected._
+- **Should `ADR-0010：受限公网、通行密钥与双条件恢复` be split into smaller, more focused modules?**
+  _Cohesion score 0.05201636469900643 - nodes in this community are weakly interconnected._
 - **Should `账号恢复请求` be split into smaller, more focused modules?**
-  _Cohesion score 0.06648936170212766 - nodes in this community are weakly interconnected._
-- **Should `FR-075 Recovery and Last-Administrator Control` be split into smaller, more focused modules?**
-  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07293868921775898 - nodes in this community are weakly interconnected._
