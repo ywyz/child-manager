@@ -162,8 +162,13 @@ def _check_public_throttle(request: Request, purpose: str) -> str:
     decision = throttle.check(source=source, purpose=purpose, now=now)
     if not decision.allowed:
         raise IdentityError(429, "auth.rate_limited", "尝试过多，请稍后重试。")
-    throttle.record_failure(source=source, purpose=purpose, now=now)
     return source
+
+
+def _record_public_failure(request: Request, purpose: str, source: str) -> None:
+    request.app.state.auth_throttle.record_failure(
+        source=source, purpose=purpose, now=request.app.state.clock()
+    )
 
 
 def _clear_public_throttle(request: Request, purpose: str, source: str) -> None:
@@ -255,13 +260,18 @@ def authentication_verify(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    source = _source(request)
-    result = service.verify_authentication(
-        ceremony_id=body.ceremony_id,
-        credential=body.credential.model_dump(exclude_none=False),
-        source=source,
-        request_id=_request_id(request),
-    )
+    source = _check_public_throttle(request, "authentication")
+    try:
+        result = service.verify_authentication(
+            ceremony_id=body.ceremony_id,
+            credential=body.credential.model_dump(exclude_none=False),
+            source=source,
+            request_id=_request_id(request),
+        )
+    except IdentityError as exc:
+        if exc.code == "auth.authentication_failed":
+            _record_public_failure(request, "authentication", source)
+        raise
     _clear_public_throttle(request, "authentication", source)
     _set_auth_cookies(response, result)
     return {"user": _payload(service, result.session), "recovery_code": result.recovery_code}
@@ -287,6 +297,8 @@ def step_up_verify(
         session,
         ceremony_id=body.ceremony_id,
         credential=body.credential.model_dump(exclude_none=False),
+        source=_source(request),
+        request_id=_request_id(request),
     )
     return {"verified_at": verified_at, "valid_until": valid_until}
 
@@ -335,7 +347,7 @@ def credential_options(
     return service.self_add_registration_options(session, origin=_origin(request))
 
 
-@router.post("/credentials/registration/verify", response_model=Credential)
+@router.post("/credentials/registration/verify", response_model=Credential, status_code=201)
 def credential_verify(
     body: RegistrationVerifyRequest,
     request: Request,
@@ -407,7 +419,7 @@ def recovery_verify(
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
-    credential, recovery_code = service.verify_recovery_registration(
+    credential, recovery_code, sessions_revoked = service.verify_recovery_registration(
         ceremony_id=body.ceremony_id,
         credential=body.credential.model_dump(exclude_none=True),
         label=body.label,
@@ -415,7 +427,7 @@ def recovery_verify(
     return {
         "credential": _credential(credential),
         "recovery_code": recovery_code,
-        "sessions_revoked": 0,
+        "sessions_revoked": sessions_revoked,
     }
 
 

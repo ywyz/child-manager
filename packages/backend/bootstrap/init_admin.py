@@ -7,6 +7,7 @@ import psycopg
 
 from packages.backend.audit.repository import AuditRepository
 from packages.backend.identity.identifiers import normalize_username
+from packages.backend.identity.repository import IdentityRepository
 from packages.backend.identity.secret_tokens import SecretPurpose, issue_secret
 from packages.contracts.audit import IdentityAuditEventCode
 
@@ -159,6 +160,126 @@ def activate_initialization(
             outcome="success",
         )
         return True
+
+
+def recover_last_admin(
+    *,
+    database_url: str,
+    recovery_request_id: UUID,
+    owner_reference: str,
+    operator_reference: str,
+) -> tuple[str, datetime]:
+    """由两位预登记责任人批准最后管理员恢复，并只返回一次登记秘密。"""
+
+    owner = owner_reference.strip()
+    operator = operator_reference.strip()
+    if not owner or not operator or owner == operator:
+        raise ValueError("必须由不同的园所负责人和独立运维/安全责任人双人核验。")
+    material = issue_secret(SecretPurpose.RECOVERY_ENROLLMENT)
+    with psycopg.connect(_native_url(database_url)) as connection, connection.transaction():
+        target = connection.execute(
+            """SELECT kindergarten_id, user_id FROM account_recovery_requests
+            WHERE id=%s""",
+            (recovery_request_id,),
+        ).fetchone()
+        if target is None:
+            raise ValueError("恢复申请无效或状态已变化。")
+        kindergarten_id, user_id = target
+        repository = IdentityRepository(connection, kindergarten_id)
+        try:
+            is_last_active_admin = not repository.can_deactivate(user_id)
+        except LookupError:
+            is_last_active_admin = False
+        if not is_last_active_admin:
+            raise ValueError("目标不是当前唯一有效管理员，不能使用最后管理员恢复。")
+
+        now = datetime.now(UTC)
+        request = connection.execute(
+            """SELECT rr.status, rr.expires_at, rr.enrollment_token_hash,
+                      rc.consumed_at, rc.revoked_at
+            FROM account_recovery_requests rr
+            JOIN recovery_codes rc
+              ON rc.kindergarten_id=rr.kindergarten_id AND rc.id=rr.recovery_code_id
+            WHERE rr.kindergarten_id=%s AND rr.user_id=%s AND rr.id=%s
+            FOR UPDATE OF rr, rc""",
+            (kindergarten_id, user_id, recovery_request_id),
+        ).fetchone()
+        if (
+            request is None
+            or request[0] != "pending_verification"
+            or request[1] <= now
+            or request[2] is not None
+            or request[3] is None
+            or request[4] is not None
+        ):
+            raise ValueError("恢复申请无效或状态已变化。")
+
+        references = connection.execute(
+            """SELECT owner_reference, operator_reference
+            FROM bootstrap_initializations WHERE kindergarten_id=%s
+            ORDER BY created_at, id LIMIT 1 FOR SHARE""",
+            (kindergarten_id,),
+        ).fetchone()
+        if (
+            references is None
+            or references[0] == references[1]
+            or owner != references[0]
+            or operator != references[1]
+        ):
+            raise ValueError("必须由预登记园所负责人和独立运维/安全责任人双人核验。")
+        if connection.execute(
+            """SELECT 1 FROM identity_verification_approvals
+            WHERE kindergarten_id=%s AND context_type='recovery' AND context_id=%s
+            LIMIT 1""",
+            (kindergarten_id, recovery_request_id),
+        ).fetchone():
+            raise ValueError("恢复申请无效或状态已变化。")
+
+        expires_at = now + timedelta(minutes=15)
+        for approver_kind, reference in (("owner", owner), ("operator", operator)):
+            connection.execute(
+                """INSERT INTO identity_verification_approvals
+                (id, kindergarten_id, context_type, context_id, user_id, approver_kind,
+                 approver_reference, decision, decided_at)
+                VALUES (%s,%s,'recovery',%s,%s,%s,%s,'approved',%s)""",
+                (
+                    uuid7(),
+                    kindergarten_id,
+                    recovery_request_id,
+                    user_id,
+                    approver_kind,
+                    reference,
+                    now,
+                ),
+            )
+        updated = connection.execute(
+            """UPDATE account_recovery_requests
+            SET status='approved', approved_at=%s, enrollment_token_hash=%s,
+                enrollment_expires_at=%s, updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s AND id=%s
+              AND status='pending_verification' AND expires_at>%s
+              AND enrollment_token_hash IS NULL""",
+            (
+                now,
+                material.record.digest,
+                expires_at,
+                kindergarten_id,
+                user_id,
+                recovery_request_id,
+                now,
+            ),
+        )
+        if updated.rowcount != 1:
+            raise ValueError("恢复申请无效或状态已变化。")
+        AuditRepository(connection, kindergarten_id).append(
+            event_code=IdentityAuditEventCode.RECOVERY_APPROVED,
+            actor_user_id=user_id,
+            actor_role_codes=["admin"],
+            resource_type="account_recovery_request",
+            resource_id=recovery_request_id,
+            outcome="success",
+        )
+    return material.secret, expires_at
 
 
 def migrate_passkeys(*, database_url: str) -> list[tuple[str, str]]:

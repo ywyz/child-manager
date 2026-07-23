@@ -533,17 +533,19 @@ class IdentityRepository:
     def record_challenge_failure(self, ceremony_id: UUID) -> None:
         self.connection.execute(
             """UPDATE webauthn_challenges SET failure_count=failure_count+1, updated_at=now()
-            WHERE kindergarten_id=%s AND id=%s""",
+            WHERE kindergarten_id IS NOT DISTINCT FROM %s AND id=%s""",
             (self.kindergarten_id, ceremony_id),
         )
 
     def list_credentials(
-        self, user_id: UUID, *, include_revoked: bool = False
+        self, user_id: UUID, *, include_revoked: bool = False, lock: bool = False
     ) -> list[CredentialRecord]:
         suffix = "" if include_revoked else " AND revoked_at IS NULL"
+        lock_clause = " FOR UPDATE" if lock else ""
         rows = self.connection.execute(
             f"""SELECT {_CREDENTIAL_COLUMNS} FROM webauthn_credentials
-            WHERE kindergarten_id=%s AND user_id=%s{suffix} ORDER BY created_at, id""",
+            WHERE kindergarten_id=%s AND user_id=%s{suffix}
+            ORDER BY created_at, id{lock_clause}""",
             (self.kindergarten_id, user_id),
         ).fetchall()
         return [CredentialRecord(*row) for row in rows]  # type: ignore[arg-type]
@@ -621,7 +623,7 @@ class IdentityRepository:
     def revoke_credential(
         self, user_id: UUID, credential_id: UUID, *, reason: str, allow_last: bool = False
     ) -> bool:
-        credentials = self.list_credentials(user_id)
+        credentials = self.list_credentials(user_id, lock=True)
         if not allow_last and len(credentials) <= 1:
             raise ValueError("至少保留一个有效通行密钥")
         cursor = self.connection.execute(
@@ -631,6 +633,17 @@ class IdentityRepository:
             (reason, self.kindergarten_id, user_id, credential_id),
         )
         return cursor.rowcount == 1
+
+    def revoke_other_credentials(
+        self, user_id: UUID, *, keep_credential_id: UUID, reason: str
+    ) -> int:
+        cursor = self.connection.execute(
+            """UPDATE webauthn_credentials SET revoked_at=COALESCE(revoked_at, now()),
+            revoke_reason=COALESCE(revoke_reason,%s), updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s AND id<>%s AND revoked_at IS NULL""",
+            (reason, self.kindergarten_id, user_id, keep_credential_id),
+        )
+        return cursor.rowcount
 
     def revoke_active_invitations(self, user_id: UUID) -> None:
         self.connection.execute(
@@ -772,6 +785,39 @@ class IdentityRepository:
             (token_hash, expires_at, self.kindergarten_id, user_id, request_id),
         )
         return cursor.rowcount == 1
+
+    def create_verification_approval(
+        self,
+        *,
+        context_type: str,
+        context_id: UUID,
+        user_id: UUID,
+        approver_user_id: UUID | None,
+        approver_kind: str,
+        approver_reference: str,
+        note: str | None,
+        decided_at: datetime,
+    ) -> UUID:
+        approval_id = uuid7()
+        self.connection.execute(
+            """INSERT INTO identity_verification_approvals
+            (id, kindergarten_id, context_type, context_id, user_id, approver_user_id,
+             approver_kind, approver_reference, decision, note, decided_at)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,'approved',%s,%s)""",
+            (
+                approval_id,
+                self.kindergarten_id,
+                context_type,
+                context_id,
+                user_id,
+                approver_user_id,
+                approver_kind,
+                approver_reference,
+                note,
+                decided_at,
+            ),
+        )
+        return approval_id
 
     def find_recovery_enrollment(
         self, token_hash: str, *, lock: bool = False

@@ -164,10 +164,14 @@ def activate(
     session: AdminSessionDependency,
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
-    del body
     require_csrf(request)
     return _user(
-        service.set_status(session, user_id, status="active", request_id=_request_id(request))
+        service.activate_user(
+            session,
+            user_id,
+            verification_note=body.verification_note,
+            request_id=_request_id(request),
+        )
     )
 
 
@@ -300,10 +304,12 @@ def recovery_approve(
     session: AdminSessionDependency,
     service: IdentityServiceDependency,
 ) -> dict[str, object]:
-    del body
     require_csrf(request)
     enrollment_token, expires_at = service.approve_recovery_request(
-        session, user_id, recovery_request_id
+        session,
+        user_id,
+        recovery_request_id,
+        verification_note=body.verification_note,
     )
     return {
         "recovery_request_id": recovery_request_id,

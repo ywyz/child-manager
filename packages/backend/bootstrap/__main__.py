@@ -7,6 +7,7 @@ from uuid import UUID
 from packages.backend.bootstrap.init_admin import (
     activate_initialization,
     migrate_passkeys,
+    recover_last_admin,
     start_initialization,
 )
 
@@ -85,6 +86,30 @@ def _migrate_passkeys() -> int:
     return 0
 
 
+def _recover_last_admin(recovery_request_id: str) -> int:
+    database_url = _database_url()
+    if database_url is None:
+        return 2
+    try:
+        owner_reference = input("园所负责人核验标识：").strip()
+        operator_reference = input("独立运维/安全责任人核验标识：").strip()
+        enrollment_token, _expires_at = recover_last_admin(
+            database_url=database_url,
+            recovery_request_id=UUID(recovery_request_id),
+            owner_reference=owner_reference,
+            operator_reference=operator_reference,
+        )
+    except EOFError:
+        print("必须由预登记园所负责人和独立运维/安全责任人双人核验。")
+        return 2
+    except ValueError as exc:
+        print(str(exc))
+        return 2
+    print(f"恢复登记凭据：{enrollment_token}")
+    print("请在 15 分钟内通过 HTTPS 或 localhost 浏览器登记新通行密钥；凭据仅显示一次。")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="child-manager-bootstrap")
     root = parser.add_subparsers(dest="command", required=True)
@@ -93,13 +118,19 @@ def main(argv: list[str] | None = None) -> int:
     init_commands.add_parser("start", help="签发一次性初始化凭据")
     activate = init_commands.add_parser("activate", help="完成双人核验激活")
     activate.add_argument("--bootstrap-id", required=True)
+    recover = init_commands.add_parser(
+        "recover-last-admin", help="完成最后管理员双人核验并签发登记凭据"
+    )
+    recover.add_argument("--recovery-request-id", required=True)
     root.add_parser("migrate-passkeys", help="列出现有账号通行密钥迁移命令")
     arguments = parser.parse_args(argv)
     if arguments.command == "migrate-passkeys":
         return _migrate_passkeys()
     if arguments.init_command == "start":
         return _start()
-    return _activate(arguments.bootstrap_id)
+    if arguments.init_command == "activate":
+        return _activate(arguments.bootstrap_id)
+    return _recover_last_admin(arguments.recovery_request_id)
 
 
 if __name__ == "__main__":

@@ -3,10 +3,17 @@
 import json
 from base64 import urlsafe_b64encode
 from hashlib import sha256
+from uuid import UUID
 
+import psycopg
 from fastapi.testclient import TestClient
 
-from tests.api.passkey_helpers import csrf_headers, passkey_client  # noqa: F401
+from tests.api.passkey_helpers import (  # noqa: F401
+    ActorFixture,
+    admin_client,
+    csrf_headers,
+    passkey_client,
+)
 
 
 def _base64url(value: bytes) -> str:
@@ -52,6 +59,65 @@ def test_authentication_options_are_username_less_and_browser_ready(
     assert body["publicKey"]["allowCredentials"] == []
     assert body["publicKey"]["userVerification"] == "required"
     assert body["publicKey"]["timeout"] == 300_000
+
+
+def test_authentication_options_do_not_increment_failure_limit(
+    passkey_client: TestClient,
+) -> None:
+    responses = [
+        passkey_client.post(
+            "/api/v1/auth/authentication/options",
+            headers=csrf_headers(passkey_client),
+        )
+        for _index in range(3)
+    ]
+
+    assert [response.status_code for response in responses] == [200, 200, 200]
+
+
+def test_failed_authentication_persists_challenge_failure_and_sanitized_audit(
+    admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
+) -> None:
+    client, _actor = admin_client
+    options = client.post(
+        "/api/v1/auth/authentication/options",
+        headers=csrf_headers(client),
+    )
+    assert options.status_code == 200
+    unknown_credential_id = _base64url(b"failure-persistence-credential")
+
+    failed = client.post(
+        "/api/v1/auth/authentication/verify",
+        json={
+            "ceremony_id": options.json()["ceremony_id"],
+            "credential": _credential(
+                credential_id=unknown_credential_id,
+                challenge=options.json()["publicKey"]["challenge"],
+            ),
+        },
+        headers=csrf_headers(client),
+    )
+
+    assert failed.status_code == 401
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    with psycopg.connect(native_url) as connection:
+        assert connection.execute(
+            "SELECT failure_count, consumed_at FROM webauthn_challenges WHERE id=%s",
+            (options.json()["ceremony_id"],),
+        ).fetchone() == (1, None)
+        audit = connection.execute(
+            """SELECT event_code, outcome, resource_type, resource_id, metadata::text
+            FROM audit_events WHERE event_code='identity.authentication_failed'"""
+        ).fetchone()
+    assert audit is not None
+    assert audit[:4] == (
+        "identity.authentication_failed",
+        "failure",
+        "webauthn_challenge",
+        UUID(options.json()["ceremony_id"]),
+    )
+    assert unknown_credential_id not in audit[4]
 
 
 def test_invalid_authentication_is_generic_and_does_not_enumerate_account(

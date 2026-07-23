@@ -309,7 +309,7 @@ def test_browser_completes_passkey_invitation_recovery_credential_and_session_jo
         teacher_page.get_by_role("button", name="撤销当前会话").click()
         teacher_page.get_by_role("button", name="使用通行密钥登录").wait_for()
 
-        throttle_statuses = teacher_page.evaluate(
+        options_statuses = teacher_page.evaluate(
             """async () => {
               const csrfResponse = await fetch('/api/v1/auth/csrf', {credentials: 'same-origin'});
               const csrf = await csrfResponse.json();
@@ -332,6 +332,6 @@ def test_browser_completes_passkey_invitation_recovery_credential_and_session_jo
 
         assert admin_authenticator
         assert teacher_authenticator
-        assert throttle_statuses == [200, 200, 429]
+        assert options_statuses == [200, 200, 200]
         assert all(f":{api_port}/" not in url for url in requested_urls)
         browser.close()

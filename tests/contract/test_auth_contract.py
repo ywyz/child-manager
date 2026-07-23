@@ -174,3 +174,14 @@ def test_runtime_auth_router_matches_frozen_passkey_paths() -> None:
         "/api/v1/auth/login",
         "/api/v1/auth/change-password",
     }.isdisjoint(runtime_paths)
+
+
+def test_runtime_auth_success_statuses_match_frozen_contract() -> None:
+    for (path, method), route in _runtime_routes().items():
+        frozen_operation = OPENAPI["paths"][path][method.lower()]
+        frozen_success = {
+            int(status) for status in frozen_operation["responses"] if status.startswith("2")
+        }
+        runtime_success = route.status_code or 200
+
+        assert frozen_success == {runtime_success}, (path, method)

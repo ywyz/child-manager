@@ -1,11 +1,18 @@
 # ruff: noqa: F811
 
+import json
+from base64 import urlsafe_b64encode
 from datetime import UTC, datetime, timedelta
+from types import SimpleNamespace
+from typing import cast
 from uuid import UUID, uuid4
 
 import psycopg
+import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from apps.api.dependencies import current_session
 from packages.backend.identity.tokens import hash_refresh_token
 from tests.api.passkey_helpers import (  # noqa: F401
     ActorFixture,
@@ -17,6 +24,33 @@ from tests.api.passkey_helpers import (  # noqa: F401
 
 def _native_url(value: str) -> str:
     return value.replace("postgresql+psycopg://", "postgresql://", 1)
+
+
+def _base64url(value: bytes) -> str:
+    return urlsafe_b64encode(value).rstrip(b"=").decode("ascii")
+
+
+def _registration_credential(*, credential_id: str, challenge: str) -> dict[str, object]:
+    client_data = json.dumps(
+        {
+            "type": "webauthn.create",
+            "challenge": challenge,
+            "origin": "http://testserver",
+            "crossOrigin": False,
+        },
+        separators=(",", ":"),
+    ).encode()
+    return {
+        "id": credential_id,
+        "rawId": credential_id,
+        "type": "public-key",
+        "response": {
+            "clientDataJSON": _base64url(client_data),
+            "attestationObject": _base64url(b"stub-attestation"),
+            "transports": ["internal"],
+        },
+        "clientExtensionResults": {},
+    }
 
 
 def _insert_credential(
@@ -119,6 +153,152 @@ def test_user_can_list_name_and_revoke_only_a_non_last_credential_after_step_up(
     assert renamed.json()["label"] == "办公电脑"
     assert revoked.status_code == 204
     assert last.status_code == 409
+
+
+def test_admin_cannot_revoke_last_active_admin_last_credential(
+    admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
+) -> None:
+    client, actor = admin_client
+    with psycopg.connect(_native_url(isolated_database_url)) as connection:
+        credential_id = _insert_credential(
+            connection,
+            kindergarten_id=actor.kindergarten_id,
+            user_id=actor.user_id,
+            label="最后管理员唯一凭据",
+        )
+
+    response = client.delete(
+        f"/api/v1/users/{actor.user_id}/credentials/{credential_id}",
+        headers=csrf_headers(client),
+    )
+
+    assert response.status_code == 409
+    assert response.json()["code"] == "auth.last_credential"
+    with psycopg.connect(_native_url(isolated_database_url)) as connection:
+        assert connection.execute(
+            "SELECT revoked_at FROM webauthn_credentials WHERE id=%s",
+            (credential_id,),
+        ).fetchone() == (None,)
+        assert connection.execute(
+            """SELECT revoked_at FROM refresh_tokens
+            WHERE kindergarten_id=%s AND token_family_id=%s""",
+            (actor.kindergarten_id, actor.session_id),
+        ).fetchone() == (None,)
+        assert connection.execute(
+            """SELECT count(*) FROM account_invitations
+            WHERE kindergarten_id=%s AND user_id=%s""",
+            (actor.kindergarten_id, actor.user_id),
+        ).fetchone() == (0,)
+
+
+def test_self_add_registration_is_bound_to_issuing_refresh_family(
+    admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client, actor = admin_client
+    options = client.post(
+        "/api/v1/auth/credentials/registration/options",
+        headers=csrf_headers(client),
+    )
+    assert options.status_code == 200
+    other_family_id = uuid4()
+    now = datetime.now(UTC)
+    with psycopg.connect(_native_url(isolated_database_url)) as connection:
+        connection.execute(
+            """INSERT INTO refresh_tokens
+            (id, kindergarten_id, user_id, token_family_id, token_hash, issued_at,
+             expires_at, last_reauthenticated_at)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
+            (
+                uuid4(),
+                actor.kindergarten_id,
+                actor.user_id,
+                other_family_id,
+                hash_refresh_token("other-family-refresh"),
+                now,
+                now + timedelta(days=7),
+                now,
+            ),
+        )
+    other_session = SimpleNamespace(
+        user=SimpleNamespace(
+            id=actor.user_id,
+            kindergarten_id=actor.kindergarten_id,
+            status="active",
+            is_active=True,
+        ),
+        role_codes=["admin"],
+        token_family_id=other_family_id,
+        session_id=other_family_id,
+        last_reauthenticated_at=now,
+    )
+    app = cast(FastAPI, client.app)
+    app.dependency_overrides[current_session] = lambda: other_session
+    new_credential_raw_id = b"family-bound-credential"
+    monkeypatch.setattr(
+        "packages.backend.identity.service.verify_registration",
+        lambda **_kwargs: SimpleNamespace(
+            credential_id=new_credential_raw_id,
+            credential_public_key=b"family-bound-cose",
+            sign_count=0,
+            aaguid=None,
+            credential_device_type=SimpleNamespace(value="single_device"),
+            credential_backed_up=False,
+        ),
+    )
+
+    verified = client.post(
+        "/api/v1/auth/credentials/registration/verify",
+        json={
+            "ceremony_id": options.json()["ceremony_id"],
+            "credential": _registration_credential(
+                credential_id=_base64url(new_credential_raw_id),
+                challenge=options.json()["publicKey"]["challenge"],
+            ),
+        },
+        headers=csrf_headers(client),
+    )
+
+    assert verified.status_code == 410
+    assert verified.json()["code"] == "identity.material_unavailable"
+    with psycopg.connect(_native_url(isolated_database_url)) as connection:
+        assert connection.execute(
+            """SELECT count(*) FROM webauthn_credentials
+            WHERE kindergarten_id=%s AND user_id=%s""",
+            (actor.kindergarten_id, actor.user_id),
+        ).fetchone() == (0,)
+        assert connection.execute(
+            "SELECT consumed_at FROM webauthn_challenges WHERE id=%s",
+            (options.json()["ceremony_id"],),
+        ).fetchone() == (None,)
+
+    original_session = SimpleNamespace(
+        user=SimpleNamespace(
+            id=actor.user_id,
+            kindergarten_id=actor.kindergarten_id,
+            status="active",
+            is_active=True,
+        ),
+        role_codes=["admin"],
+        token_family_id=actor.session_id,
+        session_id=actor.session_id,
+        last_reauthenticated_at=now,
+    )
+    app.dependency_overrides[current_session] = lambda: original_session
+    accepted = client.post(
+        "/api/v1/auth/credentials/registration/verify",
+        json={
+            "ceremony_id": options.json()["ceremony_id"],
+            "credential": _registration_credential(
+                credential_id=_base64url(new_credential_raw_id),
+                challenge=options.json()["publicKey"]["challenge"],
+            ),
+        },
+        headers=csrf_headers(client),
+    )
+    assert accepted.status_code == 201
 
 
 def test_admin_revoking_teacher_last_credential_revokes_sessions_and_reinvites_atomically(
