@@ -35,7 +35,7 @@ def test_recovery_rejects_malformed_signed_double_submit_token(passkey_client: T
     passkey_client.cookies.set("child_manager_csrf", "a.a")
     response = passkey_client.post(
         "/api/v1/auth/recovery/requests",
-        json={"login": "teacher", "recovery_code": "not-a-real-code"},
+        json={"login": "teacher", "recovery_code": "not-a-real-recovery-code"},
         headers={"Origin": "http://testserver", "X-CSRF-Token": "a.a"},
     )
 

@@ -466,6 +466,84 @@ class IdentityService:
                 metadata={"reason": expected_purpose.value, "source": source},
             )
 
+    @staticmethod
+    def _complete_recovery_registration(
+        *,
+        connection: psycopg.Connection[tuple[object, ...]],
+        repository: IdentityRepository,
+        kindergarten_id: UUID,
+        user_id: UUID,
+        recovery_request_id: UUID,
+        credential_id: UUID,
+        now: datetime,
+    ) -> tuple[str, int]:
+        material = issue_secret(SecretPurpose.RECOVERY_CODE)
+        repository.rotate_recovery_code(user_id, code_hash=material.record.digest)
+        revoked_credential_ids = repository.revoke_other_credentials(
+            user_id,
+            keep_credential_id=credential_id,
+            reason="account_recovered",
+        )
+        revoked_invitation_ids = repository.revoke_active_invitations(user_id)
+        sessions_revoked = repository.revoke_user_sessions(user_id, reason="account_recovered")
+        repository.set_status(user_id, "active", actor_user_id=user_id)
+        connection.execute(
+            """UPDATE account_recovery_requests SET status='completed',
+            enrollment_consumed_at=%s, completed_at=%s, updated_at=now()
+            WHERE kindergarten_id=%s AND id=%s""",
+            (now, now, kindergarten_id, recovery_request_id),
+        )
+        roles = repository.roles_for_user(user_id)
+        audit = AuditRepository(connection, kindergarten_id)
+        audit.append(
+            event_code=IdentityAuditEventCode.RECOVERY_COMPLETED,
+            actor_user_id=user_id,
+            actor_role_codes=roles,
+            resource_type="account_recovery_request",
+            resource_id=recovery_request_id,
+            outcome="success",
+        )
+        audit.append(
+            event_code=IdentityAuditEventCode.RECOVERY_CODE_ROTATED,
+            actor_user_id=user_id,
+            actor_role_codes=roles,
+            resource_type="user",
+            resource_id=user_id,
+            outcome="success",
+            metadata={"reason": "account_recovered"},
+        )
+        for revoked_credential_id in revoked_credential_ids:
+            audit.append(
+                event_code=IdentityAuditEventCode.CREDENTIAL_REVOKED,
+                actor_user_id=user_id,
+                actor_role_codes=roles,
+                resource_type="webauthn_credential",
+                resource_id=revoked_credential_id,
+                outcome="success",
+                metadata={"reason": "account_recovered"},
+            )
+        for revoked_invitation_id in revoked_invitation_ids:
+            audit.append(
+                event_code=IdentityAuditEventCode.INVITATION_REVOKED,
+                actor_user_id=user_id,
+                actor_role_codes=roles,
+                resource_type="account_invitation",
+                resource_id=revoked_invitation_id,
+                outcome="success",
+                metadata={"reason": "account_recovered"},
+            )
+        if sessions_revoked:
+            audit.append(
+                event_code=IdentityAuditEventCode.SESSION_REVOKED,
+                actor_user_id=user_id,
+                actor_role_codes=roles,
+                resource_type="user",
+                resource_id=user_id,
+                outcome="success",
+                metadata={"reason": "account_recovered"},
+            )
+        return material.secret, sessions_revoked
+
     def _verify_registration_transaction(
         self,
         *,
@@ -591,73 +669,15 @@ class IdentityService:
                     challenge.user_id, "pending_verification", actor_user_id=challenge.user_id
                 )
             elif expected_purpose is ChallengePurpose.RECOVERY_REGISTRATION:
-                material = issue_secret(SecretPurpose.RECOVERY_CODE)
-                repository.rotate_recovery_code(challenge.user_id, code_hash=material.record.digest)
-                revoked_credential_ids = repository.revoke_other_credentials(
-                    challenge.user_id,
-                    keep_credential_id=created.id,
-                    reason="account_recovered",
+                recovery_code, sessions_revoked = self._complete_recovery_registration(
+                    connection=connection,
+                    repository=repository,
+                    kindergarten_id=kindergarten_id,
+                    user_id=challenge.user_id,
+                    recovery_request_id=context_id,
+                    credential_id=created.id,
+                    now=now,
                 )
-                revoked_invitation_ids = repository.revoke_active_invitations(challenge.user_id)
-                sessions_revoked = repository.revoke_user_sessions(
-                    challenge.user_id, reason="account_recovered"
-                )
-                repository.set_status(challenge.user_id, "active", actor_user_id=challenge.user_id)
-                connection.execute(
-                    """UPDATE account_recovery_requests SET status='completed',
-                    enrollment_consumed_at=%s, completed_at=%s, updated_at=now()
-                    WHERE kindergarten_id=%s AND id=%s""",
-                    (now, now, kindergarten_id, context_id),
-                )
-                recovery_code = material.secret
-                recovery_audit = AuditRepository(connection, kindergarten_id)
-                recovery_audit.append(
-                    event_code=IdentityAuditEventCode.RECOVERY_COMPLETED,
-                    actor_user_id=challenge.user_id,
-                    actor_role_codes=repository.roles_for_user(challenge.user_id),
-                    resource_type="account_recovery_request",
-                    resource_id=context_id,
-                    outcome="success",
-                )
-                recovery_audit.append(
-                    event_code=IdentityAuditEventCode.RECOVERY_CODE_ROTATED,
-                    actor_user_id=challenge.user_id,
-                    actor_role_codes=repository.roles_for_user(challenge.user_id),
-                    resource_type="user",
-                    resource_id=challenge.user_id,
-                    outcome="success",
-                    metadata={"reason": "account_recovered"},
-                )
-                for revoked_credential_id in revoked_credential_ids:
-                    recovery_audit.append(
-                        event_code=IdentityAuditEventCode.CREDENTIAL_REVOKED,
-                        actor_user_id=challenge.user_id,
-                        actor_role_codes=repository.roles_for_user(challenge.user_id),
-                        resource_type="webauthn_credential",
-                        resource_id=revoked_credential_id,
-                        outcome="success",
-                        metadata={"reason": "account_recovered"},
-                    )
-                for revoked_invitation_id in revoked_invitation_ids:
-                    recovery_audit.append(
-                        event_code=IdentityAuditEventCode.INVITATION_REVOKED,
-                        actor_user_id=challenge.user_id,
-                        actor_role_codes=repository.roles_for_user(challenge.user_id),
-                        resource_type="account_invitation",
-                        resource_id=revoked_invitation_id,
-                        outcome="success",
-                        metadata={"reason": "account_recovered"},
-                    )
-                if sessions_revoked:
-                    recovery_audit.append(
-                        event_code=IdentityAuditEventCode.SESSION_REVOKED,
-                        actor_user_id=challenge.user_id,
-                        actor_role_codes=repository.roles_for_user(challenge.user_id),
-                        resource_type="user",
-                        resource_id=challenge.user_id,
-                        outcome="success",
-                        metadata={"reason": "account_recovered"},
-                    )
             AuditRepository(connection, kindergarten_id).append(
                 event_code=IdentityAuditEventCode.CREDENTIAL_REGISTERED,
                 actor_user_id=challenge.user_id,

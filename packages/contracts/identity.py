@@ -8,11 +8,35 @@ from pydantic import Field, field_validator, model_validator
 
 from packages.contracts.common import ContractModel
 
-RoleCode = Annotated[str, Field(pattern="^(admin|teacher)$")]
+RoleCode = Literal["admin", "teacher"]
 UserText = Annotated[str, Field(min_length=1, max_length=120)]
-Base64Url = Annotated[str, Field(pattern=r"^[A-Za-z0-9_-]+$")]
-SecretInput = Annotated[str, Field(min_length=1, max_length=512)]
-OneTimeSecret = Annotated[str, Field(min_length=16, max_length=512)]
+Base64Url = Annotated[
+    str,
+    Field(
+        min_length=1,
+        max_length=4096,
+        pattern=r"^[A-Za-z0-9_-]+$",
+        description="无填充 base64url；服务端解码后仍须执行各字段的字节长度限制",
+    ),
+]
+SecretInput = Annotated[
+    str,
+    Field(
+        min_length=22,
+        max_length=512,
+        description="只从受控入口输入；数据库只保存带服务端 pepper 的摘要",
+        json_schema_extra={"writeOnly": True},
+    ),
+]
+OneTimeSecret = Annotated[
+    str,
+    Field(
+        min_length=22,
+        max_length=512,
+        description="只在本次成功响应展示一次；不得进入 URL、日志、审计或后续读取响应",
+        json_schema_extra={"readOnly": True},
+    ),
+]
 Transport = Literal["usb", "nfc", "ble", "internal", "hybrid"]
 CredentialSource = Literal["bootstrap", "invitation", "self_add", "recovery", "migration"]
 AccountStatus = Literal["pending_registration", "pending_verification", "active", "suspended"]
@@ -35,9 +59,12 @@ class KindergartenSummary(ContractModel):
 
 
 class PublicKeyCredentialDescriptor(ContractModel):
-    type: Literal["public-key"] = "public-key"
+    type: Literal["public-key"]
     id: Base64Url
-    transports: list[Transport] = Field(default_factory=list)
+    transports: list[Transport] = Field(
+        default_factory=list,
+        json_schema_extra={"uniqueItems": True},
+    )
 
     _transports_are_unique = field_validator("transports")(_unique)
 
@@ -54,14 +81,14 @@ class WebAuthnUser(ContractModel):
 
 
 class PublicKeyCredentialParameter(ContractModel):
-    type: Literal["public-key"] = "public-key"
+    type: Literal["public-key"]
     alg: Literal[-7, -257]
 
 
 class AuthenticatorSelection(ContractModel):
-    residentKey: Literal["required"] = "required"
-    requireResidentKey: Literal[True] = True
-    userVerification: Literal["required"] = "required"
+    residentKey: Literal["required"]
+    requireResidentKey: Literal[True]
+    userVerification: Literal["required"]
 
 
 class RegistrationExtensions(ContractModel):
@@ -73,11 +100,10 @@ class RegistrationPublicKey(ContractModel):
     rp: RelyingParty
     user: WebAuthnUser
     pubKeyCredParams: Annotated[list[PublicKeyCredentialParameter], Field(min_length=1)]
-    timeout: Literal[300000] = 300000
-    excludeCredentials: list[PublicKeyCredentialDescriptor] = Field(default_factory=list)
-    authenticatorSelection: AuthenticatorSelection = Field(default_factory=AuthenticatorSelection)
-    userVerification: Literal["required"] = "required"
-    attestation: Literal["none"] = "none"
+    timeout: Literal[300000]
+    excludeCredentials: list[PublicKeyCredentialDescriptor]
+    authenticatorSelection: AuthenticatorSelection
+    attestation: Literal["none"]
     extensions: RegistrationExtensions | None = None
 
 
@@ -90,9 +116,9 @@ class WebAuthnRegistrationOptions(ContractModel):
 class AuthenticationPublicKey(ContractModel):
     challenge: Base64Url
     rpId: Annotated[str, Field(min_length=1, max_length=253)]
-    timeout: Literal[300000] = 300000
-    allowCredentials: list[PublicKeyCredentialDescriptor] = Field(default_factory=list)
-    userVerification: Literal["required"] = "required"
+    timeout: Literal[300000]
+    allowCredentials: list[PublicKeyCredentialDescriptor]
+    userVerification: Literal["required"]
 
 
 class WebAuthnAuthenticationOptions(ContractModel):
@@ -104,7 +130,10 @@ class WebAuthnAuthenticationOptions(ContractModel):
 class RegistrationCredentialResponse(ContractModel):
     clientDataJSON: Base64Url
     attestationObject: Base64Url
-    transports: list[Transport] = Field(default_factory=list)
+    transports: list[Transport] = Field(
+        default_factory=list,
+        json_schema_extra={"uniqueItems": True},
+    )
 
     _transports_are_unique = field_validator("transports")(_unique)
 
@@ -159,9 +188,9 @@ class AuthenticationVerifyRequest(ContractModel):
 
 class RegistrationPending(ContractModel):
     user_id: UUID
-    status: Literal["pending_verification"] = "pending_verification"
+    status: Literal["pending_verification"]
     credential_id: UUID
-    verification_required: Literal[True] = True
+    verification_required: Literal[True]
 
 
 class StepUpResult(ContractModel):
@@ -174,8 +203,8 @@ class CurrentUser(ContractModel):
     username: str
     display_name: str
     kindergarten: KindergartenSummary
-    role_codes: list[RoleCode]
-    capabilities: list[str]
+    role_codes: list[RoleCode] = Field(json_schema_extra={"uniqueItems": True})
+    capabilities: list[str] = Field(json_schema_extra={"uniqueItems": True})
     session_id: UUID
     last_reauthenticated_at: datetime | None
 
@@ -190,37 +219,48 @@ class AuthenticationResult(ContractModel):
 
 class CreateUserRequest(ContractModel):
     username: UserText
-    phone_e164: str | None = None
+    phone_e164: Annotated[str, Field(max_length=32)] | None = None
     display_name: UserText
-    role_codes: Annotated[list[RoleCode], Field(min_length=1)]
+    role_codes: Annotated[
+        list[RoleCode],
+        Field(min_length=1, json_schema_extra={"uniqueItems": True}),
+    ]
 
     _roles_are_unique = field_validator("role_codes")(_unique)
 
 
 class UserPatch(ContractModel):
     username: UserText | None = None
-    phone_e164: str | None = None
+    phone_e164: Annotated[str, Field(max_length=32)] | None = None
     display_name: UserText | None = None
 
     @model_validator(mode="after")
     def require_at_least_one_field(self) -> UserPatch:
         if not self.model_fields_set:
             raise ValueError("至少提供一个待修改字段")
+        if any(
+            field in self.model_fields_set and getattr(self, field) is None
+            for field in ("username", "display_name")
+        ):
+            raise ValueError("用户名和显示名称不得为 null")
         return self
 
 
 class RoleUpdate(ContractModel):
-    role_codes: Annotated[list[RoleCode], Field(min_length=1)]
+    role_codes: Annotated[
+        list[RoleCode],
+        Field(min_length=1, json_schema_extra={"uniqueItems": True}),
+    ]
 
     _roles_are_unique = field_validator("role_codes")(_unique)
 
 
 class User(ContractModel):
     id: UUID
-    username: str
-    phone_e164: str | None
-    display_name: str
-    role_codes: list[RoleCode]
+    username: Annotated[str, Field(max_length=120)]
+    phone_e164: Annotated[str, Field(max_length=32)] | None
+    display_name: Annotated[str, Field(max_length=120)]
+    role_codes: list[RoleCode] = Field(json_schema_extra={"uniqueItems": True})
     status: AccountStatus
     credential_count: Annotated[int, Field(ge=0)]
     activated_at: datetime | None
@@ -248,7 +288,7 @@ class AccountActivationRequest(ContractModel):
 class Credential(ContractModel):
     id: UUID
     label: UserText
-    transports: list[Transport]
+    transports: list[Transport] = Field(json_schema_extra={"uniqueItems": True})
     backup_eligible: bool
     backup_state: bool
     created_via: CredentialSource
@@ -299,9 +339,7 @@ class RecoveryRequestCreate(ContractModel):
 
 
 class RecoveryRequestAccepted(ContractModel):
-    message: Literal["如果账号和恢复材料有效，我们会按既定带外方式继续核验。"] = (
-        "如果账号和恢复材料有效，我们会按既定带外方式继续核验。"
-    )
+    message: Literal["如果账号和恢复材料有效，我们会按既定带外方式继续核验。"]
 
 
 class RecoveryRequest(ContractModel):

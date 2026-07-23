@@ -89,7 +89,7 @@ def test_recovery_request_is_generic_for_unknown_and_invalid_material(
 ) -> None:
     response = passkey_client.post(
         "/api/v1/auth/recovery/requests",
-        json={"login": "unknown", "recovery_code": "invalid-recovery-code"},
+        json={"login": "unknown", "recovery_code": "invalid-recovery-code-material"},
         headers=csrf_headers(passkey_client),
     )
 
@@ -101,7 +101,7 @@ def test_recovery_request_is_generic_for_unknown_and_invalid_material(
 def test_invalid_recovery_request_material_is_rate_limited_without_enumeration(
     passkey_client: TestClient,
 ) -> None:
-    payload = {"login": "unknown", "recovery_code": "invalid-recovery-code"}
+    payload = {"login": "unknown", "recovery_code": "invalid-recovery-code-material"}
     statuses: list[int] = []
     for forged_source in ("198.51.100.1", "203.0.113.2", "192.0.2.3"):
         headers = csrf_headers(passkey_client)
@@ -251,7 +251,7 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
         headers=csrf_headers(client),
     )
     assert options.status_code == 200
-    assert options.json()["publicKey"]["userVerification"] == "required"
+    assert options.json()["publicKey"]["authenticatorSelection"]["userVerification"] == "required"
     assert options.headers.get_list("set-cookie") == []
 
     new_credential_raw_id = b"new-recovery-credential"

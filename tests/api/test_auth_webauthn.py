@@ -219,6 +219,35 @@ def test_forged_source_headers_cannot_partition_public_authentication_limit(
     assert terminal_statuses == [401, 401, 429]
 
 
+def test_step_up_options_do_not_count_but_verify_failures_reach_the_same_limit(
+    admin_client: tuple[TestClient, ActorFixture],
+) -> None:
+    client, _actor = admin_client
+    statuses: list[int] = []
+    for index in range(3):
+        headers = csrf_headers(client)
+        options = client.post("/api/v1/auth/step-up/options", headers=headers)
+        if options.status_code == 429:
+            statuses.append(429)
+            continue
+        assert options.status_code == 200
+        body = options.json()
+        failed = client.post(
+            "/api/v1/auth/step-up/verify",
+            json={
+                "ceremony_id": body["ceremony_id"],
+                "credential": _credential(
+                    credential_id=_base64url(f"unknown-step-up-{index}".encode()),
+                    challenge=body["publicKey"]["challenge"],
+                ),
+            },
+            headers=headers,
+        )
+        statuses.append(failed.status_code)
+
+    assert statuses == [401, 401, 429]
+
+
 @pytest.mark.parametrize(
     ("path", "field", "material"),
     [

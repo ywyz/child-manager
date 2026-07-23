@@ -201,7 +201,11 @@ def csrf(response: Response) -> dict[str, str]:
     return {"csrf_token": token}
 
 
-@router.post("/bootstrap/registration/options", response_model=WebAuthnRegistrationOptions)
+@router.post(
+    "/bootstrap/registration/options",
+    response_model=WebAuthnRegistrationOptions,
+    response_model_exclude_none=True,
+)
 def bootstrap_options(
     body: BootstrapRegistrationOptionsRequest,
     request: Request,
@@ -244,10 +248,19 @@ def bootstrap_verify(
             _record_public_failure(request, purpose, source)
         raise
     _clear_public_throttle(request, purpose, source)
-    return {"user_id": user_id, "credential_id": credential.id}
+    return {
+        "user_id": user_id,
+        "status": "pending_verification",
+        "credential_id": credential.id,
+        "verification_required": True,
+    }
 
 
-@router.post("/invitation/registration/options", response_model=WebAuthnRegistrationOptions)
+@router.post(
+    "/invitation/registration/options",
+    response_model=WebAuthnRegistrationOptions,
+    response_model_exclude_none=True,
+)
 def invitation_options(
     body: InvitationRegistrationOptionsRequest,
     request: Request,
@@ -290,7 +303,12 @@ def invitation_verify(
             _record_public_failure(request, purpose, source)
         raise
     _clear_public_throttle(request, purpose, source)
-    return {"user_id": user_id, "credential_id": credential.id}
+    return {
+        "user_id": user_id,
+        "status": "pending_verification",
+        "credential_id": credential.id,
+        "verification_required": True,
+    }
 
 
 @router.post("/authentication/options", response_model=WebAuthnAuthenticationOptions)
@@ -395,7 +413,11 @@ def credentials(
     return {"items": [_credential(item) for item in service.list_credentials(session)]}
 
 
-@router.post("/credentials/registration/options", response_model=WebAuthnRegistrationOptions)
+@router.post(
+    "/credentials/registration/options",
+    response_model=WebAuthnRegistrationOptions,
+    response_model_exclude_none=True,
+)
 def credential_options(
     request: Request, session: CurrentSessionDependency, service: IdentityServiceDependency
 ) -> dict[str, object]:
@@ -477,7 +499,11 @@ def recovery_request(
     return {"message": "如果账号和恢复材料有效，我们会按既定带外方式继续核验。"}
 
 
-@router.post("/recovery/registration/options", response_model=WebAuthnRegistrationOptions)
+@router.post(
+    "/recovery/registration/options",
+    response_model=WebAuthnRegistrationOptions,
+    response_model_exclude_none=True,
+)
 def recovery_options(
     body: RecoveryRegistrationOptionsRequest,
     request: Request,

@@ -1,9 +1,10 @@
 """管理员账号、邀请、凭据、恢复和会话管理端点。"""
 
 from datetime import UTC, datetime
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Query, Request
 
 from apps.api.dependencies import AdminSessionDependency, IdentityServiceDependency
 from apps.api.routers.auth import _credential, require_csrf
@@ -76,8 +77,8 @@ def _invitation(record: InvitationRecord, secret: str | None = None) -> dict[str
 def list_users(
     session: AdminSessionDependency,
     service: IdentityServiceDependency,
-    page: int = 1,
-    page_size: int = 20,
+    page: Annotated[int, Query(ge=1)] = 1,
+    page_size: Annotated[int, Query(ge=1, le=100)] = 20,
 ) -> dict[str, object]:
     if page < 1 or not 1 <= page_size <= 100:
         raise IdentityError(422, "request.invalid_pagination", "分页参数无效。")

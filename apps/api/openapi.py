@@ -124,6 +124,16 @@ _SCHEMAS = {
             },
         },
     },
+    "UserPatch": {
+        "type": "object",
+        "additionalProperties": False,
+        "minProperties": 1,
+        "properties": {
+            "username": {"type": "string", "minLength": 1, "maxLength": 120},
+            "phone_e164": {"type": ["string", "null"], "maxLength": 32},
+            "display_name": {"type": "string", "minLength": 1, "maxLength": 120},
+        },
+    },
 }
 
 
@@ -144,6 +154,10 @@ _RESPONSES = {
     "UserCreated": _response("脱敏账号已创建", "User"),
     "UserPage": _response("分页账号", "UserPage"),
     "CurrentUserOk": _response("当前登录账号与实时权限", "CurrentUser"),
+    "CurrentUserRefreshed": {
+        **_response("轮换成功；旧 Refresh Token 已撤销", "CurrentUser"),
+        "headers": {"Set-Cookie": {"$ref": "#/components/headers/AuthSetCookies"}},
+    },
     "RegistrationOptionsOk": _response(
         "5 分钟单次 WebAuthn 注册 options；publicKey 可直接传给浏览器 API",
         "WebAuthnRegistrationOptions",
@@ -291,7 +305,7 @@ _OPERATION_RESPONSES: dict[OperationKey, dict[str, str]] = {
         "429": "TooManyRequests",
     },
     ("/api/v1/auth/refresh", "post"): {
-        "200": "CurrentUserOk",
+        "200": "CurrentUserRefreshed",
         "401": "Unauthorized",
         "403": "Forbidden",
     },
@@ -553,7 +567,11 @@ def configure_openapi(application: FastAPI) -> Callable[[], dict[str, Any]]:
         components.setdefault("securitySchemes", {}).update(_SECURITY_SCHEMES)
         components.setdefault("headers", {}).update(_HEADERS)
         components.setdefault("parameters", {}).update(_PARAMETERS)
-        components.setdefault("schemas", {}).update(_SCHEMAS)
+        schemas = components.setdefault("schemas", {})
+        schemas.update(_SCHEMAS)
+        schemas["RegistrationPublicKey"]["properties"]["extensions"] = {
+            "$ref": "#/components/schemas/RegistrationExtensions"
+        }
         components.setdefault("responses", {}).update(_RESPONSES)
         for key in _OPERATION_RESPONSES:
             _apply_operation_contract(document, key)

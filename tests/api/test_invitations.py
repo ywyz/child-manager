@@ -118,7 +118,7 @@ def test_unknown_expired_revoked_and_consumed_invitation_share_one_public_failur
     client, _actor = admin_client
     teacher = _create_teacher(client)
     native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
-    cases: list[str] = ["unknown-invitation"]
+    cases: list[str] = ["unknown-invitation-material"]
 
     expired = _issue(client, teacher["id"])
     with psycopg.connect(native_url) as connection:
