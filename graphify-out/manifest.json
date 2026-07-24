@@ -1249,9 +1249,14 @@
     "ast_hash": "581ab042a4b18e2719ce4a3587f89cd3",
     "semantic_hash": ""
   },
-  "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md": {
-    "mtime": 1784883358.45204,
-    "ast_hash": "5af4b383fc8feae6532e0557992da5c7",
+  "docs/development/dev-handoff-20260724.md": {
+    "mtime": 1784893222.1660244,
+    "ast_hash": "4bfc9ea3e31fda80e2cca5778e89d071",
+    "semantic_hash": ""
+  },
+  "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md": {
+    "mtime": 1784892984.9160163,
+    "ast_hash": "1854cd22d1f8c8512e4830f880371b69",
     "semantic_hash": ""
   }
 }

@@ -771,8 +771,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_app",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "api/app.py"
     },
     {
@@ -782,8 +782,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "apps_api_app_auth_throttle",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_auth_throttle()"
     },
     {
@@ -793,8 +793,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "apps_api_app_request_id",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_request_id()"
     },
     {
@@ -804,8 +804,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_app_py_request",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "request"
     },
     {
@@ -815,8 +815,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_app_py_uuid",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "uuid"
     },
     {
@@ -826,8 +826,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "apps_api_app_error_response",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_error_response()"
     },
     {
@@ -837,8 +837,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "jsonresponse",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "jsonresponse"
     },
     {
@@ -848,8 +848,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "apps_api_app_safe_check",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_safe_check()"
     },
     {
@@ -870,8 +870,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_app_py_fastapi",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "fastapi"
     },
     {
@@ -881,8 +881,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_app_rationale_1",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "fastapi \u5e94\u7528\u88c5\u914d\u3001\u7edf\u4e00\u5f02\u5e38\u8f6c\u6362\u4e0e\u5065\u5eb7\u7aef\u70b9\u3002"
     },
     {
@@ -892,8 +892,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_api_dependencies",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "dependencies.py"
     },
     {
@@ -914,8 +914,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "apps_api_dependencies_ai_unconfigured",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_ai_unconfigured()"
     },
     {
@@ -925,8 +925,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "apps_api_dependencies_runtime_storage_unconfigured",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_runtime_storage_unconfigured()"
     },
     {
@@ -936,8 +936,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "apps_api_dependencies_calendar_library_available",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_calendar_library_available()"
     },
     {
@@ -947,8 +947,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "apps_api_dependencies_database_check",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_database_check()"
     },
     {
@@ -958,8 +958,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "healthcheck",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "healthcheck"
     },
     {
@@ -969,8 +969,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "apps_api_dependencies_redis_check",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_redis_check()"
     },
     {
@@ -980,8 +980,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "apps_api_dependencies_path_check",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_path_check()"
     },
     {
@@ -991,8 +991,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_dependencies_py_path",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "path"
     },
     {
@@ -1002,8 +1002,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "apps_api_dependencies_file_check",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "_file_check()"
     },
     {
@@ -1013,8 +1013,8 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "apps_api_dependencies_build_health_dependencies",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "build_health_dependencies()"
     },
     {
@@ -1024,8 +1024,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "apps_api_dependencies_identity_service",
-      "community": 18,
-      "community_name": "identity/service.py",
+      "community": 5,
+      "community_name": "IdentityService",
       "norm_label": "identity_service()"
     },
     {
@@ -1079,8 +1079,8 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "apps_api_dependencies_current_session",
-      "community": 76,
-      "community_name": "test_users.py",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "current_session()"
     },
     {
@@ -1090,8 +1090,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "authenticatedsessiondependency",
-      "community": 76,
-      "community_name": "test_users.py",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "authenticatedsessiondependency"
     },
     {
@@ -1123,8 +1123,8 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "apps_api_dependencies_rationale_88",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "\u4ece\u8fdb\u7a0b\u73af\u5883\u6784\u9020\u771f\u5b9e\u3001\u65e0\u526f\u4f5c\u7528\u7684\u672c\u5730\u5c31\u7eea\u68c0\u67e5\u3002"
     },
     {
@@ -3378,8 +3378,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_audit_repository",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "audit/repository.py"
     },
     {
@@ -3389,8 +3389,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_auditrepository",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "auditrepository"
     },
     {
@@ -3400,8 +3400,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_auditrepository_init",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": ".__init__()"
     },
     {
@@ -3411,8 +3411,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_py_connection",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "connection"
     },
     {
@@ -3422,8 +3422,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_py_uuid",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "uuid"
     },
     {
@@ -3433,8 +3433,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_auditrepository_append",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": ".append()"
     },
     {
@@ -3444,8 +3444,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_audit_service",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "audit/service.py"
     },
     {
@@ -3466,8 +3466,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_main",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "bootstrap/__main__.py"
     },
     {
@@ -3477,8 +3477,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_main_database_url",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_database_url()"
     },
     {
@@ -3488,8 +3488,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_main_start",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_start()"
     },
     {
@@ -3499,8 +3499,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_main_activate",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_activate()"
     },
     {
@@ -3510,8 +3510,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_main_migrate_passkeys",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_migrate_passkeys()"
     },
     {
@@ -3521,8 +3521,8 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_main_recover_last_admin",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_recover_last_admin()"
     },
     {
@@ -3532,8 +3532,8 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_main_main",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "main()"
     },
     {
@@ -3543,8 +3543,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "init_admin.py"
     },
     {
@@ -3554,8 +3554,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_native_url",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_native_url()"
     },
     {
@@ -3565,8 +3565,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_start_initialization",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "start_initialization()"
     },
     {
@@ -3576,8 +3576,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_py_uuid",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "uuid"
     },
     {
@@ -3587,8 +3587,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_activate_initialization",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "activate_initialization()"
     },
     {
@@ -3598,8 +3598,8 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_recover_last_admin",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "recover_last_admin()"
     },
     {
@@ -3609,8 +3609,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_py_datetime",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "datetime"
     },
     {
@@ -3620,8 +3620,8 @@
       "source_location": "L285",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_migrate_passkeys",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "migrate_passkeys()"
     },
     {
@@ -3631,8 +3631,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_rationale_1",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "\u9996\u4f4d\u7ba1\u7406\u5458\u7684\u90e8\u7f72\u63a7\u5236\u53f0\u521d\u59cb\u5316\u4e0e\u53cc\u4eba\u6838\u9a8c\u6fc0\u6d3b\u3002"
     },
     {
@@ -3642,8 +3642,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_rationale_28",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "\u521b\u5efa\u5f85\u767b\u8bb0\u7ba1\u7406\u5458,\u5e76\u53ea\u8fd4\u56de\u4e00\u6b21\u521d\u59cb\u5316\u79d8\u5bc6\u3002"
     },
     {
@@ -3653,8 +3653,8 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_rationale_104",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "\u4ec5\u5728\u901a\u884c\u5bc6\u94a5\u5df2\u767b\u8bb0\u5e76\u5b8c\u6210\u4e24\u4f4d\u9884\u767b\u8bb0\u4eba\u5458\u6838\u9a8c\u540e\u6fc0\u6d3b\u3002"
     },
     {
@@ -3664,8 +3664,8 @@
       "source_location": "L172",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_rationale_172",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "\u7531\u4e24\u4f4d\u9884\u767b\u8bb0\u8d23\u4efb\u4eba\u6279\u51c6\u6700\u540e\u7ba1\u7406\u5458\u6062\u590d,\u5e76\u53ea\u8fd4\u56de\u4e00\u6b21\u767b\u8bb0\u79d8\u5bc6\u3002"
     },
     {
@@ -3675,8 +3675,8 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "packages_backend_bootstrap_init_admin_rationale_286",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "\u4e3a\u5c1a\u65e0\u901a\u884c\u5bc6\u94a5\u7684\u8fc1\u79fb\u8d26\u53f7\u8f6e\u6362\u5e76\u7b7e\u53d1\u4e00\u6b21\u6027\u767b\u8bb0\u51ed\u636e\u3002"
     },
     {
@@ -4368,8 +4368,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "timedelta",
-      "community": 76,
-      "community_name": "test_users.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "timedelta"
     },
     {
@@ -4687,8 +4687,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "client_ip.py"
     },
     {
@@ -4698,8 +4698,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip_parse_trusted_bff_peers",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "parse_trusted_bff_peers()"
     },
     {
@@ -4709,8 +4709,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip_resolve_client_ip",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "resolve_client_ip()"
     },
     {
@@ -4720,8 +4720,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "collection",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "collection"
     },
     {
@@ -4731,8 +4731,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip_rationale_8",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "\u53ea\u63a5\u53d7\u663e\u5f0f\u914d\u7f6e\u7684\u56de\u73af bff socket peer\u3002"
     },
     {
@@ -4742,8 +4742,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_csrf",
-      "community": 72,
-      "community_name": "Response",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "csrf.py"
     },
     {
@@ -4753,8 +4753,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "packages_backend_identity_csrf_encode",
-      "community": 72,
-      "community_name": "Response",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "_encode()"
     },
     {
@@ -4764,8 +4764,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "packages_backend_identity_csrf_issue_csrf_token",
-      "community": 72,
-      "community_name": "Response",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "issue_csrf_token()"
     },
     {
@@ -4775,8 +4775,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "packages_backend_identity_csrf_verify_csrf_token",
-      "community": 72,
-      "community_name": "Response",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "verify_csrf_token()"
     },
     {
@@ -5303,8 +5303,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "packages_backend_identity_repository_credentialrecord",
-      "community": 18,
-      "community_name": "identity/service.py",
+      "community": 4,
+      "community_name": "IdentityRepository",
       "norm_label": "credentialrecord"
     },
     {
@@ -5336,8 +5336,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "packages_backend_identity_repository_recoveryrequestrecord",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 4,
+      "community_name": "IdentityRepository",
       "norm_label": "recoveryrequestrecord"
     },
     {
@@ -6436,8 +6436,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "secret_tokens.py"
     },
     {
@@ -6447,8 +6447,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens_secretpurpose",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "secretpurpose"
     },
     {
@@ -6458,8 +6458,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens_py_strenum",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "strenum"
     },
     {
@@ -6469,8 +6469,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens_secretrecord",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "secretrecord"
     },
     {
@@ -6480,8 +6480,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens_issuedsecret",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "issuedsecret"
     },
     {
@@ -6491,8 +6491,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens_issue_secret",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "issue_secret()"
     },
     {
@@ -6502,8 +6502,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens_verify_secret",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "verify_secret()"
     },
     {
@@ -6513,8 +6513,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens_digest",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "_digest()"
     },
     {
@@ -6524,8 +6524,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens_rationale_36",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "\u751f\u6210 256 \u4f4d\u4e00\u6b21\u6027\u79d8\u5bc6,\u6301\u4e45\u5316\u5bf9\u8c61\u4e2d\u53ea\u4fdd\u7559 purpose \u7ed1\u5b9a\u6458\u8981\u3002"
     },
     {
@@ -6535,8 +6535,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_tokens_rationale_44",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "\u4ee5\u5e38\u91cf\u65f6\u95f4\u6bd4\u8f83 purpose \u7ed1\u5b9a\u6458\u8981\u3002"
     },
     {
@@ -6722,8 +6722,8 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_from_environment",
-      "community": 18,
-      "community_name": "identity/service.py",
+      "community": 5,
+      "community_name": "IdentityService",
       "norm_label": ".from_environment()"
     },
     {
@@ -6744,8 +6744,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_service_py_connection",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "connection"
     },
     {
@@ -6777,8 +6777,8 @@
       "source_location": "L166",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_optional_kindergarten_id",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 18,
+      "community_name": "identity/service.py",
       "norm_label": "._optional_kindergarten_id()"
     },
     {
@@ -6799,8 +6799,8 @@
       "source_location": "L184",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_safe_login_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".create_user",
       "norm_label": ".safe_login_key()"
     },
     {
@@ -6909,8 +6909,8 @@
       "source_location": "L297",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_registration_options",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 14,
+      "community_name": "test_webauthn.py",
       "norm_label": "._registration_options()"
     },
     {
@@ -6931,8 +6931,8 @@
       "source_location": "L401",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_bootstrap_registration_options",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": ".bootstrap_registration_options()"
     },
     {
@@ -6942,8 +6942,8 @@
       "source_location": "L427",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_invitation_registration_options",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 18,
+      "community_name": "identity/service.py",
       "norm_label": ".invitation_registration_options()"
     },
     {
@@ -6953,8 +6953,8 @@
       "source_location": "L450",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_recovery_registration_options",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 18,
+      "community_name": "identity/service.py",
       "norm_label": ".recovery_registration_options()"
     },
     {
@@ -6986,8 +6986,8 @@
       "source_location": "L527",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_persist_registration_failure",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 18,
+      "community_name": "identity/service.py",
       "norm_label": "._persist_registration_failure()"
     },
     {
@@ -6997,8 +6997,8 @@
       "source_location": "L557",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_complete_recovery_registration",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "._complete_recovery_registration()"
     },
     {
@@ -7008,8 +7008,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_service_py_datetime",
-      "community": 18,
-      "community_name": "identity/service.py",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "datetime"
     },
     {
@@ -7085,8 +7085,8 @@
       "source_location": "L906",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_persist_counter_anomaly",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 18,
+      "community_name": "identity/service.py",
       "norm_label": "._persist_counter_anomaly()"
     },
     {
@@ -7096,8 +7096,8 @@
       "source_location": "L971",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_persist_authentication_failure",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 18,
+      "community_name": "identity/service.py",
       "norm_label": "._persist_authentication_failure()"
     },
     {
@@ -7162,8 +7162,8 @@
       "source_location": "L1280",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_refresh",
-      "community": 50,
-      "community_name": "passkey_helpers.py",
+      "community": 5,
+      "community_name": "IdentityService",
       "norm_label": ".refresh()"
     },
     {
@@ -7184,8 +7184,8 @@
       "source_location": "L1380",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_create_user",
-      "community": 312,
-      "community_name": ".create_user",
+      "community": 5,
+      "community_name": "IdentityService",
       "norm_label": ".create_user()"
     },
     {
@@ -7217,8 +7217,8 @@
       "source_location": "L1441",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_update_user",
-      "community": 312,
-      "community_name": ".create_user",
+      "community": 5,
+      "community_name": "IdentityService",
       "norm_label": ".update_user()"
     },
     {
@@ -7338,8 +7338,8 @@
       "source_location": "L1784",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_submit_recovery_request",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".create_user",
       "norm_label": ".submit_recovery_request()"
     },
     {
@@ -7371,8 +7371,8 @@
       "source_location": "L1870",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_rotate_recovery_code",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": ".rotate_recovery_code()"
     },
     {
@@ -9153,8 +9153,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_audit",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "audit.py"
     },
     {
@@ -9164,8 +9164,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "packages_contracts_audit_identityauditeventcode",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "identityauditeventcode"
     },
     {
@@ -9175,8 +9175,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_audit_py_strenum",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "strenum"
     },
     {
@@ -9186,8 +9186,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "packages_contracts_audit_auditeventreference",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "auditeventreference"
     },
     {
@@ -9197,8 +9197,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_audit_rationale_1",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "\u8eab\u4efd\u9636\u6bb5\u7684\u7a33\u5b9a\u5ba1\u8ba1\u4e8b\u4ef6\u4ee3\u7801\u4e0e\u6700\u5c0f\u8d44\u6e90\u5f15\u7528\u3002"
     },
     {
@@ -9241,8 +9241,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "packages_contracts_common_resourcereference",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "resourcereference"
     },
     {
@@ -9252,8 +9252,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "packages_contracts_common_fielderror",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "fielderror"
     },
     {
@@ -9285,8 +9285,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "packages_contracts_common_page",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "page"
     },
     {
@@ -9340,8 +9340,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_exports",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "exports.py"
     },
     {
@@ -9351,8 +9351,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "packages_contracts_exports_exportreference",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "exportreference"
     },
     {
@@ -9560,8 +9560,8 @@
       "source_location": "L184",
       "_origin": "ast",
       "id": "packages_contracts_identity_bootstrapregistrationoptionsrequest",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "bootstrapregistrationoptionsrequest"
     },
     {
@@ -9571,8 +9571,8 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "packages_contracts_identity_invitationregistrationoptionsrequest",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "invitationregistrationoptionsrequest"
     },
     {
@@ -9582,8 +9582,8 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "packages_contracts_identity_recoveryregistrationoptionsrequest",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "recoveryregistrationoptionsrequest"
     },
     {
@@ -9824,8 +9824,8 @@
       "source_location": "L385",
       "_origin": "ast",
       "id": "packages_contracts_identity_credentialpatch",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "credentialpatch"
     },
     {
@@ -9901,8 +9901,8 @@
       "source_location": "L421",
       "_origin": "ast",
       "id": "packages_contracts_identity_recoveryrequestcreate",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "recoveryrequestcreate"
     },
     {
@@ -10055,8 +10055,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_lesson_plans",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "lesson_plans.py"
     },
     {
@@ -10066,8 +10066,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "packages_contracts_lesson_plans_lessonplanreference",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "lessonplanreference"
     },
     {
@@ -10077,8 +10077,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_prompts",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "prompts.py"
     },
     {
@@ -10088,8 +10088,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_contracts_prompts_promptreference",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "promptreference"
     },
     {
@@ -10355,8 +10355,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "passkey_helpers.py"
     },
     {
@@ -10377,8 +10377,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers_passkey_client",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "passkey_client()"
     },
     {
@@ -10388,8 +10388,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers_py_monkeypatch",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "monkeypatch"
     },
     {
@@ -10399,8 +10399,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers_py_testclient",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "testclient"
     },
     {
@@ -10410,8 +10410,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers_csrf_headers",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "csrf_headers()"
     },
     {
@@ -10421,8 +10421,8 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers_admin_client",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "admin_client()"
     },
     {
@@ -10432,8 +10432,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers_rationale_67",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "\u901a\u8fc7 fastapi \u8eab\u4efd\u4f9d\u8d56\u6ce8\u5165\u5efa\u7acb\u5df2 step-up \u7ba1\u7406\u5458,\u4e0d\u501f\u7528\u5bc6\u7801\u767b\u5f55\u3002"
     },
     {
@@ -10839,8 +10839,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_test_backup_maintenance",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "test_backup_maintenance.py"
     },
     {
@@ -10850,8 +10850,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_api_test_backup_maintenance_test_backup_maintenance_and_security_events_require_authentication",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "test_backup_maintenance_and_security_events_require_authentication()"
     },
     {
@@ -10861,8 +10861,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_test_backup_maintenance_py_testclient",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "testclient"
     },
     {
@@ -10872,8 +10872,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_api_test_backup_maintenance_test_admin_cannot_disable_required_backup_authentication",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "test_admin_cannot_disable_required_backup_authentication()"
     },
     {
@@ -10883,8 +10883,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "tests_api_test_backup_maintenance_test_backup_security_events_are_current_user_only_and_bounded",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "test_backup_security_events_are_current_user_only_and_bounded()"
     },
     {
@@ -10894,8 +10894,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "tests_api_test_backup_maintenance_test_replacing_factors_revokes_existing_password_totp_sessions",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "test_replacing_factors_revokes_existing_password_totp_sessions()"
     },
     {
@@ -10905,8 +10905,8 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "tests_api_test_backup_maintenance_test_backup_feature_does_not_weaken_emergency_recovery_contract",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 307,
+      "community_name": "ActorFixture",
       "norm_label": "test_backup_feature_does_not_weaken_emergency_recovery_contract()"
     },
     {
@@ -11070,8 +11070,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_test_csrf",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "test_csrf.py"
     },
     {
@@ -11081,8 +11081,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_api_test_csrf_test_csrf_cookie_is_signed_readable_and_not_httponly",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "test_csrf_cookie_is_signed_readable_and_not_httponly()"
     },
     {
@@ -11092,8 +11092,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_test_csrf_py_testclient",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "testclient"
     },
     {
@@ -11103,8 +11103,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_api_test_csrf_test_passkey_state_change_rejects_missing_csrf_and_wrong_origin",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "test_passkey_state_change_rejects_missing_csrf_and_wrong_origin()"
     },
     {
@@ -11114,8 +11114,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_api_test_csrf_test_recovery_rejects_malformed_signed_double_submit_token",
-      "community": 78,
-      "community_name": "passkey_client",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "test_recovery_rejects_malformed_signed_double_submit_token()"
     },
     {
@@ -11268,8 +11268,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_test_health_py_monkeypatch",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "monkeypatch"
     },
     {
@@ -11290,8 +11290,8 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "tests_api_test_health_test_default_dependencies_require_profile_runtime_root",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "test_default_dependencies_require_profile_runtime_root()"
     },
     {
@@ -11301,8 +11301,8 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "tests_api_test_health_test_default_dependencies_reject_blank_security_keys",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "test_default_dependencies_reject_blank_security_keys()"
     },
     {
@@ -11312,8 +11312,8 @@
       "source_location": "L234",
       "_origin": "ast",
       "id": "tests_api_test_health_test_default_calendar_check_degrades_when_library_is_unavailable",
-      "community": 43,
-      "community_name": "dependencies.py",
+      "community": 42,
+      "community_name": "create_app",
       "norm_label": "test_default_calendar_check_degrades_when_library_is_unavailable()"
     },
     {
@@ -12104,8 +12104,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_test_users",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "test_users.py"
     },
     {
@@ -12115,8 +12115,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_api_test_users_native_url",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "_native_url()"
     },
     {
@@ -12126,8 +12126,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_api_test_users_test_user_creation_accepts_identity_metadata_without_any_password_field",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "test_user_creation_accepts_identity_metadata_without_any_password_field()"
     },
     {
@@ -12137,8 +12137,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_test_users_py_testclient",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "testclient"
     },
     {
@@ -12148,8 +12148,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_api_test_users_test_user_identity_management_routes_require_an_admin",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "test_user_identity_management_routes_require_an_admin()"
     },
     {
@@ -12159,8 +12159,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "tests_api_test_users_test_admin_creates_pending_account_without_accepting_a_password",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "test_admin_creates_pending_account_without_accepting_a_password()"
     },
     {
@@ -12170,8 +12170,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "tests_api_test_users_test_activation_requires_registered_pending_account_and_persists_verification_evidence",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "test_activation_requires_registered_pending_account_and_persists_verification_evidence()"
     },
     {
@@ -12181,8 +12181,8 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "tests_api_test_users_test_legacy_password_reset_route_is_absent",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "test_legacy_password_reset_route_is_absent()"
     },
     {
@@ -12192,8 +12192,8 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "tests_api_test_users_test_last_admin_protection_is_exposed_as_stable_conflict_contract",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 36,
+      "community_name": "csrf_headers",
       "norm_label": "test_last_admin_protection_is_exposed_as_stable_conflict_contract()"
     },
     {
@@ -13589,8 +13589,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_migrations_test_0005_password_totp_backup_login",
-      "community": 321,
-      "community_name": "_backup_revision",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "test_0005_password_totp_backup_login.py"
     },
     {
@@ -13600,8 +13600,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_migrations_test_0005_password_totp_backup_login_backup_revision",
-      "community": 321,
-      "community_name": "_backup_revision",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_backup_revision()"
     },
     {
@@ -13611,8 +13611,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "script",
-      "community": 321,
-      "community_name": "_backup_revision",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "script"
     },
     {
@@ -13622,8 +13622,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "tests_migrations_test_0005_password_totp_backup_login_test_backup_auth_migration_creates_isolated_credentials_and_enrollments",
-      "community": 321,
-      "community_name": "_backup_revision",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "test_backup_auth_migration_creates_isolated_credentials_and_enrollments()"
     },
     {
@@ -13633,8 +13633,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_migrations_test_0005_password_totp_backup_login_py_monkeypatch",
-      "community": 321,
-      "community_name": "_backup_revision",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "monkeypatch"
     },
     {
@@ -13644,8 +13644,8 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "tests_migrations_test_0005_password_totp_backup_login_test_backup_auth_revision_is_the_only_child_of_settings",
-      "community": 321,
-      "community_name": "_backup_revision",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "test_backup_auth_revision_is_the_only_child_of_settings()"
     },
     {
@@ -13655,8 +13655,8 @@
       "source_location": "L142",
       "_origin": "ast",
       "id": "tests_migrations_test_0005_password_totp_backup_login_test_backup_auth_migration_downgrades_to_settings_without_restoring_legacy_passwords",
-      "community": 321,
-      "community_name": "_backup_revision",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "test_backup_auth_migration_downgrades_to_settings_without_restoring_legacy_passwords()"
     },
     {
@@ -13666,8 +13666,8 @@
       "source_location": "L174",
       "_origin": "ast",
       "id": "tests_migrations_test_0005_password_totp_backup_login_test_existing_sessions_are_marked_webauthn_or_revoked_during_upgrade",
-      "community": 321,
-      "community_name": "_backup_revision",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "test_existing_sessions_are_marked_webauthn_or_revoked_during_upgrade()"
     },
     {
@@ -13721,8 +13721,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_migrations_test_password_to_passkey",
-      "community": 320,
-      "community_name": "test_password_to_passkey.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "test_password_to_passkey.py"
     },
     {
@@ -13732,8 +13732,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_migrations_test_password_to_passkey_native_url",
-      "community": 320,
-      "community_name": "test_password_to_passkey.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_native_url()"
     },
     {
@@ -13743,8 +13743,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_migrations_test_password_to_passkey_user_columns",
-      "community": 320,
-      "community_name": "test_password_to_passkey.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_user_columns()"
     },
     {
@@ -13754,8 +13754,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_migrations_test_password_to_passkey_py_connection",
-      "community": 320,
-      "community_name": "test_password_to_passkey.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "connection"
     },
     {
@@ -13765,8 +13765,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "tests_migrations_test_password_to_passkey_assert_passkey_revisions_exist",
-      "community": 320,
-      "community_name": "test_password_to_passkey.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "_assert_passkey_revisions_exist()"
     },
     {
@@ -13776,8 +13776,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "tests_migrations_test_password_to_passkey_test_passkey_migration_has_explicit_expand_and_contract_boundaries",
-      "community": 320,
-      "community_name": "test_password_to_passkey.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "test_passkey_migration_has_explicit_expand_and_contract_boundaries()"
     },
     {
@@ -13787,8 +13787,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "tests_migrations_test_password_to_passkey_test_expand_moves_existing_accounts_to_enrollment_and_revokes_old_sessions",
-      "community": 320,
-      "community_name": "test_password_to_passkey.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "test_expand_moves_existing_accounts_to_enrollment_and_revokes_old_sessions()"
     },
     {
@@ -13798,8 +13798,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_migrations_test_password_to_passkey_py_monkeypatch",
-      "community": 320,
-      "community_name": "test_password_to_passkey.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "monkeypatch"
     },
     {
@@ -13809,8 +13809,8 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "tests_migrations_test_password_to_passkey_test_contract_removes_password_data_and_downgrade_recreates_only_empty_columns",
-      "community": 320,
-      "community_name": "test_password_to_passkey.py",
+      "community": 7,
+      "community_name": "timedelta",
       "norm_label": "test_contract_removes_password_data_and_downgrade_recreates_only_empty_columns()"
     },
     {
@@ -14392,8 +14392,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "test_audit.py"
     },
     {
@@ -14403,8 +14403,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_test_identity_audit_repository_is_append_only",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "test_identity_audit_repository_is_append_only()"
     },
     {
@@ -14414,8 +14414,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_test_identity_audit_rejects_sensitive_metadata_keys",
-      "community": 54,
-      "community_name": "issue_secret",
+      "community": 16,
+      "community_name": "init_admin.py",
       "norm_label": "test_identity_audit_rejects_sensitive_metadata_keys()"
     },
     {
@@ -14557,8 +14557,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "test_client_ip.py"
     },
     {
@@ -14568,8 +14568,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_configured_loopback_bff_peer_can_supply_internal_client_ip",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "test_configured_loopback_bff_peer_can_supply_internal_client_ip()"
     },
     {
@@ -14579,8 +14579,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_untrusted_peer_cannot_supply_internal_client_ip",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "test_untrusted_peer_cannot_supply_internal_client_ip()"
     },
     {
@@ -14590,8 +14590,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_non_loopback_peer_cannot_be_configured_as_trusted_bff",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "test_non_loopback_peer_cannot_be_configured_as_trusted_bff()"
     },
     {
@@ -14601,8 +14601,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_trusted_bff_peers_are_empty_until_explicitly_configured",
-      "community": 74,
-      "community_name": "resolve_client_ip",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "test_trusted_bff_peers_are_empty_until_explicitly_configured()"
     },
     {
@@ -14810,8 +14810,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_secret_tokens",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_secret_tokens.py"
     },
     {
@@ -14821,8 +14821,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_unit_identity_test_secret_tokens_decode_base64url",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "_decode_base64url()"
     },
     {
@@ -14832,8 +14832,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_unit_identity_test_secret_tokens_test_identity_secret_has_128_bits_and_only_digest_is_persistable",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_identity_secret_has_128_bits_and_only_digest_is_persistable()"
     },
     {
@@ -14843,8 +14843,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "tests_unit_identity_test_secret_tokens_test_secret_digest_is_bound_to_purpose",
-      "community": 16,
-      "community_name": "init_admin.py",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_secret_digest_is_bound_to_purpose()"
     },
     {
@@ -16586,6 +16586,215 @@
       "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
+      "label": "dev-handoff-20260724.md",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "dev-handoff-20260724.md"
+    },
+    {
+      "label": "Dev \u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5\uff082026-07-24\uff09",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "dev \u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5(2026-07-24)"
+    },
+    {
+      "label": "1. \u6062\u590d\u65f6\u5148\u786e\u8ba4\u7684\u57fa\u7ebf",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_1_\u6062\u590d\u65f6\u5148\u786e\u8ba4\u7684\u57fa\u7ebf",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "1. \u6062\u590d\u65f6\u5148\u786e\u8ba4\u7684\u57fa\u7ebf"
+    },
+    {
+      "label": "2. \u5f53\u524d\u5b9e\u73b0\u8fdb\u5ea6",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_2_\u5f53\u524d\u5b9e\u73b0\u8fdb\u5ea6",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "2. \u5f53\u524d\u5b9e\u73b0\u8fdb\u5ea6"
+    },
+    {
+      "label": "2.1 \u5df2\u5b8c\u6210",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_2_1_\u5df2\u5b8c\u6210",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "2.1 \u5df2\u5b8c\u6210"
+    },
+    {
+      "label": "2.2 \u5df2\u9a8c\u8bc1\u95e8\u7981",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_2_2_\u5df2\u9a8c\u8bc1\u95e8\u7981",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "2.2 \u5df2\u9a8c\u8bc1\u95e8\u7981"
+    },
+    {
+      "label": "2.3 \u5c1a\u672a\u5b9e\u73b0",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_2_3_\u5c1a\u672a\u5b9e\u73b0",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "2.3 \u5c1a\u672a\u5b9e\u73b0"
+    },
+    {
+      "label": "3. \u4e0b\u4e00\u6b65\uff1a\u53ea\u4ece T016 \u5f00\u59cb",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L80",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_3_\u4e0b\u4e00\u6b65_\u53ea\u4ece_t016_\u5f00\u59cb",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "3. \u4e0b\u4e00\u6b65:\u53ea\u4ece t016 \u5f00\u59cb"
+    },
+    {
+      "label": "4. Ubuntu \u6240\u9700\u8f6f\u4ef6",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L112",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_4_ubuntu_\u6240\u9700\u8f6f\u4ef6",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "4. ubuntu \u6240\u9700\u8f6f\u4ef6"
+    },
+    {
+      "label": "4.1 \u9879\u76ee\u5fc5\u987b\u9879",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L114",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_4_1_\u9879\u76ee\u5fc5\u987b\u9879",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "4.1 \u9879\u76ee\u5fc5\u987b\u9879"
+    },
+    {
+      "label": "4.2 \u5f53\u524d\u4e3b\u673a\u5df2\u53d1\u73b0\u7684\u5de5\u5177\u7f3a\u53e3",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L152",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_4_2_\u5f53\u524d\u4e3b\u673a\u5df2\u53d1\u73b0\u7684\u5de5\u5177\u7f3a\u53e3",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "4.2 \u5f53\u524d\u4e3b\u673a\u5df2\u53d1\u73b0\u7684\u5de5\u5177\u7f3a\u53e3"
+    },
+    {
+      "label": "4.3 \u65b0\u673a\u5668\u5b89\u88c5\u5165\u53e3",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L176",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_4_3_\u65b0\u673a\u5668\u5b89\u88c5\u5165\u53e3",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "4.3 \u65b0\u673a\u5668\u5b89\u88c5\u5165\u53e3"
+    },
+    {
+      "label": "5. Codex\u3001Skill \u4e0e MCP",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L199",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_5_codex_skill_\u4e0e_mcp",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "5. codex\u3001skill \u4e0e mcp"
+    },
+    {
+      "label": "6. \u672c\u5730\u73af\u5883\u4e0e\u79d8\u5bc6",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L236",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_6_\u672c\u5730\u73af\u5883\u4e0e\u79d8\u5bc6",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "6. \u672c\u5730\u73af\u5883\u4e0e\u79d8\u5bc6"
+    },
+    {
+      "label": "6.1 \u4e0d\u8981\u8fc1\u79fb\u7684\u5185\u5bb9",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L238",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_6_1_\u4e0d\u8981\u8fc1\u79fb\u7684\u5185\u5bb9",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "6.1 \u4e0d\u8981\u8fc1\u79fb\u7684\u5185\u5bb9"
+    },
+    {
+      "label": "6.2 \u4ed3\u5e93\u5916\u521b\u5efa\u672c\u5730\u79d8\u5bc6",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L247",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_6_2_\u4ed3\u5e93\u5916\u521b\u5efa\u672c\u5730\u79d8\u5bc6",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "6.2 \u4ed3\u5e93\u5916\u521b\u5efa\u672c\u5730\u79d8\u5bc6"
+    },
+    {
+      "label": "6.3 Dev \u6863\u4f4d",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L266",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_6_3_dev_\u6863\u4f4d",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "6.3 dev \u6863\u4f4d"
+    },
+    {
+      "label": "7. \u65b0\u673a\u5668\u6062\u590d\u4e0e\u9a8c\u8bc1",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L305",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_7_\u65b0\u673a\u5668\u6062\u590d\u4e0e\u9a8c\u8bc1",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "7. \u65b0\u673a\u5668\u6062\u590d\u4e0e\u9a8c\u8bc1"
+    },
+    {
+      "label": "8. \u6062\u590d\u5b8c\u6210\u5224\u5b9a",
+      "file_type": "document",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L390",
+      "_origin": "ast",
+      "id": "docs_development_dev_handoff_20260724_8_\u6062\u590d\u5b8c\u6210\u5224\u5b9a",
+      "community": 54,
+      "community_name": "issue_secret",
+      "norm_label": "8. \u6062\u590d\u5b8c\u6210\u5224\u5b9a"
+    },
+    {
       "label": "query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "file_type": "document",
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
@@ -16641,34 +16850,34 @@
       "norm_label": "source nodes"
     },
     {
-      "label": "query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "label": "query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "file_type": "document",
-      "source_file": "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "source_file": "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea",
+      "id": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu",
       "community": 324,
       "community_name": "Q: \u8fdb\u5165 M3A Phase 3 T010-T015 Foundational GREEN \u65f6\uff0c\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c\uff1f",
-      "norm_label": "query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md"
+      "norm_label": "query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md"
     },
     {
-      "label": "Q: \u8fdb\u5165 M3A Phase 3 T010-T015 Foundational GREEN \u65f6\uff0c\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c\uff1f",
+      "label": "Q: \u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6\uff0cskill\uff0c\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d\uff0c\u540c\u6b65\u5230\u4ed3\u5e93\uff0c\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubuntu\u7cfb\u7edf\u7ee7\u7eed\u5f00\u53d1\u3002",
       "file_type": "document",
-      "source_file": "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "source_file": "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_q_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c",
+      "id": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_q_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubuntu\u7cfb\u7edf\u7ee7\u7eed\u5f00\u53d1",
       "community": 324,
       "community_name": "Q: \u8fdb\u5165 M3A Phase 3 T010-T015 Foundational GREEN \u65f6\uff0c\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c\uff1f",
-      "norm_label": "q: \u8fdb\u5165 m3a phase 3 t010-t015 foundational green \u65f6,\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c?"
+      "norm_label": "q: \u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6,skill,\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d,\u540c\u6b65\u5230\u4ed3\u5e93,\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubuntu\u7cfb\u7edf\u7ee7\u7eed\u5f00\u53d1\u3002"
     },
     {
       "label": "Answer",
       "file_type": "document",
-      "source_file": "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "source_file": "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_answer",
+      "id": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_answer",
       "community": 324,
       "community_name": "Q: \u8fdb\u5165 M3A Phase 3 T010-T015 Foundational GREEN \u65f6\uff0c\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c\uff1f",
       "norm_label": "answer"
@@ -16676,10 +16885,10 @@
     {
       "label": "Outcome",
       "file_type": "document",
-      "source_file": "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "source_file": "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_outcome",
+      "id": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_outcome",
       "community": 324,
       "community_name": "Q: \u8fdb\u5165 M3A Phase 3 T010-T015 Foundational GREEN \u65f6\uff0c\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c\uff1f",
       "norm_label": "outcome"
@@ -16687,10 +16896,10 @@
     {
       "label": "Source Nodes",
       "file_type": "document",
-      "source_file": "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "source_file": "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "source_location": "L20",
       "_origin": "ast",
-      "id": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_source_nodes",
+      "id": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_source_nodes",
       "community": 324,
       "community_name": "Q: \u8fdb\u5165 M3A Phase 3 T010-T015 Foundational GREEN \u65f6\uff0c\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c\uff1f",
       "norm_label": "source nodes"
@@ -20486,9 +20695,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 325,
+      "community": 21,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u5907\u7528\u8ba4\u8bc1\u72b6\u6001\u6a21\u578b",
-      "community_name": "\u5907\u7528\u51ed\u636e\u4e0e\u77ed\u65f6\u7ed1\u5b9a\u8868",
+      "community_name": "Child Manager \u6570\u636e\u6a21\u578b\u8bbe\u8ba1",
       "id": "docs_design_data_model_backup_auth_state_model"
     },
     {
@@ -20500,9 +20709,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 326,
+      "community": 26,
       "norm_label": "\u6062\u590d\u4e0e\u4f1a\u8bdd\u4fdd\u8bc1\u6a21\u578b",
-      "community_name": "\u6062\u590d\u4e0e\u4f1a\u8bdd\u4fdd\u8bc1\u6a21\u578b",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u6570\u636e\u6a21\u578b",
       "id": "docs_design_data_model_recovery_and_session_model"
     },
     {
@@ -20528,9 +20737,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 325,
+      "community": 21,
       "norm_label": "\u5907\u7528\u8ba4\u8bc1\u7269\u7406 schema",
-      "community_name": "\u5907\u7528\u51ed\u636e\u4e0e\u77ed\u65f6\u7ed1\u5b9a\u8868",
+      "community_name": "Child Manager \u6570\u636e\u6a21\u578b\u8bbe\u8ba1",
       "id": "docs_design_database_schema_backup_auth_physical_schema"
     },
     {
@@ -20612,9 +20821,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 323,
+      "community": 11,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55\u89c4\u683c\u8d28\u91cf\u68c0\u67e5\u6e05\u5355",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u89c4\u683c\u8d28\u91cf\u68c0\u67e5\u6e05\u5355",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "specs_002_password_totp_backup_login_checklists_requirements_specification_quality_checklist"
     },
     {
@@ -20710,9 +20919,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 325,
+      "community": 21,
       "norm_label": "\u5907\u7528\u51ed\u636e\u4e0e\u77ed\u65f6\u7ed1\u5b9a\u8868",
-      "community_name": "\u5907\u7528\u51ed\u636e\u4e0e\u77ed\u65f6\u7ed1\u5b9a\u8868",
+      "community_name": "Child Manager \u6570\u636e\u6a21\u578b\u8bbe\u8ba1",
       "id": "specs_002_password_totp_backup_login_data_model_credential_enrollment_tables"
     },
     {
@@ -20724,9 +20933,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 326,
+      "community": 26,
       "norm_label": "\u5907\u7528\u8ba4\u8bc1\u4f1a\u8bdd\u4fdd\u8bc1\u72b6\u6001\u673a",
-      "community_name": "\u6062\u590d\u4e0e\u4f1a\u8bdd\u4fdd\u8bc1\u6a21\u578b",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u6570\u636e\u6a21\u578b",
       "id": "specs_002_password_totp_backup_login_data_model_session_assurance_state_machine"
     },
     {
@@ -20766,9 +20975,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 65,
+      "community": 53,
       "norm_label": "m3a \u5b9e\u65bd\u7b56\u7565",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "specs_002_password_totp_backup_login_plan_implementation_strategy"
     },
     {
@@ -20780,9 +20989,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 65,
+      "community": 53,
       "norm_label": "m3a \u5b9e\u65bd\u4e0e\u9a8c\u6536 quickstart",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "specs_002_password_totp_backup_login_quickstart_m3a_acceptance_quickstart"
     },
     {
@@ -20892,9 +21101,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 65,
+      "community": 53,
       "norm_label": "\u8ba4\u8bc1\u53d8\u66f4 intentional red \u5230 green \u6d41\u7a0b",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "specs_002_password_totp_backup_login_tasks_intentional_red_green_pipeline"
     },
     {
@@ -30081,9 +30290,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 323,
+      "community": 11,
       "norm_label": "specification quality checklist: \u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u89c4\u683c\u8d28\u91cf\u68c0\u67e5\u6e05\u5355",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_5f70de596fc8"
     },
     {
@@ -30096,9 +30305,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 323,
+      "community": 11,
       "norm_label": "content quality",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u89c4\u683c\u8d28\u91cf\u68c0\u67e5\u6e05\u5355",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_fe881a23bed0"
     },
     {
@@ -30111,9 +30320,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 323,
+      "community": 11,
       "norm_label": "requirement completeness",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u89c4\u683c\u8d28\u91cf\u68c0\u67e5\u6e05\u5355",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_f63cfd11ad46"
     },
     {
@@ -30126,9 +30335,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 323,
+      "community": 11,
       "norm_label": "feature readiness",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u89c4\u683c\u8d28\u91cf\u68c0\u67e5\u6e05\u5355",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_8fa9b4331170"
     },
     {
@@ -30141,9 +30350,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 323,
+      "community": 11,
       "norm_label": "notes",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u89c4\u683c\u8d28\u91cf\u68c0\u67e5\u6e05\u5355",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_ef61571eff09"
     },
     {
@@ -30801,9 +31010,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 53,
       "norm_label": "quickstart: \u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_6a96678c82d2"
     },
     {
@@ -30816,9 +31025,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 53,
       "norm_label": "1. \u5b9e\u65bd\u524d gate",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_8593ade8c439"
     },
     {
@@ -30831,9 +31040,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 53,
       "norm_label": "2. \u5173\u952e\u9a8c\u6536\u65c5\u7a0b",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_69ee72ae1999"
     },
     {
@@ -30846,9 +31055,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 53,
       "norm_label": "\u7ba1\u7406\u5458\u5f3a\u5236\u7ed1\u5b9a",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_100b1c49a698"
     },
     {
@@ -30861,9 +31070,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 53,
       "norm_label": "\u65b0\u8bbe\u5907\u5907\u7528\u767b\u5f55",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_e93104349b8c"
     },
     {
@@ -30876,9 +31085,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 53,
       "norm_label": "\u56e0\u7d20\u7ef4\u62a4\u4e0e\u6062\u590d",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_d8039f809ed8"
     },
     {
@@ -30891,9 +31100,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 53,
       "norm_label": "3. \u4e13\u9879\u9a8c\u8bc1",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_0ae35385c08e"
     },
     {
@@ -30906,9 +31115,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 53,
       "norm_label": "4. \u5b8c\u6574\u9a8c\u8bc1",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_7528c5033b8f"
     },
     {
@@ -77930,6 +78139,204 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724",
+      "target": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "target": "docs_development_dev_handoff_20260724_1_\u6062\u590d\u65f6\u5148\u786e\u8ba4\u7684\u57fa\u7ebf",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "target": "docs_development_dev_handoff_20260724_2_\u5f53\u524d\u5b9e\u73b0\u8fdb\u5ea6",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L80",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "target": "docs_development_dev_handoff_20260724_3_\u4e0b\u4e00\u6b65_\u53ea\u4ece_t016_\u5f00\u59cb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L112",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "target": "docs_development_dev_handoff_20260724_4_ubuntu_\u6240\u9700\u8f6f\u4ef6",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L199",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "target": "docs_development_dev_handoff_20260724_5_codex_skill_\u4e0e_mcp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L236",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "target": "docs_development_dev_handoff_20260724_6_\u672c\u5730\u73af\u5883\u4e0e\u79d8\u5bc6",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L305",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "target": "docs_development_dev_handoff_20260724_7_\u65b0\u673a\u5668\u6062\u590d\u4e0e\u9a8c\u8bc1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L390",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_dev_\u8de8\u673a\u5668\u5f00\u53d1\u4ea4\u63a5_2026_07_24",
+      "target": "docs_development_dev_handoff_20260724_8_\u6062\u590d\u5b8c\u6210\u5224\u5b9a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_2_\u5f53\u524d\u5b9e\u73b0\u8fdb\u5ea6",
+      "target": "docs_development_dev_handoff_20260724_2_1_\u5df2\u5b8c\u6210",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_2_\u5f53\u524d\u5b9e\u73b0\u8fdb\u5ea6",
+      "target": "docs_development_dev_handoff_20260724_2_2_\u5df2\u9a8c\u8bc1\u95e8\u7981",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_2_\u5f53\u524d\u5b9e\u73b0\u8fdb\u5ea6",
+      "target": "docs_development_dev_handoff_20260724_2_3_\u5c1a\u672a\u5b9e\u73b0",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L114",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_4_ubuntu_\u6240\u9700\u8f6f\u4ef6",
+      "target": "docs_development_dev_handoff_20260724_4_1_\u9879\u76ee\u5fc5\u987b\u9879",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L152",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_4_ubuntu_\u6240\u9700\u8f6f\u4ef6",
+      "target": "docs_development_dev_handoff_20260724_4_2_\u5f53\u524d\u4e3b\u673a\u5df2\u53d1\u73b0\u7684\u5de5\u5177\u7f3a\u53e3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L176",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_4_ubuntu_\u6240\u9700\u8f6f\u4ef6",
+      "target": "docs_development_dev_handoff_20260724_4_3_\u65b0\u673a\u5668\u5b89\u88c5\u5165\u53e3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L238",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_6_\u672c\u5730\u73af\u5883\u4e0e\u79d8\u5bc6",
+      "target": "docs_development_dev_handoff_20260724_6_1_\u4e0d\u8981\u8fc1\u79fb\u7684\u5185\u5bb9",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L247",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_6_\u672c\u5730\u73af\u5883\u4e0e\u79d8\u5bc6",
+      "target": "docs_development_dev_handoff_20260724_6_2_\u4ed3\u5e93\u5916\u521b\u5efa\u672c\u5730\u79d8\u5bc6",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/development/dev-handoff-20260724.md",
+      "source_location": "L266",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "docs_development_dev_handoff_20260724_6_\u672c\u5730\u73af\u5883\u4e0e\u79d8\u5bc6",
+      "target": "docs_development_dev_handoff_20260724_6_3_dev_\u6863\u4f4d",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L10",
       "weight": 1.0,
@@ -77974,45 +78381,45 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "source_file": "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "source_location": "L10",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea",
-      "target": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_q_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c",
+      "source": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu",
+      "target": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_q_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubuntu\u7cfb\u7edf\u7ee7\u7eed\u5f00\u53d1",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "source_file": "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_q_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c",
-      "target": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_answer",
+      "source": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_q_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubuntu\u7cfb\u7edf\u7ee7\u7eed\u5f00\u53d1",
+      "target": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_answer",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "source_file": "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_q_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c",
-      "target": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_outcome",
+      "source": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_q_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubuntu\u7cfb\u7edf\u7ee7\u7eed\u5f00\u53d1",
+      "target": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_outcome",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md",
+      "source_file": "graphify-out/memory/query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu.md",
       "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_q_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea\u4e9b\u73b0\u6709\u8eab\u4efd\u8fb9\u754c",
-      "target": "graphify_out_memory_query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea_source_nodes",
+      "source": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_q_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubuntu\u7cfb\u7edf\u7ee7\u7eed\u5f00\u53d1",
+      "target": "graphify_out_memory_query_20260724_113624_\u8bf7\u5c06\u73b0\u5728\u7684\u8fdb\u5ea6\u4ee5\u53ca\u7cfb\u7edf\u6240\u9700\u8981\u7684\u8f6f\u4ef6_skill_\u73af\u5883\u8bb0\u5f55\u5728\u6587\u4ef6\u4e2d_\u540c\u6b65\u5230\u4ed3\u5e93_\u6211\u5c06\u4f1a\u5207\u6362\u53e6\u4e00\u53f0ubu_source_nodes",
       "confidence_score": 1.0
     },
     {
@@ -89098,5 +89505,5 @@
       "source_file": "graphify-out/memory/query_20260712_071357_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u7684\u6570\u636e\u5b9e\u4f53_\u5173\u7cfb_\u552f\u4e00\u7ea6\u675f_\u5386\u53f2\u7248\u672c_\u5f02\u6b65\u4efb\u52a1\u548c\u5b89\u5168\u8fb9\u754c\u662f\u4ec0\u4e48.md"
     }
   ],
-  "built_at_commit": "49adf93b014878148620d0f3734dbb186151dfc4"
+  "built_at_commit": "646f828ffe091c412ae785376757113538ccf4f4"
 }

@@ -42,7 +42,6 @@
   "40": "common.sh",
   "41": "ActorFixture",
   "42": "create_app",
-  "43": "dependencies.py",
   "44": "test_settings_permissions.py",
   "45": "ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets",
   "46": "datetime",
@@ -71,13 +70,10 @@
   "69": "test_init_admin_cli.py",
   "70": "IdentityAuditEventCode",
   "71": "middleware.py",
-  "72": "Response",
   "73": "transactional_session",
-  "74": "resolve_client_ip",
   "75": "test_0004_settings.py",
   "76": "test_users.py",
   "77": "T045 M3 独立验收门禁",
-  "78": "passkey_client",
   "79": "Child Manager 架构决策记录索引",
   "80": "0002_passkey_expand.py",
   "81": "passwords.py",
@@ -320,10 +316,6 @@
   "318": "test_secret_encryption.py",
   "319": "_totp_module",
   "320": "test_password_to_passkey.py",
-  "321": "_backup_revision",
   "322": "_timestamps",
-  "323": "密码与 TOTP 备用登录规格质量检查清单",
-  "324": "Q: 进入 M3A Phase 3 T010-T015 Foundational GREEN 时，应复用哪些现有身份边界？",
-  "325": "备用凭据与短时绑定表",
-  "326": "恢复与会话保证模型"
+  "324": "Q: 进入 M3A Phase 3 T010-T015 Foundational GREEN 时，应复用哪些现有身份边界？"
 }

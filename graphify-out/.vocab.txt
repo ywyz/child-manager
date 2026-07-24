@@ -1,6 +1,7 @@
 aad
 absent
 absolute
+accept
 accepted
 accepting
 accepts
@@ -21,6 +22,8 @@ adjacent
 admin
 adopt
 adr
+aes
+aesgcm
 after
 age
 agent
@@ -67,6 +70,7 @@ assignment
 assignments
 associated
 assumptions
+assurance
 async
 atomic
 atomically
@@ -83,6 +87,7 @@ authn
 author
 authoritative
 authorization
+authorizes
 auththrottle
 autosave
 available
@@ -116,6 +121,7 @@ browser
 bucket
 buffer
 build
+business
 but
 bypass
 bytes
@@ -203,6 +209,7 @@ core
 corpus
 count
 counter
+counters
 covers
 create
 creates
@@ -228,6 +235,7 @@ decision
 declarative
 declared
 decode
+decrypt
 default
 defer
 definition
@@ -282,7 +290,9 @@ eligible
 emergency
 empty
 enable
+enabled
 encode
+encrypt
 encryption
 endpoint
 endpoints
@@ -294,6 +304,7 @@ enrollment
 enrollmentid
 enrollments
 ensure
+enter
 entire
 entities
 entropy
@@ -381,6 +392,7 @@ functional
 game
 gate
 gates
+gcm
 generate
 generation
 generations
@@ -411,6 +423,7 @@ high
 highest
 historical
 hop
+hotp
 http
 httponly
 https
@@ -466,6 +479,7 @@ kafka
 keeps
 key
 keys
+kind
 kindergarten
 kindergartens
 kit
@@ -577,6 +591,7 @@ nice
 nodes
 non
 nonce
+none
 normalize
 not
 notes
@@ -613,6 +628,7 @@ overlap
 overlapping
 overrides
 own
+owner
 package
 packages
 page
@@ -713,7 +729,10 @@ ready
 real
 reauthentication
 reauthenticationpurpose
+rebind
+rebinds
 rebuilds
+recalculate
 receive
 recent
 record
@@ -744,8 +763,10 @@ reject
 rejected
 rejection
 rejects
+related
 relations
 relationships
+releases
 relying
 removal
 removed
@@ -781,6 +802,7 @@ response
 restore
 restoring
 restricted
+restricts
 result
 retry
 return
@@ -821,6 +843,7 @@ runtime
 safe
 same
 sanitized
+satisfies
 save
 saves
 scalar
@@ -904,6 +927,7 @@ standards
 start
 state
 statements
+static
 status
 statuses
 step
@@ -923,9 +947,11 @@ stub
 subject
 submit
 substitution
+succeeds
 success
 successful
 summary
+supersedes
 supplied
 supply
 system
@@ -956,6 +982,7 @@ text
 that
 the
 them
+then
 this
 thread
 three
@@ -1125,6 +1152,7 @@ ywyz
 产品目标
 产品背景
 仅在通行密钥已登记并完成两位预登记人员核验后激活
+仅属主可读的
 仅绑定回环地址的
 仍是首选登录
 仍有效
@@ -1152,6 +1180,7 @@ ywyz
 会话认证保证字段
 但不能
 位一次性秘密
+位无填充
 作为任务最终状态存储
 作为首期第二因素或恢复渠道
 作者和归档状态分页查询教案
@@ -1173,6 +1202,8 @@ ywyz
 保留的路线经验
 保留顺序并拒绝同类别重名
 信任边界与数据流
+信封与数据库外密钥适配器
+信封解密后以新
 修改园所名称
 修改学期
 修改班级
@@ -1253,6 +1284,7 @@ ywyz
 历史隐私清理与最终
 原子设置唯一当前学期
 原子重放和
+原样拒绝
 参数与重放
 参数并完成
 参考标准
@@ -1290,6 +1322,7 @@ ywyz
 后才能增加新的通行
 后续子系统
 后续里程碑将从
+后返回种子
 启动三个独立进程
 启动前检查清单
 启动清单循环措辞
@@ -1369,6 +1402,7 @@ ywyz
 外部边界所需的最小
 外键与删除行为
 多进程
+失败或重放时返回
 失败限流
 契约与验证指南
 契约对齐
@@ -1378,6 +1412,7 @@ ywyz
 契约片段
 威胁分级
 字符及空格
+字节二进制密钥文件
 安全与范围约束
 安全与隐私硬性规则
 安全参数
@@ -1476,11 +1511,14 @@ ywyz
 并行与独立验收校验
 并采用受限公网入口
 幼儿园教育管理系统
+应复用哪
+应复用哪些现有身份边界
 应用事务不变量
 应用装配
 延后生产部署
 开发协议
 开发工作流与质量门禁
+开发环境读取仓库外
 开发规则
 开始工作前
 开始建立或替换密码与
@@ -1530,6 +1568,7 @@ ywyz
 拒绝与过期
 拒绝在非开发环境或非回环地址关闭
 持久化对象中只保留
+持久化重放保护由
 按可信来源和
 按固定
 按班级
@@ -1539,6 +1578,7 @@ ywyz
 推荐执行顺序
 提交同步到
 提交账号恢复申请
+提供数据库外的当前身份主密钥与历史解密密钥
 提示词
 提示词模型
 提示词管理子系统
@@ -1732,12 +1772,14 @@ ywyz
 生成本人新增通行密钥注册挑战
 生成流程
 生成规则
+生成认证器广泛兼容的
 生成边界
 生效版本和草稿
 用户与权限
 用户必须能够查看备用登录是否已启用
 用户本人安全事件列表
 用户验证
+用随机
 由两位预登记责任人批准最后管理员恢复
 由应用层统一开启事务
 登录与升级事务
@@ -1776,6 +1818,9 @@ ywyz
 种子保护
 种子只能在绑定流程中展示一次
 种子和二维码在代码库
+种子并绑定园所
+种子的
+秒参数生成
 秒周期
 租约与恢复
 移除后的门禁重算
@@ -1867,6 +1912,7 @@ ywyz
 认证与授权
 认证保证级别
 认证变更
+认证标签失败由
 认证治理基线
 认证验收矩阵
 认证验证
@@ -1885,6 +1931,7 @@ ywyz
 请求秘密
 负责异步执行
 贡献指南
+账号和主体
 账号枚举
 账号枚举一致性
 账号枚举测试无法根据响应内容
@@ -1913,6 +1960,8 @@ ywyz
 运行单元的模块化单体
 运行敏感信息扫描
 运行时
+返回匹配且尚未消费的
+返回当前时间步及相邻一个时间步
 返回测试数据库
 返回缓存后的
 进程存活检查
@@ -1920,6 +1969,7 @@ ywyz
 远端匹配与任务去重门禁
 逐任务最小变量白名单
 逐问逐答与增量回写
+递增排序
 递归清除
 递归清除日志中的密钥
 通用模板平台
@@ -1945,6 +1995,7 @@ ywyz
 里程碑与迁移编号决策
 里程碑与迁移顺序
 里程碑管理规则
+重新加密
 重新验证
 重新验证才能建立
 重点威胁与控制
@@ -2002,6 +2053,7 @@ ywyz
 验收标准
 验收测试
 验收门禁
+验证信封及
 验证初始化凭据并生成首位管理员注册挑战
 验证可接受当前
 验证图谱
