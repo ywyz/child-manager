@@ -13,7 +13,9 @@ from sqlalchemy import (
     Index,
     Integer,
     LargeBinary,
+    SmallInteger,
     String,
+    Text,
     UniqueConstraint,
     func,
     text,
@@ -60,6 +62,7 @@ class User(Timestamped, Base):
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_by: Mapped[UUID | None] = mapped_column(PgUUID(as_uuid=True))
     updated_by: Mapped[UUID | None] = mapped_column(PgUUID(as_uuid=True))
+    backup_auth_version: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
 
     __table_args__ = (
         UniqueConstraint("kindergarten_id", "id", name="uq_users_kindergarten_id_id"),
@@ -76,6 +79,7 @@ class User(Timestamped, Base):
             "status IN ('pending_registration','pending_verification','active','suspended')",
             name="ck_users_status",
         ),
+        CheckConstraint("backup_auth_version >= 1", name="ck_users_backup_auth_version"),
         Index(
             "uq_users_kindergarten_phone",
             "kindergarten_id",
@@ -84,6 +88,163 @@ class User(Timestamped, Base):
             postgresql_where=text("phone_e164 IS NOT NULL"),
         ),
         Index("ix_users_kindergarten_status", "kindergarten_id", "status"),
+    )
+
+
+class BackupAuthCredential(Timestamped, Base):
+    __tablename__ = "backup_auth_credentials"
+
+    id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True)
+    kindergarten_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True))
+    user_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True))
+    status: Mapped[str] = mapped_column(String(16))
+    password_hash: Mapped[str | None] = mapped_column(Text)
+    password_changed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    totp_ciphertext: Mapped[bytes | None] = mapped_column(LargeBinary)
+    totp_nonce: Mapped[bytes | None] = mapped_column(LargeBinary)
+    totp_key_id: Mapped[str | None] = mapped_column(String(64))
+    totp_envelope_version: Mapped[int | None] = mapped_column(SmallInteger)
+    totp_algorithm: Mapped[str] = mapped_column(String(16), default="SHA1", server_default="SHA1")
+    totp_digits: Mapped[int] = mapped_column(SmallInteger, default=6, server_default="6")
+    totp_period_seconds: Mapped[int] = mapped_column(
+        SmallInteger,
+        default=30,
+        server_default="30",
+    )
+    last_accepted_counter: Mapped[int | None] = mapped_column(BigInteger)
+    enabled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    __table_args__ = (
+        UniqueConstraint(
+            "kindergarten_id",
+            "id",
+            name="uq_backup_auth_credentials_kindergarten_id_id",
+        ),
+        UniqueConstraint(
+            "kindergarten_id",
+            "user_id",
+            name="uq_backup_auth_credentials_kindergarten_user",
+        ),
+        ForeignKeyConstraint(
+            ["kindergarten_id", "user_id"],
+            ["users.kindergarten_id", "users.id"],
+        ),
+        CheckConstraint(
+            "status IN ('enabled','revoked')",
+            name="ck_backup_auth_credentials_status",
+        ),
+        CheckConstraint(
+            """(
+                status = 'enabled'
+                AND password_hash IS NOT NULL
+                AND password_changed_at IS NOT NULL
+                AND totp_ciphertext IS NOT NULL
+                AND totp_nonce IS NOT NULL
+                AND totp_key_id IS NOT NULL
+                AND totp_envelope_version IS NOT NULL
+                AND enabled_at IS NOT NULL
+                AND revoked_at IS NULL
+            ) OR (
+                status = 'revoked'
+                AND password_hash IS NULL
+                AND totp_ciphertext IS NULL
+                AND totp_nonce IS NULL
+                AND totp_key_id IS NULL
+                AND totp_envelope_version IS NULL
+                AND revoked_at IS NOT NULL
+            )""",
+            name="ck_backup_auth_credentials_material",
+        ),
+        CheckConstraint(
+            "totp_nonce IS NULL OR octet_length(totp_nonce) = 12",
+            name="ck_backup_auth_credentials_nonce_length",
+        ),
+        CheckConstraint(
+            "totp_envelope_version IS NULL OR totp_envelope_version >= 1",
+            name="ck_backup_auth_credentials_envelope_version",
+        ),
+        CheckConstraint(
+            "totp_algorithm = 'SHA1' AND totp_digits = 6 AND totp_period_seconds = 30",
+            name="ck_backup_auth_credentials_totp_parameters",
+        ),
+        CheckConstraint(
+            "last_accepted_counter IS NULL OR last_accepted_counter >= 0",
+            name="ck_backup_auth_credentials_counter",
+        ),
+        Index(
+            "ix_backup_auth_credentials_status",
+            "kindergarten_id",
+            "status",
+            "updated_at",
+        ),
+    )
+
+
+class BackupAuthEnrollment(Timestamped, Base):
+    __tablename__ = "backup_auth_enrollments"
+
+    id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True)
+    kindergarten_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True))
+    user_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True))
+    session_token_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True))
+    totp_ciphertext: Mapped[bytes] = mapped_column(LargeBinary)
+    totp_nonce: Mapped[bytes] = mapped_column(LargeBinary)
+    totp_key_id: Mapped[str] = mapped_column(String(64))
+    totp_envelope_version: Mapped[int] = mapped_column(SmallInteger)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    consumed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    invalidated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    invalidation_reason: Mapped[str | None] = mapped_column(String(32))
+
+    __table_args__ = (
+        UniqueConstraint(
+            "kindergarten_id",
+            "id",
+            name="uq_backup_auth_enrollments_kindergarten_id_id",
+        ),
+        ForeignKeyConstraint(
+            ["kindergarten_id", "user_id"],
+            ["users.kindergarten_id", "users.id"],
+        ),
+        ForeignKeyConstraint(
+            ["kindergarten_id", "session_token_id"],
+            ["refresh_tokens.kindergarten_id", "refresh_tokens.id"],
+        ),
+        CheckConstraint(
+            "octet_length(totp_nonce) = 12",
+            name="ck_backup_auth_enrollments_nonce_length",
+        ),
+        CheckConstraint(
+            "totp_envelope_version >= 1",
+            name="ck_backup_auth_enrollments_envelope_version",
+        ),
+        CheckConstraint(
+            "consumed_at IS NULL OR invalidated_at IS NULL",
+            name="ck_backup_auth_enrollments_terminal_state",
+        ),
+        CheckConstraint(
+            """(invalidated_at IS NULL AND invalidation_reason IS NULL)
+            OR (invalidated_at IS NOT NULL AND invalidation_reason IS NOT NULL)""",
+            name="ck_backup_auth_enrollments_invalidation_reason",
+        ),
+        CheckConstraint(
+            """invalidation_reason IS NULL
+            OR invalidation_reason IN ('superseded','session_changed','factor_changed')""",
+            name="ck_backup_auth_enrollments_invalidation_reason_value",
+        ),
+        Index(
+            "uq_backup_auth_enrollments_active",
+            "kindergarten_id",
+            "user_id",
+            unique=True,
+            postgresql_where=text("consumed_at IS NULL AND invalidated_at IS NULL"),
+        ),
+        Index(
+            "ix_backup_auth_enrollments_session",
+            "kindergarten_id",
+            "session_token_id",
+        ),
     )
 
 
@@ -284,6 +445,16 @@ class RefreshToken(Timestamped, Base):
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     last_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_reauthenticated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    authentication_method: Mapped[str] = mapped_column(
+        String(24), default="webauthn", server_default="webauthn"
+    )
+    webauthn_verified_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+    )
+    backup_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    backup_reauthenticated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    backup_auth_version: Mapped[int | None] = mapped_column(Integer)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     revoke_reason: Mapped[str | None] = mapped_column(String(64))
     replaced_by_id: Mapped[UUID | None] = mapped_column(PgUUID(as_uuid=True))
@@ -295,5 +466,31 @@ class RefreshToken(Timestamped, Base):
         ForeignKeyConstraint(
             ["kindergarten_id", "replaced_by_id"],
             ["refresh_tokens.kindergarten_id", "refresh_tokens.id"],
+        ),
+        CheckConstraint(
+            "authentication_method IN ('webauthn','password_totp','restricted_enrollment')",
+            name="ck_refresh_tokens_authentication_method",
+        ),
+        CheckConstraint(
+            "backup_auth_version IS NULL OR backup_auth_version >= 1",
+            name="ck_refresh_tokens_backup_auth_version",
+        ),
+        CheckConstraint(
+            """(
+                authentication_method = 'webauthn'
+                AND webauthn_verified_at IS NOT NULL
+                AND backup_verified_at IS NULL
+                AND backup_auth_version IS NULL
+            ) OR (
+                authentication_method = 'password_totp'
+                AND backup_verified_at IS NOT NULL
+                AND backup_auth_version IS NOT NULL
+            ) OR (
+                authentication_method = 'restricted_enrollment'
+                AND webauthn_verified_at IS NOT NULL
+                AND backup_verified_at IS NULL
+                AND backup_auth_version IS NOT NULL
+            )""",
+            name="ck_refresh_tokens_authentication_assurance",
         ),
     )

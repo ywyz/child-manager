@@ -123,13 +123,21 @@ def settings_service() -> SettingsService:
 SettingsServiceDependency = Annotated[SettingsService, Depends(settings_service)]
 
 
-def current_session(
+def authenticated_session(
     service: IdentityServiceDependency,
     child_manager_access: Annotated[str | None, Cookie()] = None,
 ) -> SessionUser:
     if not child_manager_access:
         raise IdentityError(401, "auth.unauthenticated", "请先登录。")
     return service.authenticate_access(child_manager_access)
+
+
+AuthenticatedSessionDependency = Annotated[SessionUser, Depends(authenticated_session)]
+
+
+def current_session(session: AuthenticatedSessionDependency) -> SessionUser:
+    IdentityService.require_business_access(session)
+    return session
 
 
 CurrentSessionDependency = Annotated[SessionUser, Depends(current_session)]

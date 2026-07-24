@@ -42,6 +42,8 @@ def test_identity_migration_creates_tables_extension_and_role_seeds(
         "user_roles",
         "refresh_tokens",
         "audit_events",
+        "backup_auth_credentials",
+        "backup_auth_enrollments",
     } <= tables
     extensions = {row[0] for row in migrated_database.execute("SELECT extname FROM pg_extension")}
     assert "btree_gist" in extensions
@@ -73,6 +75,11 @@ def test_identity_migration_creates_tables_extension_and_role_seeds(
         "client_label",
         "created_at",
         "updated_at",
+        "authentication_method",
+        "webauthn_verified_at",
+        "backup_verified_at",
+        "backup_reauthenticated_at",
+        "backup_auth_version",
     )
 
     user_columns = {
@@ -87,6 +94,7 @@ def test_identity_migration_creates_tables_extension_and_role_seeds(
         "status",
         "activated_at",
         "last_login_at",
+        "backup_auth_version",
     } <= user_columns
     assert {"password_hash", "password_changed_at", "is_active"}.isdisjoint(user_columns)
 

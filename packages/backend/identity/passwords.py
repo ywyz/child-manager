@@ -8,7 +8,13 @@ from argon2.exceptions import InvalidHashError, VerifyMismatchError
 from argon2.low_level import Type
 
 _DEFAULT_WEAK_PASSWORD_PATH = Path(__file__).parent / "data/10k-most-common.txt"
-_HASHER = PasswordHasher(time_cost=2, memory_cost=19456, parallelism=1, type=Type.ID)
+_HASHER = PasswordHasher(
+    time_cost=3,
+    memory_cost=65_536,
+    parallelism=4,
+    salt_len=16,
+    type=Type.ID,
+)
 
 
 def _weak_passwords(path: Path) -> set[str]:
@@ -18,15 +24,24 @@ def _weak_passwords(path: Path) -> set[str]:
     }
 
 
-def password_violations(password: str, *, weak_password_path: Path | None = None) -> list[str]:
+def password_violations(
+    password: str,
+    *,
+    weak_password_path: Path | None = None,
+    forbidden_terms: tuple[str, ...] = (),
+) -> list[str]:
     violations: list[str] = []
-    if not 15 <= len(password) <= 128:
+    normalized = unicodedata.normalize("NFKC", password).casefold()
+    if not 8 <= len(password) <= 128:
         violations.append("length")
     path = weak_password_path or _DEFAULT_WEAK_PASSWORD_PATH
-    if path.is_file() and unicodedata.normalize("NFKC", password).casefold() in _weak_passwords(
-        path
-    ):
+    if path.is_file() and normalized in _weak_passwords(path):
         violations.append("weak")
+    normalized_terms = (
+        unicodedata.normalize("NFKC", term).casefold().strip() for term in forbidden_terms
+    )
+    if any(term and term in normalized for term in normalized_terms):
+        violations.append("context")
     return violations
 
 

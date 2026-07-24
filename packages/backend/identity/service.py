@@ -57,9 +57,16 @@ class SessionUser:
     token_family_id: UUID
     session_id: UUID
     last_reauthenticated_at: datetime | None
+    authentication_method: str = "webauthn"
+    webauthn_verified_at: datetime | None = None
+    backup_verified_at: datetime | None = None
+    backup_reauthenticated_at: datetime | None = None
+    backup_auth_version: int | None = None
 
     @property
     def capabilities(self) -> list[str]:
+        if self.authentication_method == "restricted_enrollment":
+            return ["backup:enroll"]
         capabilities = {"plans:view", "credentials:manage"}
         if "admin" in self.role_codes:
             capabilities.add("users:manage")
@@ -218,10 +225,57 @@ class IdentityService:
             raise IdentityError(403, "auth.forbidden", "没有执行此操作的权限。")
 
     @staticmethod
-    def require_recent_verification(session: SessionUser) -> None:
-        verified = session.last_reauthenticated_at
+    def require_business_access(session: SessionUser) -> None:
+        if getattr(session, "authentication_method", "webauthn") == "restricted_enrollment":
+            raise IdentityError(
+                403,
+                "auth.backup_enrollment_required",
+                "请先完成密码与 TOTP 备用登录设置。",
+            )
+
+    @staticmethod
+    def require_recent_webauthn(session: SessionUser) -> None:
+        authentication_method = getattr(session, "authentication_method", "webauthn")
+        verified = getattr(session, "webauthn_verified_at", None)
+        if verified is None and authentication_method == "webauthn":
+            verified = session.last_reauthenticated_at
         if verified is None or verified < datetime.now(UTC) - timedelta(minutes=5):
             raise IdentityError(403, "auth.step_up_required", "请先使用通行密钥重新验证。")
+
+    @staticmethod
+    def require_recent_backup_reauthentication(
+        session: SessionUser,
+        *,
+        purpose: str,
+    ) -> None:
+        if purpose != "add_passkey":
+            raise IdentityError(403, "auth.forbidden", "备用重新验证不能授权此操作。")
+        verified = session.backup_reauthenticated_at
+        if (
+            session.authentication_method != "password_totp"
+            or verified is None
+            or verified < datetime.now(UTC) - timedelta(minutes=5)
+        ):
+            raise IdentityError(
+                403,
+                "auth.backup_reauthentication_required",
+                "请先重新验证密码与动态验证码。",
+            )
+
+    @classmethod
+    def require_add_passkey_authorization(cls, session: SessionUser) -> None:
+        cls.require_business_access(session)
+        try:
+            cls.require_recent_webauthn(session)
+            return
+        except IdentityError as exc:
+            if exc.code != "auth.step_up_required":
+                raise
+        cls.require_recent_backup_reauthentication(session, purpose="add_passkey")
+
+    @staticmethod
+    def require_recent_verification(session: SessionUser) -> None:
+        IdentityService.require_recent_webauthn(session)
 
     def kindergarten_summary(self, kindergarten_id: UUID) -> dict[str, object]:
         with self._connect() as connection:
@@ -422,7 +476,7 @@ class IdentityService:
     def self_add_registration_options(
         self, session: SessionUser, *, origin: str
     ) -> dict[str, object]:
-        self.require_recent_verification(session)
+        self.require_add_passkey_authorization(session)
         with self._connect() as connection, connection.transaction():
             repository = IdentityRepository(connection, session.user.kindergarten_id)
             user = repository.get_user(session.user.id)
@@ -518,8 +572,16 @@ class IdentityService:
             reason="account_recovered",
         )
         revoked_invitation_ids = repository.revoke_active_invitations(user_id)
-        sessions_revoked = repository.revoke_user_sessions(user_id, reason="account_recovered")
+        backup_revocation = repository.revoke_backup_auth(
+            user_id,
+            reason="account_recovered",
+        )
+        sessions_revoked = backup_revocation.sessions_revoked + repository.revoke_user_sessions(
+            user_id,
+            reason="account_recovered",
+        )
         repository.set_status(user_id, "active", actor_user_id=user_id)
+        repository.recalculate_backup_enrollment_gate(user_id)
         connection.execute(
             """UPDATE account_recovery_requests SET status='completed',
             enrollment_consumed_at=%s, completed_at=%s, updated_at=now()
@@ -769,7 +831,7 @@ class IdentityService:
         source: str,
         request_id: UUID | None,
     ) -> CredentialRecord:
-        self.require_recent_verification(session)
+        self.require_add_passkey_authorization(session)
         result = self._verify_registration(
             ceremony_id=ceremony_id,
             credential=credential,
@@ -989,6 +1051,7 @@ class IdentityService:
                 else verified.new_sign_count
             )
             repository.update_credential_use(stored.id, sign_count=sign_count, now=now)
+            roles = repository.roles_for_user(user.id)
             family_id = uuid7()
             raw_refresh = generate_refresh_token()
             repository.create_refresh(
@@ -998,13 +1061,14 @@ class IdentityService:
                 issued_at=now,
                 expires_at=now + timedelta(days=7),
                 last_reauthenticated_at=now,
+                authentication_method="webauthn",
+                webauthn_verified_at=now,
             )
             connection.execute(
                 """UPDATE users SET last_login_at=%s, updated_at=now()
                 WHERE kindergarten_id=%s AND id=%s""",
                 (now, kindergarten_id, user.id),
             )
-            roles = repository.roles_for_user(user.id)
             recovery_code: str | None = None
             active_recovery = connection.execute(
                 """SELECT 1 FROM recovery_codes WHERE kindergarten_id=%s AND user_id=%s
@@ -1035,7 +1099,15 @@ class IdentityService:
                 outcome="success",
                 metadata={"source": source},
             )
-            session = SessionUser(user, roles, family_id, family_id, now)
+            session = SessionUser(
+                user=user,
+                role_codes=roles,
+                token_family_id=family_id,
+                session_id=family_id,
+                last_reauthenticated_at=now,
+                authentication_method="webauthn",
+                webauthn_verified_at=now,
+            )
             result = AuthResult(
                 session=session,
                 access_token=create_access_token(
@@ -1150,10 +1222,12 @@ class IdentityService:
             )
             repository.update_credential_use(stored.id, sign_count=sign_count, now=now)
             connection.execute(
-                """UPDATE refresh_tokens SET last_reauthenticated_at=%s, updated_at=now()
+                """UPDATE refresh_tokens
+                SET last_reauthenticated_at=%s, webauthn_verified_at=%s, updated_at=now()
                 WHERE kindergarten_id=%s AND user_id=%s AND token_family_id=%s
                 AND revoked_at IS NULL""",
                 (
+                    now,
                     now,
                     session.user.kindergarten_id,
                     session.user.id,
@@ -1184,6 +1258,10 @@ class IdentityService:
                 or current is None
                 or current.revoked_at is not None
                 or current.expires_at <= datetime.now(UTC)
+                or (
+                    current.authentication_method in {"password_totp", "restricted_enrollment"}
+                    and current.backup_auth_version != user.backup_auth_version
+                )
             ):
                 raise IdentityError(401, "auth.unauthenticated", "登录状态已失效，请重新登录。")
             return SessionUser(
@@ -1192,6 +1270,11 @@ class IdentityService:
                 family_id,
                 family_id,
                 current.last_reauthenticated_at,
+                current.authentication_method,
+                current.webauthn_verified_at,
+                current.backup_verified_at,
+                current.backup_reauthenticated_at,
+                current.backup_auth_version,
             )
 
     def refresh(self, raw_token: str, *, request_id: UUID | None) -> AuthResult:
@@ -1238,6 +1321,11 @@ class IdentityService:
                             old.token_family_id,
                             old.token_family_id,
                             old.last_reauthenticated_at,
+                            old.authentication_method,
+                            old.webauthn_verified_at,
+                            old.backup_verified_at,
+                            old.backup_reauthenticated_at,
+                            old.backup_auth_version,
                         ),
                         create_access_token(
                             user_id=str(user.id),
@@ -1401,6 +1489,7 @@ class IdentityService:
             with self._connect() as connection, connection.transaction():
                 repository = IdentityRepository(connection, session.user.kindergarten_id)
                 repository.set_roles(user_id, role_codes, actor_user_id=session.user.id)
+                repository.recalculate_backup_enrollment_gate(user_id)
                 user = repository.get_user(user_id)
                 assert user is not None
                 AuditRepository(connection, session.user.kindergarten_id).append(

@@ -318,5 +318,12 @@
   "316": "configure_logging",
   "317": "test_backup_maintenance.py",
   "318": "test_secret_encryption.py",
-  "319": "_totp_module"
+  "319": "_totp_module",
+  "320": "test_password_to_passkey.py",
+  "321": "_backup_revision",
+  "322": "_timestamps",
+  "323": "密码与 TOTP 备用登录规格质量检查清单",
+  "324": "Q: 进入 M3A Phase 3 T010-T015 Foundational GREEN 时，应复用哪些现有身份边界？",
+  "325": "备用凭据与短时绑定表",
+  "326": "恢复与会话保证模型"
 }

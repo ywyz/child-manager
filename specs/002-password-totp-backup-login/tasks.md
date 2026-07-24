@@ -73,24 +73,24 @@ M3A 前，不得执行 T003 之后的代码任务。
 
 **Purpose**: 实现三个用户故事共用的数据、密码学、Repository 和认证保证级别。
 
-- [ ] T010 创建
+- [x] T010 创建
   `packages/backend/database/migrations/versions/0005_password_totp_backup_login.py`，
   增加 `backup_auth_credentials`、`backup_auth_enrollments`、会话保证字段和
   `backup_auth_version`，通过 T005 的升降级与约束测试
-- [ ] T011 [P] 在 `packages/contracts/identity.py` 和
+- [x] T011 [P] 在 `packages/contracts/identity.py` 和
   `packages/backend/identity/models.py` 增加备用状态、绑定、登录及认证方法模型，禁止把
   密码/TOTP 字段放回 `users`
-- [ ] T012 [P] 在 `packages/backend/identity/passwords.py` 固定 Argon2id 参数并完成
+- [x] T012 [P] 在 `packages/backend/identity/passwords.py` 固定 Argon2id 参数并完成
   Unicode、阻断列表和渐进重摘要；在 `packages/backend/identity/totp.py` 实现 RFC 6238
   生成/验证及候选 counter 计算，通过 T003 对应测试
-- [ ] T013 [P] 在 `packages/backend/identity/secret_encryption.py` 和
+- [x] T013 [P] 在 `packages/backend/identity/secret_encryption.py` 和
   `packages/backend/ports.py` 实现 TOTP AES-256-GCM 信封及开发文件/测试适配器，AAD 绑定
   园所、用户、enrollment/凭据和版本；启用时以新 nonce 从 enrollment AAD 重绑到凭据
   AAD，通过认证标签失败与敏感信息测试
-- [ ] T014 在 `packages/backend/identity/repository.py` 实现同园所凭据/绑定读写、
+- [x] T014 在 `packages/backend/identity/repository.py` 实现同园所凭据/绑定读写、
   单活动 enrollment、原子 `last_accepted_counter` 与备用因素版本撤销，通过 T005 Repository
   测试
-- [ ] T015 在 `packages/backend/identity/service.py` 和 `apps/api/dependencies.py`
+- [x] T015 在 `packages/backend/identity/service.py` 和 `apps/api/dependencies.py`
   实现认证方式、管理员 `restricted_enrollment` 门禁、最近 WebAuthn/备用重新验证判断及
   `add_passkey` 唯一 purpose；角色变更和恢复后重新计算管理员门禁，不增加第二套认证服务
 

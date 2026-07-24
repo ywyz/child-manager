@@ -22,6 +22,7 @@ class UserRecord:
     last_login_at: datetime | None
     created_at: datetime
     updated_at: datetime
+    backup_auth_version: int
 
     @property
     def is_active(self) -> bool:
@@ -38,6 +39,11 @@ class RefreshRecord:
     expires_at: datetime
     last_used_at: datetime | None
     last_reauthenticated_at: datetime | None
+    authentication_method: str
+    webauthn_verified_at: datetime | None
+    backup_verified_at: datetime | None
+    backup_reauthenticated_at: datetime | None
+    backup_auth_version: int | None
     revoked_at: datetime | None
     replaced_by_id: UUID | None
 
@@ -98,16 +104,79 @@ class RecoveryRequestRecord:
     approved_at: datetime | None
 
 
+@dataclass(frozen=True, slots=True)
+class BackupCredentialRecord:
+    id: UUID
+    kindergarten_id: UUID
+    user_id: UUID
+    status: str
+    password_hash: str | None
+    password_changed_at: datetime | None
+    totp_ciphertext: bytes | None
+    totp_nonce: bytes | None
+    totp_key_id: str | None
+    totp_envelope_version: int | None
+    totp_algorithm: str
+    totp_digits: int
+    totp_period_seconds: int
+    last_accepted_counter: int | None
+    enabled_at: datetime | None
+    revoked_at: datetime | None
+    created_at: datetime
+    updated_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class BackupEnrollmentRecord:
+    id: UUID
+    kindergarten_id: UUID
+    user_id: UUID
+    session_token_id: UUID
+    totp_ciphertext: bytes
+    totp_nonce: bytes
+    totp_key_id: str
+    totp_envelope_version: int
+    expires_at: datetime
+    consumed_at: datetime | None
+    invalidated_at: datetime | None
+    invalidation_reason: str | None
+    created_at: datetime
+    updated_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class BackupRevocationResult:
+    backup_auth_version: int
+    sessions_revoked: int
+
+
+@dataclass(frozen=True, slots=True)
+class BackupSecurityEventRecord:
+    event_code: str
+    occurred_at: datetime
+    authentication_method: str | None
+    client_hint: str | None
+
+
 _USER_COLUMNS = """id, kindergarten_id, username, username_normalized, phone_e164,
-display_name, webauthn_user_handle, status, activated_at, last_login_at, created_at, updated_at"""
+display_name, webauthn_user_handle, status, activated_at, last_login_at, created_at, updated_at,
+backup_auth_version"""
 _REFRESH_COLUMNS = """id, kindergarten_id, user_id, token_family_id, issued_at, expires_at,
-last_used_at, last_reauthenticated_at, revoked_at, replaced_by_id"""
+last_used_at, last_reauthenticated_at, authentication_method, webauthn_verified_at,
+backup_verified_at, backup_reauthenticated_at, backup_auth_version, revoked_at, replaced_by_id"""
 _CREDENTIAL_COLUMNS = """id, kindergarten_id, user_id, credential_id, public_key_cose,
 sign_count, transports, aaguid, backup_eligible, backup_state, label, created_via,
 created_at, last_used_at, revoked_at"""
 _CHALLENGE_COLUMNS = """id, kindergarten_id, user_id, purpose, challenge_hash,
 authorization_context, expected_rp_id, expected_origin, requires_user_verification,
 expires_at, consumed_at"""
+_BACKUP_CREDENTIAL_COLUMNS = """id, kindergarten_id, user_id, status, password_hash,
+password_changed_at, totp_ciphertext, totp_nonce, totp_key_id, totp_envelope_version,
+totp_algorithm, totp_digits, totp_period_seconds, last_accepted_counter, enabled_at,
+revoked_at, created_at, updated_at"""
+_BACKUP_ENROLLMENT_COLUMNS = """id, kindergarten_id, user_id, session_token_id,
+totp_ciphertext, totp_nonce, totp_key_id, totp_envelope_version, expires_at, consumed_at,
+invalidated_at, invalidation_reason, created_at, updated_at"""
 
 
 def _user(row: tuple[object, ...] | None) -> UserRecord | None:
@@ -116,6 +185,14 @@ def _user(row: tuple[object, ...] | None) -> UserRecord | None:
 
 def _credential(row: tuple[object, ...] | None) -> CredentialRecord | None:
     return CredentialRecord(*row) if row is not None else None  # type: ignore[arg-type]
+
+
+def _backup_credential(row: tuple[object, ...] | None) -> BackupCredentialRecord | None:
+    return BackupCredentialRecord(*row) if row is not None else None  # type: ignore[arg-type]
+
+
+def _backup_enrollment(row: tuple[object, ...] | None) -> BackupEnrollmentRecord | None:
+    return BackupEnrollmentRecord(*row) if row is not None else None  # type: ignore[arg-type]
 
 
 class IdentityRepository:
@@ -350,14 +427,26 @@ class IdentityRepository:
         expires_at: datetime,
         last_reauthenticated_at: datetime | None = None,
         client_label: str | None = None,
+        authentication_method: str = "webauthn",
+        webauthn_verified_at: datetime | None = None,
+        backup_verified_at: datetime | None = None,
+        backup_reauthenticated_at: datetime | None = None,
+        backup_auth_version: int | None = None,
     ) -> UUID:
         self.lock_user_sessions(user_id)
+        if (
+            authentication_method in {"webauthn", "restricted_enrollment"}
+            and webauthn_verified_at is None
+        ):
+            webauthn_verified_at = last_reauthenticated_at or issued_at
         token_id = uuid7()
         self.connection.execute(
             """INSERT INTO refresh_tokens
             (id, kindergarten_id, user_id, token_family_id, token_hash, issued_at, expires_at,
-             last_reauthenticated_at, client_label)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+             last_reauthenticated_at, client_label, authentication_method,
+             webauthn_verified_at, backup_verified_at, backup_reauthenticated_at,
+             backup_auth_version)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
             (
                 token_id,
                 self.kindergarten_id,
@@ -368,6 +457,11 @@ class IdentityRepository:
                 expires_at,
                 last_reauthenticated_at,
                 client_label,
+                authentication_method,
+                webauthn_verified_at,
+                backup_verified_at,
+                backup_reauthenticated_at,
+                backup_auth_version,
             ),
         )
         return token_id
@@ -419,6 +513,11 @@ class IdentityRepository:
             issued_at=now,
             expires_at=old.expires_at,
             last_reauthenticated_at=old.last_reauthenticated_at,
+            authentication_method=old.authentication_method,
+            webauthn_verified_at=old.webauthn_verified_at,
+            backup_verified_at=old.backup_verified_at,
+            backup_reauthenticated_at=old.backup_reauthenticated_at,
+            backup_auth_version=old.backup_auth_version,
         )
         self.connection.execute(
             """UPDATE refresh_tokens SET revoked_at=%s, revoke_reason='rotated',
@@ -488,6 +587,325 @@ class IdentityRepository:
             (self.kindergarten_id, user_id, family_id),
         ).fetchone()
         return self.revoke_family(family_id, reason=reason) if row and row[0] else 0
+
+    def get_backup_credential(
+        self, user_id: UUID, *, lock: bool = False
+    ) -> BackupCredentialRecord | None:
+        suffix = " FOR UPDATE" if lock else ""
+        row = self.connection.execute(
+            f"""SELECT {_BACKUP_CREDENTIAL_COLUMNS} FROM backup_auth_credentials
+            WHERE kindergarten_id=%s AND user_id=%s{suffix}""",
+            (self.kindergarten_id, user_id),
+        ).fetchone()
+        return _backup_credential(row)
+
+    def has_enabled_backup_auth(self, user_id: UUID) -> bool:
+        row = self.connection.execute(
+            """SELECT EXISTS(SELECT 1 FROM backup_auth_credentials
+            WHERE kindergarten_id=%s AND user_id=%s AND status='enabled')""",
+            (self.kindergarten_id, user_id),
+        ).fetchone()
+        return bool(row and row[0])
+
+    def start_backup_enrollment(
+        self,
+        *,
+        user_id: UUID,
+        session_token_id: UUID,
+        totp_ciphertext: bytes,
+        totp_nonce: bytes,
+        totp_key_id: str,
+        totp_envelope_version: int,
+        expires_at: datetime,
+    ) -> BackupEnrollmentRecord:
+        self.lock_user_sessions(user_id)
+        self.connection.execute(
+            """UPDATE backup_auth_enrollments
+            SET invalidated_at=now(), invalidation_reason='superseded', updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s
+              AND consumed_at IS NULL AND invalidated_at IS NULL""",
+            (self.kindergarten_id, user_id),
+        )
+        enrollment_id = uuid7()
+        row = self.connection.execute(
+            f"""INSERT INTO backup_auth_enrollments
+            (id, kindergarten_id, user_id, session_token_id, totp_ciphertext, totp_nonce,
+             totp_key_id, totp_envelope_version, expires_at)
+            SELECT %s,%s,%s,%s,%s,%s,%s,%s,%s
+            WHERE EXISTS(
+                SELECT 1 FROM refresh_tokens
+                WHERE kindergarten_id=%s AND user_id=%s AND id=%s
+                  AND revoked_at IS NULL AND expires_at>now()
+            )
+            RETURNING {_BACKUP_ENROLLMENT_COLUMNS}""",
+            (
+                enrollment_id,
+                self.kindergarten_id,
+                user_id,
+                session_token_id,
+                totp_ciphertext,
+                totp_nonce,
+                totp_key_id,
+                totp_envelope_version,
+                expires_at,
+                self.kindergarten_id,
+                user_id,
+                session_token_id,
+            ),
+        ).fetchone()
+        record = _backup_enrollment(row)
+        if record is None:
+            raise ValueError("当前会话不能建立备用登录绑定")
+        return record
+
+    def consume_backup_enrollment(
+        self,
+        enrollment_id: UUID,
+        *,
+        user_id: UUID,
+        session_token_id: UUID,
+        now: datetime,
+    ) -> BackupEnrollmentRecord | None:
+        row = self.connection.execute(
+            f"""UPDATE backup_auth_enrollments AS enrollment
+            SET consumed_at=%s, updated_at=now()
+            WHERE enrollment.kindergarten_id=%s
+              AND enrollment.user_id=%s
+              AND enrollment.id=%s
+              AND enrollment.session_token_id=%s
+              AND enrollment.consumed_at IS NULL
+              AND enrollment.invalidated_at IS NULL
+              AND enrollment.expires_at>%s
+              AND EXISTS(
+                  SELECT 1 FROM refresh_tokens AS session
+                  WHERE session.kindergarten_id=enrollment.kindergarten_id
+                    AND session.user_id=enrollment.user_id
+                    AND session.id=enrollment.session_token_id
+                    AND session.revoked_at IS NULL
+                    AND session.expires_at>%s
+              )
+            RETURNING {_BACKUP_ENROLLMENT_COLUMNS}""",
+            (
+                now,
+                self.kindergarten_id,
+                user_id,
+                enrollment_id,
+                session_token_id,
+                now,
+                now,
+            ),
+        ).fetchone()
+        return _backup_enrollment(row)
+
+    def save_backup_credential(
+        self,
+        *,
+        credential_id: UUID,
+        user_id: UUID,
+        password_hash: str,
+        password_changed_at: datetime,
+        totp_ciphertext: bytes,
+        totp_nonce: bytes,
+        totp_key_id: str,
+        totp_envelope_version: int,
+        enabled_at: datetime,
+        last_accepted_counter: int,
+    ) -> BackupCredentialRecord:
+        row = self.connection.execute(
+            f"""INSERT INTO backup_auth_credentials
+            (id, kindergarten_id, user_id, status, password_hash, password_changed_at,
+             totp_ciphertext, totp_nonce, totp_key_id, totp_envelope_version,
+             last_accepted_counter, enabled_at)
+            VALUES (%s,%s,%s,'enabled',%s,%s,%s,%s,%s,%s,%s,%s)
+            ON CONFLICT (kindergarten_id, user_id) DO UPDATE SET
+              id=EXCLUDED.id,
+              status='enabled',
+              password_hash=EXCLUDED.password_hash,
+              password_changed_at=EXCLUDED.password_changed_at,
+              totp_ciphertext=EXCLUDED.totp_ciphertext,
+              totp_nonce=EXCLUDED.totp_nonce,
+              totp_key_id=EXCLUDED.totp_key_id,
+              totp_envelope_version=EXCLUDED.totp_envelope_version,
+              last_accepted_counter=EXCLUDED.last_accepted_counter,
+              enabled_at=EXCLUDED.enabled_at,
+              revoked_at=NULL,
+              updated_at=now()
+            RETURNING {_BACKUP_CREDENTIAL_COLUMNS}""",
+            (
+                credential_id,
+                self.kindergarten_id,
+                user_id,
+                password_hash,
+                password_changed_at,
+                totp_ciphertext,
+                totp_nonce,
+                totp_key_id,
+                totp_envelope_version,
+                last_accepted_counter,
+                enabled_at,
+            ),
+        ).fetchone()
+        record = _backup_credential(row)
+        if record is None:
+            raise LookupError("备用登录凭据写入失败")
+        return record
+
+    def accept_totp_counter(self, credential_id: UUID, counter: int) -> bool:
+        row = self.connection.execute(
+            """UPDATE backup_auth_credentials
+            SET last_accepted_counter=%s, updated_at=now()
+            WHERE kindergarten_id=%s AND id=%s AND status='enabled'
+              AND (last_accepted_counter IS NULL OR last_accepted_counter < %s)
+            RETURNING id""",
+            (counter, self.kindergarten_id, credential_id, counter),
+        ).fetchone()
+        return row is not None
+
+    def revoke_backup_auth(self, user_id: UUID, *, reason: str) -> BackupRevocationResult:
+        self.lock_user_sessions(user_id)
+        self.connection.execute(
+            """UPDATE backup_auth_credentials
+            SET status='revoked',
+                password_hash=NULL,
+                totp_ciphertext=NULL,
+                totp_nonce=NULL,
+                totp_key_id=NULL,
+                totp_envelope_version=NULL,
+                last_accepted_counter=NULL,
+                revoked_at=COALESCE(revoked_at, now()),
+                updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s""",
+            (self.kindergarten_id, user_id),
+        )
+        self.connection.execute(
+            """UPDATE backup_auth_enrollments
+            SET invalidated_at=now(), invalidation_reason='factor_changed', updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s
+              AND consumed_at IS NULL AND invalidated_at IS NULL""",
+            (self.kindergarten_id, user_id),
+        )
+        version_row = self.connection.execute(
+            """UPDATE users SET backup_auth_version=backup_auth_version+1, updated_at=now()
+            WHERE kindergarten_id=%s AND id=%s
+            RETURNING backup_auth_version""",
+            (self.kindergarten_id, user_id),
+        ).fetchone()
+        if version_row is None or not isinstance(version_row[0], int):
+            raise LookupError("账号不存在")
+        active = self.connection.execute(
+            """SELECT count(*) FROM refresh_tokens
+            WHERE kindergarten_id=%s AND user_id=%s
+              AND authentication_method IN ('password_totp','restricted_enrollment')
+              AND revoked_at IS NULL""",
+            (self.kindergarten_id, user_id),
+        ).fetchone()
+        self.connection.execute(
+            """UPDATE refresh_tokens
+            SET revoked_at=COALESCE(revoked_at, now()), revoke_reason=%s, updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s
+              AND authentication_method IN ('password_totp','restricted_enrollment')""",
+            (reason, self.kindergarten_id, user_id),
+        )
+        sessions_revoked = active[0] if active and isinstance(active[0], int) else 0
+        return BackupRevocationResult(version_row[0], sessions_revoked)
+
+    def recalculate_backup_enrollment_gate(self, user_id: UUID) -> bool:
+        row = self.connection.execute(
+            """SELECT EXISTS(
+                SELECT 1 FROM user_roles ur JOIN roles r ON r.id=ur.role_id
+                WHERE ur.kindergarten_id=u.kindergarten_id
+                  AND ur.user_id=u.id AND r.code='admin'
+            ), EXISTS(
+                SELECT 1 FROM backup_auth_credentials bac
+                WHERE bac.kindergarten_id=u.kindergarten_id
+                  AND bac.user_id=u.id AND bac.status='enabled'
+            ), u.backup_auth_version
+            FROM users u WHERE u.kindergarten_id=%s AND u.id=%s FOR UPDATE""",
+            (self.kindergarten_id, user_id),
+        ).fetchone()
+        if row is None:
+            raise LookupError("账号不存在")
+        restricted = bool(row[0]) and not bool(row[1])
+        if restricted:
+            self.connection.execute(
+                """UPDATE refresh_tokens
+                SET authentication_method='restricted_enrollment',
+                    backup_auth_version=%s,
+                    backup_verified_at=NULL,
+                    backup_reauthenticated_at=NULL,
+                    updated_at=now()
+                WHERE kindergarten_id=%s AND user_id=%s
+                  AND authentication_method='webauthn'
+                  AND revoked_at IS NULL""",
+                (row[2], self.kindergarten_id, user_id),
+            )
+        else:
+            self.connection.execute(
+                """UPDATE refresh_tokens
+                SET authentication_method='webauthn',
+                    backup_auth_version=NULL,
+                    backup_verified_at=NULL,
+                    backup_reauthenticated_at=NULL,
+                    updated_at=now()
+                WHERE kindergarten_id=%s AND user_id=%s
+                  AND authentication_method='restricted_enrollment'
+                  AND revoked_at IS NULL""",
+                (self.kindergarten_id, user_id),
+            )
+        return restricted
+
+    def update_backup_reauthentication(
+        self,
+        user_id: UUID,
+        family_id: UUID,
+        *,
+        verified_at: datetime,
+    ) -> bool:
+        row = self.connection.execute(
+            """UPDATE refresh_tokens
+            SET backup_reauthenticated_at=%s, updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s AND token_family_id=%s
+              AND authentication_method='password_totp'
+              AND revoked_at IS NULL AND expires_at>%s
+            RETURNING id""",
+            (
+                verified_at,
+                self.kindergarten_id,
+                user_id,
+                family_id,
+                verified_at,
+            ),
+        ).fetchone()
+        return row is not None
+
+    def list_backup_security_events(
+        self, user_id: UUID, *, limit: int = 20
+    ) -> list[BackupSecurityEventRecord]:
+        safe_limit = max(1, min(limit, 20))
+        rows = self.connection.execute(
+            """SELECT event_code, occurred_at,
+                   metadata->>'authentication_method',
+                   metadata->>'client_hint'
+            FROM audit_events
+            WHERE kindergarten_id=%s AND actor_user_id=%s
+              AND event_code = ANY(%s)
+            ORDER BY occurred_at DESC, id DESC
+            LIMIT %s""",
+            (
+                self.kindergarten_id,
+                user_id,
+                [
+                    "auth.backup_enabled",
+                    "auth.backup_changed",
+                    "auth.backup_disabled",
+                    "auth.backup_login_succeeded",
+                    "auth.passkey_added_from_backup",
+                    "auth.backup_revoked_by_recovery",
+                ],
+                safe_limit,
+            ),
+        ).fetchall()
+        return [BackupSecurityEventRecord(*row) for row in rows]  # type: ignore[arg-type]
 
     def create_challenge(
         self,

@@ -7,13 +7,13 @@ from alembic.config import Config
 from alembic.script import ScriptDirectory
 
 
-def test_settings_revision_is_declared_as_head() -> None:
+def test_backup_auth_revision_is_declared_as_head() -> None:
     heads = ScriptDirectory.from_config(Config("alembic.ini")).get_heads()
 
-    assert heads == ["0004_settings"]
+    assert heads == ["0005_password_totp_backup_login"]
 
 
-def test_empty_database_can_upgrade_to_settings_head(isolated_database_url: str) -> None:
+def test_empty_database_can_upgrade_to_backup_auth_head(isolated_database_url: str) -> None:
     environment = os.environ | {"CHILD_MANAGER_DATABASE_URL": isolated_database_url}
     upgrade = subprocess.run(
         ["uv", "run", "alembic", "upgrade", "head"],
@@ -32,7 +32,7 @@ def test_empty_database_can_upgrade_to_settings_head(isolated_database_url: str)
 
     assert upgrade.returncode == 0, upgrade.stderr
     assert current.returncode == 0, current.stderr
-    assert "0004_settings" in current.stdout
+    assert "0005_password_totp_backup_login" in current.stdout
 
 
 def test_migrations_reject_missing_database_url() -> None:

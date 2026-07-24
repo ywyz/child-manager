@@ -40,6 +40,24 @@ OneTimeSecret = Annotated[
 Transport = Literal["usb", "nfc", "ble", "internal", "hybrid"]
 CredentialSource = Literal["bootstrap", "invitation", "self_add", "recovery", "migration"]
 AccountStatus = Literal["pending_registration", "pending_verification", "active", "suspended"]
+AuthenticationMethod = Literal["webauthn", "password_totp", "restricted_enrollment"]
+BackupAuthStatus = Literal["enabled", "revoked"]
+ReauthenticationPurpose = Literal["add_passkey"]
+TotpCode = Annotated[
+    str,
+    Field(
+        pattern=r"^[0-9]{6}$",
+        json_schema_extra={"writeOnly": True},
+    ),
+]
+BackupPassword = Annotated[
+    str,
+    Field(
+        min_length=1,
+        max_length=128,
+        json_schema_extra={"writeOnly": True},
+    ),
+]
 
 
 def _unique(value: list[str]) -> list[str]:
@@ -215,6 +233,73 @@ class CurrentUser(ContractModel):
 class AuthenticationResult(ContractModel):
     user: CurrentUser
     recovery_code: OneTimeSecret | None
+
+
+class BackupAuthenticationStatus(ContractModel):
+    enabled: bool
+    required: bool
+    changed_at: datetime | None = None
+    enrollment_required: bool = False
+
+
+class BackupEnrollment(ContractModel):
+    enrollment_id: UUID
+    totp_secret: Annotated[
+        str,
+        Field(
+            pattern=r"^[A-Z2-7]+=*$",
+            json_schema_extra={"readOnly": True, "x-sensitive": True},
+        ),
+    ]
+    otpauth_uri: Annotated[
+        str,
+        Field(
+            pattern=r"^otpauth://totp/",
+            json_schema_extra={"readOnly": True, "x-sensitive": True},
+        ),
+    ]
+    expires_at: datetime
+
+
+class BackupEnrollmentVerifyRequest(ContractModel):
+    password: Annotated[
+        str,
+        Field(
+            min_length=8,
+            max_length=128,
+            json_schema_extra={"writeOnly": True},
+        ),
+    ]
+    totp_code: TotpCode
+
+
+class BackupAuthenticationRequest(ContractModel):
+    identifier: Annotated[str, Field(min_length=1, max_length=254)]
+    password: BackupPassword
+    totp_code: TotpCode
+
+
+class BackupReauthenticationRequest(ContractModel):
+    password: BackupPassword
+    totp_code: TotpCode
+
+
+class SecurityEvent(ContractModel):
+    event_code: Literal[
+        "auth.backup_enabled",
+        "auth.backup_changed",
+        "auth.backup_disabled",
+        "auth.backup_login_succeeded",
+        "auth.passkey_added_from_backup",
+        "auth.backup_revoked_by_recovery",
+    ]
+    occurred_at: datetime
+    authentication_method: Literal["webauthn", "password_totp"] | None = None
+    client_hint: Annotated[str, Field(max_length=160)] | None = None
+
+
+class SecurityEventList(ContractModel):
+    items: Annotated[list[SecurityEvent], Field(max_length=20)]
 
 
 class CreateUserRequest(ContractModel):

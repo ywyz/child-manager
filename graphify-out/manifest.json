@@ -440,8 +440,8 @@
     "semantic_hash": "2b3f740ae4d88d2ef5cf18c1503b0577"
   },
   "specs/002-password-totp-backup-login/tasks.md": {
-    "mtime": 1784877146.1090114,
-    "ast_hash": "76f55c6f26b9347ed2d86d56782ab8c9",
+    "mtime": 1784885165.5480103,
+    "ast_hash": "dbfbef99b9d1008cf7a39f35d999a8dc",
     "semantic_hash": ""
   },
   "apps/__init__.py": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "apps/api/dependencies.py": {
-    "mtime": 1784864247.3960636,
-    "ast_hash": "118497d696695900d7c7c864dbe43802",
+    "mtime": 1784884077.4010646,
+    "ast_hash": "53214c0f680c1d8e0eec7d620f3c49f0",
     "semantic_hash": ""
   },
   "apps/api/middleware.py": {
@@ -705,18 +705,18 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/models.py": {
-    "mtime": 1784798411.385811,
-    "ast_hash": "386eecd6a41593321c35cb992b0088f5",
+    "mtime": 1784885129.165009,
+    "ast_hash": "0e11eca30fad6de907d9c1a9e120d32f",
     "semantic_hash": ""
   },
   "packages/backend/identity/passwords.py": {
-    "mtime": 1784798411.385811,
-    "ast_hash": "fe7e130c32f0bb8821f0341f20302cc7",
+    "mtime": 1784885073.7580073,
+    "ast_hash": "80410bea0cd9f60e91e01fa83fb1f4ac",
     "semantic_hash": ""
   },
   "packages/backend/identity/repository.py": {
-    "mtime": 1784874821.0130618,
-    "ast_hash": "5c45c4f7fac021b780e1fb01cda7bcb2",
+    "mtime": 1784884087.833065,
+    "ast_hash": "1736026a78c478678208f1885ef6f472",
     "semantic_hash": ""
   },
   "packages/backend/identity/secret_tokens.py": {
@@ -725,8 +725,8 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/service.py": {
-    "mtime": 1784806941.0139008,
-    "ast_hash": "ed46bb3a825ed5643fbdc46645e58971",
+    "mtime": 1784885073.7620072,
+    "ast_hash": "f997b8e8430ae21ea5773dafd7153313",
     "semantic_hash": ""
   },
   "packages/backend/identity/tokens.py": {
@@ -745,8 +745,8 @@
     "semantic_hash": ""
   },
   "packages/backend/ports.py": {
-    "mtime": 1784798411.386811,
-    "ast_hash": "40bf75db0cba9dc5b7d55415aa94b7ee",
+    "mtime": 1784883717.9480524,
+    "ast_hash": "dc444417dcd4b911788c26b42d789737",
     "semantic_hash": ""
   },
   "packages/backend/settings/__init__.py": {
@@ -785,8 +785,8 @@
     "semantic_hash": ""
   },
   "packages/contracts/identity.py": {
-    "mtime": 1784803265.970982,
-    "ast_hash": "9def0bb3da1ccc25cec1cda5f890bc33",
+    "mtime": 1784883639.4350495,
+    "ast_hash": "12246c432f41f3810b6afc1f3f9d46ef",
     "semantic_hash": ""
   },
   "packages/contracts/jobs.py": {
@@ -970,8 +970,8 @@
     "semantic_hash": ""
   },
   "tests/migrations/test_0001_identity.py": {
-    "mtime": 1784798411.394811,
-    "ast_hash": "154323dbd7a7f9583b527f487a96ece3",
+    "mtime": 1784884577.212082,
+    "ast_hash": "84514c27f0ceb652e8a04e84c750e1dd",
     "semantic_hash": ""
   },
   "tests/migrations/test_0004_settings.py": {
@@ -980,8 +980,8 @@
     "semantic_hash": ""
   },
   "tests/migrations/test_alembic_bootstrap.py": {
-    "mtime": 1784864909.9820864,
-    "ast_hash": "c56635218f90d03b9988e704215be10a",
+    "mtime": 1784884577.2130818,
+    "ast_hash": "15eac0a086358ad8dfe3ff046a9b800e",
     "semantic_hash": ""
   },
   "tests/migrations/test_password_to_passkey.py": {
@@ -1200,13 +1200,13 @@
     "semantic_hash": ""
   },
   "tests/migrations/test_0005_password_totp_backup_login.py": {
-    "mtime": 1784877079.2620091,
-    "ast_hash": "5fa2020da10a3a5a45d52b49f2566919",
+    "mtime": 1784885129.164009,
+    "ast_hash": "1ef935c0996b20fe4661e1cfa8ee6142",
     "semantic_hash": ""
   },
   "tests/repository/test_backup_auth_isolation.py": {
-    "mtime": 1784876963.963005,
-    "ast_hash": "b84b0689b3c00737f8a8f960931cf7eb",
+    "mtime": 1784884792.0470893,
+    "ast_hash": "d1ed85497f723fd8b850e459073aceb5",
     "semantic_hash": ""
   },
   "tests/unit/identity/test_passwords.py": {
@@ -1215,8 +1215,8 @@
     "semantic_hash": ""
   },
   "tests/unit/identity/test_secret_encryption.py": {
-    "mtime": 1784876931.766004,
-    "ast_hash": "8370a58bd5efcbef69b7ed440b603c97",
+    "mtime": 1784885073.7580073,
+    "ast_hash": "d37cb6acf218479d9b16ca3667f3448c",
     "semantic_hash": ""
   },
   "tests/unit/identity/test_totp.py": {
@@ -1227,6 +1227,31 @@
   "tests/web/test_backup_auth_smoke.py": {
     "mtime": 1784877031.9020076,
     "ast_hash": "4c724b82748caa592d8b52e5129a0ee6",
+    "semantic_hash": ""
+  },
+  "packages/backend/database/migrations/versions/0005_password_totp_backup_login.py": {
+    "mtime": 1784884288.111072,
+    "ast_hash": "b4e5f61fd5610b8620d579bf1993111c",
+    "semantic_hash": ""
+  },
+  "packages/backend/identity/secret_encryption.py": {
+    "mtime": 1784884707.0130863,
+    "ast_hash": "d0994605369645bc640c7442e64032c3",
+    "semantic_hash": ""
+  },
+  "packages/backend/identity/totp.py": {
+    "mtime": 1784883669.8170507,
+    "ast_hash": "3e91b6c8e201e2f843d12694591d8641",
+    "semantic_hash": ""
+  },
+  "tests/unit/identity/test_auth_assurance.py": {
+    "mtime": 1784883980.3400614,
+    "ast_hash": "581ab042a4b18e2719ce4a3587f89cd3",
+    "semantic_hash": ""
+  },
+  "graphify-out/memory/query_20260724_085558_\u8fdb\u5165_m3a_phase_3_t010_t015_foundational_green_\u65f6_\u5e94\u590d\u7528\u54ea.md": {
+    "mtime": 1784883358.45204,
+    "ast_hash": "5af4b383fc8feae6532e0557992da5c7",
     "semantic_hash": ""
   }
 }

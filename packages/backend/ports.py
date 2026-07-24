@@ -24,3 +24,11 @@ class JobBroker(Protocol):
 
 class DependencyCheck(Protocol):
     async def check(self) -> bool: ...
+
+
+class IdentitySecretKeyProvider(Protocol):
+    """提供数据库外的当前身份主密钥与历史解密密钥。"""
+
+    def active_key(self) -> tuple[str, bytes]: ...
+
+    def get_key(self, key_id: str) -> bytes: ...

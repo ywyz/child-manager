@@ -67,6 +67,27 @@ def test_backup_auth_migration_creates_isolated_credentials_and_enrollments(
                 WHERE table_schema=current_schema() AND table_name='refresh_tokens'"""
             ).fetchall()
         }
+        constraints = {
+            str(row[0])
+            for row in connection.execute(
+                """SELECT constraint_name FROM information_schema.table_constraints
+                WHERE table_schema=current_schema()
+                  AND table_name IN (
+                    'users',
+                    'refresh_tokens',
+                    'backup_auth_credentials',
+                    'backup_auth_enrollments'
+                  )"""
+            ).fetchall()
+        }
+        enrollment_indexes = {
+            str(row[0]): str(row[1])
+            for row in connection.execute(
+                """SELECT indexname, indexdef FROM pg_indexes
+                WHERE schemaname=current_schema()
+                  AND tablename='backup_auth_enrollments'"""
+            ).fetchall()
+        }
 
     assert expected_tables <= tables
     assert {
@@ -94,6 +115,20 @@ def test_backup_auth_migration_creates_isolated_credentials_and_enrollments(
         "backup_auth_version",
     } <= refresh_columns
     assert {"password_hash", "totp_ciphertext"}.isdisjoint(user_columns)
+    assert {
+        "ck_users_backup_auth_version",
+        "ck_refresh_tokens_authentication_method",
+        "ck_refresh_tokens_authentication_assurance",
+        "uq_backup_auth_credentials_kindergarten_user",
+        "ck_backup_auth_credentials_material",
+        "ck_backup_auth_credentials_nonce_length",
+        "uq_backup_auth_enrollments_kindergarten_id_id",
+        "ck_backup_auth_enrollments_terminal_state",
+    } <= constraints
+    active_index = enrollment_indexes["uq_backup_auth_enrollments_active"]
+    assert "UNIQUE INDEX" in active_index
+    assert "consumed_at IS NULL" in active_index
+    assert "invalidated_at IS NULL" in active_index
 
 
 def test_backup_auth_revision_is_the_only_child_of_settings() -> None:
