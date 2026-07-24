@@ -14,6 +14,7 @@ from psycopg import sql
 from psycopg.errors import ForeignKeyViolation, UniqueViolation
 
 from packages.backend.identity.repository import IdentityRepository
+from packages.backend.settings.repository import SettingsRepository, TeacherInput
 
 
 @pytest.fixture
@@ -173,6 +174,138 @@ def test_repository_exposes_atomic_passkey_lifecycle_operations() -> None:
     }
 
     assert required_operations <= set(dir(IdentityRepository))
+
+
+def test_teacher_assignment_serializes_with_teacher_role_removal(
+    identity_database: psycopg.Connection[tuple[object, ...]],
+    isolated_database_url: str,
+) -> None:
+    kindergarten_id = _insert_kindergarten(identity_database, "教师关联并发测试园")
+    user_id = _insert_user(identity_database, kindergarten_id, "concurrent-teacher")
+    role_rows = identity_database.execute(
+        "SELECT id, code FROM roles WHERE code=ANY(%s)", (["admin", "teacher"],)
+    ).fetchall()
+    assert {str(row[1]) for row in role_rows} == {"admin", "teacher"}
+    for role_id, _code in role_rows:
+        identity_database.execute(
+            """INSERT INTO user_roles
+            (kindergarten_id, user_id, role_id, assigned_by, assigned_at)
+            VALUES (%s,%s,%s,%s,%s)""",
+            (kindergarten_id, user_id, role_id, user_id, datetime.now(UTC)),
+        )
+    settings_repository = SettingsRepository(identity_database)
+    settings_repository.ensure_age_groups(kindergarten_id)
+    age_group_row = identity_database.execute(
+        """SELECT id FROM age_groups
+        WHERE kindergarten_id=%s ORDER BY sort_order LIMIT 1""",
+        (kindergarten_id,),
+    ).fetchone()
+    assert age_group_row is not None
+    class_id = uuid4()
+    identity_database.execute(
+        """INSERT INTO classes
+        (id, kindergarten_id, name, name_normalized, age_group_id, created_by, updated_by)
+        VALUES (%s,%s,%s,%s,%s,%s,%s)""",
+        (
+            class_id,
+            kindergarten_id,
+            "并发测试班",
+            "并发测试班",
+            age_group_row[0],
+            user_id,
+            user_id,
+        ),
+    )
+    identity_database.commit()
+
+    role_checked = Event()
+    allow_assignment = Event()
+    role_change_started = Event()
+    role_change_finished = Event()
+    role_change_pid: list[int] = []
+    errors: list[BaseException] = []
+    dsn = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+
+    def assign_teacher() -> None:
+        try:
+            with psycopg.connect(dsn) as connection, connection.transaction():
+                repository = SettingsRepository(connection)
+                assert repository.teacher_role_user_ids(kindergarten_id, [user_id]) == {user_id}
+                role_checked.set()
+                assert allow_assignment.wait(timeout=5)
+                record = repository.replace_class_teachers(
+                    kindergarten_id,
+                    class_id,
+                    [TeacherInput(user_id=user_id, is_lead_teacher=True)],
+                    user_id,
+                )
+                assert record is not None
+        except Exception as exc:  # pragma: no cover - surfaced by the main thread
+            errors.append(exc)
+            role_checked.set()
+            allow_assignment.set()
+
+    def remove_teacher_role() -> None:
+        try:
+            assert role_checked.wait(timeout=5)
+            with psycopg.connect(dsn) as connection, connection.transaction():
+                role_change_pid.append(
+                    int(connection.execute("SELECT pg_backend_pid()").fetchone()[0])  # type: ignore[index]
+                )
+                role_change_started.set()
+                IdentityRepository(connection, kindergarten_id).set_roles(
+                    user_id,
+                    ["admin"],
+                    actor_user_id=user_id,
+                    protect_last=False,
+                )
+            role_change_finished.set()
+        except Exception as exc:  # pragma: no cover - surfaced by the main thread
+            errors.append(exc)
+            role_change_started.set()
+            role_change_finished.set()
+            allow_assignment.set()
+
+    assignment_thread = Thread(target=assign_teacher)
+    role_change_thread = Thread(target=remove_teacher_role)
+    assignment_thread.start()
+    role_change_thread.start()
+    assert role_change_started.wait(timeout=5)
+    assert role_change_pid
+
+    deadline = monotonic() + 5
+    while monotonic() < deadline:
+        if role_change_finished.is_set():
+            break
+        wait_state = identity_database.execute(
+            "SELECT wait_event_type FROM pg_stat_activity WHERE pid=%s",
+            (role_change_pid[0],),
+        ).fetchone()
+        if wait_state == ("Lock",):
+            break
+        Event().wait(0.01)
+    else:
+        pytest.fail("角色变更事务既未完成，也未进入预期的数据库锁等待")
+
+    allow_assignment.set()
+    assignment_thread.join(timeout=10)
+    role_change_thread.join(timeout=10)
+
+    assert not assignment_thread.is_alive()
+    assert not role_change_thread.is_alive()
+    assert errors == []
+    assert identity_database.execute(
+        """SELECT count(*) FROM class_teachers relation
+        WHERE relation.kindergarten_id=%s AND relation.user_id=%s
+          AND NOT EXISTS (
+            SELECT 1 FROM user_roles membership
+            JOIN roles role ON role.id=membership.role_id
+            WHERE membership.kindergarten_id=relation.kindergarten_id
+              AND membership.user_id=relation.user_id
+              AND role.code='teacher'
+          )""",
+        (kindergarten_id, user_id),
+    ).fetchone() == (0,)
 
 
 def test_webauthn_credential_cannot_reference_a_user_in_another_kindergarten(

@@ -1,3 +1,4 @@
+import asyncio
 import os
 import socket
 import subprocess
@@ -17,6 +18,7 @@ from alembic.config import Config
 from playwright.sync_api import sync_playwright
 
 from apps.web.components.navigation import navigation_for_capabilities
+from apps.web.pages import class_areas as class_areas_page
 from apps.web.pages.class_areas import class_areas_page_text
 from apps.web.pages.settings import settings_page_text
 from packages.backend.identity.tokens import create_access_token, hash_refresh_token
@@ -225,6 +227,41 @@ def test_navigation_separates_admin_settings_from_teacher_class_areas() -> None:
     assert "班级区域" not in unrelated_teacher
 
 
+def test_class_area_page_loads_all_pages_before_editing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[str] = []
+
+    async def fake_request(path: str, **_kwargs: object) -> dict[str, object]:
+        calls.append(path)
+        page = 1 if "page=1&" in path else 2
+        if page == 1:
+            items = [
+                {
+                    "id": str(uuid4()),
+                    "name": f"历史区域 {index}",
+                    "is_active": False,
+                }
+                for index in range(100)
+            ]
+        else:
+            items = [{"id": str(uuid4()), "name": "仍在使用", "is_active": True}]
+        return {
+            "ok": True,
+            "status": 200,
+            "body": {"items": items, "page": page, "page_size": 100, "total": 101},
+        }
+
+    monkeypatch.setattr(class_areas_page, "same_origin_api_request", fake_request)
+
+    items, error_status = asyncio.run(class_areas_page.load_all_class_areas("class-id", "indoor"))
+
+    assert error_status is None
+    assert len(items) == 101
+    assert [item["name"] for item in items if item["is_active"]] == ["仍在使用"]
+    assert len(calls) == 2
+
+
 def test_settings_pages_use_only_same_origin_api_paths() -> None:
     source = (
         __import__("inspect").getsource(__import__("apps.web.pages.settings", fromlist=["*"]))
@@ -282,7 +319,9 @@ def test_browser_completes_settings_empty_areas_and_immediate_unlink_flow(
         )
         teacher_page = teacher_context.new_page()
         teacher_page.set_default_timeout(5_000)
-        teacher_page.goto(f"{base_url}/class-areas/{class_id}")
+        teacher_page.goto(f"{base_url}/class-areas")
+        teacher_page.get_by_text("我的班级区域", exact=True).wait_for()
+        teacher_page.get_by_role("link", name="浏览器空区域班").click()
         teacher_page.get_by_text("班级区域", exact=True).wait_for()
         teacher_page.get_by_label("室内区域").fill("阅读区\n建构区")
         teacher_page.get_by_role("button", name="整体保存室内区域").click()

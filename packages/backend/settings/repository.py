@@ -331,6 +331,7 @@ class SettingsRepository:
         self,
         kindergarten_id: UUID,
         *,
+        user_id: UUID | None = None,
         page: int = 1,
         page_size: int = 20,
     ) -> tuple[list[ClassRecord], int]:
@@ -342,21 +343,41 @@ class SettingsRepository:
                               WHERE indoor.kindergarten_id=c.kindergarten_id
                                 AND indoor.class_id=c.id
                                 AND indoor.area_type='indoor'
+                                AND indoor.is_active
                           ),
                           EXISTS (
                               SELECT 1 FROM class_areas outdoor
                               WHERE outdoor.kindergarten_id=c.kindergarten_id
                                 AND outdoor.class_id=c.id
                                 AND outdoor.area_type='outdoor'
+                                AND outdoor.is_active
                           ),
                           count(*) OVER()
                 FROM classes c
                 JOIN age_groups age
                   ON age.kindergarten_id=c.kindergarten_id AND age.id=c.age_group_id
                 WHERE c.kindergarten_id=%s
+                  AND (
+                    %s::uuid IS NULL
+                    OR (
+                      c.is_active
+                      AND EXISTS (
+                        SELECT 1 FROM class_teachers relation
+                        WHERE relation.kindergarten_id=c.kindergarten_id
+                          AND relation.class_id=c.id
+                          AND relation.user_id=%s
+                      )
+                    )
+                  )
                 ORDER BY c.name_normalized, c.id
                 LIMIT %s OFFSET %s""",
-                (kindergarten_id, page_size, (page - 1) * page_size),
+                (
+                    kindergarten_id,
+                    user_id,
+                    user_id,
+                    page_size,
+                    (page - 1) * page_size,
+                ),
             )
         )
         records = [self._class(kindergarten_id, row) for row in rows]
@@ -366,6 +387,8 @@ class SettingsRepository:
         self,
         kindergarten_id: UUID,
         class_id: UUID,
+        *,
+        user_id: UUID | None = None,
     ) -> ClassRecord | None:
         row = _row(
             self._connection.execute(  # type: ignore[attr-defined]
@@ -375,18 +398,32 @@ class SettingsRepository:
                               WHERE indoor.kindergarten_id=c.kindergarten_id
                                 AND indoor.class_id=c.id
                                 AND indoor.area_type='indoor'
+                                AND indoor.is_active
                           ),
                           EXISTS (
                               SELECT 1 FROM class_areas outdoor
                               WHERE outdoor.kindergarten_id=c.kindergarten_id
                                 AND outdoor.class_id=c.id
                                 AND outdoor.area_type='outdoor'
+                                AND outdoor.is_active
                           )
                 FROM classes c
                 JOIN age_groups age
                   ON age.kindergarten_id=c.kindergarten_id AND age.id=c.age_group_id
-                WHERE c.kindergarten_id=%s AND c.id=%s""",
-                (kindergarten_id, class_id),
+                WHERE c.kindergarten_id=%s AND c.id=%s
+                  AND (
+                    %s::uuid IS NULL
+                    OR (
+                      c.is_active
+                      AND EXISTS (
+                        SELECT 1 FROM class_teachers relation
+                        WHERE relation.kindergarten_id=c.kindergarten_id
+                          AND relation.class_id=c.id
+                          AND relation.user_id=%s
+                      )
+                    )
+                  )""",
+                (kindergarten_id, class_id, user_id, user_id),
             )
         )
         return self._class(kindergarten_id, row) if row is not None else None
@@ -489,6 +526,37 @@ class SettingsRepository:
             )
         return self.get_class(kindergarten_id, class_id)
 
+    def teacher_role_user_ids(
+        self,
+        kindergarten_id: UUID,
+        user_ids: Sequence[UUID],
+    ) -> set[UUID]:
+        if not user_ids:
+            return set()
+        ordered_user_ids = sorted(set(user_ids), key=str)
+        self._connection.execute(  # type: ignore[attr-defined]
+            """SELECT id FROM users
+            WHERE kindergarten_id=%s AND id=ANY(%s::uuid[])
+            ORDER BY id FOR UPDATE""",
+            (kindergarten_id, ordered_user_ids),
+        )
+        rows = _rows(
+            self._connection.execute(  # type: ignore[attr-defined]
+                """SELECT DISTINCT users.id
+                FROM users
+                JOIN user_roles
+                  ON user_roles.kindergarten_id=users.kindergarten_id
+                 AND user_roles.user_id=users.id
+                JOIN roles
+                  ON roles.id=user_roles.role_id
+                 AND roles.code='teacher'
+                WHERE users.kindergarten_id=%s
+                  AND users.id=ANY(%s::uuid[])""",
+                (kindergarten_id, ordered_user_ids),
+            )
+        )
+        return {UUID(str(row[0])) for row in rows}
+
     def is_class_teacher(
         self,
         kindergarten_id: UUID,
@@ -498,8 +566,14 @@ class SettingsRepository:
         row = _row(
             self._connection.execute(  # type: ignore[attr-defined]
                 """SELECT EXISTS (
-                    SELECT 1 FROM class_teachers
-                    WHERE kindergarten_id=%s AND class_id=%s AND user_id=%s
+                    SELECT 1 FROM class_teachers relation
+                    JOIN classes class_record
+                      ON class_record.kindergarten_id=relation.kindergarten_id
+                     AND class_record.id=relation.class_id
+                    WHERE relation.kindergarten_id=%s
+                      AND relation.class_id=%s
+                      AND relation.user_id=%s
+                      AND class_record.is_active
                 )""",
                 (kindergarten_id, class_id, user_id),
             )
@@ -514,8 +588,13 @@ class SettingsRepository:
         row = _row(
             self._connection.execute(  # type: ignore[attr-defined]
                 """SELECT EXISTS (
-                    SELECT 1 FROM class_teachers
-                    WHERE kindergarten_id=%s AND user_id=%s
+                    SELECT 1 FROM class_teachers relation
+                    JOIN classes class_record
+                      ON class_record.kindergarten_id=relation.kindergarten_id
+                     AND class_record.id=relation.class_id
+                    WHERE relation.kindergarten_id=%s
+                      AND relation.user_id=%s
+                      AND class_record.is_active
                 )""",
                 (kindergarten_id, user_id),
             )
@@ -571,11 +650,19 @@ class SettingsRepository:
         names: Sequence[str | AreaInput],
         actor_id: UUID,
     ) -> None:
-        self._connection.execute(  # type: ignore[attr-defined]
-            """DELETE FROM class_areas
-            WHERE kindergarten_id=%s AND class_id=%s AND area_type=%s""",
-            (kindergarten_id, class_id, area_type),
+        existing = _rows(
+            self._connection.execute(  # type: ignore[attr-defined]
+                """SELECT id, name_normalized
+                FROM class_areas
+                WHERE kindergarten_id=%s AND class_id=%s AND area_type=%s
+                FOR UPDATE""",
+                (kindergarten_id, class_id, area_type),
+            )
         )
+        existing_by_id = {UUID(str(row[0])): str(row[1]) for row in existing}
+        existing_by_name = {str(row[1]): UUID(str(row[0])) for row in existing}
+        retained_ids: list[UUID] = []
+
         for sort_order, value in enumerate(names):
             area = (
                 AreaInput(
@@ -588,24 +675,56 @@ class SettingsRepository:
                 if isinstance(value, str)
                 else value
             )
-            self._connection.execute(  # type: ignore[attr-defined]
-                """INSERT INTO class_areas
-                (id, kindergarten_id, class_id, area_type, name, name_normalized,
-                 sort_order, is_active, created_by, updated_by)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                (
-                    area.id or uuid7(),
-                    kindergarten_id,
-                    class_id,
-                    area_type,
-                    area.name,
-                    area.name_normalized,
-                    area.sort_order,
-                    area.is_active,
-                    actor_id,
-                    actor_id,
-                ),
-            )
+            if area.id is not None and area.id not in existing_by_id:
+                raise ValueError("区域标识不属于当前班级和类别")
+            area_id = area.id or existing_by_name.get(area.name_normalized)
+            if area_id is None:
+                area_id = uuid7()
+                self._connection.execute(  # type: ignore[attr-defined]
+                    """INSERT INTO class_areas
+                    (id, kindergarten_id, class_id, area_type, name, name_normalized,
+                     sort_order, is_active, created_by, updated_by)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (
+                        area_id,
+                        kindergarten_id,
+                        class_id,
+                        area_type,
+                        area.name,
+                        area.name_normalized,
+                        area.sort_order,
+                        area.is_active,
+                        actor_id,
+                        actor_id,
+                    ),
+                )
+            else:
+                self._connection.execute(  # type: ignore[attr-defined]
+                    """UPDATE class_areas
+                    SET name=%s, name_normalized=%s, sort_order=%s, is_active=%s,
+                        updated_by=%s, updated_at=now()
+                    WHERE kindergarten_id=%s AND class_id=%s AND area_type=%s AND id=%s""",
+                    (
+                        area.name,
+                        area.name_normalized,
+                        area.sort_order,
+                        area.is_active,
+                        actor_id,
+                        kindergarten_id,
+                        class_id,
+                        area_type,
+                        area_id,
+                    ),
+                )
+            retained_ids.append(area_id)
+
+        self._connection.execute(  # type: ignore[attr-defined]
+            """UPDATE class_areas
+            SET is_active=false, updated_by=%s, updated_at=now()
+            WHERE kindergarten_id=%s AND class_id=%s AND area_type=%s
+              AND NOT (id=ANY(%s::uuid[]))""",
+            (actor_id, kindergarten_id, class_id, area_type, retained_ids),
+        )
 
     @staticmethod
     def _semester(row: tuple[object, ...] | None) -> SemesterRecord | None:

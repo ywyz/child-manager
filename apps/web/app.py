@@ -75,7 +75,7 @@ def register_web(*, api_base_url: str) -> None:
                         "账号管理": "/users",
                         "通行密钥与会话": "/account/security",
                         "系统设置": "/settings",
-                        "班级区域": "/",
+                        "班级区域": "/class-areas",
                     }.get(label, "/")
                     ui.link(label, target)
 

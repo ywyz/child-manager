@@ -186,6 +186,8 @@ def test_only_associated_teacher_can_read_and_replace_class_areas_and_unlink_is_
     application.dependency_overrides[current_session] = lambda: teacher_session
     application.dependency_overrides.pop(admin_session, None)
     teacher_capabilities = client.get("/api/v1/auth/me")
+    teacher_classes = client.get("/api/v1/settings/classes?page=1&page_size=20")
+    teacher_class = client.get(f"/api/v1/settings/classes/{class_id}")
     saved = client.put(
         f"/api/v1/settings/classes/{class_id}/areas/outdoor",
         json={
@@ -200,6 +202,10 @@ def test_only_associated_teacher_can_read_and_replace_class_areas_and_unlink_is_
 
     assert teacher_capabilities.status_code == 200
     assert "class_areas:manage" in teacher_capabilities.json()["capabilities"]
+    assert teacher_classes.status_code == 200
+    assert [item["id"] for item in teacher_classes.json()["items"]] == [class_id]
+    assert teacher_class.status_code == 200
+    assert teacher_class.json()["id"] == class_id
     assert saved.status_code == 204
     assert listed.status_code == 200
     assert [item["name"] for item in listed.json()["items"]] == ["沙水区", "种植区"]
@@ -222,6 +228,50 @@ def test_only_associated_teacher_can_read_and_replace_class_areas_and_unlink_is_
 
     assert after_unlink.status_code == 403
     assert "class_areas:manage" not in capabilities_after_unlink.json()["capabilities"]
+
+
+def test_deactivating_class_immediately_revokes_teacher_area_access(
+    admin_client: tuple[TestClient, ActorFixture],
+) -> None:
+    client, admin_actor = admin_client
+    application = cast(FastAPI, client.app)
+    admin_current_override = application.dependency_overrides[current_session]
+    class_id, teacher_id = _provision_associated_teacher(client, admin_actor)
+    class_record = client.get(f"/api/v1/settings/classes/{class_id}")
+    assert class_record.status_code == 200
+    deactivated = client.patch(
+        f"/api/v1/settings/classes/{class_id}",
+        json={
+            "name": class_record.json()["name"],
+            "age_group_id": class_record.json()["age_group_id"],
+            "is_active": False,
+        },
+        headers=csrf_headers(client),
+    )
+    assert deactivated.status_code == 200
+
+    application.dependency_overrides[current_session] = lambda: _session_for(
+        teacher_id,
+        admin_actor.kindergarten_id,
+    )
+    application.dependency_overrides.pop(admin_session, None)
+    capabilities = client.get("/api/v1/auth/me")
+    classes = client.get("/api/v1/settings/classes?page=1&page_size=20")
+    class_response = client.get(f"/api/v1/settings/classes/{class_id}")
+    areas = client.get(f"/api/v1/settings/classes/{class_id}/areas/indoor")
+    saved = client.put(
+        f"/api/v1/settings/classes/{class_id}/areas/indoor",
+        json={"areas": [{"name": "阅读区", "sort_order": 0, "is_active": True}]},
+        headers=csrf_headers(client),
+    )
+
+    assert "class_areas:manage" not in capabilities.json()["capabilities"]
+    assert classes.status_code == 403
+    assert class_response.status_code == 403
+    assert areas.status_code == 403
+    assert saved.status_code == 403
+
+    application.dependency_overrides[current_session] = admin_current_override
 
 
 def test_unassociated_admin_cannot_maintain_class_areas(

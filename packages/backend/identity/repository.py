@@ -304,6 +304,12 @@ class IdentityRepository:
         ).fetchall()
         if {str(row[1]) for row in role_rows} != requested:
             raise ValueError("角色无效")
+        if "teacher" in current and "teacher" not in requested:
+            self.connection.execute(
+                """DELETE FROM class_teachers
+                WHERE kindergarten_id=%s AND user_id=%s""",
+                (self.kindergarten_id, user_id),
+            )
         self.connection.execute(
             "DELETE FROM user_roles WHERE kindergarten_id=%s AND user_id=%s",
             (self.kindergarten_id, user_id),

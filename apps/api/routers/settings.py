@@ -206,7 +206,7 @@ def make_current_semester(
 
 @router.get("/classes", response_model=ClassPage)
 def list_classes(
-    session: AdminSessionDependency,
+    session: CurrentSessionDependency,
     service: SettingsServiceDependency,
     page: Annotated[int, Query(ge=1)] = 1,
     page_size: Annotated[int, Query(ge=1, le=100)] = 20,
@@ -241,7 +241,7 @@ def create_class(
 @router.get("/classes/{class_id}", response_model=Class)
 def get_class(
     class_id: UUID,
-    session: AdminSessionDependency,
+    session: CurrentSessionDependency,
     service: SettingsServiceDependency,
 ) -> Class:
     return _class(service.get_class(session, class_id))
