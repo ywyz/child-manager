@@ -8,7 +8,7 @@ description: "密码与 TOTP 备用登录的依赖有序实施任务"
 
 **Input**: Design documents from `/specs/002-password-totp-backup-login/`
 
-**Docs Baseline**: 待此次 docs 提交确认后固定 | **Issue**: 待创建 M3A Issue | **Implementation Branch**: `dev`
+**Docs Baseline**: `docs@7fdb8aff46ee1206029a10ba4ed46cb9bdbee54d` | **Issue**: [#8](https://github.com/ywyz/child-manager/issues/8) | **Implementation Branch**: `dev`
 
 **Prerequisites**: plan.md、spec.md、research.md、data-model.md、contracts/openapi.yaml
 
@@ -27,10 +27,10 @@ M3A 前，不得执行 T003 之后的代码任务。
 
 **Purpose**: 固定可实施基线，不改变现有 M3 范围和迁移编号。
 
-- [ ] T001 创建 M3A 实现 Issue，固定确认后的 docs 提交，链接
+- [x] T001 创建 M3A 实现 Issue，固定确认后的 docs 提交，链接
   `specs/002-password-totp-backup-login/`、ADR-0010、ADR-0011、威胁模型和总 OpenAPI，并
   写明范围、非目标、验收、风险及验证命令
-- [ ] T002 将固定 docs 提交同步到 `dev`，确认 M3 T036–T045 与
+- [x] T002 将固定 docs 提交同步到 `dev`，确认 M3 T036–T045 与
   `packages/backend/database/migrations/versions/0004_settings.py` 已完成且 Alembic head
   唯一，再记录 `0005_password_totp_backup_login` 的起点
 
@@ -42,27 +42,27 @@ M3A 前，不得执行 T003 之后的代码任务。
 
 **Purpose**: 在任何业务实现前锁定密码/TOTP、安全状态、契约、迁移、API 和浏览器行为。
 
-- [ ] T003 [P] 为密码策略、Argon2id 参数/渐进重摘要、RFC 6238 时间窗口、原子重放和
+- [x] T003 [P] 为密码策略、Argon2id 参数/渐进重摘要、RFC 6238 时间窗口、原子重放和
   AES-GCM AAD/认证标签失败增加 RED 单元测试到
   `tests/unit/identity/test_passwords.py`、`tests/unit/identity/test_totp.py` 和
   `tests/unit/identity/test_secret_encryption.py`
-- [ ] T004 [P] 为本规格 OpenAPI 路径、请求响应、请求秘密 `writeOnly`、一次性响应秘密
+- [x] T004 [P] 为本规格 OpenAPI 路径、请求响应、请求秘密 `writeOnly`、一次性响应秘密
   `readOnly` + `x-sensitive`、通用认证失败和
   运行时路由一致性增加 RED 契约测试到 `tests/contract/test_backup_auth_contract.py`
-- [ ] T005 [P] 为 `0004_settings -> 0005_password_totp_backup_login` 升降级、约束、
+- [x] T005 [P] 为 `0004_settings -> 0005_password_totp_backup_login` 升降级、约束、
   既有会话回填/撤销以及 Repository 园所隔离增加 RED 测试到
   `tests/migrations/test_0005_password_totp_backup_login.py` 和
   `tests/repository/test_backup_auth_isolation.py`
-- [ ] T006 [P] [US1] 为管理员受限门禁、管理员角色新增/移除后的门禁重算、教师每次
+- [x] T006 [P] [US1] 为管理员受限门禁、管理员角色新增/移除后的门禁重算、教师每次
   WebAuthn 登录及安全设置页的可跳过提示、一次性 TOTP 展示、绑定过期/并发消费和密码策略
   增加 RED API/Web 测试到 `tests/api/test_backup_enrollment.py` 和
   `tests/web/test_backup_auth_smoke.py`
-- [ ] T007 [P] [US2] 为双因素备用登录、账号枚举一致性、三层限流、TOTP 重放、普通业务
+- [x] T007 [P] [US2] 为双因素备用登录、账号枚举一致性、三层限流、TOTP 重放、普通业务
   会话和五分钟 `add_passkey` 专用升级增加 RED API 测试到
   `tests/api/test_backup_authentication.py`
-- [ ] T008 [P] [US3] 为 WebAuthn 保护的轮换/关闭、管理员强制、会话撤销、紧急恢复清理和
+- [x] T008 [P] [US3] 为 WebAuthn 保护的轮换/关闭、管理员强制、会话撤销、紧急恢复清理和
   最后管理员双人核验不降级增加 RED API 测试到 `tests/api/test_backup_maintenance.py`
-- [ ] T009 运行 T003–T008 的目标测试并把预期失败清单写入 M3A Issue；确认所有测试成功
+- [x] T009 运行 T003–T008 的目标测试并把预期失败清单写入 M3A Issue；确认所有测试成功
   收集、隔离 PostgreSQL 可用、失败仅来自尚未实现的 M3A 行为
 
 **Checkpoint**: 形成可复现 RED 基线后才能进入 GREEN。
