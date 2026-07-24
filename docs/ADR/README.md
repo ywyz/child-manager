@@ -25,7 +25,8 @@
 | [ADR-0007](ADR-0007-caddy-compose-and-file-secrets.md) | 采用 Caddy、Docker Compose 与文件挂载 Secrets | 已被 ADR-0009 取代（保留历史与安全结果） |
 | [ADR-0008](ADR-0008-degradable-calendar-and-external-services.md) | 日期与外部服务采用本地优先和软降级 | 已接受 |
 | [ADR-0009](ADR-0009-defer-production-deployment-until-feature-complete.md) | 功能完成前延后生产部署与访问网络决策 | 部分被 ADR-0010 取代（生产部署延后继续有效） |
-| [ADR-0010](ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md) | 采用受限公网 B/S 入口、WebAuthn 通行密钥与双条件恢复 | 已接受 |
+| [ADR-0010](ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md) | 采用受限公网 B/S 入口、WebAuthn 通行密钥与双条件恢复 | 部分被 ADR-0011 取代（唯一登录部分失效） |
+| [ADR-0011](ADR-0011-password-totp-backup-login.md) | 增加密码与 TOTP 双因素备用登录，保留 WebAuthn 高风险边界 | 已接受 |
 
 ## 与旧仓库 ADR 的关系
 

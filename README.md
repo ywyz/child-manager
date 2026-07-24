@@ -83,7 +83,14 @@ packages/
 
 教师与班级采用多对多关系，一个班级可关联多名教师并设置一名主班教师。教案默认记录当前教师为编写者，也可从本班关联教师中选择多名共同编写者。
 
-WebAuthn 通行密钥是唯一常规登录方式，不保留密码或 OTP 弱兜底。邀请对象注册首个通行密钥并经管理员带外核验后激活；紧急恢复同时需要离线恢复码和人工核验。API 继续使用短期访问令牌与可撤销刷新令牌，并通过安全的 HttpOnly Cookie 管理会话。详细边界见 [ADR-0010](docs/ADR/ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md) 与 [首期安全威胁模型](docs/security/threat-model.md)。
+WebAuthn 通行密钥是首选且具备钓鱼抗性的登录方式。为解决设备切换，系统增加必须同时验证
+密码与 TOTP 的独立备用登录：管理员强制配置、教师可选，不提供任一单因素或短信/邮件
+验证码登录。备用会话可使用普通业务；再次验证两项因素后只可新增通行密钥，因素管理仍
+要求 WebAuthn。邀请对象仍先注册通行密钥并经管理员带外核验后激活；所有通行密钥均不可用
+时，紧急恢复仍同时需要离线恢复码和人工核验。API 使用安全的 HttpOnly Cookie 管理可撤销
+会话。详细边界见 [ADR-0010](docs/ADR/ADR-0010-restricted-public-entry-passkey-authentication-and-recovery.md)、
+[ADR-0011](docs/ADR/ADR-0011-password-totp-backup-login.md) 与
+[首期安全威胁模型](docs/security/threat-model.md)。
 
 ## 首期范围：一日活动计划
 

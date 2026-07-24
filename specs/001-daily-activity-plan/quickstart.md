@@ -5,7 +5,8 @@
 **Updated**: 2026-07-23
 **Current repository state**: `main` 仍是迁移前 docs-only 基线；`docs` 是当前文档、规格、
 OpenAPI 和模板的单一事实来源；`dev@fb4f076` 已完成 M2，#4 已关闭。M3 #7 固定
-`docs@bd98a1a`，当前从 T037 RED 测试开始。下列命令覆盖 M1～M8 验收合同，尚未完成的
+`docs@bd98a1a`，当前从 T037 RED 测试开始。M3A 备用登录设计已确认但必须等待 M3 完成并
+由独立 Issue 固定新 docs 基线。下列命令覆盖 M1～M8 验收合同，尚未完成的
 用户故事步骤不可执行，也不表示已经通过。
 
 ## 1. 前提与反目标
@@ -217,8 +218,25 @@ git status --short -- templates/teacherplan/teacherplan.docx
 预期：只有认证 verify 和 Refresh 成功建立/续期会话；注册、邀请消费、恢复和恢复码轮换都
 不建立会话。认证完成/刷新分别返回两条独立 Cookie，退出返回两条独立过期 Cookie。所有
 成功、失败、限流、凭据/邀请/恢复/会话变更都有脱敏审计，不记录 challenge、秘密、签名、
-完整 credential JSON 或账号存在性。冻结契约中不存在 `/auth/login`、
-`/auth/change-password`、`/users/{user_id}/reset-password` 或密码字段。
+完整 credential JSON 或账号存在性。冻结契约中不存在旧 `/auth/login`、
+`/auth/change-password`、`/users/{user_id}/reset-password` 或 `users` 密码字段。
+
+### 6.1A 密码与 TOTP 备用登录（M3A）
+
+本节只在独立 002 Issue 授权并完成对应任务后执行：
+
+| 流程 | 正向证据 | 必测拒绝路径 |
+| --- | --- | --- |
+| 管理员绑定 | 首次通行密钥登录进入受限设置；合格密码+首个 TOTP 后原子启用并进入业务 | 只配置一项、弱/泄露密码、绑定过期/并发、种子再次展示 |
+| 教师提示 | 未配置仍可进入业务，安全设置持续提示；WebAuthn 后可启用/关闭 | 关闭管理员备用登录、无 WebAuthn 维护因素 |
+| 备用登录 | 账号+密码+当前未重放 TOTP 建立 `password_totp` 普通会话，登录后可读取本人最近 20 条安全事件 | 未知账号、未配置、任一因素错误/缺失/过期/重放出现差异，或事件投影跨用户/跨园 |
+| 新设备通行密钥 | 最近五分钟再次验证两项因素，只新增本人通行密钥 | 删除/命名凭据、修改因素、轮换恢复码、账号/角色/邀请/恢复越权 |
+| 因素恢复 | 仍有通行密钥时 WebAuthn 重设；全丢失时走离线恢复码+人工核验 | 管理员代重置、短信/邮件、单一材料恢复 |
+
+运行 002 quickstart 的专项命令，并验证密码、摘要、TOTP、种子和二维码不进入日志、异常、
+审计、消息或测试快照。M3A 迁移为 `0005_password_totp_backup_login.py`；下游迁移依次
+顺延为 `0006_lesson_plans`、`0007_ai_prompts_jobs`、`0008_ai_generation_results`、
+`0009_group_activity_sources`、`0010_word_exports`。
 
 ### 6.2 必要设置与权限
 
@@ -320,12 +338,12 @@ git status --short -- templates/teacherplan/teacherplan.docx
 ### 6.9 审计与敏感信息
 
 管理员在“审计记录”按事件、操作者、资源、结果和日期筛选。至少验证通行密钥认证、
-初始化/邀请/凭据/恢复/会话、账号/角色、
+密码+TOTP 备用绑定/登录/重新验证/因素变化/关闭、初始化/邀请/凭据/恢复/会话、账号/角色、
 设置、模型、提示词、AI、手动保存、归档/恢复、历史恢复、导出和下载事件。
 
-扫描代码、日志、错误、Redis 消息、审计与测试快照，预期 challenge、初始化/邀请/恢复
-明文、WebAuthn assertion、Cookie、token、完整 API Key、主密钥、完整教案/AI 正文和绝对
-服务器路径暴露数为 0。
+扫描代码、日志、错误、Redis 消息、审计与测试快照，预期密码、密码摘要、TOTP、种子/
+二维码、challenge、初始化/邀请/恢复明文、WebAuthn assertion、Cookie、token、完整
+API Key、主密钥、完整教案/AI 正文和绝对服务器路径暴露数为 0。
 
 故障验收必须按依赖边界区分：AI、Redis 投递、Worker 或在线日历故障时，同步手工流程和
 底层存储仍可读的既有导出下载继续；新 Word 生成或存储写入失败时，已保存教案和既有成功
@@ -347,8 +365,9 @@ uv run pytest tests/contract/test_pagination.py tests/contract/test_errors.py te
 - `/settings/age-groups` 固定返回四个系统年龄段且不分页；班级区域 GET 使用标准分页，
   整体 PUT 成功返回 `204` 后由客户端重新分页读取最新顺序。
 - FastAPI/Pydantic 和业务错误均为 `code/message/request_id/field_errors`。
-- WebAuthn options/verify、初始化、邀请、本人/管理员凭据、恢复码与会话端点和冻结 Schema
-  与运行时 OpenAPI 完全一致；旧密码路径与字段不存在。
+- WebAuthn options/verify、密码+TOTP 备用状态/绑定/认证/专用重新验证、初始化、邀请、
+  本人/管理员凭据、恢复码与会话端点和冻结 Schema 与运行时 OpenAPI 完全一致；旧单因素
+  密码路径与 `users` 密码字段不存在。
 - 同请求同 `Idempotency-Key` 返回原任务；同 key 不同摘要返回
   `409 request.idempotency_conflict`。
 - 同 key/body 用于不同实际 `plan_id`、提示词 code 或 `job_id` 时必须因 path 参数进入摘要而

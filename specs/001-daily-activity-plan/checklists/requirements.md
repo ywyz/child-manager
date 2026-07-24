@@ -54,6 +54,10 @@
   last-admin deployment-console path, freezes `identity.last_admin_recovery_requires_cli` and
   `init-admin recover-last-admin --recovery-request-id`, requires atomic immutable dual approval, and confirms
   that successful authentication options do not consume the failed-attempt budget.
+- Validation iteration 8: ADR-0011 adds an independent password-plus-TOTP backup login after M3 while
+  preserving WebAuthn as the preferred phishing-resistant path. Administrators must enroll, teachers may opt
+  in, backup reauthentication can only add a passkey, and all-passkey-loss recovery still requires the offline
+  recovery code plus human verification. The detailed implementation scope is isolated in feature `002`.
 - Product-level ambiguities are resolved. The specification retains only confirmed architecture, API, security
   and data boundaries that materially define acceptance; library choices and operational tunables belong to
   `research.md`, contracts and the implementation plan.

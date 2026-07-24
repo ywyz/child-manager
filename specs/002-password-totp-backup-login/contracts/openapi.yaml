@@ -1,0 +1,403 @@
+openapi: 3.1.0
+info:
+  title: Child Manager 密码与 TOTP 备用登录契约片段
+  version: 1.0.0
+  description: >
+    M3A 契约片段。NiceGUI Web/BFF 是浏览器唯一入口；这些 API 由 Web 服务端调用，
+    不新增独立公网 API 暴露。
+paths:
+  /api/v1/auth/backup:
+    get:
+      operationId: getBackupAuthenticationStatus
+      summary: 获取本人备用登录状态
+      security:
+        - accessCookie: []
+      responses:
+        "200":
+          description: 当前状态
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackupAuthenticationStatus"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    delete:
+      operationId: disableBackupAuthentication
+      summary: 教师关闭本人备用登录
+      description: 要求最近五分钟 WebAuthn 重新验证；管理员不得关闭。
+      security:
+        - accessCookie: []
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "204":
+          description: 已关闭并撤销全部备用会话
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /api/v1/auth/backup/enrollment:
+    post:
+      operationId: startBackupAuthenticationEnrollment
+      summary: 开始建立或替换密码与 TOTP
+      description: >
+        除管理员首次受限设置会话外，要求最近五分钟 WebAuthn 重新验证。
+        TOTP secret 与 otpauth URI 只在本响应展示一次；refresh token 轮换会使绑定失效。
+      security:
+        - accessCookie: []
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      responses:
+        "201":
+          description: 待确认绑定
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackupEnrollment"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /api/v1/auth/backup/enrollment/{enrollment_id}/verify:
+    post:
+      operationId: verifyBackupAuthenticationEnrollment
+      summary: 同时验证新密码和首个 TOTP 并启用
+      security:
+        - accessCookie: []
+      parameters:
+        - $ref: "#/components/parameters/EnrollmentId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BackupEnrollmentVerifyRequest"
+      responses:
+        "200":
+          description: 已启用
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackupAuthenticationStatus"
+        "401":
+          $ref: "#/components/responses/GenericAuthenticationFailure"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "410":
+          $ref: "#/components/responses/InvalidEnrollment"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /api/v1/auth/backup/authentication:
+    post:
+      operationId: authenticateWithPasswordAndTotp
+      summary: 使用密码与 TOTP 备用登录
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BackupAuthenticationRequest"
+      responses:
+        "204":
+          description: >
+            已建立普通业务会话；Set-Cookie 使用 HttpOnly、Secure、SameSite=Lax。
+          headers:
+            Set-Cookie:
+              $ref: "#/components/headers/AuthSetCookies"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "401":
+          $ref: "#/components/responses/GenericAuthenticationFailure"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /api/v1/auth/backup/reauthentication:
+    post:
+      operationId: reauthenticateBackupSession
+      summary: 为新增通行密钥重新验证密码与 TOTP
+      description: >
+        只在当前 password_totp 会话内生效，五分钟有效；不得授权其他高风险身份操作。
+      security:
+        - accessCookie: []
+      parameters:
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BackupReauthenticationRequest"
+      responses:
+        "204":
+          description: 当前会话已取得 add_passkey 专用证明
+        "401":
+          $ref: "#/components/responses/GenericAuthenticationFailure"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /api/v1/auth/security-events:
+    get:
+      operationId: listMyBackupAuthenticationSecurityEvents
+      summary: 获取本人最近备用认证安全事件
+      description: >
+        从现有审计事件按当前园所和本人投影最近 20 条白名单事件；不创建已读状态，
+        不返回 IP 原文、认证秘密或其他用户身份信息。
+      security:
+        - accessCookie: []
+      responses:
+        "200":
+          description: 按发生时间倒序的本人安全事件
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecurityEventList"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+components:
+  securitySchemes:
+    accessCookie:
+      type: apiKey
+      in: cookie
+      name: child_manager_access
+  headers:
+    AuthSetCookies:
+      description: >
+        两条独立 Set-Cookie 字段，依次设置 child_manager_access 与 child_manager_refresh；
+        raw HTTP/BFF 不得用逗号折叠。
+      schema:
+        type: array
+        minItems: 2
+        maxItems: 2
+        items:
+          type: string
+  parameters:
+    CsrfHeader:
+      in: header
+      name: X-CSRF-Token
+      required: true
+      description: 必须与签名 child_manager_csrf Cookie 匹配；同时校验 Origin/Referer
+      schema:
+        type: string
+        minLength: 32
+        maxLength: 512
+    EnrollmentId:
+      name: enrollment_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    BackupAuthenticationStatus:
+      type: object
+      additionalProperties: false
+      required:
+        - enabled
+        - required
+      properties:
+        enabled:
+          type: boolean
+        required:
+          type: boolean
+          description: 管理员为 true
+        changed_at:
+          type:
+            - string
+            - "null"
+          format: date-time
+        enrollment_required:
+          type: boolean
+          default: false
+          description: 当前会话是否被限制在管理员首次绑定流程
+    BackupEnrollment:
+      type: object
+      additionalProperties: false
+      required:
+        - enrollment_id
+        - totp_secret
+        - otpauth_uri
+        - expires_at
+      properties:
+        enrollment_id:
+          type: string
+          format: uuid
+        totp_secret:
+          type: string
+          pattern: "^[A-Z2-7]+=*$"
+          readOnly: true
+          x-sensitive: true
+          description: 只在本响应出现一次，不得持久化到客户端日志
+        otpauth_uri:
+          type: string
+          pattern: "^otpauth://totp/"
+          readOnly: true
+          x-sensitive: true
+        expires_at:
+          type: string
+          format: date-time
+    BackupEnrollmentVerifyRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - password
+        - totp_code
+      properties:
+        password:
+          type: string
+          minLength: 8
+          maxLength: 128
+          writeOnly: true
+        totp_code:
+          $ref: "#/components/schemas/TotpCode"
+    BackupAuthenticationRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - identifier
+        - password
+        - totp_code
+      properties:
+        identifier:
+          type: string
+          minLength: 1
+          maxLength: 254
+        password:
+          type: string
+          minLength: 1
+          maxLength: 128
+          writeOnly: true
+        totp_code:
+          $ref: "#/components/schemas/TotpCode"
+    BackupReauthenticationRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - password
+        - totp_code
+      properties:
+        password:
+          type: string
+          minLength: 1
+          maxLength: 128
+          writeOnly: true
+        totp_code:
+          $ref: "#/components/schemas/TotpCode"
+    TotpCode:
+      type: string
+      pattern: "^[0-9]{6}$"
+      writeOnly: true
+    SecurityEvent:
+      type: object
+      additionalProperties: false
+      required:
+        - event_code
+        - occurred_at
+      properties:
+        event_code:
+          type: string
+          enum:
+            - auth.backup_enabled
+            - auth.backup_changed
+            - auth.backup_disabled
+            - auth.backup_login_succeeded
+            - auth.passkey_added_from_backup
+            - auth.backup_revoked_by_recovery
+        occurred_at:
+          type: string
+          format: date-time
+        authentication_method:
+          type:
+            - string
+            - "null"
+          enum:
+            - webauthn
+            - password_totp
+            - null
+        client_hint:
+          type:
+            - string
+            - "null"
+          maxLength: 160
+    SecurityEventList:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          maxItems: 20
+          items:
+            $ref: "#/components/schemas/SecurityEvent"
+    Error:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  responses:
+    Unauthorized:
+      description: 未登录或会话失效
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: 当前认证保证级别或角色不允许该操作
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Conflict:
+      description: 状态已变化或并发操作冲突
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InvalidEnrollment:
+      description: 绑定已过期、已消费或提交内容无效
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    GenericAuthenticationFailure:
+      description: >
+        账号、密码或 TOTP 不正确；未知账号、未配置和任一因素错误使用相同响应。
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    RateLimited:
+      description: 请求过于频繁；不表示账号是否存在
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+            minimum: 1
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ValidationError:
+      description: 请求字段或业务前置条件无效
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
