@@ -34,6 +34,19 @@
       "input_tokens": 0,
       "output_tokens": 0,
       "files": 17
+    },
+    {
+      "date": "2026-07-24T02:40:36.466028+00:00",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "files": 30,
+      "semantic_backend": "codex_llm_subagents",
+      "semantic_model_provenance": "Recovered exact Codex LLM subagent output from session audit log after temporary worktree cleanup; exact host usage metrics unavailable",
+      "deterministic_structural_supplement": {
+        "nodes": 777,
+        "edges": 773,
+        "method": "deterministic headings, task/requirement identifiers, and OpenAPI operations/schemas"
+      }
     }
   ],
   "total_input_tokens": 250855,
