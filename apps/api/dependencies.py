@@ -12,6 +12,7 @@ from fastapi import Cookie, Depends
 from redis.asyncio import Redis
 
 from packages.backend.identity.service import IdentityError, IdentityService, SessionUser
+from packages.backend.settings.service import SettingsService
 
 HealthCheck = Callable[[], Awaitable[bool]]
 
@@ -113,6 +114,13 @@ def identity_service() -> IdentityService:
 
 
 IdentityServiceDependency = Annotated[IdentityService, Depends(identity_service)]
+
+
+def settings_service() -> SettingsService:
+    return SettingsService.from_environment()
+
+
+SettingsServiceDependency = Annotated[SettingsService, Depends(settings_service)]
 
 
 def current_session(

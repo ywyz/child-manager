@@ -1,6 +1,7 @@
 """M2 运行时 OpenAPI 与冻结契约的一致性门禁。"""
 
 import json
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -12,7 +13,13 @@ from apps.api.app import create_app
 FROZEN = yaml.safe_load(
     Path("specs/001-daily-activity-plan/contracts/openapi.yaml").read_text(encoding="utf-8")
 )
+M2_FROZEN = deepcopy(FROZEN)
+# 当前共享契约已经携带 M3A 的会话认证方式, M2 门禁不得迫使 M3 提前实现 M3A。
+M2_SESSION = M2_FROZEN["components"]["schemas"]["Session"]
+M2_SESSION["required"].remove("authentication_method")
+M2_SESSION["properties"].pop("authentication_method")
 M2_PREFIXES = ("/health/", "/api/v1/auth", "/api/v1/users")
+M3A_PREFIXES = ("/api/v1/auth/backup", "/api/v1/auth/security-events")
 HTTP_METHODS = {"get", "post", "put", "patch", "delete"}
 
 
@@ -31,7 +38,7 @@ def _operations(document: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any
     return {
         (path, method): operation
         for path, path_item in document["paths"].items()
-        if path.startswith(M2_PREFIXES)
+        if path.startswith(M2_PREFIXES) and not path.startswith(M3A_PREFIXES)
         for method, operation in path_item.items()
         if method in HTTP_METHODS
     }
@@ -181,7 +188,7 @@ def _request_schema(document: dict[str, Any], operation: dict[str, Any]) -> str 
 def test_runtime_m2_openapi_matches_frozen_operation_contract() -> None:
     runtime = create_app().openapi()
     validate(runtime)
-    frozen_operations = _operations(FROZEN)
+    frozen_operations = _operations(M2_FROZEN)
     runtime_operations = _operations(runtime)
 
     assert runtime_operations.keys() == frozen_operations.keys()
@@ -189,14 +196,14 @@ def test_runtime_m2_openapi_matches_frozen_operation_contract() -> None:
         runtime_operation = runtime_operations[key]
         assert set(runtime_operation["responses"]) == set(frozen_operation["responses"]), key
         assert _response_shape(runtime, runtime_operation) == _response_shape(
-            FROZEN, frozen_operation
+            M2_FROZEN, frozen_operation
         ), key
         assert _request_schema(runtime, runtime_operation) == _request_schema(
-            FROZEN, frozen_operation
+            M2_FROZEN, frozen_operation
         ), key
         assert _parameter_shape(runtime, key, runtime_operation) == _parameter_shape(
-            FROZEN, key, frozen_operation
+            M2_FROZEN, key, frozen_operation
         ), key
         assert _effective_security(runtime, runtime_operation) == _effective_security(
-            FROZEN, frozen_operation
+            M2_FROZEN, frozen_operation
         ), key

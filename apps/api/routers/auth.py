@@ -6,7 +6,11 @@ from uuid import UUID
 
 from fastapi import APIRouter, Request, Response
 
-from apps.api.dependencies import CurrentSessionDependency, IdentityServiceDependency
+from apps.api.dependencies import (
+    CurrentSessionDependency,
+    IdentityServiceDependency,
+    SettingsServiceDependency,
+)
 from packages.backend.identity.auth_throttle import (
     GLOBAL_THROTTLE_SOURCE,
     subject_throttle_source,
@@ -121,14 +125,18 @@ def _clear_auth_cookies(response: Response) -> None:
     response.delete_cookie(REFRESH_COOKIE, **common)
 
 
-def _payload(service: IdentityServiceDependency, session: SessionUser) -> dict[str, object]:
+def _payload(
+    service: IdentityServiceDependency,
+    settings_service: SettingsServiceDependency,
+    session: SessionUser,
+) -> dict[str, object]:
     return {
         "id": session.user.id,
         "username": session.user.username,
         "display_name": session.user.display_name,
         "kindergarten": service.kindergarten_summary(session.user.kindergarten_id),
         "role_codes": session.role_codes,
-        "capabilities": session.capabilities,
+        "capabilities": settings_service.capabilities_for(session),
         "session_id": session.session_id,
         "last_reauthenticated_at": session.last_reauthenticated_at,
     }
@@ -374,6 +382,7 @@ def authentication_verify(
     request: Request,
     response: Response,
     service: IdentityServiceDependency,
+    settings_service: SettingsServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
     source, buckets = _check_public_throttle(
@@ -394,7 +403,10 @@ def authentication_verify(
         raise
     _clear_public_throttle(request, buckets)
     _set_auth_cookies(response, result)
-    return {"user": _payload(service, result.session), "recovery_code": result.recovery_code}
+    return {
+        "user": _payload(service, settings_service, result.session),
+        "recovery_code": result.recovery_code,
+    }
 
 
 @router.post("/step-up/options", response_model=WebAuthnAuthenticationOptions)
@@ -437,7 +449,10 @@ def step_up_verify(
 
 @router.post("/refresh", response_model=CurrentUser)
 def refresh(
-    request: Request, response: Response, service: IdentityServiceDependency
+    request: Request,
+    response: Response,
+    service: IdentityServiceDependency,
+    settings_service: SettingsServiceDependency,
 ) -> dict[str, object]:
     require_csrf(request)
     raw = request.cookies.get(REFRESH_COOKIE)
@@ -467,7 +482,7 @@ def refresh(
         raise
     _clear_public_throttle(request, buckets)
     _set_auth_cookies(response, result)
-    return _payload(service, result.session)
+    return _payload(service, settings_service, result.session)
 
 
 @router.post("/logout", status_code=204)
@@ -482,8 +497,12 @@ def logout(request: Request, response: Response, service: IdentityServiceDepende
 
 
 @router.get("/me", response_model=CurrentUser)
-def me(session: CurrentSessionDependency, service: IdentityServiceDependency) -> dict[str, object]:
-    return _payload(service, session)
+def me(
+    session: CurrentSessionDependency,
+    service: IdentityServiceDependency,
+    settings_service: SettingsServiceDependency,
+) -> dict[str, object]:
+    return _payload(service, settings_service, session)
 
 
 @router.get("/credentials", response_model=CredentialList)

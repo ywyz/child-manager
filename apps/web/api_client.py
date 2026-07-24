@@ -1,8 +1,10 @@
 """NiceGUI 服务端 BFF 客户端的公开接缝。"""
 
+import json
 from dataclasses import dataclass
 
 import httpx
+from nicegui import ui
 
 _REQUEST_HEADER_ALLOWLIST = {
     b"accept",
@@ -35,6 +37,41 @@ class BffResponse:
     status_code: int
     headers: tuple[tuple[bytes, bytes], ...]
     body: bytes
+
+
+async def same_origin_api_request(
+    path: str,
+    *,
+    method: str = "GET",
+    payload: dict[str, object] | None = None,
+) -> dict[str, object]:
+    """从浏览器经同源 BFF 调用 API，并为写请求取得 CSRF token。"""
+
+    script = f"""
+    return await (async () => {{
+      const csrfResponse = await fetch(
+        '/api/v1/auth/csrf', {{credentials: 'same-origin'}}
+      );
+      const csrf = await csrfResponse.json();
+      const options = {{
+        method: {json.dumps(method)},
+        credentials: 'same-origin',
+        headers: {{'X-CSRF-Token': csrf.csrf_token}},
+      }};
+      const payload = {
+        json.dumps(payload, ensure_ascii=False) if payload is not None else "undefined"
+    };
+      if (payload !== undefined) {{
+        options.headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(payload);
+      }}
+      const response = await fetch({json.dumps(path)}, options);
+      const body = response.status === 204 ? {{}} : await response.json();
+      return {{ok: response.ok, status: response.status, body}};
+    }})();
+    """
+    result = await ui.run_javascript(script, timeout=15.0)
+    return result if isinstance(result, dict) else {"ok": False, "status": 0, "body": {}}
 
 
 async def proxy_request(

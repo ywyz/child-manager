@@ -7,13 +7,13 @@ from alembic.config import Config
 from alembic.script import ScriptDirectory
 
 
-def test_passkey_contract_revision_is_declared_as_head() -> None:
+def test_settings_revision_is_declared_as_head() -> None:
     heads = ScriptDirectory.from_config(Config("alembic.ini")).get_heads()
 
-    assert heads == ["0003_passkey_contract"]
+    assert heads == ["0004_settings"]
 
 
-def test_empty_database_can_upgrade_to_identity_head(isolated_database_url: str) -> None:
+def test_empty_database_can_upgrade_to_settings_head(isolated_database_url: str) -> None:
     environment = os.environ | {"CHILD_MANAGER_DATABASE_URL": isolated_database_url}
     upgrade = subprocess.run(
         ["uv", "run", "alembic", "upgrade", "head"],
@@ -32,7 +32,7 @@ def test_empty_database_can_upgrade_to_identity_head(isolated_database_url: str)
 
     assert upgrade.returncode == 0, upgrade.stderr
     assert current.returncode == 0, current.stderr
-    assert "0003_passkey_contract" in current.stdout
+    assert "0004_settings" in current.stdout
 
 
 def test_migrations_reject_missing_database_url() -> None:

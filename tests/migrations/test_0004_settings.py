@@ -118,7 +118,9 @@ def test_postgresql_enforces_semester_and_lead_teacher_uniqueness(
     ]
 
     assert any(
-        table == "semesters" and "CHECK (start_date <= end_date)" in definition
+        table == "semesters"
+        and definition.startswith("CHECK")
+        and "start_date <= end_date" in definition
         for table, definition in constraints
     )
     assert any(

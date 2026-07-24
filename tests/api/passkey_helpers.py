@@ -158,6 +158,8 @@ def admin_client(
         user=SimpleNamespace(
             id=actor.user_id,
             kindergarten_id=actor.kindergarten_id,
+            username="admin",
+            display_name="测试管理员",
             status="active",
             is_active=True,
         ),

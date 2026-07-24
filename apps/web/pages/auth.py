@@ -5,6 +5,8 @@ import json
 
 from nicegui import ui
 
+from apps.web.api_client import same_origin_api_request
+
 
 def login_page_text() -> tuple[str, ...]:
     return ("使用通行密钥登录", "邀请登记", "账号恢复")
@@ -47,17 +49,7 @@ def _javascript_helpers() -> str:
 async def api_request(
     path: str, *, method: str = "GET", payload: dict[str, object] | None = None
 ) -> dict[str, object]:
-    script = f"""
-    return await (async () => {{
-      {_javascript_helpers()}
-      return await api(
-        {json.dumps(path)}, {json.dumps(method)},
-        {json.dumps(payload, ensure_ascii=False) if payload is not None else "undefined"}
-      );
-    }})();
-    """
-    result = await ui.run_javascript(script, timeout=15.0)
-    return result if isinstance(result, dict) else {"ok": False, "body": {}}
+    return await same_origin_api_request(path, method=method, payload=payload)
 
 
 async def post_same_origin(path: str, payload: dict[str, object]) -> dict[str, object]:
