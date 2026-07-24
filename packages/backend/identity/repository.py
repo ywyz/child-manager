@@ -610,6 +610,7 @@ class IdentityRepository:
     def start_backup_enrollment(
         self,
         *,
+        enrollment_id: UUID,
         user_id: UUID,
         session_token_id: UUID,
         totp_ciphertext: bytes,
@@ -626,7 +627,6 @@ class IdentityRepository:
               AND consumed_at IS NULL AND invalidated_at IS NULL""",
             (self.kindergarten_id, user_id),
         )
-        enrollment_id = uuid7()
         row = self.connection.execute(
             f"""INSERT INTO backup_auth_enrollments
             (id, kindergarten_id, user_id, session_token_id, totp_ciphertext, totp_nonce,
@@ -657,6 +657,80 @@ class IdentityRepository:
         if record is None:
             raise ValueError("当前会话不能建立备用登录绑定")
         return record
+
+    def activate_backup_auth(
+        self,
+        user_id: UUID,
+        *,
+        current_session_token_id: UUID,
+        reason: str,
+    ) -> BackupRevocationResult:
+        """启用新材料，并只保留完成此次绑定的 WebAuthn 会话。"""
+
+        self.lock_user_sessions(user_id)
+        version_row = self.connection.execute(
+            """UPDATE users SET backup_auth_version=backup_auth_version+1, updated_at=now()
+            WHERE kindergarten_id=%s AND id=%s
+            RETURNING backup_auth_version""",
+            (self.kindergarten_id, user_id),
+        ).fetchone()
+        if version_row is None or not isinstance(version_row[0], int):
+            raise LookupError("账号不存在")
+        active = self.connection.execute(
+            """SELECT count(*) FROM refresh_tokens
+            WHERE kindergarten_id=%s AND user_id=%s
+              AND (
+                authentication_method='password_totp'
+                OR (
+                  authentication_method='restricted_enrollment'
+                  AND id<>%s
+                )
+              )
+              AND revoked_at IS NULL""",
+            (self.kindergarten_id, user_id, current_session_token_id),
+        ).fetchone()
+        self.connection.execute(
+            """UPDATE refresh_tokens
+            SET revoked_at=COALESCE(revoked_at, now()), revoke_reason=%s, updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s
+              AND (
+                authentication_method='password_totp'
+                OR (
+                  authentication_method='restricted_enrollment'
+                  AND id<>%s
+                )
+              )""",
+            (
+                reason,
+                self.kindergarten_id,
+                user_id,
+                current_session_token_id,
+            ),
+        )
+        current = self.connection.execute(
+            """UPDATE refresh_tokens
+            SET authentication_method='webauthn',
+                backup_auth_version=NULL,
+                backup_verified_at=NULL,
+                backup_reauthenticated_at=NULL,
+                updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s AND id=%s
+              AND authentication_method IN ('webauthn','restricted_enrollment')
+              AND revoked_at IS NULL
+            RETURNING id""",
+            (self.kindergarten_id, user_id, current_session_token_id),
+        ).fetchone()
+        if current is None:
+            raise ValueError("当前会话不能完成备用登录绑定")
+        self.connection.execute(
+            """UPDATE backup_auth_enrollments
+            SET invalidated_at=now(), invalidation_reason='factor_changed', updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s
+              AND consumed_at IS NULL AND invalidated_at IS NULL""",
+            (self.kindergarten_id, user_id),
+        )
+        sessions_revoked = active[0] if active and isinstance(active[0], int) else 0
+        return BackupRevocationResult(version_row[0], sessions_revoked)
 
     def consume_backup_enrollment(
         self,

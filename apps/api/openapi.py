@@ -211,6 +211,14 @@ _RESPONSES = {
     ),
     "RecoveryCodeIssued": _response("新离线恢复码只展示一次", "RecoveryCodeIssued"),
     "SessionListOk": _response("本人有效会话列表", "SessionList"),
+    "BackupAuthenticationStatusOk": _response(
+        "当前备用登录状态",
+        "BackupAuthenticationStatus",
+    ),
+    "BackupEnrollmentCreated": _response(
+        "待确认绑定；TOTP 种子与 URI 仅在本响应展示一次",
+        "BackupEnrollment",
+    ),
     "AuthenticationFailed": _response(
         "通用认证失败，不暴露凭据、账号、停用或签名失败原因",
         "Error",
@@ -229,6 +237,7 @@ _RESPONSES = {
     ),
     "InvitationUnavailable": _response("邀请过期、撤销或已消费，不细分状态", "Error"),
     "RecoveryUnavailable": _response("恢复材料或登记授权过期、撤销或已消费，不细分状态", "Error"),
+    "InvalidEnrollment": _response("绑定已过期、已消费或提交内容无效", "Error"),
     "ValidationError": _response("请求字段或业务前置条件无效", "Error"),
     "TooManyRequests": {
         **_response(
@@ -316,6 +325,31 @@ _OPERATION_RESPONSES: dict[OperationKey, dict[str, str]] = {
     },
     ("/api/v1/auth/logout", "post"): {"204": "", "403": "Forbidden"},
     ("/api/v1/auth/me", "get"): {"200": "CurrentUserOk", "401": "Unauthorized"},
+    ("/api/v1/auth/backup", "get"): {
+        "200": "BackupAuthenticationStatusOk",
+        "401": "Unauthorized",
+    },
+    ("/api/v1/auth/backup", "delete"): {
+        "204": "",
+        "401": "Unauthorized",
+        "403": "Forbidden",
+        "409": "Conflict",
+    },
+    ("/api/v1/auth/backup/enrollment", "post"): {
+        "201": "BackupEnrollmentCreated",
+        "401": "Unauthorized",
+        "403": "Forbidden",
+        "429": "TooManyRequests",
+    },
+    ("/api/v1/auth/backup/enrollment/{enrollment_id}/verify", "post"): {
+        "200": "BackupAuthenticationStatusOk",
+        "401": "AuthenticationFailed",
+        "403": "Forbidden",
+        "409": "Conflict",
+        "410": "InvalidEnrollment",
+        "422": "ValidationError",
+        "429": "TooManyRequests",
+    },
     ("/api/v1/auth/credentials", "get"): {
         "200": "CredentialListOk",
         "401": "Unauthorized",

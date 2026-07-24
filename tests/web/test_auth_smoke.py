@@ -7,6 +7,7 @@ import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
+from pathlib import Path
 
 import httpx
 import pytest
@@ -17,6 +18,7 @@ from playwright.sync_api import BrowserContext, Page, sync_playwright
 from apps.web.components.navigation import navigation_for_capabilities
 from apps.web.pages.auth import login_page_text
 from apps.web.pages.users import users_page_text
+from packages.backend.identity.totp import generate_totp
 
 
 def test_auth_pages_expose_passkey_invitation_recovery_and_session_flows() -> None:
@@ -36,7 +38,7 @@ def test_auth_pages_expose_passkey_invitation_recovery_and_session_flows() -> No
         "恢复申请",
     } <= users_text
     rendered = " ".join(auth_text | users_text).lower()
-    assert "密码" not in rendered
+    assert "密码单独登录" not in rendered
     assert "localstorage" not in rendered and "token" not in rendered
 
 
@@ -126,7 +128,11 @@ def _bootstrap_activate(database_url: str, bootstrap_id: str) -> None:
 
 
 @contextmanager
-def _m2_services(database_url: str) -> Iterator[tuple[str, int]]:
+def _m2_services(
+    database_url: str,
+    *,
+    identity_key_path: Path,
+) -> Iterator[tuple[str, int]]:
     api_port = _free_port()
     web_port = _free_port()
     environment = {
@@ -145,9 +151,14 @@ def _m2_services(database_url: str) -> Iterator[tuple[str, int]]:
         "CHILD_MANAGER_AUTH_THROTTLE_FAILURE_LIMIT": "2",
         "NICEGUI_SCREEN_TEST_PORT": str(web_port),
     }
+    api_environment = {
+        **environment,
+        "CHILD_MANAGER_IDENTITY_SECRET_KEY_FILE": str(identity_key_path),
+        "CHILD_MANAGER_IDENTITY_SECRET_KEY_ID": "browser-test-key",
+    }
     api = subprocess.Popen(
         [sys.executable, "-m", "apps.api", "--host", "127.0.0.1", "--port", str(api_port)],
-        env=environment,
+        env=api_environment,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
@@ -214,12 +225,22 @@ def _auth_cookie_names(context: BrowserContext) -> set[str]:
 def test_browser_completes_passkey_invitation_recovery_credential_and_session_journey(
     isolated_database_url: str,
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     monkeypatch.setenv("CHILD_MANAGER_DATABASE_URL", isolated_database_url)
     command.upgrade(Config("alembic.ini"), "head")
     bootstrap = _bootstrap_start(isolated_database_url)
+    identity_key_path = tmp_path / "identity.key"
+    identity_key_path.write_bytes(b"\x23" * 32)
+    identity_key_path.chmod(0o600)
 
-    with _m2_services(isolated_database_url) as (base_url, api_port), sync_playwright() as manager:
+    with (
+        _m2_services(
+            isolated_database_url,
+            identity_key_path=identity_key_path,
+        ) as (base_url, api_port),
+        sync_playwright() as manager,
+    ):
         browser = manager.chromium.launch(headless=True)
         admin_context = browser.new_context()
         admin_page = admin_context.new_page()
@@ -239,6 +260,15 @@ def test_browser_completes_passkey_invitation_recovery_credential_and_session_jo
         admin_page.get_by_text("首页").wait_for()
         admin_recovery_code = admin_page.get_by_test_id("recovery-code-once").text_content()
         assert admin_recovery_code
+
+        admin_page.get_by_text("密码与 TOTP 备用登录").wait_for()
+        admin_page.get_by_role("button", name="设置备用登录").click()
+        totp_secret = admin_page.get_by_test_id("totp-secret-once").text_content()
+        assert totp_secret
+        admin_page.get_by_label("备用登录密码").fill("合格的备用登录密码 2026")
+        admin_page.get_by_label("动态验证码").fill(generate_totp(totp_secret))
+        admin_page.get_by_role("button", name="确认密码与动态验证码").click()
+        admin_page.get_by_text("密码与 TOTP 已同时启用").wait_for()
 
         admin_page.goto(f"{base_url}/users")
         admin_page.get_by_label("用户名").fill("teacher")

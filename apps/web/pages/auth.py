@@ -1,15 +1,27 @@
 """通行密钥登录、登记、恢复和个人安全页面。"""
 
 import asyncio
+import base64
 import json
 
+import qrcode
 from nicegui import ui
+from qrcode.image.svg import SvgPathImage
 
-from apps.web.api_client import same_origin_api_request
+from apps.web.api_client import backup_auth_api_request, same_origin_api_request
 
 
 def login_page_text() -> tuple[str, ...]:
-    return ("使用通行密钥登录", "邀请登记", "账号恢复")
+    return (
+        "使用通行密钥登录",
+        "邀请登记",
+        "账号恢复",
+        "密码与 TOTP 备用登录",
+        "设置备用登录",
+        "稍后设置",
+        "重新验证后新增通行密钥",
+        "本人安全事件",
+    )
 
 
 def _javascript_helpers() -> str:
@@ -151,6 +163,12 @@ def _message(result: dict[str, object], fallback: str) -> str:
     return fallback
 
 
+def _qr_data_uri(value: str) -> str:
+    image = qrcode.make(value, image_factory=SvgPathImage)
+    encoded = base64.b64encode(image.to_string()).decode("ascii")
+    return f"data:image/svg+xml;base64,{encoded}"
+
+
 def register_auth_pages() -> None:
     @ui.page("/initialize")
     def initialize_page() -> None:
@@ -175,6 +193,7 @@ def register_auth_pages() -> None:
     def login_page() -> None:
         title = ui.label("登录").classes("text-h5")
         status = ui.label("")
+        backup_prompt = ui.column()
         recovery_container = ui.column()
 
         async def login() -> None:
@@ -188,6 +207,25 @@ def register_auth_pages() -> None:
                 code = body.get("recovery_code") if isinstance(body, dict) else None
                 with recovery_container:
                     ui.label(str(code or "")).props('data-testid="recovery-code-once"')
+                backup = await api_request("/api/v1/auth/backup")
+                backup_body = backup.get("body", {})
+                enrollment_required = (
+                    bool(backup_body.get("enrollment_required"))
+                    if isinstance(backup_body, dict)
+                    else False
+                )
+                enabled = (
+                    bool(backup_body.get("enabled")) if isinstance(backup_body, dict) else False
+                )
+                if enrollment_required:
+                    status.set_text("请先设置备用登录")
+                    ui.navigate.to("/account/security")
+                    return
+                if backup.get("ok") and not enabled:
+                    with backup_prompt:
+                        ui.label("建议设置密码与 TOTP 备用登录")
+                        ui.link("设置备用登录", "/account/security")
+                        ui.button("稍后设置", on_click=lambda: backup_prompt.clear())
                 status.set_text("登录成功")
             else:
                 status.set_text(_message(result, "通行密钥登录失败"))
@@ -259,8 +297,17 @@ def register_auth_pages() -> None:
     @ui.page("/account/security")
     def security_page() -> None:
         ui.label("通行密钥与会话").classes("text-h5")
+        ui.label("密码与 TOTP 备用登录").classes("text-h6")
         status = ui.label("")
+        backup_status = ui.label("")
+        backup_hint = ui.label("重新验证后新增通行密钥")
+        security_events = ui.label("本人安全事件")
+        del backup_hint, security_events
         label_input = ui.input("通行密钥名称")
+        backup_password = ui.input("备用登录密码", password=True)
+        backup_totp = ui.input("动态验证码")
+        enrollment_material = ui.column()
+        pending_enrollment_id: list[str] = []
         credential_ids: list[str] = []
         new_credential_id: list[str] = []
         current_session_id: list[str] = []
@@ -292,6 +339,59 @@ def register_auth_pages() -> None:
                 if isinstance(session_body, dict)
                 else []
             )
+            backup_result = await api_request("/api/v1/auth/backup")
+            backup_body = backup_result.get("body", {})
+            if backup_result.get("ok") and isinstance(backup_body, dict):
+                if backup_body.get("enabled"):
+                    backup_status.set_text("备用登录已启用")
+                elif backup_body.get("required"):
+                    backup_status.set_text("管理员必须完成备用登录设置")
+                else:
+                    backup_status.set_text("备用登录尚未启用，可稍后设置")
+
+        async def start_backup_enrollment() -> None:
+            async with operation_lock:
+                result = await backup_auth_api_request("/enrollment", method="POST")
+                body = result.get("body", {})
+                if not result.get("ok") or not isinstance(body, dict):
+                    status.set_text(_message(result, "开始设置失败"))
+                    return
+                enrollment_id = body.get("enrollment_id")
+                secret = body.get("totp_secret")
+                uri = body.get("otpauth_uri")
+                if not all(isinstance(value, str) for value in (enrollment_id, secret, uri)):
+                    status.set_text("绑定材料无效，请重新开始")
+                    return
+                pending_enrollment_id[:] = [str(enrollment_id)]
+                enrollment_material.clear()
+                with enrollment_material:
+                    ui.label("请立即扫描二维码或复制人工输入值；离开后不会再次显示。")
+                    ui.image(_qr_data_uri(str(uri))).props('alt="TOTP 认证器绑定二维码"')
+                    ui.label(str(secret)).props('data-testid="totp-secret-once"')
+                status.set_text("请输入密码和认证器显示的动态验证码")
+
+        async def verify_backup_enrollment() -> None:
+            async with operation_lock:
+                if not pending_enrollment_id:
+                    status.set_text("请先开始设置备用登录")
+                    return
+                result = await backup_auth_api_request(
+                    f"/enrollment/{pending_enrollment_id[0]}/verify",
+                    method="POST",
+                    payload={
+                        "password": backup_password.value or "",
+                        "totp_code": backup_totp.value or "",
+                    },
+                )
+                backup_password.value = ""
+                backup_totp.value = ""
+                if result.get("ok"):
+                    pending_enrollment_id.clear()
+                    enrollment_material.clear()
+                    backup_status.set_text("备用登录已启用")
+                    status.set_text("密码与 TOTP 已同时启用")
+                    return
+                status.set_text(_message(result, "验证失败"))
 
         async def step_up() -> None:
             async with operation_lock:
@@ -355,6 +455,9 @@ def register_auth_pages() -> None:
             ui.navigate.to("/login")
 
         ui.button("重新验证", on_click=step_up)
+        ui.button("设置备用登录", on_click=start_backup_enrollment)
+        ui.button("确认密码与动态验证码", on_click=verify_backup_enrollment)
+        ui.button("稍后设置", on_click=lambda: enrollment_material.clear())
         ui.button("新增通行密钥", on_click=add_credential)
         ui.button("保存名称", on_click=save_name)
         ui.button("撤销主通行密钥", on_click=revoke_primary).props(

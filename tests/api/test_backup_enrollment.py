@@ -2,10 +2,12 @@
 
 from datetime import UTC, datetime, timedelta
 from importlib import import_module
+from uuid import uuid4
 
 import psycopg
 from fastapi.testclient import TestClient
 
+from packages.backend.identity.tokens import hash_refresh_token
 from tests.api.passkey_helpers import (  # noqa: F401
     ActorFixture,
     admin_client,
@@ -138,3 +140,106 @@ def test_new_enrollment_invalidates_the_previous_pending_enrollment(
         headers=csrf_headers(client),
     )
     assert rejected.status_code == 410
+
+
+def test_replacing_enabled_material_revokes_only_related_backup_sessions(
+    admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
+) -> None:
+    client, actor = admin_client
+    totp = import_module("packages.backend.identity.totp")
+
+    first = client.post(
+        "/api/v1/auth/backup/enrollment",
+        headers=csrf_headers(client),
+    )
+    assert first.status_code == 201
+    first_body = first.json()
+    first_code = totp.generate_totp(
+        first_body["totp_secret"],
+        timestamp=datetime.now(UTC).timestamp(),
+    )
+    first_verified = client.post(
+        f"/api/v1/auth/backup/enrollment/{first_body['enrollment_id']}/verify",
+        json={
+            "password": "第一组安全备用密码 2026",
+            "totp_code": first_code,
+        },
+        headers=csrf_headers(client),
+    )
+    assert first_verified.status_code == 200
+
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    backup_session_id = uuid4()
+    now = datetime.now(UTC)
+    with psycopg.connect(native_url) as connection:
+        first_credential = connection.execute(
+            """SELECT id FROM backup_auth_credentials
+            WHERE kindergarten_id=%s AND user_id=%s AND status='enabled'""",
+            (actor.kindergarten_id, actor.user_id),
+        ).fetchone()
+        version = connection.execute(
+            """SELECT backup_auth_version FROM users
+            WHERE kindergarten_id=%s AND id=%s""",
+            (actor.kindergarten_id, actor.user_id),
+        ).fetchone()
+        assert first_credential is not None and version is not None
+        connection.execute(
+            """INSERT INTO refresh_tokens
+            (id, kindergarten_id, user_id, token_family_id, token_hash, issued_at,
+             expires_at, authentication_method, backup_verified_at, backup_auth_version)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,'password_totp',%s,%s)""",
+            (
+                backup_session_id,
+                actor.kindergarten_id,
+                actor.user_id,
+                uuid4(),
+                hash_refresh_token("replaced-backup-session"),
+                now,
+                now + timedelta(days=7),
+                now,
+                version[0],
+            ),
+        )
+
+    second = client.post(
+        "/api/v1/auth/backup/enrollment",
+        headers=csrf_headers(client),
+    )
+    assert second.status_code == 201
+    second_body = second.json()
+    second_code = totp.generate_totp(
+        second_body["totp_secret"],
+        timestamp=datetime.now(UTC).timestamp(),
+    )
+    second_verified = client.post(
+        f"/api/v1/auth/backup/enrollment/{second_body['enrollment_id']}/verify",
+        json={
+            "password": "第二组安全备用密码 2026",
+            "totp_code": second_code,
+        },
+        headers=csrf_headers(client),
+    )
+    assert second_verified.status_code == 200
+
+    with psycopg.connect(native_url) as connection:
+        replacement = connection.execute(
+            """SELECT id FROM backup_auth_credentials
+            WHERE kindergarten_id=%s AND user_id=%s AND status='enabled'""",
+            (actor.kindergarten_id, actor.user_id),
+        ).fetchone()
+        backup_session = connection.execute(
+            """SELECT revoked_at FROM refresh_tokens
+            WHERE kindergarten_id=%s AND id=%s""",
+            (actor.kindergarten_id, backup_session_id),
+        ).fetchone()
+        current_session = connection.execute(
+            """SELECT authentication_method, revoked_at FROM refresh_tokens
+            WHERE kindergarten_id=%s AND user_id=%s AND token_family_id=%s""",
+            (actor.kindergarten_id, actor.user_id, actor.session_id),
+        ).fetchone()
+
+    assert replacement is not None
+    assert replacement[0] != first_credential[0]
+    assert backup_session is not None and backup_session[0] is not None
+    assert current_session == ("webauthn", None)

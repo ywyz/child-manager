@@ -39,6 +39,9 @@ class BffResponse:
     body: bytes
 
 
+BACKUP_AUTH_API_PATH = "/api/v1/auth/backup"
+
+
 async def same_origin_api_request(
     path: str,
     *,
@@ -72,6 +75,21 @@ async def same_origin_api_request(
     """
     result = await ui.run_javascript(script, timeout=15.0)
     return result if isinstance(result, dict) else {"ok": False, "status": 0, "body": {}}
+
+
+async def backup_auth_api_request(
+    suffix: str = "",
+    *,
+    method: str = "GET",
+    payload: dict[str, object] | None = None,
+) -> dict[str, object]:
+    """只通过同源 BFF 访问本人备用登录端点。"""
+
+    return await same_origin_api_request(
+        f"{BACKUP_AUTH_API_PATH}{suffix}",
+        method=method,
+        payload=payload,
+    )
 
 
 async def proxy_request(

@@ -16,7 +16,14 @@ from fastapi.testclient import TestClient
 from psycopg import sql
 
 from apps.api.app import create_app
-from apps.api.dependencies import admin_session, current_session
+from apps.api.dependencies import (
+    admin_session,
+    authenticated_session,
+    current_session,
+    identity_service,
+)
+from packages.backend.identity.secret_encryption import StaticIdentitySecretKeyProvider
+from packages.backend.identity.service import IdentityService
 from packages.backend.identity.tokens import hash_refresh_token
 
 
@@ -46,7 +53,19 @@ def passkey_client(
     monkeypatch.setenv("CHILD_MANAGER_WEBAUTHN_RP_ID", "testserver")
     monkeypatch.setenv("CHILD_MANAGER_WEBAUTHN_RP_NAME", "Child Manager Tests")
     command.upgrade(Config("alembic.ini"), "head")
-    with TestClient(create_app()) as client:
+    app = create_app()
+    service = IdentityService(
+        database_url=isolated_database_url,
+        jwt_signing_key="test-jwt-signing-key-that-is-long",
+        rp_id="testserver",
+        rp_name="Child Manager Tests",
+        identity_secret_key_provider=StaticIdentitySecretKeyProvider(
+            {"test-key": b"\x17" * 32},
+            active_key_id="test-key",
+        ),
+    )
+    app.dependency_overrides[identity_service] = lambda: service
+    with TestClient(app) as client:
         yield client
 
 
@@ -169,6 +188,7 @@ def admin_client(
         last_reauthenticated_at=now,
     )
     app = cast(FastAPI, passkey_client.app)
+    app.dependency_overrides[authenticated_session] = lambda: session
     app.dependency_overrides[current_session] = lambda: session
     app.dependency_overrides[admin_session] = lambda: session
     try:

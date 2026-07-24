@@ -7,6 +7,7 @@ from uuid import UUID
 from fastapi import APIRouter, Request, Response
 
 from apps.api.dependencies import (
+    AuthenticatedSessionDependency,
     CurrentSessionDependency,
     IdentityServiceDependency,
     SettingsServiceDependency,
@@ -22,6 +23,9 @@ from packages.backend.identity.service import AuthResult, IdentityError, Session
 from packages.contracts.identity import (
     AuthenticationResult,
     AuthenticationVerifyRequest,
+    BackupAuthenticationStatus,
+    BackupEnrollment,
+    BackupEnrollmentVerifyRequest,
     BootstrapRegistrationOptionsRequest,
     Credential,
     CredentialList,
@@ -503,6 +507,94 @@ def me(
     settings_service: SettingsServiceDependency,
 ) -> dict[str, object]:
     return _payload(service, settings_service, session)
+
+
+@router.get(
+    "/backup",
+    response_model=BackupAuthenticationStatus,
+    operation_id="getBackupAuthenticationStatus",
+)
+def backup_authentication_status(
+    service: IdentityServiceDependency,
+    session: AuthenticatedSessionDependency,
+) -> BackupAuthenticationStatus:
+    return service.backup_authentication_status(session)
+
+
+@router.delete(
+    "/backup",
+    status_code=204,
+    operation_id="disableBackupAuthentication",
+)
+def disable_backup_authentication(
+    request: Request,
+    service: IdentityServiceDependency,
+    session: AuthenticatedSessionDependency,
+) -> None:
+    require_csrf(request)
+    service.disable_backup_authentication(
+        session,
+        request_id=_request_id(request),
+    )
+
+
+@router.post(
+    "/backup/enrollment",
+    response_model=BackupEnrollment,
+    status_code=201,
+    operation_id="startBackupAuthenticationEnrollment",
+)
+def start_backup_authentication_enrollment(
+    request: Request,
+    service: IdentityServiceDependency,
+    session: AuthenticatedSessionDependency,
+) -> BackupEnrollment:
+    require_csrf(request)
+    _source_value, buckets = _check_public_throttle(
+        request,
+        "backup_enrollment",
+        subject=str(session.user.id),
+    )
+    try:
+        enrollment = service.start_backup_enrollment(session)
+    except IdentityError:
+        _record_public_failure(request, buckets)
+        raise
+    _clear_public_throttle(request, buckets)
+    return enrollment
+
+
+@router.post(
+    "/backup/enrollment/{enrollment_id}/verify",
+    response_model=BackupAuthenticationStatus,
+    operation_id="verifyBackupAuthenticationEnrollment",
+)
+def verify_backup_authentication_enrollment(
+    enrollment_id: UUID,
+    body: BackupEnrollmentVerifyRequest,
+    request: Request,
+    service: IdentityServiceDependency,
+    session: AuthenticatedSessionDependency,
+) -> BackupAuthenticationStatus:
+    require_csrf(request)
+    _source_value, buckets = _check_public_throttle(
+        request,
+        "backup_enrollment_verify",
+        subject=str(session.user.id),
+    )
+    try:
+        status = service.verify_backup_enrollment(
+            session,
+            enrollment_id=enrollment_id,
+            password=body.password,
+            totp_code=body.totp_code,
+            request_id=_request_id(request),
+        )
+    except IdentityError:
+        _record_public_failure(request, buckets)
+        raise
+    _clear_public_throttle(request, buckets)
+    return status
 
 
 @router.get("/credentials", response_model=CredentialList)

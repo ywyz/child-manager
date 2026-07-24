@@ -105,15 +105,15 @@ M3A 前，不得执行 T003 之后的代码任务。
 **Independent Test**: 管理员未完成时无法进入业务页；密码合格且首个 TOTP 成功后两项同时
 生效，TOTP 种子不再展示；教师未配置仍可使用业务功能。
 
-- [ ] T016 [US1] 在 `packages/backend/identity/service.py` 实现绑定开始、10 分钟过期、
+- [x] T016 [US1] 在 `packages/backend/identity/service.py` 实现绑定开始、10 分钟过期、
   一次性种子返回、密码与首个 TOTP 原子启用，以及替换旧 enrollment/材料/备用会话
-- [ ] T017 [US1] 在 `apps/api/routers/auth.py` 和 `apps/api/openapi.py` 实现
+- [x] T017 [US1] 在 `apps/api/routers/auth.py` 和 `apps/api/openapi.py` 实现
   `GET/DELETE /auth/backup`、`POST /auth/backup/enrollment` 与 verify 端点、CSRF、限流、
   通用错误和最小化审计
-- [ ] T018 [US1] 在 `apps/web/api_client.py` 和 `apps/web/pages/auth.py` 实现管理员
+- [x] T018 [US1] 在 `apps/web/api_client.py` 和 `apps/web/pages/auth.py` 实现管理员
   受限绑定页、二维码/人工输入值只展示一次、教师每次 WebAuthn 登录及安全设置页的可跳过
   提示和备用状态页
-- [ ] T019 [US1] 运行 `tests/api/test_backup_enrollment.py`、
+- [x] T019 [US1] 运行 `tests/api/test_backup_enrollment.py`、
   `tests/web/test_backup_auth_smoke.py` 及相关契约/敏感信息测试，记录 US1 GREEN 证据
 
 **Checkpoint**: US1 可独立验收，不依赖公共备用登录。

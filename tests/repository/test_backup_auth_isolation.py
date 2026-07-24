@@ -3,7 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from threading import Barrier
 from typing import Any, cast
-from uuid import UUID, uuid4
+from uuid import UUID, uuid4, uuid7
 
 import psycopg
 import pytest
@@ -173,6 +173,7 @@ def test_new_backup_enrollment_atomically_supersedes_the_previous_one(
     with psycopg.connect(native_url) as connection:
         repository = IdentityRepository(connection, kindergarten_id)
         first = repository.start_backup_enrollment(
+            enrollment_id=uuid7(),
             user_id=user_id,
             session_token_id=webauthn_session_id,
             totp_ciphertext=b"first-encrypted-secret",
@@ -182,6 +183,7 @@ def test_new_backup_enrollment_atomically_supersedes_the_previous_one(
             expires_at=now + timedelta(minutes=10),
         )
         second = repository.start_backup_enrollment(
+            enrollment_id=uuid7(),
             user_id=user_id,
             session_token_id=webauthn_session_id,
             totp_ciphertext=b"second-encrypted-secret",
