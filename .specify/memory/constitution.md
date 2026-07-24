@@ -1,8 +1,8 @@
 <!--
 Sync Impact Report
-- Version change: 2.0.0 -> 2.1.0
+- Version change: 2.1.0 -> 3.0.0
 - Modified principles:
-  - 技术、安全与范围约束 -> 以 WebAuthn、单次邀请和双条件恢复取代密码认证
+  - 技术、安全与范围约束 -> WebAuthn 首选登录 + 密码与 TOTP 双因素备用登录
 - Added sections: none
 - Removed sections: none
 - Templates reviewed:
@@ -19,7 +19,11 @@ Sync Impact Report
   - ✅ docs/ROADMAP.md
   - ✅ docs/development/single-implementation-development.md
 - Command templates: .specify/templates/commands/ is not present in this installation
-- Follow-up TODOs: dev 必须依据新的 docs 固定提交迁移旧密码实现
+- Migration and compatibility:
+  - M3 T036–T045 与 0004_settings.py 保持不变
+  - M3A 使用独立 Issue 和 0005_password_totp_backup_login.py
+  - 旧 M2 密码列删除历史不回滚；新摘要只存在于独立备用认证表
+- Follow-up condition: 本次 docs 提交确认并由 Issue 固定后，才可在 dev 实施 M3A
 -->
 # Child Manager 项目宪章
 
@@ -85,11 +89,16 @@ Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测
   的迁移、组合外键、部分索引、GiST、并发和事务验证。
 - 首期仅有管理员和教师，界面使用简体中文；业务日期按 `Asia/Shanghai` 计算，时间点以
   UTC 存储。
-- WebAuthn 通行密钥是唯一常规登录方式，不得保留密码、OTP、默认管理员或万能恢复码弱兜底。
-  首位管理员和后续账号分别使用本机短时初始化凭据或管理员单次邀请绑定首个通行密钥；
-  紧急恢复必须同时满足离线恢复码与人工核验。访问与刷新令牌只能通过安全的 HttpOnly
-  Cookie 传递；状态变更必须具备 SameSite、来源校验和 CSRF 防护。开发关闭 Cookie
-  `Secure` 仅允许显式配置与回环地址绑定。
+- WebAuthn 通行密钥必须是首选且具备钓鱼抗性的登录方式；系统可以提供密码与 TOTP
+  两项共同成立的独立备用登录，但不得提供密码单独、TOTP 单独、短信/邮件验证码、默认
+  管理员或万能恢复码弱兜底。管理员必须配置完整备用登录，教师可以选择启用。备用会话
+  可以使用角色允许的普通业务；最近五分钟再次完成密码与 TOTP 验证只可新增通行密钥，
+  不能删除旧凭据或修改其他高风险身份材料。备用因素的建立、重设和关闭必须由 WebAuthn
+  重新验证保护；所有通行密钥均不可用时仍必须同时满足离线恢复码与人工核验，最后管理员
+  继续要求双人核验。首位管理员和后续账号仍分别使用本机短时初始化凭据或管理员单次邀请
+  绑定首个通行密钥。访问与刷新令牌只能通过安全的 HttpOnly Cookie 传递；状态变更必须
+  具备 SameSite、来源校验和 CSRF 防护。开发关闭 Cookie `Secure` 仅允许显式配置与回环
+  地址绑定。
 - AI Key 必须由服务端认证加密保存；初始化/邀请/恢复秘密、令牌、API Key、主密钥、完整
   敏感教案和未来照片不得进入 Git、Redis 消息、日志、异常、审计或测试快照。
 - 首期功能验收完成前，不得设计、创建或验收生产 Caddyfile、生产 Compose、公网 DNS、
@@ -137,4 +146,4 @@ Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测
 计划评审、任务生成和实现交付都必须再次执行宪章检查；复杂度例外必须在计划中列出更简单
 方案及其被拒理由。
 
-**Version**: 2.1.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-22
+**Version**: 3.0.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-23

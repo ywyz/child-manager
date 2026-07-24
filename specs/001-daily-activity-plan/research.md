@@ -310,8 +310,9 @@
   避免登录前账号枚举。成熟服务端库减少自写 CBOR/COSE/签名验证的安全风险，其 3.0.0 wheel
   由 CPython 3.14 构建且声明 Python >=3.10，但项目仍需按自身 3.14 锁定环境验证。
 - **Alternatives considered**: 自行解析 CBOR/COSE；要求用户名后返回 `allowCredentials`；
-  `userVerification=preferred`；为旧浏览器保留密码登录。前两项增加实现/枚举风险，后两项
-  违反 ADR-0010。
+  `userVerification=preferred`；以密码单因素兼容不支持 WebAuthn 的浏览器。前两项增加实现/
+  枚举风险；后两项违反 ADR-0010/0011。M3A 的密码+TOTP 是已激活用户设备切换路径，不降低
+  WebAuthn ceremony 要求。
 - **Primary references**: [W3C Web Authentication Level 3](https://www.w3.org/TR/webauthn-3/)、
   [PyPI webauthn](https://pypi.org/project/webauthn/)。
 
@@ -331,7 +332,7 @@
   `init-admin recover-last-admin --recovery-request-id <uuid>` 交互匹配初始化时预登记的园所
   负责人和独立运维/安全责任人，在单一事务中写入两项不可变批准并签发 15 分钟单次浏览器
   登记凭据；CLI 不接收恢复码、credential JSON 或预登记引用参数。恢复登记成功后原子撤销
-  旧凭据、会话、邀请和恢复码，签发新码但不创建登录会话。
+  旧密码/TOTP、通行密钥、会话、邀请和恢复码，签发新码但不创建登录会话。
 - **Rationale**: 初始化、邀请或恢复的单一秘密泄露都不能直接产生业务会话；CLI 只建立
   短时授权而不越过浏览器/认证器的 WebAuthn 安全边界。恢复后强制重新登录避免恢复登记
   能力升级为长期会话。
@@ -350,7 +351,8 @@
   撤销、恢复或重放撤销相应 family，重放撤销整个 family。认证 Cookie 使用 Secure、HttpOnly、
   SameSite=Lax；状态变更同时校验 Origin/Referer，并使用签名双提交 CSRF Cookie 与
   `X-CSRF-Token`。只有显式开发配置且绑定回环地址时可将 Secure 设为 false。认证完成和刷新
-  必须各发送两条独立 `Set-Cookie` 字段，退出/当前会话撤销必须发送两条独立过期字段；BFF
+  family 持久化认证方法、备用因素版本及最近 WebAuthn/备用验证时间，API 以此区分普通业务和
+  高风险身份授权。认证完成和刷新必须各发送两条独立 `Set-Cookie` 字段，退出/当前会话撤销必须发送两条独立过期字段；BFF
   与 raw-header 契约测试不得用逗号折叠它们。
 - **Rationale**: WebAuthn 证明用户控制凭据，但不替代服务端可撤销会话。`sid` 实时检查让
   管理员撤销或恢复后的旧 Access Token 在下一请求失效；Refresh 轮换可检测重放。
@@ -375,7 +377,27 @@
 - **Alternatives considered**: 一次性 drop 并手工改库；无限期保留只读哈希；contract downgrade
   重新启用旧应用。前两项形成锁死或残留风险，后一项重新引入已废止认证路径。
 
-### 6.5 AI Key envelope 与模型地址 SSRF
+### 6.5 密码与 TOTP 双因素备用登录
+
+- **Decision**: M3A 在 M3 后、M4 前增加必须同时验证密码与 TOTP 的独立备用登录。管理员
+  强制配置，教师可选；成功建立普通业务会话。密码使用 8–128 Unicode 字符、Argon2id、
+  本地阻断列表且不设组合/周期轮换规则。TOTP 使用每账号唯一 160 位种子、HMAC-SHA-1、
+  6 位/30 秒和相邻一个时间步容差，以 PostgreSQL 原子 `last_accepted_counter` 拒绝重放。
+  种子以 AES-256-GCM 加密、随机 96 位 nonce，AAD 绑定园所/用户/凭据/版本。备用会话最近
+  五分钟再次验证两项因素后只可新增通行密钥；因素维护要求 WebAuthn。所有通行密钥不可用
+  时继续离线恢复码加人工核验。
+- **Rationale**: 用户设备切换不应每次启动人工紧急恢复；两项共同验证比任一单因素更强。
+  但密码和 TOTP 均不具备钓鱼抗性，因此只能以认证保证级别限制身份操作，WebAuthn 仍为首选。
+- **Migration**: M2 contract 删除旧 `users` 密码列的历史不回滚；M3A 在独立表引入新摘要。
+  `0005_password_totp_backup_login` 继承 `0004_settings`，尚未实施的下游迁移顺延一位。
+- **Alternatives considered**: 密码单独、TOTP 单独、短信/邮件、备用会话只补建通行密钥、
+  备用会话管理全部身份材料、管理员代重置。均与已确认的可用性或恢复安全边界冲突。
+- **Primary references**:
+  [`specs/002-password-totp-backup-login/research.md`](../002-password-totp-backup-login/research.md)、
+  [ADR-0011](../../docs/ADR/ADR-0011-password-totp-backup-login.md)、[RFC 6238](https://www.rfc-editor.org/rfc/rfc6238.html)、
+  [RFC 9106](https://www.rfc-editor.org/rfc/rfc9106.html)。
+
+### 6.6 AI Key envelope 与模型地址 SSRF
 
 - **Decision**: API Key 使用 AES-256-GCM，每次随机 96 位 nonce，AAD 绑定
   `kindergarten_id/profile_id/envelope_version`；封装保存 version、key_id、nonce、

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Child Manager 一日活动计划 API
-  version: 2.0.0
+  version: 2.1.0
   description: |
     首期 M1-M8 的稳定 HTTP 契约。园所、角色和班级权限只能来自服务端会话；
     Redis/Dramatiq 不作为任务事实来源。浏览器只访问当前实现档位的 NiceGUI Web，同源 BFF
@@ -189,6 +189,120 @@ paths:
         "410": { $ref: "#/components/responses/CeremonyUnavailable" }
         "422": { $ref: "#/components/responses/ValidationError" }
         "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/backup:
+    get:
+      tags: [Auth]
+      summary: 获取本人密码与 TOTP 备用登录状态
+      responses:
+        "200":
+          description: 当前备用登录状态；不返回密码摘要、TOTP 种子或验证码
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BackupAuthenticationStatus" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    delete:
+      tags: [Auth]
+      summary: 教师关闭本人备用登录
+      description: 要求最近五分钟 WebAuthn step-up；管理员不得关闭。
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      responses:
+        "204": { description: 已关闭并撤销全部备用会话 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /api/v1/auth/backup/enrollment:
+    post:
+      tags: [Auth]
+      summary: 开始建立或替换密码与 TOTP
+      description: |
+        除管理员首次受限设置会话外，要求最近五分钟 WebAuthn step-up。
+        TOTP secret 与 otpauth URI 只在本响应展示一次；refresh token 轮换会使绑定失效。
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      responses:
+        "201":
+          description: 待确认绑定
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BackupEnrollment" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/backup/enrollment/{enrollment_id}/verify:
+    post:
+      tags: [Auth]
+      summary: 同时验证新密码和首个 TOTP 并启用备用登录
+      parameters:
+        - $ref: "#/components/parameters/EnrollmentId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BackupEnrollmentVerifyRequest" }
+      responses:
+        "200":
+          description: 已启用
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BackupAuthenticationStatus" }
+        "401": { $ref: "#/components/responses/AuthenticationFailed" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "410": { $ref: "#/components/responses/CeremonyUnavailable" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/backup/authentication:
+    post:
+      tags: [Auth]
+      summary: 使用密码与 TOTP 备用登录
+      description: 未知账号、未配置及任一因素错误使用相同响应；成功建立普通业务会话。
+      security: []
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BackupAuthenticationRequest" }
+      responses:
+        "204":
+          description: 已建立普通业务会话
+          headers:
+            Set-Cookie: { $ref: "#/components/headers/AuthSetCookies" }
+        "401": { $ref: "#/components/responses/AuthenticationFailed" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/backup/reauthentication:
+    post:
+      tags: [Auth]
+      summary: 为新增通行密钥重新验证密码与 TOTP
+      description: |
+        只在当前 password_totp 会话内生效，五分钟有效；只授权新增通行密钥，
+        不得删除旧通行密钥、关闭备用登录或修改其他高风险身份设置。
+      parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BackupReauthenticationRequest" }
+      responses:
+        "204": { description: 当前会话已取得 add_passkey 专用证明 }
+        "401": { $ref: "#/components/responses/AuthenticationFailed" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+  /api/v1/auth/security-events:
+    get:
+      tags: [Auth]
+      summary: 获取本人最近备用认证安全事件
+      description: |
+        从现有审计事件按当前园所和本人投影最近 20 条白名单事件；不创建已读状态，
+        不返回 IP 原文、认证秘密或其他用户身份信息。
+      responses:
+        "200":
+          description: 按发生时间倒序的本人安全事件
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SecurityEventList" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /api/v1/auth/refresh:
     post:
       tags: [Auth]
@@ -254,7 +368,9 @@ paths:
     post:
       tags: [Auth]
       summary: 生成本人新增通行密钥注册挑战
-      description: 要求当前会话在 5 分钟内完成过 WebAuthn step-up。
+      description: |
+        要求当前会话在 5 分钟内完成过 WebAuthn step-up，或 password_totp 会话完成过
+        密码+TOTP 专用再验证。后者只授权新增通行密钥。
       parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
       responses:
         "200": { $ref: "#/components/responses/RegistrationOptionsOk" }
@@ -265,6 +381,7 @@ paths:
     post:
       tags: [Auth]
       summary: 完成本人新增通行密钥登记
+      description: 注册 options 所绑定的 WebAuthn step-up 或 add_passkey 专用证明必须仍有效。
       parameters: [{ $ref: "#/components/parameters/CsrfHeader" }]
       requestBody:
         required: true
@@ -1651,6 +1768,7 @@ components:
     UserId: { in: path, name: user_id, required: true, schema: { type: string, format: uuid } }
     CredentialId: { in: path, name: credential_id, required: true, schema: { type: string, format: uuid } }
     SessionId: { in: path, name: session_id, required: true, schema: { type: string, format: uuid } }
+    EnrollmentId: { in: path, name: enrollment_id, required: true, schema: { type: string, format: uuid } }
     InvitationId: { in: path, name: invitation_id, required: true, schema: { type: string, format: uuid } }
     RecoveryRequestId: { in: path, name: recovery_request_id, required: true, schema: { type: string, format: uuid } }
     SemesterId: { in: path, name: semester_id, required: true, schema: { type: string, format: uuid } }
@@ -2380,12 +2498,97 @@ components:
         credential: { $ref: "#/components/schemas/Credential" }
         recovery_code: { $ref: "#/components/schemas/OneTimeSecret" }
         sessions_revoked: { type: integer, minimum: 0 }
+    BackupAuthenticationStatus:
+      type: object
+      additionalProperties: false
+      required: [enabled, required, enrollment_required]
+      properties:
+        enabled: { type: boolean }
+        required: { type: boolean, description: 管理员固定为 true }
+        changed_at: { type: [string, "null"], format: date-time }
+        enrollment_required:
+          type: boolean
+          description: 当前会话是否被限制在管理员首次绑定流程
+    BackupEnrollment:
+      type: object
+      additionalProperties: false
+      required: [enrollment_id, totp_secret, otpauth_uri, expires_at]
+      properties:
+        enrollment_id: { $ref: "#/components/schemas/Uuid" }
+        totp_secret:
+          type: string
+          pattern: "^[A-Z2-7]+=*$"
+          readOnly: true
+          x-sensitive: true
+          description: 只在本响应出现一次，不得持久化到客户端日志
+        otpauth_uri:
+          type: string
+          pattern: "^otpauth://totp/"
+          readOnly: true
+          x-sensitive: true
+          description: 只在本响应出现一次
+        expires_at: { type: string, format: date-time }
+    TotpCode:
+      type: string
+      pattern: "^[0-9]{6}$"
+      writeOnly: true
+    BackupEnrollmentVerifyRequest:
+      type: object
+      additionalProperties: false
+      required: [password, totp_code]
+      properties:
+        password: { type: string, minLength: 8, maxLength: 128, writeOnly: true }
+        totp_code: { $ref: "#/components/schemas/TotpCode" }
+    BackupAuthenticationRequest:
+      type: object
+      additionalProperties: false
+      required: [identifier, password, totp_code]
+      properties:
+        identifier: { type: string, minLength: 1, maxLength: 254 }
+        password: { type: string, minLength: 1, maxLength: 128, writeOnly: true }
+        totp_code: { $ref: "#/components/schemas/TotpCode" }
+    BackupReauthenticationRequest:
+      type: object
+      additionalProperties: false
+      required: [password, totp_code]
+      properties:
+        password: { type: string, minLength: 1, maxLength: 128, writeOnly: true }
+        totp_code: { $ref: "#/components/schemas/TotpCode" }
+    SecurityEvent:
+      type: object
+      additionalProperties: false
+      required: [event_code, occurred_at]
+      properties:
+        event_code:
+          type: string
+          enum:
+            - auth.backup_enabled
+            - auth.backup_changed
+            - auth.backup_disabled
+            - auth.backup_login_succeeded
+            - auth.passkey_added_from_backup
+            - auth.backup_revoked_by_recovery
+        occurred_at: { type: string, format: date-time }
+        authentication_method:
+          type: [string, "null"]
+          enum: [webauthn, password_totp, null]
+        client_hint: { type: [string, "null"], maxLength: 160 }
+    SecurityEventList:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items:
+          type: array
+          maxItems: 20
+          items: { $ref: "#/components/schemas/SecurityEvent" }
     Session:
       type: object
       additionalProperties: false
-      required: [id, is_current, created_at, last_seen_at, expires_at, revoked_at, client_ip_hint, user_agent_summary]
+      required: [id, authentication_method, is_current, created_at, last_seen_at, expires_at, revoked_at, client_ip_hint, user_agent_summary]
       properties:
         id: { $ref: "#/components/schemas/Uuid" }
+        authentication_method: { type: string, enum: [webauthn, password_totp, restricted_enrollment] }
         is_current: { type: boolean }
         created_at: { type: string, format: date-time }
         last_seen_at: { type: string, format: date-time }

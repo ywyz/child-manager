@@ -1,10 +1,10 @@
 # Child Manager PostgreSQL 数据库 Schema
 
-文档版本：v1.1
+文档版本：v1.2
 
 状态：已确认，待 Alembic 实现
 
-日期：2026-07-22
+日期：2026-07-23
 
 适用范围：Cloud 首期单园功能数据库
 
@@ -101,7 +101,7 @@ ON DELETE RESTRICT
 
 | 领域 | 表 | 数量 |
 | --- | --- | ---: |
-| 园所与身份 | `kindergartens`、`users`、`webauthn_credentials`、`webauthn_challenges`、`bootstrap_initializations`、`account_invitations`、`recovery_codes`、`account_recovery_requests`、`identity_verification_approvals`、`roles`、`user_roles`、`refresh_tokens` | 12 |
+| 园所与身份 | `kindergartens`、`users`、`webauthn_credentials`、`webauthn_challenges`、`backup_auth_credentials`、`backup_auth_enrollments`、`bootstrap_initializations`、`account_invitations`、`recovery_codes`、`account_recovery_requests`、`identity_verification_approvals`、`roles`、`user_roles`、`refresh_tokens` | 14 |
 | 教学设置 | `age_groups`、`classes`、`class_teachers`、`semesters`、`class_areas` | 5 |
 | AI 模型 | `ai_model_profiles`、`ai_model_profile_capabilities` | 2 |
 | 提示词 | `prompt_definitions`、`prompt_versions`、`prompt_test_runs` | 3 |
@@ -109,7 +109,7 @@ ON DELETE RESTRICT
 | 任务与 AI 结果 | `background_jobs`、`ai_generation_results` | 2 |
 | 导出 | `daily_activity_plan_exports` | 1 |
 | 系统支撑 | `workday_cache`、`audit_events` | 2 |
-| **合计** |  | **31** |
+| **合计** |  | **33** |
 
 首期不创建幼儿、年级组、审批、批注、照片、对象存储、平台租户或生产部署元数据表。
 
@@ -139,6 +139,7 @@ phone_e164 VARCHAR(32) NULL
 display_name VARCHAR(120) NOT NULL
 webauthn_user_handle BYTEA NOT NULL
 status VARCHAR(32) NOT NULL DEFAULT 'pending_registration'
+backup_auth_version INTEGER NOT NULL DEFAULT 1
 activated_at TIMESTAMPTZ NULL
 last_login_at TIMESTAMPTZ NULL
 created_by UUID NULL
@@ -154,12 +155,14 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 - `UNIQUE (webauthn_user_handle)` 与 `CHECK (octet_length(webauthn_user_handle) = 32)`。
 - 部分唯一索引 `(kindergarten_id, phone_e164) WHERE phone_e164 IS NOT NULL`。
 - `CHECK (status IN ('pending_registration','pending_verification','active','suspended'))`。
+- `CHECK (backup_auth_version >= 1)`。
 - 索引 `(kindergarten_id, status)`。
 - `(kindergarten_id, created_by)` 和 `(kindergarten_id, updated_by)` 组合自外键，首位管理员初始化时允许空。
 - 停用账号仍占用用户名与手机号。
 
-本表不包含密码字段。`active` 账号必须至少存在一个未撤销 WebAuthn 凭据由应用锁事务校验；
-注册成功只进入 `pending_verification`，带外核验完成后才进入 `active`。
+本表不包含密码或 TOTP 字段。M2 删除的旧密码列不恢复；M3A 新摘要只存在于独立备用认证
+表。`active` 账号必须至少存在一个未撤销 WebAuthn 凭据由应用锁事务校验；注册成功只进入
+`pending_verification`，带外核验完成后才进入 `active`。
 
 ### 5.3 `webauthn_credentials`
 
@@ -210,6 +213,66 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 authentication/step_up`；`CHECK (expires_at > created_at)`、`failed_attempts >= 0`，索引
 `(kindergarten_id, purpose, expires_at, consumed_at)`。`user_id` 非空时使用同园组合外键；
 `authorization_context_id` 的目标由 purpose 决定并由应用锁事务验证。
+
+### 5.4A `backup_auth_credentials`
+
+```text
+id UUID PK
+kindergarten_id UUID NOT NULL
+user_id UUID NOT NULL
+status VARCHAR(16) NOT NULL
+password_hash TEXT NULL
+password_changed_at TIMESTAMPTZ NULL
+totp_ciphertext BYTEA NULL
+totp_nonce BYTEA NULL
+totp_key_id VARCHAR(64) NULL
+totp_envelope_version SMALLINT NULL
+totp_algorithm VARCHAR(16) NULL
+totp_digits SMALLINT NULL
+totp_period_seconds SMALLINT NULL
+last_accepted_counter BIGINT NULL
+enabled_at TIMESTAMPTZ NULL
+revoked_at TIMESTAMPTZ NULL
+created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+```
+
+约束：`UNIQUE (kindergarten_id, id)`、`UNIQUE (kindergarten_id, user_id)` 及同园用户组合
+外键；`status IN ('enabled','revoked')`。`enabled` 时摘要、完整 TOTP 信封和 `enabled_at`
+均非空且 `revoked_at` 为空；`revoked` 时 `revoked_at` 非空且摘要/信封为空。
+`octet_length(totp_nonce)=12`，算法/位数/周期固定为 `SHA1/6/30`。Repository 以条件 UPDATE
+原子推进 `last_accepted_counter`，不得先读后写。
+
+### 5.4B `backup_auth_enrollments`
+
+```text
+id UUID PK
+kindergarten_id UUID NOT NULL
+user_id UUID NOT NULL
+session_token_id UUID NOT NULL
+totp_ciphertext BYTEA NOT NULL
+totp_nonce BYTEA NOT NULL
+totp_key_id VARCHAR(64) NOT NULL
+totp_envelope_version SMALLINT NOT NULL
+expires_at TIMESTAMPTZ NOT NULL
+consumed_at TIMESTAMPTZ NULL
+invalidated_at TIMESTAMPTZ NULL
+invalidation_reason VARCHAR(32) NULL
+created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+```
+
+同园组合外键分别指向 `users` 和当前 `refresh_tokens.id`；nonce 固定 12 字节，
+`expires_at > created_at`。验证时该 refresh token 必须未撤销、未被替换且未过期；轮换、
+撤销或过期会令 enrollment 失效。`consumed_at` 与 `invalidated_at` 互斥；
+`invalidation_reason` 与 `invalidated_at` 同空同非空，原因只允许
+`superseded/session_changed`。部分唯一索引
+`(kindergarten_id, user_id) WHERE consumed_at IS NULL AND invalidated_at IS NULL`
+只保留一个未终结绑定；新绑定先原子作废旧行再插入，不能在索引谓词使用 `now()`。密码不
+进入本表。enrollment 信封 AAD 绑定 enrollment ID，成功后使用新 nonce 重加密并改绑
+credential ID。verify 成功在同一事务启用凭据、消费 enrollment、增加
+`backup_auth_version` 并撤销旧备用会话和专用证明。管理员首次绑定还须把当前受限会话转换
+或重新签发为普通 WebAuthn 会话。
 
 ### 5.5 `bootstrap_initializations`
 
@@ -361,7 +424,11 @@ token_hash VARCHAR(128) NOT NULL UNIQUE
 issued_at TIMESTAMPTZ NOT NULL
 expires_at TIMESTAMPTZ NOT NULL
 last_used_at TIMESTAMPTZ NULL
-last_reauthenticated_at TIMESTAMPTZ NULL
+authentication_method VARCHAR(24) NOT NULL
+webauthn_verified_at TIMESTAMPTZ NULL
+backup_verified_at TIMESTAMPTZ NULL
+backup_reauthenticated_at TIMESTAMPTZ NULL
+backup_auth_version INTEGER NOT NULL
 revoked_at TIMESTAMPTZ NULL
 revoke_reason VARCHAR(64) NULL
 replaced_by_id UUID NULL
@@ -377,6 +444,8 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 - 组合自外键 `(kindergarten_id, replaced_by_id)` 指向 `refresh_tokens`。
 - `CHECK (expires_at > issued_at)`。
 - `CHECK (replaced_by_id IS NULL OR revoked_at IS NOT NULL)`。
+- `CHECK (authentication_method IN ('webauthn','password_totp','restricted_enrollment'))`。
+- `CHECK (backup_auth_version >= 1)`。
 - 索引 `(kindergarten_id, user_id, revoked_at, expires_at)` 和 `(token_family_id, revoked_at)`。
 - `replaced_by_id` 必须属于同一 `token_family_id` 由轮换事务校验。
 - `expires_at` 保存该 `token_family_id` 首次签发后 7 天的固定绝对到期时间；同一 family
@@ -385,8 +454,11 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
   `revoke_reason` 一并更新。首期不增加 `family_expires_at` 或 `family_revoked_at`；前者由同族
   记录共享的 `expires_at` 表达，后者由同族记录的 `revoked_at` 表达。
 - Access Token 的 `sid` 必须等于 `token_family_id`；每次 API 请求实时确认该 family 仍有
-  未过期、未撤销的当前记录。WebAuthn step-up 更新当前记录的 `last_reauthenticated_at`，轮换
-  时复制到新记录；高风险操作只接受 5 分钟内的值。
+  未过期、未撤销的当前记录。`password_totp/restricted_enrollment` 还必须使
+  `backup_auth_version` 与用户一致；WebAuthn family 不因备用因素版本变化失效。WebAuthn
+  step-up 更新 `webauthn_verified_at`；密码+TOTP 专用再验证更新
+  `backup_reauthenticated_at`，只允许 `add_passkey` 且 5 分钟有效。轮换复制当前保证字段，
+  不得把备用会话提升为 WebAuthn；管理员首次绑定是已验证 WebAuthn 受限会话的显式转换。
 
 ## 6. 教学设置 Schema
 
@@ -932,6 +1004,9 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 - 索引 `(kindergarten_id, occurred_at DESC)`、`(kindergarten_id, event_code, occurred_at DESC)`、`(kindergarten_id, resource_type, resource_id, occurred_at DESC)` 和 `(kindergarten_id, actor_user_id, occurred_at DESC)`。
 
 `metadata` 只允许事件专用白名单 Schema，不接收任意请求体、密钥、令牌、完整教案或完整 AI 输入输出。
+备用认证安全事件固定使用 `resource_type='user'` 和被通知用户的 `resource_id`；现有
+`(kindergarten_id, resource_type, resource_id, occurred_at DESC)` 索引直接支持本人最近
+20 条只读投影，不增加通知表或已读写入。
 
 ## 13. 组合外键矩阵
 
@@ -942,6 +1017,8 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 | `users` | `kindergartens`；同园 `users(created_by/updated_by)` |
 | `webauthn_credentials` | 同园 `users` |
 | `webauthn_challenges` | `kindergartens`；同园可选 `users`；purpose 绑定的授权上下文 |
+| `backup_auth_credentials` | 同园 `users` |
+| `backup_auth_enrollments` | 同园 `users`、当前 `refresh_tokens.id` |
 | `bootstrap_initializations` | 同园 `users`、`webauthn_credentials` |
 | `account_invitations` | 同园 `users(user_id/issued_by)`、`webauthn_credentials` |
 | `recovery_codes` | 同园 `users`；同园自引用 `replaced_by_id` |
@@ -977,7 +1054,11 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 - 不能由自助操作撤销本人最后一个有效凭据，也不能撤销最后管理员的最后凭据。
 - 邀请注册在一个事务保存凭据、消费邀请并推进到 `pending_verification`；人工核验后才激活。
 - 首位管理员与最后管理员恢复的两项核验必须来自不同自然人及规定责任类型。
-- 恢复完成必须原子撤销旧凭据、会话、邀请和恢复码，签发新恢复码但不创建登录会话。
+- 密码与 TOTP 必须一起启用/撤销；管理员必须 enabled，教师可选；TOTP counter 并发消费
+  只能有一个事务成功。
+- 备用再验证只可授权新增通行密钥；其他身份操作要求 `webauthn_verified_at`。
+- 恢复完成必须原子撤销旧密码/TOTP、通行密钥、会话、邀请和恢复码，签发新恢复码但不
+  创建登录会话。
 - `class_teachers.user_id` 必须拥有 `teacher` 角色。
 - 教案至少一名作者，且每位作者都是当前班级关联教师。
 - 班级使用 AI 区域生成前至少有一个已启用室内区域和一个已启用户外区域。
@@ -988,7 +1069,7 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 
 ## 15. Alembic 迁移顺序
 
-不要在单个迁移中一次创建全部 31 张表。建议使用下列可独立验证的迁移序列：
+不要在单个迁移中一次创建全部 33 张表。建议使用下列可独立验证的迁移序列：
 
 1. 启用 `btree_gist`，创建或扩展 `kindergartens`、`users`、WebAuthn/初始化/邀请/恢复七张表、
    `roles`、`user_roles`、`refresh_tokens` 和 `audit_events`，幂等种子角色。审计表必须从首位
@@ -1001,11 +1082,21 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 7. 创建 Word 导出记录。
 8. 在空库和包含典型种子数据的 PostgreSQL 库上分别运行完整 `upgrade head`。
 
+当前增量编号固定：
+
+- M3 使用 `0004_settings.py`，范围保持 T036–T045。
+- M3A 使用 `0005_password_totp_backup_login.py`，`down_revision = "0004_settings"`；
+  创建 `backup_auth_credentials`、`backup_auth_enrollments` 并扩展 `users`、
+  `refresh_tokens`。
+
 旧密码实现采用三段迁移：expand 阶段新增以上结构、禁用密码端点并撤销旧 Refresh family；
 enroll 阶段只允许在无 WebAuthn active 管理员时由本机 CLI 为一个既有管理员签发短时
 `migration_admin` 登记凭据；contract 阶段确认账号登记门禁后删除 `password_hash`、
 `password_changed_at` 和 `is_active`。contract downgrade 只可重建空列，不恢复密码认证；
 迁移前数据恢复依赖停机备份，不得把旧密码路由作为回滚方案。
+
+M3A 不回滚上述 contract：新摘要在独立表中且必须与 TOTP 同时验证。`0005` downgrade
+只删除 M3A 表/字段，不恢复旧 `users.password_hash` 或旧单因素密码路由。
 
 每个迁移必须同时包含本次表的组合外键、检查约束、部分索引与回归测试，不先创建弱约束表再长期拖延补强。
 
@@ -1023,6 +1114,7 @@ enroll 阶段只允许在无 WebAuthn active 管理员时由本机 CLI 为一个
 | Worker `SKIP LOCKED`/条件领取 | 否 | 是 |
 | Alembic 完整升级 | 可作辅助 | 是 |
 | WebAuthn challenge/邀请/恢复并发消费 | 不充分 | 是，行锁与唯一索引 |
+| TOTP counter/enrollment 并发消费 | 不充分 | 是，条件更新与行锁 |
 
 ## 17. 必须实现的 Schema 验收测试
 
@@ -1033,6 +1125,8 @@ enroll 阶段只允许在无 WebAuthn active 管理员时由本机 CLI 为一个
   一个未终结恢复请求，重复消费只有一个事务成功。
 - 含旧密码用户和 Refresh family 的 expand/enroll/contract 升级按设计收敛；contract 后物理
   Schema 不含 `password_hash`、`password_changed_at` 或 `is_active`。
+- `0004_settings -> 0005_password_totp_backup_login` 升降级保持单一 Alembic head；
+  TOTP counter/enrollment 并发只有一个提交成功，跨园组合外键被拒绝。
 - 邀请注册不激活账号，带外核验前不能登录；激活后的首次认证原子签发首个恢复码且管理员/
   CLI 不接触原始值；恢复完成撤销旧认证材料且不直接创建会话。
 - 每班最多一名主班教师、每园最多一个当前学期与一个已启用默认模型档案。
@@ -1043,7 +1137,8 @@ enroll 阶段只允许在无 WebAuthn active 管理员时由本机 CLI 为一个
 - 重复任务幂等键、重复 Redis 投递和过期租约恢复不产生第二个 AI 结果或导出记录。
 - AI 结果采用与拒绝互斥，清理正文后保留哈希与追溯元数据。
 - 导出成功记录具备文件大小、文件哈希、模板哈希和时间，失败记录不伪装成可下载文件。
-- 审计元数据白名单不接受密钥、令牌、完整教案或 AI 正文。
+- 审计元数据白名单不接受密码、密码摘要、TOTP、种子、二维码、密钥、令牌、完整教案或
+  AI 正文。
 
 ## 18. 实现时禁止的捷径
 

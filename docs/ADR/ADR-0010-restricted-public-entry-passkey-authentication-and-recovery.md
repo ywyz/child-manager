@@ -2,7 +2,11 @@
 
 日期：2026-07-22
 
-状态：已接受
+状态：部分被 [ADR-0011](ADR-0011-password-totp-backup-login.md) 取代
+
+关系：ADR-0011 取代本记录第 2 节中“唯一常规登录、不设置或验证账号密码”以及“密码加
+传统 MFA 不采用”的结论；受限公网、Web/BFF 唯一公网入口、WebAuthn ceremony、邀请、
+Cookie/CSRF、会话与离线恢复码加人工核验等其余条款继续有效。
 
 ## 背景
 
@@ -137,6 +141,9 @@ WebAuthn 完成的是用户认证，不取代服务端会话：
 
 ## 对现有决策和文档的影响
 
+- [ADR-0011](ADR-0011-password-totp-backup-login.md) 后续部分取代本记录：WebAuthn 改为
+  首选登录，并增加密码与 TOTP 两项共同成立的独立备用登录；本记录的高风险 WebAuthn
+  重新验证和紧急恢复边界继续有效。
 - [ADR-0004](ADR-0004-same-origin-cookie-authentication.md) 被部分取代：第 3 项密码登录及密码修改/重置、密码初始化相关后果和约束失效；其余同源 Cookie、API 授权、CSRF 和会话条款继续有效。
 - [ADR-0009](ADR-0009-defer-production-deployment-until-feature-complete.md) 被部分取代：访问网络方向、唯一公网应用入口、常规认证和紧急恢复不再等待 M9 选择；生产部署实现、密钥托管、备份、发布和恢复拓扑仍继续延后。
 - [ADR-0007](ADR-0007-caddy-compose-and-file-secrets.md) 不恢复生效。本记录确认安全边界，不确认 Caddy、Compose 或任何具体生产产品。
