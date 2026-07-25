@@ -226,6 +226,10 @@ _RESPONSES = {
         ),
         "headers": {"Set-Cookie": {"$ref": "#/components/headers/AuthSetCookies"}},
     },
+    "SecurityEventListOk": _response(
+        "按发生时间倒序的本人安全事件",
+        "SecurityEventList",
+    ),
     "GenericAuthenticationFailure": _response(
         "账号、密码或 TOTP 不正确；未知账号、未配置和任一因素错误使用相同响应",
         "Error",
@@ -372,6 +376,10 @@ _OPERATION_RESPONSES: dict[OperationKey, dict[str, str]] = {
         "401": "GenericAuthenticationFailure",
         "403": "Forbidden",
         "429": "TooManyRequests",
+    },
+    ("/api/v1/auth/security-events", "get"): {
+        "200": "SecurityEventListOk",
+        "401": "Unauthorized",
     },
     ("/api/v1/auth/credentials", "get"): {
         "200": "CredentialListOk",

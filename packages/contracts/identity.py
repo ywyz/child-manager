@@ -239,7 +239,7 @@ class BackupAuthenticationStatus(ContractModel):
     enabled: bool
     required: bool
     changed_at: datetime | None = None
-    enrollment_required: bool = False
+    enrollment_required: bool
 
 
 class BackupEnrollment(ContractModel):

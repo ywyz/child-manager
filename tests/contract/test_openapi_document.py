@@ -22,6 +22,18 @@ def test_openapi_document_is_valid_31() -> None:
     validate(document)
 
 
+def test_openapi_keeps_nicegui_as_the_only_browser_entry() -> None:
+    document = load_document()
+
+    description = document["info"]["description"]
+    assert "浏览器只访问当前实现档位的 NiceGUI Web" in description
+    assert document["servers"]
+    for server in document["servers"]:
+        assert server["url"].startswith("http://127.0.0.1:")
+        assert "NiceGUI BFF 服务端访问" in server["description"]
+        assert "不是浏览器或生产入口" in server["description"]
+
+
 def test_openapi_locks_repeated_auth_and_clear_cookies() -> None:
     document = load_document()
     components = document["components"]

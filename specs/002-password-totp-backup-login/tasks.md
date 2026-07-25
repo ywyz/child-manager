@@ -179,7 +179,7 @@ M3A 前，不得执行 T003 之后的代码任务。
 - [x] T030 [P] 扩展 `packages/backend/observability.py` 与审计事件契约，确保密码、摘要、
   TOTP、种子、二维码和完整认证请求始终脱敏，并增加 `tests/unit/test_observability.py`
   回归
-- [ ] T031 [P] 更新 `tests/contract/test_runtime_openapi.py` 和
+- [x] T031 [P] 更新 `tests/contract/test_runtime_openapi.py` 和
   `tests/contract/test_openapi_document.py`，证明运行时 OpenAPI 与固定文档契约一致且 NiceGUI
   仍是唯一浏览器入口
 - [ ] T032 执行 `specs/002-password-totp-backup-login/quickstart.md` 的全部旅程和专项测试，

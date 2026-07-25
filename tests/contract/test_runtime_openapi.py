@@ -1,4 +1,4 @@
-"""M2 运行时 OpenAPI 与冻结契约的一致性门禁。"""
+"""运行时 OpenAPI 与冻结身份契约的一致性门禁。"""
 
 import json
 from copy import deepcopy
@@ -34,11 +34,16 @@ def _resolve(document: dict[str, Any], value: dict[str, Any]) -> dict[str, Any]:
     return current
 
 
-def _operations(document: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]]:
+def _operations(
+    document: dict[str, Any],
+    *,
+    prefixes: tuple[str, ...] = M2_PREFIXES,
+    excluded_prefixes: tuple[str, ...] = M3A_PREFIXES,
+) -> dict[tuple[str, str], dict[str, Any]]:
     return {
         (path, method): operation
         for path, path_item in document["paths"].items()
-        if path.startswith(M2_PREFIXES) and not path.startswith(M3A_PREFIXES)
+        if path.startswith(prefixes) and not path.startswith(excluded_prefixes)
         for method, operation in path_item.items()
         if method in HTTP_METHODS
     }
@@ -185,25 +190,56 @@ def _request_schema(document: dict[str, Any], operation: dict[str, Any]) -> str 
     return _schema_json(document, schema if isinstance(schema, dict) else None)
 
 
-def test_runtime_m2_openapi_matches_frozen_operation_contract() -> None:
-    runtime = create_app().openapi()
-    validate(runtime)
-    frozen_operations = _operations(M2_FROZEN)
-    runtime_operations = _operations(runtime)
-
+def _assert_operation_contract(
+    *,
+    frozen_document: dict[str, Any],
+    runtime_document: dict[str, Any],
+    frozen_operations: dict[tuple[str, str], dict[str, Any]],
+    runtime_operations: dict[tuple[str, str], dict[str, Any]],
+) -> None:
     assert runtime_operations.keys() == frozen_operations.keys()
     for key, frozen_operation in frozen_operations.items():
         runtime_operation = runtime_operations[key]
         assert set(runtime_operation["responses"]) == set(frozen_operation["responses"]), key
-        assert _response_shape(runtime, runtime_operation) == _response_shape(
-            M2_FROZEN, frozen_operation
+        assert _response_shape(runtime_document, runtime_operation) == _response_shape(
+            frozen_document, frozen_operation
         ), key
-        assert _request_schema(runtime, runtime_operation) == _request_schema(
-            M2_FROZEN, frozen_operation
+        assert _request_schema(runtime_document, runtime_operation) == _request_schema(
+            frozen_document, frozen_operation
         ), key
-        assert _parameter_shape(runtime, key, runtime_operation) == _parameter_shape(
-            M2_FROZEN, key, frozen_operation
+        assert _parameter_shape(runtime_document, key, runtime_operation) == _parameter_shape(
+            frozen_document, key, frozen_operation
         ), key
-        assert _effective_security(runtime, runtime_operation) == _effective_security(
-            M2_FROZEN, frozen_operation
+        assert _effective_security(runtime_document, runtime_operation) == _effective_security(
+            frozen_document, frozen_operation
         ), key
+
+
+def test_runtime_m2_openapi_matches_frozen_operation_contract() -> None:
+    runtime = create_app().openapi()
+    validate(runtime)
+    _assert_operation_contract(
+        frozen_document=M2_FROZEN,
+        runtime_document=runtime,
+        frozen_operations=_operations(M2_FROZEN),
+        runtime_operations=_operations(runtime),
+    )
+
+
+def test_runtime_m3a_openapi_matches_frozen_operation_contract() -> None:
+    runtime = create_app().openapi()
+    validate(runtime)
+    _assert_operation_contract(
+        frozen_document=FROZEN,
+        runtime_document=runtime,
+        frozen_operations=_operations(
+            FROZEN,
+            prefixes=M3A_PREFIXES,
+            excluded_prefixes=(),
+        ),
+        runtime_operations=_operations(
+            runtime,
+            prefixes=M3A_PREFIXES,
+            excluded_prefixes=(),
+        ),
+    )
