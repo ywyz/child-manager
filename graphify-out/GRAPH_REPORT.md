@@ -1,16 +1,16 @@
 # Graph Report - child-manager  (2026-07-25)
 
 ## Corpus Check
-- 247 files · ~158,247 words
+- 247 files · ~158,849 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2644 nodes · 5256 edges · 323 communities (139 shown, 184 thin omitted)
-- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 257 edges (avg confidence: 0.59)
+- 2651 nodes · 5300 edges · 320 communities (137 shown, 183 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 259 edges (avg confidence: 0.59)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cb79a36b`
+- Built from commit: `69d16b2a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -89,7 +89,6 @@
 - middleware.py
 - test_password_to_passkey.py
 - transactional_session
-- 密码与 TOTP 备用登录规格质量检查清单
 - test_0004_settings.py
 - test_users.py
 - T045 M3 独立验收门禁
@@ -291,7 +290,6 @@
 - Pytest
 - Ruff
 - test_auth_smoke.py
-- ActorFixture
 - test_identity_isolation.py
 - backend/observability.py
 - web/__main__.py
@@ -300,7 +298,6 @@
 - proxy_request
 - test_backup_authentication.py
 - test_backup_auth_contract.py
-- 恢复与会话保证模型
 - test_backup_maintenance.py
 - test_secret_encryption.py
 - _totp_module
@@ -311,12 +308,12 @@
 ## God Nodes (most connected - your core abstractions)
 1. `openapi 文档` - 227 edges
 2. `IdentityRepository` - 128 edges
-3. `ContractModel` - 93 edges
-4. `IdentityService` - 91 edges
-5. `IdentityError` - 88 edges
-6. `csrf_headers()` - 87 edges
+3. `IdentityService` - 93 edges
+4. `ContractModel` - 93 edges
+5. `IdentityError` - 91 edges
+6. `csrf_headers()` - 90 edges
 7. `SessionUser` - 82 edges
-8. `ActorFixture` - 65 edges
+8. `ActorFixture` - 68 edges
 9. `密码与 TOTP 备用登录任务清单` - 53 edges
 10. `require_csrf()` - 49 edges
 
@@ -356,7 +353,7 @@
 - **Specify Plan Tasks Implement 全周期** — _agents_skills_speckit_specify_skill_speckit_specify, _agents_skills_speckit_plan_skill_speckit_plan, _agents_skills_speckit_tasks_skill_speckit_tasks, _agents_skills_speckit_implement_skill_speckit_implement [EXTRACTED 1.00]
 - **一日活动计划范围、架构与数据边界知识链** — graphify_out_memory_query_20260711_020708_docs_prd_lesson_management_m_prd_scope, graphify_out_memory_query_20260711_024218_service_architecture_sequence, graphify_out_memory_query_20260712_071357_corrected_data_model [INFERRED 0.75]
 
-## Communities (323 total, 184 thin omitted)
+## Communities (320 total, 183 thin omitted)
 
 ### Community 0 - "openapi 文档"
 Cohesion: 0.01
@@ -364,7 +361,7 @@ Nodes (227): openapi 文档, POST /api/v1/users/{userid}/recovery-requests/{reco
 
 ### Community 1 - "SettingsRepository"
 Cohesion: 0.07
-Nodes (47): settings_service(), IntegrityError, NoReturn, AgeGroupRecord, AreaInput, AreaRecord, ClassRecord, KindergartenRecord (+39 more)
+Nodes (48): settings_service(), IntegrityError, NoReturn, AgeGroupRecord, AreaInput, AreaRecord, ClassRecord, KindergartenRecord (+40 more)
 
 ### Community 2 - "test_settings_smoke.py"
 Cohesion: 0.25
@@ -379,8 +376,8 @@ Cohesion: 0.05
 Nodes (31): _backup_credential(), _backup_enrollment(), BackupCredentialRecord, BackupEnrollmentRecord, BackupRevocationResult, BackupSecurityEventRecord, ChallengeRecord, _credential() (+23 more)
 
 ### Community 5 - "IdentityService"
-Cohesion: 0.25
-Nodes (4): AuditRepository, InvitationRecord, ManagedUser, SessionUser
+Cohesion: 0.19
+Nodes (8): AuditRepository, ChallengeBinding, InvitationRecord, IdentityService, ManagedUser, UUID, SessionUser, BackupAuthenticationStatus
 
 ### Community 6 - "ContractModel"
 Cohesion: 0.07
@@ -395,16 +392,16 @@ Cohesion: 0.07
 Nodes (52): archive/trae-m2-20260721 Tag, Codex Branch (Historical), Dev Branch, Docs Branch, Main Branch, Trae Branch (Archived), Dual Agent Development (Historical), Graphify Knowledge Graph (+44 more)
 
 ### Community 9 - "routers/settings.py"
-Cohesion: 0.08
-Nodes (52): AgeGroup, _age_group(), _area(), _class(), create_class(), create_semester(), get_class(), get_kindergarten() (+44 more)
+Cohesion: 0.11
+Nodes (47): AgeGroup, _age_group(), _area(), _class(), create_class(), create_semester(), get_class(), get_kindergarten() (+39 more)
 
 ### Community 10 - "密码与 TOTP 备用登录任务清单"
 Cohesion: 0.04
 Nodes (48): 密码与 TOTP 备用登录任务清单, M3A 任务依赖链与授权门禁, Phase 4: User Story 1 — 管理员建立备用登录 (P1), Phase 5: User Story 2 — 新设备备用登录并新增通行密钥 (P2), Notes, Tasks: 密码与 TOTP 备用登录, Phase 1: Baseline & Setup, Phase 3: Foundational GREEN (+40 more)
 
 ### Community 11 - "密码与 TOTP 备用登录功能规格"
-Cohesion: 0.05
-Nodes (41): 管理员绑定 新设备登录与安全维护用户故事, 密码与 TOTP 备用登录功能规格, Clarifications, Assumptions, Measurable Outcomes, User Story 1 - 管理员建立备用登录 (Priority: P1), Session 2026-07-23, User Scenarios & Testing (mandatory) (+33 more)
+Cohesion: 0.04
+Nodes (47): 密码与 TOTP 备用登录规格质量检查清单, 管理员绑定 新设备登录与安全维护用户故事, 密码与 TOTP 备用登录功能规格, Specification Quality Checklist: 密码与 TOTP 备用登录, Feature Readiness, Notes, Requirement Completeness, Content Quality (+39 more)
 
 ### Community 12 - "require_csrf"
 Cohesion: 0.20
@@ -416,7 +413,7 @@ Nodes (31): activate(), create_user(), credential_revoke(), credentials(), deact
 
 ### Community 14 - "test_webauthn.py"
 Cohesion: 0.27
-Nodes (13): ActorFixture, TestClient, test_admin_cannot_disable_required_backup_authentication(), test_backup_maintenance_and_security_events_require_authentication(), test_backup_security_events_are_current_user_only_and_bounded(), test_replacing_factors_revokes_existing_password_totp_sessions(), TestClient, test_admin_creates_an_empty_area_class_and_saves_teacher_relationships() (+5 more)
+Nodes (15): ActorFixture, TestClient, test_admin_is_restricted_until_complete_backup_enrollment(), test_backup_status_and_enrollment_require_authentication(), test_enrollment_requires_password_and_totp_together_and_is_single_use(), test_expired_enrollment_cannot_enable_backup_auth(), test_new_enrollment_invalidates_the_previous_pending_enrollment(), test_replacing_enabled_material_revokes_only_related_backup_sessions() (+7 more)
 
 ### Community 15 - "Base"
 Cohesion: 0.15
@@ -443,8 +440,8 @@ Cohesion: 0.08
 Nodes (24): 本人内建安全事件投影, 教案管理 PRD, 身份登录与访问规则, 用户本人安全事件列表, 5. 用户与权限, 11. 计划管理流程, 1. 文档目的, 9. 日期与上下文规则 (+16 more)
 
 ### Community 21 - "Child Manager 数据模型设计"
-Cohesion: 0.10
-Nodes (20): 17. 索引原则, 10. JSONB Schema 演进, 19. 数据保留与清理, 5. 园所与身份模型, Child Manager 数据模型设计, 6. 教学设置模型, 12. Word 导出模型, 15. 数据快照边界 (+12 more)
+Cohesion: 0.09
+Nodes (23): 密码与 TOTP 备用认证状态模型, 备用认证物理 Schema, 备用凭据与短时绑定表, 17. 索引原则, 10. JSONB Schema 演进, 19. 数据保留与清理, 5. 园所与身份模型, Child Manager 数据模型设计 (+15 more)
 
 ### Community 22 - "Child Manager Agent 开发规则"
 Cohesion: 0.09
@@ -463,8 +460,8 @@ Cohesion: 0.10
 Nodes (21): Child Manager 项目上下文, M3A 密码与 TOTP 备用登录, 9. 当前仓库与分支状态, 14. CONTEXT 更新规则, 7. 共同实施路线, 10. 当前共同下一步, 3. 项目定位, 8. 当前非目标 (+13 more)
 
 ### Community 26 - "密码与 TOTP 备用登录数据模型"
-Cohesion: 0.11
-Nodes (19): 密码与 TOTP 备用登录数据模型, 2. 枚举, 1. 设计原则, 5. 登录与升级事务, backupauthstatus, reauthenticationpurpose, 3.3 refreshtokens 扩展, 6. Alembic (+11 more)
+Cohesion: 0.10
+Nodes (21): 恢复与会话保证模型, 密码与 TOTP 备用登录数据模型, 备用认证会话保证状态机, 2. 枚举, 1. 设计原则, 5. 登录与升级事务, backupauthstatus, reauthenticationpurpose (+13 more)
 
 ### Community 27 - "Child Manager PostgreSQL 数据库 Schema"
 Cohesion: 0.10
@@ -535,8 +532,8 @@ Cohesion: 0.17
 Nodes (11): backup_login_api_request(), backup_reauthentication_api_request(), 以请求正文提交两项备用因素，不把秘密放入 URL。, 为当前备用会话取得仅可新增通行密钥的短时证明。, _javascript_helpers(), login_page_text(), perform_authentication(), perform_registration() (+3 more)
 
 ### Community 44 - "test_settings_permissions.py"
-Cohesion: 0.18
-Nodes (20): admin_session(), current_session(), AuthenticatedSessionDependency, CurrentSessionDependency, SimpleNamespace, admin_client(), passkey_client(), MonkeyPatch (+12 more)
+Cohesion: 0.31
+Nodes (13): admin_session(), CurrentSessionDependency, SimpleNamespace, _provision_associated_teacher(), TestClient, UUID, _session_for(), teacher_client() (+5 more)
 
 ### Community 45 - "ADR-0007：采用 Caddy、Docker Compose 与文件挂载 Secrets"
 Cohesion: 0.12
@@ -559,8 +556,8 @@ Cohesion: 0.13
 Nodes (15): M2 到 M3 到 M3A 实施顺序, 密码与 TOTP 备用登录 API, M3A 里程碑与迁移编号决策, 密码与 TOTP 备用登录研究, 密码 TOTP 与认证保证安全决策, 双因素备用登录与高风险操作安全边界, R-007 账号枚举、限流与审计, R-003 TOTP 参数与重放 (+7 more)
 
 ### Community 50 - "passkey_helpers.py"
-Cohesion: 0.20
-Nodes (16): create_access_token(), decode_access_token(), hash_refresh_token(), Any, datetime, Access JWT 与 opaque Refresh token 接缝。, TestClient, test_admin_is_restricted_until_complete_backup_enrollment() (+8 more)
+Cohesion: 0.28
+Nodes (10): create_access_token(), decode_access_token(), generate_refresh_token(), hash_refresh_token(), Any, datetime, Access JWT 与 opaque Refresh token 接缝。, test_access_token_contains_minimal_identity_and_fifteen_minute_expiry() (+2 more)
 
 ### Community 51 - "备用认证端点"
 Cohesion: 0.21
@@ -619,8 +616,8 @@ Cohesion: 0.20
 Nodes (12): 密码加 TOTP 备用登录契约, 恢复安全不降级, WebAuthn 首选认证, M3A 实施门禁, M3A 里程碑, M3A 备用登录验收, 密码加 TOTP 备用登录决策, 密码与 TOTP 安全参数 (+4 more)
 
 ### Community 65 - "密码与 TOTP 备用登录实施计划"
-Cohesion: 0.09
-Nodes (23): 密码与 TOTP 备用登录实施计划, M3A 实施策略, M3A 实施与验收 Quickstart, 认证变更 Intentional RED 到 GREEN 流程, Complexity Tracking, Phase 2: Implementation Strategy, Technical Context, Phase 1: Design & Contracts (+15 more)
+Cohesion: 0.17
+Nodes (12): 密码与 TOTP 备用登录实施计划, Complexity Tracking, Phase 2: Implementation Strategy, Technical Context, Phase 1: Design & Contracts, Project Structure, Source Code (implementation target on dev), Phase 0: Research (+4 more)
 
 ### Community 66 - "test_runtime_openapi.py"
 Cohesion: 0.45
@@ -636,7 +633,7 @@ Nodes (9): _apply_operation_contract(), configure_openapi(), _no_content_respons
 
 ### Community 69 - "test_init_admin_cli.py"
 Cohesion: 0.17
-Nodes (11): identity_service(), ChallengeBinding, ChallengePurpose, StrEnum, _challenge_digest(), _client_challenge(), _decode_base64url(), IdentityService (+3 more)
+Nodes (12): ChallengePurpose, StrEnum, AuthResult, _challenge_digest(), _client_challenge(), _decode_base64url(), Any, datetime (+4 more)
 
 ### Community 70 - "IdentityAuditEventCode"
 Cohesion: 0.17
@@ -654,13 +651,9 @@ Nodes (8): UUID, AuditEventReference, IdentityAuditEventCode, StrEnum, 身份阶
 Cohesion: 0.27
 Nodes (7): async_sessionmaker, AsyncSession, 由应用层统一开启事务，并在异常时交给 SQLAlchemy 回滚。, transactional_session(), SessionFactory, Repository 禁止提交与应用事务边界。, test_application_transaction_rolls_back_writes_on_error()
 
-### Community 74 - "密码与 TOTP 备用登录规格质量检查清单"
-Cohesion: 0.33
-Nodes (6): 密码与 TOTP 备用登录规格质量检查清单, Specification Quality Checklist: 密码与 TOTP 备用登录, Feature Readiness, Notes, Requirement Completeness, Content Quality
-
 ### Community 75 - "test_0004_settings.py"
-Cohesion: 0.39
-Nodes (8): _native_url(), TestClient, test_activation_requires_registered_pending_account_and_persists_verification_evidence(), test_admin_creates_pending_account_without_accepting_a_password(), test_last_admin_protection_is_exposed_as_stable_conflict_contract(), test_legacy_password_reset_route_is_absent(), test_user_creation_accepts_identity_metadata_without_any_password_field(), test_user_identity_management_routes_require_an_admin()
+Cohesion: 0.13
+Nodes (20): authenticated_session(), IdentityServiceDependency, Cookie, admin_client(), passkey_client(), MonkeyPatch, TestClient, 通过 FastAPI 身份依赖注入建立已 step-up 管理员，不借用密码登录。 (+12 more)
 
 ### Community 76 - "test_users.py"
 Cohesion: 0.46
@@ -683,7 +676,7 @@ Cohesion: 0.52
 Nodes (5): Any, Column, _tenant_identity_columns(), _timestamps(), upgrade()
 
 ### Community 81 - "passwords.py"
-Cohesion: 0.13
+Cohesion: 0.16
 Nodes (19): normalize_phone(), normalize_username(), hash_password(), password_needs_rehash(), password_violations(), Path, verify_password(), _weak_passwords() (+11 more)
 
 ### Community 82 - "test_openapi_document.py"
@@ -707,8 +700,8 @@ Cohesion: 0.33
 Nodes (6): 身份与 M3A 规格就绪检查, Requirement Completeness, Content Quality, Feature Readiness, Specification Quality Checklist: 首期一日活动计划完整闭环, Notes
 
 ### Community 88 - "test_0001_identity.py"
-Cohesion: 0.17
-Nodes (14): authenticated_session(), IdentityServiceDependency, Cookie, IdentityError, Exception, generate_totp_secret(), 生成认证器广泛兼容的 160 位无填充 Base32 种子。, BackupEnrollment (+6 more)
+Cohesion: 0.16
+Nodes (14): current_session(), identity_service(), AuthenticatedSessionDependency, IdentityError, Exception, 返回匹配且尚未消费的 counter；失败或重放时返回 ``None``。, verify_totp(), BackupEnrollment (+6 more)
 
 ### Community 89 - "Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务"
 Cohesion: 0.40
@@ -730,29 +723,25 @@ Nodes (3): Spec Kit 计划模板, Spec Kit 规格模板, Spec Kit 任务模板
 Cohesion: 0.21
 Nodes (16): users_page_text(), BrowserContext, Page, _add_virtual_authenticator(), _auth_cookie_names(), _bootstrap_activate(), _bootstrap_start(), BootstrapMaterial (+8 more)
 
-### Community 307 - "ActorFixture"
-Cohesion: 0.60
-Nodes (4): TestClient, test_csrf_cookie_is_signed_readable_and_not_httponly(), test_passkey_state_change_rejects_missing_csrf_and_wrong_origin(), test_recovery_rejects_malformed_signed_double_submit_token()
-
 ### Community 308 - "test_identity_isolation.py"
 Cohesion: 0.10
-Nodes (35): TeacherInput, migrated_database(), MonkeyPatch, test_identity_migration_creates_tables_extension_and_role_seeds(), test_identity_migration_is_idempotent(), MonkeyPatch, settings_database(), test_age_group_seed_is_fixed_and_idempotent() (+27 more)
+Nodes (34): migrated_database(), MonkeyPatch, test_identity_migration_creates_tables_extension_and_role_seeds(), test_identity_migration_is_idempotent(), MonkeyPatch, settings_database(), test_age_group_seed_is_fixed_and_idempotent(), test_area_constraints_allow_empty_collections_but_reject_duplicate_names() (+26 more)
 
 ### Community 309 - "backend/observability.py"
-Cohesion: 0.33
-Nodes (5): _RegistrationResult, CredentialCounterAnomaly, Exception, 已通过其余认证校验的非备份凭据签名计数异常。, BackupAuthenticationStatus
+Cohesion: 0.38
+Nodes (12): _change_actor_to_teacher(), _enable_backup(), _identity_service(), _login_with_backup(), _native_url(), TestClient, test_admin_cannot_disable_required_backup_authentication(), test_backup_maintenance_and_security_events_require_authentication() (+4 more)
 
 ### Community 310 - "web/__main__.py"
 Cohesion: 0.25
 Nodes (11): main(), 仅绑定回环地址的 NiceGUI Web 入口。, _require_loopback(), _validate_cookie_security(), configure_logging(), EventDict, 递归清除 Web 日志中的凭证和内部 URL。, _redact() (+3 more)
 
 ### Community 311 - "备用凭据与短时绑定表"
-Cohesion: 0.67
-Nodes (3): 密码与 TOTP 备用认证状态模型, 备用认证物理 Schema, 备用凭据与短时绑定表
+Cohesion: 0.24
+Nodes (5): _operation_parameters(), Any, _resolve(), test_age_groups_are_a_fixed_four_item_non_paginated_collection(), test_area_get_uses_default_20_maximum_100_pagination()
 
 ### Community 312 - "0004 Settings 到 0005 M3A 迁移链"
-Cohesion: 0.67
-Nodes (3): 身份与 M3A 迁移序列, 0004 Settings 到 0005 M3A 迁移链, 0005 Password TOTP Backup Login 迁移契约
+Cohesion: 0.14
+Nodes (14): 身份与 M3A 迁移序列, 0004 Settings 到 0005 M3A 迁移链, 0005 Password TOTP Backup Login 迁移契约, M3A 实施策略, M3A 实施与验收 Quickstart, 认证变更 Intentional RED 到 GREEN 流程, 3. 专项验证, 管理员强制绑定 (+6 more)
 
 ### Community 313 - "proxy_request"
 Cohesion: 0.26
@@ -767,8 +756,8 @@ Cohesion: 0.24
 Nodes (7): Any, _resolve(), _runtime_routes(), test_backup_contract_marks_request_and_one_time_response_secrets(), test_runtime_router_exposes_the_user_story_2_endpoints(), test_runtime_router_matches_the_frozen_backup_contract(), test_runtime_user_story_2_openapi_matches_frozen_security_and_responses()
 
 ### Community 317 - "test_backup_maintenance.py"
-Cohesion: 0.31
-Nodes (10): candidate_totp_counters(), _counter(), generate_totp(), _hotp(), RFC 6238 TOTP 原语；持久化重放保护由 Repository 完成。, 返回当前时间步及相邻一个时间步，按 counter 递增排序。, 按固定 SHA-1、6 位、30 秒参数生成 TOTP。, 返回匹配且尚未消费的 counter；失败或重放时返回 ``None``。 (+2 more)
+Cohesion: 0.33
+Nodes (8): candidate_totp_counters(), _counter(), generate_totp(), _hotp(), RFC 6238 TOTP 原语；持久化重放保护由 Repository 完成。, 返回当前时间步及相邻一个时间步，按 counter 递增排序。, 按固定 SHA-1、6 位、30 秒参数生成 TOTP。, _secret_bytes()
 
 ### Community 318 - "test_secret_encryption.py"
 Cohesion: 0.39
@@ -793,7 +782,7 @@ Nodes (4): Answer, Outcome, Q: 请将现在的进度以及系统所需要的软�
 ## Knowledge Gaps
 - **981 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+976 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **184 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **183 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
@@ -806,17 +795,17 @@ Nodes (4): Answer, Outcome, Q: 请将现在的进度以及系统所需要的软�
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `IdentityRepository` connect `IdentityRepository` to `test_password_to_passkey.py`, `test_settings_contract.py`, `IdentityService`, `test_init_admin_cli.py`, `routers/users.py`, `ports.py`, `passwords.py`, `test_identity_isolation.py`, `backend/observability.py`, `test_0001_identity.py`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+- **Why does `IdentityError` connect `test_0001_identity.py` to `test_password_to_passkey.py`, `SettingsRepository`, `test_init_admin_cli.py`, `ContractModel`, `IdentityService`, `test_password_to_passkey.py`, `create_app`, `test_0004_settings.py`, `require_csrf`, `routers/users.py`, `csrf.py`, `ports.py`, `init_admin.py`, `passwords.py`, `passkey_helpers.py`, `backend/observability.py`, `api/app.py`?**
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+- **Why does `IdentityRepository` connect `IdentityRepository` to `test_password_to_passkey.py`, `test_settings_contract.py`, `IdentityService`, `test_init_admin_cli.py`, `routers/users.py`, `passwords.py`, `passkey_helpers.py`, `test_identity_isolation.py`, `test_0001_identity.py`?**
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
 - **Why does `openapi 文档` connect `openapi 文档` to `密码与 TOTP 备用登录 OpenAPI 契约片段`?**
   _High betweenness centrality (0.024) - this node is a cross-community bridge._
-- **Why does `IdentityError` connect `test_0001_identity.py` to `test_password_to_passkey.py`, `SettingsRepository`, `test_init_admin_cli.py`, `ContractModel`, `IdentityService`, `test_password_to_passkey.py`, `create_app`, `require_csrf`, `routers/users.py`, `csrf.py`, `ports.py`, `init_admin.py`, `passwords.py`, `backend/observability.py`, `api/app.py`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `IdentityRepository` (e.g. with `test_totp_counter_and_session_creation_roll_back_together()` and `test_identity_repository_exposes_atomic_backup_auth_operations()`) actually correct?**
   _`IdentityRepository` has 3 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 79 inferred relationships involving `ContractModel` (e.g. with `AuditEventReference` and `IdentityAuditEventCode`) actually correct?**
-  _`ContractModel` has 79 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 14 inferred relationships involving `IdentityService` (e.g. with `HealthDependencies` and `AuditRepository`) actually correct?**
   _`IdentityService` has 14 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 17 inferred relationships involving `IdentityError` (e.g. with `create_app()` and `HealthDependencies`) actually correct?**
-  _`IdentityError` has 17 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 79 inferred relationships involving `ContractModel` (e.g. with `AuditEventReference` and `IdentityAuditEventCode`) actually correct?**
+  _`ContractModel` has 79 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 19 inferred relationships involving `IdentityError` (e.g. with `create_app()` and `HealthDependencies`) actually correct?**
+  _`IdentityError` has 19 INFERRED edges - model-reasoned connections that need verification._

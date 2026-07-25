@@ -155,7 +155,7 @@ M3A 前，不得执行 T003 之后的代码任务。
 **Independent Test**: WebAuthn 可重设/关闭，管理员不能关闭；紧急恢复撤销全部旧材料，
 并要求管理员重新绑定。
 
-- [ ] T026 [US3] 在 `packages/backend/identity/service.py` 实现 WebAuthn 保护的密码/TOTP
+- [x] T026 [US3] 在 `packages/backend/identity/service.py` 实现 WebAuthn 保护的密码/TOTP
   替换、教师关闭、管理员拒绝关闭，以及备用因素版本增加和旧备用会话/证明即时撤销
 - [ ] T027 [US3] 扩展 `packages/backend/identity/service.py` 的恢复完成事务，清除旧密码、
   TOTP、通行密钥、会话、邀请和恢复码；管理员进入 `restricted_enrollment`，教师保持可选

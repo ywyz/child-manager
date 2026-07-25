@@ -440,8 +440,8 @@
     "semantic_hash": "2b3f740ae4d88d2ef5cf18c1503b0577"
   },
   "specs/002-password-totp-backup-login/tasks.md": {
-    "mtime": 1784938529.4619303,
-    "ast_hash": "142034a41bfcbf0d5485ba73762e2493",
+    "mtime": 1784944055.663476,
+    "ast_hash": "05670387f94786f27683be9f5042281f",
     "semantic_hash": ""
   },
   "apps/__init__.py": {
@@ -715,8 +715,8 @@
     "semantic_hash": ""
   },
   "packages/backend/identity/repository.py": {
-    "mtime": 1784938181.3094723,
-    "ast_hash": "9db8b77cf14cd536132afaadd154974a",
+    "mtime": 1784943703.952044,
+    "ast_hash": "fb12f8a4b4459ddd9ceda3a327e2e613",
     "semantic_hash": ""
   },
   "packages/backend/identity/secret_tokens.py": {
@@ -1190,8 +1190,8 @@
     "semantic_hash": ""
   },
   "tests/api/test_backup_maintenance.py": {
-    "mtime": 1784897986.7044597,
-    "ast_hash": "fddfa9e0e74aac734d19963ffc2b71b4",
+    "mtime": 1784944113.512823,
+    "ast_hash": "1368c69efe8be6b30cfededae8b28518",
     "semantic_hash": ""
   },
   "tests/contract/test_backup_auth_contract.py": {

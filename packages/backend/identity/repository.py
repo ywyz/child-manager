@@ -699,7 +699,10 @@ class IdentityRepository:
         ).fetchone()
         self.connection.execute(
             """UPDATE refresh_tokens
-            SET revoked_at=COALESCE(revoked_at, now()), revoke_reason=%s, updated_at=now()
+            SET revoked_at=COALESCE(revoked_at, now()),
+                revoke_reason=%s,
+                backup_reauthenticated_at=NULL,
+                updated_at=now()
             WHERE kindergarten_id=%s AND user_id=%s
               AND (
                 authentication_method='password_totp'
@@ -898,7 +901,10 @@ class IdentityRepository:
         ).fetchone()
         self.connection.execute(
             """UPDATE refresh_tokens
-            SET revoked_at=COALESCE(revoked_at, now()), revoke_reason=%s, updated_at=now()
+            SET revoked_at=COALESCE(revoked_at, now()),
+                revoke_reason=%s,
+                backup_reauthenticated_at=NULL,
+                updated_at=now()
             WHERE kindergarten_id=%s AND user_id=%s
               AND authentication_method IN ('password_totp','restricted_enrollment')""",
             (reason, self.kindergarten_id, user_id),
