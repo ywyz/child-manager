@@ -5,8 +5,9 @@ from datetime import UTC, datetime
 from uuid import UUID, uuid7
 
 import psycopg
+from pydantic import ValidationError
 
-from packages.contracts.audit import IdentityAuditEventCode
+from packages.contracts.audit import IdentityAuditEventCode, IdentityAuditMetadata
 
 
 class AuditRepository:
@@ -28,9 +29,12 @@ class AuditRepository:
         request_id: UUID | None = None,
         metadata: dict[str, object] | None = None,
     ) -> None:
-        safe_metadata = metadata or {}
-        if set(safe_metadata) - {"reason", "source", "target_role_codes"}:
-            raise ValueError("审计 metadata 包含非白名单字段")
+        try:
+            safe_metadata = IdentityAuditMetadata.model_validate(metadata or {}).model_dump(
+                exclude_none=True
+            )
+        except ValidationError as exc:
+            raise ValueError("审计 metadata 包含非白名单字段或值") from exc
         self.connection.execute(
             """INSERT INTO audit_events
             (id, kindergarten_id, event_code, actor_user_id, actor_role_codes, resource_type,

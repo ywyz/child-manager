@@ -1,6 +1,9 @@
 """身份阶段的稳定审计事件代码与最小资源引用。"""
 
 from enum import StrEnum
+from typing import Annotated
+
+from pydantic import Field, StrictStr
 
 from packages.contracts.common import ContractModel, ResourceReference
 
@@ -42,6 +45,14 @@ class IdentityAuditEventCode(StrEnum):
     LOGIN_SUCCEEDED = "identity.authentication_succeeded"
     LOGIN_FAILED = "identity.authentication_failed"
     LOGIN_RATE_LIMITED = "identity.authentication_rate_limited"
+
+
+class IdentityAuditMetadata(ContractModel):
+    """身份审计只允许承载最小、严格类型化的非秘密元数据。"""
+
+    reason: Annotated[StrictStr, Field(max_length=64)] | None = None
+    source: Annotated[StrictStr, Field(max_length=160)] | None = None
+    target_role_codes: list[Annotated[StrictStr, Field(max_length=64)]] | None = None
 
 
 class AuditEventReference(ContractModel):

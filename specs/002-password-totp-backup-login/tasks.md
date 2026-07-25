@@ -176,7 +176,7 @@ M3A 前，不得执行 T003 之后的代码任务。
 
 **Purpose**: 证明契约、隔离、敏感信息和完整回归一致。
 
-- [ ] T030 [P] 扩展 `packages/backend/observability.py` 与审计事件契约，确保密码、摘要、
+- [x] T030 [P] 扩展 `packages/backend/observability.py` 与审计事件契约，确保密码、摘要、
   TOTP、种子、二维码和完整认证请求始终脱敏，并增加 `tests/unit/test_observability.py`
   回归
 - [ ] T031 [P] 更新 `tests/contract/test_runtime_openapi.py` 和

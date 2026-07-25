@@ -65,6 +65,34 @@ def test_redaction_removes_signing_keys_master_keys_and_url_lists() -> None:
         assert secret not in rendered
 
 
+def test_redaction_removes_backup_authentication_materials_and_complete_requests() -> None:
+    event = redact_mapping(
+        {
+            "totp_code": "123456",
+            "totp_seed": "JBSWY3DPEHPK3PXP",
+            "credential_digest": "argon2id-full-digest",
+            "qr_code_svg": "<svg>one-time-qr-code</svg>",
+            "otpauth_uri": "otpauth://totp/ChildManager?secret=JBSWY3DPEHPK3PXP",
+            "authentication_request": {
+                "identifier": "teacher@example.test",
+                "password": "account-password",
+                "totp_code": "654321",
+            },
+            "safe": "kept",
+        }
+    )
+
+    assert event == {
+        "totp_code": "[REDACTED]",
+        "totp_seed": "[REDACTED]",
+        "credential_digest": "[REDACTED]",
+        "qr_code_svg": "[REDACTED]",
+        "otpauth_uri": "[REDACTED]",
+        "authentication_request": "[REDACTED]",
+        "safe": "kept",
+    }
+
+
 def test_structlog_processor_merges_context_variables() -> None:
     request_token = REQUEST_ID.set("request-1")
     trace_token = TRACE_ID.set("trace-2")

@@ -10,7 +10,20 @@ from structlog.typing import EventDict
 REQUEST_ID: ContextVar[str | None] = ContextVar("request_id", default=None)
 TRACE_ID: ContextVar[str | None] = ContextVar("trace_id", default=None)
 
-_SENSITIVE_KEY_PARTS = ("api_key", "authorization", "cookie", "password", "secret", "token")
+_SENSITIVE_KEY_PARTS = (
+    "api_key",
+    "authentication_request",
+    "authorization",
+    "cookie",
+    "digest",
+    "otp",
+    "password",
+    "qr_code",
+    "qrcode",
+    "secret",
+    "seed",
+    "token",
+)
 
 
 def _redact_url(value: str) -> str:
@@ -68,7 +81,7 @@ def _redact(key: str, value: object) -> object:
 
 
 def redact_mapping(event: Mapping[str, object]) -> dict[str, object]:
-    """递归清除日志中的密钥、令牌、密码与 URL 凭证。"""
+    """递归清除日志中的密钥、令牌、认证材料与 URL 凭证。"""
 
     return {str(key): _redact(str(key), value) for key, value in event.items()}
 
