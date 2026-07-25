@@ -1035,8 +1035,8 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "apps_api_dependencies_settings_service",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "settings_service()"
     },
     {
@@ -1263,7 +1263,7 @@
       "label": "_operation()",
       "file_type": "code",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L576",
+      "source_location": "L584",
       "_origin": "ast",
       "id": "apps_api_openapi_operation",
       "community": 68,
@@ -1296,7 +1296,7 @@
       "label": "_no_content_response()",
       "file_type": "code",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L581",
+      "source_location": "L589",
       "_origin": "ast",
       "id": "apps_api_openapi_no_content_response",
       "community": 68,
@@ -1307,7 +1307,7 @@
       "label": "_apply_operation_contract()",
       "file_type": "code",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L585",
+      "source_location": "L593",
       "_origin": "ast",
       "id": "apps_api_openapi_apply_operation_contract",
       "community": 68,
@@ -1318,7 +1318,7 @@
       "label": "configure_openapi()",
       "file_type": "code",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L617",
+      "source_location": "L625",
       "_origin": "ast",
       "id": "apps_api_openapi_configure_openapi",
       "community": 68,
@@ -1351,9 +1351,9 @@
       "label": "\u8fd4\u56de\u7f13\u5b58\u540e\u7684 M2 \u8fd0\u884c\u65f6 OpenAPI \u751f\u6210\u5668\u3002",
       "file_type": "rationale",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L618",
+      "source_location": "L626",
       "_origin": "ast",
-      "id": "apps_api_openapi_rationale_618",
+      "id": "apps_api_openapi_rationale_626",
       "community": 68,
       "community_name": "openapi.py",
       "norm_label": "\u8fd4\u56de\u7f13\u5b58\u540e\u7684 m2 \u8fd0\u884c\u65f6 openapi \u751f\u6210\u5668\u3002"
@@ -1508,8 +1508,8 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "apps_api_routers_auth_payload",
-      "community": 78,
-      "community_name": "csrf.py",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "_payload()"
     },
     {
@@ -1530,8 +1530,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "apps_api_routers_auth_py_settingsservicedependency",
-      "community": 78,
-      "community_name": "csrf.py",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "settingsservicedependency"
     },
     {
@@ -1673,8 +1673,8 @@
       "source_location": "L387",
       "_origin": "ast",
       "id": "apps_api_routers_auth_authentication_verify",
-      "community": 78,
-      "community_name": "csrf.py",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "authentication_verify()"
     },
     {
@@ -1717,8 +1717,8 @@
       "source_location": "L458",
       "_origin": "ast",
       "id": "apps_api_routers_auth_refresh",
-      "community": 78,
-      "community_name": "csrf.py",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "refresh()"
     },
     {
@@ -1728,8 +1728,8 @@
       "source_location": "L496",
       "_origin": "ast",
       "id": "apps_api_routers_auth_logout",
-      "community": 12,
-      "community_name": "require_csrf",
+      "community": 78,
+      "community_name": "csrf.py",
       "norm_label": "logout()"
     },
     {
@@ -1739,8 +1739,8 @@
       "source_location": "L507",
       "_origin": "ast",
       "id": "apps_api_routers_auth_me",
-      "community": 78,
-      "community_name": "csrf.py",
+      "community": 12,
+      "community_name": "require_csrf",
       "norm_label": "me()"
     },
     {
@@ -2036,8 +2036,8 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "apps_api_routers_settings_area",
-      "community": 74,
-      "community_name": "AreaRecord",
+      "community": 9,
+      "community_name": "routers/settings.py",
       "norm_label": "_area()"
     },
     {
@@ -2696,8 +2696,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_api_client",
-      "community": 43,
-      "community_name": "pages/auth.py",
+      "community": 313,
+      "community_name": "proxy_request",
       "norm_label": "api_client.py"
     },
     {
@@ -2718,8 +2718,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "apps_web_api_client_same_origin_api_request",
-      "community": 43,
-      "community_name": "pages/auth.py",
+      "community": 2,
+      "community_name": "test_settings_smoke.py",
       "norm_label": "same_origin_api_request()"
     },
     {
@@ -2729,8 +2729,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "apps_web_api_client_backup_auth_api_request",
-      "community": 43,
-      "community_name": "pages/auth.py",
+      "community": 2,
+      "community_name": "test_settings_smoke.py",
       "norm_label": "backup_auth_api_request()"
     },
     {
@@ -2795,8 +2795,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_api_client_rationale_1",
-      "community": 43,
-      "community_name": "pages/auth.py",
+      "community": 313,
+      "community_name": "proxy_request",
       "norm_label": "nicegui \u670d\u52a1\u7aef bff \u5ba2\u6237\u7aef\u7684\u516c\u5f00\u63a5\u7f1d\u3002"
     },
     {
@@ -2806,8 +2806,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "apps_web_api_client_rationale_54",
-      "community": 43,
-      "community_name": "pages/auth.py",
+      "community": 2,
+      "community_name": "test_settings_smoke.py",
       "norm_label": "\u4ece\u6d4f\u89c8\u5668\u7ecf\u540c\u6e90 bff \u8c03\u7528 api,\u5e76\u4e3a\u5199\u8bf7\u6c42\u53d6\u5f97 csrf token\u3002"
     },
     {
@@ -2817,8 +2817,8 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "apps_web_api_client_rationale_89",
-      "community": 43,
-      "community_name": "pages/auth.py",
+      "community": 2,
+      "community_name": "test_settings_smoke.py",
       "norm_label": "\u53ea\u901a\u8fc7\u540c\u6e90 bff \u8bbf\u95ee\u672c\u4eba\u5907\u7528\u767b\u5f55\u7aef\u70b9\u3002"
     },
     {
@@ -2916,8 +2916,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_components_navigation",
-      "community": 2,
-      "community_name": "test_settings_smoke.py",
+      "community": 70,
+      "community_name": "IdentityAuditEventCode",
       "norm_label": "navigation.py"
     },
     {
@@ -2927,8 +2927,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "apps_web_components_navigation_navigation_for_capabilities",
-      "community": 2,
-      "community_name": "test_settings_smoke.py",
+      "community": 70,
+      "community_name": "IdentityAuditEventCode",
       "norm_label": "navigation_for_capabilities()"
     },
     {
@@ -2938,8 +2938,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_components_navigation_rationale_1",
-      "community": 2,
-      "community_name": "test_settings_smoke.py",
+      "community": 70,
+      "community_name": "IdentityAuditEventCode",
       "norm_label": "\u6309 api capabilities \u751f\u6210\u5bfc\u822a\u3002"
     },
     {
@@ -3147,8 +3147,8 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "apps_web_pages_auth_register_auth_pages",
-      "community": 43,
-      "community_name": "pages/auth.py",
+      "community": 2,
+      "community_name": "test_settings_smoke.py",
       "norm_label": "register_auth_pages()"
     },
     {
@@ -3202,8 +3202,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_web_pages_settings",
-      "community": 70,
-      "community_name": "IdentityAuditEventCode",
+      "community": 2,
+      "community_name": "test_settings_smoke.py",
       "norm_label": "pages/settings.py"
     },
     {
@@ -3576,15 +3576,15 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_audit_repository",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "audit/repository.py"
     },
     {
       "label": "AuditRepository",
       "file_type": "code",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L12",
+      "source_location": "L13",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_auditrepository",
       "community": 5,
@@ -3595,11 +3595,11 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L13",
+      "source_location": "L14",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_auditrepository_init",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": ".__init__()"
     },
     {
@@ -3609,19 +3609,19 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_py_uuid",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "uuid"
     },
     {
       "label": ".append()",
       "file_type": "code",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L19",
+      "source_location": "L20",
       "_origin": "ast",
       "id": "packages_backend_audit_repository_auditrepository_append",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": ".append()"
     },
     {
@@ -3631,8 +3631,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_audit_service",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "audit/service.py"
     },
     {
@@ -4500,8 +4500,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_auth_throttle",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 314,
+      "community_name": "test_backup_authentication.py",
       "norm_label": "auth_throttle.py"
     },
     {
@@ -4511,8 +4511,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_backend_identity_auth_throttle_subject_throttle_source",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 314,
+      "community_name": "test_backup_authentication.py",
       "norm_label": "subject_throttle_source()"
     },
     {
@@ -4720,8 +4720,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_auth_throttle_rationale_1",
-      "community": 6,
-      "community_name": "ContractModel",
+      "community": 314,
+      "community_name": "test_backup_authentication.py",
       "norm_label": "\u516c\u5f00\u8eab\u4efd ceremony \u7684\u6765\u6e90\u9650\u6d41\u516c\u5171 seam\u3002"
     },
     {
@@ -4764,8 +4764,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "packages_backend_identity_challenges_challengepurpose",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "challengepurpose"
     },
     {
@@ -4775,8 +4775,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_challenges_py_strenum",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "strenum"
     },
     {
@@ -4973,8 +4973,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_identifiers",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "identifiers.py"
     },
     {
@@ -4984,8 +4984,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "packages_backend_identity_identifiers_normalize_username",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "normalize_username()"
     },
     {
@@ -4995,8 +4995,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "packages_backend_identity_identifiers_normalize_phone",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "normalize_phone()"
     },
     {
@@ -5457,8 +5457,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_passwords",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "passwords.py"
     },
     {
@@ -5468,8 +5468,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "packages_backend_identity_passwords_weak_passwords",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "_weak_passwords()"
     },
     {
@@ -5479,8 +5479,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_passwords_py_path",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "path"
     },
     {
@@ -5490,8 +5490,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "packages_backend_identity_passwords_password_violations",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "password_violations()"
     },
     {
@@ -5501,8 +5501,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "packages_backend_identity_passwords_hash_password",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "hash_password()"
     },
     {
@@ -5512,8 +5512,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "packages_backend_identity_passwords_verify_password",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "verify_password()"
     },
     {
@@ -5523,8 +5523,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "packages_backend_identity_passwords_password_needs_rehash",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "password_needs_rehash()"
     },
     {
@@ -5578,8 +5578,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "packages_backend_identity_repository_credentialrecord",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 321,
+      "community_name": "CredentialRecord",
       "norm_label": "credentialrecord"
     },
     {
@@ -5677,8 +5677,8 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "packages_backend_identity_repository_credential",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 321,
+      "community_name": "CredentialRecord",
       "norm_label": "_credential()"
     },
     {
@@ -6216,8 +6216,8 @@
       "source_location": "L1117",
       "_origin": "ast",
       "id": "packages_backend_identity_repository_identityrepository_get_credential_by_raw_id",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 321,
+      "community_name": "CredentialRecord",
       "norm_label": ".get_credential_by_raw_id()"
     },
     {
@@ -6227,8 +6227,8 @@
       "source_location": "L1125",
       "_origin": "ast",
       "id": "packages_backend_identity_repository_identityrepository_create_credential",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 321,
+      "community_name": "CredentialRecord",
       "norm_label": ".create_credential()"
     },
     {
@@ -6249,8 +6249,8 @@
       "source_location": "L1175",
       "_origin": "ast",
       "id": "packages_backend_identity_repository_identityrepository_rename_credential",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 321,
+      "community_name": "CredentialRecord",
       "norm_label": ".rename_credential()"
     },
     {
@@ -6458,8 +6458,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "secret_encryption.py"
     },
     {
@@ -6469,8 +6469,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_totpsecretenvelope",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "totpsecretenvelope"
     },
     {
@@ -6480,8 +6480,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_validate_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "_validate_key()"
     },
     {
@@ -6491,8 +6491,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_aad",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "_aad()"
     },
     {
@@ -6502,8 +6502,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_py_uuid",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "uuid"
     },
     {
@@ -6513,8 +6513,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "subjectkind",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "subjectkind"
     },
     {
@@ -6524,8 +6524,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_encrypt_totp_secret",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "encrypt_totp_secret()"
     },
     {
@@ -6535,8 +6535,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_decrypt_totp_secret",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "decrypt_totp_secret()"
     },
     {
@@ -6546,8 +6546,8 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_encrypt_totp_secret_with_provider",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "encrypt_totp_secret_with_provider()"
     },
     {
@@ -6557,8 +6557,8 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_decrypt_totp_secret_with_provider",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "decrypt_totp_secret_with_provider()"
     },
     {
@@ -6568,8 +6568,8 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_rebind_totp_secret_with_provider",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "rebind_totp_secret_with_provider()"
     },
     {
@@ -6579,8 +6579,8 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_staticidentitysecretkeyprovider",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "staticidentitysecretkeyprovider"
     },
     {
@@ -6590,8 +6590,8 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_staticidentitysecretkeyprovider_init",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": ".__init__()"
     },
     {
@@ -6601,8 +6601,8 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_staticidentitysecretkeyprovider_active_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": ".active_key()"
     },
     {
@@ -6612,8 +6612,8 @@
       "source_location": "L207",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_staticidentitysecretkeyprovider_get_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": ".get_key()"
     },
     {
@@ -6623,8 +6623,8 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_fileidentitysecretkeyprovider",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 317,
+      "community_name": "FileIdentitySecretKeyProvider",
       "norm_label": "fileidentitysecretkeyprovider"
     },
     {
@@ -6634,8 +6634,8 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_fileidentitysecretkeyprovider_init",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 317,
+      "community_name": "FileIdentitySecretKeyProvider",
       "norm_label": ".__init__()"
     },
     {
@@ -6645,8 +6645,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_py_path",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 317,
+      "community_name": "FileIdentitySecretKeyProvider",
       "norm_label": "path"
     },
     {
@@ -6656,8 +6656,8 @@
       "source_location": "L236",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_fileidentitysecretkeyprovider_read_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 317,
+      "community_name": "FileIdentitySecretKeyProvider",
       "norm_label": "._read_key()"
     },
     {
@@ -6667,8 +6667,8 @@
       "source_location": "L248",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_fileidentitysecretkeyprovider_active_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 317,
+      "community_name": "FileIdentitySecretKeyProvider",
       "norm_label": ".active_key()"
     },
     {
@@ -6678,8 +6678,8 @@
       "source_location": "L251",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_fileidentitysecretkeyprovider_get_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 317,
+      "community_name": "FileIdentitySecretKeyProvider",
       "norm_label": ".get_key()"
     },
     {
@@ -6689,8 +6689,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_rationale_1",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "totp \u79cd\u5b50\u7684 aes-256-gcm \u4fe1\u5c01\u4e0e\u6570\u636e\u5e93\u5916\u5bc6\u94a5\u9002\u914d\u5668\u3002"
     },
     {
@@ -6700,8 +6700,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_rationale_68",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "\u7528\u968f\u673a 96 \u4f4d nonce \u52a0\u5bc6 totp \u79cd\u5b50\u5e76\u7ed1\u5b9a\u56ed\u6240\u3001\u8d26\u53f7\u548c\u4e3b\u4f53\u3002"
     },
     {
@@ -6711,8 +6711,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_rationale_100",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "\u9a8c\u8bc1\u4fe1\u5c01\u53ca aad \u540e\u8fd4\u56de\u79cd\u5b50;\u8ba4\u8bc1\u6807\u7b7e\u5931\u8d25\u7531 ``aesgcm`` \u539f\u6837\u62d2\u7edd\u3002"
     },
     {
@@ -6722,8 +6722,8 @@
       "source_location": "L172",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_rationale_172",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "\u5c06 enrollment \u4fe1\u5c01\u89e3\u5bc6\u540e\u4ee5\u65b0 nonce \u548c credential aad \u91cd\u65b0\u52a0\u5bc6\u3002"
     },
     {
@@ -6733,8 +6733,8 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "packages_backend_identity_secret_encryption_rationale_215",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 317,
+      "community_name": "FileIdentitySecretKeyProvider",
       "norm_label": "\u5f00\u53d1\u73af\u5883\u8bfb\u53d6\u4ed3\u5e93\u5916\u3001\u4ec5\u5c5e\u4e3b\u53ef\u8bfb\u7684 32 \u5b57\u8282\u4e8c\u8fdb\u5236\u5bc6\u94a5\u6587\u4ef6\u3002"
     },
     {
@@ -6854,8 +6854,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_service",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "identity/service.py"
     },
     {
@@ -6865,8 +6865,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityerror",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "identityerror"
     },
     {
@@ -6876,8 +6876,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_service_py_exception",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "exception"
     },
     {
@@ -6887,8 +6887,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityerror_init",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".__init__()"
     },
     {
@@ -6931,8 +6931,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "packages_backend_identity_service_authresult",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "authresult"
     },
     {
@@ -6942,8 +6942,8 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "packages_backend_identity_service_registrationresult",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "_registrationresult"
     },
     {
@@ -6953,8 +6953,8 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "packages_backend_identity_service_native_url",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "_native_url()"
     },
     {
@@ -6964,8 +6964,8 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "packages_backend_identity_service_decode_base64url",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "_decode_base64url()"
     },
     {
@@ -6975,8 +6975,8 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "packages_backend_identity_service_client_challenge",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "_client_challenge()"
     },
     {
@@ -6986,8 +6986,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_service_py_any",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "any"
     },
     {
@@ -6997,8 +6997,8 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "packages_backend_identity_service_challenge_digest",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "_challenge_digest()"
     },
     {
@@ -7019,8 +7019,8 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_init",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".__init__()"
     },
     {
@@ -7030,8 +7030,8 @@
       "source_location": "L169",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_from_environment",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".from_environment()"
     },
     {
@@ -7085,8 +7085,8 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_normalize_login_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": ".normalize_login_key()"
     },
     {
@@ -7129,8 +7129,8 @@
       "source_location": "L277",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_require_business_access",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": ".require_business_access()"
     },
     {
@@ -7140,8 +7140,8 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_require_recent_webauthn",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": ".require_recent_webauthn()"
     },
     {
@@ -7151,8 +7151,8 @@
       "source_location": "L295",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_require_recent_backup_reauthentication",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": ".require_recent_backup_reauthentication()"
     },
     {
@@ -7162,8 +7162,8 @@
       "source_location": "L315",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_require_add_passkey_authorization",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": ".require_add_passkey_authorization()"
     },
     {
@@ -7195,8 +7195,8 @@
       "source_location": "L339",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_identity_key_provider",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "._identity_key_provider()"
     },
     {
@@ -7206,8 +7206,8 @@
       "source_location": "L345",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_backup_status",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "._backup_status()"
     },
     {
@@ -7217,8 +7217,8 @@
       "source_location": "L364",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_backup_authentication_status",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".backup_authentication_status()"
     },
     {
@@ -7294,8 +7294,8 @@
       "source_location": "L641",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_start_backup_enrollment",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".start_backup_enrollment()"
     },
     {
@@ -7305,8 +7305,8 @@
       "source_location": "L683",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_backup_enrollment",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".verify_backup_enrollment()"
     },
     {
@@ -7404,8 +7404,8 @@
       "source_location": "L1044",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_registration",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "._verify_registration()"
     },
     {
@@ -7437,8 +7437,8 @@
       "source_location": "L1206",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_registration_transaction",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "._verify_registration_transaction()"
     },
     {
@@ -7448,8 +7448,8 @@
       "source_location": "L1375",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_bootstrap_registration",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".verify_bootstrap_registration()"
     },
     {
@@ -7459,8 +7459,8 @@
       "source_location": "L1394",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_invitation_registration",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".verify_invitation_registration()"
     },
     {
@@ -7470,8 +7470,8 @@
       "source_location": "L1413",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_self_add_registration",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".verify_self_add_registration()"
     },
     {
@@ -7481,8 +7481,8 @@
       "source_location": "L1439",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_recovery_registration",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".verify_recovery_registration()"
     },
     {
@@ -7492,8 +7492,8 @@
       "source_location": "L1459",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_authentication",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".verify_authentication()"
     },
     {
@@ -7525,8 +7525,8 @@
       "source_location": "L1592",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_authentication_transaction",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "._verify_authentication_transaction()"
     },
     {
@@ -7547,8 +7547,8 @@
       "source_location": "L1744",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_step_up",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": ".verify_step_up()"
     },
     {
@@ -7558,8 +7558,8 @@
       "source_location": "L1781",
       "_origin": "ast",
       "id": "packages_backend_identity_service_identityservice_verify_step_up_transaction",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "._verify_step_up_transaction()"
     },
     {
@@ -7822,8 +7822,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_service_rationale_1",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "\u901a\u884c\u5bc6\u94a5\u8eab\u4efd\u7528\u4f8b\u3001\u4e00\u6b21\u6027\u6750\u6599\u72b6\u6001\u673a\u4e0e\u5b9e\u65f6\u4f1a\u8bdd\u6388\u6743\u3002"
     },
     {
@@ -7888,8 +7888,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "packages_backend_identity_tokens_generate_refresh_token",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 50,
+      "community_name": "passkey_helpers.py",
       "norm_label": "generate_refresh_token()"
     },
     {
@@ -7921,8 +7921,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_totp",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "totp.py"
     },
     {
@@ -7932,8 +7932,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_generate_totp_secret",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "generate_totp_secret()"
     },
     {
@@ -7943,8 +7943,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_counter",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "_counter()"
     },
     {
@@ -7954,8 +7954,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_candidate_totp_counters",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "candidate_totp_counters()"
     },
     {
@@ -7965,8 +7965,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_secret_bytes",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "_secret_bytes()"
     },
     {
@@ -7976,8 +7976,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_hotp",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "_hotp()"
     },
     {
@@ -7987,8 +7987,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_generate_totp",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "generate_totp()"
     },
     {
@@ -7998,8 +7998,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_verify_totp",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "verify_totp()"
     },
     {
@@ -8009,8 +8009,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_rationale_1",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "rfc 6238 totp \u539f\u8bed;\u6301\u4e45\u5316\u91cd\u653e\u4fdd\u62a4\u7531 repository \u5b8c\u6210\u3002"
     },
     {
@@ -8020,8 +8020,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_rationale_16",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "\u751f\u6210\u8ba4\u8bc1\u5668\u5e7f\u6cdb\u517c\u5bb9\u7684 160 \u4f4d\u65e0\u586b\u5145 base32 \u79cd\u5b50\u3002"
     },
     {
@@ -8031,8 +8031,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_rationale_28",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "\u8fd4\u56de\u5f53\u524d\u65f6\u95f4\u6b65\u53ca\u76f8\u90bb\u4e00\u4e2a\u65f6\u95f4\u6b65,\u6309 counter \u9012\u589e\u6392\u5e8f\u3002"
     },
     {
@@ -8042,8 +8042,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_rationale_51",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "\u6309\u56fa\u5b9a sha-1\u30016 \u4f4d\u300130 \u79d2\u53c2\u6570\u751f\u6210 totp\u3002"
     },
     {
@@ -8053,8 +8053,8 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "packages_backend_identity_totp_rationale_64",
-      "community": 306,
-      "community_name": "test_auth_smoke.py",
+      "community": 307,
+      "community_name": "totp.py",
       "norm_label": "\u8fd4\u56de\u5339\u914d\u4e14\u5c1a\u672a\u6d88\u8d39\u7684 counter;\u5931\u8d25\u6216\u91cd\u653e\u65f6\u8fd4\u56de ``none``\u3002"
     },
     {
@@ -8064,8 +8064,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn",
-      "community": 36,
-      "community_name": "csrf_headers",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "webauthn.py"
     },
     {
@@ -8075,8 +8075,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_credentialcounteranomaly",
-      "community": 36,
-      "community_name": "csrf_headers",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "credentialcounteranomaly"
     },
     {
@@ -8086,8 +8086,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_py_exception",
-      "community": 36,
-      "community_name": "csrf_headers",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "exception"
     },
     {
@@ -8108,8 +8108,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_authentication_options",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "authentication_options()"
     },
     {
@@ -8119,8 +8119,8 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_verify_registration",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "verify_registration()"
     },
     {
@@ -8130,8 +8130,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_py_any",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "any"
     },
     {
@@ -8141,8 +8141,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "verifiedregistration",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "verifiedregistration"
     },
     {
@@ -8152,8 +8152,8 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_verify_authentication",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "verify_authentication()"
     },
     {
@@ -8163,8 +8163,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "verifiedauthentication",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "verifiedauthentication"
     },
     {
@@ -8174,8 +8174,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_rationale_1",
-      "community": 36,
-      "community_name": "csrf_headers",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "webauthn 3.x options \u751f\u6210\u4e0e\u4e25\u683c\u6ce8\u518c\u3001\u8ba4\u8bc1\u9a8c\u8bc1\u3002"
     },
     {
@@ -8185,8 +8185,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_rationale_28",
-      "community": 36,
-      "community_name": "csrf_headers",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "\u5df2\u901a\u8fc7\u5176\u4f59\u8ba4\u8bc1\u6821\u9a8c\u7684\u975e\u5907\u4efd\u51ed\u636e\u7b7e\u540d\u8ba1\u6570\u5f02\u5e38\u3002"
     },
     {
@@ -8207,8 +8207,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_rationale_77",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "\u751f\u6210\u65e0\u7528\u6237\u540d\u6216\u9650\u5b9a\u5f53\u524d\u8d26\u53f7\u51ed\u636e\u7684\u6d4f\u89c8\u5668\u8ba4\u8bc1 json\u3002"
     },
     {
@@ -8218,8 +8218,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_rationale_101",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "\u6821\u9a8c\u6ce8\u518c type\u3001challenge\u3001origin\u3001rp id\u3001up/uv\u3001\u7b7e\u540d\u548c attestation\u3002"
     },
     {
@@ -8229,8 +8229,8 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "packages_backend_identity_webauthn_rationale_127",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "\u6821\u9a8c assertion\u3001\u7528\u6237\u9a8c\u8bc1\u3001\u7b7e\u540d\u548c\u7b7e\u540d\u8ba1\u6570\u5668\u3002"
     },
     {
@@ -8248,7 +8248,7 @@
       "label": "_redact_url()",
       "file_type": "code",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L16",
+      "source_location": "L29",
       "_origin": "ast",
       "id": "packages_backend_observability_redact_url",
       "community": 3,
@@ -8259,7 +8259,7 @@
       "label": "_redact()",
       "file_type": "code",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L40",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "packages_backend_observability_redact",
       "community": 3,
@@ -8270,7 +8270,7 @@
       "label": "redact_mapping()",
       "file_type": "code",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L70",
+      "source_location": "L83",
       "_origin": "ast",
       "id": "packages_backend_observability_redact_mapping",
       "community": 3,
@@ -8281,7 +8281,7 @@
       "label": "request_context()",
       "file_type": "code",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L76",
+      "source_location": "L89",
       "_origin": "ast",
       "id": "packages_backend_observability_request_context",
       "community": 3,
@@ -8292,7 +8292,7 @@
       "label": "merge_request_context()",
       "file_type": "code",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L82",
+      "source_location": "L95",
       "_origin": "ast",
       "id": "packages_backend_observability_merge_request_context",
       "community": 3,
@@ -8314,7 +8314,7 @@
       "label": "configure_logging()",
       "file_type": "code",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L94",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "packages_backend_observability_configure_logging",
       "community": 3,
@@ -8322,23 +8322,23 @@
       "norm_label": "configure_logging()"
     },
     {
-      "label": "\u9012\u5f52\u6e05\u9664\u65e5\u5fd7\u4e2d\u7684\u5bc6\u94a5\u3001\u4ee4\u724c\u3001\u5bc6\u7801\u4e0e URL \u51ed\u8bc1\u3002",
+      "label": "\u9012\u5f52\u6e05\u9664\u65e5\u5fd7\u4e2d\u7684\u5bc6\u94a5\u3001\u4ee4\u724c\u3001\u8ba4\u8bc1\u6750\u6599\u4e0e URL \u51ed\u8bc1\u3002",
       "file_type": "rationale",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L71",
+      "source_location": "L84",
       "_origin": "ast",
-      "id": "packages_backend_observability_rationale_71",
+      "id": "packages_backend_observability_rationale_84",
       "community": 3,
       "community_name": "test_foundation.py",
-      "norm_label": "\u9012\u5f52\u6e05\u9664\u65e5\u5fd7\u4e2d\u7684\u5bc6\u94a5\u3001\u4ee4\u724c\u3001\u5bc6\u7801\u4e0e url \u51ed\u8bc1\u3002"
+      "norm_label": "\u9012\u5f52\u6e05\u9664\u65e5\u5fd7\u4e2d\u7684\u5bc6\u94a5\u3001\u4ee4\u724c\u3001\u8ba4\u8bc1\u6750\u6599\u4e0e url \u51ed\u8bc1\u3002"
     },
     {
       "label": "\u5c06\u5f53\u524d\u8bf7\u6c42\u5173\u8054\u5b57\u6bb5\u5408\u5e76\u5230\u771f\u5b9e structlog \u4e8b\u4ef6\u3002",
       "file_type": "rationale",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L83",
+      "source_location": "L96",
       "_origin": "ast",
-      "id": "packages_backend_observability_rationale_83",
+      "id": "packages_backend_observability_rationale_96",
       "community": 3,
       "community_name": "test_foundation.py",
       "norm_label": "\u5c06\u5f53\u524d\u8bf7\u6c42\u5173\u8054\u5b57\u6bb5\u5408\u5e76\u5230\u771f\u5b9e structlog \u4e8b\u4ef6\u3002"
@@ -8347,9 +8347,9 @@
       "label": "\u914d\u7f6e JSON \u7ed3\u6784\u5316\u65e5\u5fd7\u548c\u6700\u7ec8\u8131\u654f\u5904\u7406\u5668\u3002",
       "file_type": "rationale",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L95",
+      "source_location": "L108",
       "_origin": "ast",
-      "id": "packages_backend_observability_rationale_95",
+      "id": "packages_backend_observability_rationale_108",
       "community": 3,
       "community_name": "test_foundation.py",
       "norm_label": "\u914d\u7f6e json \u7ed3\u6784\u5316\u65e5\u5fd7\u548c\u6700\u7ec8\u8131\u654f\u5904\u7406\u5668\u3002"
@@ -8526,8 +8526,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "packages_backend_ports_identitysecretkeyprovider",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "identitysecretkeyprovider"
     },
     {
@@ -8537,8 +8537,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "packages_backend_ports_identitysecretkeyprovider_active_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": ".active_key()"
     },
     {
@@ -8548,8 +8548,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "packages_backend_ports_identitysecretkeyprovider_get_key",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": ".get_key()"
     },
     {
@@ -8570,8 +8570,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "packages_backend_ports_rationale_30",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "\u63d0\u4f9b\u6570\u636e\u5e93\u5916\u7684\u5f53\u524d\u8eab\u4efd\u4e3b\u5bc6\u94a5\u4e0e\u5386\u53f2\u89e3\u5bc6\u5bc6\u94a5\u3002"
     },
     {
@@ -8746,8 +8746,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "packages_backend_settings_repository_arearecord",
-      "community": 74,
-      "community_name": "AreaRecord",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "arearecord"
     },
     {
@@ -8768,8 +8768,8 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "packages_backend_settings_repository_teacherinput",
-      "community": 1,
-      "community_name": "SettingsRepository",
+      "community": 308,
+      "community_name": "test_identity_isolation.py",
       "norm_label": "teacherinput"
     },
     {
@@ -9043,8 +9043,8 @@
       "source_location": "L604",
       "_origin": "ast",
       "id": "packages_backend_settings_repository_settingsrepository_list_class_areas",
-      "community": 74,
-      "community_name": "AreaRecord",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".list_class_areas()"
     },
     {
@@ -9109,8 +9109,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_settings_service",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "settings/service.py"
     },
     {
@@ -9120,8 +9120,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "packages_backend_settings_service_semester_ranges_overlap",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "semester_ranges_overlap()"
     },
     {
@@ -9131,8 +9131,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_settings_service_py_date",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "date"
     },
     {
@@ -9142,8 +9142,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "packages_backend_settings_service_current_semester_selection_is_valid",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "current_semester_selection_is_valid()"
     },
     {
@@ -9153,8 +9153,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "packages_backend_settings_service_lead_teacher_selection_is_valid",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "lead_teacher_selection_is_valid()"
     },
     {
@@ -9164,8 +9164,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_settings_service_py_uuid",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "uuid"
     },
     {
@@ -9175,8 +9175,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "packages_backend_settings_service_normalize_display_name",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "_normalize_display_name()"
     },
     {
@@ -9186,8 +9186,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "packages_backend_settings_service_normalize_key",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "_normalize_key()"
     },
     {
@@ -9197,8 +9197,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "packages_backend_settings_service_required_display_name",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "_required_display_name()"
     },
     {
@@ -9208,8 +9208,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "packages_backend_settings_service_normalize_class_areas",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "normalize_class_areas()"
     },
     {
@@ -9219,8 +9219,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "packages_backend_settings_service_native_url",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "_native_url()"
     },
     {
@@ -9230,8 +9230,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "settingsservice"
     },
     {
@@ -9241,8 +9241,8 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_init",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".__init__()"
     },
     {
@@ -9252,8 +9252,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_from_environment",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".from_environment()"
     },
     {
@@ -9263,8 +9263,8 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_connect",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "._connect()"
     },
     {
@@ -9274,8 +9274,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_kindergarten_id",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "._kindergarten_id()"
     },
     {
@@ -9285,8 +9285,8 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_require_admin",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "._require_admin()"
     },
     {
@@ -9296,8 +9296,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_not_found",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "._not_found()"
     },
     {
@@ -9307,8 +9307,8 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_raise_write_error",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "._raise_write_error()"
     },
     {
@@ -9318,8 +9318,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "integrityerror",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "integrityerror"
     },
     {
@@ -9329,8 +9329,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "noreturn",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "noreturn"
     },
     {
@@ -9340,8 +9340,8 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_get_kindergarten",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".get_kindergarten()"
     },
     {
@@ -9351,8 +9351,8 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_capabilities_for",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".capabilities_for()"
     },
     {
@@ -9362,8 +9362,8 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_update_kindergarten",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".update_kindergarten()"
     },
     {
@@ -9373,8 +9373,8 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_list_age_groups",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".list_age_groups()"
     },
     {
@@ -9384,8 +9384,8 @@
       "source_location": "L181",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_list_semesters",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".list_semesters()"
     },
     {
@@ -9395,8 +9395,8 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_get_semester",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".get_semester()"
     },
     {
@@ -9406,8 +9406,8 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_create_semester",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".create_semester()"
     },
     {
@@ -9417,8 +9417,8 @@
       "source_location": "L239",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_update_semester",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".update_semester()"
     },
     {
@@ -9428,8 +9428,8 @@
       "source_location": "L277",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_make_current_semester",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".make_current_semester()"
     },
     {
@@ -9439,8 +9439,8 @@
       "source_location": "L297",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_list_classes",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".list_classes()"
     },
     {
@@ -9450,8 +9450,8 @@
       "source_location": "L324",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_get_class",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".get_class()"
     },
     {
@@ -9461,8 +9461,8 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_create_class",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".create_class()"
     },
     {
@@ -9472,8 +9472,8 @@
       "source_location": "L373",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_update_class",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".update_class()"
     },
     {
@@ -9483,8 +9483,8 @@
       "source_location": "L406",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_replace_class_teachers",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".replace_class_teachers()"
     },
     {
@@ -9494,8 +9494,8 @@
       "source_location": "L448",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_list_class_areas",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".list_class_areas()"
     },
     {
@@ -9505,8 +9505,8 @@
       "source_location": "L473",
       "_origin": "ast",
       "id": "packages_backend_settings_service_settingsservice_replace_class_areas",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": ".replace_class_areas()"
     },
     {
@@ -9516,8 +9516,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "packages_backend_settings_service_rationale_68",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "\u89c4\u8303\u5316\u533a\u57df\u663e\u793a\u540d,\u4fdd\u7559\u987a\u5e8f\u5e76\u62d2\u7edd\u540c\u7c7b\u522b\u91cd\u540d\u3002"
     },
     {
@@ -9527,8 +9527,8 @@
       "source_location": "L141",
       "_origin": "ast",
       "id": "packages_backend_settings_service_rationale_141",
-      "community": 41,
-      "community_name": "ActorFixture",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "\u5408\u5e76\u8eab\u4efd\u80fd\u529b\u4e0e\u57fa\u4e8e\u5f53\u524d\u73ed\u7ea7\u5173\u7cfb\u5b9e\u65f6\u8ba1\u7b97\u7684\u8bbe\u7f6e\u80fd\u529b\u3002"
     },
     {
@@ -9560,19 +9560,19 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_audit",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "audit.py"
     },
     {
       "label": "IdentityAuditEventCode",
       "file_type": "code",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L8",
+      "source_location": "L11",
       "_origin": "ast",
       "id": "packages_contracts_audit_identityauditeventcode",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "identityauditeventcode"
     },
     {
@@ -9582,19 +9582,30 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_contracts_audit_py_strenum",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "strenum"
+    },
+    {
+      "label": "IdentityAuditMetadata",
+      "file_type": "code",
+      "source_file": "packages/contracts/audit.py",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "packages_contracts_audit_identityauditmetadata",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
+      "norm_label": "identityauditmetadata"
     },
     {
       "label": "AuditEventReference",
       "file_type": "code",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L47",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "packages_contracts_audit_auditeventreference",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "auditeventreference"
     },
     {
@@ -9604,9 +9615,20 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_audit_rationale_1",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "\u8eab\u4efd\u9636\u6bb5\u7684\u7a33\u5b9a\u5ba1\u8ba1\u4e8b\u4ef6\u4ee3\u7801\u4e0e\u6700\u5c0f\u8d44\u6e90\u5f15\u7528\u3002"
+    },
+    {
+      "label": "\u8eab\u4efd\u5ba1\u8ba1\u53ea\u5141\u8bb8\u627f\u8f7d\u6700\u5c0f\u3001\u4e25\u683c\u7c7b\u578b\u5316\u7684\u975e\u79d8\u5bc6\u5143\u6570\u636e\u3002",
+      "file_type": "rationale",
+      "source_file": "packages/contracts/audit.py",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "packages_contracts_audit_rationale_51",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
+      "norm_label": "\u8eab\u4efd\u5ba1\u8ba1\u53ea\u5141\u8bb8\u627f\u8f7d\u6700\u5c0f\u3001\u4e25\u683c\u7c7b\u578b\u5316\u7684\u975e\u79d8\u5bc6\u5143\u6570\u636e\u3002"
     },
     {
       "label": "common.py",
@@ -9648,8 +9670,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "packages_contracts_common_resourcereference",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "resourcereference"
     },
     {
@@ -9659,8 +9681,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "packages_contracts_common_fielderror",
-      "community": 57,
-      "community_name": "api/app.py",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "fielderror"
     },
     {
@@ -9670,8 +9692,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "packages_contracts_common_errorresponse",
-      "community": 69,
-      "community_name": "test_init_admin_cli.py",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "errorresponse"
     },
     {
@@ -9681,8 +9703,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "packages_contracts_common_pagination",
-      "community": 69,
-      "community_name": "test_init_admin_cli.py",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "pagination"
     },
     {
@@ -9747,8 +9769,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_exports",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 6,
+      "community_name": "ContractModel",
       "norm_label": "exports.py"
     },
     {
@@ -9758,8 +9780,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "packages_contracts_exports_exportreference",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 6,
+      "community_name": "ContractModel",
       "norm_label": "exportreference"
     },
     {
@@ -10066,8 +10088,8 @@
       "source_location": "L238",
       "_origin": "ast",
       "id": "packages_contracts_identity_backupauthenticationstatus",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "backupauthenticationstatus"
     },
     {
@@ -10077,8 +10099,8 @@
       "source_location": "L245",
       "_origin": "ast",
       "id": "packages_contracts_identity_backupenrollment",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 41,
+      "community_name": "ActorFixture",
       "norm_label": "backupenrollment"
     },
     {
@@ -10462,8 +10484,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_lesson_plans",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 6,
+      "community_name": "ContractModel",
       "norm_label": "lesson_plans.py"
     },
     {
@@ -10473,8 +10495,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "packages_contracts_lesson_plans_lessonplanreference",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 6,
+      "community_name": "ContractModel",
       "norm_label": "lessonplanreference"
     },
     {
@@ -10484,8 +10506,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_prompts",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 6,
+      "community_name": "ContractModel",
       "norm_label": "prompts.py"
     },
     {
@@ -10495,8 +10517,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_contracts_prompts_promptreference",
-      "community": 28,
-      "community_name": "common.py",
+      "community": 6,
+      "community_name": "ContractModel",
       "norm_label": "promptreference"
     },
     {
@@ -10616,8 +10638,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "packages_contracts_settings_classteacherwrite",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "classteacherwrite"
     },
     {
@@ -10693,8 +10715,8 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "packages_contracts_settings_areawrite",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "areawrite"
     },
     {
@@ -10784,8 +10806,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers_passkey_client",
-      "community": 75,
-      "community_name": "test_0004_settings.py",
+      "community": 316,
+      "community_name": "passkey_client",
       "norm_label": "passkey_client()"
     },
     {
@@ -10795,8 +10817,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers_py_monkeypatch",
-      "community": 75,
-      "community_name": "test_0004_settings.py",
+      "community": 316,
+      "community_name": "passkey_client",
       "norm_label": "monkeypatch"
     },
     {
@@ -10806,8 +10828,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_passkey_helpers_py_testclient",
-      "community": 75,
-      "community_name": "test_0004_settings.py",
+      "community": 316,
+      "community_name": "passkey_client",
       "norm_label": "testclient"
     },
     {
@@ -11664,8 +11686,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_api_test_csrf",
-      "community": 75,
-      "community_name": "test_0004_settings.py",
+      "community": 316,
+      "community_name": "passkey_client",
       "norm_label": "test_csrf.py"
     },
     {
@@ -11675,8 +11697,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_api_test_csrf_test_csrf_cookie_is_signed_readable_and_not_httponly",
-      "community": 75,
-      "community_name": "test_0004_settings.py",
+      "community": 316,
+      "community_name": "passkey_client",
       "norm_label": "test_csrf_cookie_is_signed_readable_and_not_httponly()"
     },
     {
@@ -11686,8 +11708,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_api_test_csrf_py_testclient",
-      "community": 75,
-      "community_name": "test_0004_settings.py",
+      "community": 316,
+      "community_name": "passkey_client",
       "norm_label": "testclient"
     },
     {
@@ -11697,8 +11719,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_api_test_csrf_test_passkey_state_change_rejects_missing_csrf_and_wrong_origin",
-      "community": 75,
-      "community_name": "test_0004_settings.py",
+      "community": 316,
+      "community_name": "passkey_client",
       "norm_label": "test_passkey_state_change_rejects_missing_csrf_and_wrong_origin()"
     },
     {
@@ -11708,8 +11730,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_api_test_csrf_test_recovery_rejects_malformed_signed_double_submit_token",
-      "community": 75,
-      "community_name": "test_0004_settings.py",
+      "community": 316,
+      "community_name": "passkey_client",
       "norm_label": "test_recovery_rejects_malformed_signed_double_submit_token()"
     },
     {
@@ -13314,8 +13336,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts",
-      "community": 69,
-      "community_name": "test_init_admin_cli.py",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "test_common_contracts.py"
     },
     {
@@ -13325,8 +13347,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_test_error_response_has_stable_shape_and_empty_field_errors",
-      "community": 69,
-      "community_name": "test_init_admin_cli.py",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "test_error_response_has_stable_shape_and_empty_field_errors()"
     },
     {
@@ -13336,8 +13358,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_test_pagination_rejects_values_outside_contract",
-      "community": 69,
-      "community_name": "test_init_admin_cli.py",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "test_pagination_rejects_values_outside_contract()"
     },
     {
@@ -13347,8 +13369,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_test_unavailable_error_codes_are_stable",
-      "community": 69,
-      "community_name": "test_init_admin_cli.py",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "test_unavailable_error_codes_are_stable()"
     },
     {
@@ -13358,8 +13380,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_rationale_1",
-      "community": 69,
-      "community_name": "test_init_admin_cli.py",
+      "community": 28,
+      "community_name": "common.py",
       "norm_label": "\u7edf\u4e00\u9519\u8bef\u3001\u5206\u9875\u548c request id \u5951\u7ea6\u3002"
     },
     {
@@ -13451,10 +13473,21 @@
       "norm_label": "test_openapi_document_is_valid_31()"
     },
     {
-      "label": "test_openapi_locks_repeated_auth_and_clear_cookies()",
+      "label": "test_openapi_keeps_nicegui_as_the_only_browser_entry()",
       "file_type": "code",
       "source_file": "tests/contract/test_openapi_document.py",
       "source_location": "L25",
+      "_origin": "ast",
+      "id": "tests_contract_test_openapi_document_test_openapi_keeps_nicegui_as_the_only_browser_entry",
+      "community": 82,
+      "community_name": "test_openapi_document.py",
+      "norm_label": "test_openapi_keeps_nicegui_as_the_only_browser_entry()"
+    },
+    {
+      "label": "test_openapi_locks_repeated_auth_and_clear_cookies()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_openapi_document.py",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_openapi_locks_repeated_auth_and_clear_cookies",
       "community": 82,
@@ -13465,7 +13498,7 @@
       "label": "test_openapi_locks_two_unavailable_codes()",
       "file_type": "code",
       "source_file": "tests/contract/test_openapi_document.py",
-      "source_location": "L41",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "tests_contract_test_openapi_document_test_openapi_locks_two_unavailable_codes",
       "community": 82,
@@ -13531,7 +13564,7 @@
       "label": "_effective_security()",
       "file_type": "code",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L47",
+      "source_location": "L52",
       "_origin": "ast",
       "id": "tests_contract_test_runtime_openapi_effective_security",
       "community": 66,
@@ -13542,7 +13575,7 @@
       "label": "_canonical_schema()",
       "file_type": "code",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L53",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "tests_contract_test_runtime_openapi_canonical_schema",
       "community": 66,
@@ -13553,7 +13586,7 @@
       "label": "_schema_json()",
       "file_type": "code",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L126",
+      "source_location": "L131",
       "_origin": "ast",
       "id": "tests_contract_test_runtime_openapi_schema_json",
       "community": 66,
@@ -13564,7 +13597,7 @@
       "label": "_parameter_shape()",
       "file_type": "code",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L137",
+      "source_location": "L142",
       "_origin": "ast",
       "id": "tests_contract_test_runtime_openapi_parameter_shape",
       "community": 66,
@@ -13575,7 +13608,7 @@
       "label": "_response_shape()",
       "file_type": "code",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L155",
+      "source_location": "L160",
       "_origin": "ast",
       "id": "tests_contract_test_runtime_openapi_response_shape",
       "community": 66,
@@ -13586,7 +13619,7 @@
       "label": "_request_schema()",
       "file_type": "code",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L178",
+      "source_location": "L183",
       "_origin": "ast",
       "id": "tests_contract_test_runtime_openapi_request_schema",
       "community": 66,
@@ -13594,10 +13627,21 @@
       "norm_label": "_request_schema()"
     },
     {
+      "label": "_assert_operation_contract()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_runtime_openapi.py",
+      "source_location": "L193",
+      "_origin": "ast",
+      "id": "tests_contract_test_runtime_openapi_assert_operation_contract",
+      "community": 66,
+      "community_name": "test_runtime_openapi.py",
+      "norm_label": "_assert_operation_contract()"
+    },
+    {
       "label": "test_runtime_m2_openapi_matches_frozen_operation_contract()",
       "file_type": "code",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L188",
+      "source_location": "L218",
       "_origin": "ast",
       "id": "tests_contract_test_runtime_openapi_test_runtime_m2_openapi_matches_frozen_operation_contract",
       "community": 66,
@@ -13605,7 +13649,18 @@
       "norm_label": "test_runtime_m2_openapi_matches_frozen_operation_contract()"
     },
     {
-      "label": "M2 \u8fd0\u884c\u65f6 OpenAPI \u4e0e\u51bb\u7ed3\u5951\u7ea6\u7684\u4e00\u81f4\u6027\u95e8\u7981\u3002",
+      "label": "test_runtime_m3a_openapi_matches_frozen_operation_contract()",
+      "file_type": "code",
+      "source_file": "tests/contract/test_runtime_openapi.py",
+      "source_location": "L229",
+      "_origin": "ast",
+      "id": "tests_contract_test_runtime_openapi_test_runtime_m3a_openapi_matches_frozen_operation_contract",
+      "community": 66,
+      "community_name": "test_runtime_openapi.py",
+      "norm_label": "test_runtime_m3a_openapi_matches_frozen_operation_contract()"
+    },
+    {
+      "label": "\u8fd0\u884c\u65f6 OpenAPI \u4e0e\u51bb\u7ed3\u8eab\u4efd\u5951\u7ea6\u7684\u4e00\u81f4\u6027\u95e8\u7981\u3002",
       "file_type": "rationale",
       "source_file": "tests/contract/test_runtime_openapi.py",
       "source_location": "L1",
@@ -13613,7 +13668,7 @@
       "id": "tests_contract_test_runtime_openapi_rationale_1",
       "community": 66,
       "community_name": "test_runtime_openapi.py",
-      "norm_label": "m2 \u8fd0\u884c\u65f6 openapi \u4e0e\u51bb\u7ed3\u5951\u7ea6\u7684\u4e00\u81f4\u6027\u95e8\u7981\u3002"
+      "norm_label": "\u8fd0\u884c\u65f6 openapi \u4e0e\u51bb\u7ed3\u8eab\u4efd\u5951\u7ea6\u7684\u4e00\u81f4\u6027\u95e8\u7981\u3002"
     },
     {
       "label": "test_settings_contract.py",
@@ -14425,8 +14480,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "test_backup_auth_isolation.py"
     },
     {
@@ -14436,8 +14491,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_recordingresult",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "recordingresult"
     },
     {
@@ -14447,8 +14502,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_recordingresult_fetchone",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": ".fetchone()"
     },
     {
@@ -14458,8 +14513,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_recordingresult_fetchall",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": ".fetchall()"
     },
     {
@@ -14469,8 +14524,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_recordingconnection",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "recordingconnection"
     },
     {
@@ -14480,8 +14535,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_recordingconnection_init",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": ".__init__()"
     },
     {
@@ -14491,8 +14546,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_recordingconnection_execute",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": ".execute()"
     },
     {
@@ -14502,8 +14557,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_test_identity_repository_exposes_atomic_backup_auth_operations",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "test_identity_repository_exposes_atomic_backup_auth_operations()"
     },
     {
@@ -14513,8 +14568,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_test_backup_credential_reads_are_scoped_to_kindergarten_and_user",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "test_backup_credential_reads_are_scoped_to_kindergarten_and_user()"
     },
     {
@@ -14524,8 +14579,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_test_totp_counter_consumption_is_one_atomic_tenant_scoped_update",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "test_totp_counter_consumption_is_one_atomic_tenant_scoped_update()"
     },
     {
@@ -14535,8 +14590,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_test_repository_cannot_read_backup_material_from_another_kindergarten",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "test_repository_cannot_read_backup_material_from_another_kindergarten()"
     },
     {
@@ -14546,8 +14601,8 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_seed_backup_repository",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "_seed_backup_repository()"
     },
     {
@@ -14557,8 +14612,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_py_monkeypatch",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "monkeypatch"
     },
     {
@@ -14568,8 +14623,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_py_uuid",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "uuid"
     },
     {
@@ -14579,8 +14634,8 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_test_new_backup_enrollment_atomically_supersedes_the_previous_one",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "test_new_backup_enrollment_atomically_supersedes_the_previous_one()"
     },
     {
@@ -14590,8 +14645,8 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_test_concurrent_totp_counter_consumption_succeeds_only_once",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "test_concurrent_totp_counter_consumption_succeeds_only_once()"
     },
     {
@@ -14601,8 +14656,8 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_test_backup_version_change_revokes_only_related_sessions",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "test_backup_version_change_revokes_only_related_sessions()"
     },
     {
@@ -14612,8 +14667,8 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "tests_repository_test_backup_auth_isolation_test_admin_role_gate_restricts_and_then_releases_webauthn_sessions",
-      "community": 4,
-      "community_name": "IdentityRepository",
+      "community": 69,
+      "community_name": "test_init_admin_cli.py",
       "norm_label": "test_admin_role_gate_restricts_and_then_releases_webauthn_sessions()"
     },
     {
@@ -14975,8 +15030,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_audit.py"
     },
     {
@@ -14986,8 +15041,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_test_identity_audit_repository_is_append_only",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_identity_audit_repository_is_append_only()"
     },
     {
@@ -14997,9 +15052,20 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_unit_identity_test_audit_test_identity_audit_rejects_sensitive_metadata_keys",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_identity_audit_rejects_sensitive_metadata_keys()"
+    },
+    {
+      "label": "test_identity_audit_rejects_authentication_material_hidden_in_allowed_fields()",
+      "file_type": "code",
+      "source_file": "tests/unit/identity/test_audit.py",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "tests_unit_identity_test_audit_test_identity_audit_rejects_authentication_material_hidden_in_allowed_fields",
+      "community": 72,
+      "community_name": "test_password_to_passkey.py",
+      "norm_label": "test_identity_audit_rejects_authentication_material_hidden_in_allowed_fields()"
     },
     {
       "label": "test_auth_assurance.py",
@@ -15008,8 +15074,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_auth_assurance",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": "test_auth_assurance.py"
     },
     {
@@ -15019,8 +15085,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_unit_identity_test_auth_assurance_session",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": "_session()"
     },
     {
@@ -15030,8 +15096,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_unit_identity_test_auth_assurance_py_datetime",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": "datetime"
     },
     {
@@ -15041,8 +15107,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "tests_unit_identity_test_auth_assurance_test_restricted_enrollment_session_cannot_enter_business_routes",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": "test_restricted_enrollment_session_cannot_enter_business_routes()"
     },
     {
@@ -15052,8 +15118,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "tests_unit_identity_test_auth_assurance_test_recent_webauthn_proof_satisfies_high_risk_identity_boundary",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": "test_recent_webauthn_proof_satisfies_high_risk_identity_boundary()"
     },
     {
@@ -15063,8 +15129,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "tests_unit_identity_test_auth_assurance_test_backup_reauthentication_only_authorizes_add_passkey_for_five_minutes",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": "test_backup_reauthentication_only_authorizes_add_passkey_for_five_minutes()"
     },
     {
@@ -15074,8 +15140,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "tests_unit_identity_test_auth_assurance_test_expired_backup_reauthentication_cannot_add_passkey",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 312,
+      "community_name": ".require_add_passkey_authorization",
       "norm_label": "test_expired_backup_reauthentication_cannot_add_passkey()"
     },
     {
@@ -15140,8 +15206,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_backup_enrollment_service",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "test_backup_enrollment_service.py"
     },
     {
@@ -15151,8 +15217,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_unit_identity_test_backup_enrollment_service_transaction",
-      "community": 308,
-      "community_name": "test_identity_isolation.py",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "_transaction"
     },
     {
@@ -15162,8 +15228,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_unit_identity_test_backup_enrollment_service_transaction_enter",
-      "community": 308,
-      "community_name": "test_identity_isolation.py",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": ".__enter__()"
     },
     {
@@ -15173,8 +15239,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_unit_identity_test_backup_enrollment_service_transaction_exit",
-      "community": 308,
-      "community_name": "test_identity_isolation.py",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": ".__exit__()"
     },
     {
@@ -15206,8 +15272,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "tests_unit_identity_test_backup_enrollment_service_test_service_generates_persisted_enrollment_id_before_encrypting_totp_aad",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "test_service_generates_persisted_enrollment_id_before_encrypting_totp_aad()"
     },
     {
@@ -15217,8 +15283,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_unit_identity_test_backup_enrollment_service_py_monkeypatch",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 47,
+      "community_name": "ports.py",
       "norm_label": "monkeypatch"
     },
     {
@@ -15283,8 +15349,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_identifiers",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_identifiers.py"
     },
     {
@@ -15294,8 +15360,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_unit_identity_test_identifiers_test_username_is_nfkc_trimmed_and_lowercase",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_username_is_nfkc_trimmed_and_lowercase()"
     },
     {
@@ -15305,8 +15371,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_unit_identity_test_identifiers_test_phone_is_mainland_e164_or_empty",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_phone_is_mainland_e164_or_empty()"
     },
     {
@@ -15316,8 +15382,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "tests_unit_identity_test_identifiers_test_invalid_phone_is_rejected",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 320,
+      "community_name": "test_password_to_passkey.py",
       "norm_label": "test_invalid_phone_is_rejected()"
     },
     {
@@ -15360,8 +15426,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_passwords",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "test_passwords.py"
     },
     {
@@ -15371,8 +15437,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_unit_identity_test_passwords_test_backup_password_policy_accepts_eight_unicode_characters_and_spaces",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "test_backup_password_policy_accepts_eight_unicode_characters_and_spaces()"
     },
     {
@@ -15382,8 +15448,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_unit_identity_test_passwords_test_backup_password_policy_blocks_local_and_contextual_terms",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "test_backup_password_policy_blocks_local_and_contextual_terms()"
     },
     {
@@ -15393,8 +15459,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_unit_identity_test_passwords_py_path",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "path"
     },
     {
@@ -15404,8 +15470,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_unit_identity_test_passwords_test_backup_password_hash_uses_auditable_argon2id_floor_and_rehashes",
-      "community": 5,
-      "community_name": "IdentityService",
+      "community": 74,
+      "community_name": "AreaRecord",
       "norm_label": "test_backup_password_hash_uses_auditable_argon2id_floor_and_rehashes()"
     },
     {
@@ -15701,8 +15767,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_unit_identity_test_webauthn_test_valid_non_backup_assertion_with_repeated_counter_is_an_anomaly",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "test_valid_non_backup_assertion_with_repeated_counter_is_an_anomaly()"
     },
     {
@@ -15712,8 +15778,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_unit_identity_test_webauthn_py_monkeypatch",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "monkeypatch"
     },
     {
@@ -15723,8 +15789,8 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "tests_unit_identity_test_webauthn_test_backup_eligible_assertion_does_not_use_monotonic_counter_as_sole_rejection",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 44,
+      "community_name": "test_settings_permissions.py",
       "norm_label": "test_backup_eligible_assertion_does_not_use_monotonic_counter_as_sole_rejection()"
     },
     {
@@ -15778,8 +15844,8 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "tests_unit_identity_test_webauthn_test_username_less_authentication_uses_empty_allow_credentials_and_uv",
-      "community": 7,
-      "community_name": "timedelta",
+      "community": 81,
+      "community_name": "CredentialCounterAnomaly",
       "norm_label": "test_username_less_authentication_uses_empty_allow_credentials_and_uv()"
     },
     {
@@ -15800,8 +15866,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_settings_test_rules",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "test_rules.py"
     },
     {
@@ -15811,8 +15877,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_unit_settings_test_rules_test_semester_overlap_uses_inclusive_date_ranges",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "test_semester_overlap_uses_inclusive_date_ranges()"
     },
     {
@@ -15822,8 +15888,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_unit_settings_test_rules_py_date",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "date"
     },
     {
@@ -15833,8 +15899,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "tests_unit_settings_test_rules_test_only_one_active_semester_can_be_current",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "test_only_one_active_semester_can_be_current()"
     },
     {
@@ -15844,8 +15910,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "tests_unit_settings_test_rules_test_each_class_has_at_most_one_lead_teacher",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "test_each_class_has_at_most_one_lead_teacher()"
     },
     {
@@ -15855,8 +15921,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "tests_unit_settings_test_rules_test_empty_area_configuration_is_valid",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "test_empty_area_configuration_is_valid()"
     },
     {
@@ -15866,8 +15932,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "tests_unit_settings_test_rules_test_areas_preserve_input_order_and_normalize_names",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "test_areas_preserve_input_order_and_normalize_names()"
     },
     {
@@ -15877,8 +15943,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "tests_unit_settings_test_rules_test_duplicate_names_within_one_area_type_are_rejected",
-      "community": 47,
-      "community_name": "ports.py",
+      "community": 1,
+      "community_name": "SettingsRepository",
       "norm_label": "test_duplicate_names_within_one_area_type_are_rejected()"
     },
     {
@@ -16036,10 +16102,21 @@
       "norm_label": "test_redaction_removes_signing_keys_master_keys_and_url_lists()"
     },
     {
-      "label": "test_structlog_processor_merges_context_variables()",
+      "label": "test_redaction_removes_backup_authentication_materials_and_complete_requests()",
       "file_type": "code",
       "source_file": "tests/unit/test_observability.py",
       "source_location": "L68",
+      "_origin": "ast",
+      "id": "tests_unit_test_observability_test_redaction_removes_backup_authentication_materials_and_complete_requests",
+      "community": 3,
+      "community_name": "test_foundation.py",
+      "norm_label": "test_redaction_removes_backup_authentication_materials_and_complete_requests()"
+    },
+    {
+      "label": "test_structlog_processor_merges_context_variables()",
+      "file_type": "code",
+      "source_file": "tests/unit/test_observability.py",
+      "source_location": "L96",
       "_origin": "ast",
       "id": "tests_unit_test_observability_test_structlog_processor_merges_context_variables",
       "community": 3,
@@ -16097,8 +16174,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "tests_web_test_auth_smoke_test_navigation_is_derived_from_current_api_capabilities",
-      "community": 2,
-      "community_name": "test_settings_smoke.py",
+      "community": 70,
+      "community_name": "IdentityAuditEventCode",
       "norm_label": "test_navigation_is_derived_from_current_api_capabilities()"
     },
     {
@@ -16504,8 +16581,8 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "tests_web_test_settings_smoke_test_navigation_separates_admin_settings_from_teacher_class_areas",
-      "community": 2,
-      "community_name": "test_settings_smoke.py",
+      "community": 70,
+      "community_name": "IdentityAuditEventCode",
       "norm_label": "test_navigation_separates_admin_settings_from_teacher_class_areas()"
     },
     {
@@ -21440,9 +21517,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 24,
+      "community": 37,
       "norm_label": "\u56ed\u6240\u8eab\u4efd\u4e0e\u8ba4\u8bc1\u6a21\u578b",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55 OpenAPI \u5951\u7ea6\u7247\u6bb5",
       "id": "docs_design_data_model_identity_authentication_model"
     },
     {
@@ -21482,9 +21559,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 88,
       "norm_label": "\u8eab\u4efd\u4e0e m3a \u8fc1\u79fb\u5e8f\u5217",
-      "community_name": "Child Manager PostgreSQL \u6570\u636e\u5e93 Schema",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "docs_design_data_model_migration_sequence_model"
     },
     {
@@ -21524,9 +21601,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 88,
       "norm_label": "0004 settings \u5230 0005 m3a \u8fc1\u79fb\u94fe",
-      "community_name": "Child Manager PostgreSQL \u6570\u636e\u5e93 Schema",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "docs_design_database_schema_alembic_0005_chain"
     },
     {
@@ -21538,9 +21615,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 24,
+      "community": 37,
       "norm_label": "nicegui bff \u540c\u6e90\u8eab\u4efd\u67b6\u6784",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55 OpenAPI \u5951\u7ea6\u7247\u6bb5",
       "id": "docs_design_system_architecture_same_origin_identity_architecture"
     },
     {
@@ -21552,9 +21629,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 24,
       "norm_label": "webauthn \u4e0e\u5907\u7528\u4f1a\u8bdd\u4fdd\u8bc1\u7ea7\u522b\u8fb9\u754c",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55 OpenAPI \u5951\u7ea6\u7247\u6bb5",
+      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
       "id": "docs_design_system_architecture_assurance_level_boundary"
     },
     {
@@ -21580,9 +21657,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 72,
+      "community": 11,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55\u89c4\u683c\u8d28\u91cf\u68c0\u67e5\u6e05\u5355",
-      "community_name": "test_password_to_passkey.py",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "specs_002_password_totp_backup_login_checklists_requirements_specification_quality_checklist"
     },
     {
@@ -21636,9 +21713,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 37,
+      "community": 24,
       "norm_label": "add passkey \u4e13\u7528\u91cd\u65b0\u9a8c\u8bc1 api",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55 OpenAPI \u5951\u7ea6\u7247\u6bb5",
+      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
       "id": "specs_002_password_totp_backup_login_contracts_openapi_add_passkey_reauthentication_api"
     },
     {
@@ -21706,9 +21783,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 88,
       "norm_label": "0005 password totp backup login \u8fc1\u79fb\u5951\u7ea6",
-      "community_name": "Child Manager PostgreSQL \u6570\u636e\u5e93 Schema",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "specs_002_password_totp_backup_login_data_model_migration_0005_contract"
     },
     {
@@ -21734,9 +21811,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 65,
+      "community": 88,
       "norm_label": "m3a \u5b9e\u65bd\u7b56\u7565",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "specs_002_password_totp_backup_login_plan_implementation_strategy"
     },
     {
@@ -21748,9 +21825,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 65,
+      "community": 88,
       "norm_label": "m3a \u5b9e\u65bd\u4e0e\u9a8c\u6536 quickstart",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "specs_002_password_totp_backup_login_quickstart_m3a_acceptance_quickstart"
     },
     {
@@ -21860,9 +21937,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 65,
+      "community": 88,
       "norm_label": "\u8ba4\u8bc1\u53d8\u66f4 intentional red \u5230 green \u6d41\u7a0b",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "specs_002_password_totp_backup_login_tasks_intentional_red_green_pipeline"
     },
     {
@@ -22175,9 +22252,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 51,
+      "community": 64,
       "norm_label": "m3a \u5907\u7528\u767b\u5f55\u9a8c\u6536",
-      "community_name": "\u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "community_name": "M3A \u5907\u7528\u767b\u5f55\u9700\u6c42",
       "id": "specs_001_daily_activity_plan_quickstart_m3a_backup_login_acceptance"
     },
     {
@@ -31049,9 +31126,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 72,
+      "community": 11,
       "norm_label": "specification quality checklist: \u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55",
-      "community_name": "test_password_to_passkey.py",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_5f70de596fc8"
     },
     {
@@ -31064,9 +31141,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 72,
+      "community": 11,
       "norm_label": "content quality",
-      "community_name": "test_password_to_passkey.py",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_fe881a23bed0"
     },
     {
@@ -31079,9 +31156,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 72,
+      "community": 11,
       "norm_label": "requirement completeness",
-      "community_name": "test_password_to_passkey.py",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_f63cfd11ad46"
     },
     {
@@ -31094,9 +31171,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 72,
+      "community": 11,
       "norm_label": "feature readiness",
-      "community_name": "test_password_to_passkey.py",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_8fa9b4331170"
     },
     {
@@ -31109,9 +31186,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 72,
+      "community": 11,
       "norm_label": "notes",
-      "community_name": "test_password_to_passkey.py",
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u529f\u80fd\u89c4\u683c",
       "id": "struct_specs_002_password_totp_backup_login_checklists_requirements_md_heading_ef61571eff09"
     },
     {
@@ -31769,9 +31846,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 88,
       "norm_label": "quickstart: \u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_6a96678c82d2"
     },
     {
@@ -31784,9 +31861,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 88,
       "norm_label": "1. \u5b9e\u65bd\u524d gate",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_8593ade8c439"
     },
     {
@@ -31799,9 +31876,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 88,
       "norm_label": "2. \u5173\u952e\u9a8c\u6536\u65c5\u7a0b",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_69ee72ae1999"
     },
     {
@@ -31814,9 +31891,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 88,
       "norm_label": "\u7ba1\u7406\u5458\u5f3a\u5236\u7ed1\u5b9a",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_100b1c49a698"
     },
     {
@@ -31829,9 +31906,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 88,
       "norm_label": "\u65b0\u8bbe\u5907\u5907\u7528\u767b\u5f55",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_e93104349b8c"
     },
     {
@@ -31844,9 +31921,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 88,
       "norm_label": "\u56e0\u7d20\u7ef4\u62a4\u4e0e\u6062\u590d",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_d8039f809ed8"
     },
     {
@@ -31859,9 +31936,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 88,
       "norm_label": "3. \u4e13\u9879\u9a8c\u8bc1",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_0ae35385c08e"
     },
     {
@@ -31874,9 +31951,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 65,
+      "community": 88,
       "norm_label": "4. \u5b8c\u6574\u9a8c\u8bc1",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "M3A \u5b9e\u65bd\u4e0e\u9a8c\u6536 Quickstart",
       "id": "struct_specs_002_password_totp_backup_login_quickstart_md_heading_7528c5033b8f"
     },
     {
@@ -34689,10 +34766,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L189",
+      "source_location": "L219",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_test_runtime_m2_openapi_matches_frozen_operation_contract",
+      "target": "apps_api_app_create_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_runtime_openapi.py",
+      "source_location": "L230",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_contract_test_runtime_openapi_test_runtime_m3a_openapi_matches_frozen_operation_contract",
       "target": "apps_api_app_create_app",
       "confidence_score": 1.0
     },
@@ -35793,7 +35882,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L585",
+      "source_location": "L593",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi",
@@ -35804,7 +35893,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L617",
+      "source_location": "L625",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi",
@@ -35815,7 +35904,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L581",
+      "source_location": "L589",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi",
@@ -35826,7 +35915,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L576",
+      "source_location": "L584",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi",
@@ -35872,7 +35961,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L586",
+      "source_location": "L594",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi_apply_operation_contract",
@@ -35884,7 +35973,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L576",
+      "source_location": "L584",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi_operation",
@@ -35896,7 +35985,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L576",
+      "source_location": "L584",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi_operation",
@@ -35908,7 +35997,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L585",
+      "source_location": "L593",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi_apply_operation_contract",
@@ -35920,7 +36009,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L617",
+      "source_location": "L625",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi_configure_openapi",
@@ -35932,7 +36021,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L585",
+      "source_location": "L593",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi_apply_operation_contract",
@@ -35944,7 +36033,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L589",
+      "source_location": "L597",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi_apply_operation_contract",
@@ -35956,7 +36045,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L617",
+      "source_location": "L625",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_api_openapi_configure_openapi",
@@ -35967,10 +36056,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "apps/api/openapi.py",
-      "source_location": "L618",
+      "source_location": "L626",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "apps_api_openapi_rationale_618",
+      "source": "apps_api_openapi_rationale_626",
       "target": "apps_api_openapi_configure_openapi",
       "confidence_score": 1.0
     },
@@ -45603,7 +45692,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_audit_repository",
@@ -45627,7 +45716,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_audit_repository",
@@ -45639,11 +45728,23 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_audit_repository",
       "target": "packages_contracts_audit_identityauditeventcode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/backend/audit/repository.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "packages_backend_audit_repository",
+      "target": "packages_contracts_audit_identityauditmetadata",
       "confidence_score": 1.0
     },
     {
@@ -45698,7 +45799,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_audit_repository_auditrepository",
@@ -45709,7 +45810,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_audit_repository_auditrepository",
@@ -45720,11 +45821,22 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 0.8,
       "_origin": "ast",
       "source": "packages_backend_audit_repository_auditrepository",
       "target": "packages_contracts_audit_identityauditeventcode",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "packages/backend/audit/repository.py",
+      "source_location": "L10",
+      "weight": 0.8,
+      "_origin": "ast",
+      "source": "packages_backend_audit_repository_auditrepository",
+      "target": "packages_contracts_audit_identityauditmetadata",
       "confidence_score": 0.5
     },
     {
@@ -46218,6 +46330,18 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/identity/test_audit.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_identity_test_audit_test_identity_audit_rejects_authentication_material_hidden_in_allowed_fields",
+      "target": "packages_backend_audit_repository_auditrepository",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/identity/test_audit.py",
       "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
@@ -46242,7 +46366,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_audit_repository_auditrepository_init",
@@ -46254,7 +46378,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_audit_repository_auditrepository_init",
@@ -46266,7 +46390,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_audit_repository_auditrepository_append",
@@ -46278,7 +46402,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/audit/repository.py",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_audit_repository_auditrepository_append",
@@ -64337,7 +64461,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L94",
+      "source_location": "L107",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability",
@@ -64348,7 +64472,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L82",
+      "source_location": "L95",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability",
@@ -64359,7 +64483,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L40",
+      "source_location": "L53",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability",
@@ -64370,7 +64494,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L70",
+      "source_location": "L83",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability",
@@ -64381,7 +64505,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L16",
+      "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability",
@@ -64392,7 +64516,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L76",
+      "source_location": "L89",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability",
@@ -64416,7 +64540,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L50",
+      "source_location": "L63",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability_redact",
@@ -64428,7 +64552,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L73",
+      "source_location": "L86",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability_redact_mapping",
@@ -64440,7 +64564,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L100",
+      "source_location": "L113",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability_configure_logging",
@@ -64451,10 +64575,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L71",
+      "source_location": "L84",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "packages_backend_observability_rationale_71",
+      "source": "packages_backend_observability_rationale_84",
       "target": "packages_backend_observability_redact_mapping",
       "confidence_score": 1.0
     },
@@ -64467,6 +64591,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_observability",
+      "target": "packages_backend_observability_redact_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_observability.py",
+      "source_location": "L69",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_test_observability_test_redaction_removes_backup_authentication_materials_and_complete_requests",
       "target": "packages_backend_observability_redact_mapping",
       "confidence_score": 1.0
     },
@@ -64535,7 +64671,7 @@
       "context": "collection",
       "confidence": "INFERRED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L99",
+      "source_location": "L112",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability_configure_logging",
@@ -64547,7 +64683,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L82",
+      "source_location": "L95",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_backend_observability_merge_request_context",
@@ -64558,10 +64694,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L83",
+      "source_location": "L96",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "packages_backend_observability_rationale_83",
+      "source": "packages_backend_observability_rationale_96",
       "target": "packages_backend_observability_merge_request_context",
       "confidence_score": 1.0
     },
@@ -64582,7 +64718,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_observability.py",
-      "source_location": "L72",
+      "source_location": "L100",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_observability_test_structlog_processor_merges_context_variables",
@@ -64593,10 +64729,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "packages/backend/observability.py",
-      "source_location": "L95",
+      "source_location": "L108",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "packages_backend_observability_rationale_95",
+      "source": "packages_backend_observability_rationale_108",
       "target": "packages_backend_observability_configure_logging",
       "confidence_score": 1.0
     },
@@ -68640,7 +68776,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L47",
+      "source_location": "L58",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_contracts_audit",
@@ -68651,7 +68787,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L8",
+      "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_contracts_audit",
@@ -68659,11 +68795,22 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/contracts/audit.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "packages_contracts_audit",
+      "target": "packages_contracts_audit_identityauditmetadata",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L5",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_contracts_audit",
@@ -68675,7 +68822,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L5",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_contracts_audit",
@@ -68687,7 +68834,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L5",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_contracts_audit",
@@ -68721,7 +68868,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L8",
+      "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_contracts_audit_identityauditeventcode",
@@ -68732,7 +68879,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L5",
+      "source_location": "L8",
       "weight": 0.8,
       "_origin": "ast",
       "source": "packages_contracts_audit_identityauditeventcode",
@@ -68743,7 +68890,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L5",
+      "source_location": "L8",
       "weight": 0.8,
       "_origin": "ast",
       "source": "packages_contracts_audit_identityauditeventcode",
@@ -68766,7 +68913,40 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L5",
+      "source_location": "L8",
+      "weight": 0.8,
+      "_origin": "ast",
+      "source": "packages_contracts_audit_identityauditmetadata",
+      "target": "packages_contracts_common_contractmodel",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "packages/contracts/audit.py",
+      "source_location": "L8",
+      "weight": 0.8,
+      "_origin": "ast",
+      "source": "packages_contracts_audit_identityauditmetadata",
+      "target": "packages_contracts_common_resourcereference",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/contracts/audit.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "packages_contracts_audit_rationale_51",
+      "target": "packages_contracts_audit_identityauditmetadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "packages/contracts/audit.py",
+      "source_location": "L8",
       "weight": 0.8,
       "_origin": "ast",
       "source": "packages_contracts_audit_auditeventreference",
@@ -68777,7 +68957,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "packages/contracts/audit.py",
-      "source_location": "L5",
+      "source_location": "L8",
       "weight": 0.8,
       "_origin": "ast",
       "source": "packages_contracts_audit_auditeventreference",
@@ -78526,6 +78706,17 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_openapi_document",
+      "target": "tests_contract_test_openapi_document_test_openapi_keeps_nicegui_as_the_only_browser_entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_openapi_document.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_contract_test_openapi_document",
       "target": "tests_contract_test_openapi_document_test_openapi_locks_repeated_auth_and_clear_cookies",
       "confidence_score": 1.0
     },
@@ -78533,7 +78724,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_openapi_document.py",
-      "source_location": "L41",
+      "source_location": "L53",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_openapi_document",
@@ -78583,6 +78774,18 @@
       "source_location": "L26",
       "weight": 1.0,
       "_origin": "ast",
+      "source": "tests_contract_test_openapi_document_test_openapi_keeps_nicegui_as_the_only_browser_entry",
+      "target": "tests_contract_test_openapi_document_load_document",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_openapi_document.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast",
       "source": "tests_contract_test_openapi_document_test_openapi_locks_repeated_auth_and_clear_cookies",
       "target": "tests_contract_test_openapi_document_load_document",
       "confidence_score": 1.0
@@ -78592,7 +78795,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_openapi_document.py",
-      "source_location": "L42",
+      "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_openapi_document_test_openapi_locks_two_unavailable_codes",
@@ -78603,7 +78806,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L53",
+      "source_location": "L193",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_contract_test_runtime_openapi",
+      "target": "tests_contract_test_runtime_openapi_assert_operation_contract",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_runtime_openapi.py",
+      "source_location": "L58",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi",
@@ -78614,7 +78828,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L47",
+      "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi",
@@ -78636,7 +78850,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L137",
+      "source_location": "L142",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi",
@@ -78647,7 +78861,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L178",
+      "source_location": "L183",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi",
@@ -78669,7 +78883,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L155",
+      "source_location": "L160",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi",
@@ -78680,7 +78894,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L126",
+      "source_location": "L131",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi",
@@ -78691,11 +78905,22 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L188",
+      "source_location": "L218",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi",
       "target": "tests_contract_test_runtime_openapi_test_runtime_m2_openapi_matches_frozen_operation_contract",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_runtime_openapi.py",
+      "source_location": "L229",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_contract_test_runtime_openapi",
+      "target": "tests_contract_test_runtime_openapi_test_runtime_m3a_openapi_matches_frozen_operation_contract",
       "confidence_score": 1.0
     },
     {
@@ -78714,7 +78939,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L65",
+      "source_location": "L70",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_canonical_schema",
@@ -78726,7 +78951,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L151",
+      "source_location": "L156",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_parameter_shape",
@@ -78750,7 +78975,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L160",
+      "source_location": "L165",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_response_shape",
@@ -78762,7 +78987,19 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L53",
+      "source_location": "L193",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_contract_test_runtime_openapi_assert_operation_contract",
+      "target": "tests_contract_test_runtime_openapi_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_runtime_openapi.py",
+      "source_location": "L58",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_canonical_schema",
@@ -78774,7 +79011,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L47",
+      "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_effective_security",
@@ -78798,7 +79035,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L137",
+      "source_location": "L142",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_parameter_shape",
@@ -78810,7 +79047,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L178",
+      "source_location": "L183",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_request_schema",
@@ -78822,7 +79059,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L155",
+      "source_location": "L160",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_response_shape",
@@ -78834,7 +79071,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L126",
+      "source_location": "L131",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_schema_json",
@@ -78846,7 +79083,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L191",
+      "source_location": "L224",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_test_runtime_m2_openapi_matches_frozen_operation_contract",
@@ -78858,10 +79095,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L207",
+      "source_location": "L235",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_contract_test_runtime_openapi_test_runtime_m2_openapi_matches_frozen_operation_contract",
+      "source": "tests_contract_test_runtime_openapi_test_runtime_m3a_openapi_matches_frozen_operation_contract",
+      "target": "tests_contract_test_runtime_openapi_operations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_runtime_openapi.py",
+      "source_location": "L213",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_contract_test_runtime_openapi_assert_operation_contract",
       "target": "tests_contract_test_runtime_openapi_effective_security",
       "confidence_score": 1.0
     },
@@ -78870,7 +79119,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L130",
+      "source_location": "L135",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_schema_json",
@@ -78882,7 +79131,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L148",
+      "source_location": "L153",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_parameter_shape",
@@ -78894,7 +79143,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L185",
+      "source_location": "L190",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_request_schema",
@@ -78906,7 +79155,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L166",
+      "source_location": "L171",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_response_shape",
@@ -78918,10 +79167,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L204",
+      "source_location": "L210",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_contract_test_runtime_openapi_test_runtime_m2_openapi_matches_frozen_operation_contract",
+      "source": "tests_contract_test_runtime_openapi_assert_operation_contract",
       "target": "tests_contract_test_runtime_openapi_parameter_shape",
       "confidence_score": 1.0
     },
@@ -78930,10 +79179,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L198",
+      "source_location": "L204",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "tests_contract_test_runtime_openapi_test_runtime_m2_openapi_matches_frozen_operation_contract",
+      "source": "tests_contract_test_runtime_openapi_assert_operation_contract",
       "target": "tests_contract_test_runtime_openapi_response_shape",
       "confidence_score": 1.0
     },
@@ -78942,11 +79191,35 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/contract/test_runtime_openapi.py",
-      "source_location": "L201",
+      "source_location": "L207",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_contract_test_runtime_openapi_assert_operation_contract",
+      "target": "tests_contract_test_runtime_openapi_request_schema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_runtime_openapi.py",
+      "source_location": "L221",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_contract_test_runtime_openapi_test_runtime_m2_openapi_matches_frozen_operation_contract",
-      "target": "tests_contract_test_runtime_openapi_request_schema",
+      "target": "tests_contract_test_runtime_openapi_assert_operation_contract",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/contract/test_runtime_openapi.py",
+      "source_location": "L232",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_contract_test_runtime_openapi_test_runtime_m3a_openapi_matches_frozen_operation_contract",
+      "target": "tests_contract_test_runtime_openapi_assert_operation_contract",
       "confidence_score": 1.0
     },
     {
@@ -81170,6 +81443,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/identity/test_audit.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_identity_test_audit",
+      "target": "tests_unit_identity_test_audit_test_identity_audit_rejects_authentication_material_hidden_in_allowed_fields",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/identity/test_audit.py",
       "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
@@ -82351,6 +82635,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_observability.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_unit_test_observability",
+      "target": "tests_unit_test_observability_test_redaction_removes_backup_authentication_materials_and_complete_requests",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/unit/test_observability.py",
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
@@ -82395,7 +82690,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit/test_observability.py",
-      "source_location": "L68",
+      "source_location": "L96",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_unit_test_observability",
@@ -95151,5 +95446,5 @@
       "source_file": "graphify-out/memory/query_20260712_071357_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u7684\u6570\u636e\u5b9e\u4f53_\u5173\u7cfb_\u552f\u4e00\u7ea6\u675f_\u5386\u53f2\u7248\u672c_\u5f02\u6b65\u4efb\u52a1\u548c\u5b89\u5168\u8fb9\u754c\u662f\u4ec0\u4e48.md"
     }
   ],
-  "built_at_commit": "61f66b7cbb236abe37841416a2dae6019db52c23"
+  "built_at_commit": "dc4443dbb2177b4dd3f57dd1a91854bd19c1176e"
 }

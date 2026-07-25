@@ -182,11 +182,11 @@ M3A 前，不得执行 T003 之后的代码任务。
 - [x] T031 [P] 更新 `tests/contract/test_runtime_openapi.py` 和
   `tests/contract/test_openapi_document.py`，证明运行时 OpenAPI 与固定文档契约一致且 NiceGUI
   仍是唯一浏览器入口
-- [ ] T032 执行 `specs/002-password-totp-backup-login/quickstart.md` 的全部旅程和专项测试，
+- [x] T032 执行 `specs/002-password-totp-backup-login/quickstart.md` 的全部旅程和专项测试，
   再运行 `uv sync --locked`、Ruff format/check、Pyright 与完整 Pytest
-- [ ] T033 运行敏感信息扫描、`git diff --check` 与 `graphify update .`，验证图谱 manifest、
+- [x] T033 运行敏感信息扫描、`git diff --check` 与 `graphify update .`，验证图谱 manifest、
   JSON 可解析性、核心认证节点和无向多重图诊断，把真实结果写入 M3A Issue
-- [ ] T034 对固定 docs 基线和 M3A Issue 执行 Standards + Spec 双轴 Review；解决阻塞发现后
+- [x] T034 对固定 docs 基线和 M3A Issue 执行 Standards + Spec 双轴 Review；解决阻塞发现后
   才可宣称 M3A 完成，且不得自动合并到 `main`
 
 ---

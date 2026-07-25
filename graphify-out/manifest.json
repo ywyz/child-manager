@@ -410,9 +410,9 @@
     "semantic_hash": "5c0f5481a79338b04836063496f47cf6"
   },
   "specs/002-password-totp-backup-login/contracts/openapi.yaml": {
-    "mtime": 1784897971.076967,
-    "ast_hash": "bd74fead998d6cb9651659929242516d",
-    "semantic_hash": "bd74fead998d6cb9651659929242516d"
+    "mtime": 1784989045.1800542,
+    "ast_hash": "8a27feb714caa7fd6813492ba61f7888",
+    "semantic_hash": ""
   },
   "specs/002-password-totp-backup-login/data-model.md": {
     "mtime": 1784897971.0771642,
@@ -425,9 +425,9 @@
     "semantic_hash": "046d838eb4abbef44264a65ac2fb1b74"
   },
   "specs/002-password-totp-backup-login/quickstart.md": {
-    "mtime": 1784897971.0772786,
-    "ast_hash": "1eb2702f4b5e483d88fee4bf038f37dc",
-    "semantic_hash": "1eb2702f4b5e483d88fee4bf038f37dc"
+    "mtime": 1784989177.7460592,
+    "ast_hash": "6242c7adce26790458e5935cf699fea2",
+    "semantic_hash": ""
   },
   "specs/002-password-totp-backup-login/research.md": {
     "mtime": 1784897971.0773401,
@@ -440,8 +440,8 @@
     "semantic_hash": "2b3f740ae4d88d2ef5cf18c1503b0577"
   },
   "specs/002-password-totp-backup-login/tasks.md": {
-    "mtime": 1784964254.0748787,
-    "ast_hash": "38537d5257f425ae5ddd0993bac0c5d7",
+    "mtime": 1784989573.5735686,
+    "ast_hash": "96087ade34532a1f64ee71cb6b1eea47",
     "semantic_hash": ""
   },
   "apps/__init__.py": {
@@ -475,8 +475,8 @@
     "semantic_hash": ""
   },
   "apps/api/openapi.py": {
-    "mtime": 1784905536.5707278,
-    "ast_hash": "7acc5be39086e0b86d0ca3996c7b0385",
+    "mtime": 1784989059.64294,
+    "ast_hash": "a85ac4bb9180b2d6a91801041c4784e2",
     "semantic_hash": ""
   },
   "apps/api/routers/__init__.py": {
@@ -590,8 +590,8 @@
     "semantic_hash": ""
   },
   "packages/backend/audit/repository.py": {
-    "mtime": 1784897986.7000654,
-    "ast_hash": "7babf252bc68826a196b26bc67640aba",
+    "mtime": 1784987308.1169815,
+    "ast_hash": "d957ffaef5bc0b8396ce88d0e2630d2c",
     "semantic_hash": ""
   },
   "packages/backend/audit/service.py": {
@@ -740,8 +740,8 @@
     "semantic_hash": ""
   },
   "packages/backend/observability.py": {
-    "mtime": 1784897986.702539,
-    "ast_hash": "bc1bc25b640206ad5a91d2818535933a",
+    "mtime": 1784987308.1149814,
+    "ast_hash": "00d81911eb75fab59103f6f595b723db",
     "semantic_hash": ""
   },
   "packages/backend/ports.py": {
@@ -770,8 +770,8 @@
     "semantic_hash": ""
   },
   "packages/contracts/audit.py": {
-    "mtime": 1784964059.7611933,
-    "ast_hash": "1a507aff3c1f227e12eca315478e7acb",
+    "mtime": 1784987308.1159816,
+    "ast_hash": "e78e02c3704ba4f0efe5fa6283f5d899",
     "semantic_hash": ""
   },
   "packages/contracts/common.py": {
@@ -785,8 +785,8 @@
     "semantic_hash": ""
   },
   "packages/contracts/identity.py": {
-    "mtime": 1784897986.7031188,
-    "ast_hash": "12246c432f41f3810b6afc1f3f9d46ef",
+    "mtime": 1784989059.6419244,
+    "ast_hash": "19c991dbef9697abe78eaae741f09791",
     "semantic_hash": ""
   },
   "packages/contracts/jobs.py": {
@@ -920,13 +920,13 @@
     "semantic_hash": ""
   },
   "tests/contract/test_openapi_document.py": {
-    "mtime": 1784897986.705657,
-    "ast_hash": "cc61e4d6f3319b0d493ded9aa49ac246",
+    "mtime": 1784987462.9147732,
+    "ast_hash": "89c256b9340f991c632685a072ca4ccd",
     "semantic_hash": ""
   },
   "tests/contract/test_runtime_openapi.py": {
-    "mtime": 1784897986.705728,
-    "ast_hash": "40bf9b2e2e5300d2900a6d131392696f",
+    "mtime": 1784987469.534807,
+    "ast_hash": "f48ae2092179e17b51e374ef4e3a0b3d",
     "semantic_hash": ""
   },
   "tests/contract/test_users_contract.py": {
@@ -1025,8 +1025,8 @@
     "semantic_hash": ""
   },
   "tests/unit/identity/test_audit.py": {
-    "mtime": 1784897986.7067907,
-    "ast_hash": "7f232f0393aebfef3372795c5ba184b7",
+    "mtime": 1784987241.516641,
+    "ast_hash": "ab9b1d19f6e224dac6f848c3244f8cef",
     "semantic_hash": ""
   },
   "tests/unit/identity/test_auth_throttle.py": {
@@ -1075,8 +1075,8 @@
     "semantic_hash": ""
   },
   "tests/unit/test_observability.py": {
-    "mtime": 1784897986.7073472,
-    "ast_hash": "a8bc777752ff5581c038bce1bf18f7ba",
+    "mtime": 1784987241.5146408,
+    "ast_hash": "eeeea9e39e61b8691647d08020f32919",
     "semantic_hash": ""
   },
   "tests/web/__init__.py": {
