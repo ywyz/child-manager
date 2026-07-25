@@ -29,6 +29,7 @@ from packages.backend.identity.passwords import (
 )
 from packages.backend.identity.repository import (
     BackupCredentialRecord,
+    BackupSecurityEventRecord,
     CredentialRecord,
     IdentityRepository,
     InvitationRecord,
@@ -371,6 +372,14 @@ class IdentityService:
                 repository.get_backup_credential(session.user.id),
             )
 
+    def list_backup_security_events(
+        self,
+        session: SessionUser,
+    ) -> list[BackupSecurityEventRecord]:
+        with self._connect() as connection:
+            repository = IdentityRepository(connection, session.user.kindergarten_id)
+            return repository.list_backup_security_events(session.user.id)
+
     @staticmethod
     def _backup_authentication_failure() -> IdentityError:
         return IdentityError(
@@ -700,6 +709,7 @@ class IdentityService:
         now = datetime.now(UTC)
         with self._connect() as connection, connection.transaction():
             repository = IdentityRepository(connection, session.user.kindergarten_id)
+            was_enabled = repository.has_enabled_backup_auth(session.user.id)
             current = repository.get_family_session(
                 session.user.id,
                 session.token_family_id,
@@ -772,14 +782,18 @@ class IdentityService:
                 reason="backup_factor_changed",
             )
             AuditRepository(connection, session.user.kindergarten_id).append(
-                event_code=IdentityAuditEventCode.BACKUP_ENABLED,
+                event_code=(
+                    IdentityAuditEventCode.BACKUP_CHANGED
+                    if was_enabled
+                    else IdentityAuditEventCode.BACKUP_ENABLED
+                ),
                 actor_user_id=session.user.id,
                 actor_role_codes=session.role_codes,
                 resource_type="backup_auth_credential",
                 resource_id=credential.id,
                 request_id=request_id,
                 outcome="success",
-                metadata={"reason": "enrollment_verified"},
+                metadata={"reason": ("factors_replaced" if was_enabled else "enrollment_verified")},
             )
         return BackupAuthenticationStatus(
             enabled=True,
@@ -1104,6 +1118,7 @@ class IdentityService:
         now: datetime,
     ) -> tuple[str, int]:
         material = issue_secret(SecretPurpose.RECOVERY_CODE)
+        backup_was_enabled = repository.has_enabled_backup_auth(user_id)
         repository.rotate_recovery_code(user_id, code_hash=material.record.digest)
         revoked_credential_ids = repository.revoke_other_credentials(
             user_id,
@@ -1146,6 +1161,16 @@ class IdentityService:
             outcome="success",
             metadata={"reason": "account_recovered"},
         )
+        if backup_was_enabled:
+            audit.append(
+                event_code=IdentityAuditEventCode.BACKUP_REVOKED_BY_RECOVERY,
+                actor_user_id=user_id,
+                actor_role_codes=roles,
+                resource_type="user",
+                resource_id=user_id,
+                outcome="success",
+                metadata={"reason": "account_recovered"},
+            )
         for revoked_credential_id in revoked_credential_ids:
             audit.append(
                 event_code=IdentityAuditEventCode.CREDENTIAL_REVOKED,
@@ -1335,6 +1360,16 @@ class IdentityService:
                 resource_id=created.id,
                 outcome="success",
             )
+            if consume_backup_reauthentication:
+                AuditRepository(connection, kindergarten_id).append(
+                    event_code=IdentityAuditEventCode.PASSKEY_ADDED_FROM_BACKUP,
+                    actor_user_id=challenge.user_id,
+                    actor_role_codes=repository.roles_for_user(challenge.user_id),
+                    resource_type="webauthn_credential",
+                    resource_id=created.id,
+                    outcome="success",
+                    metadata={"reason": "password_totp"},
+                )
             return _RegistrationResult(created, recovery_code, sessions_revoked)
 
     def verify_bootstrap_registration(

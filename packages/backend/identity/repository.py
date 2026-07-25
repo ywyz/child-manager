@@ -1013,8 +1013,19 @@ class IdentityRepository:
         safe_limit = max(1, min(limit, 20))
         rows = self.connection.execute(
             """SELECT event_code, occurred_at,
-                   metadata->>'authentication_method',
-                   metadata->>'client_hint'
+                   CASE
+                     WHEN event_code IN (
+                       'auth.backup_login_succeeded',
+                       'auth.passkey_added_from_backup'
+                     ) THEN 'password_totp'
+                     WHEN event_code IN (
+                       'auth.backup_enabled',
+                       'auth.backup_changed',
+                       'auth.backup_disabled'
+                     ) THEN 'webauthn'
+                     ELSE metadata->>'authentication_method'
+                   END,
+                   COALESCE(metadata->>'client_hint', metadata->>'source')
             FROM audit_events
             WHERE kindergarten_id=%s AND actor_user_id=%s
               AND event_code = ANY(%s)

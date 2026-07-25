@@ -42,6 +42,7 @@ from packages.contracts.identity import (
     RecoveryRequestCreate,
     RegistrationPending,
     RegistrationVerifyRequest,
+    SecurityEventList,
     SessionList,
     StepUpResult,
     WebAuthnAuthenticationOptions,
@@ -671,6 +672,28 @@ def reauthenticate_backup_session(
             )
         raise
     _clear_public_throttle(request, buckets)
+
+
+@router.get(
+    "/security-events",
+    response_model=SecurityEventList,
+    operation_id="listMyBackupAuthenticationSecurityEvents",
+)
+def security_events(
+    service: IdentityServiceDependency,
+    session: AuthenticatedSessionDependency,
+) -> dict[str, object]:
+    return {
+        "items": [
+            {
+                "event_code": item.event_code,
+                "occurred_at": item.occurred_at,
+                "authentication_method": item.authentication_method,
+                "client_hint": item.client_hint,
+            }
+            for item in service.list_backup_security_events(session)
+        ]
+    }
 
 
 @router.get("/credentials", response_model=CredentialList)

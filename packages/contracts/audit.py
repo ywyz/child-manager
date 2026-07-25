@@ -31,8 +31,11 @@ class IdentityAuditEventCode(StrEnum):
     RECOVERY_CODE_ROTATED = "identity.recovery_code_rotated"
     SESSION_REVOKED = "identity.session_revoked"
     BACKUP_ENABLED = "auth.backup_enabled"
+    BACKUP_CHANGED = "auth.backup_changed"
     BACKUP_DISABLED = "auth.backup_disabled"
     BACKUP_LOGIN_SUCCEEDED = "auth.backup_login_succeeded"
+    PASSKEY_ADDED_FROM_BACKUP = "auth.passkey_added_from_backup"
+    BACKUP_REVOKED_BY_RECOVERY = "auth.backup_revoked_by_recovery"
 
     # 通用登录审计名称保留为认证 ceremony 的兼容别名, 不代表密码登录。
     INITIALIZED = "identity.bootstrap_started"

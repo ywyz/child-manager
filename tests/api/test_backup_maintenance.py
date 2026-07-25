@@ -1,10 +1,12 @@
 # ruff: noqa: F811
 
-from datetime import UTC, datetime
+import json
+from datetime import UTC, datetime, timedelta
 from importlib import import_module
 from pathlib import Path
 from types import SimpleNamespace
 from typing import cast
+from uuid import uuid4
 
 import psycopg
 import pytest
@@ -231,12 +233,24 @@ def test_teacher_can_disable_backup_authentication_and_revoke_old_state(
               AND authentication_method='webauthn' AND revoked_at IS NULL""",
             (actor.kindergarten_id, actor.user_id),
         ).fetchone()
+        security_event_codes = connection.execute(
+            """SELECT event_code FROM audit_events
+            WHERE kindergarten_id=%s AND actor_user_id=%s
+              AND event_code LIKE %s
+            ORDER BY occurred_at""",
+            (actor.kindergarten_id, actor.user_id, "auth.backup_%"),
+        ).fetchall()
     assert credential == ("revoked", None, None, None, None)
     assert version_after == (version_before[0] + 1,)
     assert backup_sessions
     assert all(revoked_at is not None for revoked_at, _proof in backup_sessions)
     assert all(proof_at is None for _revoked_at, proof_at in backup_sessions)
     assert active_webauthn_sessions == (1,)
+    assert [row[0] for row in security_event_codes] == [
+        "auth.backup_enabled",
+        "auth.backup_login_succeeded",
+        "auth.backup_disabled",
+    ]
     webauthn_session = _identity_service(client).authenticate_access(webauthn_access)
     assert webauthn_session.authentication_method == "webauthn"
     with pytest.raises(IdentityError) as exc_info:
@@ -246,12 +260,97 @@ def test_teacher_can_disable_backup_authentication_and_revoke_old_state(
 
 def test_backup_security_events_are_current_user_only_and_bounded(
     admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
 ) -> None:
-    client, _actor = admin_client
+    client, actor = admin_client
+    event_codes = [
+        "auth.backup_enabled",
+        "auth.backup_changed",
+        "auth.backup_disabled",
+        "auth.backup_login_succeeded",
+        "auth.passkey_added_from_backup",
+        "auth.backup_revoked_by_recovery",
+    ]
+    other_user_id = uuid4()
+    now = datetime.now(UTC)
+    with psycopg.connect(_native_url(isolated_database_url)) as connection:
+        connection.execute(
+            """INSERT INTO users
+            (id, kindergarten_id, username, username_normalized, display_name,
+             webauthn_user_handle, status, activated_at)
+            VALUES (%s,%s,%s,%s,%s,%s,'active',%s)""",
+            (
+                other_user_id,
+                actor.kindergarten_id,
+                "other-security-event-user",
+                "other-security-event-user",
+                "其他安全事件用户",
+                b"e" * 32,
+                now,
+            ),
+        )
+        for index in range(25):
+            connection.execute(
+                """INSERT INTO audit_events
+                (id, kindergarten_id, event_code, actor_user_id, actor_role_codes,
+                 resource_type, outcome, metadata, occurred_at)
+                VALUES (%s,%s,%s,%s,%s::jsonb,'user','success',%s::jsonb,%s)""",
+                (
+                    uuid4(),
+                    actor.kindergarten_id,
+                    event_codes[index % len(event_codes)],
+                    actor.user_id,
+                    '["admin"]',
+                    json.dumps(
+                        {
+                            "authentication_method": ("password_totp" if index % 2 else "webauthn"),
+                            "client_hint": f"设备-{index}",
+                        }
+                    ),
+                    now + timedelta(seconds=index),
+                ),
+            )
+        connection.execute(
+            """INSERT INTO audit_events
+            (id, kindergarten_id, event_code, actor_user_id, actor_role_codes,
+             resource_type, outcome, metadata, occurred_at)
+            VALUES (%s,%s,'auth.backup_enabled',%s,%s::jsonb,'user','success',
+                    %s::jsonb,%s)""",
+            (
+                uuid4(),
+                actor.kindergarten_id,
+                other_user_id,
+                '["teacher"]',
+                json.dumps({"client_hint": "其他用户设备"}),
+                now + timedelta(minutes=1),
+            ),
+        )
+        connection.execute(
+            """INSERT INTO audit_events
+            (id, kindergarten_id, event_code, actor_user_id, actor_role_codes,
+             resource_type, outcome, metadata, occurred_at)
+            VALUES (%s,%s,'identity.user_updated',%s,%s::jsonb,'user','success',
+                    %s::jsonb,%s)""",
+            (
+                uuid4(),
+                actor.kindergarten_id,
+                actor.user_id,
+                '["admin"]',
+                json.dumps({"client_hint": "非白名单事件"}),
+                now + timedelta(minutes=2),
+            ),
+        )
+
     response = client.get("/api/v1/auth/security-events")
 
     assert response.status_code == 200
-    assert len(response.json()["items"]) <= 20
+    assert len(response.json()["items"]) == 20
+    assert [item["event_code"] for item in response.json()["items"]] == [
+        event_codes[index % len(event_codes)] for index in range(24, 4, -1)
+    ]
+    assert [item["client_hint"] for item in response.json()["items"]] == [
+        f"设备-{index}" for index in range(24, 4, -1)
+    ]
     assert all(
         set(item)
         <= {
@@ -335,11 +434,22 @@ def test_replacing_factors_revokes_existing_password_totp_sessions(
               AND authentication_method='webauthn' AND revoked_at IS NULL""",
             (actor.kindergarten_id, actor.user_id),
         ).fetchone()
+        security_event_codes = connection.execute(
+            """SELECT event_code FROM audit_events
+            WHERE kindergarten_id=%s AND actor_user_id=%s
+              AND event_code IN ('auth.backup_enabled','auth.backup_changed')
+            ORDER BY occurred_at""",
+            (actor.kindergarten_id, actor.user_id),
+        ).fetchall()
     assert version_after == (version_before[0] + 1,)
     assert backup_sessions
     assert all(revoked_at is not None for revoked_at, _proof in backup_sessions)
     assert all(proof_at is None for _revoked_at, proof_at in backup_sessions)
     assert active_webauthn_sessions == (1,)
+    assert [row[0] for row in security_event_codes] == [
+        "auth.backup_enabled",
+        "auth.backup_changed",
+    ]
     webauthn_session = _identity_service(client).authenticate_access(webauthn_access)
     assert webauthn_session.authentication_method == "webauthn"
     with pytest.raises(IdentityError) as exc_info:

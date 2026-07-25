@@ -73,3 +73,44 @@ async def test_backup_login_and_reauthentication_submit_secrets_only_in_post_bod
         ),
     ]
     assert all("password" not in path and "totp_code" not in path for path, _, _ in calls)
+
+
+@pytest.mark.asyncio
+async def test_security_events_use_read_only_same_origin_api(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[tuple[str, str, dict[str, object] | None]] = []
+
+    async def fake_request(
+        path: str,
+        *,
+        method: str = "GET",
+        payload: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        calls.append((path, method, payload))
+        return {"ok": True, "status": 200, "body": {"items": []}}
+
+    monkeypatch.setattr(api_client, "same_origin_api_request", fake_request)
+
+    result = await api_client.security_events_api_request()
+
+    assert result == {"ok": True, "status": 200, "body": {"items": []}}
+    assert calls == [("/api/v1/auth/security-events", "GET", None)]
+
+
+def test_security_event_messages_cover_the_frozen_event_codes() -> None:
+    assert {
+        auth.security_event_text("auth.backup_enabled"),
+        auth.security_event_text("auth.backup_changed"),
+        auth.security_event_text("auth.backup_disabled"),
+        auth.security_event_text("auth.backup_login_succeeded"),
+        auth.security_event_text("auth.passkey_added_from_backup"),
+        auth.security_event_text("auth.backup_revoked_by_recovery"),
+    } == {
+        "备用登录已启用",
+        "密码或动态验证码已变更",
+        "备用登录已关闭",
+        "已使用密码与动态验证码登录",
+        "已从备用会话新增通行密钥",
+        "账号恢复已撤销旧备用因素",
+    }

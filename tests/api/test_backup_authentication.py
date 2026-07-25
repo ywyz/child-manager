@@ -505,6 +505,12 @@ def test_backup_reauthentication_only_grants_add_passkey_proof(
             ORDER BY issued_at DESC LIMIT 1""",
             (actor.kindergarten_id, actor.user_id),
         ).fetchone() == (None,)
+        assert connection.execute(
+            """SELECT count(*) FROM audit_events
+            WHERE kindergarten_id=%s AND actor_user_id=%s
+              AND event_code='auth.passkey_added_from_backup'""",
+            (actor.kindergarten_id, actor.user_id),
+        ).fetchone() == (1,)
 
     reused = client.post(
         "/api/v1/auth/credentials/registration/options",

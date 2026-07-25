@@ -13,6 +13,7 @@ from apps.web.api_client import (
     backup_login_api_request,
     backup_reauthentication_api_request,
     same_origin_api_request,
+    security_events_api_request,
 )
 
 
@@ -30,6 +31,17 @@ def login_page_text() -> tuple[str, ...]:
         "为此设备新增通行密钥",
         "本人安全事件",
     )
+
+
+def security_event_text(event_code: str) -> str:
+    return {
+        "auth.backup_enabled": "备用登录已启用",
+        "auth.backup_changed": "密码或动态验证码已变更",
+        "auth.backup_disabled": "备用登录已关闭",
+        "auth.backup_login_succeeded": "已使用密码与动态验证码登录",
+        "auth.passkey_added_from_backup": "已从备用会话新增通行密钥",
+        "auth.backup_revoked_by_recovery": "账号恢复已撤销旧备用因素",
+    }.get(event_code, "安全设置已变更")
 
 
 def _javascript_helpers() -> str:
@@ -328,8 +340,10 @@ def register_auth_pages() -> None:
         status = ui.label("")
         backup_status = ui.label("")
         backup_hint = ui.label("重新验证后新增通行密钥")
-        security_events = ui.label("本人安全事件")
-        del backup_hint, security_events
+        ui.label("本人安全事件").classes("text-h6")
+        security_alert = ui.label("")
+        security_event_list = ui.column()
+        del backup_hint
         label_input = ui.input("通行密钥名称")
         backup_password = ui.input("备用登录密码", password=True)
         backup_totp = ui.input("动态验证码")
@@ -377,6 +391,30 @@ def register_auth_pages() -> None:
                     backup_status.set_text("管理员必须完成备用登录设置")
                 else:
                     backup_status.set_text("备用登录尚未启用，可稍后设置")
+            event_result = await security_events_api_request()
+            event_body = event_result.get("body", {})
+            items = (
+                event_body.get("items", [])
+                if event_result.get("ok") and isinstance(event_body, dict)
+                else []
+            )
+            security_event_list.clear()
+            if not items:
+                security_alert.set_text("暂无备用认证安全事件")
+                return
+            first = items[0] if isinstance(items[0], dict) else {}
+            security_alert.set_text(
+                f"安全提醒：{security_event_text(str(first.get('event_code', '')))}"
+            )
+            with security_event_list:
+                for item in items:
+                    if not isinstance(item, dict):
+                        continue
+                    summary = security_event_text(str(item.get("event_code", "")))
+                    occurred_at = str(item.get("occurred_at", ""))
+                    client_hint = item.get("client_hint")
+                    suffix = f" · {client_hint}" if isinstance(client_hint, str) else ""
+                    ui.label(f"{summary} · {occurred_at}{suffix}")
 
         async def start_backup_enrollment() -> None:
             async with operation_lock:

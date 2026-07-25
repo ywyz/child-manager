@@ -1,7 +1,7 @@
 # ruff: noqa: F811
 
 import json
-from base64 import urlsafe_b64decode, urlsafe_b64encode
+from base64 import b32encode, urlsafe_b64decode, urlsafe_b64encode
 from datetime import UTC, datetime, timedelta
 from hashlib import sha256
 from types import SimpleNamespace
@@ -13,9 +13,14 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from apps.api.dependencies import identity_service
 from packages.backend.identity.auth_throttle import subject_throttle_source
+from packages.backend.identity.passwords import hash_password
+from packages.backend.identity.secret_encryption import encrypt_totp_secret
 from packages.backend.identity.secret_tokens import SecretPurpose, issue_secret
+from packages.backend.identity.service import IdentityError, IdentityService
 from packages.backend.identity.tokens import hash_refresh_token
+from packages.backend.identity.totp import generate_totp
 from tests.api.passkey_helpers import (  # noqa: F401
     ActorFixture,
     admin_client,
@@ -37,6 +42,12 @@ def _secret_bytes(value: object) -> bytes:
 
 def _base64url(value: bytes) -> str:
     return urlsafe_b64encode(value).rstrip(b"=").decode("ascii")
+
+
+def _identity_service(client: TestClient) -> IdentityService:
+    application = cast(FastAPI, client.app)
+    dependency = application.dependency_overrides[identity_service]
+    return cast(IdentityService, dependency())
 
 
 def _registration_credential(*, credential_id: str, challenge: str) -> dict[str, object]:
@@ -190,25 +201,35 @@ def test_recovery_code_rotation_requires_authenticated_step_up(passkey_client: T
     assert response.status_code == 401
 
 
+@pytest.mark.parametrize(
+    ("role_code", "username", "display_name"),
+    [
+        ("teacher", "recovery-teacher", "恢复教师"),
+        ("admin", "recovery-admin", "恢复管理员"),
+    ],
+)
 def test_valid_recovery_code_still_requires_admin_approval_before_registration(
     admin_client: tuple[TestClient, ActorFixture],
     isolated_database_url: str,
     monkeypatch: pytest.MonkeyPatch,
+    role_code: str,
+    username: str,
+    display_name: str,
 ) -> None:
     client, actor = admin_client
     created = client.post(
         "/api/v1/users",
         json={
-            "username": "recovery-teacher",
-            "display_name": "恢复教师",
-            "role_codes": ["teacher"],
+            "username": username,
+            "display_name": display_name,
+            "role_codes": [role_code],
         },
         headers=csrf_headers(client),
     )
     assert created.status_code == 201
-    teacher_id = UUID(created.json()["id"])
+    recovered_user_id = UUID(created.json()["id"])
     invitation = client.post(
-        f"/api/v1/users/{teacher_id}/invitations",
+        f"/api/v1/users/{recovered_user_id}/invitations",
         json={"expires_in_hours": 24},
         headers=csrf_headers(client),
     )
@@ -219,11 +240,27 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
     old_credential_id = uuid4()
     old_refresh = "old-recovery-refresh"
     old_refresh_id = uuid4()
+    old_backup_refresh = "old-recovery-backup-refresh"
+    old_backup_refresh_id = uuid4()
+    old_backup_credential_id = uuid4()
+    old_backup_password = "恢复前仍然有效的备用密码 2026"
+    old_totp_secret_bytes = b"t" * 20
+    old_totp_secret = b32encode(old_totp_secret_bytes).decode("ascii")
+    old_totp_envelope = encrypt_totp_secret(
+        old_totp_secret_bytes,
+        key=b"\x17" * 32,
+        key_id="test-key",
+        kindergarten_id=actor.kindergarten_id,
+        user_id=recovered_user_id,
+        subject_id=old_backup_credential_id,
+        subject_kind="credential",
+        envelope_version=1,
+    )
     now = datetime.now(UTC)
     with psycopg.connect(_native_url(isolated_database_url)) as connection:
         connection.execute(
             "UPDATE users SET status='active', activated_at=%s WHERE id=%s",
-            (now, teacher_id),
+            (now, recovered_user_id),
         )
         connection.execute(
             """INSERT INTO recovery_codes
@@ -232,7 +269,7 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
             (
                 uuid4(),
                 actor.kindergarten_id,
-                teacher_id,
+                recovered_user_id,
                 recovery.record.digest,
                 now,
             ),
@@ -245,7 +282,7 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
             (
                 old_credential_id,
                 actor.kindergarten_id,
-                teacher_id,
+                recovered_user_id,
                 old_credential_raw_id,
                 b"old-cose-key",
                 '["internal"]',
@@ -260,29 +297,64 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
             (
                 old_refresh_id,
                 actor.kindergarten_id,
-                teacher_id,
+                recovered_user_id,
                 uuid4(),
                 hash_refresh_token(old_refresh),
                 now,
                 now + timedelta(days=7),
             ),
         )
+        connection.execute(
+            """INSERT INTO refresh_tokens
+            (id, kindergarten_id, user_id, token_family_id, token_hash, issued_at, expires_at,
+             authentication_method, backup_verified_at, backup_auth_version)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,'password_totp',%s,1)""",
+            (
+                old_backup_refresh_id,
+                actor.kindergarten_id,
+                recovered_user_id,
+                uuid4(),
+                hash_refresh_token(old_backup_refresh),
+                now,
+                now + timedelta(days=7),
+                now,
+            ),
+        )
+        connection.execute(
+            """INSERT INTO backup_auth_credentials
+            (id, kindergarten_id, user_id, status, password_hash, password_changed_at,
+             totp_ciphertext, totp_nonce, totp_key_id, totp_envelope_version,
+             last_accepted_counter, enabled_at)
+            VALUES (%s,%s,%s,'enabled',%s,%s,%s,%s,%s,%s,NULL,%s)""",
+            (
+                old_backup_credential_id,
+                actor.kindergarten_id,
+                recovered_user_id,
+                hash_password(old_backup_password),
+                now,
+                old_totp_envelope.ciphertext,
+                old_totp_envelope.nonce,
+                old_totp_envelope.key_id,
+                old_totp_envelope.envelope_version,
+                now,
+            ),
+        )
 
     submitted = client.post(
         "/api/v1/auth/recovery/requests",
-        json={"login": "recovery-teacher", "recovery_code": recovery.secret},
+        json={"login": username, "recovery_code": recovery.secret},
         headers=csrf_headers(client),
     )
     assert submitted.status_code == 202
     assert submitted.json() == {"message": GENERIC_RECOVERY_MESSAGE}
     assert submitted.headers.get_list("set-cookie") == []
 
-    pending = client.get(f"/api/v1/users/{teacher_id}/recovery-requests")
+    pending = client.get(f"/api/v1/users/{recovered_user_id}/recovery-requests")
     assert pending.status_code == 200
     assert len(pending.json()["items"]) == 1
     recovery_request_id = pending.json()["items"][0]["id"]
     approved = client.post(
-        f"/api/v1/users/{teacher_id}/recovery-requests/{recovery_request_id}/approve",
+        f"/api/v1/users/{recovered_user_id}/recovery-requests/{recovery_request_id}/approve",
         json={"verification_confirmed": True, "verification_note": "已电话核验"},
         headers=csrf_headers(client),
     )
@@ -325,7 +397,7 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
     )
 
     assert completed.status_code == 200
-    assert completed.json()["sessions_revoked"] == 1
+    assert completed.json()["sessions_revoked"] == 2
     assert len(_secret_bytes(completed.json()["recovery_code"])) >= 16
     assert completed.headers.get_list("set-cookie") == []
     with psycopg.connect(_native_url(isolated_database_url)) as connection:
@@ -333,22 +405,31 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
             """SELECT count(*) FILTER (WHERE revoked_at IS NULL),
                       count(*) FILTER (WHERE revoked_at IS NOT NULL)
             FROM webauthn_credentials WHERE kindergarten_id=%s AND user_id=%s""",
-            (actor.kindergarten_id, teacher_id),
+            (actor.kindergarten_id, recovered_user_id),
         ).fetchone() == (1, 1)
         assert connection.execute(
-            "SELECT revoked_at IS NOT NULL FROM refresh_tokens WHERE id=%s",
-            (old_refresh_id,),
-        ).fetchone() == (True,)
+            """SELECT count(*), count(*) FILTER (WHERE revoked_at IS NOT NULL)
+            FROM refresh_tokens WHERE kindergarten_id=%s AND user_id=%s""",
+            (actor.kindergarten_id, recovered_user_id),
+        ).fetchone() == (2, 2)
+        assert connection.execute(
+            """SELECT status, password_hash, totp_ciphertext, totp_nonce, totp_key_id,
+                      totp_envelope_version, last_accepted_counter,
+                      revoked_at IS NOT NULL
+            FROM backup_auth_credentials
+            WHERE kindergarten_id=%s AND user_id=%s""",
+            (actor.kindergarten_id, recovered_user_id),
+        ).fetchone() == ("revoked", None, None, None, None, None, None, True)
         assert connection.execute(
             """SELECT count(*) FILTER (WHERE revoked_at IS NULL AND consumed_at IS NULL),
                       count(*) FILTER (WHERE revoked_at IS NOT NULL)
             FROM account_invitations WHERE kindergarten_id=%s AND user_id=%s""",
-            (actor.kindergarten_id, teacher_id),
+            (actor.kindergarten_id, recovered_user_id),
         ).fetchone() == (0, 1)
         recovery_rows = connection.execute(
             """SELECT id, consumed_at, revoked_at, replaced_by_id
             FROM recovery_codes WHERE kindergarten_id=%s AND user_id=%s ORDER BY issued_at""",
-            (actor.kindergarten_id, teacher_id),
+            (actor.kindergarten_id, recovered_user_id),
         ).fetchall()
         assert len(recovery_rows) == 2
         assert recovery_rows[0][1] is not None
@@ -372,6 +453,12 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
                 "account_recovered",
             ),
         ]
+        assert connection.execute(
+            """SELECT count(*) FROM audit_events
+            WHERE kindergarten_id=%s AND actor_user_id=%s
+              AND event_code='auth.backup_revoked_by_recovery'""",
+            (actor.kindergarten_id, recovered_user_id),
+        ).fetchone() == (1,)
 
     old_invitation = client.post(
         "/api/v1/auth/invitation/registration/options",
@@ -407,15 +494,63 @@ def test_valid_recovery_code_still_requires_admin_approval_before_registration(
     )
     assert old_credential.status_code == 401
 
+    old_backup_login = client.post(
+        "/api/v1/auth/backup/authentication",
+        json={
+            "identifier": username,
+            "password": old_backup_password,
+            "totp_code": generate_totp(
+                old_totp_secret,
+                timestamp=datetime.now(UTC).timestamp(),
+            ),
+        },
+        headers=csrf_headers(client),
+    )
+    assert old_backup_login.status_code == 401
+    assert old_backup_login.json()["code"] == "auth.backup_authentication_failed"
+
     old_recovery = client.post(
         "/api/v1/auth/recovery/requests",
-        json={"login": "recovery-teacher", "recovery_code": recovery.secret},
+        json={"login": username, "recovery_code": recovery.secret},
         headers=csrf_headers(client),
     )
     assert old_recovery.status_code == 202
-    requests = client.get(f"/api/v1/users/{teacher_id}/recovery-requests")
+    requests = client.get(f"/api/v1/users/{recovered_user_id}/recovery-requests")
     assert requests.status_code == 200
     assert [item["status"] for item in requests.json()["items"]] == ["completed"]
+
+    restored_options = client.post(
+        "/api/v1/auth/authentication/options",
+        headers=csrf_headers(client),
+    )
+    assert restored_options.status_code == 200
+    monkeypatch.setattr(
+        "packages.backend.identity.service.verify_authentication",
+        lambda **_kwargs: SimpleNamespace(new_sign_count=1),
+    )
+    restored_login = client.post(
+        "/api/v1/auth/authentication/verify",
+        json={
+            "ceremony_id": restored_options.json()["ceremony_id"],
+            "credential": _authentication_credential(
+                credential_id=_base64url(new_credential_raw_id),
+                challenge=restored_options.json()["publicKey"]["challenge"],
+            ),
+        },
+        headers=csrf_headers(client),
+    )
+    assert restored_login.status_code == 200
+    restored_access = restored_login.cookies.get("child_manager_access")
+    assert restored_access is not None
+    restored_session = _identity_service(client).authenticate_access(restored_access)
+    expected_method = "restricted_enrollment" if role_code == "admin" else "webauthn"
+    assert restored_session.authentication_method == expected_method
+    if role_code == "admin":
+        with pytest.raises(IdentityError) as exc_info:
+            IdentityService.require_business_access(restored_session)
+        assert exc_info.value.code == "auth.backup_enrollment_required"
+    else:
+        IdentityService.require_business_access(restored_session)
 
 
 def test_authenticated_step_up_rotation_revokes_old_code_and_returns_new_code_once(

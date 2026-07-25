@@ -42,6 +42,7 @@ class BffResponse:
 BACKUP_AUTH_API_PATH = "/api/v1/auth/backup"
 BACKUP_AUTHENTICATION_API_PATH = f"{BACKUP_AUTH_API_PATH}/authentication"
 BACKUP_REAUTHENTICATION_API_PATH = f"{BACKUP_AUTH_API_PATH}/reauthentication"
+SECURITY_EVENTS_API_PATH = "/api/v1/auth/security-events"
 
 
 async def same_origin_api_request(
@@ -125,6 +126,12 @@ async def backup_reauthentication_api_request(
         method="POST",
         payload={"password": password, "totp_code": totp_code},
     )
+
+
+async def security_events_api_request() -> dict[str, object]:
+    """读取本人最近 20 条内建安全事件，不产生已读状态。"""
+
+    return await same_origin_api_request(SECURITY_EVENTS_API_PATH)
 
 
 async def proxy_request(

@@ -157,14 +157,14 @@ M3A 前，不得执行 T003 之后的代码任务。
 
 - [x] T026 [US3] 在 `packages/backend/identity/service.py` 实现 WebAuthn 保护的密码/TOTP
   替换、教师关闭、管理员拒绝关闭，以及备用因素版本增加和旧备用会话/证明即时撤销
-- [ ] T027 [US3] 扩展 `packages/backend/identity/service.py` 的恢复完成事务，清除旧密码、
+- [x] T027 [US3] 扩展 `packages/backend/identity/service.py` 的恢复完成事务，清除旧密码、
   TOTP、通行密钥、会话、邀请和恢复码；管理员进入 `restricted_enrollment`，教师保持可选
-- [ ] T028 [US3] 在 `apps/api/routers/auth.py`、`apps/web/pages/auth.py` 和
+- [x] T028 [US3] 在 `apps/api/routers/auth.py`、`apps/web/pages/auth.py` 和
   `apps/web/api_client.py` 实现 `GET /auth/security-events`：从现有审计事件投影本人最近
   20 条内建安全事件并在登录后展示警报/列表，覆盖备用登录启用、密码/TOTP 变化、备用登录
   成功、备用会话新增通行密钥、关闭和恢复撤销；不新增通知表、已读状态、管理员代重置或
   短信/邮件路径
-- [ ] T029 [US3] 运行 `tests/api/test_backup_maintenance.py`、
+- [x] T029 [US3] 运行 `tests/api/test_backup_maintenance.py`、
   `tests/api/test_recovery.py`、`tests/api/test_invitations.py` 和 Web 冒烟测试，记录 US3
   GREEN 及最后管理员双人核验未降级证据
 
