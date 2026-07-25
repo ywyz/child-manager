@@ -206,6 +206,7 @@ components:
       required:
         - enabled
         - required
+        - enrollment_required
       properties:
         enabled:
           type: boolean
@@ -219,7 +220,6 @@ components:
           format: date-time
         enrollment_required:
           type: boolean
-          default: false
           description: 当前会话是否被限制在管理员首次绑定流程
     BackupEnrollment:
       type: object
