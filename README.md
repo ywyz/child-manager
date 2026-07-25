@@ -12,12 +12,16 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 当前 PRD、架构、ADR、上下文、开发指南、共享规格、OpenAPI 契约与模板，`dev` 是 Codex
 负责的唯一实现与集成分支。业务实现开始前必须读取并固定引用已确认的 `docs` 提交。
 
-项目已完成 M1 工程骨架与 M2 认证、授权及身份审计验收。M2 Issue
-[#4](https://github.com/ywyz/child-manager/issues/4) 已在 `docs@bb025b2`、`dev@fb4f076`
-及远端 Quality Gates 通过后按 `completed` 关闭；历史 Issue #5 只保留实现证据，Issue #6
-按工作流重置以 `not planned` 归档。M3 必要设置由
-[#7](https://github.com/ywyz/child-manager/issues/7) 管理，固定 `docs@bd98a1a`，当前已解锁
-RED 测试。`main` 仍是迁移前 docs-only 基线；未经单独授权，本次不合并或宣称为可发布应用。
+项目已完成 M1 工程骨架、M2 认证授权、M3 首期必要设置和 M3A 密码与 TOTP 备用登录验收。
+M3 [Issue #7](https://github.com/ywyz/child-manager/issues/7) 固定 `docs@bd98a1a`，M3A
+[Issue #8](https://github.com/ywyz/child-manager/issues/8) 固定 `docs@2f7894c`；两者均已按
+`completed` 关闭。`dev@6a9e269` 在本地 310 项完整测试、独立 Review 和同提交远端 Quality
+Gates 通过后，已获授权集成到 `main`，形成首个包含 M1–M3A 实现的稳定开发基线；这不代表
+首期功能或生产部署已经完成。
+
+下一实现顺序仍有一项文档冲突需要先在 `docs` 裁决：Roadmap 默认 M4 后进入 M5，而共享
+`tasks.md` 要求 M3A 后先执行 T046–T061 手工教案，再执行 T062 以后的 AI 模型与提示词任务。
+冲突解决并固定新 docs 提交前，不创建或启动下一实现 Issue。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 

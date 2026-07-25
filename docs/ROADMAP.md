@@ -234,13 +234,16 @@ M4 和 M5 在 M3A 完成后具备并行设计条件，但 M6 必须同时等待 
 
 ### 出口门禁
 
-- [ ] PostgreSQL 验证有效学期 GiST 日期范围不重叠、每园最多一个当前学期。
-- [ ] 每班最多一名主班教师，教师关联必须具备 `teacher` 角色。
-- [ ] 跨园班级、教师、学期和区域关联被组合外键拒绝。
-- [ ] 区域保持顺序，空白或规范化后重名被拒绝。
-- [ ] 本地节假日库、在线替身、缓存和“无法确认”降级通过确定性测试。
-- [ ] 跨班教师不能查看或修改区域，管理员只有同时是该班教师时才能维护区域。
-- [ ] 浏览器冒烟覆盖园所、学期、班级/教师关联与班级区域编辑。
+- [x] PostgreSQL 验证有效学期 GiST 日期范围不重叠、每园最多一个当前学期。
+- [x] 每班最多一名主班教师，教师关联必须具备 `teacher` 角色。
+- [x] 跨园班级、教师、学期和区域关联被组合外键拒绝。
+- [x] 区域保持顺序，空白或规范化后重名被拒绝。
+- [x] 本地节假日库、在线替身、缓存和“无法确认”降级通过确定性测试。
+- [x] 跨班教师不能查看或修改区域，管理员只有同时是该班教师时才能维护区域。
+- [x] 浏览器冒烟覆盖园所、学期、班级/教师关联与班级区域编辑。
+
+验收证据见 [Issue #7](https://github.com/ywyz/child-manager/issues/7)；固定文档基线为
+`docs@bd98a1a`，最终 Review 修复提交为 `dev@f5f0084`。
 
 ## 9A. M3A：密码与 TOTP 备用登录
 
@@ -259,14 +262,18 @@ M4 和 M5 在 M3A 完成后具备并行设计条件，但 M6 必须同时等待 
 
 ### 出口门禁
 
-- [ ] 管理员未完整配置不能进入业务页面；教师未配置仍可使用业务并持续获得提示。
-- [ ] 任一单因素、未知账号、错误/过期/重放 TOTP 均不建立会话，公开失败不可枚举。
-- [ ] 密码策略、Argon2id 参数、TOTP 时间窗口/counter、AES-GCM AAD/标签失败通过单元与
+- [x] 管理员未完整配置不能进入业务页面；教师未配置仍可使用业务并持续获得提示。
+- [x] 任一单因素、未知账号、错误/过期/重放 TOTP 均不建立会话，公开失败不可枚举。
+- [x] 密码策略、Argon2id 参数、TOTP 时间窗口/counter、AES-GCM AAD/标签失败通过单元与
   PostgreSQL 并发测试。
-- [ ] 备用会话普通业务授权正确；五分钟专用证明只能新增通行密钥，负向身份矩阵全部拒绝。
-- [ ] 因素变化、教师关闭和紧急恢复使旧备用会话下一请求失效；管理员不能关闭。
-- [ ] 密码、摘要、TOTP、种子和二维码在日志、异常、审计、消息和快照中暴露为 0。
-- [ ] NiceGUI 冒烟覆盖管理员绑定、教师提示、新设备登录、新增通行密钥、因素维护与恢复。
+- [x] 备用会话普通业务授权正确；五分钟专用证明只能新增通行密钥，负向身份矩阵全部拒绝。
+- [x] 因素变化、教师关闭和紧急恢复使旧备用会话下一请求失效；管理员不能关闭。
+- [x] 密码、摘要、TOTP、种子和二维码在日志、异常、审计、消息和快照中暴露为 0。
+- [x] NiceGUI 冒烟覆盖管理员绑定、教师提示、新设备登录、新增通行密钥、因素维护与恢复。
+
+验收证据见 [Issue #8](https://github.com/ywyz/child-manager/issues/8)；固定文档基线为
+`docs@2f7894c`，最终实现为 `dev@6a9e269`，Quality Gates `30161645948` 和集成前独立
+Review 的 310 项完整测试均通过。
 
 ## 10. M4：AI 模型与提示词基础
 
@@ -421,19 +428,25 @@ M4 和 M5 在 M3A 完成后具备并行设计条件，但 M6 必须同时等待 
 
 ## 16. 当前状态快照
 
-状态日期：2026-07-23
+状态日期：2026-07-26
 
 | 里程碑 | 状态 | 当前证据 | 下一个解锁动作 |
 | --- | --- | --- | --- |
 | M0 共享基线 | `complete` | M0-G1～M0-G8 已关闭；历史隐私清理完成，脱敏模板和共享文档基线已通过专项验证与远端重克隆复核 | 由 `docs` 维护后续文档与契约基线 |
 | M1 | `complete` | [Issue #1](https://github.com/ywyz/child-manager/issues/1) 与历史实现 Issue [#2](https://github.com/ywyz/child-manager/issues/2)、[#3](https://github.com/ywyz/child-manager/issues/3) 已关闭 | 保留历史验收记录 |
-| M2 | `complete` | [#4](https://github.com/ywyz/child-manager/issues/4) 已按 `completed` 关闭；最终基线 `docs@bb025b2`、`dev@fb4f076`，M2 专项 133 项、完整 192 项、双轴 Review 与 Quality Gates `30006114394` 均通过 | 保留验收记录；`main` 合并仍需单独授权 |
-| M3 | `ready` | [#7](https://github.com/ywyz/child-manager/issues/7) 固定 T036～T045 与 `docs@bd98a1a`；M2 入口门禁已满足 | 同步完成状态到 `dev`，编写 T037 RED |
-| M3A | `pending` | 产品选择与 `specs/002-password-totp-backup-login/` 已形成；尚未固定 docs 提交或创建实现 Issue | 等待 M3 `complete`，再以独立 Issue 固定本次 docs 基线 |
-| M4–M8 | `pending` | 尚未开始实现 | 等待 M3A 及各自前序里程碑完成 |
+| M2 | `complete` | [#4](https://github.com/ywyz/child-manager/issues/4) 已按 `completed` 关闭；最终基线 `docs@bb025b2`、`dev@fb4f076`，M2 专项 133 项、完整 192 项、双轴 Review 与 Quality Gates `30006114394` 均通过 | 保留验收记录；已随 M3A 稳定基线集成 `main` |
+| M3 | `complete` | [#7](https://github.com/ywyz/child-manager/issues/7) 已按 `completed` 关闭；固定 `docs@bd98a1a`，最终 Review 修复 `dev@f5f0084` | 保留验收记录；已集成 `main` |
+| M3A | `complete` | [#8](https://github.com/ywyz/child-manager/issues/8) 已按 `completed` 关闭；固定 `docs@2f7894c`，最终实现 `dev@6a9e269`，Quality Gates `30161645948` 与独立复验通过 | 保留验收记录；已集成 `main` |
+| M4 / M5 | `blocked` | M3A 入口已满足，但本 Roadmap 默认 M4→M5，共享 `tasks.md` 明确要求 T046–T061 手工教案先于 T062 以后 AI 任务 | 先在 `docs` 裁决执行顺序并固定新基线 |
+| M6–M8 | `pending` | 尚未开始实现 | 等待 M4、M5 及各自前序里程碑完成 |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010/ADR-0011 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 
 该快照只能根据实际分支、文件、命令与验收证据更新。不得根据历史分支、计划文件或未执行命令猜测状态。
+
+当前顺序冲突会改变下一实现 Issue 的范围，不能静默选择。维护者确认先做 M4 还是先做 M5
+后，必须同时修正本 Roadmap 与
+[`specs/001-daily-activity-plan/tasks.md`](../specs/001-daily-activity-plan/tasks.md) 的依赖
+和任务顺序，再以新的固定 `docs` 提交创建下一实现 Issue。
 
 ## 17. Roadmap 更新规则
 

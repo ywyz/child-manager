@@ -1,10 +1,10 @@
 # Child Manager 项目上下文
 
-最后更新：2026-07-23
+最后更新：2026-07-26
 
 当前上下文分支：`docs`
 
-项目阶段：M2 完成，M3 必要设置 RED 测试；M3A 备用登录设计已确认、待固定 docs 基线
+项目阶段：M3 与 M3A 已完成并集成 `main`；下一实现顺序等待 docs 冲突裁决
 
 ## 1. 本文档的用途
 
@@ -260,13 +260,13 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 ## 9. 当前仓库与分支状态
 
-状态日期：2026-07-23。
+状态日期：2026-07-26。
 
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
-| `main` | 稳定版本与发布基线 | 仍为迁移前 docs-only 基线，尚不是可发布应用 | 等待单独授权后接收已完成 Review 的 `dev` 稳定结果 |
-| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M2 最终契约基线为 `bb025b2`；M3 #7 固定使用 `bd98a1a` | 同步 M2 完成状态，不改写 #7 的固定需求基线 |
-| `dev` | Codex 唯一实现与集成 | M2 已在 `fb4f076` 完成 133 项专项、192 项完整测试、双轴 Review 与远端 CI | 同步完成状态后，仅编写 T037 RED 测试 |
+| `main` | 稳定版本与发布基线 | 已接收通过独立 Review 的 `dev@6a9e269`，包含 M1–M3A 实现；首期功能与生产部署仍未完成 | 保持稳定，只接收后续已验收的 `dev` 结果 |
+| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M3 #7 固定 `bd98a1a`、M3A #8 固定 `2f7894c`，两者均已完成 | 先裁决 Roadmap 与 `tasks.md` 的 M4/M5 执行顺序冲突并固定新基线 |
+| `dev` | Codex 唯一实现与集成 | M3/M3A 最终实现为 `6a9e269`；独立复验 310 项通过，远端 Quality Gates `30161645948` 成功 | 顺序冲突解决并创建固定 docs 提交的下一 Issue 前，不启动新实现 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -284,12 +284,16 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 2. M2 为 `complete`。Issue #4 已按 `completed` 关闭；Issue #5 保留为历史 Codex 实现证据，Issue #6 仍按 `not planned` 归档。
 3. M2 最终证据固定为 `docs@bb025b2`、`dev@fb4f076` 与 Quality Gates
    `30006114394`；旧分支证据不能替代这组最终验收。
-4. M3 Issue #7 范围固定为 T036～T045，文档基线保持 `docs@bd98a1a`；当前只启动 T037
-   领域规则、`0004_settings` 迁移与 Repository 园所隔离 RED 测试，不提前实现设置能力。
-5. M3A 已确认采用密码与 TOTP 双因素备用登录，但必须等待 M3 `complete`；本次 docs 提交
-   确认后创建独立 Issue 并固定新基线，不扩大 #7 或重编号 `0004_settings.py`。
-6. `main` 合并仍需单独授权；开始 M3 RED 或完成 M3A 设计均不得被表述为已形成可发布
-   `main` 基线。
+4. M3 Issue #7 已按 `completed` 关闭；固定基线为 `docs@bd98a1a`，最终 Review 修复提交为
+   `dev@f5f0084`，T036～T045 全部完成。
+5. M3A Issue #8 已按 `completed` 关闭；固定基线为 `docs@2f7894c`，最终实现为
+   `dev@6a9e269`，同提交 Quality Gates `30161645948` 与本地 310 项完整复验均通过。
+6. `dev@6a9e269` 已经明确授权和独立 Review 后集成 `main`；该稳定开发基线只证明
+   M1–M3A，不得表述为首期功能完成或生产可发布。
+7. 下一实现前必须先解决同级文档冲突：Roadmap 规定单分支默认 M4 后进入 M5，共享
+   `specs/001-daily-activity-plan/tasks.md` 则要求 M3A 后先执行 T046–T061 手工教案，再执行
+   T062 以后的 AI 模型与提示词任务。确认顺序、更新 docs 并固定提交后，才能创建下一
+   实现 Issue。
 
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
@@ -336,7 +340,10 @@ uv run pyright
 uv run pytest
 ```
 
-当前 `main` 没有 Python 项目骨架，因此这些命令尚不可执行。不得把“尚无命令”误写为“验证通过”。
+`main` 与 `dev` 现已包含 Python 项目骨架和同一份 M1–M3A 稳定实现。2026-07-26 集成前独立
+复验中，锁定安装、Ruff format/check、Pyright 和完整 Pytest 均通过；Pytest 结果为
+`310 passed, 1 warning`，warning 是已记录的 Pydantic 2.11 弃用提示。后续里程碑仍必须
+重新执行这些命令，不得复用本次结果代替新变更验证。
 
 各阶段还必须执行与风险匹配的专项验证：
 
