@@ -48,7 +48,8 @@ uv run pytest tests/unit/identity -q
 uv run pytest tests/contract/test_auth_contract.py -q
 uv run pytest tests/migrations/test_0005_password_totp_backup_login.py -q
 uv run pytest tests/repository/test_identity_isolation.py -q
-uv run pytest tests/api/test_backup_auth.py tests/api/test_credentials.py tests/api/test_recovery.py -q
+uv run pytest tests/api/test_backup_authentication.py tests/api/test_backup_enrollment.py \
+  tests/api/test_backup_maintenance.py tests/api/test_credentials.py tests/api/test_recovery.py -q
 uv run pytest tests/web/test_auth_smoke.py -q
 ```
 
