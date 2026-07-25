@@ -263,6 +263,7 @@ def sessions_revoke(
     service: IdentityServiceDependency,
 ) -> None:
     require_csrf(request)
+    service.require_recent_verification(session)
     with service._connect() as connection, connection.transaction():
         from packages.backend.identity.repository import IdentityRepository
 

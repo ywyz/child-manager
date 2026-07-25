@@ -256,10 +256,11 @@ class IdentityRepository:
         ).fetchone()
         return _user(row)
 
-    def find_user_by_login(self, login: str) -> UserRecord | None:
+    def find_user_by_login(self, login: str, *, lock: bool = False) -> UserRecord | None:
+        suffix = " FOR UPDATE" if lock else ""
         row = self.connection.execute(
             f"""SELECT {_USER_COLUMNS} FROM users
-            WHERE kindergarten_id=%s AND (username_normalized=%s OR phone_e164=%s)""",
+            WHERE kindergarten_id=%s AND (username_normalized=%s OR phone_e164=%s){suffix}""",
             (self.kindergarten_id, login, login),
         ).fetchone()
         return _user(row)
@@ -492,11 +493,18 @@ class IdentityRepository:
         ).fetchone()
         return bool(row and row[0])
 
-    def get_family_session(self, user_id: UUID, family_id: UUID) -> RefreshRecord | None:
+    def get_family_session(
+        self,
+        user_id: UUID,
+        family_id: UUID,
+        *,
+        lock: bool = False,
+    ) -> RefreshRecord | None:
+        suffix = " FOR UPDATE" if lock else ""
         row = self.connection.execute(
             f"""SELECT {_REFRESH_COLUMNS} FROM refresh_tokens
             WHERE kindergarten_id=%s AND user_id=%s AND token_family_id=%s
-            ORDER BY issued_at DESC LIMIT 1""",
+            ORDER BY issued_at DESC LIMIT 1{suffix}""",
             (self.kindergarten_id, user_id, family_id),
         ).fetchone()
         return RefreshRecord(*row) if row else None  # type: ignore[arg-type]
@@ -835,6 +843,21 @@ class IdentityRepository:
         ).fetchone()
         return row is not None
 
+    def update_backup_password_hash(
+        self,
+        credential_id: UUID,
+        *,
+        password_hash: str,
+    ) -> bool:
+        row = self.connection.execute(
+            """UPDATE backup_auth_credentials
+            SET password_hash=%s, updated_at=now()
+            WHERE kindergarten_id=%s AND id=%s AND status='enabled'
+            RETURNING id""",
+            (password_hash, self.kindergarten_id, credential_id),
+        ).fetchone()
+        return row is not None
+
     def revoke_backup_auth(self, user_id: UUID, *, reason: str) -> BackupRevocationResult:
         self.lock_user_sessions(user_id)
         self.connection.execute(
@@ -948,6 +971,32 @@ class IdentityRepository:
                 user_id,
                 family_id,
                 verified_at,
+            ),
+        ).fetchone()
+        return row is not None
+
+    def consume_backup_reauthentication(
+        self,
+        user_id: UUID,
+        family_id: UUID,
+        *,
+        now: datetime,
+        not_before: datetime,
+    ) -> bool:
+        row = self.connection.execute(
+            """UPDATE refresh_tokens
+            SET backup_reauthenticated_at=NULL, updated_at=now()
+            WHERE kindergarten_id=%s AND user_id=%s AND token_family_id=%s
+              AND authentication_method='password_totp'
+              AND revoked_at IS NULL AND expires_at>%s
+              AND backup_reauthenticated_at>=%s
+            RETURNING id""",
+            (
+                self.kindergarten_id,
+                user_id,
+                family_id,
+                now,
+                not_before,
             ),
         ).fetchone()
         return row is not None

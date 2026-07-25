@@ -127,20 +127,20 @@ M3A 前，不得执行 T003 之后的代码任务。
 **Independent Test**: 未知账号或任一因素错误均通用失败；成功会话可使用普通业务；最近五
 分钟再验证可新增但不能删除或修改其他身份材料。
 
-- [ ] T020 [US2] 在 `packages/backend/identity/service.py` 实现等价虚拟密码/TOTP 路径、
+- [x] T020 [US2] 在 `packages/backend/identity/service.py` 实现等价虚拟密码/TOTP 路径、
   两因素单意图验证、TOTP counter 原子消费、备用因素版本检查和 `password_totp` 会话创建
-- [ ] T021 [US2] 在 `packages/backend/identity/auth_throttle.py` 与
+- [x] T021 [US2] 在 `packages/backend/identity/auth_throttle.py` 与
   `packages/backend/identity/login_throttle.py` 增加可信来源、账号摘要和端点全局三层备用
   限流，确保通行密钥限流不能被清零或无关阻断
-- [ ] T022 [US2] 在 `apps/api/routers/auth.py` 实现公共
+- [x] T022 [US2] 在 `apps/api/routers/auth.py` 实现公共
   `POST /auth/backup/authentication` 与会话内
   `POST /auth/backup/reauthentication`，公开错误不区分账号、密码、TOTP 或未配置状态
-- [ ] T023 [US2] 修改 `packages/backend/identity/service.py` 的通行密钥注册授权：
+- [x] T023 [US2] 修改 `packages/backend/identity/service.py` 的通行密钥注册授权：
   `password_totp` 会话仅在五分钟专用证明有效时可新增，成功后消费证明；其余凭据、恢复、
   账号和角色操作仍要求 WebAuthn
-- [ ] T024 [US2] 在 `apps/web/pages/auth.py` 与 `apps/web/api_client.py` 增加备用登录、
+- [x] T024 [US2] 在 `apps/web/pages/auth.py` 与 `apps/web/api_client.py` 增加备用登录、
   再验证和新设备通行密钥绑定流程，不在浏览器日志或 URL 暴露秘密
-- [ ] T025 [US2] 运行 `tests/api/test_backup_authentication.py`、
+- [x] T025 [US2] 运行 `tests/api/test_backup_authentication.py`、
   `tests/api/test_credentials.py`、`tests/api/test_sessions.py` 和 Web 冒烟测试，记录 US2
   GREEN 与负向授权矩阵
 

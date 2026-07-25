@@ -40,6 +40,8 @@ class BffResponse:
 
 
 BACKUP_AUTH_API_PATH = "/api/v1/auth/backup"
+BACKUP_AUTHENTICATION_API_PATH = f"{BACKUP_AUTH_API_PATH}/authentication"
+BACKUP_REAUTHENTICATION_API_PATH = f"{BACKUP_AUTH_API_PATH}/reauthentication"
 
 
 async def same_origin_api_request(
@@ -89,6 +91,39 @@ async def backup_auth_api_request(
         f"{BACKUP_AUTH_API_PATH}{suffix}",
         method=method,
         payload=payload,
+    )
+
+
+async def backup_login_api_request(
+    *,
+    identifier: str,
+    password: str,
+    totp_code: str,
+) -> dict[str, object]:
+    """以请求正文提交两项备用因素，不把秘密放入 URL。"""
+
+    return await same_origin_api_request(
+        BACKUP_AUTHENTICATION_API_PATH,
+        method="POST",
+        payload={
+            "identifier": identifier,
+            "password": password,
+            "totp_code": totp_code,
+        },
+    )
+
+
+async def backup_reauthentication_api_request(
+    *,
+    password: str,
+    totp_code: str,
+) -> dict[str, object]:
+    """为当前备用会话取得仅可新增通行密钥的短时证明。"""
+
+    return await same_origin_api_request(
+        BACKUP_REAUTHENTICATION_API_PATH,
+        method="POST",
+        payload={"password": password, "totp_code": totp_code},
     )
 
 

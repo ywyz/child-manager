@@ -12,6 +12,7 @@ from urllib.parse import quote, urlencode
 from uuid import UUID, uuid7
 
 import psycopg
+from cryptography.exceptions import InvalidTag
 
 from packages.backend.audit.repository import AuditRepository
 from packages.backend.identity.challenges import (
@@ -20,7 +21,12 @@ from packages.backend.identity.challenges import (
     issue_challenge,
 )
 from packages.backend.identity.identifiers import normalize_phone, normalize_username
-from packages.backend.identity.passwords import hash_password, password_violations
+from packages.backend.identity.passwords import (
+    hash_password,
+    password_needs_rehash,
+    password_violations,
+    verify_password,
+)
 from packages.backend.identity.repository import (
     BackupCredentialRecord,
     CredentialRecord,
@@ -54,6 +60,13 @@ from packages.backend.identity.webauthn import (
 from packages.backend.ports import IdentitySecretKeyProvider
 from packages.contracts.audit import IdentityAuditEventCode
 from packages.contracts.identity import BackupAuthenticationStatus, BackupEnrollment
+
+_VIRTUAL_BACKUP_PASSWORD_HASH = hash_password(
+    "child-manager virtual backup authentication password material"
+)
+_VIRTUAL_BACKUP_TOTP_SECRET = base64.b32encode(
+    sha256(b"child-manager virtual backup authentication totp material").digest()[:20]
+).decode("ascii")
 
 
 class IdentityError(Exception):
@@ -233,6 +246,8 @@ class IdentityService:
             "recovery_options": IdentityAuditEventCode.CREDENTIAL_REGISTERED,
             "recovery_request": IdentityAuditEventCode.RECOVERY_REQUESTED,
             "refresh": IdentityAuditEventCode.TOKEN_REFRESHED,
+            "backup_authentication": IdentityAuditEventCode.AUTHENTICATION_FAILED,
+            "backup_reauthentication": IdentityAuditEventCode.AUTHENTICATION_FAILED,
         }
         event_code = event_codes.get(purpose)
         if event_code is None:
@@ -355,6 +370,264 @@ class IdentityService:
                 session,
                 repository.get_backup_credential(session.user.id),
             )
+
+    @staticmethod
+    def _backup_authentication_failure() -> IdentityError:
+        return IdentityError(
+            401,
+            "auth.backup_authentication_failed",
+            "账号、密码或动态验证码不正确。",
+        )
+
+    def _verify_backup_factors(
+        self,
+        *,
+        user: UserRecord | None,
+        credential: BackupCredentialRecord | None,
+        password: str,
+        totp_code: str,
+        now: datetime,
+        key_provider: IdentitySecretKeyProvider,
+    ) -> int | None:
+        enabled = (
+            user is not None
+            and user.status == "active"
+            and credential is not None
+            and credential.status == "enabled"
+            and credential.password_hash is not None
+            and credential.totp_ciphertext is not None
+            and credential.totp_nonce is not None
+            and credential.totp_key_id is not None
+            and credential.totp_envelope_version is not None
+        )
+        password_hash = (
+            credential.password_hash
+            if enabled and credential is not None and credential.password_hash is not None
+            else _VIRTUAL_BACKUP_PASSWORD_HASH
+        )
+        password_verified = verify_password(password, password_hash)
+
+        totp_secret = _VIRTUAL_BACKUP_TOTP_SECRET
+        last_accepted_counter: int | None = None
+        if enabled and user is not None and credential is not None:
+            assert credential.totp_ciphertext is not None
+            assert credential.totp_nonce is not None
+            assert credential.totp_key_id is not None
+            assert credential.totp_envelope_version is not None
+            try:
+                secret_bytes = decrypt_totp_secret_with_provider(
+                    TotpSecretEnvelope(
+                        credential.totp_ciphertext,
+                        credential.totp_nonce,
+                        credential.totp_key_id,
+                        credential.totp_envelope_version,
+                    ),
+                    key_provider=key_provider,
+                    kindergarten_id=user.kindergarten_id,
+                    user_id=user.id,
+                    subject_id=credential.id,
+                    subject_kind="credential",
+                )
+            except (InvalidTag, LookupError, ValueError) as exc:
+                raise IdentityError(
+                    503,
+                    "configuration.unavailable",
+                    "服务端安全配置不可用。",
+                ) from exc
+            totp_secret = base64.b32encode(secret_bytes).decode("ascii")
+            last_accepted_counter = credential.last_accepted_counter
+
+        accepted_counter = verify_totp(
+            totp_secret,
+            totp_code,
+            timestamp=now.timestamp(),
+            last_accepted_counter=last_accepted_counter,
+        )
+        if not enabled or not password_verified:
+            return None
+        return accepted_counter
+
+    def authenticate_with_backup(
+        self,
+        *,
+        identifier: str,
+        password: str,
+        totp_code: str,
+        source: str,
+        request_id: UUID | None,
+    ) -> AuthResult:
+        login_key = self.safe_login_key(identifier)
+        key_provider = self._identity_key_provider()
+        now = datetime.now(UTC)
+        result: AuthResult | None = None
+        with self._connect() as connection, connection.transaction():
+            kindergarten_id = self._optional_kindergarten_id(connection)
+            repository = IdentityRepository(connection, kindergarten_id)
+            candidate = repository.find_user_by_login(login_key) if login_key else None
+            user: UserRecord | None = None
+            if candidate is not None:
+                repository.lock_user_sessions(candidate.id)
+                user = repository.find_user_by_login(login_key, lock=True)
+            credential = (
+                repository.get_backup_credential(user.id, lock=True) if user is not None else None
+            )
+            accepted_counter = self._verify_backup_factors(
+                user=user,
+                credential=credential,
+                password=password,
+                totp_code=totp_code,
+                now=now,
+                key_provider=key_provider,
+            )
+            if (
+                kindergarten_id is None
+                or user is None
+                or credential is None
+                or accepted_counter is None
+                or not repository.accept_totp_counter(credential.id, accepted_counter)
+            ):
+                raise self._backup_authentication_failure()
+            if (
+                credential.password_hash is not None
+                and password_needs_rehash(credential.password_hash)
+                and not repository.update_backup_password_hash(
+                    credential.id,
+                    password_hash=hash_password(password),
+                )
+            ):
+                raise self._backup_authentication_failure()
+
+            family_id = uuid7()
+            raw_refresh = generate_refresh_token()
+            repository.create_refresh(
+                user_id=user.id,
+                family_id=family_id,
+                token_hash=hash_refresh_token(raw_refresh),
+                issued_at=now,
+                expires_at=now + timedelta(days=7),
+                authentication_method="password_totp",
+                backup_verified_at=now,
+                backup_auth_version=user.backup_auth_version,
+            )
+            connection.execute(
+                """UPDATE users SET last_login_at=%s, updated_at=now()
+                WHERE kindergarten_id=%s AND id=%s""",
+                (now, kindergarten_id, user.id),
+            )
+            roles = repository.roles_for_user(user.id)
+            AuditRepository(connection, kindergarten_id).append(
+                event_code=IdentityAuditEventCode.BACKUP_LOGIN_SUCCEEDED,
+                actor_user_id=user.id,
+                actor_role_codes=roles,
+                resource_type="refresh_family",
+                resource_id=family_id,
+                request_id=request_id,
+                outcome="success",
+                metadata={
+                    "reason": "password_totp",
+                    "source": sha256(source.encode()).hexdigest()[:16],
+                },
+            )
+            session = SessionUser(
+                user=user,
+                role_codes=roles,
+                token_family_id=family_id,
+                session_id=family_id,
+                last_reauthenticated_at=None,
+                authentication_method="password_totp",
+                backup_verified_at=now,
+                backup_auth_version=user.backup_auth_version,
+            )
+            result = AuthResult(
+                session=session,
+                access_token=create_access_token(
+                    user_id=str(user.id),
+                    kindergarten_id=str(kindergarten_id),
+                    token_family_id=str(family_id),
+                    signing_key=self.jwt_signing_key,
+                    now=now,
+                ),
+                refresh_token=raw_refresh,
+            )
+        assert result is not None
+        return result
+
+    def reauthenticate_backup_session(
+        self,
+        session: SessionUser,
+        *,
+        password: str,
+        totp_code: str,
+        request_id: UUID | None,
+    ) -> datetime:
+        if session.authentication_method != "password_totp":
+            raise IdentityError(
+                403,
+                "auth.forbidden",
+                "当前会话不能使用备用重新验证。",
+            )
+        key_provider = self._identity_key_provider()
+        now = datetime.now(UTC)
+        with self._connect() as connection, connection.transaction():
+            repository = IdentityRepository(connection, session.user.kindergarten_id)
+            repository.lock_user_sessions(session.user.id)
+            user = repository.get_user(session.user.id, lock=True)
+            current = repository.get_family_session(
+                session.user.id,
+                session.token_family_id,
+                lock=True,
+            )
+            credential = repository.get_backup_credential(session.user.id, lock=True)
+            if (
+                user is None
+                or user.status != "active"
+                or current is None
+                or current.revoked_at is not None
+                or current.expires_at <= now
+                or current.authentication_method != "password_totp"
+                or current.backup_auth_version != user.backup_auth_version
+            ):
+                raise self._backup_authentication_failure()
+            accepted_counter = self._verify_backup_factors(
+                user=user,
+                credential=credential,
+                password=password,
+                totp_code=totp_code,
+                now=now,
+                key_provider=key_provider,
+            )
+            if (
+                credential is None
+                or accepted_counter is None
+                or not repository.accept_totp_counter(credential.id, accepted_counter)
+            ):
+                raise self._backup_authentication_failure()
+            if (
+                credential.password_hash is not None
+                and password_needs_rehash(credential.password_hash)
+                and not repository.update_backup_password_hash(
+                    credential.id,
+                    password_hash=hash_password(password),
+                )
+            ):
+                raise self._backup_authentication_failure()
+            if not repository.update_backup_reauthentication(
+                user.id,
+                session.token_family_id,
+                verified_at=now,
+            ):
+                raise self._backup_authentication_failure()
+            AuditRepository(connection, session.user.kindergarten_id).append(
+                event_code=IdentityAuditEventCode.AUTHENTICATION_SUCCEEDED,
+                actor_user_id=user.id,
+                actor_role_codes=repository.roles_for_user(user.id),
+                resource_type="refresh_family",
+                resource_id=session.token_family_id,
+                request_id=request_id,
+                outcome="success",
+                metadata={"reason": "password_totp_add_passkey"},
+            )
+        return now
 
     def start_backup_enrollment(self, session: SessionUser) -> BackupEnrollment:
         self.require_recent_webauthn(session)
@@ -763,6 +1036,7 @@ class IdentityService:
         expected_purpose: ChallengePurpose,
         expected_user_id: UUID | None = None,
         expected_authorization_context: str | None = None,
+        consume_backup_reauthentication: bool = False,
         source: str,
         request_id: UUID | None,
     ) -> _RegistrationResult:
@@ -774,6 +1048,7 @@ class IdentityService:
                 expected_purpose=expected_purpose,
                 expected_user_id=expected_user_id,
                 expected_authorization_context=expected_authorization_context,
+                consume_backup_reauthentication=consume_backup_reauthentication,
             )
         except IdentityError as exc:
             if exc.code not in {"identity.material_unavailable", "auth.authentication_failed"}:
@@ -912,6 +1187,7 @@ class IdentityService:
         expected_purpose: ChallengePurpose,
         expected_user_id: UUID | None = None,
         expected_authorization_context: str | None = None,
+        consume_backup_reauthentication: bool = False,
     ) -> _RegistrationResult:
         now = datetime.now(UTC)
         with self._connect() as connection, connection.transaction():
@@ -999,6 +1275,20 @@ class IdentityService:
                     ChallengePurpose.RECOVERY_REGISTRATION: "recovery",
                 }[expected_purpose],
             )
+            if consume_backup_reauthentication:
+                assert expected_user_id is not None
+                assert expected_authorization_context is not None
+                if not repository.consume_backup_reauthentication(
+                    expected_user_id,
+                    UUID(expected_authorization_context),
+                    now=now,
+                    not_before=now - timedelta(minutes=5),
+                ):
+                    raise IdentityError(
+                        403,
+                        "auth.backup_reauthentication_required",
+                        "请先重新验证密码与动态验证码。",
+                    )
             recovery_code: str | None = None
             sessions_revoked = 0
             if expected_purpose is ChallengePurpose.BOOTSTRAP_REGISTRATION:
@@ -1103,6 +1393,9 @@ class IdentityService:
             expected_purpose=ChallengePurpose.SELF_ADD_REGISTRATION,
             expected_user_id=session.user.id,
             expected_authorization_context=str(session.token_family_id),
+            consume_backup_reauthentication=(
+                getattr(session, "authentication_method", "webauthn") == "password_totp"
+            ),
             source=source,
             request_id=request_id,
         )
@@ -1664,6 +1957,7 @@ class IdentityService:
         request_id: UUID | None,
     ) -> ManagedUser:
         self.require_admin(session)
+        self.require_recent_verification(session)
         try:
             normalized_username = normalize_username(username)
             normalized_phone = normalize_phone(phone_e164)
@@ -1725,6 +2019,7 @@ class IdentityService:
         request_id: UUID | None,
     ) -> ManagedUser:
         self.require_admin(session)
+        self.require_recent_verification(session)
         try:
             normalized_username = normalize_username(username) if username is not None else None
             normalized_phone = normalize_phone(phone_e164)
@@ -1761,6 +2056,7 @@ class IdentityService:
         self, session: SessionUser, user_id: UUID, role_codes: list[str], *, request_id: UUID | None
     ) -> ManagedUser:
         self.require_admin(session)
+        self.require_recent_verification(session)
         try:
             with self._connect() as connection, connection.transaction():
                 repository = IdentityRepository(connection, session.user.kindergarten_id)
@@ -1788,6 +2084,7 @@ class IdentityService:
         self, session: SessionUser, user_id: UUID, *, status: str, request_id: UUID | None
     ) -> ManagedUser:
         self.require_admin(session)
+        self.require_recent_verification(session)
         try:
             with self._connect() as connection, connection.transaction():
                 repository = IdentityRepository(connection, session.user.kindergarten_id)
@@ -1837,6 +2134,7 @@ class IdentityService:
         request_id: UUID | None,
     ) -> ManagedUser:
         self.require_admin(session)
+        self.require_recent_verification(session)
         with self._connect() as connection, connection.transaction():
             repository = IdentityRepository(connection, session.user.kindergarten_id)
             user = repository.get_user(user_id, lock=True)
@@ -1948,6 +2246,7 @@ class IdentityService:
         self, session: SessionUser, user_id: UUID, *, expires_in_hours: int
     ) -> tuple[InvitationRecord, str]:
         self.require_admin(session)
+        self.require_recent_verification(session)
         material = issue_secret(SecretPurpose.INVITATION)
         with self._connect() as connection, connection.transaction():
             repository = IdentityRepository(connection, session.user.kindergarten_id)
@@ -1978,6 +2277,7 @@ class IdentityService:
 
     def revoke_invitation(self, session: SessionUser, user_id: UUID, invitation_id: UUID) -> None:
         self.require_admin(session)
+        self.require_recent_verification(session)
         with self._connect() as connection, connection.transaction():
             IdentityRepository(connection, session.user.kindergarten_id).revoke_invitation(
                 user_id, invitation_id
@@ -1995,6 +2295,7 @@ class IdentityService:
         self, session: SessionUser, user_id: UUID, credential_id: UUID
     ) -> tuple[int, tuple[InvitationRecord, str] | None]:
         self.require_admin(session)
+        self.require_recent_verification(session)
         with self._connect() as connection, connection.transaction():
             repository = IdentityRepository(connection, session.user.kindergarten_id)
             user = repository.get_user(user_id)
@@ -2104,6 +2405,7 @@ class IdentityService:
         verification_note: str | None,
     ) -> tuple[str, datetime]:
         self.require_admin(session)
+        self.require_recent_verification(session)
         material = issue_secret(SecretPurpose.RECOVERY_ENROLLMENT)
         expires_at = datetime.now(UTC) + timedelta(minutes=15)
         with self._connect() as connection, connection.transaction():

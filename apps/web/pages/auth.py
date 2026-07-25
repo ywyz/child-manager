@@ -8,7 +8,12 @@ import qrcode
 from nicegui import ui
 from qrcode.image.svg import SvgPathImage
 
-from apps.web.api_client import backup_auth_api_request, same_origin_api_request
+from apps.web.api_client import (
+    backup_auth_api_request,
+    backup_login_api_request,
+    backup_reauthentication_api_request,
+    same_origin_api_request,
+)
 
 
 def login_page_text() -> tuple[str, ...]:
@@ -17,9 +22,12 @@ def login_page_text() -> tuple[str, ...]:
         "邀请登记",
         "账号恢复",
         "密码与 TOTP 备用登录",
+        "使用密码与 TOTP 登录",
         "设置备用登录",
         "稍后设置",
         "重新验证后新增通行密钥",
+        "获取五分钟专用授权",
+        "为此设备新增通行密钥",
         "本人安全事件",
     )
 
@@ -195,6 +203,9 @@ def register_auth_pages() -> None:
         status = ui.label("")
         backup_prompt = ui.column()
         recovery_container = ui.column()
+        backup_identifier = ui.input("用户名或手机号")
+        backup_password = ui.input("备用登录密码", password=True)
+        backup_totp = ui.input("动态验证码")
 
         async def login() -> None:
             result = await perform_authentication(
@@ -230,7 +241,23 @@ def register_auth_pages() -> None:
             else:
                 status.set_text(_message(result, "通行密钥登录失败"))
 
+        async def backup_login() -> None:
+            result = await backup_login_api_request(
+                identifier=backup_identifier.value or "",
+                password=backup_password.value or "",
+                totp_code=backup_totp.value or "",
+            )
+            backup_password.value = ""
+            backup_totp.value = ""
+            if result.get("ok"):
+                title.set_text("首页")
+                status.set_text("备用登录成功，可进入业务或为此设备新增通行密钥")
+                return
+            status.set_text(_message(result, "账号、密码或动态验证码不正确"))
+
         ui.button("使用通行密钥登录", on_click=login)
+        ui.button("使用密码与 TOTP 登录", on_click=backup_login)
+        ui.link("为此设备新增通行密钥", "/account/security")
         ui.link("邀请登记", "/register")
         ui.link("账号恢复", "/recover")
 
@@ -306,6 +333,8 @@ def register_auth_pages() -> None:
         label_input = ui.input("通行密钥名称")
         backup_password = ui.input("备用登录密码", password=True)
         backup_totp = ui.input("动态验证码")
+        reauthentication_password = ui.input("重新验证密码", password=True)
+        reauthentication_totp = ui.input("重新验证动态码")
         enrollment_material = ui.column()
         pending_enrollment_id: list[str] = []
         credential_ids: list[str] = []
@@ -403,6 +432,20 @@ def register_auth_pages() -> None:
                     "重新验证成功" if result.get("ok") else _message(result, "验证失败")
                 )
 
+        async def reauthenticate_backup() -> None:
+            async with operation_lock:
+                result = await backup_reauthentication_api_request(
+                    password=reauthentication_password.value or "",
+                    totp_code=reauthentication_totp.value or "",
+                )
+                reauthentication_password.value = ""
+                reauthentication_totp.value = ""
+                status.set_text(
+                    "已取得五分钟新增通行密钥授权"
+                    if result.get("ok")
+                    else _message(result, "验证失败")
+                )
+
         async def add_credential() -> None:
             async with operation_lock:
                 result = await perform_registration(
@@ -454,7 +497,11 @@ def register_auth_pages() -> None:
                 await api_request(f"/api/v1/auth/sessions/{current_session_id[0]}", method="DELETE")
             ui.navigate.to("/login")
 
-        ui.button("重新验证", on_click=step_up)
+        ui.button("使用通行密钥重新验证", on_click=step_up)
+        ui.button(
+            "获取五分钟专用授权",
+            on_click=reauthenticate_backup,
+        )
         ui.button("设置备用登录", on_click=start_backup_enrollment)
         ui.button("确认密码与动态验证码", on_click=verify_backup_enrollment)
         ui.button("稍后设置", on_click=lambda: enrollment_material.clear())

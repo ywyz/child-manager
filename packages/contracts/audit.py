@@ -32,6 +32,7 @@ class IdentityAuditEventCode(StrEnum):
     SESSION_REVOKED = "identity.session_revoked"
     BACKUP_ENABLED = "auth.backup_enabled"
     BACKUP_DISABLED = "auth.backup_disabled"
+    BACKUP_LOGIN_SUCCEEDED = "auth.backup_login_succeeded"
 
     # 通用登录审计名称保留为认证 ceremony 的兼容别名, 不代表密码登录。
     INITIALIZED = "identity.bootstrap_started"

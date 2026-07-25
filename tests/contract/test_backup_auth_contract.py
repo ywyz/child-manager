@@ -4,6 +4,7 @@ from typing import Any
 import yaml
 from fastapi.routing import APIRoute
 
+from apps.api.app import create_app
 from apps.api.routers.auth import router as auth_router
 from packages.contracts import identity as identity_contracts
 
@@ -19,6 +20,10 @@ BACKUP_PATH_METHODS = {
     ("/api/v1/auth/backup/authentication", "post"),
     ("/api/v1/auth/backup/reauthentication", "post"),
     ("/api/v1/auth/security-events", "get"),
+}
+USER_STORY_2_PATH_METHODS = {
+    ("/api/v1/auth/backup/authentication", "post"),
+    ("/api/v1/auth/backup/reauthentication", "post"),
 }
 
 
@@ -93,6 +98,32 @@ def test_backup_authentication_failures_share_one_public_contract() -> None:
 
 def test_runtime_router_matches_the_frozen_backup_contract() -> None:
     assert _runtime_routes() >= BACKUP_PATH_METHODS
+
+
+def test_runtime_router_exposes_the_user_story_2_endpoints() -> None:
+    assert _runtime_routes() >= USER_STORY_2_PATH_METHODS
+
+
+def test_runtime_user_story_2_openapi_matches_frozen_security_and_responses() -> None:
+    runtime = create_app().openapi()
+
+    for path, method in USER_STORY_2_PATH_METHODS:
+        frozen_operation = OPENAPI["paths"][path][method]
+        runtime_operation = runtime["paths"][path][method]
+        assert runtime_operation["operationId"] == frozen_operation["operationId"]
+        assert set(runtime_operation["responses"]) == set(frozen_operation["responses"])
+        assert {
+            (parameter["$ref"] if "$ref" in parameter else parameter["name"])
+            for parameter in runtime_operation["parameters"]
+        } >= {"#/components/parameters/CsrfHeader"}
+
+    login = runtime["paths"]["/api/v1/auth/backup/authentication"]["post"]
+    reauthentication = runtime["paths"]["/api/v1/auth/backup/reauthentication"]["post"]
+    assert login["security"] == []
+    assert "security" not in reauthentication
+    login_success = runtime["components"]["responses"]["BackupAuthenticated"]
+    assert login_success["headers"]["Set-Cookie"] == {"$ref": "#/components/headers/AuthSetCookies"}
+    assert runtime["components"]["responses"]["GenericAuthenticationFailure"]["description"]
 
 
 def test_runtime_identity_contract_models_match_the_frozen_names() -> None:

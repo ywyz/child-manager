@@ -219,6 +219,17 @@ _RESPONSES = {
         "待确认绑定；TOTP 种子与 URI 仅在本响应展示一次",
         "BackupEnrollment",
     ),
+    "BackupAuthenticated": {
+        "description": (
+            "密码与 TOTP 同时验证成功并建立普通业务会话；"
+            "access/refresh Cookie 与通行密钥登录使用相同安全属性"
+        ),
+        "headers": {"Set-Cookie": {"$ref": "#/components/headers/AuthSetCookies"}},
+    },
+    "GenericAuthenticationFailure": _response(
+        "账号、密码或 TOTP 不正确；未知账号、未配置和任一因素错误使用相同响应",
+        "Error",
+    ),
     "AuthenticationFailed": _response(
         "通用认证失败，不暴露凭据、账号、停用或签名失败原因",
         "Error",
@@ -348,6 +359,18 @@ _OPERATION_RESPONSES: dict[OperationKey, dict[str, str]] = {
         "409": "Conflict",
         "410": "InvalidEnrollment",
         "422": "ValidationError",
+        "429": "TooManyRequests",
+    },
+    ("/api/v1/auth/backup/authentication", "post"): {
+        "204": "BackupAuthenticated",
+        "401": "GenericAuthenticationFailure",
+        "403": "Forbidden",
+        "429": "TooManyRequests",
+    },
+    ("/api/v1/auth/backup/reauthentication", "post"): {
+        "204": "",
+        "401": "GenericAuthenticationFailure",
+        "403": "Forbidden",
         "429": "TooManyRequests",
     },
     ("/api/v1/auth/credentials", "get"): {
@@ -543,6 +566,7 @@ _PUBLIC_OPERATIONS = {
     ("/api/v1/auth/invitation/registration/verify", "post"),
     ("/api/v1/auth/authentication/options", "post"),
     ("/api/v1/auth/authentication/verify", "post"),
+    ("/api/v1/auth/backup/authentication", "post"),
     ("/api/v1/auth/recovery/requests", "post"),
     ("/api/v1/auth/recovery/registration/options", "post"),
     ("/api/v1/auth/recovery/registration/verify", "post"),

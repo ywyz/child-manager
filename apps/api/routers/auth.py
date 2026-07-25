@@ -23,9 +23,11 @@ from packages.backend.identity.service import AuthResult, IdentityError, Session
 from packages.contracts.identity import (
     AuthenticationResult,
     AuthenticationVerifyRequest,
+    BackupAuthenticationRequest,
     BackupAuthenticationStatus,
     BackupEnrollment,
     BackupEnrollmentVerifyRequest,
+    BackupReauthenticationRequest,
     BootstrapRegistrationOptionsRequest,
     Credential,
     CredentialList,
@@ -595,6 +597,80 @@ def verify_backup_authentication_enrollment(
         raise
     _clear_public_throttle(request, buckets)
     return status
+
+
+@router.post(
+    "/backup/authentication",
+    status_code=204,
+    operation_id="authenticateWithPasswordAndTotp",
+)
+def authenticate_with_password_and_totp(
+    body: BackupAuthenticationRequest,
+    request: Request,
+    response: Response,
+    service: IdentityServiceDependency,
+) -> None:
+    require_csrf(request)
+    source, buckets = _check_public_throttle(
+        request,
+        "backup_authentication",
+        subject=service.safe_login_key(body.identifier) or "<invalid>",
+    )
+    try:
+        result = service.authenticate_with_backup(
+            identifier=body.identifier,
+            password=body.password,
+            totp_code=body.totp_code,
+            source=source,
+            request_id=_request_id(request),
+        )
+    except IdentityError as exc:
+        if exc.code == "auth.backup_authentication_failed":
+            _record_public_failure(request, buckets)
+            service.record_public_authorization_failure(
+                purpose="backup_authentication",
+                source=source,
+                request_id=_request_id(request),
+            )
+        raise
+    _clear_public_throttle(request, buckets)
+    _set_auth_cookies(response, result)
+
+
+@router.post(
+    "/backup/reauthentication",
+    status_code=204,
+    operation_id="reauthenticateBackupSession",
+)
+def reauthenticate_backup_session(
+    body: BackupReauthenticationRequest,
+    request: Request,
+    service: IdentityServiceDependency,
+    session: CurrentSessionDependency,
+) -> None:
+    require_csrf(request)
+    source, buckets = _check_public_throttle(
+        request,
+        "backup_reauthentication",
+        subject=str(session.user.id),
+    )
+    try:
+        service.reauthenticate_backup_session(
+            session,
+            password=body.password,
+            totp_code=body.totp_code,
+            request_id=_request_id(request),
+        )
+    except IdentityError as exc:
+        if exc.status_code in {401, 403}:
+            _record_public_failure(request, buckets)
+            service.record_public_authorization_failure(
+                purpose="backup_reauthentication",
+                source=source,
+                request_id=_request_id(request),
+            )
+        raise
+    _clear_public_throttle(request, buckets)
 
 
 @router.get("/credentials", response_model=CredentialList)
