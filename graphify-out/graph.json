@@ -319,10 +319,10 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 45,
-      "community_name": "check-prerequisites.sh",
-      "norm_label": "check-prerequisites.sh",
-      "id": "specify_scripts_bash_check_prerequisites"
+      "id": "specify_scripts_bash_check_prerequisites",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "check-prerequisites.sh"
     },
     {
       "label": "check-prerequisites.sh script",
@@ -334,10 +334,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 45,
-      "community_name": "check-prerequisites.sh",
-      "norm_label": "check-prerequisites.sh script",
-      "id": "specify_scripts_bash_check_prerequisites_sh__entry"
+      "id": "specify_scripts_bash_check_prerequisites_sh__entry",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "check-prerequisites.sh script"
     },
     {
       "label": "common.sh",
@@ -349,10 +349,10 @@
         "kind": "file"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "common.sh",
-      "id": "specify_scripts_bash_common"
+      "norm_label": "common.sh"
     },
     {
       "label": "common.sh script",
@@ -364,10 +364,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_sh__entry",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "common.sh script",
-      "id": "specify_scripts_bash_common_sh__entry"
+      "norm_label": "common.sh script"
     },
     {
       "label": "find_specify_root()",
@@ -379,10 +379,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_find_specify_root",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "find_specify_root()",
-      "id": "specify_scripts_bash_common_find_specify_root"
+      "norm_label": "find_specify_root()"
     },
     {
       "label": "resolve_specify_init_dir()",
@@ -394,10 +394,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_resolve_specify_init_dir",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "resolve_specify_init_dir()",
-      "id": "specify_scripts_bash_common_resolve_specify_init_dir"
+      "norm_label": "resolve_specify_init_dir()"
     },
     {
       "label": "get_repo_root()",
@@ -409,10 +409,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_get_repo_root",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "get_repo_root()",
-      "id": "specify_scripts_bash_common_get_repo_root"
+      "norm_label": "get_repo_root()"
     },
     {
       "label": "get_current_branch()",
@@ -424,10 +424,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_get_current_branch",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "get_current_branch()",
-      "id": "specify_scripts_bash_common_get_current_branch"
+      "norm_label": "get_current_branch()"
     },
     {
       "label": "read_feature_json_feature_directory()",
@@ -439,10 +439,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_read_feature_json_feature_directory",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "read_feature_json_feature_directory()",
-      "id": "specify_scripts_bash_common_read_feature_json_feature_directory"
+      "norm_label": "read_feature_json_feature_directory()"
     },
     {
       "label": "_persist_feature_json()",
@@ -454,10 +454,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_persist_feature_json",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "_persist_feature_json()",
-      "id": "specify_scripts_bash_common_persist_feature_json"
+      "norm_label": "_persist_feature_json()"
     },
     {
       "label": "get_feature_paths()",
@@ -469,10 +469,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_get_feature_paths",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "get_feature_paths()",
-      "id": "specify_scripts_bash_common_get_feature_paths"
+      "norm_label": "get_feature_paths()"
     },
     {
       "label": "has_jq()",
@@ -484,10 +484,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_has_jq",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "has_jq()",
-      "id": "specify_scripts_bash_common_has_jq"
+      "norm_label": "has_jq()"
     },
     {
       "label": "get_invoke_separator()",
@@ -499,10 +499,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_get_invoke_separator",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "get_invoke_separator()",
-      "id": "specify_scripts_bash_common_get_invoke_separator"
+      "norm_label": "get_invoke_separator()"
     },
     {
       "label": "format_speckit_command()",
@@ -514,10 +514,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_format_speckit_command",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "format_speckit_command()",
-      "id": "specify_scripts_bash_common_format_speckit_command"
+      "norm_label": "format_speckit_command()"
     },
     {
       "label": "json_escape()",
@@ -529,10 +529,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_json_escape",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "json_escape()",
-      "id": "specify_scripts_bash_common_json_escape"
+      "norm_label": "json_escape()"
     },
     {
       "label": "check_file()",
@@ -544,10 +544,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_check_file",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "check_file()",
-      "id": "specify_scripts_bash_common_check_file"
+      "norm_label": "check_file()"
     },
     {
       "label": "check_dir()",
@@ -559,10 +559,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_check_dir",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "check_dir()",
-      "id": "specify_scripts_bash_common_check_dir"
+      "norm_label": "check_dir()"
     },
     {
       "label": "resolve_template()",
@@ -574,10 +574,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_resolve_template",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "resolve_template()",
-      "id": "specify_scripts_bash_common_resolve_template"
+      "norm_label": "resolve_template()"
     },
     {
       "label": "resolve_template_content()",
@@ -589,10 +589,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
+      "id": "specify_scripts_bash_common_resolve_template_content",
       "community": 22,
       "community_name": "common.sh",
-      "norm_label": "resolve_template_content()",
-      "id": "specify_scripts_bash_common_resolve_template_content"
+      "norm_label": "resolve_template_content()"
     },
     {
       "label": "create-new-feature.sh",
@@ -604,10 +604,10 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 34,
-      "community_name": "create-new-feature.sh",
-      "norm_label": "create-new-feature.sh",
-      "id": "specify_scripts_bash_create_new_feature"
+      "id": "specify_scripts_bash_create_new_feature",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "create-new-feature.sh"
     },
     {
       "label": "create-new-feature.sh script",
@@ -619,10 +619,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 34,
-      "community_name": "create-new-feature.sh",
-      "norm_label": "create-new-feature.sh script",
-      "id": "specify_scripts_bash_create_new_feature_sh__entry"
+      "id": "specify_scripts_bash_create_new_feature_sh__entry",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "create-new-feature.sh script"
     },
     {
       "label": "get_highest_from_specs()",
@@ -634,10 +634,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 34,
-      "community_name": "create-new-feature.sh",
-      "norm_label": "get_highest_from_specs()",
-      "id": "specify_scripts_bash_create_new_feature_get_highest_from_specs"
+      "id": "specify_scripts_bash_create_new_feature_get_highest_from_specs",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "get_highest_from_specs()"
     },
     {
       "label": "clean_branch_name()",
@@ -649,10 +649,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 34,
-      "community_name": "create-new-feature.sh",
-      "norm_label": "clean_branch_name()",
-      "id": "specify_scripts_bash_create_new_feature_clean_branch_name"
+      "id": "specify_scripts_bash_create_new_feature_clean_branch_name",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "clean_branch_name()"
     },
     {
       "label": "generate_branch_name()",
@@ -664,10 +664,10 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 34,
-      "community_name": "create-new-feature.sh",
-      "norm_label": "generate_branch_name()",
-      "id": "specify_scripts_bash_create_new_feature_generate_branch_name"
+      "id": "specify_scripts_bash_create_new_feature_generate_branch_name",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "generate_branch_name()"
     },
     {
       "label": "setup-plan.sh",
@@ -679,10 +679,10 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 46,
-      "community_name": "setup-plan.sh",
-      "norm_label": "setup-plan.sh",
-      "id": "specify_scripts_bash_setup_plan"
+      "id": "specify_scripts_bash_setup_plan",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "setup-plan.sh"
     },
     {
       "label": "setup-plan.sh script",
@@ -694,10 +694,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 46,
-      "community_name": "setup-plan.sh",
-      "norm_label": "setup-plan.sh script",
-      "id": "specify_scripts_bash_setup_plan_sh__entry"
+      "id": "specify_scripts_bash_setup_plan_sh__entry",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "setup-plan.sh script"
     },
     {
       "label": "setup-tasks.sh",
@@ -709,10 +709,10 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 47,
-      "community_name": "setup-tasks.sh",
-      "norm_label": "setup-tasks.sh",
-      "id": "specify_scripts_bash_setup_tasks"
+      "id": "specify_scripts_bash_setup_tasks",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "setup-tasks.sh"
     },
     {
       "label": "setup-tasks.sh script",
@@ -724,10 +724,10 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 47,
-      "community_name": "setup-tasks.sh",
-      "norm_label": "setup-tasks.sh script",
-      "id": "specify_scripts_bash_setup_tasks_sh__entry"
+      "id": "specify_scripts_bash_setup_tasks_sh__entry",
+      "community": 22,
+      "community_name": "common.sh",
+      "norm_label": "setup-tasks.sh script"
     },
     {
       "label": "ADR-0002-separate-web-api-worker-modular-monolith.md",
@@ -735,10 +735,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "adr-0002-separate-web-api-worker-modular-monolith.md",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith"
+      "norm_label": "adr-0002-separate-web-api-worker-modular-monolith.md"
     },
     {
       "label": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
@@ -746,10 +746,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "adr-0002:\u91c7\u7528\u72ec\u7acb web\u3001api\u3001worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53"
+      "norm_label": "adr-0002:\u91c7\u7528\u72ec\u7acb web\u3001api\u3001worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53"
     },
     {
       "label": "\u80cc\u666f",
@@ -757,10 +757,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u80cc\u666f",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -768,10 +768,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L11",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u51b3\u7b56",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -779,10 +779,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L21",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "NiceGUI \u4e00\u4f53\u5316\u8fdb\u7a0b",
@@ -790,10 +790,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L23",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_nicegui_\u4e00\u4f53\u5316\u8fdb\u7a0b",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "nicegui \u4e00\u4f53\u5316\u8fdb\u7a0b",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_nicegui_\u4e00\u4f53\u5316\u8fdb\u7a0b"
+      "norm_label": "nicegui \u4e00\u4f53\u5316\u8fdb\u7a0b"
     },
     {
       "label": "\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab Repository",
@@ -801,10 +801,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L27",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab_repository",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab repository",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab_repository"
+      "norm_label": "\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab repository"
     },
     {
       "label": "\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316",
@@ -812,10 +812,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L31",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316"
+      "norm_label": "\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316"
     },
     {
       "label": "React/TypeScript \u72ec\u7acb\u524d\u7aef",
@@ -823,10 +823,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L35",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_react_typescript_\u72ec\u7acb\u524d\u7aef",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "react/typescript \u72ec\u7acb\u524d\u7aef",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_react_typescript_\u72ec\u7acb\u524d\u7aef"
+      "norm_label": "react/typescript \u72ec\u7acb\u524d\u7aef"
     },
     {
       "label": "\u540e\u679c",
@@ -834,10 +834,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L39",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u540e\u679c",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -845,10 +845,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L54",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5b9e\u65bd\u7ea6\u675f",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -856,10 +856,10 @@
       "source_file": "docs/ADR/ADR-0002-separate-web-api-worker-modular-monolith.md",
       "source_location": "L60",
       "_origin": "ast",
+      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 27,
       "community_name": "ADR-0002\uff1a\u91c7\u7528\u72ec\u7acb Web\u3001API\u3001Worker \u8fd0\u884c\u5355\u5143\u7684\u6a21\u2026",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
       "label": "ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
@@ -867,10 +867,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "adr-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs"
+      "norm_label": "adr-0003-postgresql-authoritative-dramatiq-redis-jobs.md"
     },
     {
       "label": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
@@ -878,10 +878,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "adr-0003:postgresql \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001,dramatiq \u4e0e redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c"
+      "norm_label": "adr-0003:postgresql \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001,dramatiq \u4e0e redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c"
     },
     {
       "label": "\u80cc\u666f",
@@ -889,10 +889,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u80cc\u666f",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -900,10 +900,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L13",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u51b3\u7b56",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -911,10 +911,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L24",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "API \u540c\u6b65\u6267\u884c AI \u548c Word",
@@ -922,10 +922,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L26",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_api_\u540c\u6b65\u6267\u884c_ai_\u548c_word",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "api \u540c\u6b65\u6267\u884c ai \u548c word",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_api_\u540c\u6b65\u6267\u884c_ai_\u548c_word"
+      "norm_label": "api \u540c\u6b65\u6267\u884c ai \u548c word"
     },
     {
       "label": "Celery + Redis",
@@ -933,10 +933,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L30",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_celery_redis",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "celery + redis",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_celery_redis"
+      "norm_label": "celery + redis"
     },
     {
       "label": "Redis \u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8",
@@ -944,10 +944,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L34",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_redis_\u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "redis \u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_redis_\u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8"
+      "norm_label": "redis \u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8"
     },
     {
       "label": "PostgreSQL \u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217",
@@ -955,10 +955,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L38",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_\u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "postgresql \u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_\u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217"
+      "norm_label": "postgresql \u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217"
     },
     {
       "label": "\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216 Kafka",
@@ -966,10 +966,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L42",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216_kafka",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216 kafka",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216_kafka"
+      "norm_label": "\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216 kafka"
     },
     {
       "label": "\u9996\u671f\u4f7f\u7528 SSE \u6216 WebSocket \u63a8\u9001",
@@ -977,10 +977,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L46",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u9996\u671f\u4f7f\u7528_sse_\u6216_websocket_\u63a8\u9001",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u9996\u671f\u4f7f\u7528 sse \u6216 websocket \u63a8\u9001",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u9996\u671f\u4f7f\u7528_sse_\u6216_websocket_\u63a8\u9001"
+      "norm_label": "\u9996\u671f\u4f7f\u7528 sse \u6216 websocket \u63a8\u9001"
     },
     {
       "label": "\u540e\u679c",
@@ -988,10 +988,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L50",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u540e\u679c",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -999,10 +999,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L64",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5b9e\u65bd\u7ea6\u675f",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -1010,10 +1010,10 @@
       "source_file": "docs/ADR/ADR-0003-postgresql-authoritative-dramatiq-redis-jobs.md",
       "source_location": "L71",
       "_origin": "ast",
+      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 24,
       "community_name": "ADR-0003\uff1aPostgreSQL \u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001\uff0cDramatiq \u4e0e Redis \u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
       "label": "ADR-0005-provider-neutral-ai-and-central-prompts.md",
@@ -1021,10 +1021,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "adr-0005-provider-neutral-ai-and-central-prompts.md",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts"
+      "norm_label": "adr-0005-provider-neutral-ai-and-central-prompts.md"
     },
     {
       "label": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
@@ -1032,10 +1032,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "adr-0005:ai \u4f9b\u5e94\u5546\u4e2d\u7acb,\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf"
+      "norm_label": "adr-0005:ai \u4f9b\u5e94\u5546\u4e2d\u7acb,\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf"
     },
     {
       "label": "\u80cc\u666f",
@@ -1043,10 +1043,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u80cc\u666f",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -1054,10 +1054,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L11",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u51b3\u7b56",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -1065,10 +1065,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L22",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546 SDK",
@@ -1076,10 +1076,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L24",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546_sdk",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546 sdk",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546_sdk"
+      "norm_label": "\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546 sdk"
     },
     {
       "label": "\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b",
@@ -1087,10 +1087,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L28",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b"
+      "norm_label": "\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b"
     },
     {
       "label": "\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d",
@@ -1098,10 +1098,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L32",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d"
+      "norm_label": "\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d"
     },
     {
       "label": "\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa Schema",
@@ -1109,10 +1109,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L36",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa_schema",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa schema",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa_schema"
+      "norm_label": "\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa schema"
     },
     {
       "label": "AI \u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9",
@@ -1120,10 +1120,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L40",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_ai_\u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "ai \u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_ai_\u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9"
+      "norm_label": "ai \u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9"
     },
     {
       "label": "\u540e\u679c",
@@ -1131,10 +1131,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L44",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u540e\u679c",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -1142,10 +1142,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L59",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5b9e\u65bd\u7ea6\u675f",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -1153,10 +1153,10 @@
       "source_file": "docs/ADR/ADR-0005-provider-neutral-ai-and-central-prompts.md",
       "source_location": "L66",
       "_origin": "ast",
+      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 26,
       "community_name": "ADR-0005\uff1aAI \u4f9b\u5e94\u5546\u4e2d\u7acb\uff0c\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
       "label": "ADR-0006-fixed-word-template-export-boundary.md",
@@ -1164,10 +1164,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "adr-0006-fixed-word-template-export-boundary.md",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary"
+      "norm_label": "adr-0006-fixed-word-template-export-boundary.md"
     },
     {
       "label": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
@@ -1175,10 +1175,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "adr-0006:\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c"
+      "norm_label": "adr-0006:\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c"
     },
     {
       "label": "\u80cc\u666f",
@@ -1186,10 +1186,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u80cc\u666f",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -1197,10 +1197,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L11",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u51b3\u7b56",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -1208,10 +1208,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L22",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "\u901a\u7528\u6a21\u677f\u5e73\u53f0",
@@ -1219,10 +1219,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L24",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u901a\u7528\u6a21\u677f\u5e73\u53f0",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u901a\u7528\u6a21\u677f\u5e73\u53f0",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u901a\u7528\u6a21\u677f\u5e73\u53f0"
+      "norm_label": "\u901a\u7528\u6a21\u677f\u5e73\u53f0"
     },
     {
       "label": "\u4ece\u96f6\u751f\u6210 Word \u6392\u7248",
@@ -1230,10 +1230,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L28",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u4ece\u96f6\u751f\u6210_word_\u6392\u7248",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u4ece\u96f6\u751f\u6210 word \u6392\u7248",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u4ece\u96f6\u751f\u6210_word_\u6392\u7248"
+      "norm_label": "\u4ece\u96f6\u751f\u6210 word \u6392\u7248"
     },
     {
       "label": "UI \u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d",
@@ -1241,10 +1241,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L32",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_ui_\u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "ui \u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_ui_\u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d"
+      "norm_label": "ui \u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d"
     },
     {
       "label": "\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6",
@@ -1252,10 +1252,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L36",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6"
+      "norm_label": "\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6"
     },
     {
       "label": "\u540e\u679c",
@@ -1263,10 +1263,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L40",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u540e\u679c",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -1274,10 +1274,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L54",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5b9e\u65bd\u7ea6\u675f",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -1285,10 +1285,10 @@
       "source_file": "docs/ADR/ADR-0006-fixed-word-template-export-boundary.md",
       "source_location": "L61",
       "_origin": "ast",
+      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 28,
       "community_name": "ADR-0006\uff1a\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
     },
     {
       "label": "ADR-0008-degradable-calendar-and-external-services.md",
@@ -1296,10 +1296,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "adr-0008-degradable-calendar-and-external-services.md",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services"
+      "norm_label": "adr-0008-degradable-calendar-and-external-services.md"
     },
     {
       "label": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
@@ -1307,10 +1307,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "adr-0008:\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7"
+      "norm_label": "adr-0008:\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7"
     },
     {
       "label": "\u80cc\u666f",
@@ -1318,10 +1318,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L7",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u80cc\u666f",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u80cc\u666f",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u80cc\u666f"
+      "norm_label": "\u80cc\u666f"
     },
     {
       "label": "\u51b3\u7b56",
@@ -1329,10 +1329,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L13",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u51b3\u7b56",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u51b3\u7b56",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u51b3\u7b56"
+      "norm_label": "\u51b3\u7b56"
     },
     {
       "label": "\u5907\u9009\u65b9\u6848",
@@ -1340,10 +1340,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L23",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u5907\u9009\u65b9\u6848",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848"
+      "norm_label": "\u5907\u9009\u65b9\u6848"
     },
     {
       "label": "\u5728\u7ebf\u8282\u5047\u65e5 API \u4f18\u5148",
@@ -1351,10 +1351,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L25",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5728\u7ebf\u8282\u5047\u65e5_api_\u4f18\u5148",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u5728\u7ebf\u8282\u5047\u65e5 api \u4f18\u5148",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5728\u7ebf\u8282\u5047\u65e5_api_\u4f18\u5148"
+      "norm_label": "\u5728\u7ebf\u8282\u5047\u65e5 api \u4f18\u5148"
     },
     {
       "label": "\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5",
@@ -1362,10 +1362,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L29",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5"
+      "norm_label": "\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5"
     },
     {
       "label": "\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848",
@@ -1373,10 +1373,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L33",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848"
+      "norm_label": "\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848"
     },
     {
       "label": "\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e",
@@ -1384,10 +1384,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L37",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e"
+      "norm_label": "\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e"
     },
     {
       "label": "\u540e\u679c",
@@ -1395,10 +1395,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L41",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u540e\u679c",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u540e\u679c",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u540e\u679c"
+      "norm_label": "\u540e\u679c"
     },
     {
       "label": "\u5b9e\u65bd\u7ea6\u675f",
@@ -1406,10 +1406,10 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L55",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5b9e\u65bd\u7ea6\u675f",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u5b9e\u65bd\u7ea6\u675f",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5b9e\u65bd\u7ea6\u675f"
+      "norm_label": "\u5b9e\u65bd\u7ea6\u675f"
     },
     {
       "label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
@@ -1417,10 +1417,21 @@
       "source_file": "docs/ADR/ADR-0008-degradable-calendar-and-external-services.md",
       "source_location": "L62",
       "_origin": "ast",
+      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
       "community": 29,
       "community_name": "ADR-0008\uff1a\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
-      "id": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "norm_label": "\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+    },
+    {
+      "label": "teacherplan_cee02092.md",
+      "file_type": "document",
+      "source_file": "graphify-out/converted/teacherplan_cee02092.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "graphify_out_converted_teacherplan_cee02092",
+      "community": 47,
+      "community_name": "setup-tasks.sh",
+      "norm_label": "teacherplan_cee02092.md"
     },
     {
       "label": "query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
@@ -1428,10 +1439,10 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L1",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0",
       "community": 33,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0"
+      "norm_label": "query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md"
     },
     {
       "label": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
@@ -1439,10 +1450,10 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L10",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
       "community": 33,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0,\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0,\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1"
+      "norm_label": "q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0,\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0,\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1"
     },
     {
       "label": "Answer",
@@ -1450,10 +1461,10 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L12",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_answer",
       "community": 33,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "answer",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_answer"
+      "norm_label": "answer"
     },
     {
       "label": "Outcome",
@@ -1461,10 +1472,10 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L16",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_outcome",
       "community": 33,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "outcome",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_outcome"
+      "norm_label": "outcome"
     },
     {
       "label": "Source Nodes",
@@ -1472,10 +1483,65 @@
       "source_file": "graphify-out/memory/query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update__\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0.md",
       "source_location": "L20",
       "_origin": "ast",
+      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_source_nodes",
       "community": 33,
       "community_name": "Q: \u8bf7\u4f7f\u7528/graphify update. \u8fdb\u884c\u66f4\u65b0\uff0c\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0\uff0c\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "norm_label": "source nodes",
-      "id": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_source_nodes"
+      "norm_label": "source nodes"
+    },
+    {
+      "label": "query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "file_type": "document",
+      "source_file": "graphify-out/memory/query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48",
+      "community": 45,
+      "community_name": "check-prerequisites.sh",
+      "norm_label": "query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md"
+    },
+    {
+      "label": "Q: T046\u2013T061 \u4e0e T062\u2013T086 \u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48\uff1f",
+      "file_type": "document",
+      "source_file": "graphify-out/memory/query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_q_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48",
+      "community": 45,
+      "community_name": "check-prerequisites.sh",
+      "norm_label": "q: t046\u2013t061 \u4e0e t062\u2013t086 \u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48?"
+    },
+    {
+      "label": "Answer",
+      "file_type": "document",
+      "source_file": "graphify-out/memory/query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_answer",
+      "community": 45,
+      "community_name": "check-prerequisites.sh",
+      "norm_label": "answer"
+    },
+    {
+      "label": "Outcome",
+      "file_type": "document",
+      "source_file": "graphify-out/memory/query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_outcome",
+      "community": 45,
+      "community_name": "check-prerequisites.sh",
+      "norm_label": "outcome"
+    },
+    {
+      "label": "Source Nodes",
+      "file_type": "document",
+      "source_file": "graphify-out/memory/query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_source_nodes",
+      "community": 45,
+      "community_name": "check-prerequisites.sh",
+      "norm_label": "source nodes"
     },
     {
       "label": "AGENTS.md \u8865\u5145\u5efa\u8bae\u67e5\u8be2",
@@ -4894,9 +4960,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 13,
+      "community": 4,
       "norm_label": "\u56ed\u6240\u8eab\u4efd\u4e0e\u8ba4\u8bc1\u6a21\u578b",
-      "community_name": "Child Manager \u6570\u636e\u6a21\u578b\u8bbe\u8ba1",
+      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
       "id": "docs_design_data_model_identity_authentication_model"
     },
     {
@@ -4992,9 +5058,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 13,
+      "community": 4,
       "norm_label": "nicegui bff \u540c\u6e90\u8eab\u4efd\u67b6\u6784",
-      "community_name": "Child Manager \u6570\u636e\u6a21\u578b\u8bbe\u8ba1",
+      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
       "id": "docs_design_system_architecture_same_origin_identity_architecture"
     },
     {
@@ -5020,9 +5086,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 46,
       "norm_label": "m2 \u5230 m3 \u5230 m3a \u5b9e\u65bd\u987a\u5e8f",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "setup-plan.sh",
       "id": "docs_design_system_architecture_m3a_architecture_sequence"
     },
     {
@@ -5118,9 +5184,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
+      "community": 46,
       "norm_label": "m3a \u5b9e\u65bd\u7b56\u7565",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "setup-plan.sh",
       "id": "specs_002_password_totp_backup_login_plan_implementation_strategy"
     },
     {
@@ -5132,9 +5198,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 34,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55\u7814\u7a76",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "specs_002_password_totp_backup_login_research_password_totp_backup_research"
     },
     {
@@ -5146,9 +5212,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 34,
       "norm_label": "\u5bc6\u7801 totp \u4e0e\u8ba4\u8bc1\u4fdd\u8bc1\u5b89\u5168\u51b3\u7b56",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "specs_002_password_totp_backup_login_research_password_totp_security_decisions"
     },
     {
@@ -5160,9 +5226,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 46,
       "norm_label": "m3a \u91cc\u7a0b\u7891\u4e0e\u8fc1\u79fb\u7f16\u53f7\u51b3\u7b56",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "setup-plan.sh",
       "id": "specs_002_password_totp_backup_login_research_m3a_migration_decision"
     },
     {
@@ -5202,9 +5268,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 34,
       "norm_label": "\u53cc\u56e0\u7d20\u5907\u7528\u767b\u5f55\u4e0e\u9ad8\u98ce\u9669\u64cd\u4f5c\u5b89\u5168\u8fb9\u754c",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "specs_002_password_totp_backup_login_spec_functional_security_boundary"
     },
     {
@@ -5230,9 +5296,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
+      "community": 46,
       "norm_label": "\u8ba4\u8bc1\u53d8\u66f4 intentional red \u5230 green \u6d41\u7a0b",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u5b9e\u65bd\u8ba1\u5212",
+      "community_name": "setup-plan.sh",
       "id": "specs_002_password_totp_backup_login_tasks_intentional_red_green_pipeline"
     },
     {
@@ -5288,9 +5354,9 @@
       "author": null,
       "contributor": null,
       "rationale": "\u901a\u884c\u5bc6\u94a5\u4fdd\u6301\u9996\u9009\u4e14\u6297\u9493\u9c7c\u7684\u8ba4\u8bc1\u8def\u5f84\uff0c\u5bc6\u7801\u52a0 TOTP \u4ec5\u4f5c\u4e3a\u72ec\u7acb\u5907\u7528\u94fe\u3002",
-      "community": 3,
+      "community": 5,
       "norm_label": "webauthn \u9996\u9009\u8ba4\u8bc1",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_contracts_readme_webauthn_preferred_authentication"
     },
     {
@@ -5302,9 +5368,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 5,
       "norm_label": "\u5bc6\u7801\u52a0 totp \u5907\u7528\u767b\u5f55\u5951\u7ea6",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_contracts_readme_password_totp_backup_login"
     },
     {
@@ -5317,9 +5383,9 @@
       "author": null,
       "contributor": null,
       "rationale": "\u5168\u90e8\u901a\u884c\u5bc6\u94a5\u4e0d\u53ef\u7528\u65f6\u4ecd\u5fc5\u987b\u4f7f\u7528\u79bb\u7ebf\u6062\u590d\u7801\u548c\u4eba\u5de5\u6838\u9a8c\uff0c\u5907\u7528\u56e0\u7d20\u4e0d\u5f97\u6210\u4e3a\u6062\u590d\u540e\u95e8\u3002",
-      "community": 3,
+      "community": 5,
       "norm_label": "\u6062\u590d\u5b89\u5168\u4e0d\u964d\u7ea7",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_contracts_readme_recovery_no_downgrade"
     },
     {
@@ -5488,9 +5554,9 @@
       "author": null,
       "contributor": null,
       "rationale": "M3A \u8bbe\u8ba1\u867d\u5df2\u786e\u8ba4\uff0c\u4f46\u5fc5\u987b\u7b49\u5f85 M3 complete\uff0c\u5e76\u7531\u72ec\u7acb Issue \u56fa\u5b9a\u65b0\u7684 docs \u63d0\u4ea4\u540e\u624d\u53ef\u5b9e\u65bd\u3002",
-      "community": 3,
+      "community": 5,
       "norm_label": "m3a \u5b9e\u65bd\u95e8\u7981",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_plan_m3a_implementation_gate"
     },
     {
@@ -5517,9 +5583,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 5,
       "norm_label": "m3a \u91cc\u7a0b\u7891",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_plan_m3a_milestone"
     },
     {
@@ -5574,9 +5640,9 @@
       "author": null,
       "contributor": null,
       "rationale": "\u53ef\u53d1\u73b0\u51ed\u636e\u907f\u514d\u767b\u5f55\u524d\u8d26\u53f7\u679a\u4e3e\uff0c\u6210\u719f\u670d\u52a1\u7aef\u5e93\u964d\u4f4e\u81ea\u5199 CBOR\u3001COSE \u548c\u7b7e\u540d\u6821\u9a8c\u7684\u98ce\u9669\u3002",
-      "community": 3,
+      "community": 5,
       "norm_label": "webauthn \u9996\u9009\u8ba4\u8bc1\u51b3\u7b56",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_research_webauthn_primary_authentication_decision"
     },
     {
@@ -5589,9 +5655,9 @@
       "author": null,
       "contributor": null,
       "rationale": "\u8bbe\u5907\u5207\u6362\u4e0d\u5e94\u6bcf\u6b21\u89e6\u53d1\u4eba\u5de5\u7d27\u6025\u6062\u590d\uff0c\u4f46\u5bc6\u7801\u4e0e TOTP \u4e0d\u6297\u9493\u9c7c\uff0c\u56e0\u6b64\u53ea\u80fd\u5efa\u7acb\u53d7\u4fdd\u8bc1\u7ea7\u522b\u9650\u5236\u7684\u5907\u7528\u4f1a\u8bdd\u3002",
-      "community": 3,
+      "community": 5,
       "norm_label": "\u5bc6\u7801\u52a0 totp \u5907\u7528\u767b\u5f55\u51b3\u7b56",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_research_password_totp_backup_login_decision"
     },
     {
@@ -5603,9 +5669,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 5,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u5b89\u5168\u53c2\u6570",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_research_password_totp_security_parameters"
     },
     {
@@ -5618,9 +5684,9 @@
       "author": null,
       "contributor": null,
       "rationale": "\u76f4\u63a5\u5148\u5220\u5bc6\u7801\u5217\u4f1a\u9501\u6b7b\u73b0\u6709\u7ba1\u7406\u5458\uff0c\u65e0\u9650\u4fdd\u7559\u65e7\u5bc6\u7801\u767b\u5f55\u53c8\u5f62\u6210\u9690\u85cf\u517c\u5bb9\u8def\u5f84\uff1bcontract downgrade \u53ea\u80fd\u6062\u590d\u7a7a\u7ed3\u6784\u3002",
-      "community": 3,
+      "community": 5,
       "norm_label": "\u65e7\u5bc6\u7801\u8fc1\u79fb\u4e0d\u53ef\u9006\u8fb9\u754c",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_research_identity_migration_nonrollback_boundary"
     },
     {
@@ -5646,9 +5712,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 5,
       "norm_label": "m3a \u5907\u7528\u767b\u5f55\u9700\u6c42",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_spec_m3a_backup_login_requirements"
     },
     {
@@ -5661,9 +5727,9 @@
       "author": null,
       "contributor": null,
       "rationale": "\u5bc6\u7801\u4e0e TOTP \u518d\u9a8c\u8bc1\u53ea\u6388\u6743\u65b0\u589e\u901a\u884c\u5bc6\u94a5\uff0c\u4e0d\u5f97\u6388\u6743\u5220\u9664\u51ed\u636e\u3001\u4fee\u6539\u56e0\u7d20\u3001\u8f6e\u6362\u6062\u590d\u7801\u6216\u5176\u4ed6\u9ad8\u98ce\u9669\u8eab\u4efd\u64cd\u4f5c\u3002",
-      "community": 3,
+      "community": 5,
       "norm_label": "\u5907\u7528\u4f1a\u8bdd\u4fdd\u8bc1\u8fb9\u754c",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_spec_backup_session_assurance"
     },
     {
@@ -5675,9 +5741,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 5,
       "norm_label": "m3a \u4f9d\u8d56\u95e8\u7981",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_spec_m3a_dependency_gate"
     },
     {
@@ -5689,9 +5755,9 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 5,
       "norm_label": "\u65e7\u5bc6\u7801\u8eab\u4efd\u8fc1\u79fb\u9700\u6c42",
-      "community_name": "\u4e3b\u89c4\u683c\u8eab\u4efd\u8ba4\u8bc1\u8303\u56f4",
+      "community_name": "API v1 \u5951\u7ea6 2.1",
       "id": "specs_001_daily_activity_plan_spec_identity_migration_requirement"
     },
     {
@@ -14059,9 +14125,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 4,
+      "community": 34,
       "norm_label": "phase 0 research: \u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "struct_specs_002_password_totp_backup_login_research_md_heading_a5ffef5920fe"
     },
     {
@@ -14074,9 +14140,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 4,
+      "community": 34,
       "norm_label": "r-001 \u5bc6\u7801\u7b56\u7565",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "struct_specs_002_password_totp_backup_login_research_md_heading_5aa4d5832c70"
     },
     {
@@ -14089,9 +14155,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 4,
+      "community": 34,
       "norm_label": "r-002 \u5bc6\u7801\u6458\u8981",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "struct_specs_002_password_totp_backup_login_research_md_heading_9c3bd32b6059"
     },
     {
@@ -14104,9 +14170,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 4,
+      "community": 34,
       "norm_label": "r-003 totp \u53c2\u6570\u4e0e\u91cd\u653e",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "struct_specs_002_password_totp_backup_login_research_md_heading_50da7be35abc"
     },
     {
@@ -14119,9 +14185,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 4,
+      "community": 34,
       "norm_label": "r-004 totp \u79cd\u5b50\u4fdd\u62a4",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "struct_specs_002_password_totp_backup_login_research_md_heading_cd6e161c4572"
     },
     {
@@ -14134,9 +14200,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 4,
+      "community": 34,
       "norm_label": "r-005 \u8ba4\u8bc1\u4fdd\u8bc1\u7ea7\u522b",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "struct_specs_002_password_totp_backup_login_research_md_heading_a5090f57bca4"
     },
     {
@@ -14149,9 +14215,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 4,
+      "community": 34,
       "norm_label": "r-006 \u8bbe\u7f6e\u3001\u6062\u590d\u4e0e\u8bbe\u5907\u5207\u6362",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "struct_specs_002_password_totp_backup_login_research_md_heading_d91a4f8c3823"
     },
     {
@@ -14164,9 +14230,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 4,
+      "community": 34,
       "norm_label": "r-007 \u8d26\u53f7\u679a\u4e3e\u3001\u9650\u6d41\u4e0e\u5ba1\u8ba1",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "struct_specs_002_password_totp_backup_login_research_md_heading_484f958b12bd"
     },
     {
@@ -14179,9 +14245,9 @@
       "author": null,
       "contributor": null,
       "extraction_method": "deterministic_structure",
-      "community": 4,
+      "community": 34,
       "norm_label": "r-008 \u91cc\u7a0b\u7891\u4e0e\u8fc1\u79fb\u987a\u5e8f",
-      "community_name": "Child Manager \u7cfb\u7edf\u67b6\u6784\u8bbe\u8ba1",
+      "community_name": "create-new-feature.sh",
       "id": "struct_specs_002_password_totp_backup_login_research_md_heading_a250835db14b"
     },
     {
@@ -17030,8 +17096,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "child manager \u9879\u76ee\u4e0a\u4e0b\u6587",
-      "id": "context_document",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "context_document"
     },
     {
       "label": "Cloud \u5e7c\u513f\u56ed\u6559\u80b2\u7ba1\u7406\u7cfb\u7edf\u5b9a\u4f4d",
@@ -17044,8 +17110,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "cloud \u5e7c\u513f\u56ed\u6559\u80b2\u7ba1\u7406\u7cfb\u7edf\u5b9a\u4f4d",
-      "id": "context_project_positioning",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "context_project_positioning"
     },
     {
       "label": "Web\u3001API \u4e0e Worker \u670d\u52a1\u8fb9\u754c",
@@ -17058,8 +17124,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "web\u3001api \u4e0e worker \u670d\u52a1\u8fb9\u754c",
-      "id": "context_service_boundaries",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "context_service_boundaries"
     },
     {
       "label": "\u57fa\u4e8e kindergarten_id \u7684\u56ed\u6240\u9694\u79bb",
@@ -17072,8 +17138,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u57fa\u4e8e kindergarten_id \u7684\u56ed\u6240\u9694\u79bb",
-      "id": "context_kindergarten_isolation",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "context_kindergarten_isolation"
     },
     {
       "label": "\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u9996\u671f\u95ed\u73af",
@@ -17086,8 +17152,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u9996\u671f\u95ed\u73af",
-      "id": "context_daily_plan_loop",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "context_daily_plan_loop"
     },
     {
       "label": "\u5bc6\u7801\u4e0e TOTP \u53cc\u56e0\u7d20\u5907\u7528\u767b\u5f55",
@@ -17100,8 +17166,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u53cc\u56e0\u7d20\u5907\u7528\u767b\u5f55",
-      "id": "context_backup_authentication",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "context_backup_authentication"
     },
     {
       "label": "\u751f\u4ea7\u90e8\u7f72\u5ef6\u540e\u81f3\u529f\u80fd\u9a8c\u6536\u540e",
@@ -17114,8 +17180,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u751f\u4ea7\u90e8\u7f72\u5ef6\u540e\u81f3\u529f\u80fd\u9a8c\u6536\u540e",
-      "id": "context_deployment_deferred",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "context_deployment_deferred"
     },
     {
       "label": "M4 \u4e0e M5 \u6267\u884c\u987a\u5e8f\u51b2\u7a81",
@@ -17128,8 +17194,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "m4 \u4e0e m5 \u6267\u884c\u987a\u5e8f\u51b2\u7a81",
-      "id": "context_m4_m5_order_conflict",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "context_m4_m5_order_conflict"
     },
     {
       "label": "\u5bc6\u94a5\u4e0e\u654f\u611f\u6570\u636e\u4fdd\u62a4\u8fb9\u754c",
@@ -17142,8 +17208,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u5bc6\u94a5\u4e0e\u654f\u611f\u6570\u636e\u4fdd\u62a4\u8fb9\u754c",
-      "id": "context_security_privacy",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "context_security_privacy"
     },
     {
       "label": "Child Manager \u9879\u76ee\u603b\u89c8",
@@ -17156,8 +17222,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "child manager \u9879\u76ee\u603b\u89c8",
-      "id": "readme_document",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "readme_document"
     },
     {
       "label": "NiceGUI Web\u3001FastAPI API\u3001Redis Worker \u4e91\u67b6\u6784",
@@ -17170,8 +17236,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "nicegui web\u3001fastapi api\u3001redis worker \u4e91\u67b6\u6784",
-      "id": "readme_cloud_architecture",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "readme_cloud_architecture"
     },
     {
       "label": "\u7ba1\u7406\u5458\u4e0e\u6559\u5e08\u6743\u9650\u6a21\u578b",
@@ -17184,8 +17250,8 @@
       "contributor": null,
       "community": 182,
       "norm_label": "\u7ba1\u7406\u5458\u4e0e\u6559\u5e08\u6743\u9650\u6a21\u578b",
-      "id": "readme_roles_permissions",
-      "community_name": "\u7ba1\u7406\u5458\u4e0e\u6559\u5e08\u6743\u9650\u6a21\u578b"
+      "community_name": "\u7ba1\u7406\u5458\u4e0e\u6559\u5e08\u6743\u9650\u6a21\u578b",
+      "id": "readme_roles_permissions"
     },
     {
       "label": "\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7ba1\u7406",
@@ -17198,8 +17264,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7ba1\u7406",
-      "id": "readme_daily_activity_plan",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "readme_daily_activity_plan"
     },
     {
       "label": "\u7ed3\u6784\u5316\u5f02\u6b65 AI \u751f\u6210",
@@ -17212,8 +17278,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u7ed3\u6784\u5316\u5f02\u6b65 ai \u751f\u6210",
-      "id": "readme_ai_generation",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "readme_ai_generation"
     },
     {
       "label": "\u56fa\u5b9a Word \u6a21\u677f\u5bfc\u51fa",
@@ -17226,8 +17292,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u56fa\u5b9a word \u6a21\u677f\u5bfc\u51fa",
-      "id": "readme_word_export",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "readme_word_export"
     },
     {
       "label": "main\u3001docs\u3001dev \u5206\u652f\u5de5\u4f5c\u6d41",
@@ -17240,8 +17306,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "main\u3001docs\u3001dev \u5206\u652f\u5de5\u4f5c\u6d41",
-      "id": "readme_branch_workflow",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "readme_branch_workflow"
     },
     {
       "label": "\u751f\u4ea7\u90e8\u7f72\u5b9e\u65bd\u65f6\u5e8f",
@@ -17254,8 +17320,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u751f\u4ea7\u90e8\u7f72\u5b9e\u65bd\u65f6\u5e8f",
-      "id": "readme_deployment_timing",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "readme_deployment_timing"
     },
     {
       "label": "ADR-0007\uff1a\u91c7\u7528 Caddy\u3001Docker Compose \u4e0e\u6587\u4ef6\u6302\u8f7d Secrets",
@@ -17268,8 +17334,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "adr-0007:\u91c7\u7528 caddy\u3001docker compose \u4e0e\u6587\u4ef6\u6302\u8f7d secrets",
-      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_document",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_document"
     },
     {
       "label": "\u5386\u53f2 Caddy \u4e0e Docker Compose \u751f\u4ea7\u62d3\u6251",
@@ -17282,8 +17348,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u5386\u53f2 caddy \u4e0e docker compose \u751f\u4ea7\u62d3\u6251",
-      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_historical_caddy_compose",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_historical_caddy_compose"
     },
     {
       "label": "\u6587\u4ef6\u6302\u8f7d\u9ad8\u654f\u611f Secrets",
@@ -17296,8 +17362,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u6587\u4ef6\u6302\u8f7d\u9ad8\u654f\u611f secrets",
-      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_file_mounted_secrets",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_file_mounted_secrets"
     },
     {
       "label": "\u670d\u52a1\u6700\u5c0f\u66b4\u9732",
@@ -17310,8 +17376,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u670d\u52a1\u6700\u5c0f\u66b4\u9732",
-      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_minimum_service_exposure",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_minimum_service_exposure"
     },
     {
       "label": "ADR-0009 \u53d6\u4ee3\u5177\u4f53\u751f\u4ea7\u62d3\u6251\u4f46\u4fdd\u7559\u5b89\u5168\u7ed3\u679c",
@@ -17324,8 +17390,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "adr-0009 \u53d6\u4ee3\u5177\u4f53\u751f\u4ea7\u62d3\u6251\u4f46\u4fdd\u7559\u5b89\u5168\u7ed3\u679c",
-      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_superseded_status",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "docs_adr_adr_0007_caddy_compose_and_file_secrets_superseded_status"
     },
     {
       "label": "Child Manager \u4ea7\u54c1\u4e0e\u5de5\u7a0b\u8def\u7ebf\u56fe",
@@ -17338,8 +17404,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "child manager \u4ea7\u54c1\u4e0e\u5de5\u7a0b\u8def\u7ebf\u56fe",
-      "id": "docs_roadmap_document",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "docs_roadmap_document"
     },
     {
       "label": "M0 \u81f3 M9 \u91cc\u7a0b\u7891\u4f9d\u8d56\u56fe",
@@ -17352,8 +17418,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "m0 \u81f3 m9 \u91cc\u7a0b\u7891\u4f9d\u8d56\u56fe",
-      "id": "docs_roadmap_milestone_dependency_graph",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "docs_roadmap_milestone_dependency_graph"
     },
     {
       "label": "\u53ef\u91cd\u590d\u8bc1\u636e\u9a71\u52a8\u7684\u5b8c\u6210\u95e8\u7981",
@@ -17366,8 +17432,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u53ef\u91cd\u590d\u8bc1\u636e\u9a71\u52a8\u7684\u5b8c\u6210\u95e8\u7981",
-      "id": "docs_roadmap_completion_gates",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "docs_roadmap_completion_gates"
     },
     {
       "label": "M4 AI \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd\u57fa\u7840",
@@ -17380,8 +17446,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "m4 ai \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd\u57fa\u7840",
-      "id": "docs_roadmap_m4_ai_foundation",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "docs_roadmap_m4_ai_foundation"
     },
     {
       "label": "M5 \u65e0 AI \u6559\u6848\u624b\u5de5\u95ed\u73af",
@@ -17394,8 +17460,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "m5 \u65e0 ai \u6559\u6848\u624b\u5de5\u95ed\u73af",
-      "id": "docs_roadmap_m5_manual_plan",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "docs_roadmap_m5_manual_plan"
     },
     {
       "label": "M6 AI \u5f02\u6b65\u751f\u6210\u4e0e\u4eba\u5de5\u91c7\u7528",
@@ -17408,8 +17474,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "m6 ai \u5f02\u6b65\u751f\u6210\u4e0e\u4eba\u5de5\u91c7\u7528",
-      "id": "docs_roadmap_m6_ai_async",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "docs_roadmap_m6_ai_async"
     },
     {
       "label": "M9 \u751f\u4ea7\u5b89\u5168\u4e0e\u90e8\u7f72\u5b9e\u73b0\u590d\u5ba1",
@@ -17422,8 +17488,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "m9 \u751f\u4ea7\u5b89\u5168\u4e0e\u90e8\u7f72\u5b9e\u73b0\u590d\u5ba1",
-      "id": "docs_roadmap_m9_deployment_review",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "docs_roadmap_m9_deployment_review"
     },
     {
       "label": "M4 \u4e0e M5 \u56e0\u6587\u6863\u987a\u5e8f\u51b2\u7a81\u800c\u963b\u585e",
@@ -17436,8 +17502,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "m4 \u4e0e m5 \u56e0\u6587\u6863\u987a\u5e8f\u51b2\u7a81\u800c\u963b\u585e",
-      "id": "docs_roadmap_m4_m5_blocked",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "docs_roadmap_m4_m5_blocked"
     },
     {
       "label": "\u9996\u671f\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u5b8c\u6574\u95ed\u73af\u4efb\u52a1\u6e05\u5355",
@@ -17450,8 +17516,8 @@
       "contributor": null,
       "community": 10,
       "norm_label": "\u9996\u671f\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u5b8c\u6574\u95ed\u73af\u4efb\u52a1\u6e05\u5355",
-      "id": "specs_001_daily_activity_plan_tasks_document",
-      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587"
+      "community_name": "Child Manager \u9879\u76ee\u4e0a\u4e0b\u6587",
+      "id": "specs_001_daily_activity_plan_tasks_document"
     },
     {
       "label": "Issue \u56fa\u5b9a docs \u63d0\u4ea4\u7684\u6267\u884c\u6388\u6743\u8fb9\u754c",
@@ -17464,8 +17530,8 @@
       "contributor": null,
       "community": 48,
       "norm_label": "issue \u56fa\u5b9a docs \u63d0\u4ea4\u7684\u6267\u884c\u6388\u6743\u8fb9\u754c",
-      "id": "specs_001_daily_activity_plan_tasks_authorization_boundary",
-      "community_name": "Issue \u56fa\u5b9a docs \u63d0\u4ea4\u7684\u6267\u884c\u6388\u6743\u8fb9\u754c"
+      "community_name": "Issue \u56fa\u5b9a docs \u63d0\u4ea4\u7684\u6267\u884c\u6388\u6743\u8fb9\u754c",
+      "id": "specs_001_daily_activity_plan_tasks_authorization_boundary"
     },
     {
       "label": "\u6709\u6548 RED \u5230\u6700\u5c0f\u5b9e\u73b0\u7684\u6d4b\u8bd5\u4f18\u5148\u6d41\u7a0b",
@@ -17478,8 +17544,8 @@
       "contributor": null,
       "community": 48,
       "norm_label": "\u6709\u6548 red \u5230\u6700\u5c0f\u5b9e\u73b0\u7684\u6d4b\u8bd5\u4f18\u5148\u6d41\u7a0b",
-      "id": "specs_001_daily_activity_plan_tasks_red_green_workflow",
-      "community_name": "Issue \u56fa\u5b9a docs \u63d0\u4ea4\u7684\u6267\u884c\u6388\u6743\u8fb9\u754c"
+      "community_name": "Issue \u56fa\u5b9a docs \u63d0\u4ea4\u7684\u6267\u884c\u6388\u6743\u8fb9\u754c",
+      "id": "specs_001_daily_activity_plan_tasks_red_green_workflow"
     },
     {
       "label": "US2 \u7eaf\u624b\u5de5\u6559\u6848\u95ed\u73af T046\u2013T061",
@@ -17492,8 +17558,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "us2 \u7eaf\u624b\u5de5\u6559\u6848\u95ed\u73af t046\u2013t061",
-      "id": "specs_001_daily_activity_plan_tasks_us2_manual_plan",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "specs_001_daily_activity_plan_tasks_us2_manual_plan"
     },
     {
       "label": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
@@ -17506,8 +17572,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "us3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd t062\u2013t086",
-      "id": "specs_001_daily_activity_plan_tasks_us3_ai_prompts",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "specs_001_daily_activity_plan_tasks_us3_ai_prompts"
     },
     {
       "label": "M3A \u540e\u5148 US2 \u518d US3 \u7684\u6267\u884c\u987a\u5e8f",
@@ -17520,8 +17586,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "m3a \u540e\u5148 us2 \u518d us3 \u7684\u6267\u884c\u987a\u5e8f",
-      "id": "specs_001_daily_activity_plan_tasks_execution_order",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "specs_001_daily_activity_plan_tasks_execution_order"
     },
     {
       "label": "M8 \u5b8c\u6574\u529f\u80fd\u9a8c\u6536\u4efb\u52a1",
@@ -17534,8 +17600,8 @@
       "contributor": null,
       "community": 30,
       "norm_label": "m8 \u5b8c\u6574\u529f\u80fd\u9a8c\u6536\u4efb\u52a1",
-      "id": "specs_001_daily_activity_plan_tasks_m8_acceptance",
-      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086"
+      "community_name": "US3 \u6a21\u578b\u4e0e\u63d0\u793a\u8bcd T062\u2013T086",
+      "id": "specs_001_daily_activity_plan_tasks_m8_acceptance"
     },
     {
       "label": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55 OpenAPI \u5951\u7ea6",
@@ -17548,8 +17614,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55 openapi \u5951\u7ea6",
-      "id": "specs_002_password_totp_backup_login_contracts_openapi_document",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_contracts_openapi_document"
     },
     {
       "label": "\u5907\u7528\u767b\u5f55\u72b6\u6001\u7aef\u70b9",
@@ -17562,8 +17628,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u5907\u7528\u767b\u5f55\u72b6\u6001\u7aef\u70b9",
-      "id": "specs_002_password_totp_backup_login_contracts_openapi_backup_status_endpoint",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_contracts_openapi_backup_status_endpoint"
     },
     {
       "label": "\u5bc6\u7801\u4e0e TOTP \u7ed1\u5b9a\u6d41\u7a0b",
@@ -17576,8 +17642,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u7ed1\u5b9a\u6d41\u7a0b",
-      "id": "specs_002_password_totp_backup_login_contracts_openapi_backup_enrollment_flow",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_contracts_openapi_backup_enrollment_flow"
     },
     {
       "label": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
@@ -17590,8 +17656,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
-      "id": "specs_002_password_totp_backup_login_contracts_openapi_password_totp_login",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_contracts_openapi_password_totp_login"
     },
     {
       "label": "\u65b0\u589e\u901a\u884c\u5bc6\u94a5\u4e13\u7528\u91cd\u65b0\u9a8c\u8bc1",
@@ -17604,8 +17670,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u65b0\u589e\u901a\u884c\u5bc6\u94a5\u4e13\u7528\u91cd\u65b0\u9a8c\u8bc1",
-      "id": "specs_002_password_totp_backup_login_contracts_openapi_backup_reauthentication",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_contracts_openapi_backup_reauthentication"
     },
     {
       "label": "\u672c\u4eba\u6700\u8fd1 20 \u6761\u5907\u7528\u8ba4\u8bc1\u5b89\u5168\u4e8b\u4ef6\u6295\u5f71",
@@ -17618,8 +17684,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u672c\u4eba\u6700\u8fd1 20 \u6761\u5907\u7528\u8ba4\u8bc1\u5b89\u5168\u4e8b\u4ef6\u6295\u5f71",
-      "id": "specs_002_password_totp_backup_login_contracts_openapi_security_events_projection",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_contracts_openapi_security_events_projection"
     },
     {
       "label": "CSRF \u4e0e HttpOnly Cookie \u5b89\u5168\u5951\u7ea6",
@@ -17632,8 +17698,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "csrf \u4e0e httponly cookie \u5b89\u5168\u5951\u7ea6",
-      "id": "specs_002_password_totp_backup_login_contracts_openapi_csrf_cookie_security",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_contracts_openapi_csrf_cookie_security"
     },
     {
       "label": "\u9632\u8d26\u53f7\u679a\u4e3e\u7684\u7edf\u4e00\u8ba4\u8bc1\u5931\u8d25\u54cd\u5e94",
@@ -17646,8 +17712,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u9632\u8d26\u53f7\u679a\u4e3e\u7684\u7edf\u4e00\u8ba4\u8bc1\u5931\u8d25\u54cd\u5e94",
-      "id": "specs_002_password_totp_backup_login_contracts_openapi_generic_authentication_failure",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_contracts_openapi_generic_authentication_failure"
     },
     {
       "label": "\u516d\u4f4d\u6570\u5b57 TOTP \u9a8c\u8bc1\u7801 Schema",
@@ -17660,8 +17726,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u516d\u4f4d\u6570\u5b57 totp \u9a8c\u8bc1\u7801 schema",
-      "id": "specs_002_password_totp_backup_login_contracts_openapi_totp_code_schema",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_contracts_openapi_totp_code_schema"
     },
     {
       "label": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55 Quickstart",
@@ -17674,8 +17740,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55 quickstart",
-      "id": "specs_002_password_totp_backup_login_quickstart_document",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_quickstart_document"
     },
     {
       "label": "M3A \u5b9e\u65bd\u524d Gate",
@@ -17688,8 +17754,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "m3a \u5b9e\u65bd\u524d gate",
-      "id": "specs_002_password_totp_backup_login_quickstart_implementation_gate",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_quickstart_implementation_gate"
     },
     {
       "label": "\u7ba1\u7406\u5458\u5f3a\u5236\u7ed1\u5b9a\u9a8c\u6536\u65c5\u7a0b",
@@ -17702,8 +17768,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u7ba1\u7406\u5458\u5f3a\u5236\u7ed1\u5b9a\u9a8c\u6536\u65c5\u7a0b",
-      "id": "specs_002_password_totp_backup_login_quickstart_admin_mandatory_enrollment",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_quickstart_admin_mandatory_enrollment"
     },
     {
       "label": "\u65b0\u8bbe\u5907\u5907\u7528\u767b\u5f55\u9a8c\u6536\u65c5\u7a0b",
@@ -17716,8 +17782,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u65b0\u8bbe\u5907\u5907\u7528\u767b\u5f55\u9a8c\u6536\u65c5\u7a0b",
-      "id": "specs_002_password_totp_backup_login_quickstart_new_device_backup_login",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_quickstart_new_device_backup_login"
     },
     {
       "label": "\u56e0\u7d20\u7ef4\u62a4\u4e0e\u7d27\u6025\u6062\u590d\u9a8c\u6536\u65c5\u7a0b",
@@ -17730,8 +17796,8 @@
       "contributor": null,
       "community": 23,
       "norm_label": "\u56e0\u7d20\u7ef4\u62a4\u4e0e\u7d27\u6025\u6062\u590d\u9a8c\u6536\u65c5\u7a0b",
-      "id": "specs_002_password_totp_backup_login_quickstart_factor_maintenance_and_recovery",
-      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9"
+      "community_name": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u8ba4\u8bc1\u7aef\u70b9",
+      "id": "specs_002_password_totp_backup_login_quickstart_factor_maintenance_and_recovery"
     },
     {
       "label": "M3A \u4e13\u9879\u4e0e\u5b8c\u6574\u9a8c\u8bc1\u5957\u4ef6",
@@ -17744,8 +17810,8 @@
       "contributor": null,
       "community": 49,
       "norm_label": "m3a \u4e13\u9879\u4e0e\u5b8c\u6574\u9a8c\u8bc1\u5957\u4ef6",
-      "id": "specs_002_password_totp_backup_login_quickstart_verification_suite",
-      "community_name": "\u5907\u7528\u8ba4\u8bc1\u654f\u611f\u6570\u636e\u96f6\u6cc4\u9732\u9a8c\u8bc1"
+      "community_name": "\u5907\u7528\u8ba4\u8bc1\u654f\u611f\u6570\u636e\u96f6\u6cc4\u9732\u9a8c\u8bc1",
+      "id": "specs_002_password_totp_backup_login_quickstart_verification_suite"
     },
     {
       "label": "\u5907\u7528\u8ba4\u8bc1\u654f\u611f\u6570\u636e\u96f6\u6cc4\u9732\u9a8c\u8bc1",
@@ -17758,8 +17824,8 @@
       "contributor": null,
       "community": 49,
       "norm_label": "\u5907\u7528\u8ba4\u8bc1\u654f\u611f\u6570\u636e\u96f6\u6cc4\u9732\u9a8c\u8bc1",
-      "id": "specs_002_password_totp_backup_login_quickstart_sensitive_data_non_disclosure",
-      "community_name": "\u5907\u7528\u8ba4\u8bc1\u654f\u611f\u6570\u636e\u96f6\u6cc4\u9732\u9a8c\u8bc1"
+      "community_name": "\u5907\u7528\u8ba4\u8bc1\u654f\u611f\u6570\u636e\u96f6\u6cc4\u9732\u9a8c\u8bc1",
+      "id": "specs_002_password_totp_backup_login_quickstart_sensitive_data_non_disclosure"
     }
   ],
   "links": [
@@ -17770,9 +17836,57 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_check_prerequisites",
-      "target": "specify_scripts_bash_check_prerequisites_sh__entry"
+      "target": "specify_scripts_bash_check_prerequisites_sh__entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "INFERRED",
+      "source_file": ".specify/scripts/bash/check-prerequisites.sh",
+      "source_location": "L79",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast",
+      "source": "specify_scripts_bash_check_prerequisites",
+      "target": "specify_scripts_bash_common",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".specify/scripts/bash/check-prerequisites.sh",
+      "source_location": "L189",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "specify_scripts_bash_check_prerequisites_sh__entry",
+      "target": "specify_scripts_bash_common_check_dir"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".specify/scripts/bash/check-prerequisites.sh",
+      "source_location": "L187",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "specify_scripts_bash_check_prerequisites_sh__entry",
+      "target": "specify_scripts_bash_common_check_file"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".specify/scripts/bash/check-prerequisites.sh",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "specify_scripts_bash_check_prerequisites_sh__entry",
+      "target": "specify_scripts_bash_common_has_jq"
     },
     {
       "relation": "defines",
@@ -17781,9 +17895,9 @@
       "source_location": "L399",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_check_dir"
+      "target": "specify_scripts_bash_common_check_dir",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17792,9 +17906,9 @@
       "source_location": "L398",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_check_file"
+      "target": "specify_scripts_bash_common_check_file",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17803,9 +17917,9 @@
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_find_specify_root"
+      "target": "specify_scripts_bash_common_find_specify_root",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17814,9 +17928,9 @@
       "source_location": "L350",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_format_speckit_command"
+      "target": "specify_scripts_bash_common_format_speckit_command",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17825,9 +17939,9 @@
       "source_location": "L79",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_get_current_branch"
+      "target": "specify_scripts_bash_common_get_current_branch",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17836,9 +17950,9 @@
       "source_location": "L163",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_get_feature_paths"
+      "target": "specify_scripts_bash_common_get_feature_paths",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17847,9 +17961,9 @@
       "source_location": "L238",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_get_invoke_separator"
+      "target": "specify_scripts_bash_common_get_invoke_separator",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17858,9 +17972,9 @@
       "source_location": "L56",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_get_repo_root"
+      "target": "specify_scripts_bash_common_get_repo_root",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17869,9 +17983,9 @@
       "source_location": "L234",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_has_jq"
+      "target": "specify_scripts_bash_common_has_jq",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17880,9 +17994,9 @@
       "source_location": "L372",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_json_escape"
+      "target": "specify_scripts_bash_common_json_escape",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17891,9 +18005,9 @@
       "source_location": "L135",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_persist_feature_json"
+      "target": "specify_scripts_bash_common_persist_feature_json",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17902,9 +18016,9 @@
       "source_location": "L95",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_read_feature_json_feature_directory"
+      "target": "specify_scripts_bash_common_read_feature_json_feature_directory",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17913,9 +18027,9 @@
       "source_location": "L38",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_resolve_specify_init_dir"
+      "target": "specify_scripts_bash_common_resolve_specify_init_dir",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17924,9 +18038,9 @@
       "source_location": "L406",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_resolve_template"
+      "target": "specify_scripts_bash_common_resolve_template",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17935,9 +18049,9 @@
       "source_location": "L490",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_resolve_template_content"
+      "target": "specify_scripts_bash_common_resolve_template_content",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -17946,9 +18060,45 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common",
-      "target": "specify_scripts_bash_common_sh__entry"
+      "target": "specify_scripts_bash_common_sh__entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "INFERRED",
+      "source_file": ".specify/scripts/bash/create-new-feature.sh",
+      "source_location": "L124",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast",
+      "source": "specify_scripts_bash_create_new_feature",
+      "target": "specify_scripts_bash_common",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "INFERRED",
+      "source_file": ".specify/scripts/bash/setup-plan.sh",
+      "source_location": "L28",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast",
+      "source": "specify_scripts_bash_setup_plan",
+      "target": "specify_scripts_bash_common",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "INFERRED",
+      "source_file": ".specify/scripts/bash/setup-tasks.sh",
+      "source_location": "L23",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast",
+      "source": "specify_scripts_bash_setup_tasks",
+      "target": "specify_scripts_bash_common",
+      "confidence_score": 0.5
     },
     {
       "relation": "calls",
@@ -17958,9 +18108,9 @@
       "weight": 1.0,
       "context": "call",
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common_get_repo_root",
-      "target": "specify_scripts_bash_common_resolve_specify_init_dir"
+      "target": "specify_scripts_bash_common_resolve_specify_init_dir",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -17970,9 +18120,69 @@
       "weight": 1.0,
       "context": "call",
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_common_get_feature_paths",
+      "target": "specify_scripts_bash_common_persist_feature_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".specify/scripts/bash/create-new-feature.sh",
+      "source_location": "L264",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "specify_scripts_bash_create_new_feature_sh__entry",
       "target": "specify_scripts_bash_common_persist_feature_json"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".specify/scripts/bash/setup-plan.sh",
+      "source_location": "L67",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "specify_scripts_bash_setup_plan_sh__entry",
+      "target": "specify_scripts_bash_common_has_jq"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".specify/scripts/bash/setup-tasks.sh",
+      "source_location": "L62",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "specify_scripts_bash_setup_tasks_sh__entry",
+      "target": "specify_scripts_bash_common_has_jq"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".specify/scripts/bash/setup-tasks.sh",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "specify_scripts_bash_setup_tasks_sh__entry",
+      "target": "specify_scripts_bash_common_check_file"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".specify/scripts/bash/setup-tasks.sh",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "specify_scripts_bash_setup_tasks_sh__entry",
+      "target": "specify_scripts_bash_common_check_dir"
     },
     {
       "relation": "defines",
@@ -17981,9 +18191,9 @@
       "source_location": "L117",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_create_new_feature",
-      "target": "specify_scripts_bash_create_new_feature_clean_branch_name"
+      "target": "specify_scripts_bash_create_new_feature_clean_branch_name",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -17992,9 +18202,9 @@
       "source_location": "L136",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_create_new_feature",
-      "target": "specify_scripts_bash_create_new_feature_generate_branch_name"
+      "target": "specify_scripts_bash_create_new_feature_generate_branch_name",
+      "confidence_score": 1.0
     },
     {
       "relation": "defines",
@@ -18003,9 +18213,9 @@
       "source_location": "L94",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_create_new_feature",
-      "target": "specify_scripts_bash_create_new_feature_get_highest_from_specs"
+      "target": "specify_scripts_bash_create_new_feature_get_highest_from_specs",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18014,9 +18224,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_create_new_feature",
-      "target": "specify_scripts_bash_create_new_feature_sh__entry"
+      "target": "specify_scripts_bash_create_new_feature_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18025,9 +18235,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_setup_plan",
-      "target": "specify_scripts_bash_setup_plan_sh__entry"
+      "target": "specify_scripts_bash_setup_plan_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18036,9 +18246,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "specify_scripts_bash_setup_tasks",
-      "target": "specify_scripts_bash_setup_tasks_sh__entry"
+      "target": "specify_scripts_bash_setup_tasks_sh__entry",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18047,9 +18257,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18058,9 +18268,9 @@
       "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u51b3\u7b56"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18069,9 +18279,9 @@
       "source_location": "L39",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u540e\u679c"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18080,9 +18290,9 @@
       "source_location": "L21",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18091,9 +18301,9 @@
       "source_location": "L60",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18102,9 +18312,9 @@
       "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18113,9 +18323,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_adr_0002_\u91c7\u7528\u72ec\u7acb_web_api_worker_\u8fd0\u884c\u5355\u5143\u7684\u6a21\u5757\u5316\u5355\u4f53",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u80cc\u666f"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18124,9 +18334,9 @@
       "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_nicegui_\u4e00\u4f53\u5316\u8fdb\u7a0b"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_nicegui_\u4e00\u4f53\u5316\u8fdb\u7a0b",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18135,9 +18345,9 @@
       "source_location": "L35",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_react_typescript_\u72ec\u7acb\u524d\u7aef"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_react_typescript_\u72ec\u7acb\u524d\u7aef",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18146,9 +18356,9 @@
       "source_location": "L31",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u4ece\u9996\u671f\u5f00\u59cb\u5168\u9762\u5fae\u670d\u52a1\u5316",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18157,9 +18367,9 @@
       "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab_repository"
+      "target": "docs_adr_adr_0002_separate_web_api_worker_modular_monolith_\u524d\u7aef\u76f4\u63a5\u8bbf\u95ee\u6570\u636e\u5e93\u6216\u5171\u4eab_repository",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18168,9 +18378,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18179,9 +18389,9 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u51b3\u7b56"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18190,9 +18400,9 @@
       "source_location": "L50",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u540e\u679c"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18201,9 +18411,9 @@
       "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18212,9 +18422,9 @@
       "source_location": "L71",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18223,9 +18433,9 @@
       "source_location": "L64",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18234,9 +18444,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_adr_0003_postgresql_\u4fdd\u5b58\u4efb\u52a1\u6743\u5a01\u72b6\u6001_dramatiq_\u4e0e_redis_\u8d1f\u8d23\u5f02\u6b65\u6267\u884c",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u80cc\u666f"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18245,9 +18455,9 @@
       "source_location": "L26",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_api_\u540c\u6b65\u6267\u884c_ai_\u548c_word"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_api_\u540c\u6b65\u6267\u884c_ai_\u548c_word",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18256,9 +18466,9 @@
       "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_celery_redis"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_celery_redis",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18267,9 +18477,9 @@
       "source_location": "L38",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_\u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_\u76f4\u63a5\u5145\u5f53\u8f6e\u8be2\u4efb\u52a1\u961f\u5217",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18278,9 +18488,9 @@
       "source_location": "L34",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_redis_\u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_redis_\u4f5c\u4e3a\u4efb\u52a1\u6700\u7ec8\u72b6\u6001\u5b58\u50a8",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18289,9 +18499,9 @@
       "source_location": "L42",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216_kafka"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u7acb\u5373\u5f15\u5165\u4e8b\u52a1\u6d88\u606f\u4e2d\u95f4\u4ef6\u6216_kafka",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18300,9 +18510,9 @@
       "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u9996\u671f\u4f7f\u7528_sse_\u6216_websocket_\u63a8\u9001"
+      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_\u9996\u671f\u4f7f\u7528_sse_\u6216_websocket_\u63a8\u9001",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18311,9 +18521,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18322,9 +18532,9 @@
       "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u51b3\u7b56"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18333,9 +18543,9 @@
       "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u540e\u679c"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18344,9 +18554,9 @@
       "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18355,9 +18565,9 @@
       "source_location": "L66",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18366,9 +18576,9 @@
       "source_location": "L59",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18377,9 +18587,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_adr_0005_ai_\u4f9b\u5e94\u5546\u4e2d\u7acb_\u5e76\u5efa\u7acb\u7ba1\u7406\u5458\u4e13\u7528\u63d0\u793a\u8bcd\u7cfb\u7edf",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u80cc\u666f"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18388,9 +18598,9 @@
       "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_ai_\u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_ai_\u76f4\u63a5\u5199\u5165\u6559\u6848\u5f53\u524d\u5185\u5bb9",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18399,9 +18609,9 @@
       "source_location": "L36",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa_schema"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5141\u8bb8\u63d0\u793a\u8bcd\u5b9a\u4e49\u8f93\u51fa_schema",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18410,9 +18620,9 @@
       "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u53ea\u914d\u7f6e\u4e00\u4e2a\u5168\u5c40\u6a21\u578b",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18421,9 +18631,9 @@
       "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5c06\u63d0\u793a\u8bcd\u5199\u5728\u4ee3\u7801\u6216\u73af\u5883\u53d8\u91cf\u4e2d",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18432,9 +18642,9 @@
       "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546_sdk"
+      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_\u6bcf\u4e2a\u4e1a\u52a1\u6a21\u5757\u76f4\u63a5\u4f7f\u7528\u4f9b\u5e94\u5546_sdk",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18443,9 +18653,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18454,9 +18664,9 @@
       "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u51b3\u7b56"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18465,9 +18675,9 @@
       "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u540e\u679c"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18476,9 +18686,9 @@
       "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18487,9 +18697,9 @@
       "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18498,9 +18708,9 @@
       "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18509,9 +18719,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_adr_0006_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u91c7\u7528\u56fa\u5b9a_word_\u6a21\u677f\u5bfc\u51fa\u8fb9\u754c",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u80cc\u666f"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18520,9 +18730,9 @@
       "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_ui_\u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_ui_\u76f4\u63a5\u4fee\u6539\u6a21\u677f\u5e76\u4e0b\u8f7d",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18531,9 +18741,9 @@
       "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u4ece\u96f6\u751f\u6210_word_\u6392\u7248"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u4ece\u96f6\u751f\u6210_word_\u6392\u7248",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18542,9 +18752,9 @@
       "source_location": "L36",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u53ea\u5411\u6d4f\u89c8\u5668\u8fd4\u56de\u4e34\u65f6\u6587\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18553,9 +18763,9 @@
       "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u901a\u7528\u6a21\u677f\u5e73\u53f0"
+      "target": "docs_adr_adr_0006_fixed_word_template_export_boundary_\u901a\u7528\u6a21\u677f\u5e73\u53f0",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18564,9 +18774,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18575,9 +18785,9 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u51b3\u7b56"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u51b3\u7b56",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18586,9 +18796,9 @@
       "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u540e\u679c"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u540e\u679c",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18597,9 +18807,9 @@
       "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18608,9 +18818,9 @@
       "source_location": "L62",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u590d\u5ba1\u89e6\u53d1\u6761\u4ef6",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18619,9 +18829,9 @@
       "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5b9e\u65bd\u7ea6\u675f"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5b9e\u65bd\u7ea6\u675f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18630,9 +18840,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_adr_0008_\u65e5\u671f\u4e0e\u5916\u90e8\u670d\u52a1\u91c7\u7528\u672c\u5730\u4f18\u5148\u548c\u8f6f\u964d\u7ea7",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u80cc\u666f"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u80cc\u666f",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18641,9 +18851,9 @@
       "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5728\u7ebf\u8282\u5047\u65e5_api_\u4f18\u5148"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5728\u7ebf\u8282\u5047\u65e5_api_\u4f18\u5148",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18652,9 +18862,9 @@
       "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5916\u90e8\u670d\u52a1\u5931\u8d25\u65f6\u9ed8\u8ba4\u666e\u901a\u5de5\u4f5c\u65e5",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18663,9 +18873,9 @@
       "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u63a5\u5165\u5929\u6c14\u670d\u52a1\u6216\u8ba9\u6559\u5e08\u9009\u62e9\u5929\u6c14\u6807\u7b7e",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18674,9 +18884,9 @@
       "source_location": "L33",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u5907\u9009\u65b9\u6848",
-      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848"
+      "target": "docs_adr_adr_0008_degradable_calendar_and_external_services_\u975e\u5de5\u4f5c\u65e5\u7981\u6b62\u521b\u5efa\u6559\u6848",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18685,9 +18895,9 @@
       "source_location": "L10",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0",
-      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1"
+      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18696,9 +18906,9 @@
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_answer"
+      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_answer",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18707,9 +18917,9 @@
       "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_outcome"
+      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_outcome",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -18718,9 +18928,53 @@
       "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_q_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0\u4e48\u4efb\u52a1",
-      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_source_nodes"
+      "target": "graphify_out_memory_query_20260713_043702_\u8bf7\u4f7f\u7528_graphify_update_\u8fdb\u884c\u66f4\u65b0_\u540c\u65f6\u4f7f\u7528\u5b50\u4ee3\u7406\u8fdb\u884c\u8bed\u4e49\u66f4\u65b0_\u7136\u540e\u601d\u8003\u8fd8\u9700\u8981\u5b8c\u6210\u4ec0_source_nodes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "graphify-out/memory/query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48",
+      "target": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_q_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "graphify-out/memory/query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_q_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48",
+      "target": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_answer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "graphify-out/memory/query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_q_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48",
+      "target": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_outcome",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "graphify-out/memory/query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48.md",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_q_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48",
+      "target": "graphify_out_memory_query_20260726_004336_t046_t061_\u4e0e_t062_t086_\u7684\u56fa\u5b9a\u5b9e\u65bd\u987a\u5e8f\u53ca\u4f9d\u8d56\u662f\u4ec0\u4e48_source_nodes",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -29223,5 +29477,5 @@
       "source_file": "graphify-out/memory/query_20260712_071357_\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u7684\u6570\u636e\u5b9e\u4f53_\u5173\u7cfb_\u552f\u4e00\u7ea6\u675f_\u5386\u53f2\u7248\u672c_\u5f02\u6b65\u4efb\u52a1\u548c\u5b89\u5168\u8fb9\u754c\u662f\u4ec0\u4e48.md"
     }
   ],
-  "built_at_commit": "2f7894c2356e4486eaccb8bd8da7dc1dc7776fe2"
+  "built_at_commit": "7d9af6c9e56dae3e126a12cf23012f18285d5d0a"
 }

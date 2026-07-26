@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-07-26)
+# Graph Report - child-manager-docs  (2026-07-26)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 87 files · ~92,031 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1218 nodes · 1040 edges · 296 communities (39 shown, 257 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 39 edges (avg confidence: 0.93)
+- 1224 nodes · 1056 edges · 296 communities (43 shown, 253 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 43 edges (avg confidence: 0.89)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2f7894c2`
+- Built from commit: `7d9af6c9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -61,7 +62,6 @@
 - 恢复与会话保证模型
 - check-prerequisites.sh
 - setup-plan.sh
-- setup-tasks.sh
 - Issue 固定 docs 提交的执行授权边界
 - 备用认证敏感数据零泄露验证
 - 检测与分析报告
@@ -361,7 +361,7 @@
 - **Specify Plan Tasks Implement 全周期** — _agents_skills_speckit_specify_skill_speckit_specify, _agents_skills_speckit_plan_skill_speckit_plan, _agents_skills_speckit_tasks_skill_speckit_tasks, _agents_skills_speckit_implement_skill_speckit_implement [EXTRACTED 1.00]
 - **一日活动计划范围、架构与数据边界知识链** — graphify_out_memory_query_20260711_020708_docs_prd_lesson_management_m_prd_scope, graphify_out_memory_query_20260711_024218_service_architecture_sequence, graphify_out_memory_query_20260712_071357_corrected_data_model [INFERRED 0.75]
 
-## Communities (296 total, 257 thin omitted)
+## Communities (296 total, 253 thin omitted)
 
 ### Community 0 - "openapi 文档"
 Cohesion: 0.01
@@ -376,16 +376,16 @@ Cohesion: 0.04
 Nodes (47): 密码与 TOTP 备用登录规格质量检查清单, 管理员绑定 新设备登录与安全维护用户故事, 密码与 TOTP 备用登录功能规格, Specification Quality Checklist: 密码与 TOTP 备用登录, Feature Readiness, Notes, Requirement Completeness, Content Quality (+39 more)
 
 ### Community 3 - "主规格身份认证范围"
-Cohesion: 0.06
-Nodes (40): 身份与 M3A 规格就绪检查, 密码加 TOTP 备用登录契约, 恢复安全不降级, WebAuthn 首选认证, M3A 实施门禁, M3A 里程碑, 旧密码迁移不可逆边界, 密码加 TOTP 备用登录决策 (+32 more)
+Cohesion: 0.07
+Nodes (27): 身份与 M3A 规格就绪检查, 主规格身份认证范围, Requirement Completeness, Content Quality, Feature Readiness, Specification Quality Checklist: 首期一日活动计划完整闭环, Notes, User Story 2 - 教师完成纯手工教案闭环 (Priority: P2) (+19 more)
 
 ### Community 4 - "Child Manager 系统架构设计"
-Cohesion: 0.06
-Nodes (35): WebAuthn 与备用会话保证级别边界, M2 到 M3 到 M3A 实施顺序, M3A 里程碑与迁移编号决策, 密码与 TOTP 备用登录研究, 密码 TOTP 与认证保证安全决策, 双因素备用登录与高风险操作安全边界, 7. API 与契约, 18. 测试与架构验证 (+27 more)
+Cohesion: 0.09
+Nodes (23): 园所身份与认证模型, WebAuthn 与备用会话保证级别边界, NiceGUI BFF 同源身份架构, 7. API 与契约, 18. 测试与架构验证, 3. 架构目标, 4. 架构总览, 14. 可观测性与审计 (+15 more)
 
 ### Community 5 - "API v1 契约 2.1"
-Cohesion: 0.07
-Nodes (35): 备用认证端点, 备用认证 Schema, 敏感秘密读写标注, 会话认证保证契约, WebAuthn Ceremony OpenAPI 契约, API v1 契约 2.1, 备用认证凭据表, 备用认证绑定表 (+27 more)
+Cohesion: 0.05
+Nodes (48): 备用认证端点, 备用认证 Schema, 敏感秘密读写标注, 会话认证保证契约, WebAuthn Ceremony OpenAPI 契约, API v1 契约 2.1, 密码加 TOTP 备用登录契约, 恢复安全不降级 (+40 more)
 
 ### Community 6 - "Child Manager 幼儿园教育管理系统"
 Cohesion: 0.06
@@ -416,8 +416,8 @@ Cohesion: 0.09
 Nodes (22): ADR-0011 密码与 TOTP 双因素备用登录, 普通业务与高风险身份操作保证级别分离, 1. WebAuthn 仍是首选登录，新增独立双因素备用登录, 备用会话允许管理全部身份材料, 5. 备用会话只可经专用再验证新增通行密钥, ADR-0011：增加密码与 TOTP 双因素备用登录, 3. 密码与 TOTP 的固定安全参数, 7. 紧急恢复不降级 (+14 more)
 
 ### Community 13 - "Child Manager 数据模型设计"
-Cohesion: 0.09
-Nodes (22): 园所身份与认证模型, NiceGUI BFF 同源身份架构, 17. 索引原则, 10. JSONB Schema 演进, 19. 数据保留与清理, 5. 园所与身份模型, Child Manager 数据模型设计, 6. 教学设置模型 (+14 more)
+Cohesion: 0.10
+Nodes (20): 17. 索引原则, 10. JSONB Schema 演进, 19. 数据保留与清理, 5. 园所与身份模型, Child Manager 数据模型设计, 6. 教学设置模型, 12. Word 导出模型, 15. 数据快照边界 (+12 more)
 
 ### Community 14 - "教案管理 PRD"
 Cohesion: 0.09
@@ -452,8 +452,8 @@ Cohesion: 0.11
 Nodes (19): 密码与 TOTP 备用登录数据模型, 2. 枚举, 1. 设计原则, 5. 登录与升级事务, backupauthstatus, reauthenticationpurpose, 3.3 refreshtokens 扩展, 6. Alembic (+11 more)
 
 ### Community 22 - "common.sh"
-Cohesion: 0.13
-Nodes (5): get_feature_paths(), get_repo_root(), _persist_feature_json(), resolve_specify_init_dir(), common.sh script
+Cohesion: 0.10
+Nodes (12): check-prerequisites.sh script, check_dir(), check_file(), get_feature_paths(), get_repo_root(), has_jq(), _persist_feature_json(), resolve_specify_init_dir() (+4 more)
 
 ### Community 23 - "密码与 TOTP 备用认证端点"
 Cohesion: 0.17
@@ -464,8 +464,8 @@ Cohesion: 0.14
 Nodes (13): ADR-0003：PostgreSQL 保存任务权威状态，Dramatiq 与 Redis 负责异步执行, API 同步执行 AI 和 Word, Celery + Redis, PostgreSQL 直接充当轮询任务队列, Redis 作为任务最终状态存储, 决策, 后果, 备选方案 (+5 more)
 
 ### Community 25 - "密码与 TOTP 备用登录实施计划"
-Cohesion: 0.14
-Nodes (14): 密码与 TOTP 备用登录实施计划, M3A 实施策略, 认证变更 Intentional RED 到 GREEN 流程, Complexity Tracking, Phase 2: Implementation Strategy, Technical Context, Phase 1: Design & Contracts, Project Structure (+6 more)
+Cohesion: 0.17
+Nodes (12): 密码与 TOTP 备用登录实施计划, Complexity Tracking, Phase 2: Implementation Strategy, Technical Context, Phase 1: Design & Contracts, Project Structure, Source Code (implementation target on dev), Phase 0: Research (+4 more)
 
 ### Community 26 - "ADR-0005：AI 供应商中立，并建立管理员专用提示词系统"
 Cohesion: 0.15
@@ -499,6 +499,10 @@ Nodes (6): Spec Kit 任务实施, Spec Kit 实施规划, Spec Kit 功能规格�
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: 请使用/graphify update. 进行更新，同时使用子代理进行语义更新，然后思考还需要完成什么任务, Source Nodes
 
+### Community 34 - "create-new-feature.sh"
+Cohesion: 0.17
+Nodes (12): 密码与 TOTP 备用登录研究, 密码 TOTP 与认证保证安全决策, 双因素备用登录与高风险操作安全边界, R-007 账号枚举、限流与审计, R-003 TOTP 参数与重放, R-001 密码策略, R-002 密码摘要, R-008 里程碑与迁移顺序 (+4 more)
+
 ### Community 35 - "Child Manager 文档交叉审计合并结论"
 Cohesion: 0.50
 Nodes (4): M0 验收门禁, ADR-0001 Cloud Only, Single Implementation Development Rules, Child Manager 文档交叉审计合并结论
@@ -519,15 +523,24 @@ Nodes (3): 身份与 M3A 迁移序列, 0004 Settings 到 0005 M3A 迁移链, 000
 Cohesion: 0.67
 Nodes (3): Spec Kit 计划模板, Spec Kit 规格模板, Spec Kit 任务模板
 
+### Community 45 - "check-prerequisites.sh"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？, Source Nodes
+
+### Community 46 - "setup-plan.sh"
+Cohesion: 0.50
+Nodes (4): M2 到 M3 到 M3A 实施顺序, M3A 实施策略, M3A 里程碑与迁移编号决策, 认证变更 Intentional RED 到 GREEN 流程
+
 ## Knowledge Gaps
-- **986 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+981 more)
+- **985 isolated node(s):** `common.sh script`, `背景`, `决策`, `NiceGUI 一体化进程`, `前端直接访问数据库或共享 Repository` (+980 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **257 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **253 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
 **Preferred sources** — corroborated by past sessions; start here.
-- `班级与教师配置` (2× useful, score=1.518952047)
+- `Web、API 与 Worker 服务边界` (2× useful, score=1.416647594) _(code changed — re-verify)_
+- `班级与教师配置` (2× useful, score=1.39887405)
 
 **Known dead ends** — questions that led nowhere; don't re-derive.
 - "哪些关键架构决策需要独立 ADR，哪些已经确认，决策之间有什么依赖？" -> `需要直接比较文件`
@@ -535,12 +548,12 @@ Nodes (3): Spec Kit 计划模板, Spec Kit 规格模板, Spec Kit 任务模板
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `密码与 TOTP 备用登录任务清单` connect `密码与 TOTP 备用登录任务清单` to `密码与 TOTP 备用登录实施计划`, `密码与 TOTP 备用登录功能规格`, `Child Manager 系统架构设计`, `密码与 TOTP 备用登录数据模型`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+- **Why does `密码与 TOTP 备用登录任务清单` connect `密码与 TOTP 备用登录任务清单` to `create-new-feature.sh`, `密码与 TOTP 备用登录功能规格`, `setup-plan.sh`, `密码与 TOTP 备用登录数据模型`, `密码与 TOTP 备用登录实施计划`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `密码与 TOTP 备用登录数据模型` connect `密码与 TOTP 备用登录数据模型` to `密码与 TOTP 备用登录任务清单`, `备用凭据与短时绑定表`, `0004 Settings 到 0005 M3A 迁移链`, `恢复与会话保证模型`, `密码与 TOTP 备用登录实施计划`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
-- **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
-  _986 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+- **What connects `common.sh script`, `背景`, `决策` to the rest of the system?**
+  _985 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `openapi 文档` be split into smaller, more focused modules?**
   _Cohesion score 0.008771929824561403 - nodes in this community are weakly interconnected._
 - **Should `密码与 TOTP 备用登录任务清单` be split into smaller, more focused modules?**
@@ -548,4 +561,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `密码与 TOTP 备用登录功能规格` be split into smaller, more focused modules?**
   _Cohesion score 0.0425531914893617 - nodes in this community are weakly interconnected._
 - **Should `主规格身份认证范围` be split into smaller, more focused modules?**
-  _Cohesion score 0.05512820512820513 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07407407407407407 - nodes in this community are weakly interconnected._

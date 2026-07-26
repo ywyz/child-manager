@@ -3571,8 +3571,12 @@ components:
         - class_name_snapshot
         - age_group_name_snapshot
         - semester_name_snapshot
+        - semester_start_date_snapshot
+        - semester_end_date_snapshot
         - teaching_week_number
         - teaching_week_text
+        - activity_date_text
+        - season
         - content
         - content_schema_version
         - version
