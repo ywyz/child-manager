@@ -1,7 +1,9 @@
 # ruff: noqa: F811
 
+import pytest
 from fastapi.testclient import TestClient
 
+from packages.backend.lesson_plans.service import LessonPlanService
 from tests.api.passkey_helpers import (  # noqa: F401
     ActorFixture,
     admin_client,
@@ -113,3 +115,36 @@ def test_plan_writes_reject_ownership_fields(
     )
 
     assert response.status_code == 422
+
+
+def test_plan_list_batches_response_context_without_per_item_connections(
+    admin_client: tuple[TestClient, ActorFixture],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client, actor = admin_client
+    provision_editable_plan_context(client, actor)
+    second = client.post(
+        "/api/v1/plans/open",
+        json={
+            "class_id": client.get("/api/v1/plans").json()["items"][0]["class_id"],
+            "plan_date": "2026-03-03",
+        },
+        headers=csrf_headers(client),
+    )
+    assert second.status_code == 201
+
+    connection_count = 0
+    original_connect = LessonPlanService._connect
+
+    def counting_connect(self: LessonPlanService):
+        nonlocal connection_count
+        connection_count += 1
+        return original_connect(self)
+
+    monkeypatch.setattr(LessonPlanService, "_connect", counting_connect)
+
+    listed = client.get("/api/v1/plans?page=1&page_size=100")
+
+    assert listed.status_code == 200
+    assert listed.json()["total"] == 2
+    assert connection_count == 2

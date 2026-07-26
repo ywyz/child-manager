@@ -4,7 +4,7 @@ from datetime import date
 from typing import Annotated, cast
 from uuid import UUID
 
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, Query, Request, Response
 
 from apps.api.dependencies import (
     CurrentSessionDependency,
@@ -13,6 +13,7 @@ from apps.api.dependencies import (
 from apps.api.routers.auth import require_csrf
 from packages.backend.lesson_plans.repository import PlanRecord, SnapshotRecord
 from packages.backend.lesson_plans.schemas import readable_content
+from packages.backend.lesson_plans.service import PlanView
 from packages.contracts.lesson_plans import (
     Author,
     Plan,
@@ -30,11 +31,8 @@ from packages.contracts.lesson_plans import (
 router = APIRouter(prefix="/api/v1/plans", tags=["Plans"])
 
 
-def _plan(
-    service: LessonPlanServiceDependency,
-    session: CurrentSessionDependency,
-    record: PlanRecord,
-) -> Plan:
+def _plan(view: PlanView) -> Plan:
+    record = view.record
     return Plan(
         id=record.id,
         class_id=record.class_id,
@@ -59,12 +57,22 @@ def _plan(
                 sort_order=author.sort_order,
                 display_name_snapshot=author.display_name_snapshot,
             )
-            for author in service.authors_for(session, record)
+            for author in view.authors
         ],
-        soft_warnings=service.warnings_for(session, record),
-        capabilities=service.capabilities_for(session, record),
+        soft_warnings=view.soft_warnings,
+        capabilities=view.capabilities,
         archived_at=record.archived_at,
     )
+
+
+def _present_one(
+    service: LessonPlanServiceDependency,
+    session: CurrentSessionDependency,
+    record: PlanRecord,
+) -> Plan:
+    views = service.present_plans(session, [record])
+    assert len(views) == 1
+    return _plan(views[0])
 
 
 def _snapshot(record: SnapshotRecord) -> PlanSnapshot:
@@ -104,27 +112,32 @@ def list_plans(
         page=page,
         page_size=page_size,
     )
+    views = service.present_plans(session, records)
     return PlanPage(
-        items=[_plan(service, session, record) for record in records],
+        items=[_plan(view) for view in views],
         page=page,
         page_size=page_size,
         total=total,
     )
 
 
-@router.post("/open", response_model=Plan)
+@router.post(
+    "/open",
+    response_model=Plan,
+    responses={201: {"model": Plan, "description": "已创建"}},
+)
 def open_plan(
     body: PlanOpenRequest,
     request: Request,
+    response: Response,
     session: CurrentSessionDependency,
     service: LessonPlanServiceDependency,
 ) -> Plan:
     require_csrf(request)
-    return _plan(
-        service,
-        session,
-        service.open_plan(session, class_id=body.class_id, plan_date=body.plan_date),
-    )
+    result = service.open_plan(session, class_id=body.class_id, plan_date=body.plan_date)
+    if result.created:
+        response.status_code = 201
+    return _present_one(service, session, result.record)
 
 
 @router.get("/{plan_id}", response_model=Plan)
@@ -133,7 +146,7 @@ def get_plan(
     session: CurrentSessionDependency,
     service: LessonPlanServiceDependency,
 ) -> Plan:
-    return _plan(service, session, service.get_plan(session, plan_id))
+    return _present_one(service, session, service.get_plan(session, plan_id))
 
 
 def _save(
@@ -154,7 +167,7 @@ def _save(
         authors=body.authors,
         create_snapshot=create_snapshot,
     )
-    return _plan(service, session, record)
+    return _present_one(service, session, record)
 
 
 @router.put("/{plan_id}/autosave", response_model=Plan)
@@ -209,7 +222,7 @@ def _set_archived(
         expected_version=body.expected_version,
         archived=archived,
     )
-    return _plan(service, session, record)
+    return _present_one(service, session, record)
 
 
 @router.post("/{plan_id}/archive", response_model=Plan)
@@ -284,4 +297,4 @@ def restore_snapshot(
         snapshot_id,
         expected_version=body.expected_version,
     )
-    return _plan(service, session, record)
+    return _present_one(service, session, record)

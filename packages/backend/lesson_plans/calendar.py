@@ -24,11 +24,12 @@ def teaching_week(
         return None, None
     first_monday = semester_start - timedelta(days=semester_start.weekday())
     number = ((plan_date - first_monday).days // 7) + 1
-    return number, f"第{_chinese_number(number)}周"
+    return number, f"第（{_chinese_number(number)}）周"
 
 
 def activity_date_text(value: date) -> str:
-    return f"{value.year}年{value.month}月{value.day}日 {_WEEKDAYS[value.weekday()]}"
+    weekday = _WEEKDAYS[value.weekday()].removeprefix("星期")
+    return f"周（{weekday}）{value.month}月{value.day}日"
 
 
 def season_for(value: date) -> str:

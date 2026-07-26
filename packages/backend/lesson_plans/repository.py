@@ -177,7 +177,7 @@ class LessonPlanRepository:
         season_code: str,
         content: dict[str, Any],
         actor_id: UUID,
-    ) -> PlanRecord:
+    ) -> tuple[PlanRecord, bool]:
         row = self._connection.execute(  # type: ignore[attr-defined]
             f"""INSERT INTO daily_activity_plans
             (id, kindergarten_id, class_id, semester_id, plan_date,
@@ -186,8 +186,7 @@ class LessonPlanRepository:
              teaching_week_number, teaching_week_text, activity_date_text, season_code,
              content, content_schema_version, version, created_by, updated_by)
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,1,1,%s,%s)
-            ON CONFLICT (kindergarten_id, class_id, plan_date) DO UPDATE
-              SET updated_at=daily_activity_plans.updated_at
+            ON CONFLICT (kindergarten_id, class_id, plan_date) DO NOTHING
             RETURNING {_PLAN_COLUMNS}""",
             (
                 uuid7(),
@@ -211,8 +210,12 @@ class LessonPlanRepository:
             ),
         ).fetchone()
         plan = _plan(row)
+        if plan is None:
+            plan = self.get_plan_by_class_date(kindergarten_id, class_id, plan_date)
+            assert plan is not None
+            return plan, False
         assert plan is not None
-        return plan
+        return plan, True
 
     def get_plan(self, kindergarten_id: UUID, plan_id: UUID) -> PlanRecord | None:
         row = self._connection.execute(  # type: ignore[attr-defined]
@@ -266,8 +269,16 @@ class LessonPlanRepository:
               AND (
                 %s::uuid IS NULL OR EXISTS (
                   SELECT 1 FROM class_teachers ct
-                  WHERE ct.kindergarten_id=p.kindergarten_id AND ct.class_id=p.class_id
-                    AND ct.user_id=%s
+                  JOIN classes c
+                    ON c.kindergarten_id=ct.kindergarten_id AND c.id=ct.class_id
+                  JOIN users u
+                    ON u.kindergarten_id=ct.kindergarten_id AND u.id=ct.user_id
+                  JOIN user_roles ur
+                    ON ur.kindergarten_id=u.kindergarten_id AND ur.user_id=u.id
+                  JOIN roles r ON r.id=ur.role_id AND r.code='teacher'
+                  WHERE ct.kindergarten_id=p.kindergarten_id
+                    AND ct.class_id=p.class_id AND ct.user_id=%s
+                    AND c.is_active AND u.status='active'
                 )
               )
             ORDER BY p.plan_date DESC, p.id
@@ -313,6 +324,55 @@ class LessonPlanRepository:
             )
             for row in rows
         ]
+
+    def list_authors_for_plans(
+        self,
+        kindergarten_id: UUID,
+        plan_ids: Sequence[UUID],
+    ) -> dict[UUID, list[AuthorRecord]]:
+        if not plan_ids:
+            return {}
+        rows = self._connection.execute(  # type: ignore[attr-defined]
+            """SELECT plan_id, user_id, sort_order, display_name_snapshot
+            FROM daily_activity_plan_authors
+            WHERE kindergarten_id=%s AND plan_id=ANY(%s)
+            ORDER BY plan_id, sort_order, user_id""",
+            (kindergarten_id, list(plan_ids)),
+        ).fetchall()
+        result = {plan_id: [] for plan_id in plan_ids}
+        for row in rows:
+            result[UUID(str(row[0]))].append(
+                AuthorRecord(
+                    user_id=UUID(str(row[1])),
+                    sort_order=int(str(row[2])),
+                    display_name_snapshot=str(row[3]),
+                )
+            )
+        return result
+
+    def associated_class_ids(
+        self,
+        kindergarten_id: UUID,
+        user_id: UUID,
+        class_ids: Sequence[UUID],
+    ) -> set[UUID]:
+        if not class_ids:
+            return set()
+        rows = self._connection.execute(  # type: ignore[attr-defined]
+            """SELECT DISTINCT ct.class_id
+            FROM class_teachers ct
+            JOIN classes c
+              ON c.kindergarten_id=ct.kindergarten_id AND c.id=ct.class_id
+            JOIN users u
+              ON u.kindergarten_id=ct.kindergarten_id AND u.id=ct.user_id
+            JOIN user_roles ur
+              ON ur.kindergarten_id=u.kindergarten_id AND ur.user_id=u.id
+            JOIN roles r ON r.id=ur.role_id AND r.code='teacher'
+            WHERE ct.kindergarten_id=%s AND ct.user_id=%s
+              AND ct.class_id=ANY(%s) AND c.is_active AND u.status='active'""",
+            (kindergarten_id, user_id, list(class_ids)),
+        ).fetchall()
+        return {UUID(str(row[0])) for row in rows}
 
     def resolve_author_names(
         self,

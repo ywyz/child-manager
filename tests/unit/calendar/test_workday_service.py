@@ -1,6 +1,8 @@
 from datetime import UTC, date, datetime, timedelta
 from importlib import import_module
 
+import pytest
+
 
 def _module():
     return import_module("packages.backend.integrations.calendar.service")
@@ -53,3 +55,29 @@ def test_timor_mapping_rejects_nonzero_missing_unknown_and_redirect_responses() 
     assert module.map_timor_payload({"code": 1, "type": {"type": 0}}) is None
     assert module.map_timor_payload({"code": 0, "type": {"type": 9}}) is None
     assert module.map_timor_payload({"code": 0}) is None
+
+
+def test_unsupported_local_calendar_range_softly_falls_back_to_online(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _module()
+    now = datetime(2026, 3, 2, tzinfo=UTC)
+
+    def unsupported(_value: date) -> bool:
+        raise NotImplementedError
+
+    class OnlineClient:
+        @staticmethod
+        def check(_value: date) -> str:
+            return "workday"
+
+    monkeypatch.setattr(module, "is_workday", unsupported)
+
+    result = module.resolve_uncached_workday(
+        date(2200, 3, 2),
+        now=now,
+        online_client=OnlineClient(),
+    )
+
+    assert result.result_code == "workday"
+    assert result.source_code == "online"

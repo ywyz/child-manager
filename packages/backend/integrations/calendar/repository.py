@@ -1,5 +1,6 @@
 """园所范围工作日缓存 Repository。"""
 
+from collections.abc import Sequence
 from datetime import date, datetime
 from typing import Any
 from uuid import UUID
@@ -38,6 +39,34 @@ class WorkdayCacheRepository:
             expires_at=row[6],
         )
 
+    def get_many(
+        self,
+        kindergarten_id: UUID,
+        calendar_dates: Sequence[date],
+        now: datetime,
+    ) -> dict[date, WorkdayResult]:
+        if not calendar_dates:
+            return {}
+        rows = self._connection.execute(  # type: ignore[attr-defined]
+            """SELECT calendar_date, result_code, source_code, source_version,
+                      detail, checked_at, expires_at
+            FROM workday_cache
+            WHERE kindergarten_id=%s AND calendar_date=ANY(%s) AND expires_at>%s""",
+            (kindergarten_id, list(calendar_dates), now),
+        ).fetchall()
+        return {
+            row[0]: WorkdayResult(
+                calendar_date=row[0],
+                result_code=str(row[1]),
+                source_code=str(row[2]),
+                source_version=str(row[3]),
+                detail=dict(row[4]),
+                checked_at=row[5],
+                expires_at=row[6],
+            )
+            for row in rows
+        }
+
     def put(
         self,
         kindergarten_id: UUID,
@@ -74,3 +103,16 @@ class WorkdayCacheRepository:
                 expires_at,
             ),
         )
+
+    def put_many(self, kindergarten_id: UUID, results: Sequence[WorkdayResult]) -> None:
+        for result in results:
+            self.put(
+                kindergarten_id,
+                calendar_date=result.calendar_date,
+                result_code=result.result_code,
+                source_code=result.source_code,
+                source_version=result.source_version,
+                detail=result.detail,
+                checked_at=result.checked_at,
+                expires_at=result.expires_at,
+            )

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 from collections.abc import Sequence
+from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from hashlib import sha256
 from typing import Any
@@ -14,7 +15,10 @@ import psycopg
 
 from packages.backend.audit.repository import AuditRepository
 from packages.backend.identity.service import IdentityError, SessionUser
-from packages.backend.integrations.calendar.service import WorkdayService
+from packages.backend.integrations.calendar.client import TimorWorkdayClient
+from packages.backend.integrations.calendar.models import WorkdayResult
+from packages.backend.integrations.calendar.repository import WorkdayCacheRepository
+from packages.backend.integrations.calendar.service import resolve_uncached_workday
 from packages.backend.lesson_plans.calendar import activity_date_text, season_for, teaching_week
 from packages.backend.lesson_plans.repository import (
     AuthorRecord,
@@ -40,9 +44,29 @@ def _canonical_sha256(value: dict[str, Any]) -> str:
     return sha256(payload).hexdigest()
 
 
+@dataclass(frozen=True, slots=True)
+class OpenPlanResult:
+    record: PlanRecord
+    created: bool
+
+
+@dataclass(frozen=True, slots=True)
+class PlanView:
+    record: PlanRecord
+    authors: list[AuthorRecord]
+    soft_warnings: list[SoftWarning]
+    capabilities: list[str]
+
+
 class LessonPlanService:
-    def __init__(self, database_url: str) -> None:
+    def __init__(
+        self,
+        database_url: str,
+        *,
+        workday_client: TimorWorkdayClient | None = None,
+    ) -> None:
         self.database_url = database_url
+        self._workday_client = workday_client or TimorWorkdayClient()
 
     @classmethod
     def from_environment(cls) -> LessonPlanService:
@@ -67,7 +91,11 @@ class LessonPlanService:
 
     @staticmethod
     def _conflict() -> IdentityError:
-        return IdentityError(409, "plan.version_conflict", "教案已被修改，请刷新后重试。")
+        return IdentityError(
+            409,
+            "lesson_plan.version_conflict",
+            "教案已被修改，请刷新后重试。",
+        )
 
     @staticmethod
     def _require_view(
@@ -104,14 +132,14 @@ class LessonPlanService:
         *,
         class_id: UUID,
         plan_date: date,
-    ) -> PlanRecord:
+    ) -> OpenPlanResult:
         kindergarten_id = self._kindergarten_id(session)
         with self._connect() as connection, connection.transaction():
             repository = LessonPlanRepository(connection)
             existing = repository.get_plan_by_class_date(kindergarten_id, class_id, plan_date)
             if existing is not None:
                 self._require_view(session, repository, kindergarten_id, existing)
-                return existing
+                return OpenPlanResult(existing, False)
             if not repository.class_exists(kindergarten_id, class_id):
                 raise IdentityError(404, "resource.not_found", "班级不存在。")
             if not repository.is_class_teacher(kindergarten_id, class_id, session.user.id):
@@ -124,7 +152,7 @@ class LessonPlanService:
                 context.semester_start_date,
                 context.semester_end_date,
             )
-            plan = repository.create_plan(
+            plan, created = repository.create_plan(
                 kindergarten_id,
                 class_id,
                 plan_date,
@@ -136,14 +164,17 @@ class LessonPlanService:
                 content=PlanContentV1.empty().model_dump(mode="json"),
                 actor_id=session.user.id,
             )
-            if not repository.list_authors(kindergarten_id, plan.id):
+            if not created:
+                self._require_view(session, repository, kindergarten_id, plan)
+                return OpenPlanResult(plan, False)
+            if created:
                 repository.replace_authors(
                     kindergarten_id,
                     plan.id,
                     [(session.user.id, 0, session.user.display_name)],
                     actor_id=session.user.id,
                 )
-            return plan
+            return OpenPlanResult(plan, True)
 
     def get_plan(self, session: SessionUser, plan_id: UUID) -> PlanRecord:
         kindergarten_id = self._kindergarten_id(session)
@@ -185,11 +216,6 @@ class LessonPlanService:
                 page=page,
                 page_size=page_size,
             )
-
-    def authors_for(self, session: SessionUser, plan: PlanRecord) -> list[AuthorRecord]:
-        kindergarten_id = self._kindergarten_id(session)
-        with self._connect() as connection:
-            return LessonPlanRepository(connection).list_authors(kindergarten_id, plan.id)
 
     @staticmethod
     def _author_tuples(
@@ -459,7 +485,8 @@ class LessonPlanService:
             )
             return updated
 
-    def warnings_for(self, session: SessionUser, plan: PlanRecord) -> list[SoftWarning]:
+    @staticmethod
+    def _warnings_for(plan: PlanRecord, result: WorkdayResult) -> list[SoftWarning]:
         warnings: list[SoftWarning] = []
         if plan.teaching_week_number is None:
             warnings.append(
@@ -467,14 +494,6 @@ class LessonPlanService:
                     code="semester.out_of_range",
                     message="所选日期不在当前学期内，教学周次保持为空。",
                 )
-            )
-        kindergarten_id = self._kindergarten_id(session)
-        now = datetime.now(UTC)
-        with self._connect() as connection, connection.transaction():
-            result = WorkdayService(connection=connection).check(
-                kindergarten_id,
-                plan.plan_date,
-                now=now,
             )
         detail = {
             "calendar_date": plan.plan_date.isoformat(),
@@ -507,15 +526,72 @@ class LessonPlanService:
             )
         return warnings
 
-    def capabilities_for(self, session: SessionUser, plan: PlanRecord) -> list[str]:
-        kindergarten_id = self._kindergarten_id(session)
-        with self._connect() as connection:
-            associated = LessonPlanRepository(connection).is_class_teacher(
-                kindergarten_id, plan.class_id, session.user.id
-            )
+    @staticmethod
+    def _capabilities_for(
+        session: SessionUser,
+        plan: PlanRecord,
+        *,
+        associated: bool,
+    ) -> list[str]:
         capabilities = {"plans:view", "plans:snapshots:view"}
         if associated and plan.archived_at is None and plan.content_schema_version == 1:
             capabilities.update({"plans:edit", "plans:archive"})
         elif "admin" in session.role_codes or associated:
             capabilities.add("plans:archive")
         return sorted(capabilities)
+
+    def present_plans(
+        self,
+        session: SessionUser,
+        plans: Sequence[PlanRecord],
+    ) -> list[PlanView]:
+        """批量组装响应上下文；外网解析发生在所有数据库连接关闭之后。"""
+
+        if not plans:
+            return []
+        kindergarten_id = self._kindergarten_id(session)
+        plan_ids = [plan.id for plan in plans]
+        class_ids = list({plan.class_id for plan in plans})
+        calendar_dates = list({plan.plan_date for plan in plans})
+        now = datetime.now(UTC)
+        with self._connect() as connection:
+            repository = LessonPlanRepository(connection)
+            authors = repository.list_authors_for_plans(kindergarten_id, plan_ids)
+            associated_class_ids = repository.associated_class_ids(
+                kindergarten_id,
+                session.user.id,
+                class_ids,
+            )
+            workdays = WorkdayCacheRepository(connection).get_many(
+                kindergarten_id,
+                calendar_dates,
+                now,
+            )
+
+        resolved = [
+            resolve_uncached_workday(
+                calendar_date,
+                now=now,
+                online_client=self._workday_client,
+            )
+            for calendar_date in calendar_dates
+            if calendar_date not in workdays
+        ]
+        if resolved:
+            with self._connect() as connection, connection.transaction():
+                WorkdayCacheRepository(connection).put_many(kindergarten_id, resolved)
+            workdays.update({result.calendar_date: result for result in resolved})
+
+        return [
+            PlanView(
+                record=plan,
+                authors=authors.get(plan.id, []),
+                soft_warnings=self._warnings_for(plan, workdays[plan.plan_date]),
+                capabilities=self._capabilities_for(
+                    session,
+                    plan,
+                    associated=plan.class_id in associated_class_ids,
+                ),
+            )
+            for plan in plans
+        ]

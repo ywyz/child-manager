@@ -58,5 +58,5 @@ def provision_editable_plan_context(
         json={"class_id": class_id, "plan_date": plan_date.isoformat()},
         headers=csrf_headers(client),
     )
-    assert opened.status_code == 200
+    assert opened.status_code == 201
     return class_id, opened.json()["id"]

@@ -1,7 +1,12 @@
 # ruff: noqa: F811
 
+from types import SimpleNamespace
+from typing import cast
+
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from apps.api.dependencies import current_session
 from tests.api.passkey_helpers import (  # noqa: F401
     ActorFixture,
     admin_client,
@@ -75,3 +80,42 @@ def test_open_requires_current_semester(
 
     assert response.status_code == 409
     assert response.json()["code"] == "semester.current_required"
+
+
+def test_teacher_list_hides_plans_when_the_associated_class_is_inactive(
+    admin_client: tuple[TestClient, ActorFixture],
+) -> None:
+    client, actor = admin_client
+    class_id, _plan_id = provision_editable_plan_context(client, actor)
+    deactivated = client.patch(
+        f"/api/v1/settings/classes/{class_id}",
+        json={
+            "name": "向日葵班",
+            "age_group_id": client.get("/api/v1/settings/age-groups").json()[2]["id"],
+            "is_active": False,
+        },
+        headers=csrf_headers(client),
+    )
+    assert deactivated.status_code == 200
+
+    teacher_session = SimpleNamespace(
+        user=SimpleNamespace(
+            id=actor.user_id,
+            kindergarten_id=actor.kindergarten_id,
+            username="admin",
+            display_name="测试管理员",
+            status="active",
+            is_active=True,
+        ),
+        role_codes=["teacher"],
+        token_family_id=actor.session_id,
+        session_id=actor.session_id,
+        last_reauthenticated_at=None,
+    )
+    app = cast(FastAPI, client.app)
+    app.dependency_overrides[current_session] = lambda: teacher_session
+
+    listed = client.get("/api/v1/plans")
+
+    assert listed.status_code == 200
+    assert listed.json()["total"] == 0

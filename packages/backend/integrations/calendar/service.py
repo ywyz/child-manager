@@ -1,13 +1,11 @@
 """本地优先、在线补充且始终软降级的工作日服务。"""
 
 from datetime import date, datetime, timedelta
-from uuid import UUID
 
 from chinese_calendar import is_workday
 
 from packages.backend.integrations.calendar.client import TimorWorkdayClient
 from packages.backend.integrations.calendar.models import WorkdayResult
-from packages.backend.integrations.calendar.repository import WorkdayCacheRepository
 
 
 def combine_workday_results(
@@ -50,46 +48,22 @@ def combine_workday_results(
     )
 
 
-class WorkdayService:
-    def __init__(
-        self,
-        *,
-        connection: object,
-        online_client: TimorWorkdayClient | None = None,
-    ) -> None:
-        self._connection = connection
-        self._online_client = online_client or TimorWorkdayClient()
+def resolve_uncached_workday(
+    calendar_date: date,
+    *,
+    now: datetime,
+    online_client: TimorWorkdayClient | None = None,
+) -> WorkdayResult:
+    """在无数据库连接存活时解析工作日，确保外网延迟不会扩大事务。"""
 
-    def check(
-        self,
-        kindergarten_id: UUID,
-        calendar_date: date,
-        *,
-        now: datetime,
-    ) -> WorkdayResult:
-        repository = WorkdayCacheRepository(self._connection)
-        cached = repository.get(kindergarten_id, calendar_date, now)
-        if cached is not None:
-            return cached
-        try:
-            local_result = "workday" if is_workday(calendar_date) else "non_workday"
-        except KeyError, ValueError:
-            local_result = None
-        online_result = self._online_client.check(calendar_date)
-        result = combine_workday_results(
-            calendar_date=calendar_date,
-            local_result=local_result,
-            online_result=online_result,
-            checked_at=now,
-        )
-        repository.put(
-            kindergarten_id,
-            calendar_date=result.calendar_date,
-            result_code=result.result_code,
-            source_code=result.source_code,
-            source_version=result.source_version,
-            detail=result.detail,
-            checked_at=result.checked_at,
-            expires_at=result.expires_at,
-        )
-        return result
+    try:
+        local_result = "workday" if is_workday(calendar_date) else "non_workday"
+    except KeyError, NotImplementedError, ValueError:
+        local_result = None
+    online_result = (online_client or TimorWorkdayClient()).check(calendar_date)
+    return combine_workday_results(
+        calendar_date=calendar_date,
+        local_result=local_result,
+        online_result=online_result,
+        checked_at=now,
+    )

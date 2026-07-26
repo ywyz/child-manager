@@ -1,3 +1,5 @@
+# ruff: noqa: F811
+
 from collections.abc import Iterator
 
 import psycopg
@@ -5,6 +7,10 @@ import pytest
 from alembic import command
 from alembic.config import Config
 from alembic.script import ScriptDirectory
+from fastapi.testclient import TestClient
+
+from tests.api.passkey_helpers import ActorFixture, admin_client, csrf_headers  # noqa: F401
+from tests.api.plan_helpers import provision_editable_plan_context
 
 REVISION = "0006_lesson_plans"
 TABLES = {
@@ -79,3 +85,43 @@ def test_database_contains_unique_cas_week_and_unavailable_constraints(
     assert "UNIQUE (kindergarten_id, class_id, plan_date)" in definitions
     assert "teaching_week_number" in definitions
     assert "source_code" in definitions and "unavailable" in definitions
+
+
+def test_snapshot_rows_reject_database_update_and_delete(
+    admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
+) -> None:
+    client, actor = admin_client
+    _class_id, plan_id = provision_editable_plan_context(client, actor)
+    plan = client.get(f"/api/v1/plans/{plan_id}").json()
+    saved = client.put(
+        f"/api/v1/plans/{plan_id}/save",
+        json={
+            "expected_version": plan["version"],
+            "content": plan["content"],
+            "authors": [{"user_id": str(actor.user_id), "sort_order": 0}],
+        },
+        headers=csrf_headers(client),
+    )
+    assert saved.status_code == 200
+    snapshot_id = client.get(f"/api/v1/plans/{plan_id}/snapshots").json()["items"][0]["id"]
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+
+    with psycopg.connect(native_url) as connection:
+        with pytest.raises(psycopg.errors.RaiseException), connection.transaction():
+            connection.execute(
+                """UPDATE daily_activity_plan_snapshots SET reason_code='archive'
+                WHERE kindergarten_id=%s AND id=%s""",
+                (actor.kindergarten_id, snapshot_id),
+            )
+        with pytest.raises(psycopg.errors.RaiseException), connection.transaction():
+            connection.execute(
+                """DELETE FROM daily_activity_plan_snapshots
+                WHERE kindergarten_id=%s AND id=%s""",
+                (actor.kindergarten_id, snapshot_id),
+            )
+        assert connection.execute(
+            """SELECT reason_code FROM daily_activity_plan_snapshots
+            WHERE kindergarten_id=%s AND id=%s""",
+            (actor.kindergarten_id, snapshot_id),
+        ).fetchone() == ("manual_save",)

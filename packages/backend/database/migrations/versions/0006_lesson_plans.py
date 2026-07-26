@@ -168,6 +168,25 @@ def upgrade() -> None:
         "daily_activity_plan_snapshots",
         ["kindergarten_id", "plan_id", "created_at"],
     )
+    op.execute(
+        """
+        CREATE FUNCTION reject_daily_activity_plan_snapshot_mutation()
+        RETURNS trigger
+        LANGUAGE plpgsql
+        AS $$
+        BEGIN
+            RAISE EXCEPTION 'daily activity plan snapshots are immutable';
+        END;
+        $$
+        """
+    )
+    op.execute(
+        """
+        CREATE TRIGGER daily_activity_plan_snapshots_immutable
+        BEFORE UPDATE OR DELETE ON daily_activity_plan_snapshots
+        FOR EACH ROW EXECUTE FUNCTION reject_daily_activity_plan_snapshot_mutation()
+        """
+    )
 
     op.create_table(
         "workday_cache",
@@ -205,5 +224,6 @@ def upgrade() -> None:
 def downgrade() -> None:
     op.drop_table("workday_cache")
     op.drop_table("daily_activity_plan_snapshots")
+    op.execute("DROP FUNCTION reject_daily_activity_plan_snapshot_mutation()")
     op.drop_table("daily_activity_plan_authors")
     op.drop_table("daily_activity_plans")
