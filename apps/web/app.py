@@ -7,6 +7,7 @@ from apps.web.api_client import proxy_request
 from apps.web.components.navigation import navigation_for_capabilities
 from apps.web.pages.auth import post_same_origin, register_auth_pages
 from apps.web.pages.class_areas import register_class_area_pages
+from apps.web.pages.plans import register_plan_pages
 from apps.web.pages.settings import register_settings_pages
 from apps.web.pages.users import register_users_page
 
@@ -16,6 +17,7 @@ def register_web(*, api_base_url: str) -> None:
     register_users_page()
     register_settings_pages()
     register_class_area_pages()
+    register_plan_pages()
 
     @app.api_route(
         "/api/v1/{api_path:path}",
@@ -76,6 +78,7 @@ def register_web(*, api_base_url: str) -> None:
                         "通行密钥与会话": "/account/security",
                         "系统设置": "/settings",
                         "班级区域": "/class-areas",
+                        "教案": "/plans",
                     }.get(label, "/")
                     ui.link(label, target)
 

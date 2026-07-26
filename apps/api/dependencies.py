@@ -12,6 +12,7 @@ from fastapi import Cookie, Depends
 from redis.asyncio import Redis
 
 from packages.backend.identity.service import IdentityError, IdentityService, SessionUser
+from packages.backend.lesson_plans.service import LessonPlanService
 from packages.backend.settings.service import SettingsService
 
 HealthCheck = Callable[[], Awaitable[bool]]
@@ -121,6 +122,13 @@ def settings_service() -> SettingsService:
 
 
 SettingsServiceDependency = Annotated[SettingsService, Depends(settings_service)]
+
+
+def lesson_plan_service() -> LessonPlanService:
+    return LessonPlanService.from_environment()
+
+
+LessonPlanServiceDependency = Annotated[LessonPlanService, Depends(lesson_plan_service)]
 
 
 def authenticated_session(

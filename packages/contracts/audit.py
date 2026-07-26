@@ -39,6 +39,10 @@ class IdentityAuditEventCode(StrEnum):
     BACKUP_LOGIN_SUCCEEDED = "auth.backup_login_succeeded"
     PASSKEY_ADDED_FROM_BACKUP = "auth.passkey_added_from_backup"
     BACKUP_REVOKED_BY_RECOVERY = "auth.backup_revoked_by_recovery"
+    PLAN_MANUALLY_SAVED = "lesson_plan.manually_saved"
+    PLAN_ARCHIVED = "lesson_plan.archived"
+    PLAN_UNARCHIVED = "lesson_plan.unarchived"
+    PLAN_HISTORY_RESTORED = "lesson_plan.history_restored"
 
     # 通用登录审计名称保留为认证 ceremony 的兼容别名, 不代表密码登录。
     INITIALIZED = "identity.bootstrap_started"

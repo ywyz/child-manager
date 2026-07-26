@@ -43,6 +43,7 @@ BACKUP_AUTH_API_PATH = "/api/v1/auth/backup"
 BACKUP_AUTHENTICATION_API_PATH = f"{BACKUP_AUTH_API_PATH}/authentication"
 BACKUP_REAUTHENTICATION_API_PATH = f"{BACKUP_AUTH_API_PATH}/reauthentication"
 SECURITY_EVENTS_API_PATH = "/api/v1/auth/security-events"
+PLANS_API_PATH = "/api/v1/plans"
 
 
 async def same_origin_api_request(
@@ -132,6 +133,21 @@ async def security_events_api_request() -> dict[str, object]:
     """读取本人最近 20 条内建安全事件，不产生已读状态。"""
 
     return await same_origin_api_request(SECURITY_EVENTS_API_PATH)
+
+
+async def plan_api_request(
+    suffix: str = "",
+    *,
+    method: str = "GET",
+    payload: dict[str, object] | None = None,
+) -> dict[str, object]:
+    """只通过同源 BFF 访问教案端点。"""
+
+    return await same_origin_api_request(
+        f"{PLANS_API_PATH}{suffix}",
+        method=method,
+        payload=payload,
+    )
 
 
 async def proxy_request(

@@ -16,6 +16,7 @@ from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from apps.api.middleware import RequestContextMiddleware
 from apps.api.openapi import configure_openapi
 from apps.api.routers.auth import router as auth_router
+from apps.api.routers.plans import router as plans_router
 from apps.api.routers.settings import router as settings_router
 from apps.api.routers.users import router as users_router
 from packages.backend.identity.auth_throttle import MemoryAuthThrottle, RedisAuthThrottle
@@ -103,6 +104,7 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
     application.include_router(auth_router)
     application.include_router(users_router)
     application.include_router(settings_router)
+    application.include_router(plans_router)
 
     @application.get("/health/live")
     async def live() -> dict[str, object]:

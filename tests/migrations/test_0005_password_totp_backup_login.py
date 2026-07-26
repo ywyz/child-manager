@@ -131,12 +131,11 @@ def test_backup_auth_migration_creates_isolated_credentials_and_enrollments(
     assert "invalidated_at IS NULL" in active_index
 
 
-def test_backup_auth_revision_is_the_only_child_of_settings() -> None:
+def test_backup_auth_revision_follows_settings_and_precedes_lesson_plans() -> None:
     revision = _backup_revision()
-    script = ScriptDirectory.from_config(Config("alembic.ini"))
 
     assert revision.down_revision == DOWN_REVISION
-    assert script.get_heads() == [REVISION]
+    assert revision.nextrev == frozenset({"0006_lesson_plans"})
 
 
 def test_backup_auth_migration_downgrades_to_settings_without_restoring_legacy_passwords(
