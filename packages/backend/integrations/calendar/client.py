@@ -53,5 +53,12 @@ class TimorWorkdayClient:
             return None
         try:
             return asyncio.run(self._check(calendar_date))
-        except TimeoutError, httpx.HTTPError, OSError, RuntimeError, ValueError:
+        except (
+            TimeoutError,
+            httpx.HTTPError,
+            ExceptionGroup,
+            OSError,
+            RuntimeError,
+            ValueError,
+        ):
             return None

@@ -91,6 +91,9 @@ def test_timor_client_softly_degrades_timeout_and_fixed_payloads() -> None:
     def timeout(request: httpx.Request) -> httpx.Response:
         raise httpx.ConnectTimeout("calendar timeout", request=request)
 
+    def blocked_by_network_guard(_request: httpx.Request) -> httpx.Response:
+        raise ExceptionGroup("blocked network", [RuntimeError("network disabled")])
+
     def confirmed(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
             200,
@@ -99,6 +102,12 @@ def test_timor_client_softly_degrades_timeout_and_fixed_payloads() -> None:
         )
 
     assert module.TimorWorkdayClient(httpx.MockTransport(timeout)).check(date(2026, 3, 2)) is None
+    assert (
+        module.TimorWorkdayClient(httpx.MockTransport(blocked_by_network_guard)).check(
+            date(2026, 3, 2)
+        )
+        is None
+    )
     assert (
         module.TimorWorkdayClient(httpx.MockTransport(confirmed)).check(date(2026, 3, 2))
         == "workday"
