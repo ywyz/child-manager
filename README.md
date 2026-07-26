@@ -19,9 +19,10 @@ M3 [Issue #7](https://github.com/ywyz/child-manager/issues/7) 固定 `docs@bd98a
 Gates 通过后，已获授权集成到 `main`，形成首个包含 M1–M3A 实现的稳定开发基线；这不代表
 首期功能或生产部署已经完成。
 
-下一实现顺序仍有一项文档冲突需要先在 `docs` 裁决：Roadmap 默认 M4 后进入 M5，而共享
-`tasks.md` 要求 M3A 后先执行 T046–T061 手工教案，再执行 T062 以后的 AI 模型与提示词任务。
-冲突解决并固定新 docs 提交前，不创建或启动下一实现 Issue。
+下一实现已固定为 M5 无 AI 教案手工闭环：先执行 T046–T061，形成可独立验收的第一条
+业务 MVP；完成后再进入 M4 的 T062–T086 AI 模型与提示词基础。该顺序同时满足
+`0006_lesson_plans → 0007_ai_prompts_jobs` 迁移链和 US3 对教案强外键的依赖。下一实现
+Issue 必须引用本次确认后的固定 `docs` 提交。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 

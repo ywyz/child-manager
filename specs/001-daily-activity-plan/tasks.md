@@ -155,6 +155,9 @@ Cookie、CSRF、园所隔离和身份审计可独立运行；没有密码或公�
 
 ### M3A：密码与 TOTP 备用登录（独立规格）
 
+**Requirements covered**: 本 feature 的 FR-078–FR-082、SC-019–SC-020；详细行为由独立
+`002` 规格的 FR-001–FR-015、SC-001–SC-008 与 T001–T034 完整映射。
+
 M3 `complete` 后，必须先按
 [`specs/002-password-totp-backup-login/tasks.md`](../002-password-totp-backup-login/tasks.md)
 完成其 T001–T034，再进入本清单 T046。M3A 使用独立 Issue、固定新 docs 基线和

@@ -6,13 +6,13 @@
 
 **Created**: 2026-07-12
 
-**Updated**: 2026-07-23
+**Updated**: 2026-07-26
 
-**Status**: M0、M1、M2 `complete` / M3 `ready` / M3A `pending` — #4 已关闭，#7 固定
-T036–T045；M3A 待 M3 完成和独立 Issue 固定新 docs 基线
+**Status**: M0–M3A `complete` / M5 `ready` / M4、M6–M8 `pending` — 下一实施固定为
+M5 T046–T061，完成后再进入 M4 T062–T086
 
 **Input**: 将 Child Manager 首期 M1–M8 作为一个完整 feature，交付工程与安全基础、
-认证授权、必要设置、AI 模型与提示词、手工教案、异步 AI、固定 Word 导出和功能验收。
+认证授权、必要设置、手工教案、AI 模型与提示词、异步 AI、固定 Word 导出和功能验收。
 
 ## Clarifications
 
@@ -789,10 +789,11 @@ AI 和在线节假日服务。
 
 ## Assumptions
 
-- 本 feature 覆盖整个首期一日活动计划闭环，并以 Roadmap M1–M3、M3A、M4–M8 作为依赖
+- 本 feature 覆盖整个首期一日活动计划闭环，并以 Roadmap M1–M3、M3A、M5、M4、M6–M8 作为依赖
   实施阶段；M9
   生产安全与部署复审不属于本 feature。
-- 当前 `main` 只有共享文档和模板；本规格不表示任何业务代码、迁移或测试已经存在。
+- 当前 `main` 与 `dev` 已包含通过验收的 M1–M3A 实现；本规格中的 M5、M4 及后续目标仍
+  不能据此视为已实现。
 - 一个运行实例首期只服务一所幼儿园，但园所隔离必须从数据、授权和验收层面完整保留。
 - 当前学期是创建教案的必需设置；学期外日期仍绑定当前学期快照，周次为空。
 - 班级允许暂时缺少区域；对应类别的 AI 栏目在至少有一个启用区域前不可生成。
@@ -815,8 +816,8 @@ AI 和在线节假日服务。
   接受本规格和当前模板的评审。
 - M6 AI 异步生成必须同时等待模型/提示词基础和手工教案闭环完成；Word 导出在异步任务
   与手工内容稳定后实施。
-- M3A 必须等待 M3 complete，并使用独立 Issue、固定 docs 基线与
-  `0005_password_totp_backup_login.py`；不得扩大 M3 #7 或重编号 `0004_settings.py`。
+- M3A 已按独立 Issue #8、固定 docs 基线与 `0005_password_totp_backup_login.py` 完成；
+  后续不得扩大或重写其范围，也不得重编号 `0004_settings.py`。
 
 ## Out of Scope
 

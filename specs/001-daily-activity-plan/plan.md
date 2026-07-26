@@ -1,6 +1,6 @@
 # Implementation Plan: 首期一日活动计划完整闭环
 
-**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-07-22 | **Spec**: [spec.md](./spec.md)
+**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-07-26 | **Spec**: [spec.md](./spec.md)
 
 **Input**: `specs/001-daily-activity-plan/spec.md`；范围为 Roadmap M1–M8，M9 生产部署复审排除。
 
@@ -52,18 +52,17 @@ WCAG 2.2 AA 可验证要求
 
 ## Constitution Check
 
-*GATE: M0、M1、M2 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
-`main/docs/dev` 单实现流程。#4 已完成并关闭；M3 #7 固定 T036–T045 与 `docs@bd98a1a`，
-当前为 `ready`。M3A 设计已确认但保持 `pending`，必须等待 M3 complete 并由独立 Issue
-固定新 docs 提交。*
+*GATE: M0–M3A 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
+`main/docs/dev` 单实现流程。M3 #7 与 M3A #8 均已完成并集成稳定基线。下一实施固定为
+M5 T046–T061；M4 T062–T086 必须等待 M5 完成。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
 | I. 事实来源与范围忠实 | PASS | **PASS（M0）** | canonical 文档、历史清理与最终共享基线均已验证 |
 | II. 服务边界与单向依赖 | PASS | **PASS（M1）** | 历史 Codex、Trae 实现均通过 BFF/API/Worker 边界与依赖方向验证；当前 `dev` 仍须维持该门禁 |
-| III. 园所隔离与服务端授权 | PASS | **PASS（M2 身份）/ PENDING（M3+ 业务）** | M2 已验证身份与会话园所隔离；设置及后续业务实体仍按里程碑验收 |
+| III. 园所隔离与服务端授权 | PASS | **PASS（M2/M3 身份与设置）/ PENDING（M5+ 业务）** | 身份、会话和设置园所隔离已验证；教案及后续业务实体仍按里程碑验收 |
 | IV. 权威状态、事务与可恢复性 | PASS | **PASS（M1 基础）** | 历史实现已建立 PostgreSQL 事务与迁移基础；业务幂等、租约、恢复扫描和文件补偿由后续里程碑实现 |
-| V. 教师控制、AI 与 Word 保真 | PASS | **PENDING（M4+）** | 固定 Schema、栏目级预览、采用事务、模板副本/哈希和红字边界已设计，尚未进入对应里程碑 |
+| V. 教师控制、AI 与 Word 保真 | PASS | **PENDING（M5+）** | 固定 Schema、栏目级预览、采用事务、模板副本/哈希和红字边界已设计，下一步先验收 M5 手工教师控制 |
 | VI. 可执行验证与真实证据 | PASS | **PASS（M1）** | M1 工程入口与质量门禁已有历史证据；当前和后续用户故事仍须在 `dev` 按对应里程碑重新验收 |
 
 **前置同步与授权处理**: T001～T003 以及 Codex/Trae 的 M1 T004～T020 保留为历史记录。自 2026-07-21 起，新的实现必须由 Issue 固定引用已确认的 `docs` 提交，并只在 `dev` 执行；历史验收不自动替代当前文档基线的验证。
@@ -198,8 +197,9 @@ uv run python -m apps.web --host 127.0.0.1 --port "$CHILD_MANAGER_WEB_PORT" \
   --api-base-url "http://127.0.0.1:${CHILD_MANAGER_API_PORT}"
 ```
 
-入口名称属于本 feature 的实现契约；当前 `main` 尚无代码。Codex 分支在 T004～T020 后可
-执行 API、Worker、Web 命令；初始化子命令仅冻结名称，其真实行为在 T032 完成前不可执行。
+入口名称属于本 feature 的实现契约；当前 `main` 与 `dev` 已包含通过验收的 M1–M3A
+实现，上述 API、Worker、Web 和初始化命令均已有稳定入口。T046–T061 只能复用这些入口，
+不得另建平行运行单元。
 
 ## Phase 0: Research
 
@@ -292,8 +292,8 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 
 ### Quickstart 验收合同
 
-- 当前 `main` 无 `pyproject.toml`、代码、迁移或测试，quickstart 只能描述实现后的可执行
-  验收，不得声称命令已通过。
+- 当前 `main` 与 `dev` 已包含 M1–M3A 的 `pyproject.toml`、迁移、代码和测试；quickstart
+  同时保留后续故事的可执行验收合同，尚未实施的 T046 以后步骤不得声称已经通过。
 - M1 后使用 API、Worker、Web 三个可执行入口；T032 完成后再使用已冻结的初始化与最后管理员
   恢复子命令；后者只接受恢复请求 ID，交互匹配初始化时保存的两项预登记引用，Web/API 对
   最后管理员审批只返回 `identity.last_admin_recovery_requires_cli`；
@@ -303,8 +303,8 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
   Word 样式与审计，并明确生产部署和未来子系统反目标。
 
 **Post-design Constitution Check**: 内部设计、T002 最终 Pre-M1 审查、M0-G1～M0-G8、
-T003、M1 T004～T020 与 M2 T021～T035 均已完成，M0、M1、M2 为 `complete`。M3 已由 #7
-解锁，先执行 RED 测试。宪章 3.0.0 已接纳 M3A，但独立 Issue Gate 尚未满足。
+T003、M1 T004～T020、M2 T021～T035、M3 T036～T045 与独立 M3A T001～T034 均已完成。
+M0–M3A 为 `complete`；下一实施门禁是由固定 docs 提交的单一 Issue 执行 M5 T046–T061。
 
 ## Phase 2: Task Generation Strategy
 
@@ -335,8 +335,8 @@ US1–US7 建立可独立验收的纵向切片：
 | M2 | 初始化、通行密钥、邀请、恢复、会话、角色和园所隔离可独立验收 | WebAuthn 浏览器/API/Repository/迁移负向矩阵 |
 | M3 | 所有直接依赖设置可用，区域允许部分配置 | 设置 API/Web 与隔离测试 |
 | M3A | 密码+TOTP 备用登录可用，高风险身份保证级别与恢复不降级 | 密码/TOTP/AEAD/限流/API/Web/恢复负向矩阵 |
-| M4 | 模型 Key、SSRF、七个提示词生命周期可审计 | crypto/prompt/API/替身测试 |
 | M5 | 无 AI 时完整手工教案闭环可用 | 浏览器冒烟 + 并发/快照/迁移测试 |
+| M4 | 模型 Key、SSRF、七个提示词生命周期可审计 | crypto/prompt/API/替身测试 |
 | M6 | 可靠任务、四栏一键、显式反思、集体部分成功可用 | Worker 恢复/幂等/AI Schema 测试 |
 | M7 | 固定模板导出及历史下载保真 | Word 结构/样式/哈希/权限测试 |
 | M8 | 所有未延后验收有可复现证据 | 全量质量命令、性能、安全、浏览器报告 |

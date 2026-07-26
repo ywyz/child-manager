@@ -1,6 +1,27 @@
 {
-  "generated_at": "2026-07-24T08:52:45.297818+00:00",
+  "generated_at": "2026-07-26T00:43:40.496807+00:00",
   "nodes": {
+    "context_service_boundaries": {
+      "code_fingerprint": "8152afd80f78c71e46a62806f3d383fa3f02e9e5287928ad0210eb0d6d73ec19",
+      "label": "Web、API 与 Worker 服务边界",
+      "last": "2026-07-11T02:42:18.471052+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:42:18.471052+00:00",
+          "outcome": "useful",
+          "q": "系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
+        },
+        {
+          "date": "2026-07-11T02:19:23.469077+00:00",
+          "outcome": "useful",
+          "q": "接下来需要生成什么文件呢"
+        }
+      ],
+      "score": 1.416647594,
+      "source_file": "CONTEXT.md",
+      "status": "preferred",
+      "uses": 2
+    },
     "graphify_out_memory_query_20260710_131311_agents_md_ywyz_kindergartenmanager_gi_class_teacher_configuration": {
       "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
       "label": "班级与教师配置",
@@ -17,7 +38,7 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 1.453580976,
+      "score": 1.39887405,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2

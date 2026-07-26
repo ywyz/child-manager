@@ -1,10 +1,10 @@
 # Child Manager 产品与工程路线图
 
-文档版本：v1.2
+文档版本：v1.3
 
 状态：共享路线已确认
 
-日期：2026-07-23
+日期：2026-07-26
 
 适用分支：`main`、`docs`、`dev`
 
@@ -112,17 +112,18 @@ flowchart LR
     M1 --> M2[M2 认证授权]
     M2 --> M3[M3 必要设置]
     M3 --> M3A[M3A 密码与 TOTP 备用登录]
-    M3A --> M4[M4 AI 基础能力]
     M3A --> M5[M5 教案手工闭环]
+    M5 --> M4[M4 AI 基础能力]
     M4 --> M6[M6 AI 异步生成]
-    M5 --> M6
     M6 --> M7[M7 Word 导出]
     M7 --> M8[M8 功能验收]
     M8 --> M9[M9 生产部署复审]
 ```
 
-M4 和 M5 在 M3A 完成后具备并行设计条件，但 M6 必须同时等待 AI 基础能力和手工教案闭环
-完成。单个实现分支默认按编号顺序推进，避免同时修改核心契约导致返工。
+M4 和 M5 的产品设计均已具备，但唯一 `dev` 实施路线固定为 M5 → M4：先由 T046–T061
+交付完全不依赖 AI 的手工教案 MVP，再执行 T062–T086。该顺序保持现有里程碑名称不重编号，
+并与 `0006_lesson_plans → 0007_ai_prompts_jobs` 迁移链、US3 对教案强外键的依赖一致。
+不得仅根据 M4/M5 的编号推导相反顺序，也不得并行修改两组核心契约。
 
 ## 6. M0：共享设计基线
 
@@ -277,7 +278,7 @@ Review 的 310 项完整测试均通过。
 
 ## 10. M4：AI 模型与提示词基础
 
-入口条件：M3A `complete`。
+入口条件：M5 `complete`。M3A 已完成，但必须先通过 T046–T061 的手工教案门禁。
 
 ### 交付范围
 
@@ -300,7 +301,7 @@ Review 的 310 项完整测试均通过。
 
 ## 11. M5：无 AI 教案手工闭环
 
-入口条件：M3A `complete`。M4 不是功能依赖，但单分支默认在 M4 后实施。
+入口条件：M3A `complete`。本阶段是下一实施里程碑，固定先于 M4 执行。
 
 ### 交付范围
 
@@ -437,16 +438,16 @@ Review 的 310 项完整测试均通过。
 | M2 | `complete` | [#4](https://github.com/ywyz/child-manager/issues/4) 已按 `completed` 关闭；最终基线 `docs@bb025b2`、`dev@fb4f076`，M2 专项 133 项、完整 192 项、双轴 Review 与 Quality Gates `30006114394` 均通过 | 保留验收记录；已随 M3A 稳定基线集成 `main` |
 | M3 | `complete` | [#7](https://github.com/ywyz/child-manager/issues/7) 已按 `completed` 关闭；固定 `docs@bd98a1a`，最终 Review 修复 `dev@f5f0084` | 保留验收记录；已集成 `main` |
 | M3A | `complete` | [#8](https://github.com/ywyz/child-manager/issues/8) 已按 `completed` 关闭；固定 `docs@2f7894c`，最终实现 `dev@6a9e269`，Quality Gates `30161645948` 与独立复验通过 | 保留验收记录；已集成 `main` |
-| M4 / M5 | `blocked` | M3A 入口已满足，但本 Roadmap 默认 M4→M5，共享 `tasks.md` 明确要求 T046–T061 手工教案先于 T062 以后 AI 任务 | 先在 `docs` 裁决执行顺序并固定新基线 |
-| M6–M8 | `pending` | 尚未开始实现 | 等待 M4、M5 及各自前序里程碑完成 |
+| M5 | `ready` | M3A 已完成；PRD、架构、契约与共享 `tasks.md` 已固定 T046–T061 手工教案范围 | 创建引用本次固定 docs 提交的单一实施 Issue，并在 `dev` 执行 T046–T061 |
+| M4 | `pending` | 设计已具备；实施顺序固定在 M5 之后，任务为 T062–T086 | 等待 M5 T061 完成并验收 |
+| M6–M8 | `pending` | 尚未开始实现 | 等待 M5、M4 及各自前序里程碑完成 |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010/ADR-0011 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 
 该快照只能根据实际分支、文件、命令与验收证据更新。不得根据历史分支、计划文件或未执行命令猜测状态。
 
-当前顺序冲突会改变下一实现 Issue 的范围，不能静默选择。维护者确认先做 M4 还是先做 M5
-后，必须同时修正本 Roadmap 与
-[`specs/001-daily-activity-plan/tasks.md`](../specs/001-daily-activity-plan/tasks.md) 的依赖
-和任务顺序，再以新的固定 `docs` 提交创建下一实现 Issue。
+维护者已确认先完成 M5 T046–T061，再进入 M4 T062–T086。共享
+[`specs/001-daily-activity-plan/tasks.md`](../specs/001-daily-activity-plan/tasks.md) 的现有
+任务顺序、迁移编号和依赖图无需重编号；下一实施 Issue 必须引用本次固定 `docs` 提交。
 
 ## 17. Roadmap 更新规则
 
