@@ -314,13 +314,13 @@ Review 的 310 项完整测试均通过。
 
 ### 出口门禁
 
-- [ ] PostgreSQL 唯一约束证明归档教案仍占用 `(kindergarten_id, class_id, plan_date)`。
-- [ ] 两个请求使用同一 `expected_version` 更新时只有一个成功，另一个返回中文可理解冲突。
-- [ ] 自动保存不建快照；手动保存、归档、恢复归档和历史恢复建立正确原因快照。
-- [ ] 快照、正文、作者、版本与审计在同一事务中成功或回滚，Repository 不自行提交。
-- [ ] 管理员可查看/归档全园教案，但未关联班级时不能编辑正文；教师不能访问未关联班级。
-- [ ] 学期外、非工作日和无法确认都只软提示，不阻止创建、保存或归档。
-- [ ] 浏览器冒烟完成“创建→编辑→自动保存→显式保存→归档→恢复→历史恢复”。
+- [x] PostgreSQL 唯一约束证明归档教案仍占用 `(kindergarten_id, class_id, plan_date)`。
+- [x] 两个请求使用同一 `expected_version` 更新时只有一个成功，另一个返回中文可理解冲突。
+- [x] 自动保存不建快照；手动保存、归档、恢复归档和历史恢复建立正确原因快照。
+- [x] 快照、正文、作者、版本与审计在同一事务中成功或回滚，Repository 不自行提交。
+- [x] 管理员可查看/归档全园教案，但未关联班级时不能编辑正文；教师不能访问未关联班级。
+- [x] 学期外、非工作日和无法确认都只软提示，不阻止创建、保存或归档。
+- [x] 浏览器冒烟完成“创建→编辑→自动保存→显式保存→归档→恢复→历史恢复”。
 
 ## 12. M6：AI 异步生成与人工采用
 
@@ -438,8 +438,8 @@ Review 的 310 项完整测试均通过。
 | M2 | `complete` | [#4](https://github.com/ywyz/child-manager/issues/4) 已按 `completed` 关闭；最终基线 `docs@bb025b2`、`dev@fb4f076`，M2 专项 133 项、完整 192 项、双轴 Review 与 Quality Gates `30006114394` 均通过 | 保留验收记录；已随 M3A 稳定基线集成 `main` |
 | M3 | `complete` | [#7](https://github.com/ywyz/child-manager/issues/7) 已按 `completed` 关闭；固定 `docs@bd98a1a`，最终 Review 修复 `dev@f5f0084` | 保留验收记录；已集成 `main` |
 | M3A | `complete` | [#8](https://github.com/ywyz/child-manager/issues/8) 已按 `completed` 关闭；固定 `docs@2f7894c`，最终实现 `dev@6a9e269`，Quality Gates `30161645948` 与独立复验通过 | 保留验收记录；已集成 `main` |
-| M5 | `complete` | [#9](https://github.com/ywyz/child-manager/issues/9) 固定 `docs@7d9af6c`；T046–T061、`0006_lesson_plans`、专项 28 项与完整 338 项测试通过 | 保留验收记录；等待 Review 后集成 `main` |
-| M4 | `ready` | M5 已完成；设计与 T062–T086 已具备 | 创建引用更新后固定 docs 提交的单一实施 Issue |
+| M5 | `complete` | [#9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed` 关闭；固定 `docs@7d9af6c`，最终 `dev@ae74c83`，双轴 Review 均通过，Quality Gates `30202886134` 为 347 项通过 | 更新并检查最终图谱后集成 `main`，保留验收记录 |
+| M4 | `ready` | M5 已完成并关闭；设计与 T062–T086 已具备 | 创建固定引用本次 docs 状态提交的单一实施 Issue |
 | M6–M8 | `pending` | 尚未开始实现 | 等待 M5、M4 及各自前序里程碑完成 |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010/ADR-0011 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 

@@ -20,10 +20,10 @@ M3 [Issue #7](https://github.com/ywyz/child-manager/issues/7) 固定 `docs@bd98a
 Gates 通过后，已获授权集成到 `main`，形成首个包含 M1–M3A 实现的稳定开发基线；这不代表
 首期功能或生产部署已经完成。
 
-M5 [Issue #9](https://github.com/ywyz/child-manager/issues/9) 固定 `docs@7d9af6c`，
-已完成 T046–T061 并形成可独立验收的第一条业务 MVP。下一实现为 M4 的 T062–T086
-AI 模型与提示词基础；新 Issue 必须引用本次确认后的固定 `docs` 提交，且不得提前进入
-T087 以后的 AI 生成任务。
+M5 [Issue #9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed` 关闭，固定
+`docs@7d9af6c`，最终 `dev@ae74c83` 已通过 Standards/Spec 双轴 Review 与 Quality Gates
+`30202886134`（347 项通过），形成第一条业务 MVP。下一实现为 M4 的 T062–T086 AI 模型与
+提示词基础；新 Issue 必须固定引用本次状态提交，且不得提前进入 T087 以后的 AI 生成任务。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 
