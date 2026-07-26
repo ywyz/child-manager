@@ -1,3 +1,4 @@
+import asyncio
 from datetime import UTC, date, datetime, timedelta
 from importlib import import_module
 
@@ -102,6 +103,35 @@ def test_timor_client_softly_degrades_timeout_and_fixed_payloads() -> None:
         module.TimorWorkdayClient(httpx.MockTransport(confirmed)).check(date(2026, 3, 2))
         == "workday"
     )
+
+
+def test_timor_client_enforces_one_total_deadline(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = import_module("packages.backend.integrations.calendar.client")
+    cancelled = False
+
+    async def slower_than_total_deadline(request: httpx.Request) -> httpx.Response:
+        nonlocal cancelled
+        try:
+            await asyncio.sleep(1)
+        except asyncio.CancelledError:
+            cancelled = True
+            raise
+        return httpx.Response(
+            200,
+            json={"code": 0, "type": {"type": 3}},
+            request=request,
+        )
+
+    monkeypatch.setattr(module, "TIMOR_TOTAL_TIMEOUT_SECONDS", 0.01, raising=False)
+
+    result = module.TimorWorkdayClient(httpx.MockTransport(slower_than_total_deadline)).check(
+        date(2026, 3, 2)
+    )
+
+    assert result is None
+    assert cancelled is True
 
 
 def test_unsupported_local_calendar_range_softly_falls_back_to_online(
