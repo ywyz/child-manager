@@ -265,9 +265,9 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
-| `main` | 稳定版本与发布基线 | 已接收通过独立 Review 的 `dev@6a9e269`，包含 M1–M3A 实现；首期功能与生产部署仍未完成 | 保持稳定，只接收后续已验收的 `dev` 结果 |
-| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M5 #9 固定 `7d9af6c`，T046–T061 已完成；OpenAPI 已补齐完整教案上下文字段的必填声明 | 固定 M4 文档基线并创建单一实施 Issue |
-| `dev` | Codex 唯一实现与集成 | M5 已完成迁移、契约、API、Web、权限、历史与工作日软降级，并通过 338 项完整测试 | 推送 M5 实现，随后按新 docs 基线实施 T062–T086 |
+| `main` | 稳定版本与发布基线 | 已接收通过独立 Review 的 `dev@6a9e269`，包含 M1–M3A 实现；M5 已验收但尚未集成 | 接收完成最终图谱更新的 M5 `dev` |
+| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M5 Issue #9 已按 `completed` 关闭；固定 `docs@7d9af6c`，最终实现与 Review 证据为 `dev@ae74c83` | 以本次状态提交固定 M4 单一实施 Issue |
+| `dev` | Codex 唯一实现与集成 | M5 `dev@ae74c83` 已通过双轴 Review 与 Quality Gates `30202886134`，完整回归 347 项通过 | 更新并检查图谱，集成 `main`，随后实施 M4 T062–T086 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -291,10 +291,12 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
    `dev@6a9e269`，同提交 Quality Gates `30161645948` 与本地 310 项完整复验均通过。
 6. `dev@6a9e269` 已经明确授权和独立 Review 后集成 `main`；该稳定开发基线只证明
    M1–M3A，不得表述为首期功能完成或生产可发布。
-7. M5 Issue #9 已按 `docs@7d9af6c` 完成 T046–T061，使用
-   `0006_lesson_plans` 交付无 AI 手工教案闭环。下一实现为 M4 T062–T086 AI 模型与
-   提示词基础，使用后继 `0007_ai_prompts_jobs`；新 Issue 必须固定引用更新后的 docs
-   提交，并且不得扩大到 T087 以后任务。
+7. M5 Issue #9 已按 `completed` 关闭；固定需求基线为 `docs@7d9af6c`，最终实现为
+   `dev@ae74c83`。Standards 与 Spec 双轴 Review 均为 `PASS`，同提交 Quality Gates
+   `30202886134` 通过，结果为 `347 passed, 1 warning`。
+8. M5 关闭后的下一动作是对最终 `dev` 运行并检查 `graphify update .`，再集成 `main`。
+   随后创建固定引用本次 docs 状态提交的 M4 单一实施 Issue，依次执行 T062–T072 RED、
+   T073–T085 GREEN 与 T086 验收；不得提前进入 T087。
 
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
@@ -341,10 +343,10 @@ uv run pyright
 uv run pytest
 ```
 
-`main` 与 `dev` 现已包含 Python 项目骨架和同一份 M1–M3A 稳定实现。2026-07-26 集成前独立
-复验中，锁定安装、Ruff format/check、Pyright 和完整 Pytest 均通过；Pytest 结果为
-`310 passed, 1 warning`，warning 是已记录的 Pydantic 2.11 弃用提示。后续里程碑仍必须
-重新执行这些命令，不得复用本次结果代替新变更验证。
+`main` 当前包含 M1–M3A 稳定实现，`dev@ae74c83` 进一步包含已独立验收的 M5。2026-07-26
+最终 Quality Gates `30202886134` 中，锁定安装、Ruff format/check、Pyright、OpenAPI 校验
+和完整 Pytest 均通过；Pytest 结果为 `347 passed, 1 warning`，warning 是已记录的 Pydantic
+2.11 弃用提示。后续里程碑仍必须重新执行这些命令，不得复用本次结果代替新变更验证。
 
 各阶段还必须执行与风险匹配的专项验证：
 
