@@ -103,22 +103,25 @@ def test_prompt_test_summary_contains_only_sorted_names_and_redaction_flag() -> 
 
 def test_prompt_run_frozen_fields_cannot_be_updated() -> None:
     _settings, prompts, _jobs = _modules()
-    assert frozenset(
-        {
-            "input_context",
-            "input_sha256",
-            "prompt_content",
-            "prompt_content_sha256",
-            "result_schema_code",
-            "result_schema_version",
-            "model_call_snapshot",
-            "input_summary",
-            "prompt_definition_id",
-            "prompt_version_id",
-            "model_profile_id",
-            "job_id",
-        }
-    ) == prompts.FROZEN_PROMPT_RUN_FIELDS
+    assert (
+        frozenset(
+            {
+                "input_context",
+                "input_sha256",
+                "prompt_content",
+                "prompt_content_sha256",
+                "result_schema_code",
+                "result_schema_version",
+                "model_call_snapshot",
+                "input_summary",
+                "prompt_definition_id",
+                "prompt_version_id",
+                "model_profile_id",
+                "job_id",
+            }
+        )
+        == prompts.FROZEN_PROMPT_RUN_FIELDS
+    )
     connection = RecordingConnection()
     repository = prompts.PromptRepository(connection)
     with pytest.raises(ValueError):

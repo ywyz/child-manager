@@ -43,6 +43,13 @@ class IdentityAuditEventCode(StrEnum):
     PLAN_ARCHIVED = "lesson_plan.archived"
     PLAN_UNARCHIVED = "lesson_plan.unarchived"
     PLAN_HISTORY_RESTORED = "lesson_plan.history_restored"
+    AI_MODEL_CREATED = "ai_model.created"
+    AI_MODEL_UPDATED = "ai_model.updated"
+    AI_MODEL_ENABLED = "ai_model.enabled"
+    AI_MODEL_DISABLED = "ai_model.disabled"
+    PROMPT_PUBLISHED = "prompt.published"
+    PROMPT_RESTORED = "prompt.restored"
+    PROMPT_TESTS_CLEARED = "prompt.tests_cleared"
 
     # 通用登录审计名称保留为认证 ceremony 的兼容别名, 不代表密码登录。
     INITIALIZED = "identity.bootstrap_started"

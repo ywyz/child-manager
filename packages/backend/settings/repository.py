@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid5, uuid7
 
@@ -87,12 +87,315 @@ AGE_GROUPS = (
     ("large", "大班", 3),
 )
 
+CALL_CONFIG_FIELDS = frozenset({"api_base_url", "model_name", "capability_codes", "api_key"})
 
-def _rows(result: Any) -> list[tuple[object, ...]]:
+
+def call_configuration_changed(
+    before: dict[str, object],
+    after: dict[str, object],
+) -> bool:
+    """只把会改变实际外呼的字段计入调用配置 revision。"""
+
+    return any(
+        field in after and before.get(field) != after.get(field) for field in CALL_CONFIG_FIELDS
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class AiModelProfileRecord:
+    id: UUID
+    name: str
+    api_base_url: str
+    model_name: str
+    api_key_ciphertext: bytes | None
+    api_key_encryption_version: int | None
+    api_key_key_id: str | None
+    api_key_nonce: bytes | None
+    api_key_last_four: str | None
+    capability_codes: tuple[str, ...]
+    call_config_revision: int
+    max_concurrency: int
+    rate_limit_per_minute: int | None
+    is_default: bool
+    is_active: bool
+    risk_confirmed_by: UUID | None
+    risk_confirmed_at: datetime | None
+
+
+def _ai_profile(row: tuple[Any, ...] | None) -> AiModelProfileRecord | None:
+    if row is None:
+        return None
+    return AiModelProfileRecord(
+        id=UUID(str(row[0])),
+        name=str(row[1]),
+        api_base_url=str(row[2]),
+        model_name=str(row[3]),
+        api_key_ciphertext=bytes(row[4]) if row[4] is not None else None,
+        api_key_encryption_version=int(row[5]) if row[5] is not None else None,
+        api_key_key_id=str(row[6]) if row[6] is not None else None,
+        api_key_nonce=bytes(row[7]) if row[7] is not None else None,
+        api_key_last_four=str(row[8]) if row[8] is not None else None,
+        capability_codes=tuple(str(value) for value in (row[9] or [])),
+        call_config_revision=int(row[10]),
+        max_concurrency=int(row[11]),
+        rate_limit_per_minute=int(row[12]) if row[12] is not None else None,
+        is_default=bool(row[13]),
+        is_active=bool(row[14]),
+        risk_confirmed_by=UUID(str(row[15])) if row[15] is not None else None,
+        risk_confirmed_at=row[16] if isinstance(row[16], datetime) else None,
+    )
+
+
+_AI_PROFILE_SELECT = """
+SELECT p.id,p.name,p.api_base_url,p.model_name,p.api_key_ciphertext,
+       p.api_key_encryption_version,p.api_key_key_id,p.api_key_nonce,p.api_key_last_four,
+       COALESCE(array_agg(c.capability_code ORDER BY c.capability_code)
+                FILTER (WHERE c.capability_code IS NOT NULL), ARRAY[]::varchar[]),
+       p.call_config_revision,p.max_concurrency,p.rate_limit_per_minute,
+       p.is_default,p.is_active,p.risk_confirmed_by,p.risk_confirmed_at
+FROM ai_model_profiles p
+LEFT JOIN ai_model_profile_capabilities c
+  ON c.kindergarten_id=p.kindergarten_id AND c.model_profile_id=p.id
+"""
+
+
+class AiModelProfileRepository:
+    """园所隔离的 AI 模型档案持久化。"""
+
+    def __init__(self, connection: Any) -> None:
+        self.connection = connection
+
+    def get(
+        self,
+        kindergarten_id: UUID,
+        profile_id: UUID,
+        *,
+        for_update: bool = False,
+    ) -> AiModelProfileRecord | None:
+        if for_update:
+            self.connection.execute(
+                """SELECT id FROM ai_model_profiles
+                WHERE kindergarten_id=%s AND id=%s FOR UPDATE""",
+                (kindergarten_id, profile_id),
+            )
+        result = self.connection.execute(
+            _AI_PROFILE_SELECT
+            + """ WHERE p.kindergarten_id=%s AND p.id=%s
+                GROUP BY p.id""",
+            (kindergarten_id, profile_id),
+        )
+        return _ai_profile(_row(result))
+
+    def list(
+        self,
+        kindergarten_id: UUID,
+        *,
+        page: int,
+        page_size: int,
+    ) -> tuple[list[AiModelProfileRecord], int]:
+        count_result = self.connection.execute(
+            "SELECT count(*) FROM ai_model_profiles WHERE kindergarten_id=%s",
+            (kindergarten_id,),
+        )
+        count_row = _row(count_result)
+        result = self.connection.execute(
+            _AI_PROFILE_SELECT
+            + """ WHERE p.kindergarten_id=%s
+                GROUP BY p.id ORDER BY p.name_normalized,p.id
+                LIMIT %s OFFSET %s""",
+            (kindergarten_id, page_size, (page - 1) * page_size),
+        )
+        return (
+            [record for row in _rows(result) if (record := _ai_profile(row)) is not None],
+            int(count_row[0]) if count_row is not None else 0,
+        )
+
+    def create(
+        self,
+        kindergarten_id: UUID,
+        *,
+        profile_id: UUID,
+        name: str,
+        name_normalized: str,
+        api_base_url: str,
+        model_name: str,
+        envelope: object | None,
+        capability_codes: Sequence[str],
+        max_concurrency: int,
+        rate_limit_per_minute: int | None,
+        is_default: bool,
+        actor_id: UUID,
+    ) -> AiModelProfileRecord:
+        if is_default:
+            self.connection.execute(
+                "UPDATE ai_model_profiles SET is_default=false,updated_at=now(),updated_by=%s "
+                "WHERE kindergarten_id=%s AND is_default",
+                (actor_id, kindergarten_id),
+            )
+        self.connection.execute(
+            """INSERT INTO ai_model_profiles
+            (id,kindergarten_id,name,name_normalized,api_base_url,model_name,
+             api_key_ciphertext,api_key_encryption_version,api_key_key_id,api_key_nonce,
+             api_key_last_four,call_config_revision,max_concurrency,rate_limit_per_minute,
+             is_default,is_active,created_by,updated_by)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,1,%s,%s,%s,false,%s,%s)""",
+            (
+                profile_id,
+                kindergarten_id,
+                name,
+                name_normalized,
+                api_base_url,
+                model_name,
+                getattr(envelope, "ciphertext", None),
+                getattr(envelope, "envelope_version", None),
+                getattr(envelope, "key_id", None),
+                getattr(envelope, "nonce", None),
+                getattr(envelope, "last_four", None),
+                max_concurrency,
+                rate_limit_per_minute,
+                is_default,
+                actor_id,
+                actor_id,
+            ),
+        )
+        for capability in sorted(capability_codes):
+            self.connection.execute(
+                """INSERT INTO ai_model_profile_capabilities
+                (kindergarten_id,model_profile_id,capability_code)
+                VALUES (%s,%s,%s)""",
+                (kindergarten_id, profile_id, capability),
+            )
+        record = self.get(kindergarten_id, profile_id)
+        assert record is not None
+        return record
+
+    def update(
+        self,
+        kindergarten_id: UUID,
+        profile_id: UUID,
+        *,
+        name: str,
+        name_normalized: str,
+        api_base_url: str,
+        model_name: str,
+        envelope: object | None,
+        replace_key: bool,
+        capability_codes: Sequence[str],
+        max_concurrency: int,
+        rate_limit_per_minute: int | None,
+        is_default: bool,
+        increment_revision: bool,
+        actor_id: UUID,
+    ) -> AiModelProfileRecord | None:
+        if is_default:
+            self.connection.execute(
+                """UPDATE ai_model_profiles SET is_default=false,updated_at=now(),updated_by=%s
+                WHERE kindergarten_id=%s AND id<>%s AND is_default""",
+                (actor_id, kindergarten_id, profile_id),
+            )
+        key_sql = ""
+        params: list[object] = [
+            name,
+            name_normalized,
+            api_base_url,
+            model_name,
+            max_concurrency,
+            rate_limit_per_minute,
+            is_default,
+            actor_id,
+        ]
+        if replace_key:
+            key_sql = """,
+                api_key_ciphertext=%s,api_key_encryption_version=%s,api_key_key_id=%s,
+                api_key_nonce=%s,api_key_last_four=%s"""
+            params.extend(
+                [
+                    getattr(envelope, "ciphertext", None),
+                    getattr(envelope, "envelope_version", None),
+                    getattr(envelope, "key_id", None),
+                    getattr(envelope, "nonce", None),
+                    getattr(envelope, "last_four", None),
+                ]
+            )
+        revision_sql = ",call_config_revision=call_config_revision+1" if increment_revision else ""
+        params.extend([kindergarten_id, profile_id])
+        result = self.connection.execute(
+            f"""UPDATE ai_model_profiles SET
+                name=%s,name_normalized=%s,api_base_url=%s,model_name=%s,
+                max_concurrency=%s,rate_limit_per_minute=%s,is_default=%s,
+                updated_by=%s,updated_at=now(){key_sql}{revision_sql}
+                WHERE kindergarten_id=%s AND id=%s""",
+            tuple(params),
+        )
+        if getattr(result, "rowcount", 1) == 0:
+            return None
+        self.connection.execute(
+            """DELETE FROM ai_model_profile_capabilities
+            WHERE kindergarten_id=%s AND model_profile_id=%s""",
+            (kindergarten_id, profile_id),
+        )
+        for capability in sorted(capability_codes):
+            self.connection.execute(
+                """INSERT INTO ai_model_profile_capabilities
+                (kindergarten_id,model_profile_id,capability_code)
+                VALUES (%s,%s,%s)""",
+                (kindergarten_id, profile_id, capability),
+            )
+        return self.get(kindergarten_id, profile_id)
+
+    def set_enabled(
+        self,
+        kindergarten_id: UUID,
+        profile_id: UUID,
+        *,
+        enabled: bool,
+        actor_id: UUID,
+    ) -> AiModelProfileRecord | None:
+        risk_sql = ",risk_confirmed_by=%s,risk_confirmed_at=now()" if enabled else ""
+        params: tuple[object, ...] = (
+            (enabled, actor_id, actor_id, kindergarten_id, profile_id)
+            if enabled
+            else (enabled, actor_id, kindergarten_id, profile_id)
+        )
+        result = self.connection.execute(
+            f"""UPDATE ai_model_profiles SET is_active=%s,updated_by=%s,updated_at=now()
+                {risk_sql} WHERE kindergarten_id=%s AND id=%s""",
+            params,
+        )
+        if getattr(result, "rowcount", 1) == 0:
+            return None
+        return self.get(kindergarten_id, profile_id)
+
+    def replace_key_envelope(
+        self,
+        kindergarten_id: UUID,
+        profile_id: UUID,
+        *,
+        envelope: Any,
+    ) -> bool:
+        result = self.connection.execute(
+            """UPDATE ai_model_profiles SET
+            api_key_ciphertext=%s,api_key_encryption_version=%s,api_key_key_id=%s,
+            api_key_nonce=%s,api_key_last_four=%s,updated_at=now()
+            WHERE kindergarten_id=%s AND id=%s""",
+            (
+                envelope.ciphertext,
+                envelope.envelope_version,
+                envelope.key_id,
+                envelope.nonce,
+                envelope.last_four,
+                kindergarten_id,
+                profile_id,
+            ),
+        )
+        return bool(getattr(result, "rowcount", 1))
+
+
+def _rows(result: Any) -> list[tuple[Any, ...]]:
     return list(result.fetchall()) if result is not None else []
 
 
-def _row(result: Any) -> tuple[object, ...] | None:
+def _row(result: Any) -> tuple[Any, ...] | None:
     return result.fetchone() if result is not None else None
 
 

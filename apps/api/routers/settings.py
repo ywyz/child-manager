@@ -7,12 +7,14 @@ from fastapi import APIRouter, Query, Request, Response
 
 from apps.api.dependencies import (
     AdminSessionDependency,
+    AiModelServiceDependency,
     CurrentSessionDependency,
     SettingsServiceDependency,
 )
 from apps.api.routers.auth import require_csrf
 from packages.backend.settings.repository import (
     AgeGroupRecord,
+    AiModelProfileRecord,
     AreaRecord,
     ClassRecord,
     KindergartenRecord,
@@ -21,6 +23,10 @@ from packages.backend.settings.repository import (
 from packages.contracts.settings import (
     AgeGroup,
     AgeGroupList,
+    AiModelEnableRequest,
+    AiModelProfile,
+    AiModelProfilePage,
+    AiModelProfileWrite,
     Area,
     AreaPage,
     AreaReplaceRequest,
@@ -38,6 +44,97 @@ from packages.contracts.settings import (
 )
 
 router = APIRouter(prefix="/api/v1/settings", tags=["Settings"])
+
+
+def _ai_model(record: AiModelProfileRecord) -> AiModelProfile:
+    return AiModelProfile(
+        id=record.id,
+        name=record.name,
+        api_base_url=record.api_base_url,
+        model_name=record.model_name,
+        api_key_masked=(
+            f"••••{record.api_key_last_four}" if record.api_key_last_four is not None else None
+        ),
+        capability_codes=list(record.capability_codes),  # type: ignore[arg-type]
+        call_config_revision=record.call_config_revision,
+        max_concurrency=record.max_concurrency,
+        rate_limit_per_minute=record.rate_limit_per_minute,
+        is_default=record.is_default,
+        is_active=record.is_active,
+        risk_confirmed_at=record.risk_confirmed_at,
+    )
+
+
+@router.get("/ai-model-profiles", response_model=AiModelProfilePage)
+def list_ai_model_profiles(
+    session: AdminSessionDependency,
+    service: AiModelServiceDependency,
+    page: Annotated[int, Query(ge=1)] = 1,
+    page_size: Annotated[int, Query(ge=1, le=100)] = 20,
+) -> AiModelProfilePage:
+    records, total = service.list(session, page=page, page_size=page_size)
+    return AiModelProfilePage(
+        items=[_ai_model(record) for record in records],
+        page=page,
+        page_size=page_size,
+        total=total,
+    )
+
+
+@router.post("/ai-model-profiles", response_model=AiModelProfile, status_code=201)
+def create_ai_model_profile(
+    body: AiModelProfileWrite,
+    request: Request,
+    session: AdminSessionDependency,
+    service: AiModelServiceDependency,
+) -> AiModelProfile:
+    require_csrf(request)
+    return _ai_model(service.create(session, body))
+
+
+@router.get("/ai-model-profiles/{profile_id}", response_model=AiModelProfile)
+def get_ai_model_profile(
+    profile_id: UUID,
+    session: AdminSessionDependency,
+    service: AiModelServiceDependency,
+) -> AiModelProfile:
+    return _ai_model(service.get(session, profile_id))
+
+
+@router.patch("/ai-model-profiles/{profile_id}", response_model=AiModelProfile)
+def patch_ai_model_profile(
+    profile_id: UUID,
+    body: AiModelProfileWrite,
+    request: Request,
+    session: AdminSessionDependency,
+    service: AiModelServiceDependency,
+) -> AiModelProfile:
+    require_csrf(request)
+    return _ai_model(service.update(session, profile_id, body))
+
+
+@router.post("/ai-model-profiles/{profile_id}/enable", response_model=AiModelProfile)
+def enable_ai_model_profile(
+    profile_id: UUID,
+    body: AiModelEnableRequest,
+    request: Request,
+    session: AdminSessionDependency,
+    service: AiModelServiceDependency,
+) -> AiModelProfile:
+    require_csrf(request)
+    del body
+    return _ai_model(service.set_enabled(session, profile_id, enabled=True))
+
+
+@router.post("/ai-model-profiles/{profile_id}/disable", response_model=AiModelProfile)
+def disable_ai_model_profile(
+    profile_id: UUID,
+    request: Request,
+    session: AdminSessionDependency,
+    service: AiModelServiceDependency,
+) -> AiModelProfile:
+    require_csrf(request)
+    return _ai_model(service.set_enabled(session, profile_id, enabled=False))
 
 
 def _kindergarten(record: KindergartenRecord) -> Kindergarten:

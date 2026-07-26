@@ -262,6 +262,8 @@ def test_browser_completes_passkey_invitation_recovery_credential_and_session_jo
         assert admin_recovery_code
 
         admin_page.get_by_text("密码与 TOTP 备用登录").wait_for()
+        admin_page.get_by_role("button", name="进入备用登录设置").click()
+        admin_page.wait_for_url("**/account/security")
         admin_page.get_by_role("button", name="设置备用登录").click()
         totp_secret = admin_page.get_by_test_id("totp-secret-once").text_content()
         assert totp_secret

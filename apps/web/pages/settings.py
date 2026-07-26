@@ -20,7 +20,24 @@ def settings_page_text() -> tuple[str, ...]:
         "保存教师关系",
         "主班教师",
         "区域尚未配置",
+        "AI 模型档案",
+        "提示词中心",
+        "API Key（仅写入）",
+        "外部数据处理风险",
+        "保存模型档案",
+        "启用模型",
+        "提示词草稿",
+        "发布新版本",
+        "历史版本",
+        "恢复为新版本",
+        "运行异步测试",
     )
+
+
+def masked_api_key_text(masked: str) -> str:
+    """只渲染服务端给出的末四位脱敏摘要。"""
+
+    return f"已配置：{masked}"
 
 
 def register_settings_pages() -> None:
@@ -63,6 +80,20 @@ def register_settings_pages() -> None:
         class_status = ui.label("")
         class_results = ui.column()
         age_group_ids: dict[str, str] = {}
+
+        ui.label("AI 模型档案").classes("text-h6")
+        ui.input("API Key（仅写入）").props(
+            'type=password autocomplete=new-password aria-describedby="ai-api-key-error"'
+        )
+        ui.label("外部数据处理风险")
+        ui.button("保存模型档案")
+        ui.button("启用模型")
+        ui.label("提示词中心").classes("text-h6")
+        ui.textarea("提示词草稿")
+        ui.button("发布新版本")
+        ui.label("历史版本")
+        ui.button("恢复为新版本")
+        ui.button("运行异步测试")
 
         async def save_kindergarten() -> None:
             result = await same_origin_api_request(

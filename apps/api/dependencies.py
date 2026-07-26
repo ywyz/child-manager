@@ -13,6 +13,8 @@ from redis.asyncio import Redis
 
 from packages.backend.identity.service import IdentityError, IdentityService, SessionUser
 from packages.backend.lesson_plans.service import LessonPlanService
+from packages.backend.prompts.service import PromptService
+from packages.backend.settings.ai_models import AiModelService
 from packages.backend.settings.service import SettingsService
 
 HealthCheck = Callable[[], Awaitable[bool]]
@@ -129,6 +131,20 @@ def lesson_plan_service() -> LessonPlanService:
 
 
 LessonPlanServiceDependency = Annotated[LessonPlanService, Depends(lesson_plan_service)]
+
+
+def ai_model_service() -> AiModelService:
+    return AiModelService.from_environment()
+
+
+AiModelServiceDependency = Annotated[AiModelService, Depends(ai_model_service)]
+
+
+def prompt_service() -> PromptService:
+    return PromptService.from_environment()
+
+
+PromptServiceDependency = Annotated[PromptService, Depends(prompt_service)]
 
 
 def authenticated_session(

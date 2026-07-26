@@ -63,7 +63,13 @@ _PARAMETERS = {
         "required": True,
         "description": "必须与签名 child_manager_csrf Cookie 匹配；同时校验 Origin/Referer",
         "schema": {"type": "string", "minLength": 32, "maxLength": 512},
-    }
+    },
+    "ProfileId": {
+        "in": "path",
+        "name": "profile_id",
+        "required": True,
+        "schema": {"type": "string", "format": "uuid"},
+    },
 }
 
 _SCHEMAS = {
@@ -645,6 +651,9 @@ def configure_openapi(application: FastAPI) -> Callable[[], dict[str, Any]]:
             "$ref": "#/components/schemas/RegistrationExtensions"
         }
         components.setdefault("responses", {}).update(_RESPONSES)
+        document["paths"]["/api/v1/settings/ai-model-profiles/{profile_id}"]["parameters"] = [
+            {"$ref": "#/components/parameters/ProfileId"}
+        ]
         for key in _OPERATION_RESPONSES:
             _apply_operation_contract(document, key)
 

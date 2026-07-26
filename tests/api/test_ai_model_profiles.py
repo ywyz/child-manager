@@ -5,6 +5,7 @@ from collections.abc import Iterator
 from importlib import import_module
 from typing import Any, cast
 
+import psycopg
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -131,6 +132,7 @@ def test_call_fields_increment_revision_but_display_and_limits_do_not(
 
 def test_enable_requires_key_capabilities_and_explicit_risk_confirmation(
     ai_admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
 ) -> None:
     client, actor = ai_admin_client
     created = client.post(
@@ -167,7 +169,15 @@ def test_enable_requires_key_capabilities_and_explicit_risk_confirmation(
     assert enabled.status_code == 200
     assert enabled.json()["is_active"] is True
     assert enabled.json()["risk_confirmed_at"] is not None
-    assert enabled.json()["risk_confirmed_by"] == str(actor.user_id)
+    assert "risk_confirmed_by" not in enabled.json()
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    with psycopg.connect(native_url) as connection:
+        risk_confirmer = connection.execute(
+            """SELECT risk_confirmed_by FROM ai_model_profiles
+            WHERE kindergarten_id=%s AND id=%s""",
+            (actor.kindergarten_id, profile_id),
+        ).fetchone()
+    assert risk_confirmer == (actor.user_id,)
 
 
 def test_disable_preserves_profile_and_default_switch_is_tenant_local(
