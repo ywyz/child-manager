@@ -18,7 +18,10 @@ from packages.backend.identity.service import IdentityError, SessionUser
 from packages.backend.integrations.calendar.client import TimorWorkdayClient
 from packages.backend.integrations.calendar.models import WorkdayResult
 from packages.backend.integrations.calendar.repository import WorkdayCacheRepository
-from packages.backend.integrations.calendar.service import resolve_uncached_workday
+from packages.backend.integrations.calendar.service import (
+    resolve_local_workday,
+    resolve_uncached_workday,
+)
 from packages.backend.lesson_plans.calendar import activity_date_text, season_for, teaching_week
 from packages.backend.lesson_plans.repository import (
     AuthorRecord,
@@ -46,7 +49,7 @@ def _canonical_sha256(value: dict[str, Any]) -> str:
 
 @dataclass(frozen=True, slots=True)
 class OpenPlanResult:
-    record: PlanRecord
+    view: PlanView
     created: bool
 
 
@@ -56,6 +59,14 @@ class PlanView:
     authors: list[AuthorRecord]
     soft_warnings: list[SoftWarning]
     capabilities: list[str]
+
+
+@dataclass(frozen=True, slots=True)
+class _PlanViewSeed:
+    record: PlanRecord
+    authors: list[AuthorRecord]
+    associated: bool
+    workday: WorkdayResult | None
 
 
 class LessonPlanService:
@@ -136,55 +147,89 @@ class LessonPlanService:
         kindergarten_id = self._kindergarten_id(session)
         with self._connect() as connection, connection.transaction():
             repository = LessonPlanRepository(connection)
-            existing = repository.get_plan_by_class_date(kindergarten_id, class_id, plan_date)
-            if existing is not None:
-                self._require_view(session, repository, kindergarten_id, existing)
-                return OpenPlanResult(existing, False)
-            if not repository.class_exists(kindergarten_id, class_id):
-                raise IdentityError(404, "resource.not_found", "班级不存在。")
-            if not repository.is_class_teacher(kindergarten_id, class_id, session.user.id):
-                raise IdentityError(403, "class.not_associated", "只有关联教师可创建本班教案。")
-            context = repository.creation_context(kindergarten_id, class_id)
-            if context is None:
-                raise IdentityError(409, "semester.current_required", "请先配置并启用当前学期。")
-            week_number, week_text = teaching_week(
-                plan_date,
-                context.semester_start_date,
-                context.semester_end_date,
-            )
-            plan, created = repository.create_plan(
-                kindergarten_id,
-                class_id,
-                plan_date,
-                context=context,
-                teaching_week_number=week_number,
-                teaching_week_text=week_text,
-                activity_date_text=activity_date_text(plan_date),
-                season_code=season_for(plan_date),
-                content=PlanContentV1.empty().model_dump(mode="json"),
-                actor_id=session.user.id,
-            )
-            if not created:
-                self._require_view(session, repository, kindergarten_id, plan)
-                return OpenPlanResult(plan, False)
-            if created:
-                repository.replace_authors(
+            plan = repository.get_plan_by_class_date(kindergarten_id, class_id, plan_date)
+            created = False
+            if plan is None:
+                if not repository.class_exists(kindergarten_id, class_id):
+                    raise IdentityError(404, "resource.not_found", "班级不存在。")
+                if not repository.is_class_teacher(kindergarten_id, class_id, session.user.id):
+                    raise IdentityError(
+                        403,
+                        "class.not_associated",
+                        "只有关联教师可创建本班教案。",
+                    )
+                context = repository.creation_context(kindergarten_id, class_id)
+                if context is None:
+                    raise IdentityError(
+                        409,
+                        "semester.current_required",
+                        "请先配置并启用当前学期。",
+                    )
+                week_number, week_text = teaching_week(
+                    plan_date,
+                    context.semester_start_date,
+                    context.semester_end_date,
+                )
+                plan, created = repository.create_plan(
                     kindergarten_id,
-                    plan.id,
-                    [(session.user.id, 0, session.user.display_name)],
+                    class_id,
+                    plan_date,
+                    context=context,
+                    teaching_week_number=week_number,
+                    teaching_week_text=week_text,
+                    activity_date_text=activity_date_text(plan_date),
+                    season_code=season_for(plan_date),
+                    content=PlanContentV1.empty().model_dump(mode="json"),
                     actor_id=session.user.id,
                 )
-            return OpenPlanResult(plan, True)
+                if created:
+                    repository.replace_authors(
+                        kindergarten_id,
+                        plan.id,
+                        [(session.user.id, 0, session.user.display_name)],
+                        actor_id=session.user.id,
+                    )
+            if not created:
+                self._require_view(session, repository, kindergarten_id, plan)
+            seeds = self._view_seeds(
+                connection,
+                session,
+                kindergarten_id,
+                [plan],
+                now=datetime.now(UTC),
+            )
+        return OpenPlanResult(
+            self._finish_views(
+                session,
+                kindergarten_id,
+                seeds,
+                allow_online=True,
+            )[0],
+            created,
+        )
 
-    def get_plan(self, session: SessionUser, plan_id: UUID) -> PlanRecord:
+    def get_plan(self, session: SessionUser, plan_id: UUID) -> PlanView:
         kindergarten_id = self._kindergarten_id(session)
-        with self._connect() as connection:
+        now = datetime.now(UTC)
+        with self._connect() as connection, connection.transaction():
             repository = LessonPlanRepository(connection)
             plan = repository.get_plan(kindergarten_id, plan_id)
             if plan is None:
                 raise self._not_found()
             self._require_view(session, repository, kindergarten_id, plan)
-            return plan
+            seeds = self._view_seeds(
+                connection,
+                session,
+                kindergarten_id,
+                [plan],
+                now=now,
+            )
+        return self._finish_views(
+            session,
+            kindergarten_id,
+            seeds,
+            allow_online=True,
+        )[0]
 
     def list_plans(
         self,
@@ -197,15 +242,17 @@ class LessonPlanService:
         archived: bool | None,
         page: int,
         page_size: int,
-    ) -> tuple[list[PlanRecord], int]:
+    ) -> tuple[list[PlanView], int]:
         kindergarten_id = self._kindergarten_id(session)
         if date_from is not None and date_to is not None and date_from > date_to:
             raise IdentityError(422, "plan.invalid_date_range", "开始日期不能晚于结束日期。")
         visible_to = None if "admin" in session.role_codes else session.user.id
         if visible_to is not None and "teacher" not in session.role_codes:
             raise IdentityError(403, "auth.forbidden", "当前账号没有访问教案的权限。")
-        with self._connect() as connection:
-            return LessonPlanRepository(connection).list_plans(
+        now = datetime.now(UTC)
+        with self._connect() as connection, connection.transaction():
+            repository = LessonPlanRepository(connection)
+            plans, total = repository.list_plans(
                 kindergarten_id,
                 class_id=class_id,
                 date_from=date_from,
@@ -216,6 +263,22 @@ class LessonPlanService:
                 page=page,
                 page_size=page_size,
             )
+            seeds = self._view_seeds(
+                connection,
+                session,
+                kindergarten_id,
+                plans,
+                now=now,
+            )
+        return (
+            self._finish_views(
+                session,
+                kindergarten_id,
+                seeds,
+                allow_online=False,
+            ),
+            total,
+        )
 
     @staticmethod
     def _author_tuples(
@@ -299,8 +362,9 @@ class LessonPlanService:
         content: PlanContentV1,
         authors: Sequence[AuthorWrite],
         create_snapshot: bool,
-    ) -> PlanRecord:
+    ) -> PlanView:
         kindergarten_id = self._kindergarten_id(session)
+        now = datetime.now(UTC)
         with self._connect() as connection, connection.transaction():
             repository = LessonPlanRepository(connection)
             current = repository.get_plan(kindergarten_id, plan_id)
@@ -351,7 +415,19 @@ class LessonPlanService:
                     resource_id=plan_id,
                     outcome="success",
                 )
-            return updated
+            seeds = self._view_seeds(
+                connection,
+                session,
+                kindergarten_id,
+                [updated],
+                now=now,
+            )
+        return self._finish_views(
+            session,
+            kindergarten_id,
+            seeds,
+            allow_online=True,
+        )[0]
 
     def set_archived(
         self,
@@ -360,8 +436,9 @@ class LessonPlanService:
         *,
         expected_version: int,
         archived: bool,
-    ) -> PlanRecord:
+    ) -> PlanView:
         kindergarten_id = self._kindergarten_id(session)
+        now = datetime.now(UTC)
         with self._connect() as connection, connection.transaction():
             repository = LessonPlanRepository(connection)
             current = repository.get_plan(kindergarten_id, plan_id)
@@ -397,7 +474,19 @@ class LessonPlanService:
                 resource_id=plan_id,
                 outcome="success",
             )
-            return updated
+            seeds = self._view_seeds(
+                connection,
+                session,
+                kindergarten_id,
+                [updated],
+                now=now,
+            )
+        return self._finish_views(
+            session,
+            kindergarten_id,
+            seeds,
+            allow_online=True,
+        )[0]
 
     def list_snapshots(
         self,
@@ -425,8 +514,9 @@ class LessonPlanService:
         snapshot_id: UUID,
         *,
         expected_version: int,
-    ) -> PlanRecord:
+    ) -> PlanView:
         kindergarten_id = self._kindergarten_id(session)
+        now = datetime.now(UTC)
         with self._connect() as connection, connection.transaction():
             repository = LessonPlanRepository(connection)
             current = repository.get_plan(kindergarten_id, plan_id)
@@ -483,7 +573,19 @@ class LessonPlanService:
                 resource_id=plan_id,
                 outcome="success",
             )
-            return updated
+            seeds = self._view_seeds(
+                connection,
+                session,
+                kindergarten_id,
+                [updated],
+                now=now,
+            )
+        return self._finish_views(
+            session,
+            kindergarten_id,
+            seeds,
+            allow_online=True,
+        )[0]
 
     @staticmethod
     def _warnings_for(plan: PlanRecord, result: WorkdayResult) -> list[SoftWarning]:
@@ -540,58 +642,92 @@ class LessonPlanService:
             capabilities.add("plans:archive")
         return sorted(capabilities)
 
-    def present_plans(
-        self,
+    @staticmethod
+    def _view_seeds(
+        connection: psycopg.Connection[tuple[object, ...]],
         session: SessionUser,
+        kindergarten_id: UUID,
         plans: Sequence[PlanRecord],
-    ) -> list[PlanView]:
-        """批量组装响应上下文；外网解析发生在所有数据库连接关闭之后。"""
-
+        *,
+        now: datetime,
+    ) -> list[_PlanViewSeed]:
         if not plans:
             return []
-        kindergarten_id = self._kindergarten_id(session)
-        plan_ids = [plan.id for plan in plans]
-        class_ids = list({plan.class_id for plan in plans})
-        calendar_dates = list({plan.plan_date for plan in plans})
-        now = datetime.now(UTC)
-        with self._connect() as connection:
-            repository = LessonPlanRepository(connection)
-            authors = repository.list_authors_for_plans(kindergarten_id, plan_ids)
-            associated_class_ids = repository.associated_class_ids(
-                kindergarten_id,
-                session.user.id,
-                class_ids,
+        repository = LessonPlanRepository(connection)
+        authors = repository.list_authors_for_plans(
+            kindergarten_id,
+            [plan.id for plan in plans],
+        )
+        associated_class_ids = repository.associated_class_ids(
+            kindergarten_id,
+            session.user.id,
+            list({plan.class_id for plan in plans}),
+        )
+        workdays = WorkdayCacheRepository(connection).get_many(
+            kindergarten_id,
+            list({plan.plan_date for plan in plans}),
+            now,
+        )
+        return [
+            _PlanViewSeed(
+                record=plan,
+                authors=authors.get(plan.id, []),
+                associated=plan.class_id in associated_class_ids,
+                workday=workdays.get(plan.plan_date),
             )
-            workdays = WorkdayCacheRepository(connection).get_many(
-                kindergarten_id,
-                calendar_dates,
-                now,
-            )
-
-        resolved = [
-            resolve_uncached_workday(
-                calendar_date,
-                now=now,
-                online_client=self._workday_client,
-            )
-            for calendar_date in calendar_dates
-            if calendar_date not in workdays
+            for plan in plans
         ]
-        if resolved:
-            with self._connect() as connection, connection.transaction():
-                WorkdayCacheRepository(connection).put_many(kindergarten_id, resolved)
-            workdays.update({result.calendar_date: result for result in resolved})
+
+    def _finish_views(
+        self,
+        session: SessionUser,
+        kindergarten_id: UUID,
+        seeds: Sequence[_PlanViewSeed],
+        *,
+        allow_online: bool,
+    ) -> list[PlanView]:
+        """完成单一用例响应；外网解析发生在业务事务关闭之后。"""
+
+        if not seeds:
+            return []
+        now = datetime.now(UTC)
+        missing_dates = list({seed.record.plan_date for seed in seeds if seed.workday is None})
+        if allow_online:
+            if len(missing_dates) > 1:
+                raise RuntimeError("单条教案用例不得批量串行访问在线工作日来源")
+            resolved = [
+                resolve_uncached_workday(
+                    calendar_date,
+                    now=now,
+                    online_client=self._workday_client,
+                )
+                for calendar_date in missing_dates
+            ]
+            if resolved:
+                with self._connect() as connection, connection.transaction():
+                    WorkdayCacheRepository(connection).put_many(kindergarten_id, resolved)
+        else:
+            resolved = [
+                resolve_local_workday(calendar_date, now=now) for calendar_date in missing_dates
+            ]
+        workdays = {
+            seed.record.plan_date: seed.workday for seed in seeds if seed.workday is not None
+        }
+        workdays.update({result.calendar_date: result for result in resolved})
 
         return [
             PlanView(
-                record=plan,
-                authors=authors.get(plan.id, []),
-                soft_warnings=self._warnings_for(plan, workdays[plan.plan_date]),
+                record=seed.record,
+                authors=seed.authors,
+                soft_warnings=self._warnings_for(
+                    seed.record,
+                    workdays[seed.record.plan_date],
+                ),
                 capabilities=self._capabilities_for(
                     session,
-                    plan,
-                    associated=plan.class_id in associated_class_ids,
+                    seed.record,
+                    associated=seed.associated,
                 ),
             )
-            for plan in plans
+            for seed in seeds
         ]

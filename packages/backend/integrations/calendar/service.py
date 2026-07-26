@@ -67,3 +67,18 @@ def resolve_uncached_workday(
         online_result=online_result,
         checked_at=now,
     )
+
+
+def resolve_local_workday(calendar_date: date, *, now: datetime) -> WorkdayResult:
+    """为列表冷缓存提供无外网的即时结论；单条用例再补充在线来源。"""
+
+    try:
+        local_result = "workday" if is_workday(calendar_date) else "non_workday"
+    except KeyError, NotImplementedError, ValueError:
+        local_result = None
+    return combine_workday_results(
+        calendar_date=calendar_date,
+        local_result=local_result,
+        online_result=None,
+        checked_at=now,
+    )

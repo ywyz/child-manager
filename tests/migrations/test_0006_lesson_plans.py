@@ -9,7 +9,12 @@ from alembic.config import Config
 from alembic.script import ScriptDirectory
 from fastapi.testclient import TestClient
 
-from tests.api.passkey_helpers import ActorFixture, admin_client, csrf_headers  # noqa: F401
+from tests.api.passkey_helpers import (  # noqa: F401
+    ActorFixture,
+    admin_client,
+    csrf_headers,
+    passkey_client,
+)
 from tests.api.plan_helpers import provision_editable_plan_context
 
 REVISION = "0006_lesson_plans"

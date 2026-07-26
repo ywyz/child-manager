@@ -11,7 +11,7 @@ from apps.api.dependencies import (
     LessonPlanServiceDependency,
 )
 from apps.api.routers.auth import require_csrf
-from packages.backend.lesson_plans.repository import PlanRecord, SnapshotRecord
+from packages.backend.lesson_plans.repository import SnapshotRecord
 from packages.backend.lesson_plans.schemas import readable_content
 from packages.backend.lesson_plans.service import PlanView
 from packages.contracts.lesson_plans import (
@@ -65,16 +65,6 @@ def _plan(view: PlanView) -> Plan:
     )
 
 
-def _present_one(
-    service: LessonPlanServiceDependency,
-    session: CurrentSessionDependency,
-    record: PlanRecord,
-) -> Plan:
-    views = service.present_plans(session, [record])
-    assert len(views) == 1
-    return _plan(views[0])
-
-
 def _snapshot(record: SnapshotRecord) -> PlanSnapshot:
     return PlanSnapshot(
         id=record.id,
@@ -102,7 +92,7 @@ def list_plans(
     page: Annotated[int, Query(ge=1)] = 1,
     page_size: Annotated[int, Query(ge=1, le=100)] = 20,
 ) -> PlanPage:
-    records, total = service.list_plans(
+    views, total = service.list_plans(
         session,
         class_id=class_id,
         date_from=date_from,
@@ -112,7 +102,6 @@ def list_plans(
         page=page,
         page_size=page_size,
     )
-    views = service.present_plans(session, records)
     return PlanPage(
         items=[_plan(view) for view in views],
         page=page,
@@ -137,7 +126,7 @@ def open_plan(
     result = service.open_plan(session, class_id=body.class_id, plan_date=body.plan_date)
     if result.created:
         response.status_code = 201
-    return _present_one(service, session, result.record)
+    return _plan(result.view)
 
 
 @router.get("/{plan_id}", response_model=Plan)
@@ -146,7 +135,7 @@ def get_plan(
     session: CurrentSessionDependency,
     service: LessonPlanServiceDependency,
 ) -> Plan:
-    return _present_one(service, session, service.get_plan(session, plan_id))
+    return _plan(service.get_plan(session, plan_id))
 
 
 def _save(
@@ -159,7 +148,7 @@ def _save(
     create_snapshot: bool,
 ) -> Plan:
     require_csrf(request)
-    record = service.save(
+    view = service.save(
         session,
         plan_id,
         expected_version=body.expected_version,
@@ -167,7 +156,7 @@ def _save(
         authors=body.authors,
         create_snapshot=create_snapshot,
     )
-    return _present_one(service, session, record)
+    return _plan(view)
 
 
 @router.put("/{plan_id}/autosave", response_model=Plan)
@@ -216,13 +205,13 @@ def _set_archived(
     archived: bool,
 ) -> Plan:
     require_csrf(request)
-    record = service.set_archived(
+    view = service.set_archived(
         session,
         plan_id,
         expected_version=body.expected_version,
         archived=archived,
     )
-    return _present_one(service, session, record)
+    return _plan(view)
 
 
 @router.post("/{plan_id}/archive", response_model=Plan)
@@ -291,10 +280,10 @@ def restore_snapshot(
     service: LessonPlanServiceDependency,
 ) -> Plan:
     require_csrf(request)
-    record = service.restore_snapshot(
+    view = service.restore_snapshot(
         session,
         plan_id,
         snapshot_id,
         expected_version=body.expected_version,
     )
-    return _present_one(service, session, record)
+    return _plan(view)

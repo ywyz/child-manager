@@ -13,23 +13,6 @@ from apps.web.components.plan_editor import AUTOSAVE_DELAY_SECONDS, SECTION_LABE
 from apps.web.components.save_status import SaveState, save_status
 
 
-def plan_page_text() -> tuple[str, ...]:
-    return (
-        "教案",
-        "日历视图",
-        "列表视图",
-        "日期范围开始",
-        "日期范围结束",
-        "编写教师",
-        "归档状态",
-        *SECTION_LABELS.values(),
-        "保存",
-        "归档",
-        "恢复归档",
-        "历史版本",
-    )
-
-
 def build_plans_page() -> None:
     """构建可由真实服务或 NiceGUI 用户模拟器调用的教案首页。"""
 

@@ -147,4 +147,4 @@ def test_plan_list_batches_response_context_without_per_item_connections(
 
     assert listed.status_code == 200
     assert listed.json()["total"] == 2
-    assert connection_count == 2
+    assert connection_count == 1

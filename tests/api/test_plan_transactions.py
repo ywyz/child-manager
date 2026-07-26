@@ -1,5 +1,6 @@
 # ruff: noqa: F811
 
+from copy import deepcopy
 from importlib import import_module
 
 import psycopg
@@ -60,7 +61,8 @@ def test_manual_save_rolls_back_content_version_snapshot_and_audit_together(
     client, actor = admin_client
     _class_id, plan_id = provision_editable_plan_context(client, actor)
     before = client.get(f"/api/v1/plans/{plan_id}").json()
-    content = before["content"]
+    before_content = deepcopy(before["content"])
+    content = deepcopy(before_content)
     content["daily_reflection"] = {
         "highlights": "这次写入必须回滚",
         "issues": "",
@@ -84,7 +86,7 @@ def test_manual_save_rolls_back_content_version_snapshot_and_audit_together(
         )
 
     after = client.get(f"/api/v1/plans/{plan_id}").json()
-    assert after["content"] == before["content"]
+    assert after["content"] == before_content
     assert after["version"] == before["version"]
     assert client.get(f"/api/v1/plans/{plan_id}/snapshots").json()["total"] == 0
 
