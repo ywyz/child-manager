@@ -233,7 +233,7 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 
 - [ ] T073 [P] [US3] 在 `packages/contracts/settings.py`、`packages/contracts/prompts.py`、`packages/contracts/jobs.py` 实现模型/提示词/任务契约，模型响应含只读 `call_config_revision`，prompt run 公开字段只含固定 `input_summary` 并支持 `prompt.configuration_changed`，batch API attempt 0/0、派生状态及稳定错误枚举；验证：`uv run pytest tests/contract/test_ai_prompt_contracts.py tests/contract/test_idempotency.py` 通过 schema、幂等和任务边界断言
 - [ ] T074 [P] [US3] 在 `packages/backend/settings/models.py`、`packages/backend/prompts/models.py`、`packages/backend/jobs/models.py` 实现含单调 `call_config_revision` 的模型档案/能力、提示词/版本、带完整冻结上下文/脱敏摘要的测试运行和通用任务模型；batch DB execution/attempt/租约字段可空且由 CHECK 强制全 NULL，同园/幂等/栏目约束保持；验证：`uv run pyright packages/backend/settings/models.py packages/backend/prompts/models.py packages/backend/jobs/models.py` 退出 0，且 `uv run pytest --collect-only tests/migrations/test_ai_prompts_jobs_migration.py` 退出 0
-- [ ] T075 [US3] 在 `packages/backend/prompts/system_defaults.py`、`packages/backend/prompts/catalog.py` 以旧仓库固定提交仅作措辞参考，按当前白名单、固定 `\{\{[ \t]*([a-z][a-z0-9_]*)[ \t]*\}\}` 词法和结果 Schema 重写并冻结七个 v1 默认提示词资源，供后续 `0004` 迁移复制；验证：`uv run pytest tests/unit/test_prompt_catalog.py tests/unit/test_prompt_renderer.py` 通过且 `rg -n "near_holiday|自由文本解析|account|phone" packages/backend/prompts/system_defaults.py packages/backend/prompts/catalog.py` 无未解释命中
+- [ ] T075 [US3] 在 `packages/backend/prompts/system_defaults.py`、`packages/backend/prompts/catalog.py` 以旧仓库固定提交仅作措辞参考，按当前白名单、固定 `\{\{[ \t]*([a-z][a-z0-9_]*)[ \t]*\}\}` 词法和结果 Schema 重写并冻结七个 v1 默认提示词资源，供后续 `0007_ai_prompts_jobs` 迁移复制；验证：`uv run pytest tests/unit/test_prompt_catalog.py tests/unit/test_prompt_renderer.py` 通过且 `rg -n "near_holiday|自由文本解析|account|phone" packages/backend/prompts/system_defaults.py packages/backend/prompts/catalog.py` 无未解释命中
 - [ ] T076 [P] [US3] 在 `packages/backend/integrations/crypto/ai_keys.py`、`packages/backend/settings/ai_key_rotation.py`、`packages/backend/bootstrap/rotate_ai_keys.py` 实现 AES-256-GCM envelope、AAD、key ring 读写、新写入切换、旧 key 只读、稳定游标分批重加密、幂等断点恢复及维护 CLI；同一 API Key 明文仅因主密钥轮换而重加密时不得递增 `call_config_revision`；CLI 只接收目标 key id、批量大小、dry-run 和断点游标，不接收主密钥，并输出扫描/重加密/验证/失败完成报告；旧 key 仅在报告全通过后由维护者从外部 keyring 移除；验证：`uv run pytest tests/unit/test_ai_key_envelope.py tests/unit/test_ai_key_rotation.py tests/api/test_rotate_ai_keys_cli.py` 通过，dry-run 零写入、断点可恢复、任一失败/计数不符时旧 key 保持可读且无不可解密记录
 - [ ] T077 [P] [US3] 在 `packages/backend/integrations/ai/url_policy.py` 实现保存时及连接前后的网络地址校验和服务端 allowlist；验证：`uv run pytest tests/unit/test_ai_model_url_policy.py` 通过
 - [ ] T078 [P] [US3] 在 `packages/backend/integrations/ai/client.py`、`packages/backend/integrations/ai/errors.py`、`packages/backend/integrations/ai/limits.py` 实现供应商中立 HTTPX 客户端、统一错误分类、模型并发/限流和脱敏诊断；验证：`uv run pytest tests/unit/test_ai_client.py tests/unit/test_ai_model_url_policy.py` 在禁网替身下通过
@@ -501,7 +501,7 @@ US2 红测 T046-T051 可并行；T052 contracts、T053 领域规则、T055 日�
 
 ```text
 US3 红测 T062-T072 可并行；T075 先冻结默认提示词资源，T076 Key 加密、T077 URL 策略、
-T078 AI 客户端可并行，T079 必须在 T075 后创建并验证 `0004` 迁移。
+T078 AI 客户端可并行，T079 必须在 T075 后创建并验证 `0007_ai_prompts_jobs` 迁移。
 US4 红测 T087-T097 可并行；T098 contracts 与 T101 Schema/指纹可并行。
 US5 在 T111 fixture 完成后，T112-T117 可并行；T118 contracts 与 T119 migration 可并行。
 ```
