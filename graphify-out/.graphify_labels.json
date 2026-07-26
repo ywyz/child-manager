@@ -374,7 +374,7 @@
   "372": "0003_passkey_contract.py",
   "373": "test_dependency_boundaries.py",
   "374": "FakeAiClient",
-  "375": "test_us2_manual_plan_smoke.py",
+  "375": "totp.py",
   "376": "apps/__init__.py",
   "377": "apps/worker/__init__.py",
   "378": "backend/database/__init__.py",
@@ -386,7 +386,7 @@
   "384": "test_pagination.py",
   "385": "test_workday_cache.py",
   "386": "tests/web/__init__.py",
-  "387": "test_plan_accessibility.py",
+  "387": "test_sessions.py",
   "388": "apps/api/__init__.py",
   "389": "routers/__init__.py",
   "390": "components/__init__.py",
@@ -416,5 +416,11 @@
   "414": "unit/__init__.py",
   "415": "unit/settings/__init__.py",
   "416": "word/__init__.py",
-  "417": "tests/worker/__init__.py"
+  "417": "tests/worker/__init__.py",
+  "418": "test_0004_settings.py",
+  "419": "test_password_to_passkey.py",
+  "420": "Q: M5 完成后到 M4 的当前依赖路径是什么？",
+  "421": ".get_key",
+  "422": "test_0001_identity.py",
+  "423": "_Transaction"
 }

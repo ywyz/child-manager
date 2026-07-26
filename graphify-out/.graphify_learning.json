@@ -1,8 +1,40 @@
 {
-  "generated_at": "2026-07-26T00:43:40.496807+00:00",
+  "generated_at": "2026-07-26T13:02:36.707594+00:00",
   "nodes": {
+    "config_compose_dev": {
+      "code_fingerprint": "af8c0efe85e58c41d20297521a5b8c53c572553ce1193204f79352457213b2e2",
+      "label": "compose.dev.yaml",
+      "last": "2026-07-24T11:36:24.917450+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-24T11:36:24.917450+00:00",
+          "outcome": "useful",
+          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
+        }
+      ],
+      "score": 0.953521943,
+      "source_file": "docs/development/local-development-environments.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "config_pyproject_toml": {
+      "code_fingerprint": "af8c0efe85e58c41d20297521a5b8c53c572553ce1193204f79352457213b2e2",
+      "label": "pyproject.toml",
+      "last": "2026-07-24T11:36:24.917450+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-24T11:36:24.917450+00:00",
+          "outcome": "useful",
+          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
+        }
+      ],
+      "score": 0.953521943,
+      "source_file": "docs/development/local-development-environments.md",
+      "status": "tentative",
+      "uses": 1
+    },
     "context_service_boundaries": {
-      "code_fingerprint": "8152afd80f78c71e46a62806f3d383fa3f02e9e5287928ad0210eb0d6d73ec19",
+      "code_fingerprint": "369f9ca588e7a517652fe3571aa776c06dac3e66a6fde76885a62efaa5166129",
       "label": "Web、API 与 Worker 服务边界",
       "last": "2026-07-11T02:42:18.471052+00:00",
       "provenance": [
@@ -17,10 +49,26 @@
           "q": "接下来需要生成什么文件呢"
         }
       ],
-      "score": 1.416647594,
+      "score": 1.399950578,
       "source_file": "CONTEXT.md",
       "status": "preferred",
       "uses": 2
+    },
+    "docs_development_local_dev_environments": {
+      "code_fingerprint": "af8c0efe85e58c41d20297521a5b8c53c572553ce1193204f79352457213b2e2",
+      "label": "Local Development Environments",
+      "last": "2026-07-24T11:36:24.917450+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-24T11:36:24.917450+00:00",
+          "outcome": "useful",
+          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
+        }
+      ],
+      "score": 0.953521943,
+      "source_file": "docs/development/local-development-environments.md",
+      "status": "tentative",
+      "uses": 1
     },
     "graphify_out_memory_query_20260710_131311_agents_md_ywyz_kindergartenmanager_gi_class_teacher_configuration": {
       "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
@@ -38,10 +86,26 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 1.39887405,
+      "score": 1.382386519,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2
+    },
+    "struct_specs_002_password_totp_backup_login_tasks_md_heading_595456058962": {
+      "code_fingerprint": "437ddc7cf541e418cae4156661a3469ff6e4a212d1577e846d757b8379c6afce",
+      "label": "Tasks: 密码与 TOTP 备用登录",
+      "last": "2026-07-24T11:36:24.917450+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-24T11:36:24.917450+00:00",
+          "outcome": "useful",
+          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
+        }
+      ],
+      "score": 0.953521943,
+      "source_file": "specs/002-password-totp-backup-login/tasks.md",
+      "status": "tentative",
+      "uses": 1
     }
   },
   "version": 1
