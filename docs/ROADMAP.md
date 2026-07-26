@@ -120,10 +120,10 @@ flowchart LR
     M8 --> M9[M9 生产部署复审]
 ```
 
-M4 和 M5 的产品设计均已具备，但唯一 `dev` 实施路线固定为 M5 → M4：先由 T046–T061
-交付完全不依赖 AI 的手工教案 MVP，再执行 T062–T086。该顺序保持现有里程碑名称不重编号，
-并与 `0006_lesson_plans → 0007_ai_prompts_jobs` 迁移链、US3 对教案强外键的依赖一致。
-不得仅根据 M4/M5 的编号推导相反顺序，也不得并行修改两组核心契约。
+M5 已按固定路线完成 T046–T061，交付完全不依赖 AI 的手工教案 MVP。唯一 `dev`
+实施路线现已进入 M4 T062–T086，并继续遵守
+`0006_lesson_plans → 0007_ai_prompts_jobs` 迁移链与 US3 对教案强外键的依赖。
+不得跳过 M4 直接进入 T087 以后的 AI 生成任务。
 
 ## 6. M0：共享设计基线
 
@@ -438,16 +438,17 @@ Review 的 310 项完整测试均通过。
 | M2 | `complete` | [#4](https://github.com/ywyz/child-manager/issues/4) 已按 `completed` 关闭；最终基线 `docs@bb025b2`、`dev@fb4f076`，M2 专项 133 项、完整 192 项、双轴 Review 与 Quality Gates `30006114394` 均通过 | 保留验收记录；已随 M3A 稳定基线集成 `main` |
 | M3 | `complete` | [#7](https://github.com/ywyz/child-manager/issues/7) 已按 `completed` 关闭；固定 `docs@bd98a1a`，最终 Review 修复 `dev@f5f0084` | 保留验收记录；已集成 `main` |
 | M3A | `complete` | [#8](https://github.com/ywyz/child-manager/issues/8) 已按 `completed` 关闭；固定 `docs@2f7894c`，最终实现 `dev@6a9e269`，Quality Gates `30161645948` 与独立复验通过 | 保留验收记录；已集成 `main` |
-| M5 | `ready` | M3A 已完成；PRD、架构、契约与共享 `tasks.md` 已固定 T046–T061 手工教案范围 | 创建引用本次固定 docs 提交的单一实施 Issue，并在 `dev` 执行 T046–T061 |
-| M4 | `pending` | 设计已具备；实施顺序固定在 M5 之后，任务为 T062–T086 | 等待 M5 T061 完成并验收 |
+| M5 | `complete` | [#9](https://github.com/ywyz/child-manager/issues/9) 固定 `docs@7d9af6c`；T046–T061、`0006_lesson_plans`、专项 28 项与完整 338 项测试通过 | 保留验收记录；等待 Review 后集成 `main` |
+| M4 | `ready` | M5 已完成；设计与 T062–T086 已具备 | 创建引用更新后固定 docs 提交的单一实施 Issue |
 | M6–M8 | `pending` | 尚未开始实现 | 等待 M5、M4 及各自前序里程碑完成 |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010/ADR-0011 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 
 该快照只能根据实际分支、文件、命令与验收证据更新。不得根据历史分支、计划文件或未执行命令猜测状态。
 
-维护者已确认先完成 M5 T046–T061，再进入 M4 T062–T086。共享
-[`specs/001-daily-activity-plan/tasks.md`](../specs/001-daily-activity-plan/tasks.md) 的现有
-任务顺序、迁移编号和依赖图无需重编号；下一实施 Issue 必须引用本次固定 `docs` 提交。
+M5 T046–T061 已完成，下一阶段进入 M4 T062–T086。共享
+[`specs/001-daily-activity-plan/tasks.md`](../specs/001-daily-activity-plan/tasks.md)
+的现有任务顺序、迁移编号和依赖图无需重编号；M4 实施 Issue 必须引用更新后固定的
+`docs` 提交。
 
 ## 17. Roadmap 更新规则
 

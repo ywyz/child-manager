@@ -12,17 +12,18 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 当前 PRD、架构、ADR、上下文、开发指南、共享规格、OpenAPI 契约与模板，`dev` 是 Codex
 负责的唯一实现与集成分支。业务实现开始前必须读取并固定引用已确认的 `docs` 提交。
 
-项目已完成 M1 工程骨架、M2 认证授权、M3 首期必要设置和 M3A 密码与 TOTP 备用登录验收。
+项目已完成 M1 工程骨架、M2 认证授权、M3 首期必要设置、M3A 密码与 TOTP 备用登录，以及
+M5 无 AI 教案手工闭环验收。
 M3 [Issue #7](https://github.com/ywyz/child-manager/issues/7) 固定 `docs@bd98a1a`，M3A
 [Issue #8](https://github.com/ywyz/child-manager/issues/8) 固定 `docs@2f7894c`；两者均已按
 `completed` 关闭。`dev@6a9e269` 在本地 310 项完整测试、独立 Review 和同提交远端 Quality
 Gates 通过后，已获授权集成到 `main`，形成首个包含 M1–M3A 实现的稳定开发基线；这不代表
 首期功能或生产部署已经完成。
 
-下一实现已固定为 M5 无 AI 教案手工闭环：先执行 T046–T061，形成可独立验收的第一条
-业务 MVP；完成后再进入 M4 的 T062–T086 AI 模型与提示词基础。该顺序同时满足
-`0006_lesson_plans → 0007_ai_prompts_jobs` 迁移链和 US3 对教案强外键的依赖。下一实现
-Issue 必须引用本次确认后的固定 `docs` 提交。
+M5 [Issue #9](https://github.com/ywyz/child-manager/issues/9) 固定 `docs@7d9af6c`，
+已完成 T046–T061 并形成可独立验收的第一条业务 MVP。下一实现为 M4 的 T062–T086
+AI 模型与提示词基础；新 Issue 必须引用本次确认后的固定 `docs` 提交，且不得提前进入
+T087 以后的 AI 生成任务。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 

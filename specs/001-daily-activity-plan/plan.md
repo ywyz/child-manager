@@ -52,17 +52,16 @@ WCAG 2.2 AA 可验证要求
 
 ## Constitution Check
 
-*GATE: M0–M3A 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
-`main/docs/dev` 单实现流程。M3 #7 与 M3A #8 均已完成并集成稳定基线。下一实施固定为
-M5 T046–T061；M4 T062–T086 必须等待 M5 完成。*
+*GATE: M0–M3A、M5 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
+`main/docs/dev` 单实现流程。M5 #9 已完成 T046–T061；下一实施固定为 M4 T062–T086。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
 | I. 事实来源与范围忠实 | PASS | **PASS（M0）** | canonical 文档、历史清理与最终共享基线均已验证 |
 | II. 服务边界与单向依赖 | PASS | **PASS（M1）** | 历史 Codex、Trae 实现均通过 BFF/API/Worker 边界与依赖方向验证；当前 `dev` 仍须维持该门禁 |
-| III. 园所隔离与服务端授权 | PASS | **PASS（M2/M3 身份与设置）/ PENDING（M5+ 业务）** | 身份、会话和设置园所隔离已验证；教案及后续业务实体仍按里程碑验收 |
+| III. 园所隔离与服务端授权 | PASS | **PASS（M2/M3/M5）/ PENDING（M4+ 业务）** | 身份、会话、设置与教案 Repository/API 园所隔离均已验证；后续业务实体仍按里程碑验收 |
 | IV. 权威状态、事务与可恢复性 | PASS | **PASS（M1 基础）** | 历史实现已建立 PostgreSQL 事务与迁移基础；业务幂等、租约、恢复扫描和文件补偿由后续里程碑实现 |
-| V. 教师控制、AI 与 Word 保真 | PASS | **PENDING（M5+）** | 固定 Schema、栏目级预览、采用事务、模板副本/哈希和红字边界已设计，下一步先验收 M5 手工教师控制 |
+| V. 教师控制、AI 与 Word 保真 | PASS | **PASS（M5 手工教师控制）/ PENDING（M4+ AI 与 Word）** | 六栏目手工编辑、乐观锁、历史和归档已验证；栏目级 AI 采用、模板副本/哈希和红字边界按后续里程碑验收 |
 | VI. 可执行验证与真实证据 | PASS | **PASS（M1）** | M1 工程入口与质量门禁已有历史证据；当前和后续用户故事仍须在 `dev` 按对应里程碑重新验收 |
 
 **前置同步与授权处理**: T001～T003 以及 Codex/Trae 的 M1 T004～T020 保留为历史记录。自 2026-07-21 起，新的实现必须由 Issue 固定引用已确认的 `docs` 提交，并只在 `dev` 执行；历史验收不自动替代当前文档基线的验证。
@@ -292,8 +291,8 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 
 ### Quickstart 验收合同
 
-- 当前 `main` 与 `dev` 已包含 M1–M3A 的 `pyproject.toml`、迁移、代码和测试；quickstart
-  同时保留后续故事的可执行验收合同，尚未实施的 T046 以后步骤不得声称已经通过。
+- 当前 `main` 已包含 M1–M3A，`dev` 已包含 M1–M3A 与 M5 的代码和测试；quickstart
+  同时保留后续故事的可执行验收合同，尚未实施的 T062 以后步骤不得声称已经通过。
 - M1 后使用 API、Worker、Web 三个可执行入口；T032 完成后再使用已冻结的初始化与最后管理员
   恢复子命令；后者只接受恢复请求 ID，交互匹配初始化时保存的两项预登记引用，Web/API 对
   最后管理员审批只返回 `identity.last_admin_recovery_requires_cli`；
@@ -304,7 +303,8 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 
 **Post-design Constitution Check**: 内部设计、T002 最终 Pre-M1 审查、M0-G1～M0-G8、
 T003、M1 T004～T020、M2 T021～T035、M3 T036～T045 与独立 M3A T001～T034 均已完成。
-M0–M3A 为 `complete`；下一实施门禁是由固定 docs 提交的单一 Issue 执行 M5 T046–T061。
+M0–M3A、M5 为 `complete`；下一实施门禁是由固定 docs 提交的单一 Issue 执行
+M4 T062–T086。
 
 ## Phase 2: Task Generation Strategy
 
