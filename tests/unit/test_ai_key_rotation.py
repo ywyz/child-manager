@@ -171,3 +171,27 @@ def test_single_rotation_failure_preserves_old_ciphertext_and_is_reported() -> N
     assert report.complete is False
     assert store.records[0].envelope == original.envelope
     assert store.records[0].call_config_revision == 7
+
+
+def test_rotation_cursor_stops_before_a_failed_record_so_resume_retries_it() -> None:
+    encryption, rotation = _modules()
+    profile_ids = sorted([uuid4(), uuid4(), uuid4()])
+    store = FakeStore(
+        [_candidate(encryption, rotation, profile_id, "old") for profile_id in profile_ids],
+        fail_profile_id=profile_ids[1],
+    )
+    provider = encryption.StaticAiKeyProvider(
+        {"old": b"\x11" * 32, "new": b"\x22" * 32},
+        active_key_id="new",
+    )
+
+    report = rotation.rotate_ai_key_batch(
+        store,
+        key_provider=provider,
+        target_key_id="new",
+        batch_size=10,
+    )
+
+    assert report.failed == 1
+    assert report.next_cursor == profile_ids[0]
+    assert [profile_id for profile_id, _envelope in store.writes] == [profile_ids[0]]

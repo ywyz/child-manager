@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-from contextlib import suppress
 from typing import Any, Protocol
 from uuid import UUID, uuid7
 
@@ -12,6 +11,7 @@ from pydantic import ValidationError
 
 from packages.backend.audit.repository import AuditRepository
 from packages.backend.identity.service import IdentityError, IdentityService, SessionUser
+from packages.backend.jobs.dispatcher import RedisJobDispatcher
 from packages.backend.jobs.repository import JobRecord, JobRepository
 from packages.backend.prompts.catalog import validate_prompt_variables
 from packages.backend.prompts.renderer import (
@@ -48,7 +48,9 @@ class PromptService:
         database_url = os.environ.get("CHILD_MANAGER_DATABASE_URL")
         if not database_url:
             raise IdentityError(503, "configuration.unavailable", "数据库配置不可用。")
-        return cls(database_url=database_url)
+        redis_url = os.environ.get("CHILD_MANAGER_REDIS_URL")
+        dispatcher = RedisJobDispatcher.from_url(redis_url) if redis_url else None
+        return cls(database_url=database_url, dispatcher=dispatcher)
 
     def _connect(self) -> psycopg.Connection[tuple[object, ...]]:
         return psycopg.connect(_native_url(self.database_url))
@@ -205,7 +207,7 @@ class PromptService:
         *,
         idempotency_key: str,
         request_id: UUID | None,
-    ) -> tuple[JobRecord, PromptTestRunRecord]:
+    ) -> tuple[JobRecord, PromptTestRunRecord | None]:
         kindergarten_id = self._scope(session)
         scope = "POST /api/v1/prompts/{code}/tests"
         fingerprint = canonical_request_fingerprint(
@@ -220,6 +222,12 @@ class PromptService:
             with self._connect() as connection, connection.transaction():
                 jobs = JobRepository(connection)
                 prompts = PromptRepository(connection)
+                jobs.lock_idempotency(
+                    kindergarten_id,
+                    requested_by=session.user.id,
+                    scope=scope,
+                    key=idempotency_key,
+                )
                 existing = jobs.find_idempotent(
                     kindergarten_id,
                     requested_by=session.user.id,
@@ -234,12 +242,16 @@ class PromptService:
                             "幂等键已用于不同请求。",
                         )
                     run = prompts.get_prompt_test_run_by_job(kindergarten_id, existing.id)
-                    assert run is not None
                     return existing, run
                 prompts.ensure_defaults(kindergarten_id)
                 definition = prompts.get_definition(kindergarten_id, code, for_update=True)
                 if definition is None:
                     raise self._missing("提示词")
+                prompts.prune_finished_prompt_test_runs(
+                    kindergarten_id,
+                    definition.id,
+                    keep=19,
+                )
                 if prompts.unfinished_count(kindergarten_id, definition.id) >= 20:
                     raise IdentityError(
                         409,
@@ -247,11 +259,11 @@ class PromptService:
                         "当前提示词已有过多未完成测试。",
                     )
                 version = prompts.get_version(kindergarten_id, code, body.version_id)
-                if version is None or version.lifecycle_state != "published":
+                if version is None:
                     raise IdentityError(
                         422,
                         "prompt.version_unavailable",
-                        "只能测试已发布提示词版本。",
+                        "提示词版本不可用。",
                     )
                 try:
                     input_context = validate_prompt_variables(code, body.variables)
@@ -318,8 +330,13 @@ class PromptService:
             raise IdentityError(503, "database.unavailable", "数据库暂不可用。") from exc
         assert job_id is not None
         if self.dispatcher is not None:
-            with suppress(Exception):
+            try:
                 self.dispatcher.dispatch(job_id)
+            except Exception:
+                pass
+            else:
+                with self._connect() as connection, connection.transaction():
+                    JobRepository(connection).mark_queued(kindergarten_id, job_id)
         return job, run
 
     def get_test(self, session: SessionUser, code: str, run_id: UUID) -> PromptTestRunRecord:

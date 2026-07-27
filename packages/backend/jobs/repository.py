@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+from hashlib import sha256
 from typing import Any
 from uuid import UUID
 
@@ -89,6 +90,18 @@ class JobRepository:
             )
         )
 
+    def lock_idempotency(
+        self,
+        kindergarten_id: UUID,
+        *,
+        requested_by: UUID,
+        scope: str,
+        key: str,
+    ) -> None:
+        digest = sha256(f"{kindergarten_id}:{requested_by}:{scope}:{key}".encode()).digest()
+        lock_id = int.from_bytes(digest[:8], signed=True)
+        self.connection.execute("SELECT pg_advisory_xact_lock(%s)", (lock_id,))
+
     def create_prompt_test(
         self,
         kindergarten_id: UUID,
@@ -137,11 +150,20 @@ class JobRepository:
             lease_owner=%s,lease_expires_at=%s,last_heartbeat_at=now(),
             started_at=COALESCE(started_at,now()),updated_at=now()
             WHERE kindergarten_id=%s AND id=%s AND job_type='prompt.test'
+              AND attempt_count < max_attempts
               AND (execution_status IN ('pending_dispatch','queued','retrying')
                    OR (execution_status='running' AND lease_expires_at<now()))""",
             (worker_id, lease_expires_at, kindergarten_id, job_id),
         )
         return bool(getattr(result, "rowcount", 0))
+
+    def mark_queued(self, kindergarten_id: UUID, job_id: UUID) -> None:
+        self.connection.execute(
+            """UPDATE background_jobs SET execution_status='queued',
+            queued_at=COALESCE(queued_at,now()),updated_at=now()
+            WHERE kindergarten_id=%s AND id=%s AND execution_status='pending_dispatch'""",
+            (kindergarten_id, job_id),
+        )
 
     def recoverable_job_ids(
         self,
@@ -153,6 +175,7 @@ class JobRepository:
         result = self.connection.execute(
             """SELECT id FROM background_jobs
             WHERE kindergarten_id=%s AND job_type='prompt.test'
+              AND attempt_count < max_attempts
               AND (execution_status='pending_dispatch'
                    OR (execution_status='running' AND lease_expires_at<%s))
             ORDER BY created_at,id LIMIT %s""",

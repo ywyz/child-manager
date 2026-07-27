@@ -2,32 +2,67 @@
 
 import argparse
 import os
-from threading import Event
+from threading import Event, Thread
+from uuid import UUID
 
 import dramatiq
 from dramatiq import Worker
 from dramatiq.broker import Broker
 
-from apps.worker.actors import register_actors
+from apps.worker.actors import (
+    build_prompt_test_executor,
+    recover_prompt_test_jobs,
+    register_actors,
+)
 from apps.worker.broker import build_redis_broker
+from packages.backend.jobs.service import PromptTestExecutor
 from packages.backend.observability import configure_logging
 
 DEFAULT_THREADS = 4
+RECOVERY_INTERVAL_SECONDS = 15
 
 
-def serve(broker: Broker, *, threads: int, stop_event: Event | None = None) -> None:
+def serve(
+    broker: Broker,
+    *,
+    threads: int,
+    stop_event: Event | None = None,
+    executor: PromptTestExecutor | None = None,
+) -> None:
     """持续消费消息，直到收到显式停止信号。"""
 
+    if executor is None and stop_event is None:
+        executor = build_prompt_test_executor()
     dramatiq.set_broker(broker)
-    register_actors(broker)
+    actors = register_actors(broker, executor=executor)
     worker = Worker(broker, worker_threads=threads)
     worker.start()
     shutdown = stop_event or Event()
+    recovery_thread: Thread | None = None
+    if executor is not None:
+        prompt_actor = actors[0]
+
+        def recover() -> None:
+            def dispatch(job_id: UUID) -> None:
+                prompt_actor.send(str(job_id))
+
+            while not shutdown.is_set():
+                recover_prompt_test_jobs(
+                    executor.store,
+                    dispatch=dispatch,
+                )
+                shutdown.wait(RECOVERY_INTERVAL_SECONDS)
+
+        recovery_thread = Thread(target=recover, name="prompt-test-recovery", daemon=True)
+        recovery_thread.start()
     try:
         shutdown.wait()
     except KeyboardInterrupt:
         pass
     finally:
+        shutdown.set()
+        if recovery_thread is not None:
+            recovery_thread.join(timeout=2)
         worker.stop()
 
 

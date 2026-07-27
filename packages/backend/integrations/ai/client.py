@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 import socket
+from ipaddress import ip_address
 from typing import Any
+from urllib.parse import urlsplit, urlunsplit
 
 import httpx
 
@@ -16,6 +18,14 @@ from packages.backend.integrations.ai.url_policy import (
     revalidate_ai_base_url,
     validate_ai_base_url,
 )
+
+
+def _pinned_url(base_url: str, address: str) -> str:
+    parsed = urlsplit(base_url)
+    normalized = ip_address(address).compressed
+    host = f"[{normalized}]" if ":" in normalized else normalized
+    netloc = f"{host}:{parsed.port}" if parsed.port is not None else host
+    return urlunsplit((parsed.scheme, netloc, parsed.path, parsed.query, ""))
 
 
 class ProviderNeutralAiClient:
@@ -45,14 +55,13 @@ class ProviderNeutralAiClient:
                 resolver=self._resolver,
                 allowed_hosts=self._allowed_hosts,
             )
-            revalidate_ai_base_url(
-                validated,
-                resolver=self._resolver,
-                allowed_hosts=self._allowed_hosts,
-            )
         except AiUrlPolicyError as exc:
             raise AiClientError("ai.address_rejected", "模型地址安全校验失败。") from exc
-        url = f"{base_url.rstrip('/')}/chat/completions"
+        pinned_base_url = _pinned_url(base_url, sorted(validated.addresses)[0])
+        url = f"{pinned_base_url.rstrip('/')}/chat/completions"
+        host_header = (
+            validated.host if validated.port == 443 else f"{validated.host}:{validated.port}"
+        )
         payload = {
             "model": model_name,
             "messages": [{"role": "user", "content": prompt}],
@@ -67,13 +76,25 @@ class ProviderNeutralAiClient:
             ) as client:
                 response = client.post(
                     url,
-                    headers={"Authorization": f"Bearer {api_key}"},
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Host": host_header,
+                    },
                     json=payload,
+                    extensions={"sni_hostname": validated.host},
                 )
         except httpx.TimeoutException as exc:
             raise AiClientError("ai.timeout", "模型服务响应超时。") from exc
         except httpx.HTTPError as exc:
             raise AiClientError("ai.unavailable", "模型服务暂不可用。") from exc
+        try:
+            revalidate_ai_base_url(
+                validated,
+                resolver=self._resolver,
+                allowed_hosts=self._allowed_hosts,
+            )
+        except AiUrlPolicyError as exc:
+            raise AiClientError("ai.address_rejected", "模型地址安全校验失败。") from exc
         if response.is_redirect:
             raise AiClientError("ai.redirect_rejected", "模型服务重定向已拒绝。")
         if response.status_code in {401, 403}:

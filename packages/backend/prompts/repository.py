@@ -435,6 +435,27 @@ class PromptRepository:
         )
         return int(row[0]) if row else 0
 
+    def prune_finished_prompt_test_runs(
+        self,
+        kindergarten_id: UUID,
+        definition_id: UUID,
+        *,
+        keep: int,
+    ) -> int:
+        result = self.connection.execute(
+            """DELETE FROM prompt_test_runs
+            WHERE kindergarten_id=%s AND prompt_definition_id=%s
+              AND status IN ('succeeded','failed')
+              AND id NOT IN (
+                SELECT id FROM prompt_test_runs
+                WHERE kindergarten_id=%s AND prompt_definition_id=%s
+                  AND status IN ('succeeded','failed')
+                ORDER BY created_at DESC,id DESC LIMIT %s
+              )""",
+            (kindergarten_id, definition_id, kindergarten_id, definition_id, keep),
+        )
+        return int(getattr(result, "rowcount", 0))
+
     def create_prompt_test_run(
         self,
         kindergarten_id: UUID,

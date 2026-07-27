@@ -1,10 +1,13 @@
 """管理员首期必要设置页面。"""
 
 import asyncio
+import json
+from uuid import uuid4
 
 from nicegui import ui
 
 from apps.web.api_client import same_origin_api_request
+from apps.web.components.job_status import prompt_test_status, should_poll
 
 
 def settings_page_text() -> tuple[str, ...]:
@@ -38,6 +41,185 @@ def masked_api_key_text(masked: str) -> str:
     """只渲染服务端给出的末四位脱敏摘要。"""
 
     return f"已配置：{masked}"
+
+
+def build_ai_prompt_settings_section() -> None:
+    ui.label("AI 模型档案").classes("text-h6")
+    model_name = ui.input("模型档案名称")
+    api_base_url = ui.input("API 地址")
+    provider_model_name = ui.input("模型名")
+    api_key = ui.input("API Key（仅写入）").props(
+        'type=password autocomplete=new-password aria-describedby="ai-api-key-error"'
+    )
+    risk_confirmed = ui.checkbox("外部数据处理风险")
+    model_status = ui.label("").props('id="ai-api-key-error" aria-live="polite"')
+    profile_id: list[str] = []
+
+    ui.label("提示词中心").classes("text-h6")
+    prompt_code = ui.input(
+        "提示词标识",
+        value="daily_activity_plan.morning_talk",
+    )
+    prompt_version_id = ui.input("测试版本 ID")
+    prompt_profile_id = ui.input("测试模型档案 ID")
+    prompt_draft = ui.textarea("提示词草稿")
+    historical_version_id = ui.input("历史版本 ID")
+    test_variables = ui.textarea(
+        "测试变量（JSON）",
+        value="{}",
+    )
+    prompt_status = ui.label("").props('aria-live="polite"')
+
+    async def save_model_profile() -> None:
+        result = await same_origin_api_request(
+            "/api/v1/settings/ai-model-profiles",
+            method="POST",
+            payload={
+                "name": model_name.value or "",
+                "api_base_url": api_base_url.value or "",
+                "model_name": provider_model_name.value or "",
+                "api_key": api_key.value or None,
+                "capability_codes": ["text", "structured_output"],
+                "max_concurrency": 2,
+                "rate_limit_per_minute": None,
+                "is_default": False,
+            },
+        )
+        body = result.get("body", {})
+        if result.get("ok") and isinstance(body, dict) and body.get("id"):
+            profile_id[:] = [str(body["id"])]
+            prompt_profile_id.value = profile_id[0]
+            api_key.value = ""
+            model_status.set_text("模型档案已保存")
+        else:
+            model_status.set_text("模型档案保存失败")
+
+    async def enable_model_profile() -> None:
+        selected = profile_id[0] if profile_id else str(prompt_profile_id.value or "")
+        if not selected or not risk_confirmed.value:
+            model_status.set_text("启用前必须确认外部数据处理风险")
+            return
+        result = await same_origin_api_request(
+            f"/api/v1/settings/ai-model-profiles/{selected}/enable",
+            method="POST",
+            payload={"confirm_external_data_risk": True},
+        )
+        model_status.set_text("模型档案已启用" if result.get("ok") else "模型档案启用失败")
+
+    async def save_prompt_draft() -> None:
+        result = await same_origin_api_request(
+            f"/api/v1/prompts/{prompt_code.value}/draft",
+            method="PUT",
+            payload={
+                "content": prompt_draft.value or "",
+                "based_on_version_id": prompt_version_id.value or None,
+            },
+        )
+        body = result.get("body", {})
+        if result.get("ok") and isinstance(body, dict) and body.get("id"):
+            prompt_version_id.value = str(body["id"])
+            prompt_status.set_text("提示词草稿已保存")
+        else:
+            prompt_status.set_text("提示词草稿保存失败")
+
+    async def publish_prompt() -> None:
+        result = await same_origin_api_request(
+            f"/api/v1/prompts/{prompt_code.value}/publish",
+            method="POST",
+            payload={},
+        )
+        body = result.get("body", {})
+        if result.get("ok") and isinstance(body, dict) and body.get("id"):
+            prompt_version_id.value = str(body["id"])
+            prompt_status.set_text("提示词新版本已发布")
+        else:
+            prompt_status.set_text("提示词发布失败")
+
+    async def restore_prompt() -> None:
+        selected = str(historical_version_id.value or "")
+        if not selected:
+            prompt_status.set_text("请填写历史版本 ID")
+            return
+        result = await same_origin_api_request(
+            f"/api/v1/prompts/{prompt_code.value}/versions/{selected}/restore",
+            method="POST",
+            payload={},
+        )
+        body = result.get("body", {})
+        if result.get("ok") and isinstance(body, dict) and body.get("id"):
+            prompt_version_id.value = str(body["id"])
+            prompt_status.set_text("历史版本已恢复为新版本")
+        else:
+            prompt_status.set_text("提示词版本恢复失败")
+
+    async def run_prompt_test() -> None:
+        try:
+            variables = json.loads(str(test_variables.value or "{}"))
+        except json.JSONDecodeError:
+            prompt_status.set_text("测试变量必须是 JSON 对象")
+            return
+        if not isinstance(variables, dict):
+            prompt_status.set_text("测试变量必须是 JSON 对象")
+            return
+        accepted = await same_origin_api_request(
+            f"/api/v1/prompts/{prompt_code.value}/tests",
+            method="POST",
+            payload={
+                "version_id": prompt_version_id.value or "",
+                "model_profile_id": prompt_profile_id.value or "",
+                "variables": variables,
+            },
+            request_headers={"Idempotency-Key": f"web-prompt-test-{uuid4()}"},
+        )
+        body = accepted.get("body", {})
+        job = body.get("job", {}) if isinstance(body, dict) else {}
+        if not accepted.get("ok") or not isinstance(job, dict) or not job.get("id"):
+            prompt_status.set_text("异步测试创建失败")
+            return
+        while should_poll(str(job.get("status", ""))):
+            prompt_status.set_text(prompt_test_status(job).message)
+            await asyncio.sleep(1.5)
+            result = await same_origin_api_request(f"/api/v1/jobs/{job['id']}")
+            job = result.get("body", {}) if result.get("ok") else {}
+            if not isinstance(job, dict):
+                job = {}
+                break
+        prompt_status.set_text(prompt_test_status(job).message)
+
+    async def load_ai_prompt_settings() -> None:
+        profiles = await same_origin_api_request(
+            "/api/v1/settings/ai-model-profiles?page=1&page_size=20"
+        )
+        profile_body = profiles.get("body", {})
+        if profiles.get("ok") and isinstance(profile_body, dict):
+            items = profile_body.get("items", [])
+            if isinstance(items, list) and items and isinstance(items[0], dict):
+                first = items[0]
+                profile_id[:] = [str(first.get("id", ""))]
+                prompt_profile_id.value = profile_id[0]
+                model_name.value = str(first.get("name", ""))
+                api_base_url.value = str(first.get("api_base_url", ""))
+                provider_model_name.value = str(first.get("model_name", ""))
+                masked = first.get("api_key_masked")
+                if isinstance(masked, str):
+                    model_status.set_text(masked_api_key_text(masked))
+        prompts = await same_origin_api_request("/api/v1/prompts?page=1&page_size=7")
+        prompt_body = prompts.get("body", {})
+        if prompts.get("ok") and isinstance(prompt_body, dict):
+            items = prompt_body.get("items", [])
+            if isinstance(items, list) and items and isinstance(items[0], dict):
+                first_prompt = items[0]
+                prompt_code.value = str(first_prompt.get("code", prompt_code.value))
+                prompt_version_id.value = str(first_prompt.get("effective_version_id", ""))
+
+    ui.button("保存模型档案", on_click=save_model_profile)
+    ui.button("启用模型", on_click=enable_model_profile)
+    ui.button("保存提示词草稿", on_click=save_prompt_draft)
+    ui.button("发布新版本", on_click=publish_prompt)
+    ui.label("历史版本")
+    ui.button("恢复为新版本", on_click=restore_prompt)
+    ui.button("运行异步测试", on_click=run_prompt_test)
+    ui.timer(0.1, load_ai_prompt_settings, once=True)
 
 
 def register_settings_pages() -> None:
@@ -81,19 +263,7 @@ def register_settings_pages() -> None:
         class_results = ui.column()
         age_group_ids: dict[str, str] = {}
 
-        ui.label("AI 模型档案").classes("text-h6")
-        ui.input("API Key（仅写入）").props(
-            'type=password autocomplete=new-password aria-describedby="ai-api-key-error"'
-        )
-        ui.label("外部数据处理风险")
-        ui.button("保存模型档案")
-        ui.button("启用模型")
-        ui.label("提示词中心").classes("text-h6")
-        ui.textarea("提示词草稿")
-        ui.button("发布新版本")
-        ui.label("历史版本")
-        ui.button("恢复为新版本")
-        ui.button("运行异步测试")
+        build_ai_prompt_settings_section()
 
         async def save_kindergarten() -> None:
             result = await same_origin_api_request(

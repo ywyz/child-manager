@@ -222,7 +222,7 @@ def create_prompt_test(
         idempotency_key=idempotency_key,
         request_id=UUID(str(request.state.request_id)),
     )
-    return JobAccepted(job=_job(job), related_resource_id=run.id)
+    return JobAccepted(job=_job(job), related_resource_id=run.id if run is not None else None)
 
 
 @router.delete("/{code}/tests", status_code=204)

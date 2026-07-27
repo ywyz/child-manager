@@ -102,3 +102,31 @@ def test_client_errors_are_stable_and_never_include_key_or_prompt() -> None:
     assert captured.value.code == "ai.authentication_failed"
     assert "never-log-me" not in str(captured.value)
     assert "private prompt" not in str(captured.value)
+
+
+def test_client_pins_the_request_to_a_validated_ip_and_preserves_the_tls_origin() -> None:
+    client_module, _errors = _modules()
+    captured: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        captured.append(request)
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"content": '{"topic":"春天","questions":[]}'}}]},
+        )
+
+    client = client_module.ProviderNeutralAiClient(
+        transport=httpx.MockTransport(handler),
+        resolver=_resolver,
+        allowed_hosts={"ai.example.test"},
+    )
+    client.generate_structured(
+        base_url="https://ai.example.test/v1",
+        api_key="secret",
+        model_name="test-model",
+        prompt="test",
+    )
+
+    assert captured[0].url.host == "93.184.216.34"
+    assert captured[0].headers["host"] == "ai.example.test"
+    assert captured[0].extensions["sni_hostname"] == "ai.example.test"

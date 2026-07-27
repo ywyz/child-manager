@@ -129,6 +129,43 @@ def test_background_job_batch_and_execution_attempt_constraints_are_frozen(
     assert "retry_of_job_id" in definitions
 
 
+def test_model_activation_and_job_terminal_invariants_are_database_enforced(
+    m4_database: psycopg.Connection[tuple[object, ...]],
+) -> None:
+    constraints = {
+        str(row[0]): str(row[1])
+        for row in m4_database.execute(
+            """SELECT c.conname, pg_get_constraintdef(c.oid)
+            FROM pg_constraint c
+            JOIN pg_class t ON t.oid=c.conrelid
+            JOIN pg_namespace n ON n.oid=t.relnamespace
+            WHERE n.nspname=current_schema()
+              AND t.relname IN ('ai_model_profiles','background_jobs')"""
+        ).fetchall()
+    }
+    assert "risk_confirmed_by IS NULL" in constraints["ck_ai_model_profiles_risk_confirmation"]
+    assert "risk_confirmed_at IS NULL" in constraints["ck_ai_model_profiles_risk_confirmation"]
+    assert "risk_confirmed_by IS NOT NULL" in constraints["ck_ai_model_profiles_enable_ready"]
+    assert "finished_at IS NOT NULL" in constraints["ck_background_jobs_terminal_finished"]
+    assert "error_code IS NOT NULL" in constraints["ck_background_jobs_failure_error"]
+    assert (
+        "requested_resource_version > 0"
+        in constraints["ck_background_jobs_requested_resource_version"]
+    )
+    assert "parent_job_id <> id" in constraints["ck_background_jobs_parent_not_self"]
+    assert "retry_of_job_id <> id" in constraints["ck_background_jobs_retry_not_self"]
+
+    default_index = m4_database.execute(
+        """SELECT pg_get_indexdef(i.indexrelid)
+        FROM pg_index i
+        JOIN pg_class idx ON idx.oid=i.indexrelid
+        JOIN pg_namespace n ON n.oid=idx.relnamespace
+        WHERE n.nspname=current_schema() AND idx.relname='uq_ai_model_profiles_default'"""
+    ).fetchone()
+    assert default_index is not None
+    assert "is_default AND is_active" in str(default_index[0])
+
+
 def test_migration_seeds_exactly_seven_system_versions_per_existing_kindergarten(
     isolated_database_url: str,
     monkeypatch: pytest.MonkeyPatch,

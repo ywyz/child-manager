@@ -4,6 +4,7 @@ import socket
 from collections.abc import Iterator
 from importlib import import_module
 from typing import Any, cast
+from uuid import UUID
 
 import psycopg
 import pytest
@@ -11,6 +12,14 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from apps.api import dependencies as api_dependencies
+from packages.backend.integrations.crypto.ai_keys import (
+    AiKeyEnvelope,
+    StaticAiKeyProvider,
+    decrypt_api_key_with_provider,
+)
+from packages.backend.jobs.prompt_test_store import PostgresPromptTestStore
+from packages.backend.jobs.service import CurrentModelCallProfile, PromptTestExecutor
+from packages.backend.prompts.catalog import validate_prompt_result_schema
 from tests.api.passkey_helpers import (  # noqa: F401
     ActorFixture,
     admin_client,
@@ -162,10 +171,80 @@ def test_create_freezes_run_and_job_in_one_transaction_and_returns_202_after_red
     assert "ciphertext" not in str(frozen[6]).lower()
 
 
-def test_idempotency_replay_precedes_retention_and_cross_prompt_fingerprint_conflicts(
+def test_postgres_worker_rebuilds_frozen_context_and_finishes_the_public_job(
     prompt_job_client: tuple[TestClient, ActorFixture, FailingDispatcher],
+    isolated_database_url: str,
 ) -> None:
     client, _actor, _dispatcher = prompt_job_client
+    profile_id, version_id = _provision_model_and_version(client)
+    accepted = client.post(
+        f"/api/v1/prompts/{PROMPT_CODE}/tests",
+        json={
+            "version_id": version_id,
+            "model_profile_id": profile_id,
+            "variables": _variables(),
+        },
+        headers={**csrf_headers(client), "Idempotency-Key": "worker-chain"},
+    )
+    assert accepted.status_code == 202
+
+    class StructuredClient:
+        def generate_structured(
+            self,
+            *,
+            base_url: str,
+            api_key: str,
+            model_name: str,
+            prompt: str,
+        ) -> dict[str, object]:
+            assert base_url == "https://ai.example.test/v1"
+            assert api_key == "test-secret-value"
+            assert model_name == "structured-test-model"
+            assert "向日葵班" in prompt
+            return {
+                "topic": "自然变化",
+                "questions": ["你发现了什么？", "为什么会变化？", "我们怎样记录？"],
+            }
+
+    provider = StaticAiKeyProvider({"test-key": b"\x42" * 32}, active_key_id="test-key")
+    store = PostgresPromptTestStore(isolated_database_url)
+
+    def read_key(profile: CurrentModelCallProfile) -> str:
+        assert isinstance(profile.key_envelope, AiKeyEnvelope)
+        return decrypt_api_key_with_provider(
+            profile.key_envelope,
+            key_provider=provider,
+            kindergarten_id=profile.kindergarten_id,
+            profile_id=profile.profile_id,
+        )
+
+    executor = PromptTestExecutor(
+        store=store,
+        client=StructuredClient(),
+        authorizer=store,
+        read_api_key=read_key,
+        validate_url=lambda value: value,
+        validate_result=validate_prompt_result_schema,
+    )
+    executor.execute_job(UUID(accepted.json()["job"]["id"]), worker_id="integration-worker")
+
+    job = client.get(f"/api/v1/jobs/{accepted.json()['job']['id']}")
+    run = client.get(
+        f"/api/v1/prompts/{PROMPT_CODE}/tests/{accepted.json()['related_resource_id']}"
+    )
+    assert job.status_code == 200
+    assert job.json()["status"] == "succeeded"
+    assert job.json()["attempt_count"] == 1
+    assert run.status_code == 200
+    assert run.json()["status"] == "succeeded"
+    assert run.json()["output_content"]["topic"] == "自然变化"
+
+
+def test_idempotency_replay_precedes_retention_and_cross_prompt_fingerprint_conflicts(
+    prompt_job_client: tuple[TestClient, ActorFixture, FailingDispatcher],
+    isolated_database_url: str,
+) -> None:
+    client, actor, _dispatcher = prompt_job_client
     profile_id, version_id = _provision_model_and_version(client)
     request = {
         "version_id": version_id,
@@ -186,6 +265,45 @@ def test_idempotency_replay_precedes_retention_and_cross_prompt_fingerprint_conf
     assert replay.json() == first.json()
     assert conflict.status_code == 409
     assert conflict.json()["code"] == "job.idempotency_conflict"
+
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    with psycopg.connect(native_url) as connection:
+        connection.execute(
+            "DELETE FROM prompt_test_runs WHERE kindergarten_id=%s AND job_id=%s",
+            (actor.kindergarten_id, first.json()["job"]["id"]),
+        )
+    replay_after_cleanup = client.post(
+        f"/api/v1/prompts/{PROMPT_CODE}/tests", json=request, headers=headers
+    )
+    assert replay_after_cleanup.status_code == 202
+    assert replay_after_cleanup.json()["job"]["id"] == first.json()["job"]["id"]
+    assert replay_after_cleanup.json()["related_resource_id"] is None
+
+
+def test_draft_version_can_be_tested_before_publication(
+    prompt_job_client: tuple[TestClient, ActorFixture, FailingDispatcher],
+) -> None:
+    client, _actor, _dispatcher = prompt_job_client
+    profile_id, version_id = _provision_model_and_version(client)
+    current = client.get(f"/api/v1/prompts/{PROMPT_CODE}/versions/{version_id}")
+    assert current.status_code == 200
+    draft = client.put(
+        f"/api/v1/prompts/{PROMPT_CODE}/draft",
+        json={"content": current.json()["content"], "based_on_version_id": version_id},
+        headers=csrf_headers(client),
+    )
+    assert draft.status_code == 200
+
+    accepted = client.post(
+        f"/api/v1/prompts/{PROMPT_CODE}/tests",
+        json={
+            "version_id": draft.json()["id"],
+            "model_profile_id": profile_id,
+            "variables": _variables(),
+        },
+        headers={**csrf_headers(client), "Idempotency-Key": "draft-prompt-test"},
+    )
+    assert accepted.status_code == 202
 
 
 def test_twenty_unfinished_runs_reject_new_work_without_partial_job(
@@ -225,3 +343,52 @@ def test_twenty_unfinished_runs_reject_new_work_without_partial_job(
             WHERE kindergarten_id=%s AND idempotency_key='active-20'""",
             (actor.kindergarten_id,),
         ).fetchone() == (0,)
+
+
+def test_new_prompt_test_prunes_only_finished_runs_to_the_recent_twenty(
+    prompt_job_client: tuple[TestClient, ActorFixture, FailingDispatcher],
+    isolated_database_url: str,
+) -> None:
+    client, actor, _dispatcher = prompt_job_client
+    profile_id, version_id = _provision_model_and_version(client)
+    run_ids: list[str] = []
+    for index in range(20):
+        response = client.post(
+            f"/api/v1/prompts/{PROMPT_CODE}/tests",
+            json={
+                "version_id": version_id,
+                "model_profile_id": profile_id,
+                "variables": _variables(class_name=f"已完成班级 {index}"),
+            },
+            headers={**csrf_headers(client), "Idempotency-Key": f"finished-{index}"},
+        )
+        assert response.status_code == 202
+        run_ids.append(response.json()["related_resource_id"])
+
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    with psycopg.connect(native_url) as connection:
+        connection.execute(
+            """UPDATE background_jobs SET execution_status='succeeded',finished_at=now()
+            WHERE kindergarten_id=%s AND idempotency_key LIKE 'finished-%%'""",
+            (actor.kindergarten_id,),
+        )
+        connection.execute(
+            """UPDATE prompt_test_runs SET status='succeeded',output_content='{}'::jsonb
+            WHERE kindergarten_id=%s""",
+            (actor.kindergarten_id,),
+        )
+
+    newest = client.post(
+        f"/api/v1/prompts/{PROMPT_CODE}/tests",
+        json={
+            "version_id": version_id,
+            "model_profile_id": profile_id,
+            "variables": _variables(class_name="最新班级"),
+        },
+        headers={**csrf_headers(client), "Idempotency-Key": "finished-20"},
+    )
+    assert newest.status_code == 202
+    page = client.get(f"/api/v1/prompts/{PROMPT_CODE}/tests?page=1&page_size=20")
+    assert page.status_code == 200
+    assert page.json()["total"] == 20
+    assert client.get(f"/api/v1/prompts/{PROMPT_CODE}/tests/{run_ids[0]}").status_code == 404

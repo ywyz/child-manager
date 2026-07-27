@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import unicodedata
 from datetime import date, datetime
 from typing import Annotated, Any, Literal
 from uuid import UUID
@@ -87,9 +88,13 @@ class ReflectionPromptVariables(ContractModel):
     current_plan: ReflectionCurrentPlan
 
 
-StrictSentenceList = Annotated[
-    list[Annotated[str, Field(min_length=1, max_length=1000)]],
-    Field(min_length=1, max_length=3),
+ExactlyThreeStatements = Annotated[
+    list[Annotated[str, Field(min_length=1, max_length=1000, pattern=r"。$")]],
+    Field(min_length=3, max_length=3),
+]
+ExactlyThreeQuestions = Annotated[
+    list[Annotated[str, Field(min_length=1, max_length=1000, pattern=r"？$")]],
+    Field(min_length=3, max_length=3),
 ]
 
 
@@ -98,37 +103,59 @@ class AiMorningActivity(ContractModel):
     group_game: Annotated[str, Field(min_length=1, max_length=500)]
     free_game: Annotated[str, Field(min_length=1, max_length=500)]
     focus_guidance: Annotated[str, Field(min_length=1, max_length=500)]
-    objectives: StrictSentenceList
-    guidance_points: StrictSentenceList
+    objectives: ExactlyThreeStatements
+    guidance_points: ExactlyThreeStatements
 
 
 class AiMorningTalk(ContractModel):
     topic: Annotated[str, Field(min_length=1, max_length=500)]
-    questions: StrictSentenceList
+    questions: ExactlyThreeQuestions
 
 
 class AiAreaGame(ContractModel):
-    areas: Annotated[
-        list[Annotated[str, Field(min_length=1, max_length=120)]],
+    focus_guidance: Annotated[str, Field(min_length=1, max_length=500)]
+    objectives: ExactlyThreeStatements
+    guidance_points: ExactlyThreeStatements
+    support_strategies: ExactlyThreeStatements
+
+
+class AiGroupActivityStep(ContractModel):
+    heading: Annotated[str, Field(min_length=1, max_length=1000)]
+    lines: Annotated[
+        list[Annotated[str, Field(min_length=1, max_length=5000)]],
         Field(min_length=1),
     ]
-    focus_guidance: Annotated[str, Field(min_length=1, max_length=500)]
-    objectives: StrictSentenceList
-    guidance_points: StrictSentenceList
-    support_strategies: StrictSentenceList
 
-    @field_validator("areas")
-    @classmethod
-    def unique_areas(cls, value: list[str]) -> list[str]:
-        if len(value) != len(set(value)):
-            raise ValueError("区域名称不能重复")
-        return value
+
+class AiGroupActivity(ContractModel):
+    theme: Annotated[str, Field(min_length=1, max_length=1000)]
+    objectives: Annotated[
+        list[Annotated[str, Field(min_length=1, max_length=5000)]],
+        Field(min_length=1),
+    ]
+    preparation: Annotated[
+        list[Annotated[str, Field(min_length=1, max_length=5000)]],
+        Field(min_length=1),
+    ]
+    focus: Annotated[str, Field(min_length=1, max_length=5000)]
+    difficulty: Annotated[str, Field(min_length=1, max_length=5000)]
+    process: Annotated[list[AiGroupActivityStep], Field(min_length=1)]
+
+
+class GroupActivityAddStepResult(ContractModel):
+    step: AiGroupActivityStep
+    suggested_insert_index: Annotated[int, Field(ge=0)]
 
 
 class AiDailyReflection(ContractModel):
     highlights: Annotated[str, Field(min_length=1, max_length=200)]
     issues: Annotated[str, Field(min_length=1, max_length=200)]
     adjustments: Annotated[str, Field(min_length=1, max_length=200)]
+
+    @field_validator("highlights", "issues", "adjustments")
+    @classmethod
+    def normalize_nfkc(cls, value: str) -> str:
+        return unicodedata.normalize("NFKC", value)
 
     @model_validator(mode="after")
     def enforce_combined_limit(self) -> AiDailyReflection:

@@ -134,9 +134,13 @@ def rotate_ai_key_batch(
     target_key = key_provider.get_key(target_key_id)
     candidates = store.scan_for_rotation(after_profile_id=after_profile_id, limit=batch_size)
     reencrypted = verified = failed = 0
+    scanned = 0
+    next_cursor = after_profile_id
     for candidate in candidates:
+        scanned += 1
         if candidate.envelope.key_id == target_key_id:
             verified += 1
+            next_cursor = candidate.profile_id
             continue
         try:
             plaintext = decrypt_api_key_with_provider(
@@ -160,15 +164,16 @@ def rotate_ai_key_batch(
                 envelope=replacement,
             ):
                 failed += 1
-                continue
+                break
             reencrypted += 1
             verified += 1
+            next_cursor = candidate.profile_id
         except Exception:
             failed += 1
-    next_cursor = candidates[-1].profile_id if candidates else after_profile_id
+            break
     complete = len(candidates) < batch_size and failed == 0
     return RotationReport(
-        scanned=len(candidates),
+        scanned=scanned,
         reencrypted=reencrypted,
         verified=verified,
         failed=failed,

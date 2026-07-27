@@ -167,7 +167,16 @@ def upgrade() -> None:
             name="ck_ai_model_profiles_rate_limit",
         ),
         sa.CheckConstraint(
-            "NOT is_active OR (api_key_ciphertext IS NOT NULL AND risk_confirmed_at IS NOT NULL)",
+            """(risk_confirmed_by IS NULL AND risk_confirmed_at IS NULL)
+            OR (risk_confirmed_by IS NOT NULL AND risk_confirmed_at IS NOT NULL)""",
+            name="ck_ai_model_profiles_risk_confirmation",
+        ),
+        sa.CheckConstraint(
+            """NOT is_active OR (
+                api_key_ciphertext IS NOT NULL
+                AND risk_confirmed_by IS NOT NULL
+                AND risk_confirmed_at IS NOT NULL
+            )""",
             name="ck_ai_model_profiles_enable_ready",
         ),
     )
@@ -176,7 +185,7 @@ def upgrade() -> None:
         "ai_model_profiles",
         ["kindergarten_id"],
         unique=True,
-        postgresql_where=sa.text("is_default"),
+        postgresql_where=sa.text("is_default AND is_active"),
     )
 
     op.create_table(
@@ -414,6 +423,43 @@ def upgrade() -> None:
             "(lease_owner IS NULL AND lease_expires_at IS NULL AND last_heartbeat_at IS NULL)"
             " OR (lease_owner IS NOT NULL AND lease_expires_at IS NOT NULL)",
             name="ck_background_jobs_lease",
+        ),
+        sa.CheckConstraint(
+            """requested_resource_version IS NULL OR requested_resource_version > 0""",
+            name="ck_background_jobs_requested_resource_version",
+        ),
+        sa.CheckConstraint(
+            "parent_job_id IS NULL OR parent_job_id <> id",
+            name="ck_background_jobs_parent_not_self",
+        ),
+        sa.CheckConstraint(
+            "retry_of_job_id IS NULL OR retry_of_job_id <> id",
+            name="ck_background_jobs_retry_not_self",
+        ),
+        sa.CheckConstraint(
+            """execution_status IS NULL
+            OR (
+                execution_status IN ('succeeded','failed','adopted','rejected','expired')
+                AND finished_at IS NOT NULL
+            )
+            OR (
+                execution_status NOT IN ('succeeded','failed','adopted','rejected','expired')
+                AND finished_at IS NULL
+            )""",
+            name="ck_background_jobs_terminal_finished",
+        ),
+        sa.CheckConstraint(
+            """execution_status IS NULL
+            OR (
+                execution_status = 'failed'
+                AND error_code IS NOT NULL
+            )
+            OR (
+                execution_status <> 'failed'
+                AND error_code IS NULL
+                AND error_summary IS NULL
+            )""",
+            name="ck_background_jobs_failure_error",
         ),
     )
     op.create_index(

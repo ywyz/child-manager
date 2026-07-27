@@ -2,14 +2,29 @@
 
 from __future__ import annotations
 
-from typing import Protocol
 from uuid import UUID
 
+from dramatiq import Message
+from dramatiq.broker import Broker
+from dramatiq.brokers.redis import RedisBroker
 
-class JobDispatcher(Protocol):
-    def dispatch(self, job_id: UUID) -> None: ...
 
+class RedisJobDispatcher:
+    def __init__(self, broker: Broker, *, actor_name: str = "prompt_test") -> None:
+        self.broker = broker
+        self.actor_name = actor_name
 
-class NullDispatcher:
+    @classmethod
+    def from_url(cls, redis_url: str) -> RedisJobDispatcher:
+        return cls(RedisBroker(url=redis_url))
+
     def dispatch(self, job_id: UUID) -> None:
-        del job_id
+        self.broker.enqueue(
+            Message(
+                queue_name="default",
+                actor_name=self.actor_name,
+                args=(str(job_id),),
+                kwargs={},
+                options={},
+            )
+        )

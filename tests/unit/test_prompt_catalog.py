@@ -103,3 +103,65 @@ def test_catalog_result_schemas_are_strict() -> None:
             "daily_activity_plan.morning_talk",
             {**valid, "unexpected": "不能接受"},
         )
+
+
+def test_catalog_result_schemas_match_the_frozen_openapi_shapes() -> None:
+    module = _module()
+
+    with pytest.raises(ValidationError):
+        module.validate_prompt_result(
+            "daily_activity_plan.morning_talk",
+            {"topic": "春天的变化", "questions": ["少于三项？"]},
+        )
+    with pytest.raises(ValidationError):
+        module.validate_prompt_result(
+            "daily_activity_plan.morning_talk",
+            {
+                "topic": "春天的变化",
+                "questions": ["第一问？", "第二问？", "缺少中文问号"],
+            },
+        )
+
+    area_result = {
+        "focus_guidance": "观察协作过程。",
+        "objectives": ["目标一。", "目标二。", "目标三。"],
+        "guidance_points": ["指导一。", "指导二。", "指导三。"],
+        "support_strategies": ["支持一。", "支持二。", "支持三。"],
+    }
+    assert (
+        module.validate_prompt_result("daily_activity_plan.indoor_area_game", area_result)
+        == area_result
+    )
+    with pytest.raises(ValidationError):
+        module.validate_prompt_result(
+            "daily_activity_plan.indoor_area_game",
+            {**area_result, "areas": ["建构区"]},
+        )
+
+    group_result = {
+        "theme": "春天",
+        "objectives": ["观察春天。"],
+        "preparation": ["春天图片"],
+        "focus": "主动观察",
+        "difficulty": "表达发现",
+        "process": [{"heading": "观察", "lines": ["看一看。"]}],
+    }
+    assert (
+        module.validate_prompt_result(
+            "daily_activity_plan.group_activity_split",
+            group_result,
+        )
+        == group_result
+    )
+
+    added_step = {
+        "step": {"heading": "迁移经验", "lines": ["说一说新的发现。"]},
+        "suggested_insert_index": 1,
+    }
+    assert (
+        module.validate_prompt_result(
+            "daily_activity_plan.group_activity_add_step",
+            added_step,
+        )
+        == added_step
+    )

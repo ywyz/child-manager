@@ -13,9 +13,11 @@ from packages.backend.prompts.system_defaults import SYSTEM_DEFAULTS
 from packages.contracts.prompts import (
     AiAreaGame,
     AiDailyReflection,
+    AiGroupActivity,
     AiMorningActivity,
     AiMorningTalk,
     CommonPlanPromptVariables,
+    GroupActivityAddStepResult,
     GroupAddStepPromptVariables,
     GroupSplitPromptVariables,
     IndoorAreaPromptVariables,
@@ -101,7 +103,7 @@ PROMPT_SPECS = {
             frozenset({"source_text", "age_group_name", "teacher_context"}),
             "prompt.group_activity_split.v1",
             GroupSplitPromptVariables,
-            AiMorningActivity,
+            AiGroupActivity,
         ),
         _spec(
             "daily_activity_plan.group_activity_add_step",
@@ -109,7 +111,7 @@ PROMPT_SPECS = {
             frozenset({"group_activity", "age_group_name", "teacher_context"}),
             "prompt.group_activity_add_step.v1",
             GroupAddStepPromptVariables,
-            AiMorningActivity,
+            GroupActivityAddStepResult,
         ),
         _spec(
             "daily_activity_plan.indoor_area_game",
@@ -152,3 +154,13 @@ def validate_prompt_variables(code: str, variables: dict[str, Any]) -> dict[str,
 
 def validate_prompt_result(code: str, result: dict[str, Any]) -> dict[str, Any]:
     return prompt_spec(code).result_model.model_validate(result).model_dump(mode="json")
+
+
+def validate_prompt_result_schema(
+    schema_code: str,
+    result: dict[str, Any],
+) -> dict[str, Any]:
+    for spec in PROMPT_SPECS.values():
+        if spec.result_schema_code == schema_code:
+            return spec.result_model.model_validate(result).model_dump(mode="json")
+    raise LookupError("提示词结果 Schema 不存在")
