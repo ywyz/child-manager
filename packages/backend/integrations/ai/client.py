@@ -100,9 +100,21 @@ class ProviderNeutralAiClient:
         if response.status_code in {401, 403}:
             raise AiClientError("ai.authentication_failed", "模型服务认证失败。")
         if response.status_code == 429:
-            raise AiClientError("ai.rate_limited", "模型服务请求过于频繁。")
-        if response.status_code >= 400:
+            retry_after = response.headers.get("Retry-After", "")
+            retry_after_seconds = min(60, int(retry_after)) if retry_after.isdigit() else None
+            raise AiClientError(
+                "ai.rate_limited",
+                "模型服务请求过于频繁。",
+                retry_after_seconds=retry_after_seconds,
+            )
+        if response.status_code >= 500:
             raise AiClientError("ai.provider_error", "模型服务返回错误。")
+        if response.status_code == 402:
+            raise AiClientError("ai.balance_unavailable", "模型服务余额不可用。")
+        if response.status_code == 404:
+            raise AiClientError("ai.model_not_found", "模型不存在。")
+        if response.status_code >= 400:
+            raise AiClientError("ai.request_rejected", "模型请求配置无效。")
         if len(response.content) > MAX_RESPONSE_BYTES:
             raise AiClientError("ai.response_too_large", "模型响应超过安全限制。")
         try:

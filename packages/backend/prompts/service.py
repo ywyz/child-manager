@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 from typing import Any, Protocol
 from uuid import UUID, uuid7
@@ -28,6 +29,8 @@ from packages.backend.prompts.repository import (
 from packages.contracts.audit import IdentityAuditEventCode
 from packages.contracts.common import canonical_request_fingerprint
 from packages.contracts.prompts import PromptTestRequest
+
+logger = logging.getLogger(__name__)
 
 
 class Dispatcher(Protocol):
@@ -247,12 +250,13 @@ class PromptService:
                 definition = prompts.get_definition(kindergarten_id, code, for_update=True)
                 if definition is None:
                     raise self._missing("提示词")
+                unfinished = prompts.unfinished_count(kindergarten_id, definition.id)
                 prompts.prune_finished_prompt_test_runs(
                     kindergarten_id,
                     definition.id,
-                    keep=19,
+                    keep=19 - unfinished,
                 )
-                if prompts.unfinished_count(kindergarten_id, definition.id) >= 20:
+                if unfinished >= 20:
                     raise IdentityError(
                         409,
                         "prompt.too_many_active_tests",
@@ -266,7 +270,10 @@ class PromptService:
                         "提示词版本不可用。",
                     )
                 try:
-                    input_context = validate_prompt_variables(code, body.variables)
+                    input_context = validate_prompt_variables(
+                        code,
+                        body.variables.root.model_dump(mode="json"),
+                    )
                     render_prompt(
                         version.content,
                         input_context,
@@ -333,10 +340,13 @@ class PromptService:
             try:
                 self.dispatcher.dispatch(job_id)
             except Exception:
-                pass
+                logger.error("提示词测试投递失败", extra={"job_id": str(job_id)})
             else:
-                with self._connect() as connection, connection.transaction():
-                    JobRepository(connection).mark_queued(kindergarten_id, job_id)
+                try:
+                    with self._connect() as connection, connection.transaction():
+                        JobRepository(connection).mark_queued(kindergarten_id, job_id)
+                except Exception:
+                    logger.error("提示词测试 queued 状态回写失败", extra={"job_id": str(job_id)})
         return job, run
 
     def get_test(self, session: SessionUser, code: str, run_id: UUID) -> PromptTestRunRecord:

@@ -3,7 +3,6 @@ from importlib import import_module
 from typing import Any
 
 import pytest
-from nicegui import ui
 from nicegui.testing.user_simulation import user_simulation
 
 from apps.web.pages import settings as settings_page
@@ -22,13 +21,19 @@ def test_settings_page_exposes_model_and_prompt_admin_flows() -> None:
         "提示词中心",
         "API Key（仅写入）",
         "外部数据处理风险",
+        "模型能力",
+        "最大并发",
         "保存模型档案",
         "启用模型",
+        "停用模型",
         "提示词草稿",
         "发布新版本",
         "历史版本",
         "恢复为新版本",
         "运行异步测试",
+        "恢复任务状态",
+        "重新测试",
+        "最近 20 条测试记录",
     } <= set(settings_page.settings_page_text())
 
 
@@ -138,9 +143,11 @@ async def test_settings_controls_call_model_prompt_and_job_public_api_seams(
     async with user_simulation(root=settings_page.build_ai_prompt_settings_section) as user:
         await user.open("/")
         await asyncio.sleep(0.15)
+        user.find("新建模型档案").click()
         user.find("保存模型档案").click()
-        user.find(ui.checkbox).click()
+        user.find("外部数据处理风险").click()
         user.find("启用模型").click()
+        user.find("停用模型").click()
         user.find("发布新版本").click()
         user.find("运行异步测试").click()
         await asyncio.sleep(0.1)
@@ -149,6 +156,10 @@ async def test_settings_controls_call_model_prompt_and_job_public_api_seams(
     assert ("/api/v1/settings/ai-model-profiles", "POST") in paths
     assert (
         "/api/v1/settings/ai-model-profiles/01900000-0000-7000-8000-000000000001/enable",
+        "POST",
+    ) in paths
+    assert (
+        "/api/v1/settings/ai-model-profiles/01900000-0000-7000-8000-000000000001/disable",
         "POST",
     ) in paths
     assert ("/api/v1/prompts/daily_activity_plan.morning_talk/publish", "POST") in paths

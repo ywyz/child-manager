@@ -79,6 +79,16 @@ def test_prompt_test_contract_exposes_only_redacted_input_summary() -> None:
         "按 ASCII 字典序排列"
     )
 
+    variables = _schema(runtime, "PromptTestVariables")
+    result = _schema(runtime, "PromptResult")
+    assert len(variables["oneOf"]) == 6
+    assert len(result["oneOf"]) == 6
+    request = _schema(runtime, "PromptTestRequest")
+    assert request["properties"]["variables"]["$ref"].endswith("/PromptTestVariables")
+    assert _schema(runtime, "PromptTestRun")["properties"]["output_content"]["oneOf"][0][
+        "$ref"
+    ].endswith("/PromptResult")
+
 
 def test_prompt_test_acceptance_contract_distinguishes_precommit_503_from_postcommit_202() -> None:
     operation = FROZEN["paths"]["/api/v1/prompts/{code}/tests"]["post"]

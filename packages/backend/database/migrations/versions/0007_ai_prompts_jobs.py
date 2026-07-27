@@ -292,9 +292,19 @@ def upgrade() -> None:
         ),
         sa.CheckConstraint("content_sha256 ~ '^[0-9a-f]{64}$'", name="ck_prompt_versions_sha256"),
         sa.CheckConstraint(
-            """(lifecycle_state='draft' AND published_at IS NULL)
-            OR (lifecycle_state='published' AND published_at IS NOT NULL)""",
-            name="ck_prompt_versions_published_at",
+            """(
+                lifecycle_state='draft'
+                AND published_at IS NULL
+                AND published_by IS NULL
+            ) OR (
+                lifecycle_state='published'
+                AND published_at IS NOT NULL
+                AND (
+                    (source_type='system' AND published_by IS NULL)
+                    OR (source_type='custom' AND published_by IS NOT NULL)
+                )
+            )""",
+            name="ck_prompt_versions_publication",
         ),
     )
     op.create_index(
@@ -538,13 +548,18 @@ def upgrade() -> None:
         sa.CheckConstraint(
             """model_call_snapshot ?& ARRAY[
                 'profile_id','base_url','model_name','capabilities','call_config_revision'
-            ] AND NOT model_call_snapshot ?| ARRAY[
+            ] AND (model_call_snapshot - ARRAY[
+                'profile_id','base_url','model_name','capabilities','call_config_revision'
+            ]) = '{}'::jsonb AND NOT model_call_snapshot ?| ARRAY[
                 'api_key','api_key_ciphertext','api_key_nonce','api_key_key_id','key_id'
             ]""",
             name="ck_prompt_test_runs_model_call_snapshot",
         ),
         sa.CheckConstraint(
             """input_summary ?& ARRAY['provided_variable_names','all_values_redacted']
+            AND (input_summary - ARRAY[
+                'provided_variable_names','all_values_redacted'
+            ]) = '{}'::jsonb
             AND input_summary->>'all_values_redacted'='true'""",
             name="ck_prompt_test_runs_input_summary",
         ),
@@ -553,6 +568,26 @@ def upgrade() -> None:
         ),
         sa.CheckConstraint(
             "elapsed_ms IS NULL OR elapsed_ms >= 0", name="ck_prompt_test_runs_elapsed"
+        ),
+        sa.CheckConstraint(
+            """(
+                status='pending'
+                AND output_content IS NULL
+                AND elapsed_ms IS NULL
+                AND error_code IS NULL
+                AND error_summary IS NULL
+            ) OR (
+                status='succeeded'
+                AND jsonb_typeof(output_content)='object'
+                AND elapsed_ms IS NOT NULL
+                AND error_code IS NULL
+                AND error_summary IS NULL
+            ) OR (
+                status='failed'
+                AND output_content IS NULL
+                AND error_code IS NOT NULL
+            )""",
+            name="ck_prompt_test_runs_outcome",
         ),
     )
     op.create_index(

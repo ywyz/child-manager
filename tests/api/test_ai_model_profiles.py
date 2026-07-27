@@ -172,12 +172,36 @@ def test_enable_requires_key_capabilities_and_explicit_risk_confirmation(
     assert "risk_confirmed_by" not in enabled.json()
     native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
     with psycopg.connect(native_url) as connection:
-        risk_confirmer = connection.execute(
-            """SELECT risk_confirmed_by FROM ai_model_profiles
+        first_confirmation = connection.execute(
+            """SELECT risk_confirmed_by,risk_confirmed_at FROM ai_model_profiles
             WHERE kindergarten_id=%s AND id=%s""",
             (actor.kindergarten_id, profile_id),
         ).fetchone()
-    assert risk_confirmer == (actor.user_id,)
+    assert first_confirmation is not None
+    assert first_confirmation[0] == actor.user_id
+
+    assert (
+        client.post(
+            f"/api/v1/settings/ai-model-profiles/{profile_id}/disable",
+            headers=csrf_headers(client),
+        ).status_code
+        == 200
+    )
+    assert (
+        client.post(
+            f"/api/v1/settings/ai-model-profiles/{profile_id}/enable",
+            json={"confirm_external_data_risk": True},
+            headers=csrf_headers(client),
+        ).status_code
+        == 200
+    )
+    with psycopg.connect(native_url) as connection:
+        second_confirmation = connection.execute(
+            """SELECT risk_confirmed_by,risk_confirmed_at FROM ai_model_profiles
+            WHERE kindergarten_id=%s AND id=%s""",
+            (actor.kindergarten_id, profile_id),
+        ).fetchone()
+    assert second_confirmation == first_confirmation
 
 
 def test_disable_preserves_profile_and_default_switch_is_tenant_local(

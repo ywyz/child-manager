@@ -18,6 +18,7 @@ from packages.contracts.prompts import (
     PromptDefinition,
     PromptDefinitionPage,
     PromptDraftWrite,
+    PromptResult,
     PromptTestPage,
     PromptTestRequest,
     PromptTestRun,
@@ -69,7 +70,11 @@ def _run(record: PromptTestRunRecord) -> PromptTestRun:
         prompt_code=record.prompt_code,  # type: ignore[arg-type]
         input_summary=record.input_summary,  # type: ignore[arg-type]
         status=record.status,  # type: ignore[arg-type]
-        output_content=record.output_content,
+        output_content=(
+            PromptResult.model_validate(record.output_content)
+            if record.output_content is not None
+            else None
+        ),
         elapsed_ms=record.elapsed_ms,
         error_code=record.error_code,
         error_summary=record.error_summary,

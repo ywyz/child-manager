@@ -1,5 +1,6 @@
 """只接收 job_id 的 Dramatiq actor 与 PostgreSQL 恢复扫描。"""
 
+import logging
 import os
 import socket
 from collections.abc import Callable
@@ -8,6 +9,7 @@ from typing import Protocol
 from uuid import UUID
 
 import dramatiq
+from dramatiq import Retry
 from dramatiq.actor import Actor
 from dramatiq.broker import Broker
 
@@ -21,9 +23,12 @@ from packages.backend.jobs.prompt_test_store import PostgresPromptTestStore
 from packages.backend.jobs.service import (
     CurrentModelCallProfile,
     PromptTestExecutor,
+    PromptTestRetry,
 )
 from packages.backend.prompts.catalog import validate_prompt_result_schema
 from packages.backend.settings.ai_models import AiModelService
+
+logger = logging.getLogger(__name__)
 
 
 def _worker_id() -> str:
@@ -63,7 +68,13 @@ def build_prompt_test_executor() -> PromptTestExecutor:
 
 
 class RecoveryStore(Protocol):
-    def recoverable_job_ids(self, *, now: datetime, limit: int) -> list[UUID]: ...
+    def recoverable_job_ids(
+        self,
+        *,
+        now: datetime,
+        limit: int,
+        include_expired: bool,
+    ) -> list[UUID]: ...
 
 
 def recover_prompt_test_jobs(
@@ -72,13 +83,24 @@ def recover_prompt_test_jobs(
     dispatch: Callable[[UUID], None],
     now: datetime | None = None,
     limit: int = 100,
+    include_expired: bool = True,
 ) -> int:
     """按 PostgreSQL 权威状态重投 pending/过期租约任务。"""
 
-    job_ids = store.recoverable_job_ids(now=now or datetime.now(UTC), limit=limit)
+    job_ids = store.recoverable_job_ids(
+        now=now or datetime.now(UTC),
+        limit=limit,
+        include_expired=include_expired,
+    )
+    dispatched = 0
     for job_id in job_ids:
-        dispatch(job_id)
-    return len(job_ids)
+        try:
+            dispatch(job_id)
+        except Exception:
+            logger.error("提示词测试恢复投递失败", extra={"job_id": str(job_id)})
+            continue
+        dispatched += 1
+    return dispatched
 
 
 def register_actors(
@@ -89,14 +111,17 @@ def register_actors(
     def run_prompt_test(job_id: str) -> str:
         parsed_job_id = UUID(job_id)
         if executor is not None:
-            executor.execute_job(parsed_job_id, worker_id=_worker_id())
+            try:
+                executor.execute_job(parsed_job_id, worker_id=_worker_id())
+            except PromptTestRetry as exc:
+                raise Retry(delay=exc.delay_seconds * 1000) from None
         return str(parsed_job_id)
 
     actor = dramatiq.actor(
         actor_name="prompt_test",
         broker=broker,
-        max_retries=2,
-        min_backoff=1000,
-        max_backoff=2000,
+        max_retries=3,
+        min_backoff=5000,
+        max_backoff=30000,
     )(run_prompt_test)
     return (actor,)

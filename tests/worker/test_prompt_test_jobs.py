@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from importlib import import_module
+from time import sleep
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -27,13 +28,20 @@ class FakeStore:
     failures: list[tuple[str, str]] = field(default_factory=list)
     successes: list[dict[str, object]] = field(default_factory=list)
     retry_errors: bool = False
+    heartbeats: int = 0
 
     def kindergarten_id_for_job(self, job_id: UUID) -> UUID | None:
         assert job_id == self.context.job_id
         return self.context.kindergarten_id
 
-    def recoverable_job_ids(self, *, now: datetime, limit: int) -> list[UUID]:
-        del now, limit
+    def recoverable_job_ids(
+        self,
+        *,
+        now: datetime,
+        limit: int,
+        include_expired: bool,
+    ) -> list[UUID]:
+        del now, limit, include_expired
         return []
 
     def claim_prompt_test(self, kindergarten_id: UUID, job_id: UUID, worker_id: str) -> bool:
@@ -58,9 +66,11 @@ class FakeStore:
         kindergarten_id: UUID,
         job_id: UUID,
         *,
+        worker_id: str,
         code: str,
         summary: str,
     ) -> None:
+        assert worker_id == "worker-1"
         assert kindergarten_id == self.context.kindergarten_id
         assert job_id == self.context.job_id
         self.failures.append((code, summary))
@@ -70,9 +80,11 @@ class FakeStore:
         kindergarten_id: UUID,
         job_id: UUID,
         *,
+        worker_id: str,
         output: dict[str, object],
         elapsed_ms: int,
     ) -> None:
+        assert worker_id == "worker-1"
         assert kindergarten_id == self.context.kindergarten_id
         assert job_id == self.context.job_id
         assert elapsed_ms >= 0
@@ -83,19 +95,36 @@ class FakeStore:
         kindergarten_id: UUID,
         job_id: UUID,
         *,
+        worker_id: str,
         code: str,
         summary: str,
         retryable: bool,
-    ) -> bool:
+        retry_after_seconds: int | None,
+    ) -> int | None:
+        del retry_after_seconds
         if retryable and self.retry_errors:
-            return True
+            return 5
         self.finish_prompt_test_failure(
             kindergarten_id,
             job_id,
+            worker_id=worker_id,
             code=code,
             summary=summary,
         )
-        return False
+        return None
+
+    def heartbeat_prompt_test(
+        self,
+        kindergarten_id: UUID,
+        job_id: UUID,
+        *,
+        worker_id: str,
+    ) -> bool:
+        assert kindergarten_id == self.context.kindergarten_id
+        assert job_id == self.context.job_id
+        assert worker_id == "worker-1"
+        self.heartbeats += 1
+        return True
 
 
 @dataclass
@@ -113,6 +142,12 @@ class TimeoutClient:
         del kwargs
         errors = import_module("packages.backend.integrations.ai.errors")
         raise errors.AiClientError("ai.timeout", "模型服务响应超时。")
+
+
+class SlowClient(FakeClient):
+    def generate_structured(self, **kwargs: object) -> dict[str, object]:
+        sleep(0.03)
+        return super().generate_structured(**kwargs)
 
 
 @dataclass
@@ -165,6 +200,8 @@ def test_revision_mismatch_fails_without_reading_key_or_calling_model() -> None:
         model_name="new-model",
         capability_codes=frozenset({"text", "structured_output"}),
         call_config_revision=4,
+        max_concurrency=2,
+        rate_limit_per_minute=None,
         is_active=True,
         key_envelope=object(),
     )
@@ -203,6 +240,8 @@ def test_matching_revision_uses_only_frozen_context_and_current_key() -> None:
         model_name="frozen-model",
         capability_codes=frozenset({"text", "structured_output"}),
         call_config_revision=3,
+        max_concurrency=2,
+        rate_limit_per_minute=None,
         is_active=True,
         key_envelope=object(),
     )
@@ -241,6 +280,8 @@ def test_worker_rechecks_authorization_and_enabled_state_before_external_call() 
         model_name="frozen-model",
         capability_codes=frozenset({"text", "structured_output"}),
         call_config_revision=3,
+        max_concurrency=2,
+        rate_limit_per_minute=None,
         is_active=False,
         key_envelope=object(),
     )
@@ -271,6 +312,8 @@ def test_retryable_provider_failure_returns_control_to_the_broker_retry_policy()
         model_name="frozen-model",
         capability_codes=frozenset({"text", "structured_output"}),
         call_config_revision=3,
+        max_concurrency=2,
+        rate_limit_per_minute=None,
         is_active=True,
         key_envelope=object(),
     )
@@ -284,10 +327,43 @@ def test_retryable_provider_failure_returns_control_to_the_broker_retry_policy()
         validate_result=lambda _code, result: result,
     )
 
-    with pytest.raises(service.PromptTestRetry):
+    with pytest.raises(service.PromptTestRetry) as raised:
         executor.execute(context.kindergarten_id, context.job_id, worker_id="worker-1")
 
     assert store.failures == []
+    assert raised.value.delay_seconds == 5
+
+
+def test_long_model_call_renews_the_worker_owned_lease() -> None:
+    service, _leases, _actors = _modules()
+    context = _context(service)
+    profile = service.CurrentModelCallProfile(
+        kindergarten_id=context.kindergarten_id,
+        profile_id=context.model_profile_id,
+        api_base_url="https://ai.example.test/v1",
+        model_name="frozen-model",
+        capability_codes=frozenset({"text", "structured_output"}),
+        call_config_revision=3,
+        max_concurrency=1,
+        rate_limit_per_minute=10,
+        is_active=True,
+        key_envelope=object(),
+    )
+    store = FakeStore(context, profile)
+    executor = service.PromptTestExecutor(
+        store=store,
+        client=SlowClient({"topic": "春天", "questions": []}),
+        authorizer=FakeAuthorizer(),
+        read_api_key=lambda _profile: "secret",
+        validate_url=lambda value: value,
+        validate_result=lambda _code, result: result,
+        heartbeat_interval_seconds=0.01,
+    )
+
+    executor.execute(context.kindergarten_id, context.job_id, worker_id="worker-1")
+
+    assert store.heartbeats >= 1
+    assert len(store.successes) == 1
 
 
 def test_lease_expiry_and_recovery_scan_are_deterministic() -> None:
@@ -297,9 +373,16 @@ def test_lease_expiry_and_recovery_scan_are_deterministic() -> None:
     assert leases.lease_is_expired(now + timedelta(seconds=1), now=now) is False
 
     class SchedulerStore:
-        def recoverable_job_ids(self, *, now: datetime, limit: int) -> list[UUID]:
+        def recoverable_job_ids(
+            self,
+            *,
+            now: datetime,
+            limit: int,
+            include_expired: bool,
+        ) -> list[UUID]:
             assert now == datetime(2026, 7, 26, 12, 0, tzinfo=UTC)
             assert limit == 100
+            assert include_expired is True
             return [uuid4(), uuid4()]
 
     dispatched: list[UUID] = []
@@ -311,3 +394,31 @@ def test_lease_expiry_and_recovery_scan_are_deterministic() -> None:
     )
     assert count == 2
     assert len(dispatched) == 2
+
+
+def test_recovery_dispatch_failure_does_not_skip_later_reserved_jobs() -> None:
+    _service, _leases, actors = _modules()
+    job_ids = [uuid4(), uuid4()]
+
+    class SchedulerStore:
+        def recoverable_job_ids(
+            self,
+            *,
+            now: datetime,
+            limit: int,
+            include_expired: bool,
+        ) -> list[UUID]:
+            del now, limit, include_expired
+            return job_ids
+
+    attempted: list[UUID] = []
+
+    def dispatch(job_id: UUID) -> None:
+        attempted.append(job_id)
+        if job_id == job_ids[0]:
+            raise RuntimeError("Redis unavailable")
+
+    count = actors.recover_prompt_test_jobs(SchedulerStore(), dispatch=dispatch)
+
+    assert attempted == job_ids
+    assert count == 1

@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import unicodedata
 from datetime import date, datetime
-from typing import Annotated, Any, Literal
+from typing import Annotated, Literal
 from uuid import UUID
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import ConfigDict, Field, RootModel, field_validator, model_validator
+from pydantic.json_schema import JsonSchemaValue
 
 from packages.contracts.common import ContractModel
 from packages.contracts.lesson_plans import (
@@ -213,10 +214,42 @@ class PromptDraftWrite(ContractModel):
     based_on_version_id: UUID | None = None
 
 
+def _render_union_as_one_of(schema: JsonSchemaValue) -> None:
+    alternatives = schema.pop("anyOf", None)
+    if alternatives is not None:
+        schema["oneOf"] = alternatives
+
+
+class PromptTestVariables(
+    RootModel[
+        CommonPlanPromptVariables
+        | IndoorAreaPromptVariables
+        | OutdoorAreaPromptVariables
+        | GroupSplitPromptVariables
+        | GroupAddStepPromptVariables
+        | ReflectionPromptVariables
+    ]
+):
+    model_config = ConfigDict(json_schema_extra=_render_union_as_one_of)
+
+
+class PromptResult(
+    RootModel[
+        AiMorningActivity
+        | AiMorningTalk
+        | AiGroupActivity
+        | GroupActivityAddStepResult
+        | AiAreaGame
+        | AiDailyReflection
+    ]
+):
+    model_config = ConfigDict(json_schema_extra=_render_union_as_one_of)
+
+
 class PromptTestRequest(ContractModel):
     version_id: UUID
     model_profile_id: UUID
-    variables: dict[str, Any]
+    variables: PromptTestVariables
 
 
 class PromptTestInputSummary(ContractModel):
@@ -226,13 +259,24 @@ class PromptTestInputSummary(ContractModel):
     all_values_redacted: Literal[True]
 
 
+def _render_prompt_test_run_schema(schema: JsonSchemaValue) -> None:
+    properties = schema.get("properties")
+    if not isinstance(properties, dict):
+        return
+    output = properties.get("output_content")
+    if isinstance(output, dict):
+        _render_union_as_one_of(output)
+
+
 class PromptTestRun(ContractModel):
+    model_config = ConfigDict(json_schema_extra=_render_prompt_test_run_schema)
+
     id: UUID
     job_id: UUID
     prompt_code: PromptCode
     input_summary: PromptTestInputSummary
     status: Literal["pending", "succeeded", "failed"]
-    output_content: dict[str, Any] | None = None
+    output_content: PromptResult | None = None
     elapsed_ms: Annotated[int, Field(ge=0)] | None = None
     error_code: str | None = None
     error_summary: Annotated[str, Field(max_length=1000)] | None = None

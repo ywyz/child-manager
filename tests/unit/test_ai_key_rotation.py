@@ -62,6 +62,21 @@ class FakeStore:
                 return True
         return False
 
+    def get_candidate(
+        self,
+        *,
+        kindergarten_id: UUID,
+        profile_id: UUID,
+    ) -> Any | None:
+        return next(
+            (
+                record
+                for record in self.records
+                if record.kindergarten_id == kindergarten_id and record.profile_id == profile_id
+            ),
+            None,
+        )
+
 
 def _candidate(encryption: Any, rotation: Any, profile_id: UUID, key_id: str) -> Any:
     kindergarten_id = uuid4()
@@ -195,3 +210,37 @@ def test_rotation_cursor_stops_before_a_failed_record_so_resume_retries_it() -> 
     assert report.failed == 1
     assert report.next_cursor == profile_ids[0]
     assert [profile_id for profile_id, _envelope in store.writes] == [profile_ids[0]]
+
+
+def test_target_key_record_is_counted_verified_only_after_authenticated_decryption() -> None:
+    encryption, rotation = _modules()
+    profile_id = uuid4()
+    candidate = _candidate(encryption, rotation, profile_id, "new")
+    damaged = candidate.__class__(
+        kindergarten_id=candidate.kindergarten_id,
+        profile_id=candidate.profile_id,
+        envelope=candidate.envelope.__class__(
+            ciphertext=candidate.envelope.ciphertext[:-1]
+            + bytes([candidate.envelope.ciphertext[-1] ^ 1]),
+            nonce=candidate.envelope.nonce,
+            key_id=candidate.envelope.key_id,
+            envelope_version=candidate.envelope.envelope_version,
+            last_four=candidate.envelope.last_four,
+        ),
+        call_config_revision=candidate.call_config_revision,
+    )
+    provider = encryption.StaticAiKeyProvider(
+        {"new": b"\x22" * 32},
+        active_key_id="new",
+    )
+
+    report = rotation.rotate_ai_key_batch(
+        FakeStore([damaged]),
+        key_provider=provider,
+        target_key_id="new",
+        batch_size=10,
+    )
+
+    assert report.verified == 0
+    assert report.failed == 1
+    assert report.complete is False

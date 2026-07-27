@@ -452,7 +452,7 @@ class PromptRepository:
                   AND status IN ('succeeded','failed')
                 ORDER BY created_at DESC,id DESC LIMIT %s
               )""",
-            (kindergarten_id, definition_id, kindergarten_id, definition_id, keep),
+            (kindergarten_id, definition_id, kindergarten_id, definition_id, max(0, keep)),
         )
         return int(getattr(result, "rowcount", 0))
 

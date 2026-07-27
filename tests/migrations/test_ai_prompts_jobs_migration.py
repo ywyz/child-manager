@@ -165,6 +165,26 @@ def test_model_activation_and_job_terminal_invariants_are_database_enforced(
     assert default_index is not None
     assert "is_default AND is_active" in str(default_index[0])
 
+    prompt_constraints = {
+        str(row[0]): str(row[1])
+        for row in m4_database.execute(
+            """SELECT c.conname, pg_get_constraintdef(c.oid)
+            FROM pg_constraint c
+            JOIN pg_class t ON t.oid=c.conrelid
+            JOIN pg_namespace n ON n.oid=t.relnamespace
+            WHERE n.nspname=current_schema()
+              AND t.relname IN ('prompt_versions','prompt_test_runs')"""
+        ).fetchall()
+    }
+    assert "published_by IS NOT NULL" in prompt_constraints["ck_prompt_versions_publication"]
+    assert "output_content IS NOT NULL" in prompt_constraints["ck_prompt_test_runs_outcome"]
+    assert "error_code IS NOT NULL" in prompt_constraints["ck_prompt_test_runs_outcome"]
+    assert (
+        "model_call_snapshot - ARRAY"
+        in prompt_constraints["ck_prompt_test_runs_model_call_snapshot"]
+    )
+    assert "input_summary - ARRAY" in prompt_constraints["ck_prompt_test_runs_input_summary"]
+
 
 def test_migration_seeds_exactly_seven_system_versions_per_existing_kindergarten(
     isolated_database_url: str,

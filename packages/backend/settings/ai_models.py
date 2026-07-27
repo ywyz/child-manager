@@ -299,6 +299,28 @@ class AiModelService:
                     "ai_model.not_ready",
                     "启用前必须配置 API Key 及文本、结构化输出能力。",
                 )
+            if enabled:
+                self._validate_url(current.api_base_url)
+                envelope = self._envelope(current)
+                if envelope is None:
+                    raise IdentityError(
+                        422,
+                        "ai_model.not_ready",
+                        "启用前必须配置完整的 API Key。",
+                    )
+                try:
+                    decrypt_api_key_with_provider(
+                        envelope,
+                        key_provider=self.key_provider,
+                        kindergarten_id=kindergarten_id,
+                        profile_id=profile_id,
+                    )
+                except (InvalidTag, LookupError, UnicodeDecodeError, ValueError) as exc:
+                    raise IdentityError(
+                        422,
+                        "ai_model.not_ready",
+                        "模型密钥验证失败。",
+                    ) from exc
             record = repository.set_enabled(
                 kindergarten_id,
                 profile_id,

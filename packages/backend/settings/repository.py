@@ -351,7 +351,12 @@ class AiModelProfileRepository:
         enabled: bool,
         actor_id: UUID,
     ) -> AiModelProfileRecord | None:
-        risk_sql = ",risk_confirmed_by=%s,risk_confirmed_at=now()" if enabled else ""
+        risk_sql = (
+            """,risk_confirmed_by=COALESCE(risk_confirmed_by,%s),
+            risk_confirmed_at=COALESCE(risk_confirmed_at,now())"""
+            if enabled
+            else ""
+        )
         params: tuple[object, ...] = (
             (enabled, actor_id, actor_id, kindergarten_id, profile_id)
             if enabled

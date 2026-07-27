@@ -130,3 +130,58 @@ def test_client_pins_the_request_to_a_validated_ip_and_preserves_the_tls_origin(
     assert captured[0].url.host == "93.184.216.34"
     assert captured[0].headers["host"] == "ai.example.test"
     assert captured[0].extensions["sni_hostname"] == "ai.example.test"
+
+
+@pytest.mark.parametrize(
+    ("status_code", "expected_code"),
+    [
+        (400, "ai.request_rejected"),
+        (402, "ai.balance_unavailable"),
+        (404, "ai.model_not_found"),
+        (503, "ai.provider_error"),
+    ],
+)
+def test_client_separates_non_retryable_provider_rejections_from_5xx(
+    status_code: int,
+    expected_code: str,
+) -> None:
+    client_module, errors = _modules()
+    client = client_module.ProviderNeutralAiClient(
+        transport=httpx.MockTransport(
+            lambda _request: httpx.Response(status_code, text="provider detail")
+        ),
+        resolver=_resolver,
+        allowed_hosts={"ai.example.test"},
+    )
+
+    with pytest.raises(errors.AiClientError) as captured:
+        client.generate_structured(
+            base_url="https://ai.example.test/v1",
+            api_key="secret",
+            model_name="test-model",
+            prompt="test",
+        )
+
+    assert captured.value.code == expected_code
+
+
+def test_client_caps_retry_after_at_sixty_seconds() -> None:
+    client_module, errors = _modules()
+    client = client_module.ProviderNeutralAiClient(
+        transport=httpx.MockTransport(
+            lambda _request: httpx.Response(429, headers={"Retry-After": "120"})
+        ),
+        resolver=_resolver,
+        allowed_hosts={"ai.example.test"},
+    )
+
+    with pytest.raises(errors.AiClientError) as captured:
+        client.generate_structured(
+            base_url="https://ai.example.test/v1",
+            api_key="secret",
+            model_name="test-model",
+            prompt="test",
+        )
+
+    assert captured.value.code == "ai.rate_limited"
+    assert captured.value.retry_after_seconds == 60

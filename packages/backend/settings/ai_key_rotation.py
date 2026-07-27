@@ -41,6 +41,12 @@ class AiKeyRotationStore(Protocol):
         expected_key_id: str,
         envelope: AiKeyEnvelope,
     ) -> bool: ...
+    def get_candidate(
+        self,
+        *,
+        kindergarten_id: UUID,
+        profile_id: UUID,
+    ) -> RotationCandidate | None: ...
 
 
 @dataclass(frozen=True, slots=True)
@@ -119,6 +125,34 @@ class PostgresAiKeyRotationStore:
             )
             return result.rowcount == 1
 
+    def get_candidate(
+        self,
+        *,
+        kindergarten_id: UUID,
+        profile_id: UUID,
+    ) -> RotationCandidate | None:
+        with psycopg.connect(self.database_url) as connection:
+            row = connection.execute(
+                """SELECT api_key_ciphertext,api_key_nonce,api_key_key_id,
+                api_key_encryption_version,api_key_last_four,call_config_revision
+                FROM ai_model_profiles WHERE kindergarten_id=%s AND id=%s""",
+                (kindergarten_id, profile_id),
+            ).fetchone()
+        if row is None or row[0] is None:
+            return None
+        return RotationCandidate(
+            kindergarten_id=kindergarten_id,
+            profile_id=profile_id,
+            envelope=AiKeyEnvelope(
+                ciphertext=bytes(row[0]),
+                nonce=bytes(row[1]),
+                key_id=str(row[2]),
+                envelope_version=int(row[3]),
+                last_four=str(row[4]),
+            ),
+            call_config_revision=int(row[5]),
+        )
+
 
 def rotate_ai_key_batch(
     store: AiKeyRotationStore,
@@ -138,10 +172,6 @@ def rotate_ai_key_batch(
     next_cursor = after_profile_id
     for candidate in candidates:
         scanned += 1
-        if candidate.envelope.key_id == target_key_id:
-            verified += 1
-            next_cursor = candidate.profile_id
-            continue
         try:
             plaintext = decrypt_api_key_with_provider(
                 candidate.envelope,
@@ -149,6 +179,10 @@ def rotate_ai_key_batch(
                 kindergarten_id=candidate.kindergarten_id,
                 profile_id=candidate.profile_id,
             )
+            if candidate.envelope.key_id == target_key_id:
+                verified += 1
+                next_cursor = candidate.profile_id
+                continue
             replacement = encrypt_api_key(
                 plaintext,
                 key=target_key,
@@ -157,12 +191,36 @@ def rotate_ai_key_batch(
                 profile_id=candidate.profile_id,
                 envelope_version=candidate.envelope.envelope_version,
             )
-            if not dry_run and not store.replace_envelope(
-                kindergarten_id=candidate.kindergarten_id,
-                profile_id=candidate.profile_id,
-                expected_key_id=candidate.envelope.key_id,
-                envelope=replacement,
-            ):
+            if dry_run:
+                verified_plaintext = decrypt_api_key_with_provider(
+                    replacement,
+                    key_provider=key_provider,
+                    kindergarten_id=candidate.kindergarten_id,
+                    profile_id=candidate.profile_id,
+                )
+            else:
+                if not store.replace_envelope(
+                    kindergarten_id=candidate.kindergarten_id,
+                    profile_id=candidate.profile_id,
+                    expected_key_id=candidate.envelope.key_id,
+                    envelope=replacement,
+                ):
+                    failed += 1
+                    break
+                persisted = store.get_candidate(
+                    kindergarten_id=candidate.kindergarten_id,
+                    profile_id=candidate.profile_id,
+                )
+                if persisted is None or persisted.envelope.key_id != target_key_id:
+                    failed += 1
+                    break
+                verified_plaintext = decrypt_api_key_with_provider(
+                    persisted.envelope,
+                    key_provider=key_provider,
+                    kindergarten_id=candidate.kindergarten_id,
+                    profile_id=candidate.profile_id,
+                )
+            if verified_plaintext != plaintext:
                 failed += 1
                 break
             reencrypted += 1

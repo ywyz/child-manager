@@ -1,8 +1,10 @@
 """Dramatiq Worker 本地入口。"""
 
 import argparse
+import logging
 import os
 from threading import Event, Thread
+from time import monotonic
 from uuid import UUID
 
 import dramatiq
@@ -20,6 +22,8 @@ from packages.backend.observability import configure_logging
 
 DEFAULT_THREADS = 4
 RECOVERY_INTERVAL_SECONDS = 15
+EXPIRED_SCAN_INTERVAL_SECONDS = 30
+logger = logging.getLogger(__name__)
 
 
 def serve(
@@ -46,11 +50,20 @@ def serve(
             def dispatch(job_id: UUID) -> None:
                 prompt_actor.send(str(job_id))
 
+            last_expired_scan = float("-inf")
             while not shutdown.is_set():
-                recover_prompt_test_jobs(
-                    executor.store,
-                    dispatch=dispatch,
-                )
+                current = monotonic()
+                include_expired = current - last_expired_scan >= EXPIRED_SCAN_INTERVAL_SECONDS
+                try:
+                    recover_prompt_test_jobs(
+                        executor.store,
+                        dispatch=dispatch,
+                        include_expired=include_expired,
+                    )
+                    if include_expired:
+                        last_expired_scan = current
+                except Exception:
+                    logger.error("提示词测试恢复扫描失败")
                 shutdown.wait(RECOVERY_INTERVAL_SECONDS)
 
         recovery_thread = Thread(target=recover, name="prompt-test-recovery", daemon=True)
