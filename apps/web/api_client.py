@@ -51,6 +51,7 @@ async def same_origin_api_request(
     *,
     method: str = "GET",
     payload: dict[str, object] | None = None,
+    request_headers: dict[str, str] | None = None,
 ) -> dict[str, object]:
     """从浏览器经同源 BFF 调用 API，并为写请求取得 CSRF token。"""
 
@@ -63,7 +64,10 @@ async def same_origin_api_request(
       const options = {{
         method: {json.dumps(method)},
         credentials: 'same-origin',
-        headers: {{'X-CSRF-Token': csrf.csrf_token}},
+        headers: {{
+          'X-CSRF-Token': csrf.csrf_token,
+          ...{json.dumps(request_headers or {})},
+        }},
       }};
       const payload = {
         json.dumps(payload, ensure_ascii=False) if payload is not None else "undefined"

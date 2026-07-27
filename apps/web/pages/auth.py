@@ -242,7 +242,12 @@ def register_auth_pages() -> None:
                 )
                 if enrollment_required:
                     status.set_text("请先设置备用登录")
-                    ui.navigate.to("/account/security")
+                    with backup_prompt:
+                        ui.label("密码与 TOTP 备用登录")
+                        ui.button(
+                            "进入备用登录设置",
+                            on_click=lambda: ui.navigate.to("/account/security"),
+                        )
                     return
                 if backup.get("ok") and not enabled:
                     with backup_prompt:

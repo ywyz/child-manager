@@ -35,3 +35,14 @@ def test_contracts_do_not_import_backend_or_orm() -> None:
     assert "packages.backend" not in source
     assert "sqlalchemy" not in source.lower()
     assert "repository" not in source.lower()
+
+
+def test_job_router_only_maps_transport_to_the_application_service() -> None:
+    source = Path("apps/api/routers/jobs.py").read_text(encoding="utf-8")
+
+    assert "JobQueryServiceDependency" in source
+    assert "psycopg" not in source
+    assert "JobRepository" not in source
+    assert "os.environ" not in source
+    service_source = Path("packages/backend/jobs/query_service.py").read_text(encoding="utf-8")
+    assert "IdentityService.require_admin(session)" in service_source

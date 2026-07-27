@@ -17,8 +17,8 @@ from sqlalchemy import (
     func,
     text,
 )
+from sqlalchemy.dialects.postgresql import BYTEA, ExcludeConstraint
 from sqlalchemy.dialects.postgresql import UUID as PgUUID
-from sqlalchemy.dialects.postgresql import ExcludeConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from packages.backend.database.base import Base
@@ -193,5 +193,53 @@ class ClassArea(Timestamped, Base):
             "area_type",
             "is_active",
             "sort_order",
+        ),
+    )
+
+
+class AiModelProfile(Timestamped, Base):
+    __tablename__ = "ai_model_profiles"
+
+    id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True)
+    kindergarten_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    name_normalized: Mapped[str] = mapped_column(String(120), nullable=False)
+    api_base_url: Mapped[str] = mapped_column(String(500), nullable=False)
+    model_name: Mapped[str] = mapped_column(String(200), nullable=False)
+    api_key_ciphertext: Mapped[bytes | None] = mapped_column(BYTEA)
+    api_key_encryption_version: Mapped[int | None] = mapped_column(Integer)
+    api_key_key_id: Mapped[str | None] = mapped_column(String(64))
+    api_key_nonce: Mapped[bytes | None] = mapped_column(BYTEA)
+    api_key_last_four: Mapped[str | None] = mapped_column(String(8))
+    call_config_revision: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    max_concurrency: Mapped[int] = mapped_column(Integer, nullable=False, default=2)
+    rate_limit_per_minute: Mapped[int | None] = mapped_column(Integer)
+    is_default: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    risk_confirmed_by: Mapped[UUID | None] = mapped_column(PgUUID(as_uuid=True))
+    risk_confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    created_by: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False)
+    updated_by: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("kindergarten_id", "id", name="uq_ai_model_profiles_kg_id"),
+        UniqueConstraint("kindergarten_id", "name_normalized", name="uq_ai_model_profiles_kg_name"),
+        CheckConstraint(
+            "call_config_revision >= 1", name="ck_ai_model_profiles_call_config_revision"
+        ),
+    )
+
+
+class AiModelProfileCapability(Timestamped, Base):
+    __tablename__ = "ai_model_profile_capabilities"
+
+    kindergarten_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True)
+    model_profile_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True)
+    capability_code: Mapped[str] = mapped_column(String(64), primary_key=True)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["kindergarten_id", "model_profile_id"],
+            ["ai_model_profiles.kindergarten_id", "ai_model_profiles.id"],
         ),
     )

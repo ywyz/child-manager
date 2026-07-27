@@ -43,6 +43,14 @@ class IdentityAuditEventCode(StrEnum):
     PLAN_ARCHIVED = "lesson_plan.archived"
     PLAN_UNARCHIVED = "lesson_plan.unarchived"
     PLAN_HISTORY_RESTORED = "lesson_plan.history_restored"
+    AI_MODEL_CREATED = "ai_model.created"
+    AI_MODEL_UPDATED = "ai_model.updated"
+    AI_MODEL_ENABLED = "ai_model.enabled"
+    AI_MODEL_DISABLED = "ai_model.disabled"
+    PROMPT_PUBLISHED = "prompt.published"
+    PROMPT_RESTORED = "prompt.restored"
+    PROMPT_TEST_ATTEMPTED = "prompt.test_attempted"
+    PROMPT_TESTS_CLEARED = "prompt.tests_cleared"
 
     # 通用登录审计名称保留为认证 ceremony 的兼容别名, 不代表密码登录。
     INITIALIZED = "identity.bootstrap_started"
@@ -56,6 +64,8 @@ class IdentityAuditMetadata(ContractModel):
 
     reason: Annotated[StrictStr, Field(max_length=64)] | None = None
     source: Annotated[StrictStr, Field(max_length=160)] | None = None
+    elapsed_ms: Annotated[int, Field(ge=0)] | None = None
+    error_summary: Annotated[StrictStr, Field(max_length=1000)] | None = None
     target_role_codes: list[Annotated[StrictStr, Field(max_length=64)]] | None = None
 
 

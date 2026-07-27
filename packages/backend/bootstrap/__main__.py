@@ -10,6 +10,7 @@ from packages.backend.bootstrap.init_admin import (
     recover_last_admin,
     start_initialization,
 )
+from packages.backend.bootstrap.rotate_ai_keys import configure_parser, run_rotation
 
 
 def _database_url() -> str | None:
@@ -123,7 +124,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     recover.add_argument("--recovery-request-id", required=True)
     root.add_parser("migrate-passkeys", help="列出现有账号通行密钥迁移命令")
+    rotate = root.add_parser("rotate-ai-keys", help="分批轮换 AI API Key 密文")
+    configure_parser(rotate)
     arguments = parser.parse_args(argv)
+    if arguments.command == "rotate-ai-keys":
+        return run_rotation(
+            target_key_id=arguments.target_key_id,
+            batch_size=arguments.batch_size,
+            after_profile_id=arguments.after_profile_id,
+            dry_run=arguments.dry_run,
+        )
     if arguments.command == "migrate-passkeys":
         return _migrate_passkeys()
     if arguments.init_command == "start":

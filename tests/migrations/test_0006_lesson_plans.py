@@ -38,12 +38,12 @@ def lesson_plan_database(
         yield connection
 
 
-def test_0006_follows_backup_authentication_and_is_the_only_head() -> None:
+def test_0006_follows_backup_authentication_and_precedes_ai_prompts() -> None:
     script = ScriptDirectory.from_config(Config("alembic.ini"))
     revisions = {revision.revision: revision.down_revision for revision in script.walk_revisions()}
 
     assert revisions[REVISION] == "0005_password_totp_backup_login"
-    assert script.get_heads() == [REVISION]
+    assert revisions["0007_ai_prompts_jobs"] == REVISION
 
 
 def test_0006_creates_tenant_scoped_plan_snapshot_author_and_cache_tables(

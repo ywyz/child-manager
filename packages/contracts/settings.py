@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from typing import Annotated, Literal
 from uuid import UUID
 
@@ -148,3 +148,43 @@ class AreaPage(ContractModel):
     page: PageNumber
     page_size: PageSize
     total: Total
+
+
+AiCapability = Literal["text", "vision", "structured_output"]
+
+
+class AiModelProfileWrite(ContractModel):
+    name: Name120
+    api_base_url: Annotated[str, Field(min_length=1, max_length=500)]
+    model_name: Annotated[str, Field(min_length=1, max_length=200)]
+    api_key: Annotated[str, Field(min_length=1, max_length=4000)] | None = None
+    capability_codes: set[AiCapability]
+    max_concurrency: Annotated[int, Field(ge=1)]
+    rate_limit_per_minute: Annotated[int, Field(ge=1)] | None = None
+    is_default: bool = False
+
+
+class AiModelProfile(ContractModel):
+    id: UUID
+    name: Annotated[str, Field(max_length=120)]
+    api_base_url: Annotated[str, Field(max_length=500)]
+    model_name: Annotated[str, Field(max_length=200)]
+    api_key_masked: str | None = Field(default=None, json_schema_extra={"readOnly": True})
+    capability_codes: list[AiCapability] = Field(default_factory=list)
+    call_config_revision: Annotated[int, Field(ge=1)]
+    max_concurrency: Annotated[int, Field(ge=1)]
+    rate_limit_per_minute: Annotated[int, Field(ge=1)] | None
+    is_default: bool
+    is_active: bool
+    risk_confirmed_at: datetime | None
+
+
+class AiModelProfilePage(ContractModel):
+    items: list[AiModelProfile] = Field(default_factory=list)
+    page: PageNumber
+    page_size: PageSize
+    total: Total
+
+
+class AiModelEnableRequest(ContractModel):
+    confirm_external_data_risk: Literal[True]

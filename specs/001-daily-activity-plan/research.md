@@ -108,7 +108,7 @@
   `daily_activity_plan.afternoon_outdoor_game`、
   `daily_activity_plan.daily_reflection`。旧仓库仅作措辞参考，正文必须按当前变量白名单、
   固定 Schema、隐私规则和 Word 格式重写。七份 v1 默认提示词必须先冻结为可导入、可哈希
-  的只读资源，再编写 `0004` 种子迁移；迁移复制该冻结版本，不得在以后升级时动态读取可变
+  的只读资源，再编写 `0007_ai_prompts_jobs` 种子迁移；迁移复制该冻结版本，不得在以后升级时动态读取可变
   的运行时草稿或最新 catalog。
 - **Rationale**: 稳定命名空间支持版本、任务、审计与回滚；重写可保留教学经验而不继承
   旧架构、旧变量或自由文本解析。
