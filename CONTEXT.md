@@ -224,7 +224,8 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 ### 阶段 6：AI 异步生成
 
-- M4 与 M5 均已完成，本阶段 T087–T126 已具备创建固定基线实施 Issue 的入口条件。
+- M4 与 M5 均已完成，[M6 Issue #11](https://github.com/ywyz/child-manager/issues/11)
+  已创建；Issue 固定到本轮新 `docs` SHA 且该治理提交同步至 `dev` 后，先执行 T087–T097 RED。
 - 接入 Redis Worker、任务状态、栏目级生成、结构校验、重试和失败恢复。
 - 支持集体活动文本与 `.docx` 导入。
 
@@ -267,8 +268,8 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
 | `main` | 稳定版本与发布基线 | `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已正常 merge 最终 M4 `dev`，最终树与 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 一致；Quality Gates `30235439229` 为 458 项通过 | 保持稳定；等待 M6 完成独立验收后再接收新结果 |
-| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M4 原固定基线为 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`；本次状态提交将 M4 修正为 `complete`、M6 修正为 `ready` | 固定本次新 docs SHA，并据此创建 M6 单一实施 Issue |
-| `dev` | Codex 唯一实现与集成 | M4 最终 Review SHA `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`；Standards/Spec 均 PASS，Quality Gates `30235090100` 为 458 项通过 | 仅在 M6 Issue 固定新 docs SHA 后执行 T087–T126 |
+| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 已创建；实施只认 Issue 中固定的不可移动 `docs` SHA | 本轮治理提交形成新基线后更新 Issue #11，不再创建重复 Issue |
+| `dev` | Codex 唯一实现与集成 | M4 最终 Review SHA `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`；Standards/Spec 均 PASS，Quality Gates `30235090100` 为 458 项通过 | Issue #11 固定新 `docs` SHA 且治理提交同步后执行 T087–T097 RED；RED 纯净前不得进入 T098 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -302,8 +303,10 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 9. 最终 `dev` 已通过正常 merge 集成为
    `main@b7676c27d07adc5eca1f0c397217780367481e9c`；两条等价 Dependabot 提交历史均保留，
    最终树一致，`main` Quality Gates `30235439229` 同样为 `458 passed, 1 warning`。
-10. M4 与 M5 均为 `complete`，因此 M6 为 `ready`。下一动作是固定本次新 docs SHA，
-    创建只覆盖 T087–T126 的 M6 单一实施 Issue；创建 Issue 不自动授权开始实现。
+10. M4 与 M5 均为 `complete`，因此 M6 为 `ready`。[Issue #11](https://github.com/ywyz/child-manager/issues/11)
+    已创建且只覆盖 T087–T126；本轮顺序固定为：将 Issue 基线更新为新的不可移动 `docs` SHA，
+    同步该治理提交到 `dev`，执行 T087–T097 RED。全部测试可收集且失败只来自尚未实现的 M6
+    行为后，才能进入 T098。
 
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 

@@ -309,7 +309,7 @@ Quality Gates `30235090100` 为 458 项通过；正常 merge 后
 
 ## 11. M5：无 AI 教案手工闭环
 
-入口条件：M3A `complete`。本阶段是下一实施里程碑，固定先于 M4 执行。
+入口条件：M3A `complete`。本阶段已完成，并按固定路线先于 M4 执行。
 
 ### 交付范围
 
@@ -448,7 +448,7 @@ Quality Gates `30235090100` 为 458 项通过；正常 merge 后
 | M3A | `complete` | [#8](https://github.com/ywyz/child-manager/issues/8) 已按 `completed` 关闭；固定 `docs@2f7894c`，最终实现 `dev@6a9e269`，Quality Gates `30161645948` 与独立复验通过 | 保留验收记录；已集成 `main` |
 | M5 | `complete` | [#9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed` 关闭；固定 `docs@7d9af6c`，最终 `dev@ae74c83`，双轴 Review 均通过，Quality Gates `30202886134` 为 347 项通过 | 已随最终 M4 树集成 `main`；保留验收记录 |
 | M4 | `complete` | [#10](https://github.com/ywyz/child-manager/issues/10) 已按 `completed` 关闭；固定 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，Review `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，双轴 PASS；`dev`/`main` Quality Gates `30235090100`/`30235439229` 均为 458 项通过；最终 `main@b7676c27d07adc5eca1f0c397217780367481e9c` | 保留验收记录 |
-| M6 | `ready` | M4 与 M5 均为 `complete`；T087–T126 的设计、任务与入口依赖已具备 | 创建固定引用本次新 docs SHA 的单一实施 Issue |
+| M6 | `ready` | M4 与 M5 均为 `complete`；[#11](https://github.com/ywyz/child-manager/issues/11) 已创建并覆盖 T087–T126 | Issue 固定新 `docs` SHA 并同步治理提交至 `dev` 后，先执行 T087–T097 RED；纯净 RED 后进入 T098 |
 | M7–M8 | `pending` | 尚未开始实现 | 等待 M6 及各自前序里程碑完成 |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010/ADR-0011 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 

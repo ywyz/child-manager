@@ -1,8 +1,8 @@
 <!--
 Sync Impact Report
-- Version change: 2.1.0 -> 3.0.0
+- Version change: 3.0.0 -> 3.0.1
 - Modified principles:
-  - 技术、安全与范围约束 -> WebAuthn 首选登录 + 密码与 TOTP 双因素备用登录
+  - VI. 可执行验证与真实证据 -> 区分代码增量抽取与活跃文档语义抽取
 - Added sections: none
 - Removed sections: none
 - Templates reviewed:
@@ -12,18 +12,15 @@ Sync Impact Report
   - ✅ .specify/templates/checklist-template.md（无需修改）
   - ✅ .specify/templates/constitution-template.md（无需修改）
 - Runtime guidance reviewed:
-  - ✅ AGENTS.md
-  - ✅ CONTEXT.md
-  - ✅ README.md
-  - ✅ CONTRIBUTING.md
-  - ✅ docs/ROADMAP.md
-  - ✅ docs/development/single-implementation-development.md
+  - ✅ AGENTS.md（已同步 Graphify 命令与模型降级顺序）
+  - ✅ CONTEXT.md、README.md、docs/ROADMAP.md（无需额外修改）
+  - ✅ CONTRIBUTING.md、docs/development/single-implementation-development.md（无需修改）
 - Command templates: .specify/templates/commands/ is not present in this installation
 - Migration and compatibility:
-  - M3 T036–T045 与 0004_settings.py 保持不变
-  - M3A 使用独立 Issue 和 0005_password_totp_backup_login.py
-  - 旧 M2 密码列删除历史不回滚；新摘要只存在于独立备用认证表
-- Follow-up condition: 本次 docs 提交确认并由 Issue 固定后，才可在 dev 实施 M3A
+  - 业务代码继续使用 `graphify update .`
+  - 活跃治理/架构文档改用 `graphify extract` 语义抽取并按 AGENTS.md 命名
+  - 不涉及数据库、API、依赖或运行时兼容迁移
+- Follow-up condition: 新 `docs` SHA 固定到 Issue #11 并同步至 `dev` 后，才可执行 M6 RED
 -->
 # Child Manager 项目宪章
 
@@ -130,7 +127,8 @@ Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测
    ```
 
    尚未配置的命令必须如实报告；数据库、Worker、Word 和真实 UI 流程还必须执行对应专项
-   检查。业务代码或活跃治理/架构文档变化后应运行 `graphify update .`，失败时记录原因。
+   检查。业务代码变化后应运行 `graphify update .`；活跃治理/架构文档变化后应按
+   `AGENTS.md` 的模型优先级运行 `graphify extract` 语义抽取及社区命名。失败时记录原因。
 5. 评审必须逐项检查本宪章、PRD 验收、服务依赖、园所隔离、权限、迁移、事务、任务幂等、
    数据最小化、模板哈希和非目标。任何未解释的宪章违反都必须在进入实现前消除。
 
@@ -146,4 +144,4 @@ Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测
 计划评审、任务生成和实现交付都必须再次执行宪章检查；复杂度例外必须在计划中列出更简单
 方案及其被拒理由。
 
-**Version**: 3.0.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-23
+**Version**: 3.0.1 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-27

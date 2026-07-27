@@ -1,8 +1,8 @@
 {
   "README.md": {
-    "mtime": 1785124511.3070154,
-    "ast_hash": "357f4e2476219ba497a21536641f79c6",
-    "semantic_hash": "357f4e2476219ba497a21536641f79c6"
+    "mtime": 1785148933.8450148,
+    "ast_hash": "682f128361616a5c6c26bcf1d33491d6",
+    "semantic_hash": "682f128361616a5c6c26bcf1d33491d6"
   },
   "templates/teacherplan/\u4e00\u65e5\u6d3b\u52a8\u8ba1\u5212\u7cfb\u7edf\u8bf4\u660e.md": {
     "mtime": 1784860386.1740103,
@@ -10,14 +10,14 @@
     "semantic_hash": "a902d6a68899280db0e05069a07f358d"
   },
   "AGENTS.md": {
-    "mtime": 1785130293.9920056,
-    "ast_hash": "82b214c5658314e719cf0f04b3c7b9f7",
-    "semantic_hash": "82b214c5658314e719cf0f04b3c7b9f7"
+    "mtime": 1785149431.5990112,
+    "ast_hash": "7a4d5fa03b838880c42de3925297025c",
+    "semantic_hash": "7a4d5fa03b838880c42de3925297025c"
   },
   "CONTEXT.md": {
-    "mtime": 1785124577.4990177,
-    "ast_hash": "afb384278dd985906c2aaed74e8cecb4",
-    "semantic_hash": "afb384278dd985906c2aaed74e8cecb4"
+    "mtime": 1785148323.6630092,
+    "ast_hash": "2e76f9b02690ec31ea3d816a5d836867",
+    "semantic_hash": "2e76f9b02690ec31ea3d816a5d836867"
   },
   "graphify-out/memory/query_20260710_131311_\u8bf7\u9605\u8bfb\u4ee5\u4e0a\u5185\u5bb9\u548c\u73b0\u6709\u7684agents_md_\u8fd8\u6709ywyz_kindergartenmanager_gi.md": {
     "mtime": 1784860386.1700103,
@@ -115,9 +115,9 @@
     "semantic_hash": "c2d623d01f057e6b287171a456ffdd84"
   },
   "docs/ROADMAP.md": {
-    "mtime": 1785124511.3070154,
-    "ast_hash": "17414812e2aceb22b8f0f66b5f392576",
-    "semantic_hash": "17414812e2aceb22b8f0f66b5f392576"
+    "mtime": 1785148933.8450148,
+    "ast_hash": "e82a5dde7d8aaa018943aac27852c731",
+    "semantic_hash": "e82a5dde7d8aaa018943aac27852c731"
   },
   "docs/development/dual-agent-development.md": {
     "mtime": 1784860386.1630104,
@@ -230,9 +230,9 @@
     "semantic_hash": "0e1916695d58d1bf2fa4b3573ad6ca3b"
   },
   ".specify/memory/constitution.md": {
-    "mtime": 1784860521.859015,
-    "ast_hash": "ee3e965b73a9d601d42ba32f83efc030",
-    "semantic_hash": "ee3e965b73a9d601d42ba32f83efc030"
+    "mtime": 1785149779.4440234,
+    "ast_hash": "21224351403436925d537e35a03aa46e",
+    "semantic_hash": "21224351403436925d537e35a03aa46e"
   },
   ".specify/templates/checklist-template.md": {
     "mtime": 1784860386.1590102,
@@ -290,14 +290,14 @@
     "semantic_hash": "e555008f919c21d0a45171aecd987688"
   },
   "specs/001-daily-activity-plan/plan.md": {
-    "mtime": 1785124572.4800174,
-    "ast_hash": "e860d5795a3f0a1af2ad4147c5dee31b",
-    "semantic_hash": "e860d5795a3f0a1af2ad4147c5dee31b"
+    "mtime": 1785148933.8460147,
+    "ast_hash": "f42f2c88ff4b4caee1c8499c99e52f5c",
+    "semantic_hash": "f42f2c88ff4b4caee1c8499c99e52f5c"
   },
   "specs/001-daily-activity-plan/quickstart.md": {
-    "mtime": 1785124511.3090155,
-    "ast_hash": "b853ff5b580859954afc86fa529abe71",
-    "semantic_hash": "b853ff5b580859954afc86fa529abe71"
+    "mtime": 1785148323.6640093,
+    "ast_hash": "8ce087d34b4ce2783c57a607d827c94f",
+    "semantic_hash": "8ce087d34b4ce2783c57a607d827c94f"
   },
   "specs/001-daily-activity-plan/research.md": {
     "mtime": 1785072475.4287074,
@@ -305,9 +305,9 @@
     "semantic_hash": "28776fb712eb6144f702599ad72c1722"
   },
   "specs/001-daily-activity-plan/spec.md": {
-    "mtime": 1785070669.594815,
-    "ast_hash": "1561d2dd40a59acaa4b2718fb84c0be5",
-    "semantic_hash": "1561d2dd40a59acaa4b2718fb84c0be5"
+    "mtime": 1785148933.847015,
+    "ast_hash": "6be73449cf339377994e807ce34c3656",
+    "semantic_hash": "6be73449cf339377994e807ce34c3656"
   },
   "specs/001-daily-activity-plan/tasks.md": {
     "mtime": 1785124519.4150157,
@@ -448,10 +448,5 @@
     "mtime": 1785070669.592815,
     "ast_hash": "cc8008774d6f0e44d699ee588cfc5fab",
     "semantic_hash": "cc8008774d6f0e44d699ee588cfc5fab"
-  },
-  "docs/ADR/ADR-0007-caddy-compose-and-file-secrets.md": {
-    "mtime": 1784860386.1610103,
-    "ast_hash": "0dd7d8dc5666a83c09a1ab351781d230",
-    "semantic_hash": "0dd7d8dc5666a83c09a1ab351781d230"
   }
 }

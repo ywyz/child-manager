@@ -1,6 +1,6 @@
 # Implementation Plan: 首期一日活动计划完整闭环
 
-**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-07-26 | **Spec**: [spec.md](./spec.md)
+**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-07-27 | **Spec**: [spec.md](./spec.md)
 
 **Input**: `specs/001-daily-activity-plan/spec.md`；范围为 Roadmap M1–M8，M9 生产部署复审排除。
 
@@ -196,8 +196,8 @@ uv run python -m apps.web --host 127.0.0.1 --port "$CHILD_MANAGER_WEB_PORT" \
   --api-base-url "http://127.0.0.1:${CHILD_MANAGER_API_PORT}"
 ```
 
-入口名称属于本 feature 的实现契约；当前 `main` 与 `dev` 已包含通过验收的 M1–M3A
-实现，上述 API、Worker、Web 和初始化命令均已有稳定入口。T046–T061 只能复用这些入口，
+入口名称属于本 feature 的实现契约；当前 `main` 与 `dev` 已包含通过验收的 M1–M3A、M5
+与 M4 实现，上述 API、Worker、Web 和初始化命令均已有稳定入口。M6 必须复用这些入口，
 不得另建平行运行单元。
 
 ## Phase 0: Research
@@ -307,8 +307,10 @@ T003、M1 T004～T020、M2 T021～T035、M3 T036～T045、独立 M3A T001～T034
 T046～T061 与 M4 T062～T086 均已完成。M4 [Issue #10](https://github.com/ywyz/child-manager/issues/10)
 的固定基线为 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，最终 Review SHA 为
 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，并已集成
-`main@b7676c27d07adc5eca1f0c397217780367481e9c`。M6 为 `ready`；下一实施门禁是由
-本次新固定 docs 提交的单一 Issue 执行 T087–T126。
+`main@b7676c27d07adc5eca1f0c397217780367481e9c`。M6 为 `ready`；
+[Issue #11](https://github.com/ywyz/child-manager/issues/11) 已创建并覆盖 T087–T126。
+Issue 固定到本轮新 `docs` SHA 且治理提交同步至 `dev` 后，先执行 T087–T097 RED；确认
+测试全部可收集且只因 M6 尚未实现而失败，再进入 T098。
 
 ## Phase 2: Task Generation Strategy
 

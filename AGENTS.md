@@ -361,7 +361,7 @@ uv run pytest
 ### 已安装工具与技能
 
 - 当前环境已安装 `fdfind`、`rg`、`sg` 与 graphify；文件名搜索、文本搜索和 AST 搜索仍分别遵循上述优先级。
-- 跨文档和架构决策关系优先使用 graphify；代码符号、调用与影响分析优先使用 codebase-memory MCP；只有需要本地静态图或导出物时才使用 codegraph。业务代码或重大文档变更后运行 `graphify update .` 并报告失败原因。
+- 跨文档和架构决策关系优先使用 graphify；代码符号、调用与影响分析优先使用 codebase-memory MCP；只有需要本地静态图或导出物时才使用 codegraph。业务代码或重大文档变更后，必须按第 17 节分别执行代码增量抽取或文档语义抽取，并报告失败原因。
 - 已安装 Spec Kit 技能（`.agents/skills/speckit-*`），适用于规格、计划、任务及其一致性审查；生成 `tasks.md` 后，实施前应运行 `speckit-analyze`。
 - 已安装 Superpowers 与 `mattpocock/skills` 工程技能集合。任务命中其适用范围时，应先阅读对应 `SKILL.md` 并按其流程执行；技能不改变本文件的安全、数据隔离、Git 与验证要求。
 
