@@ -70,10 +70,12 @@ class FakeStore:
         worker_id: str,
         code: str,
         summary: str,
+        elapsed_ms: int,
     ) -> None:
         assert worker_id == "worker-1"
         assert kindergarten_id == self.context.kindergarten_id
         assert job_id == self.context.job_id
+        assert elapsed_ms >= 0
         self.failures.append((code, summary))
 
     def finish_prompt_test_success(
@@ -101,6 +103,7 @@ class FakeStore:
         summary: str,
         retryable: bool,
         retry_after_seconds: int | None,
+        elapsed_ms: int | None,
     ) -> int | None:
         del retry_after_seconds
         if retryable and self.retry_errors:
@@ -111,6 +114,7 @@ class FakeStore:
             worker_id=worker_id,
             code=code,
             summary=summary,
+            elapsed_ms=elapsed_ms or 0,
         )
         return None
 
@@ -179,7 +183,7 @@ def _context(service: Any, *, revision: int = 3) -> Any:
         input_context={
             "plan_date": "2026-07-26",
             "class_name": "冻结班级",
-            "teacher_context": {"notes": "冻结补充"},
+            "teacher_context": "冻结补充",
         },
         prompt_content="班级：{{class_name}}；补充：{{teacher_context}}",
         result_schema_code="prompt.morning_talk.v1",

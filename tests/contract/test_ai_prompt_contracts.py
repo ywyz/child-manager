@@ -47,6 +47,15 @@ def test_model_and_job_contracts_freeze_revision_and_stable_errors() -> None:
     assert profile["properties"]["call_config_revision"]["minimum"] == 1
     assert "api_key" not in profile["properties"]
     assert profile["properties"]["api_key_masked"]["readOnly"] is True
+    profile_write = _schema(runtime, "AiModelProfileWrite")
+    assert {"capability_codes", "max_concurrency"} <= set(profile_write["required"])
+    assert (
+        _schema(runtime, "Job")["properties"]["job_type"]["enum"]
+        == _schema(
+            FROZEN,
+            "JobType",
+        )["enum"]
+    )
 
     run = _schema(runtime, "PromptTestRun")
     assert set(run["properties"]) == {
@@ -71,6 +80,9 @@ def test_model_and_job_contracts_freeze_revision_and_stable_errors() -> None:
 
 def test_prompt_test_contract_exposes_only_redacted_input_summary() -> None:
     runtime = create_app().openapi()
+    teacher_context = _schema(runtime, "TeacherContext")
+    assert teacher_context["type"] == "string"
+    assert teacher_context["maxLength"] == 5000
     summary = _schema(runtime, "PromptTestInputSummary")
     assert summary["additionalProperties"] is False
     assert set(summary["required"]) == {"provided_variable_names", "all_values_redacted"}
@@ -78,6 +90,8 @@ def test_prompt_test_contract_exposes_only_redacted_input_summary() -> None:
     assert summary["properties"]["provided_variable_names"]["description"].startswith(
         "按 ASCII 字典序排列"
     )
+    assert summary["properties"]["provided_variable_names"]["uniqueItems"] is True
+    assert summary["properties"]["provided_variable_names"]["maxItems"] == 10
 
     variables = _schema(runtime, "PromptTestVariables")
     result = _schema(runtime, "PromptResult")

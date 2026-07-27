@@ -91,7 +91,7 @@ def test_call_configuration_change_set_matches_the_frozen_revision_rules() -> No
 def test_prompt_test_summary_contains_only_sorted_names_and_redaction_flag() -> None:
     _settings, prompts, _jobs = _modules()
     summary = prompts.prompt_test_input_summary(
-        {"teacher_context": {"notes": "秘密"}, "class_name": "向日葵班", "plan_date": "2026-07-26"}
+        {"teacher_context": "秘密", "class_name": "向日葵班", "plan_date": "2026-07-26"}
     )
     assert summary == {
         "provided_variable_names": ["class_name", "plan_date", "teacher_context"],

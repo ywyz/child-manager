@@ -66,6 +66,7 @@ class PromptTestStore(Protocol):
         worker_id: str,
         code: str,
         summary: str,
+        elapsed_ms: int,
     ) -> None: ...
     def finish_prompt_test_success(
         self,
@@ -86,6 +87,7 @@ class PromptTestStore(Protocol):
         summary: str,
         retryable: bool,
         retry_after_seconds: int | None,
+        elapsed_ms: int | None,
     ) -> int | None: ...
     def heartbeat_prompt_test(
         self,
@@ -217,6 +219,11 @@ class PromptTestExecutor:
             daemon=True,
         )
         heartbeat_thread.start()
+        started = monotonic()
+
+        def attempt_elapsed_ms() -> int:
+            return max(0, int((monotonic() - started) * 1000))
+
         try:
             try:
                 context = self.store.load_prompt_test_context(kindergarten_id, job_id)
@@ -229,6 +236,7 @@ class PromptTestExecutor:
                         worker_id=worker_id,
                         code="prompt.configuration_changed",
                         summary="模型调用配置已变化，请重新测试。",
+                        elapsed_ms=attempt_elapsed_ms(),
                     )
                     return
                 if not profile.is_active or not self.authorizer.can_run_prompt_test(
@@ -240,6 +248,7 @@ class PromptTestExecutor:
                         worker_id=worker_id,
                         code="prompt.model_unavailable",
                         summary="模型档案当前不可用。",
+                        elapsed_ms=attempt_elapsed_ms(),
                     )
                     return
                 self.validate_url(profile.api_base_url)
@@ -249,7 +258,6 @@ class PromptTestExecutor:
                     context.input_context,
                     set(context.input_context),
                 )
-                started = monotonic()
                 with self.limiter.slot(profile):
                     raw = self.client.generate_structured(
                         base_url=str(context.model_call_snapshot["base_url"]),
@@ -286,6 +294,7 @@ class PromptTestExecutor:
                         "ai.response_too_large",
                     },
                     retry_after_seconds=exc.retry_after_seconds,
+                    elapsed_ms=attempt_elapsed_ms(),
                 )
             except ValidationError:
                 self._handle_error(
@@ -296,6 +305,7 @@ class PromptTestExecutor:
                     summary="模型响应结构无效。",
                     retryable=True,
                     retry_after_seconds=None,
+                    elapsed_ms=attempt_elapsed_ms(),
                 )
             except Exception:
                 self._handle_error(
@@ -306,6 +316,7 @@ class PromptTestExecutor:
                     summary="提示词测试执行失败。",
                     retryable=False,
                     retry_after_seconds=None,
+                    elapsed_ms=attempt_elapsed_ms(),
                 )
         finally:
             heartbeat_stop.set()
@@ -321,6 +332,7 @@ class PromptTestExecutor:
         summary: str,
         retryable: bool,
         retry_after_seconds: int | None,
+        elapsed_ms: int | None,
     ) -> None:
         retry_delay = self.store.handle_prompt_test_error(
             kindergarten_id,
@@ -330,6 +342,7 @@ class PromptTestExecutor:
             summary=summary,
             retryable=retryable,
             retry_after_seconds=retry_after_seconds,
+            elapsed_ms=elapsed_ms,
         )
         if retry_delay is not None:
             raise PromptTestRetry(retry_delay)

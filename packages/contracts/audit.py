@@ -64,6 +64,8 @@ class IdentityAuditMetadata(ContractModel):
 
     reason: Annotated[StrictStr, Field(max_length=64)] | None = None
     source: Annotated[StrictStr, Field(max_length=160)] | None = None
+    elapsed_ms: Annotated[int, Field(ge=0)] | None = None
+    error_summary: Annotated[StrictStr, Field(max_length=1000)] | None = None
     target_role_codes: list[Annotated[StrictStr, Field(max_length=64)]] | None = None
 
 

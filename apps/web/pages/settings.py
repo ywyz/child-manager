@@ -68,6 +68,13 @@ def prompt_test_record_text(record: dict[str, object]) -> str:
     return header
 
 
+def prompt_code_for_restore(options: dict[str, str], requested: object) -> str:
+    requested_code = str(requested or "")
+    if requested_code in options:
+        return requested_code
+    return next(iter(options), "")
+
+
 def build_ai_prompt_settings_section() -> None:
     ui.label("AI 模型档案").classes("text-h6")
     profile_selector = ui.select({}, label="模型档案列表")
@@ -310,6 +317,7 @@ def build_ai_prompt_settings_section() -> None:
         await ui.run_javascript(
             "const u=new URL(window.location.href);"
             f"u.searchParams.set('prompt_job_id',{json.dumps(job_id.value)});"
+            f"u.searchParams.set('prompt_code',{json.dumps(str(prompt_code.value or ''))});"
             "window.history.replaceState({},'',u);"
         )
         if should_poll(str(job.get("status", ""))):
@@ -323,6 +331,12 @@ def build_ai_prompt_settings_section() -> None:
         if not selected:
             prompt_status.set_text("请填写任务 ID")
             return
+        await ui.run_javascript(
+            "const u=new URL(window.location.href);"
+            f"u.searchParams.set('prompt_job_id',{json.dumps(selected)});"
+            f"u.searchParams.set('prompt_code',{json.dumps(str(prompt_code.value or ''))});"
+            "window.history.replaceState({},'',u);"
+        )
         await poll_job(selected)
 
     async def clear_prompt_tests() -> None:
@@ -398,21 +412,40 @@ def build_ai_prompt_settings_section() -> None:
                     apply_profile(selected)
         prompts = await same_origin_api_request("/api/v1/prompts?page=1&page_size=7")
         prompt_body = prompts.get("body", {})
+        prompt_options: dict[str, str] = {}
         if prompts.get("ok") and isinstance(prompt_body, dict):
             items = prompt_body.get("items", [])
             if isinstance(items, list):
-                prompt_code.options = {
+                prompt_options = {
                     str(item["code"]): str(item.get("name", item["code"]))
                     for item in items
                     if isinstance(item, dict) and item.get("code")
                 }
-                prompt_code.update()
-                if prompt_code.options:
-                    prompt_code.value = next(iter(prompt_code.options))
+                if prompt_options:
+                    prompt_code.set_options(
+                        prompt_options,
+                        value=prompt_code_for_restore(prompt_options, ""),
+                    )
                     await load_prompt_context()
-        restored_job_id = await ui.run_javascript(
-            "return new URL(window.location.href).searchParams.get('prompt_job_id') || ''"
+                else:
+                    prompt_code.set_options({})
+        restored_state = await ui.run_javascript(
+            "const u=new URL(window.location.href);"
+            "return {"
+            "job_id:u.searchParams.get('prompt_job_id') || '',"
+            "prompt_code:u.searchParams.get('prompt_code') || ''"
+            "};"
         )
+        restored_code = (
+            restored_state.get("prompt_code", "") if isinstance(restored_state, dict) else ""
+        )
+        restored_job_id = (
+            restored_state.get("job_id", "") if isinstance(restored_state, dict) else ""
+        )
+        selected_code = prompt_code_for_restore(prompt_options, restored_code)
+        if selected_code and selected_code != prompt_code.value:
+            prompt_code.value = selected_code
+            await load_prompt_context()
         if restored_job_id:
             job_id.value = str(restored_job_id)
             await restore_job_status()

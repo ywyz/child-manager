@@ -89,7 +89,7 @@ def _variables(**changes: Any) -> dict[str, Any]:
         "season": "summer",
         "class_name": "向日葵班",
         "age_group_name": "中班",
-        "teacher_context": {"notes": "只讨论自然变化"},
+        "teacher_context": "只讨论自然变化",
         **changes,
     }
 
@@ -367,18 +367,28 @@ def test_model_profile_concurrency_and_rate_limits_gate_database_claims(
             summary="模型服务请求过于频繁。",
             retryable=True,
             retry_after_seconds=120,
+            elapsed_ms=123,
         )
         == 60
     )
     assert store.claim_prompt_test(actor.kindergarten_id, jobs[1], "duplicate-message") is False
     with psycopg.connect(native_url) as connection:
         retry_audit = connection.execute(
-            """SELECT outcome,metadata->>'reason',metadata->>'source' FROM audit_events
+            """SELECT outcome,metadata->>'reason',metadata->>'source',
+                      (metadata->>'elapsed_ms')::integer,
+                      metadata->>'error_summary'
+            FROM audit_events
             WHERE kindergarten_id=%s AND event_code='prompt.test_attempted'
             ORDER BY occurred_at DESC LIMIT 1""",
             (actor.kindergarten_id,),
         ).fetchone()
-    assert retry_audit == ("failure", "ai.rate_limited", "retrying")
+    assert retry_audit == (
+        "failure",
+        "ai.rate_limited",
+        "retrying",
+        123,
+        "模型服务请求过于频繁。",
+    )
 
 
 def test_recovery_reservation_stays_pending_until_redis_dispatch_succeeds(
@@ -416,6 +426,77 @@ def test_recovery_reservation_stays_pending_until_redis_dispatch_succeeds(
 
     store.mark_prompt_test_dispatched(actor.kindergarten_id, job_id)
     assert client.get(f"/api/v1/jobs/{job_id}").json()["status"] == "queued"
+
+
+def test_expired_max_attempt_job_finishes_with_sanitized_attempt_audit(
+    prompt_job_client: tuple[TestClient, ActorFixture, FailingDispatcher],
+    isolated_database_url: str,
+) -> None:
+    client, actor, _dispatcher = prompt_job_client
+    profile_id, version_id = _provision_model_and_version(client)
+    accepted = client.post(
+        f"/api/v1/prompts/{PROMPT_CODE}/tests",
+        json={
+            "version_id": version_id,
+            "model_profile_id": profile_id,
+            "variables": _variables(),
+        },
+        headers={**csrf_headers(client), "Idempotency-Key": "recovery-exhausted"},
+    )
+    job_id = UUID(accepted.json()["job"]["id"])
+    native_url = isolated_database_url.replace("postgresql+psycopg://", "postgresql://", 1)
+    recovery_time = datetime.now(UTC)
+    with psycopg.connect(native_url) as connection:
+        connection.execute(
+            """UPDATE background_jobs SET execution_status='running',
+            attempt_count=max_attempts,lease_owner='expired-worker',
+            lease_expires_at=%s-interval '1 second',
+            last_heartbeat_at=%s-interval '121 seconds',updated_at=now()
+            WHERE kindergarten_id=%s AND id=%s""",
+            (recovery_time, recovery_time, actor.kindergarten_id, job_id),
+        )
+
+    store = PostgresPromptTestStore(isolated_database_url)
+    assert (
+        store.recoverable_job_ids(
+            now=recovery_time,
+            limit=100,
+            include_expired=True,
+        )
+        == []
+    )
+
+    with psycopg.connect(native_url) as connection:
+        terminal = connection.execute(
+            """SELECT j.execution_status,j.error_code,r.status,r.error_code
+            FROM background_jobs j JOIN prompt_test_runs r
+              ON r.kindergarten_id=j.kindergarten_id AND r.job_id=j.id
+            WHERE j.kindergarten_id=%s AND j.id=%s""",
+            (actor.kindergarten_id, job_id),
+        ).fetchone()
+        audit = connection.execute(
+            """SELECT outcome,metadata->>'reason',metadata->>'source',
+                      (metadata->>'elapsed_ms')::integer,
+                      metadata->>'error_summary'
+            FROM audit_events
+            WHERE kindergarten_id=%s AND event_code='prompt.test_attempted'
+            ORDER BY occurred_at DESC LIMIT 1""",
+            (actor.kindergarten_id,),
+        ).fetchone()
+
+    assert terminal == (
+        "failed",
+        "job.attempts_exhausted",
+        "failed",
+        "job.attempts_exhausted",
+    )
+    assert audit == (
+        "failure",
+        "job.attempts_exhausted",
+        "lease_expired",
+        121000,
+        "提示词测试已达到最大尝试次数。",
+    )
 
 
 def test_idempotency_replay_precedes_retention_and_cross_prompt_fingerprint_conflicts(

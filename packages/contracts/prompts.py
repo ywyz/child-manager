@@ -44,8 +44,8 @@ class PromptReference(ContractModel):
     required_capabilities: list[AiCapability]
 
 
-class TeacherContext(ContractModel):
-    notes: Annotated[str, Field(max_length=2000)] = ""
+class TeacherContext(RootModel[Annotated[str, Field(max_length=5000)]]):
+    """教师主动填写且不得含身份信息的纯文本教学上下文。"""
 
 
 class CommonPlanPromptVariables(ContractModel):
@@ -58,16 +58,16 @@ class CommonPlanPromptVariables(ContractModel):
     teacher_context: TeacherContext
 
 
-def _require_unique_area_names(values: list[str]) -> list[str]:
+def _require_unique_strings(values: list[str]) -> list[str]:
     if len(set(values)) != len(values):
-        raise ValueError("班级区域名称不能重复")
+        raise ValueError("列表项不能重复")
     return values
 
 
 AreaNames = Annotated[
     list[Annotated[str, Field(min_length=1, max_length=120)]],
     Field(min_length=1, json_schema_extra={"uniqueItems": True}),
-    AfterValidator(_require_unique_area_names),
+    AfterValidator(_require_unique_strings),
 ]
 
 
@@ -278,9 +278,11 @@ class PromptTestRequest(ContractModel):
 
 
 class PromptTestInputSummary(ContractModel):
-    provided_variable_names: list[Annotated[str, Field(pattern=r"^[a-z][a-z0-9_]*$")]] = Field(
-        description="按 ASCII 字典序排列的已提供变量名；不返回变量值。"
-    )
+    provided_variable_names: Annotated[
+        list[Annotated[str, Field(pattern=r"^[a-z][a-z0-9_]*$")]],
+        Field(max_length=10, json_schema_extra={"uniqueItems": True}),
+        AfterValidator(_require_unique_strings),
+    ] = Field(description="按 ASCII 字典序排列的已提供变量名；不返回变量值。")
     all_values_redacted: Literal[True]
 
 

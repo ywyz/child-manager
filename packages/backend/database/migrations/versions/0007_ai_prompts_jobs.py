@@ -391,7 +391,18 @@ def upgrade() -> None:
             ["daily_activity_plans.kindergarten_id", "daily_activity_plans.id"],
         ),
         sa.CheckConstraint(
-            "job_type IN ('ai.batch','ai.section','prompt.test','word.export')",
+            """job_type IN (
+                'ai.batch',
+                'ai.morning_activity',
+                'ai.morning_talk',
+                'ai.group_activity_split',
+                'ai.group_activity_add_step',
+                'ai.indoor_area_game',
+                'ai.afternoon_outdoor_game',
+                'ai.daily_reflection',
+                'prompt.test',
+                'word.export'
+            )""",
             name="ck_background_jobs_type",
         ),
         sa.CheckConstraint(

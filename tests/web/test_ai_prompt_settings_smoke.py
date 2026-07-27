@@ -82,6 +82,25 @@ def test_prompt_test_history_renders_structured_output_and_safe_error_summary() 
     assert "模型响应结构无效。" in failed
 
 
+def test_prompt_reload_restores_the_code_that_owns_the_job_results() -> None:
+    options = {
+        "daily_activity_plan.morning_activity": "晨间活动",
+        "daily_activity_plan.daily_reflection": "一日活动反思",
+    }
+
+    assert (
+        settings_page.prompt_code_for_restore(
+            options,
+            "daily_activity_plan.daily_reflection",
+        )
+        == "daily_activity_plan.daily_reflection"
+    )
+    assert (
+        settings_page.prompt_code_for_restore(options, "unknown")
+        == "daily_activity_plan.morning_activity"
+    )
+
+
 def test_job_status_recovers_configuration_change_with_chinese_action() -> None:
     module = _job_status_module()
     state = module.prompt_test_status(

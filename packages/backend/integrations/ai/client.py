@@ -68,13 +68,15 @@ class ProviderNeutralAiClient:
             "response_format": {"type": "json_object"},
         }
         try:
-            with httpx.Client(
-                transport=self._transport,
-                timeout=self.timeout,
-                follow_redirects=False,
-                trust_env=False,
-            ) as client:
-                response = client.post(
+            with (
+                httpx.Client(
+                    transport=self._transport,
+                    timeout=self.timeout,
+                    follow_redirects=False,
+                    trust_env=False,
+                ) as client,
+                client.stream(
+                    "POST",
                     url,
                     headers={
                         "Authorization": f"Bearer {api_key}",
@@ -82,43 +84,66 @@ class ProviderNeutralAiClient:
                     },
                     json=payload,
                     extensions={"sni_hostname": validated.host},
-                )
+                ) as response,
+            ):
+                try:
+                    revalidate_ai_base_url(
+                        validated,
+                        resolver=self._resolver,
+                        allowed_hosts=self._allowed_hosts,
+                    )
+                except AiUrlPolicyError as exc:
+                    raise AiClientError(
+                        "ai.address_rejected",
+                        "模型地址安全校验失败。",
+                    ) from exc
+                if response.is_redirect:
+                    raise AiClientError("ai.redirect_rejected", "模型服务重定向已拒绝。")
+                if response.status_code in {401, 403}:
+                    raise AiClientError(
+                        "ai.authentication_failed",
+                        "模型服务认证失败。",
+                    )
+                if response.status_code == 429:
+                    retry_after = response.headers.get("Retry-After", "")
+                    retry_after_seconds = (
+                        min(60, int(retry_after)) if retry_after.isdigit() else None
+                    )
+                    raise AiClientError(
+                        "ai.rate_limited",
+                        "模型服务请求过于频繁。",
+                        retry_after_seconds=retry_after_seconds,
+                    )
+                if response.status_code >= 500:
+                    raise AiClientError("ai.provider_error", "模型服务返回错误。")
+                if response.status_code == 402:
+                    raise AiClientError(
+                        "ai.balance_unavailable",
+                        "模型服务余额不可用。",
+                    )
+                if response.status_code == 404:
+                    raise AiClientError("ai.model_not_found", "模型不存在。")
+                if response.status_code >= 400:
+                    raise AiClientError(
+                        "ai.request_rejected",
+                        "模型请求配置无效。",
+                    )
+                body = bytearray()
+                for chunk in response.iter_bytes():
+                    if len(body) + len(chunk) > MAX_RESPONSE_BYTES:
+                        raise AiClientError(
+                            "ai.response_too_large",
+                            "模型响应超过安全限制。",
+                        )
+                    body.extend(chunk)
+        except AiClientError:
+            raise
         except httpx.TimeoutException as exc:
             raise AiClientError("ai.timeout", "模型服务响应超时。") from exc
         except httpx.HTTPError as exc:
             raise AiClientError("ai.unavailable", "模型服务暂不可用。") from exc
         try:
-            revalidate_ai_base_url(
-                validated,
-                resolver=self._resolver,
-                allowed_hosts=self._allowed_hosts,
-            )
-        except AiUrlPolicyError as exc:
-            raise AiClientError("ai.address_rejected", "模型地址安全校验失败。") from exc
-        if response.is_redirect:
-            raise AiClientError("ai.redirect_rejected", "模型服务重定向已拒绝。")
-        if response.status_code in {401, 403}:
-            raise AiClientError("ai.authentication_failed", "模型服务认证失败。")
-        if response.status_code == 429:
-            retry_after = response.headers.get("Retry-After", "")
-            retry_after_seconds = min(60, int(retry_after)) if retry_after.isdigit() else None
-            raise AiClientError(
-                "ai.rate_limited",
-                "模型服务请求过于频繁。",
-                retry_after_seconds=retry_after_seconds,
-            )
-        if response.status_code >= 500:
-            raise AiClientError("ai.provider_error", "模型服务返回错误。")
-        if response.status_code == 402:
-            raise AiClientError("ai.balance_unavailable", "模型服务余额不可用。")
-        if response.status_code == 404:
-            raise AiClientError("ai.model_not_found", "模型不存在。")
-        if response.status_code >= 400:
-            raise AiClientError("ai.request_rejected", "模型请求配置无效。")
-        if len(response.content) > MAX_RESPONSE_BYTES:
-            raise AiClientError("ai.response_too_large", "模型响应超过安全限制。")
-        try:
-            content = response.json()["choices"][0]["message"]["content"]
+            content = json.loads(body)["choices"][0]["message"]["content"]
             result = json.loads(content)
         except (KeyError, IndexError, TypeError, ValueError, json.JSONDecodeError) as exc:
             raise AiClientError("ai.invalid_response", "模型响应结构无效。") from exc

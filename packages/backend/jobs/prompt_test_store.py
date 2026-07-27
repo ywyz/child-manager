@@ -185,9 +185,21 @@ class PostgresPromptTestStore:
         worker_id: str,
         code: str,
         summary: str,
+        elapsed_ms: int,
     ) -> None:
         with self._connect() as connection, connection.transaction():
-            self._finish_failure(
+            row: Any = connection.execute(
+                """SELECT j.requested_by,j.request_id,r.id
+                FROM background_jobs j JOIN prompt_test_runs r
+                  ON r.kindergarten_id=j.kindergarten_id AND r.job_id=j.id
+                WHERE j.kindergarten_id=%s AND j.id=%s AND j.job_type='prompt.test'
+                  AND j.execution_status='running' AND j.lease_owner=%s
+                FOR UPDATE OF j""",
+                (kindergarten_id, job_id, worker_id),
+            ).fetchone()
+            if row is None:
+                return
+            finished = self._finish_failure(
                 connection,
                 kindergarten_id,
                 job_id,
@@ -195,6 +207,19 @@ class PostgresPromptTestStore:
                 code=code,
                 summary=summary,
             )
+            if finished:
+                self._append_attempt_audit(
+                    connection,
+                    kindergarten_id,
+                    requested_by=UUID(str(row[0])),
+                    request_id=UUID(str(row[1])) if row[1] is not None else None,
+                    run_id=UUID(str(row[2])),
+                    outcome="failure",
+                    reason=code,
+                    source="final",
+                    elapsed_ms=elapsed_ms,
+                    error_summary=summary,
+                )
 
     @staticmethod
     def _finish_failure(
@@ -234,6 +259,8 @@ class PostgresPromptTestStore:
         outcome: str,
         reason: str | None = None,
         source: str | None = None,
+        elapsed_ms: int | None = None,
+        error_summary: str | None = None,
     ) -> None:
         AuditRepository(connection, kindergarten_id).append(
             event_code=IdentityAuditEventCode.PROMPT_TEST_ATTEMPTED,
@@ -245,7 +272,12 @@ class PostgresPromptTestStore:
             request_id=request_id,
             metadata={
                 key: value
-                for key, value in {"reason": reason, "source": source}.items()
+                for key, value in {
+                    "reason": reason,
+                    "source": source,
+                    "elapsed_ms": elapsed_ms,
+                    "error_summary": error_summary,
+                }.items()
                 if value is not None
             },
         )
@@ -292,6 +324,7 @@ class PostgresPromptTestStore:
                     run_id=UUID(str(run_row[0])),
                     outcome="success",
                     source="completed",
+                    elapsed_ms=elapsed_ms,
                 )
 
     def handle_prompt_test_error(
@@ -304,6 +337,7 @@ class PostgresPromptTestStore:
         summary: str,
         retryable: bool,
         retry_after_seconds: int | None,
+        elapsed_ms: int | None,
     ) -> int | None:
         with self._connect() as connection, connection.transaction():
             row: Any = connection.execute(
@@ -347,6 +381,8 @@ class PostgresPromptTestStore:
                     outcome="failure",
                     reason=code,
                     source="retrying",
+                    elapsed_ms=elapsed_ms,
+                    error_summary=summary,
                 )
                 return policy_delay
             finished = self._finish_failure(
@@ -367,6 +403,8 @@ class PostgresPromptTestStore:
                     outcome="failure",
                     reason=code,
                     source="final",
+                    elapsed_ms=elapsed_ms,
+                    error_summary=summary,
                 )
             return None
 
@@ -412,24 +450,52 @@ class PostgresPromptTestStore:
             if lock is None or not bool(lock[0]):
                 return []
             if include_expired:
-                connection.execute(
-                    """UPDATE background_jobs j SET execution_status='failed',finished_at=now(),
-                    error_code='job.attempts_exhausted',
-                    error_summary='提示词测试已达到最大尝试次数。',
-                    lease_owner=NULL,lease_expires_at=NULL,last_heartbeat_at=NULL,updated_at=now()
+                exhausted = connection.execute(
+                    """SELECT j.kindergarten_id,j.id,j.requested_by,j.request_id,
+                    j.last_heartbeat_at,r.id
+                    FROM background_jobs j JOIN prompt_test_runs r
+                      ON r.kindergarten_id=j.kindergarten_id AND r.job_id=j.id
                     WHERE j.job_type='prompt.test' AND j.execution_status='running'
-                      AND j.lease_expires_at<%s AND j.attempt_count>=j.max_attempts""",
-                    (now,),
-                )
-                connection.execute(
-                    """UPDATE prompt_test_runs r SET status='failed',
-                    error_code='job.attempts_exhausted',
-                    error_summary='提示词测试已达到最大尝试次数。',updated_at=now()
-                    FROM background_jobs j
-                    WHERE j.kindergarten_id=r.kindergarten_id AND j.id=r.job_id
-                      AND j.job_type='prompt.test' AND j.execution_status='failed'
-                      AND j.error_code='job.attempts_exhausted' AND r.status='pending'"""
-                )
+                      AND j.lease_expires_at<%s AND j.attempt_count>=j.max_attempts
+                    ORDER BY j.created_at,j.id LIMIT %s FOR UPDATE OF j SKIP LOCKED""",
+                    (now, limit),
+                ).fetchall()
+                for row in exhausted:
+                    kindergarten_id = UUID(str(row[0]))
+                    job_id = UUID(str(row[1]))
+                    summary = "提示词测试已达到最大尝试次数。"
+                    connection.execute(
+                        """UPDATE background_jobs SET execution_status='failed',
+                        finished_at=%s,error_code='job.attempts_exhausted',
+                        error_summary=%s,lease_owner=NULL,lease_expires_at=NULL,
+                        last_heartbeat_at=NULL,updated_at=now()
+                        WHERE kindergarten_id=%s AND id=%s
+                          AND execution_status='running'""",
+                        (now, summary, kindergarten_id, job_id),
+                    )
+                    connection.execute(
+                        """UPDATE prompt_test_runs SET status='failed',
+                        error_code='job.attempts_exhausted',error_summary=%s,updated_at=now()
+                        WHERE kindergarten_id=%s AND job_id=%s AND status='pending'""",
+                        (summary, kindergarten_id, job_id),
+                    )
+                    heartbeat_at = row[4] if isinstance(row[4], datetime) else now
+                    elapsed_ms = max(
+                        0,
+                        int((now - heartbeat_at).total_seconds() * 1000),
+                    )
+                    self._append_attempt_audit(
+                        connection,
+                        kindergarten_id,
+                        requested_by=UUID(str(row[2])),
+                        request_id=UUID(str(row[3])) if row[3] is not None else None,
+                        run_id=UUID(str(row[5])),
+                        outcome="failure",
+                        reason="job.attempts_exhausted",
+                        source="lease_expired",
+                        elapsed_ms=elapsed_ms,
+                        error_summary=summary,
+                    )
             rows = connection.execute(
                 """SELECT kindergarten_id,id FROM background_jobs
                 WHERE job_type='prompt.test' AND attempt_count<max_attempts

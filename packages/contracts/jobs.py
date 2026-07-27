@@ -15,7 +15,18 @@ class JobMessage(ContractModel):
     job_id: UUID
 
 
-JobType = Literal["ai.batch", "ai.section", "prompt.test", "word.export"]
+JobType = Literal[
+    "ai.batch",
+    "ai.morning_activity",
+    "ai.morning_talk",
+    "ai.group_activity_split",
+    "ai.group_activity_add_step",
+    "ai.indoor_area_game",
+    "ai.afternoon_outdoor_game",
+    "ai.daily_reflection",
+    "prompt.test",
+    "word.export",
+]
 JobStatus = Literal[
     "pending_dispatch",
     "queued",

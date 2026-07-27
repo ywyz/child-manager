@@ -7,7 +7,7 @@ from uuid import UUID
 
 import psycopg
 
-from packages.backend.identity.service import IdentityError, SessionUser
+from packages.backend.identity.service import IdentityError, IdentityService, SessionUser
 from packages.backend.jobs.repository import JobRecord, JobRepository
 
 
@@ -23,6 +23,7 @@ class JobQueryService:
         return cls(database_url)
 
     def get(self, session: SessionUser, job_id: UUID) -> JobRecord:
+        IdentityService.require_admin(session)
         kindergarten_id = session.user.kindergarten_id
         if kindergarten_id is None:
             raise IdentityError(403, "auth.forbidden", "当前账号不属于可用园所。")

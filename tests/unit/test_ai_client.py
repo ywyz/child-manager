@@ -1,4 +1,5 @@
 import socket
+from collections.abc import Iterator
 from importlib import import_module
 from typing import Any
 
@@ -185,3 +186,42 @@ def test_client_caps_retry_after_at_sixty_seconds() -> None:
 
     assert captured.value.code == "ai.rate_limited"
     assert captured.value.retry_after_seconds == 60
+
+
+def test_client_stops_streaming_as_soon_as_response_exceeds_limit() -> None:
+    client_module, errors = _modules()
+
+    class OversizedStream(httpx.SyncByteStream):
+        def __init__(self) -> None:
+            self.yielded_chunks = 0
+            self.closed = False
+
+        def __iter__(self) -> Iterator[bytes]:
+            self.yielded_chunks += 1
+            yield b"x" * client_module.MAX_RESPONSE_BYTES
+            self.yielded_chunks += 1
+            yield b"y"
+            self.yielded_chunks += 1
+            yield b"must-not-be-read"
+
+        def close(self) -> None:
+            self.closed = True
+
+    stream = OversizedStream()
+    client = client_module.ProviderNeutralAiClient(
+        transport=httpx.MockTransport(lambda _request: httpx.Response(200, stream=stream)),
+        resolver=_resolver,
+        allowed_hosts={"ai.example.test"},
+    )
+
+    with pytest.raises(errors.AiClientError) as captured:
+        client.generate_structured(
+            base_url="https://ai.example.test/v1",
+            api_key="secret",
+            model_name="test-model",
+            prompt="test",
+        )
+
+    assert captured.value.code == "ai.response_too_large"
+    assert stream.yielded_chunks == 2
+    assert stream.closed is True

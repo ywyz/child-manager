@@ -121,7 +121,20 @@ def test_background_job_batch_and_execution_attempt_constraints_are_frozen(
             WHERE n.nspname=current_schema() AND t.relname='background_jobs'"""
         ).fetchall()
     )
-    assert "ai.batch" in definitions
+    for job_type in (
+        "ai.batch",
+        "ai.morning_activity",
+        "ai.morning_talk",
+        "ai.group_activity_split",
+        "ai.group_activity_add_step",
+        "ai.indoor_area_game",
+        "ai.afternoon_outdoor_game",
+        "ai.daily_reflection",
+        "prompt.test",
+        "word.export",
+    ):
+        assert job_type in definitions
+    assert "ai.section" not in definitions
     assert "attempt_count IS NULL" in definitions
     assert "max_attempts IS NULL" in definitions
     assert "max_attempts = 3" in definitions

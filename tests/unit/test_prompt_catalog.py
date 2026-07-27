@@ -71,13 +71,13 @@ def test_catalog_input_validation_excludes_teacher_identity_and_unknown_fields()
         "season": "summer",
         "class_name": "向日葵班",
         "age_group_name": "中班",
-        "teacher_context": {"notes": "关注轮流表达"},
+        "teacher_context": "关注轮流表达",
     }
     validated = module.validate_prompt_variables(
         "daily_activity_plan.morning_activity",
         variables,
     )
-    assert validated["teacher_context"] == {"notes": "关注轮流表达"}
+    assert validated["teacher_context"] == "关注轮流表达"
 
     with pytest.raises(ValidationError):
         module.validate_prompt_variables(
@@ -87,7 +87,7 @@ def test_catalog_input_validation_excludes_teacher_identity_and_unknown_fields()
     with pytest.raises(ValidationError):
         module.validate_prompt_variables(
             "daily_activity_plan.morning_activity",
-            {**variables, "teacher_context": {"name": "真实教师"}},
+            {**variables, "teacher_context": {"notes": "错误对象格式"}},
         )
     with pytest.raises(ValidationError):
         module.validate_prompt_variables(
@@ -177,6 +177,6 @@ def test_catalog_result_schemas_match_the_frozen_openapi_shapes() -> None:
             input_context={
                 "group_activity": group_result,
                 "age_group_name": "中班",
-                "teacher_context": {"notes": ""},
+                "teacher_context": "",
             },
         )

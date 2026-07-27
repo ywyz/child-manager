@@ -158,8 +158,8 @@ class AiModelProfileWrite(ContractModel):
     api_base_url: Annotated[str, Field(min_length=1, max_length=500)]
     model_name: Annotated[str, Field(min_length=1, max_length=200)]
     api_key: Annotated[str, Field(min_length=1, max_length=4000)] | None = None
-    capability_codes: set[AiCapability] = Field(default_factory=set)
-    max_concurrency: Annotated[int, Field(ge=1)] = 2
+    capability_codes: set[AiCapability]
+    max_concurrency: Annotated[int, Field(ge=1)]
     rate_limit_per_minute: Annotated[int, Field(ge=1)] | None = None
     is_default: bool = False
 

@@ -44,3 +44,5 @@ def test_job_router_only_maps_transport_to_the_application_service() -> None:
     assert "psycopg" not in source
     assert "JobRepository" not in source
     assert "os.environ" not in source
+    service_source = Path("packages/backend/jobs/query_service.py").read_text(encoding="utf-8")
+    assert "IdentityService.require_admin(session)" in service_source
