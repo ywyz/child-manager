@@ -2,11 +2,13 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Updated**: 2026-07-26
-**Current repository state**: `main` 已包含通过验收的 M1–M3A 稳定实现，`dev` 已完成
-M5 T046–T061 无 AI 手工教案闭环；`docs` 是当前文档、规格、OpenAPI 和模板的单一事实
-来源。下一实施固定为 M4 T062–T086。下列命令覆盖 M1～M8 验收合同，尚未完成的
-用户故事步骤不可执行，也不表示已经通过。
+**Updated**: 2026-07-27
+**Current repository state**: M4 与 M5 均为 `complete`；最终 M4 Review SHA 为
+`dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，已正常 merge 到
+`main@b7676c27d07adc5eca1f0c397217780367481e9c`。`docs` 是当前文档、规格、OpenAPI
+和模板的单一事实来源。下一实施为 `ready` 的 M6 T087–T126，且必须由新 Issue 固定引用
+本次 docs 基线。下列命令覆盖 M1～M8 验收合同，尚未完成的用户故事步骤不可执行，也不表示
+已经通过。
 
 ## 1. 前提与反目标
 

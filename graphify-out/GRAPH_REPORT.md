@@ -1,16 +1,16 @@
-# Graph Report - child-manager-docs  (2026-07-26)
+# Graph Report - child-manager-docs-auth  (2026-07-27)
 
 ## Corpus Check
-- 87 files · ~92,031 words
+- 85 files · ~91,909 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1224 nodes · 1056 edges · 296 communities (43 shown, 253 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 43 edges (avg confidence: 0.89)
+- 1223 nodes · 1044 edges · 298 communities (41 shown, 257 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 39 edges (avg confidence: 0.93)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7d9af6c9`
+- Built from commit: `c9401c5a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -62,6 +62,7 @@
 - 恢复与会话保证模型
 - check-prerequisites.sh
 - setup-plan.sh
+- setup-tasks.sh
 - Issue 固定 docs 提交的执行授权边界
 - 备用认证敏感数据零泄露验证
 - 检测与分析报告
@@ -310,6 +311,8 @@
 - Pyright
 - Pytest
 - Ruff
+- setup-plan.sh
+- setup-tasks.sh
 
 ## God Nodes (most connected - your core abstractions)
 1. `openapi 文档` - 227 edges
@@ -361,7 +364,7 @@
 - **Specify Plan Tasks Implement 全周期** — _agents_skills_speckit_specify_skill_speckit_specify, _agents_skills_speckit_plan_skill_speckit_plan, _agents_skills_speckit_tasks_skill_speckit_tasks, _agents_skills_speckit_implement_skill_speckit_implement [EXTRACTED 1.00]
 - **一日活动计划范围、架构与数据边界知识链** — graphify_out_memory_query_20260711_020708_docs_prd_lesson_management_m_prd_scope, graphify_out_memory_query_20260711_024218_service_architecture_sequence, graphify_out_memory_query_20260712_071357_corrected_data_model [INFERRED 0.75]
 
-## Communities (296 total, 253 thin omitted)
+## Communities (298 total, 257 thin omitted)
 
 ### Community 0 - "openapi 文档"
 Cohesion: 0.01
@@ -376,8 +379,8 @@ Cohesion: 0.04
 Nodes (47): 密码与 TOTP 备用登录规格质量检查清单, 管理员绑定 新设备登录与安全维护用户故事, 密码与 TOTP 备用登录功能规格, Specification Quality Checklist: 密码与 TOTP 备用登录, Feature Readiness, Notes, Requirement Completeness, Content Quality (+39 more)
 
 ### Community 3 - "主规格身份认证范围"
-Cohesion: 0.07
-Nodes (27): 身份与 M3A 规格就绪检查, 主规格身份认证范围, Requirement Completeness, Content Quality, Feature Readiness, Specification Quality Checklist: 首期一日活动计划完整闭环, Notes, User Story 2 - 教师完成纯手工教案闭环 (Priority: P2) (+19 more)
+Cohesion: 0.04
+Nodes (48): 身份与 M3A 规格就绪检查, 认证验收矩阵, 主规格身份认证范围, Requirement Completeness, Content Quality, Feature Readiness, Specification Quality Checklist: 首期一日活动计划完整闭环, Notes (+40 more)
 
 ### Community 4 - "Child Manager 系统架构设计"
 Cohesion: 0.09
@@ -427,10 +430,6 @@ Nodes (22): 教案管理 PRD, 身份登录与访问规则, 5. 用户与权限, 1
 Cohesion: 0.10
 Nodes (21): 园所组合外键与并发约束, 4. Schema 总览, 14. 应用事务不变量, 5. 园所与身份 Schema, 2.1 事实来源, 3. PostgreSQL 物理约定, 10. 后台任务与 AI 结果 Schema, 9. 一日活动计划 Schema (+13 more)
 
-### Community 16 - "认证验收矩阵"
-Cohesion: 0.10
-Nodes (21): 认证验收矩阵, 6.3 纯手工教案, 2. 锁定安装与本地依赖, 6.2 必要设置与权限, 3. 数据库与首次初始化, 最后管理员已有有效待核验恢复请求时，改由部署控制台执行：, 以下 init-admin 命令仅在 T032 完成后执行：, 在下节启动 Web/API 后，通过 CLI 展示的入口输入单独展示的一次性初始化凭据， (+13 more)
-
 ### Community 17 - "data model 文档"
 Cohesion: 0.10
 Nodes (21): data model 文档, 7. 任务、预览与导出, 3.5 bootstrapinitializations, 11. 必测数据行为, 6. 教案与结构化正文, 8. 系统支撑, 9. 关键事务与状态不变量, 1. 通用规则 (+13 more)
@@ -452,8 +451,8 @@ Cohesion: 0.11
 Nodes (19): 密码与 TOTP 备用登录数据模型, 2. 枚举, 1. 设计原则, 5. 登录与升级事务, backupauthstatus, reauthenticationpurpose, 3.3 refreshtokens 扩展, 6. Alembic (+11 more)
 
 ### Community 22 - "common.sh"
-Cohesion: 0.10
-Nodes (12): check-prerequisites.sh script, check_dir(), check_file(), get_feature_paths(), get_repo_root(), has_jq(), _persist_feature_json(), resolve_specify_init_dir() (+4 more)
+Cohesion: 0.13
+Nodes (5): get_feature_paths(), get_repo_root(), _persist_feature_json(), resolve_specify_init_dir(), common.sh script
 
 ### Community 23 - "密码与 TOTP 备用认证端点"
 Cohesion: 0.17
@@ -532,9 +531,9 @@ Cohesion: 0.50
 Nodes (4): M2 到 M3 到 M3A 实施顺序, M3A 实施策略, M3A 里程碑与迁移编号决策, 认证变更 Intentional RED 到 GREEN 流程
 
 ## Knowledge Gaps
-- **985 isolated node(s):** `common.sh script`, `背景`, `决策`, `NiceGUI 一体化进程`, `前端直接访问数据库或共享 Repository` (+980 more)
+- **989 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+984 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **253 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **257 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
@@ -552,8 +551,8 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `密码与 TOTP 备用登录数据模型` connect `密码与 TOTP 备用登录数据模型` to `密码与 TOTP 备用登录任务清单`, `备用凭据与短时绑定表`, `0004 Settings 到 0005 M3A 迁移链`, `恢复与会话保证模型`, `密码与 TOTP 备用登录实施计划`?**
   _High betweenness centrality (0.011) - this node is a cross-community bridge._
-- **What connects `common.sh script`, `背景`, `决策` to the rest of the system?**
-  _985 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
+  _989 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `openapi 文档` be split into smaller, more focused modules?**
   _Cohesion score 0.008771929824561403 - nodes in this community are weakly interconnected._
 - **Should `密码与 TOTP 备用登录任务清单` be split into smaller, more focused modules?**
@@ -561,4 +560,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `密码与 TOTP 备用登录功能规格` be split into smaller, more focused modules?**
   _Cohesion score 0.0425531914893617 - nodes in this community are weakly interconnected._
 - **Should `主规格身份认证范围` be split into smaller, more focused modules?**
-  _Cohesion score 0.07407407407407407 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.041666666666666664 - nodes in this community are weakly interconnected._

@@ -294,5 +294,7 @@
   "292": "第二行：",
   "293": "Pyright",
   "294": "Pytest",
-  "295": "Ruff"
+  "295": "Ruff",
+  "296": "setup-plan.sh",
+  "297": "setup-tasks.sh"
 }

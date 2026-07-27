@@ -120,10 +120,11 @@ flowchart LR
     M8 --> M9[M9 生产部署复审]
 ```
 
-M5 已按固定路线完成 T046–T061，交付完全不依赖 AI 的手工教案 MVP。唯一 `dev`
-实施路线现已进入 M4 T062–T086，并继续遵守
-`0006_lesson_plans → 0007_ai_prompts_jobs` 迁移链与 US3 对教案强外键的依赖。
-不得跳过 M4 直接进入 T087 以后的 AI 生成任务。
+M5 已按固定路线完成 T046–T061，交付完全不依赖 AI 的手工教案 MVP；M4 也已完成
+T062–T086 并通过双轴 Review、`dev`/`main` Quality Gates 与正常 merge。M6 T087–T126
+现为 `ready`，继续遵守 `0006_lesson_plans → 0007_ai_prompts_jobs →
+0008_ai_generation_results → 0009_group_activity_sources` 迁移链。M6 Issue 必须固定引用
+本次新 docs 基线，并保持 US4 T087–T110 先于 US5 T111–T126。
 
 ## 6. M0：共享设计基线
 
@@ -291,13 +292,20 @@ Review 的 310 项完整测试均通过。
 
 ### 出口门禁
 
-- [ ] 数据库中只存储 AI Key 密文、版本、Key ID 和脱敏末尾，日志/审计/异常不出现明文。
-- [ ] 每园最多一个已启用默认档案，启用前必须完成风险确认并具备密文。
-- [ ] 提示词版本与定义的三列外键归属正确，每定义最多一个自定义草稿。
-- [ ] 已发布版本不被原地修改，回滚生成新版本，未发布草稿不影响业务生成。
-- [ ] 变量白名单、能力校验、Schema 版本和模型选择通过契约测试。
-- [ ] 常规自动化测试只使用本地替身，不调用真实或付费 AI。
-- [ ] 浏览器冒烟覆盖密钥脱敏、模型档案和提示词草稿→发布→回滚流程。
+- [x] 数据库中只存储 AI Key 密文、版本、Key ID 和脱敏末尾，日志/审计/异常不出现明文。
+- [x] 每园最多一个已启用默认档案，启用前必须完成风险确认并具备密文。
+- [x] 提示词版本与定义的三列外键归属正确，每定义最多一个自定义草稿。
+- [x] 已发布版本不被原地修改，回滚生成新版本，未发布草稿不影响业务生成。
+- [x] 变量白名单、能力校验、Schema 版本和模型选择通过契约测试。
+- [x] 常规自动化测试只使用本地替身，不调用真实或付费 AI。
+- [x] 浏览器冒烟覆盖密钥脱敏、模型档案和提示词草稿→发布→回滚流程。
+
+验收证据见 [Issue #10](https://github.com/ywyz/child-manager/issues/10)；固定文档基线为
+`docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，最终 Review SHA 为
+`dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`。Standards/Spec 均为 PASS，`dev`
+Quality Gates `30235090100` 为 458 项通过；正常 merge 后
+`main@b7676c27d07adc5eca1f0c397217780367481e9c` 的 Quality Gates `30235439229`
+同样为 458 项通过，且最终树与 `dev` 一致。
 
 ## 11. M5：无 AI 教案手工闭环
 
@@ -429,7 +437,7 @@ Review 的 310 项完整测试均通过。
 
 ## 16. 当前状态快照
 
-状态日期：2026-07-26
+状态日期：2026-07-27
 
 | 里程碑 | 状态 | 当前证据 | 下一个解锁动作 |
 | --- | --- | --- | --- |
@@ -438,17 +446,18 @@ Review 的 310 项完整测试均通过。
 | M2 | `complete` | [#4](https://github.com/ywyz/child-manager/issues/4) 已按 `completed` 关闭；最终基线 `docs@bb025b2`、`dev@fb4f076`，M2 专项 133 项、完整 192 项、双轴 Review 与 Quality Gates `30006114394` 均通过 | 保留验收记录；已随 M3A 稳定基线集成 `main` |
 | M3 | `complete` | [#7](https://github.com/ywyz/child-manager/issues/7) 已按 `completed` 关闭；固定 `docs@bd98a1a`，最终 Review 修复 `dev@f5f0084` | 保留验收记录；已集成 `main` |
 | M3A | `complete` | [#8](https://github.com/ywyz/child-manager/issues/8) 已按 `completed` 关闭；固定 `docs@2f7894c`，最终实现 `dev@6a9e269`，Quality Gates `30161645948` 与独立复验通过 | 保留验收记录；已集成 `main` |
-| M5 | `complete` | [#9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed` 关闭；固定 `docs@7d9af6c`，最终 `dev@ae74c83`，双轴 Review 均通过，Quality Gates `30202886134` 为 347 项通过 | 更新并检查最终图谱后集成 `main`，保留验收记录 |
-| M4 | `ready` | M5 已完成并关闭；设计与 T062–T086 已具备 | 创建固定引用本次 docs 状态提交的单一实施 Issue |
-| M6–M8 | `pending` | 尚未开始实现 | 等待 M5、M4 及各自前序里程碑完成 |
+| M5 | `complete` | [#9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed` 关闭；固定 `docs@7d9af6c`，最终 `dev@ae74c83`，双轴 Review 均通过，Quality Gates `30202886134` 为 347 项通过 | 已随最终 M4 树集成 `main`；保留验收记录 |
+| M4 | `complete` | [#10](https://github.com/ywyz/child-manager/issues/10) 已按 `completed` 关闭；固定 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，Review `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，双轴 PASS；`dev`/`main` Quality Gates `30235090100`/`30235439229` 均为 458 项通过；最终 `main@b7676c27d07adc5eca1f0c397217780367481e9c` | 保留验收记录 |
+| M6 | `ready` | M4 与 M5 均为 `complete`；T087–T126 的设计、任务与入口依赖已具备 | 创建固定引用本次新 docs SHA 的单一实施 Issue |
+| M7–M8 | `pending` | 尚未开始实现 | 等待 M6 及各自前序里程碑完成 |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010/ADR-0011 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 
 该快照只能根据实际分支、文件、命令与验收证据更新。不得根据历史分支、计划文件或未执行命令猜测状态。
 
-M5 T046–T061 已完成，下一阶段进入 M4 T062–T086。共享
+M4 T062–T086 与 M5 T046–T061 均已完成，下一阶段为 M6 T087–T126。共享
 [`specs/001-daily-activity-plan/tasks.md`](../specs/001-daily-activity-plan/tasks.md)
-的现有任务顺序、迁移编号和依赖图无需重编号；M4 实施 Issue 必须引用更新后固定的
-`docs` 提交。
+的现有任务顺序、迁移编号和依赖图无需重编号；M6 实施 Issue 必须引用本次更新后固定的
+`docs` 提交，并保持 T087–T110 → T111–T126 的内部顺序。
 
 ## 17. Roadmap 更新规则
 
