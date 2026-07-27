@@ -224,7 +224,7 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 - [x] T066 [P] [US3] 在 `tests/repository/test_ai_prompt_repositories.py` 编写园所隔离、模型/草稿生命周期、调用字段或密钥业务变化原子递增 revision、非调用字段与同明文重加密不递增、prompt run 全部冻结字段不可更新且 model snapshot 含 revision/无 key/ciphertext、摘要只含排序变量名/true、幂等命中先于 retention、删除 run 保留 job 和 20 条并发测试；验证：`uv run pytest --collect-only tests/repository/test_ai_prompt_repositories.py` 退出 0，再运行该文件并因隔离、revision、冻结上下文、脱敏摘要、幂等保留或并发断言未满足而 RED
 - [x] T067 [P] [US3] 在 `tests/api/test_ai_model_profiles.py` 编写管理员权限、Key 只写脱敏、能力/密钥/风险确认启用门禁、地址/模型名/能力/Key 变化递增 `call_config_revision`、显示名/限流/默认/启停不递增、停用保留引用、默认切换和错误脱敏测试；验证：`uv run pytest --collect-only tests/api/test_ai_model_profiles.py` 退出 0，再运行该文件并因模型档案权限、revision 或安全行为断言未满足而 RED
 - [x] T068 [P] [US3] 在 `tests/unit/test_prompt_catalog.py`、`tests/unit/test_prompt_renderer.py` 编写七个稳定代码、逐任务白名单及严格 AI 结果 Schema 测试；渲染表驱动接受 `{{name}}`、`{{ name }}`、水平 Tab，拒绝换行/Unicode 空白、大小写、前导下划线、点号、下标、表达式/过滤器/循环/未知/未闭合，并覆盖字符串/空值/JSON 标量、数组保序/对象 key 排序紧凑 JSON、变量值不递归渲染及缺变量外呼前失败；同时覆盖现有固定输出约束、`teacher_context` 身份排除和 v1 资源哈希；验证：`uv run pytest --collect-only tests/unit/test_prompt_catalog.py tests/unit/test_prompt_renderer.py` 退出 0，再运行两文件并因目录、词法/渲染安全、严格结果 Schema 或冻结资源行为断言未满足而 RED
-- [x] T069 [P] [US3] 在 `tests/api/test_prompt_lifecycle.py` 编写系统版本只读、草稿/发布、历史、恢复、业务只取已发布版本，以及保存与发布复用同一解析器、对 T068 全部非法/未知/未闭合占位符均返回 422 的审计测试；验证：`uv run pytest --collect-only tests/api/test_prompt_lifecycle.py` 退出 0，再运行该文件并因提示词生命周期或解析器一致性断言未满足而 RED
+- [x] T069 [P] [US3] 在 `tests/api/test_prompt_lifecycle.py` 编写系统版本只读、草稿/发布/历史/恢复、业务只取已发布版本，以及保存与发布复用同一解析器、对 T068 全部非法/未知/未闭合占位符均返回 422 的审计测试；验证：`uv run pytest --collect-only tests/api/test_prompt_lifecycle.py` 退出 0，再运行该文件并因提示词生命周期或解析器一致性断言未满足而 RED
 - [x] T070 [P] [US3] 在 `tests/api/test_prompt_test_jobs.py` 编写同事务 run+job，冻结 input、提示词正文/哈希、Schema、profile/base_url/model_name/capabilities/call_config_revision 且零密钥；后续请求、草稿或模型变化不修改冻结 row，响应仅脱敏摘要；覆盖 prompt code fingerprint、Redis 后 202、DB/端点配置前 503、retention/幂等和并发上限；验证：`uv run pytest --collect-only tests/api/test_prompt_test_jobs.py` 退出 0，再运行该文件并因 revision 冻结、脱敏摘要、幂等保留或受理语义断言未满足而 RED
 - [x] T071 [P] [US3] 在 `tests/worker/test_prompt_test_jobs.py` 编写重复投递、租约恢复、调用上限、Schema、幂等更新和 retention；Redis 仅传 job_id，Worker 只读 run 冻结 input/prompt/schema/model snapshot，草稿修改不改变外呼；地址/模型名/能力/Key 任一变化使 revision 不同并以 `prompt.configuration_changed` 零调用失败，严禁新 Key 与旧地址混用；revision 一致时才读当前 Key 并实时重验账号/管理员/模型启用和当前地址安全；验证：`uv run pytest --collect-only tests/worker/test_prompt_test_jobs.py` 退出 0，再运行该文件并因 revision 门禁、权威上下文、实时安全、Worker 幂等或恢复断言未满足而 RED
 - [x] T072 [P] [US3] 在 `tests/web/test_ai_prompt_settings_smoke.py` 编写模型/提示词设置、脱敏 Key、异步测试刷新恢复、`prompt.configuration_changed` 中文提示与重新测试入口及键盘/焦点/标签错误关联冒烟；验证：`uv run pytest --collect-only tests/web/test_ai_prompt_settings_smoke.py` 退出 0，再运行该文件并因配置变更恢复、页面流程或无障碍行为断言未满足而 RED
@@ -248,9 +248,18 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 
 **Checkpoint**: 管理员可安全配置和测试 AI 基础，但教师手工教案仍不依赖它。
 
+**完成证据**: [Issue #10](https://github.com/ywyz/child-manager/issues/10) 已按 `completed`
+关闭；固定 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，最终 Review SHA
+`dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 的 Standards/Spec 均为 PASS，
+`dev`/`main` Quality Gates `30235090100`/`30235439229` 均为 458 项通过；正常 merge
+形成 `main@b7676c27d07adc5eca1f0c397217780367481e9c`。
+
 ---
 
 ## Phase 6: User Story 4 — 教师按栏目使用 AI 并保留决定权（Priority: P4）
+
+**Milestone state**: M4 与 M5 均为 `complete`，M6 T087–T126 为 `ready`。只有固定引用本次
+新 docs SHA 的 M6 Issue 才能授权实现，并保持 T087–T110 先于 T111–T126。
 
 **Goal**: 实现可靠任务、一键四栏、栏目级预览/采用/拒绝/重试以及五栏完整后显式反思。
 
