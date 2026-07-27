@@ -89,6 +89,11 @@ def test_catalog_input_validation_excludes_teacher_identity_and_unknown_fields()
             "daily_activity_plan.morning_activity",
             {**variables, "teacher_context": {"name": "真实教师"}},
         )
+    with pytest.raises(ValidationError):
+        module.validate_prompt_variables(
+            "daily_activity_plan.indoor_area_game",
+            {**variables, "indoor_areas": ["建构区", "建构区"]},
+        )
 
 
 def test_catalog_result_schemas_are_strict() -> None:
@@ -165,3 +170,13 @@ def test_catalog_result_schemas_match_the_frozen_openapi_shapes() -> None:
         )
         == added_step
     )
+    with pytest.raises(ValidationError):
+        module.validate_prompt_result_schema(
+            "prompt.group_activity_add_step.v1",
+            {**added_step, "suggested_insert_index": 2},
+            input_context={
+                "group_activity": group_result,
+                "age_group_name": "中班",
+                "teacher_context": {"notes": ""},
+            },
+        )

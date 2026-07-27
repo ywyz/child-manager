@@ -49,6 +49,7 @@ class IdentityAuditEventCode(StrEnum):
     AI_MODEL_DISABLED = "ai_model.disabled"
     PROMPT_PUBLISHED = "prompt.published"
     PROMPT_RESTORED = "prompt.restored"
+    PROMPT_TEST_ATTEMPTED = "prompt.test_attempted"
     PROMPT_TESTS_CLEARED = "prompt.tests_cleared"
 
     # 通用登录审计名称保留为认证 ceremony 的兼容别名, 不代表密码登录。

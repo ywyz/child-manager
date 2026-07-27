@@ -29,6 +29,7 @@ class FakeStore:
     successes: list[dict[str, object]] = field(default_factory=list)
     retry_errors: bool = False
     heartbeats: int = 0
+    heartbeat_failures_remaining: int = 0
 
     def kindergarten_id_for_job(self, job_id: UUID) -> UUID | None:
         assert job_id == self.context.job_id
@@ -123,6 +124,9 @@ class FakeStore:
         assert kindergarten_id == self.context.kindergarten_id
         assert job_id == self.context.job_id
         assert worker_id == "worker-1"
+        if self.heartbeat_failures_remaining:
+            self.heartbeat_failures_remaining -= 1
+            raise RuntimeError("transient database error")
         self.heartbeats += 1
         return True
 
@@ -221,7 +225,7 @@ def test_revision_mismatch_fails_without_reading_key_or_calling_model() -> None:
         authorizer=authorizer,
         read_api_key=read_key,
         validate_url=lambda value: value,
-        validate_result=lambda _code, result: result,
+        validate_result=lambda _code, result, _input: result,
     )
     executor.execute(context.kindergarten_id, context.job_id, worker_id="worker-1")
 
@@ -254,7 +258,7 @@ def test_matching_revision_uses_only_frozen_context_and_current_key() -> None:
         authorizer=authorizer,
         read_api_key=lambda _profile: "current-secret",
         validate_url=lambda value: value,
-        validate_result=lambda _code, result: result,
+        validate_result=lambda _code, result, _input: result,
     )
 
     executor.execute(context.kindergarten_id, context.job_id, worker_id="worker-1")
@@ -293,7 +297,7 @@ def test_worker_rechecks_authorization_and_enabled_state_before_external_call() 
         authorizer=FakeAuthorizer(allowed=True),
         read_api_key=lambda _profile: "secret",
         validate_url=lambda value: value,
-        validate_result=lambda _code, result: result,
+        validate_result=lambda _code, result, _input: result,
     )
 
     executor.execute(context.kindergarten_id, context.job_id, worker_id="worker-1")
@@ -324,7 +328,7 @@ def test_retryable_provider_failure_returns_control_to_the_broker_retry_policy()
         authorizer=FakeAuthorizer(),
         read_api_key=lambda _profile: "secret",
         validate_url=lambda value: value,
-        validate_result=lambda _code, result: result,
+        validate_result=lambda _code, result, _input: result,
     )
 
     with pytest.raises(service.PromptTestRetry) as raised:
@@ -356,7 +360,7 @@ def test_long_model_call_renews_the_worker_owned_lease() -> None:
         authorizer=FakeAuthorizer(),
         read_api_key=lambda _profile: "secret",
         validate_url=lambda value: value,
-        validate_result=lambda _code, result: result,
+        validate_result=lambda _code, result, _input: result,
         heartbeat_interval_seconds=0.01,
     )
 
@@ -366,6 +370,61 @@ def test_long_model_call_renews_the_worker_owned_lease() -> None:
     assert len(store.successes) == 1
 
 
+def test_transient_heartbeat_failure_does_not_abandon_the_active_lease() -> None:
+    service, _leases, _actors = _modules()
+    context = _context(service)
+    profile = service.CurrentModelCallProfile(
+        kindergarten_id=context.kindergarten_id,
+        profile_id=context.model_profile_id,
+        api_base_url="https://ai.example.test/v1",
+        model_name="frozen-model",
+        capability_codes=frozenset({"text", "structured_output"}),
+        call_config_revision=3,
+        max_concurrency=1,
+        rate_limit_per_minute=10,
+        is_active=True,
+        key_envelope=object(),
+    )
+    store = FakeStore(context, profile, heartbeat_failures_remaining=1)
+    executor = service.PromptTestExecutor(
+        store=store,
+        client=SlowClient({"topic": "春天", "questions": []}),
+        authorizer=FakeAuthorizer(),
+        read_api_key=lambda _profile: "secret",
+        validate_url=lambda value: value,
+        validate_result=lambda _code, result, _input: result,
+        heartbeat_interval_seconds=0.01,
+    )
+
+    executor.execute(context.kindergarten_id, context.job_id, worker_id="worker-1")
+
+    assert store.heartbeat_failures_remaining == 0
+    assert store.heartbeats >= 1
+    assert len(store.successes) == 1
+
+
+def test_each_actor_delivery_uses_a_unique_lease_owner_token() -> None:
+    _service, _leases, actors = _modules()
+
+    first = actors._worker_id()
+    second = actors._worker_id()
+
+    assert first != second
+    assert first.rsplit(":", 1)[0] == second.rsplit(":", 1)[0]
+
+
+def test_retry_delays_use_deterministic_bounded_jitter() -> None:
+    policy = import_module("packages.backend.jobs.retry_policy")
+    job_id = UUID("01900000-0000-7000-8000-000000000001")
+
+    first = policy.retry_delay_seconds(job_id, attempt_count=1)
+    second = policy.retry_delay_seconds(job_id, attempt_count=2)
+
+    assert first in range(4, 7)
+    assert second in range(24, 37)
+    assert policy.retry_delay_seconds(job_id, attempt_count=1) == first
+
+
 def test_lease_expiry_and_recovery_scan_are_deterministic() -> None:
     _service, leases, actors = _modules()
     now = datetime(2026, 7, 26, 12, 0, tzinfo=UTC)
@@ -373,6 +432,10 @@ def test_lease_expiry_and_recovery_scan_are_deterministic() -> None:
     assert leases.lease_is_expired(now + timedelta(seconds=1), now=now) is False
 
     class SchedulerStore:
+        def __init__(self) -> None:
+            self.marked: list[UUID] = []
+            self.kindergarten_id = uuid4()
+
         def recoverable_job_ids(
             self,
             *,
@@ -385,15 +448,25 @@ def test_lease_expiry_and_recovery_scan_are_deterministic() -> None:
             assert include_expired is True
             return [uuid4(), uuid4()]
 
+        def kindergarten_id_for_job(self, job_id: UUID) -> UUID | None:
+            del job_id
+            return self.kindergarten_id
+
+        def mark_prompt_test_dispatched(self, kindergarten_id: UUID, job_id: UUID) -> None:
+            assert kindergarten_id == self.kindergarten_id
+            self.marked.append(job_id)
+
     dispatched: list[UUID] = []
+    store = SchedulerStore()
     count = actors.recover_prompt_test_jobs(
-        SchedulerStore(),
+        store,
         dispatch=dispatched.append,
         now=now,
         limit=100,
     )
     assert count == 2
     assert len(dispatched) == 2
+    assert store.marked == dispatched
 
 
 def test_recovery_dispatch_failure_does_not_skip_later_reserved_jobs() -> None:
@@ -401,6 +474,10 @@ def test_recovery_dispatch_failure_does_not_skip_later_reserved_jobs() -> None:
     job_ids = [uuid4(), uuid4()]
 
     class SchedulerStore:
+        def __init__(self) -> None:
+            self.marked: list[UUID] = []
+            self.kindergarten_id = uuid4()
+
         def recoverable_job_ids(
             self,
             *,
@@ -411,6 +488,14 @@ def test_recovery_dispatch_failure_does_not_skip_later_reserved_jobs() -> None:
             del now, limit, include_expired
             return job_ids
 
+        def kindergarten_id_for_job(self, job_id: UUID) -> UUID | None:
+            del job_id
+            return self.kindergarten_id
+
+        def mark_prompt_test_dispatched(self, kindergarten_id: UUID, job_id: UUID) -> None:
+            assert kindergarten_id == self.kindergarten_id
+            self.marked.append(job_id)
+
     attempted: list[UUID] = []
 
     def dispatch(job_id: UUID) -> None:
@@ -418,7 +503,9 @@ def test_recovery_dispatch_failure_does_not_skip_later_reserved_jobs() -> None:
         if job_id == job_ids[0]:
             raise RuntimeError("Redis unavailable")
 
-    count = actors.recover_prompt_test_jobs(SchedulerStore(), dispatch=dispatch)
+    store = SchedulerStore()
+    count = actors.recover_prompt_test_jobs(store, dispatch=dispatch)
 
     assert attempted == job_ids
     assert count == 1
+    assert store.marked == [job_ids[1]]

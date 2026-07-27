@@ -7,7 +7,15 @@ from datetime import date, datetime
 from typing import Annotated, Literal
 from uuid import UUID
 
-from pydantic import ConfigDict, Field, RootModel, field_validator, model_validator
+from pydantic import (
+    AfterValidator,
+    ConfigDict,
+    Field,
+    RootModel,
+    ValidationInfo,
+    field_validator,
+    model_validator,
+)
 from pydantic.json_schema import JsonSchemaValue
 
 from packages.contracts.common import ContractModel
@@ -50,16 +58,25 @@ class CommonPlanPromptVariables(ContractModel):
     teacher_context: TeacherContext
 
 
+def _require_unique_area_names(values: list[str]) -> list[str]:
+    if len(set(values)) != len(values):
+        raise ValueError("班级区域名称不能重复")
+    return values
+
+
+AreaNames = Annotated[
+    list[Annotated[str, Field(min_length=1, max_length=120)]],
+    Field(min_length=1, json_schema_extra={"uniqueItems": True}),
+    AfterValidator(_require_unique_area_names),
+]
+
+
 class IndoorAreaPromptVariables(CommonPlanPromptVariables):
-    indoor_areas: Annotated[
-        list[Annotated[str, Field(min_length=1, max_length=120)]], Field(min_length=1)
-    ]
+    indoor_areas: AreaNames
 
 
 class OutdoorAreaPromptVariables(CommonPlanPromptVariables):
-    outdoor_areas: Annotated[
-        list[Annotated[str, Field(min_length=1, max_length=120)]], Field(min_length=1)
-    ]
+    outdoor_areas: AreaNames
 
 
 class GroupSplitPromptVariables(ContractModel):
@@ -146,6 +163,14 @@ class AiGroupActivity(ContractModel):
 class GroupActivityAddStepResult(ContractModel):
     step: AiGroupActivityStep
     suggested_insert_index: Annotated[int, Field(ge=0)]
+
+    @model_validator(mode="after")
+    def enforce_insert_index(self, info: ValidationInfo) -> GroupActivityAddStepResult:
+        context = info.context
+        maximum = context.get("max_insert_index") if isinstance(context, dict) else None
+        if isinstance(maximum, int) and self.suggested_insert_index > maximum:
+            raise ValueError("建议插入位置不能超过现有活动环节数")
+        return self
 
 
 class AiDailyReflection(ContractModel):

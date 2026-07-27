@@ -146,6 +146,9 @@ def test_model_activation_and_job_terminal_invariants_are_database_enforced(
     assert "risk_confirmed_by IS NULL" in constraints["ck_ai_model_profiles_risk_confirmation"]
     assert "risk_confirmed_at IS NULL" in constraints["ck_ai_model_profiles_risk_confirmation"]
     assert "risk_confirmed_by IS NOT NULL" in constraints["ck_ai_model_profiles_enable_ready"]
+    key_envelope = constraints["ck_ai_model_profiles_key_envelope"]
+    assert "api_key_nonce IS NOT NULL" in key_envelope
+    assert "api_key_encryption_version IS NOT NULL" in key_envelope
     assert "finished_at IS NOT NULL" in constraints["ck_background_jobs_terminal_finished"]
     assert "error_code IS NOT NULL" in constraints["ck_background_jobs_failure_error"]
     assert (

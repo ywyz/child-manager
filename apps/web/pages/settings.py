@@ -49,6 +49,25 @@ def masked_api_key_text(masked: str) -> str:
     return f"已配置：{masked}"
 
 
+def prompt_edit_version_id(definition: dict[str, object]) -> str:
+    """刷新时优先恢复未发布草稿，避免用已发布正文覆盖编辑态。"""
+
+    return str(definition.get("draft_version_id") or definition.get("effective_version_id") or "")
+
+
+def prompt_test_record_text(record: dict[str, object]) -> str:
+    """将服务端已脱敏的测试运行渲染为可读历史记录。"""
+
+    header = f"{record.get('created_at', '')} · {record.get('status', '')} · {record.get('id', '')}"
+    output = record.get("output_content")
+    if isinstance(output, dict):
+        return f"{header}\n{json.dumps(output, ensure_ascii=False, indent=2)}"
+    error_summary = record.get("error_summary")
+    if isinstance(error_summary, str) and error_summary:
+        return f"{header}\n{error_summary}"
+    return header
+
+
 def build_ai_prompt_settings_section() -> None:
     ui.label("AI 模型档案").classes("text-h6")
     profile_selector = ui.select({}, label="模型档案列表")
@@ -232,6 +251,21 @@ def build_ai_prompt_settings_section() -> None:
         else:
             prompt_status.set_text("提示词版本恢复失败")
 
+    async def load_prompt_test_history(selected: str | None = None) -> None:
+        selected_code = selected or str(prompt_code.value or "")
+        if not selected_code:
+            return
+        tests = await same_origin_api_request(
+            f"/api/v1/prompts/{selected_code}/tests?page=1&page_size=20"
+        )
+        tests_body = tests.get("body", {})
+        test_history.clear()
+        if tests.get("ok") and isinstance(tests_body, dict):
+            with test_history:
+                for item in tests_body.get("items", []):
+                    if isinstance(item, dict):
+                        ui.label(prompt_test_record_text(item)).style("white-space: pre-wrap")
+
     async def poll_job(selected_job_id: str) -> None:
         result = await same_origin_api_request(f"/api/v1/jobs/{selected_job_id}")
         job = result.get("body", {}) if result.get("ok") else {}
@@ -246,6 +280,7 @@ def build_ai_prompt_settings_section() -> None:
             prompt_status.set_text("任务仍在执行，可稍后使用任务 ID 恢复状态。")
             return
         prompt_status.set_text(prompt_test_status(job if isinstance(job, dict) else {}).message)
+        await load_prompt_test_history()
 
     async def run_prompt_test() -> None:
         try:
@@ -281,6 +316,7 @@ def build_ai_prompt_settings_section() -> None:
             await poll_job(job_id.value)
         else:
             prompt_status.set_text(prompt_test_status(job).message)
+            await load_prompt_test_history()
 
     async def restore_job_status() -> None:
         selected = str(job_id.value or "")
@@ -305,7 +341,7 @@ def build_ai_prompt_settings_section() -> None:
         definition = await same_origin_api_request(f"/api/v1/prompts/{selected}")
         definition_body = definition.get("body", {})
         if definition.get("ok") and isinstance(definition_body, dict):
-            prompt_version_id.value = str(definition_body.get("effective_version_id", ""))
+            prompt_version_id.value = prompt_edit_version_id(definition_body)
         versions = await same_origin_api_request(
             f"/api/v1/prompts/{selected}/versions?page=1&page_size=100"
         )
@@ -330,19 +366,7 @@ def build_ai_prompt_settings_section() -> None:
                 )
                 if isinstance(selected_version, dict):
                     prompt_draft.value = str(selected_version.get("content", ""))
-        tests = await same_origin_api_request(
-            f"/api/v1/prompts/{selected}/tests?page=1&page_size=20"
-        )
-        tests_body = tests.get("body", {})
-        test_history.clear()
-        if tests.get("ok") and isinstance(tests_body, dict):
-            with test_history:
-                for item in tests_body.get("items", []):
-                    if isinstance(item, dict):
-                        ui.label(
-                            f"{item.get('created_at', '')} · {item.get('status', '')}"
-                            f" · {item.get('id', '')}"
-                        )
+        await load_prompt_test_history(selected)
 
     async def load_ai_prompt_settings() -> None:
         profiles = await same_origin_api_request(

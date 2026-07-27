@@ -470,8 +470,8 @@
     "semantic_hash": ""
   },
   "apps/api/dependencies.py": {
-    "mtime": 1785078912.883975,
-    "ast_hash": "75b4b8e1388f35989325c01a05fe12b2",
+    "mtime": 1785122078.556016,
+    "ast_hash": "549a17b1164cc3751209b75cd4e6847e",
     "semantic_hash": ""
   },
   "apps/api/middleware.py": {
@@ -575,8 +575,8 @@
     "semantic_hash": ""
   },
   "apps/web/pages/settings.py": {
-    "mtime": 1785120509.575109,
-    "ast_hash": "6a46d8863fcb88c6a17eddceee261061",
+    "mtime": 1785122226.131021,
+    "ast_hash": "6d583845fb2d4cf8d1f90ab8ed405234",
     "semantic_hash": ""
   },
   "apps/web/pages/users.py": {
@@ -595,8 +595,8 @@
     "semantic_hash": ""
   },
   "apps/worker/actors.py": {
-    "mtime": 1785120552.0951104,
-    "ast_hash": "ad65b2427fb9374a94ccfebd4f601440",
+    "mtime": 1785121892.7170095,
+    "ast_hash": "be0c716eee5e53233fa26da27c0173dd",
     "semantic_hash": ""
   },
   "apps/worker/broker.py": {
@@ -900,8 +900,8 @@
     "semantic_hash": ""
   },
   "packages/contracts/audit.py": {
-    "mtime": 1785078912.911975,
-    "ast_hash": "67c7fcb6fca84e4813a879ae201bbbf1",
+    "mtime": 1785121954.8710117,
+    "ast_hash": "b7ca4a15404575a4ab07bfe32311d1dc",
     "semantic_hash": ""
   },
   "packages/contracts/common.py": {
@@ -930,8 +930,8 @@
     "semantic_hash": ""
   },
   "packages/contracts/prompts.py": {
-    "mtime": 1785120863.5821211,
-    "ast_hash": "04b0fb5cb2267849e5dd2651c68ca32f",
+    "mtime": 1785121823.915007,
+    "ast_hash": "70b27639d8589cc48ce45f8de26ea2a2",
     "semantic_hash": ""
   },
   "packages/contracts/settings.py": {
@@ -1055,8 +1055,8 @@
     "semantic_hash": ""
   },
   "tests/architecture/test_dependency_boundaries.py": {
-    "mtime": 1785071260.5527797,
-    "ast_hash": "0a2d549b545339ab0d5a173af795d980",
+    "mtime": 1785121727.959004,
+    "ast_hash": "334802b778d51fb92cc20c6613e0f00d",
     "semantic_hash": ""
   },
   "tests/architecture/test_local_development_profiles.py": {
@@ -1440,8 +1440,8 @@
     "semantic_hash": ""
   },
   "apps/api/routers/jobs.py": {
-    "mtime": 1785078912.883975,
-    "ast_hash": "45692bf34a1d36b4404d57ccff5900ae",
+    "mtime": 1785122078.557016,
+    "ast_hash": "440e78969dee9d11dc807496d4ea7dd5",
     "semantic_hash": ""
   },
   "apps/api/routers/prompts.py": {
@@ -1460,8 +1460,8 @@
     "semantic_hash": ""
   },
   "packages/backend/database/migrations/versions/0007_ai_prompts_jobs.py": {
-    "mtime": 1785121250.7761345,
-    "ast_hash": "694c8206f9744bda744d757d89858607",
+    "mtime": 1785121925.2510107,
+    "ast_hash": "0b36e31541a6de08a8381af48e76b9b5",
     "semantic_hash": ""
   },
   "packages/backend/integrations/ai/__init__.py": {
@@ -1520,18 +1520,18 @@
     "semantic_hash": ""
   },
   "packages/backend/jobs/repository.py": {
-    "mtime": 1785118646.6840448,
-    "ast_hash": "abbb2eddf942a50a0704b77d2ddcc8f1",
+    "mtime": 1785121917.6750104,
+    "ast_hash": "d656faf01a7de84c2cee49f690ce65db",
     "semantic_hash": ""
   },
   "packages/backend/jobs/retry_policy.py": {
-    "mtime": 1785119859.7260866,
-    "ast_hash": "0942dc37ded711e2d888db4cd4f484f4",
+    "mtime": 1785122172.6850193,
+    "ast_hash": "4cd9ce79e0137c045aa8683f41e5b7eb",
     "semantic_hash": ""
   },
   "packages/backend/jobs/service.py": {
-    "mtime": 1785120867.6141214,
-    "ast_hash": "c7790db91afc33c73d59a738c2f2f9f2",
+    "mtime": 1785122168.672019,
+    "ast_hash": "62d6a44773a27c0b3b705cb416b42923",
     "semantic_hash": ""
   },
   "packages/backend/prompts/__init__.py": {
@@ -1540,8 +1540,8 @@
     "semantic_hash": ""
   },
   "packages/backend/prompts/catalog.py": {
-    "mtime": 1785118785.7030497,
-    "ast_hash": "7e939c7274e793f8655a122c5031eab3",
+    "mtime": 1785121823.916007,
+    "ast_hash": "c69613af4a69e127ff733eb4a84174b9",
     "semantic_hash": ""
   },
   "packages/backend/prompts/models.py": {
@@ -1555,8 +1555,8 @@
     "semantic_hash": ""
   },
   "packages/backend/prompts/repository.py": {
-    "mtime": 1785119769.0950835,
-    "ast_hash": "ea700f7820e5ed546474289358a94006",
+    "mtime": 1785121843.4080079,
+    "ast_hash": "00c164e4d6e7f7fbd7ac2537056ffaee",
     "semantic_hash": ""
   },
   "packages/backend/prompts/service.py": {
@@ -1585,13 +1585,13 @@
     "semantic_hash": ""
   },
   "tests/api/test_prompt_lifecycle.py": {
-    "mtime": 1785078912.913975,
-    "ast_hash": "1ea0e05dc43b2dbb2635b9e743ddc94b",
+    "mtime": 1785121727.9580038,
+    "ast_hash": "65385348c725b3463d581439366c8178",
     "semantic_hash": ""
   },
   "tests/api/test_prompt_test_jobs.py": {
-    "mtime": 1785121250.7761345,
-    "ast_hash": "faf31d7ce0323299f0ae758208883d5f",
+    "mtime": 1785122246.9520216,
+    "ast_hash": "632371dd5d2ac1c79f43c2317002f7f4",
     "semantic_hash": ""
   },
   "tests/api/test_rotate_ai_keys_cli.py": {
@@ -1600,13 +1600,13 @@
     "semantic_hash": ""
   },
   "tests/contract/test_ai_prompt_contracts.py": {
-    "mtime": 1785120796.412119,
-    "ast_hash": "710b213f3781d462b2035bf0679177b0",
+    "mtime": 1785122253.602022,
+    "ast_hash": "4720698b6e681b49647378d124858f6d",
     "semantic_hash": ""
   },
   "tests/migrations/test_ai_prompts_jobs_migration.py": {
-    "mtime": 1785120204.6470985,
-    "ast_hash": "9356919f524185c249b70b19e0457720",
+    "mtime": 1785121727.959004,
+    "ast_hash": "0c4d82b587349e7be3997ae1edfb36ce",
     "semantic_hash": ""
   },
   "tests/repository/test_ai_prompt_repositories.py": {
@@ -1635,8 +1635,8 @@
     "semantic_hash": ""
   },
   "tests/unit/test_prompt_catalog.py": {
-    "mtime": 1785118198.3720293,
-    "ast_hash": "ffbf9a9a97a1c21b1cb7caf0813bc5aa",
+    "mtime": 1785121727.9580038,
+    "ast_hash": "e7d25a63aabafc6cca7d1b7ff6c21e23",
     "semantic_hash": ""
   },
   "tests/unit/test_prompt_renderer.py": {
@@ -1645,18 +1645,23 @@
     "semantic_hash": ""
   },
   "tests/web/test_ai_prompt_settings_smoke.py": {
-    "mtime": 1785120294.6521015,
-    "ast_hash": "50636b2d7afd5a3f296856c33fd5e892",
+    "mtime": 1785121791.951006,
+    "ast_hash": "cfbc64441f8c7e290b8d856039d2fd32",
     "semantic_hash": ""
   },
   "tests/worker/test_prompt_test_jobs.py": {
-    "mtime": 1785120552.0961106,
-    "ast_hash": "4f70563b9ba18e09baefff98719fd810",
+    "mtime": 1785122168.672019,
+    "ast_hash": "ec6b078d5e6a44732b38ce6a54611518",
     "semantic_hash": ""
   },
   "packages/backend/jobs/prompt_test_store.py": {
-    "mtime": 1785120552.0961106,
-    "ast_hash": "63ce1369a1448343ecdd6048c0137229",
+    "mtime": 1785122287.8910232,
+    "ast_hash": "6ce65433107c880eafe21cb7706262f2",
+    "semantic_hash": ""
+  },
+  "packages/backend/jobs/query_service.py": {
+    "mtime": 1785122078.556016,
+    "ast_hash": "8a0cf62e8832c9da235cdf38a4a768ef",
     "semantic_hash": ""
   }
 }

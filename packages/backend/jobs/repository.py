@@ -151,7 +151,8 @@ class JobRepository:
             started_at=COALESCE(started_at,now()),updated_at=now()
             WHERE kindergarten_id=%s AND id=%s AND job_type='prompt.test'
               AND attempt_count < max_attempts
-              AND (execution_status IN ('pending_dispatch','queued','retrying')
+              AND (execution_status IN ('pending_dispatch','queued')
+                   OR (execution_status='retrying' AND queued_at<=now())
                    OR (execution_status='running' AND lease_expires_at<now()))""",
             (worker_id, lease_expires_at, kindergarten_id, job_id),
         )

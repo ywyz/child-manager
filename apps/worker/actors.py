@@ -6,7 +6,7 @@ import socket
 from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Protocol
-from uuid import UUID
+from uuid import UUID, uuid7
 
 import dramatiq
 from dramatiq import Retry
@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 
 def _worker_id() -> str:
-    return f"{socket.gethostname()}:{os.getpid()}"
+    return f"{socket.gethostname()[:64]}:{os.getpid()}:{uuid7()}"
 
 
 def build_prompt_test_executor() -> PromptTestExecutor:
@@ -63,11 +63,17 @@ def build_prompt_test_executor() -> PromptTestExecutor:
             resolver=settings.resolver,
             allowed_hosts=settings.allowed_hosts,
         ),
-        validate_result=validate_prompt_result_schema,
+        validate_result=lambda code, result, input_context: validate_prompt_result_schema(
+            code,
+            result,
+            input_context=input_context,
+        ),
     )
 
 
 class RecoveryStore(Protocol):
+    def kindergarten_id_for_job(self, job_id: UUID) -> UUID | None: ...
+
     def recoverable_job_ids(
         self,
         *,
@@ -75,6 +81,8 @@ class RecoveryStore(Protocol):
         limit: int,
         include_expired: bool,
     ) -> list[UUID]: ...
+
+    def mark_prompt_test_dispatched(self, kindergarten_id: UUID, job_id: UUID) -> None: ...
 
 
 def recover_prompt_test_jobs(
@@ -100,6 +108,14 @@ def recover_prompt_test_jobs(
             logger.error("提示词测试恢复投递失败", extra={"job_id": str(job_id)})
             continue
         dispatched += 1
+        kindergarten_id = store.kindergarten_id_for_job(job_id)
+        if kindergarten_id is None:
+            logger.error("提示词测试恢复状态缺少园所", extra={"job_id": str(job_id)})
+            continue
+        try:
+            store.mark_prompt_test_dispatched(kindergarten_id, job_id)
+        except Exception:
+            logger.error("提示词测试恢复状态更新失败", extra={"job_id": str(job_id)})
     return dispatched
 
 

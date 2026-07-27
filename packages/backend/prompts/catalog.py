@@ -159,8 +159,19 @@ def validate_prompt_result(code: str, result: dict[str, Any]) -> dict[str, Any]:
 def validate_prompt_result_schema(
     schema_code: str,
     result: dict[str, Any],
+    *,
+    input_context: dict[str, object] | None = None,
 ) -> dict[str, Any]:
     for spec in PROMPT_SPECS.values():
         if spec.result_schema_code == schema_code:
-            return spec.result_model.model_validate(result).model_dump(mode="json")
+            validation_context: dict[str, object] | None = None
+            if schema_code == "prompt.group_activity_add_step.v1":
+                variables = GroupAddStepPromptVariables.model_validate(input_context)
+                validation_context = {
+                    "max_insert_index": len(variables.group_activity.process),
+                }
+            return spec.result_model.model_validate(
+                result,
+                context=validation_context,
+            ).model_dump(mode="json")
     raise LookupError("提示词结果 Schema 不存在")

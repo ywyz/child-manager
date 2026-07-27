@@ -42,6 +42,46 @@ def test_key_is_masked_and_never_rendered_as_an_editable_value() -> None:
     assert "secret" not in settings_page.masked_api_key_text("••••cret").lower()
 
 
+def test_existing_draft_is_preferred_over_the_published_version_after_reload() -> None:
+    assert (
+        settings_page.prompt_edit_version_id(
+            {
+                "draft_version_id": "draft-id",
+                "effective_version_id": "published-id",
+            }
+        )
+        == "draft-id"
+    )
+    assert (
+        settings_page.prompt_edit_version_id(
+            {"draft_version_id": None, "effective_version_id": "published-id"}
+        )
+        == "published-id"
+    )
+
+
+def test_prompt_test_history_renders_structured_output_and_safe_error_summary() -> None:
+    succeeded = settings_page.prompt_test_record_text(
+        {
+            "created_at": "2026-07-27T00:00:00Z",
+            "status": "succeeded",
+            "id": "run-id",
+            "output_content": {"topic": "自然变化"},
+        }
+    )
+    failed = settings_page.prompt_test_record_text(
+        {
+            "created_at": "2026-07-27T00:01:00Z",
+            "status": "failed",
+            "id": "failed-id",
+            "error_summary": "模型响应结构无效。",
+        }
+    )
+
+    assert '"topic": "自然变化"' in succeeded
+    assert "模型响应结构无效。" in failed
+
+
 def test_job_status_recovers_configuration_change_with_chinese_action() -> None:
     module = _job_status_module()
     state = module.prompt_test_status(

@@ -83,6 +83,14 @@ def test_prompt_test_contract_exposes_only_redacted_input_summary() -> None:
     result = _schema(runtime, "PromptResult")
     assert len(variables["oneOf"]) == 6
     assert len(result["oneOf"]) == 6
+    assert (
+        _schema(runtime, "IndoorAreaPromptVariables")["properties"]["indoor_areas"]["uniqueItems"]
+        is True
+    )
+    assert (
+        _schema(runtime, "OutdoorAreaPromptVariables")["properties"]["outdoor_areas"]["uniqueItems"]
+        is True
+    )
     request = _schema(runtime, "PromptTestRequest")
     assert request["properties"]["variables"]["$ref"].endswith("/PromptTestVariables")
     assert _schema(runtime, "PromptTestRun")["properties"]["output_content"]["oneOf"][0][

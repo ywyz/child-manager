@@ -127,3 +127,37 @@ def test_admin_creates_updates_publishes_and_restores_without_mutating_history(
             ).fetchall()
         }
     assert event_codes == {"prompt.published", "prompt.restored"}
+
+
+def test_published_draft_id_is_never_reused_for_the_next_draft(
+    prompt_admin_client: tuple[TestClient, ActorFixture],
+) -> None:
+    client, _actor = prompt_admin_client
+    original = client.get(f"/api/v1/prompts/{PROMPT_CODE}").json()
+    first = client.put(
+        f"/api/v1/prompts/{PROMPT_CODE}/draft",
+        json={
+            "content": "日期：{{plan_date}}；班级：{{class_name}}",
+            "based_on_version_id": original["effective_version_id"],
+        },
+        headers=csrf_headers(client),
+    )
+    assert first.status_code == 200
+    published = client.post(
+        f"/api/v1/prompts/{PROMPT_CODE}/publish",
+        headers=csrf_headers(client),
+    )
+    assert published.status_code == 201
+
+    second = client.put(
+        f"/api/v1/prompts/{PROMPT_CODE}/draft",
+        json={
+            "content": "日期：{{plan_date}}；星期：{{weekday_text}}",
+            "based_on_version_id": published.json()["id"],
+        },
+        headers=csrf_headers(client),
+    )
+
+    assert second.status_code == 200
+    assert second.json()["id"] != first.json()["id"]
+    assert second.json()["lifecycle_state"] == "draft"

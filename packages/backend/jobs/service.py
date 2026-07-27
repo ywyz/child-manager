@@ -94,6 +94,7 @@ class PromptTestStore(Protocol):
         *,
         worker_id: str,
     ) -> bool: ...
+    def mark_prompt_test_dispatched(self, kindergarten_id: UUID, job_id: UUID) -> None: ...
     def recoverable_job_ids(
         self,
         *,
@@ -170,7 +171,10 @@ class PromptTestExecutor:
         authorizer: PromptTestAuthorizer,
         read_api_key: Callable[[CurrentModelCallProfile], str],
         validate_url: Callable[[str], object],
-        validate_result: Callable[[str, dict[str, object]], dict[str, object]],
+        validate_result: Callable[
+            [str, dict[str, object], dict[str, object]],
+            dict[str, object],
+        ],
         limiter: ProfileCallLimiter | None = None,
         heartbeat_interval_seconds: float = 30,
     ) -> None:
@@ -203,7 +207,7 @@ class PromptTestExecutor:
                     )
                 except Exception:
                     logger.error("提示词测试心跳更新失败", extra={"job_id": str(job_id)})
-                    return
+                    continue
                 if not renewed:
                     return
 
@@ -253,7 +257,11 @@ class PromptTestExecutor:
                         api_key=api_key,
                         prompt=prompt,
                     )
-                output = self.validate_result(context.result_schema_code, raw)
+                output = self.validate_result(
+                    context.result_schema_code,
+                    raw,
+                    context.input_context,
+                )
                 self.store.finish_prompt_test_success(
                     kindergarten_id,
                     job_id,

@@ -9,13 +9,15 @@ from uuid import UUID
 
 import psycopg
 
+from packages.backend.audit.repository import AuditRepository
 from packages.backend.integrations.crypto.ai_keys import AiKeyEnvelope
 from packages.backend.jobs.repository import JobRepository
-from packages.backend.jobs.retry_policy import MAX_RETRY_AFTER_SECONDS, RETRY_DELAYS_SECONDS
+from packages.backend.jobs.retry_policy import MAX_RETRY_AFTER_SECONDS, retry_delay_seconds
 from packages.backend.jobs.service import (
     CurrentModelCallProfile,
     PromptTestExecutionContext,
 )
+from packages.contracts.audit import IdentityAuditEventCode
 
 LEASE_SECONDS = 120
 
@@ -203,7 +205,7 @@ class PostgresPromptTestStore:
         worker_id: str,
         code: str,
         summary: str,
-    ) -> None:
+    ) -> bool:
         updated = connection.execute(
             """UPDATE background_jobs SET execution_status='failed',finished_at=now(),
             error_code=%s,error_summary=%s,lease_owner=NULL,lease_expires_at=NULL,
@@ -213,11 +215,39 @@ class PostgresPromptTestStore:
             (code, summary, kindergarten_id, job_id, worker_id),
         )
         if not getattr(updated, "rowcount", 0):
-            return
+            return False
         connection.execute(
             """UPDATE prompt_test_runs SET status='failed',error_code=%s,error_summary=%s,
             updated_at=now() WHERE kindergarten_id=%s AND job_id=%s AND status='pending'""",
             (code, summary, kindergarten_id, job_id),
+        )
+        return True
+
+    @staticmethod
+    def _append_attempt_audit(
+        connection: psycopg.Connection[tuple[object, ...]],
+        kindergarten_id: UUID,
+        *,
+        requested_by: UUID,
+        request_id: UUID | None,
+        run_id: UUID,
+        outcome: str,
+        reason: str | None = None,
+        source: str | None = None,
+    ) -> None:
+        AuditRepository(connection, kindergarten_id).append(
+            event_code=IdentityAuditEventCode.PROMPT_TEST_ATTEMPTED,
+            actor_user_id=requested_by,
+            actor_role_codes=["admin"],
+            resource_type="prompt_test_run",
+            resource_id=run_id,
+            outcome=outcome,
+            request_id=request_id,
+            metadata={
+                key: value
+                for key, value in {"reason": reason, "source": source}.items()
+                if value is not None
+            },
         )
 
     def finish_prompt_test_success(
@@ -230,27 +260,39 @@ class PostgresPromptTestStore:
         elapsed_ms: int,
     ) -> None:
         with self._connect() as connection, connection.transaction():
-            updated = connection.execute(
+            job_row: Any = connection.execute(
                 """UPDATE background_jobs SET execution_status='succeeded',finished_at=now(),
                 error_code=NULL,error_summary=NULL,lease_owner=NULL,lease_expires_at=NULL,
                 last_heartbeat_at=NULL,updated_at=now()
                 WHERE kindergarten_id=%s AND id=%s AND job_type='prompt.test'
-                  AND execution_status='running' AND lease_owner=%s""",
+                  AND execution_status='running' AND lease_owner=%s
+                RETURNING requested_by,request_id""",
                 (kindergarten_id, job_id, worker_id),
-            )
-            if not getattr(updated, "rowcount", 0):
+            ).fetchone()
+            if job_row is None:
                 return
-            connection.execute(
+            run_row: Any = connection.execute(
                 """UPDATE prompt_test_runs SET status='succeeded',output_content=%s::jsonb,
                 elapsed_ms=%s,error_code=NULL,error_summary=NULL,updated_at=now()
-                WHERE kindergarten_id=%s AND job_id=%s AND status='pending'""",
+                WHERE kindergarten_id=%s AND job_id=%s AND status='pending'
+                RETURNING id""",
                 (
                     json.dumps(output, ensure_ascii=False),
                     elapsed_ms,
                     kindergarten_id,
                     job_id,
                 ),
-            )
+            ).fetchone()
+            if run_row is not None:
+                self._append_attempt_audit(
+                    connection,
+                    kindergarten_id,
+                    requested_by=UUID(str(job_row[0])),
+                    request_id=UUID(str(job_row[1])) if job_row[1] is not None else None,
+                    run_id=UUID(str(run_row[0])),
+                    outcome="success",
+                    source="completed",
+                )
 
     def handle_prompt_test_error(
         self,
@@ -265,24 +307,27 @@ class PostgresPromptTestStore:
     ) -> int | None:
         with self._connect() as connection, connection.transaction():
             row: Any = connection.execute(
-                """SELECT attempt_count,max_attempts FROM background_jobs
-                WHERE kindergarten_id=%s AND id=%s AND job_type='prompt.test'
-                  AND execution_status='running' AND lease_owner=%s
-                FOR UPDATE""",
+                """SELECT j.attempt_count,j.max_attempts,j.requested_by,j.request_id,r.id
+                FROM background_jobs j JOIN prompt_test_runs r
+                  ON r.kindergarten_id=j.kindergarten_id AND r.job_id=j.id
+                WHERE j.kindergarten_id=%s AND j.id=%s AND j.job_type='prompt.test'
+                  AND j.execution_status='running' AND j.lease_owner=%s
+                FOR UPDATE OF j""",
                 (kindergarten_id, job_id, worker_id),
             ).fetchone()
             if row is None:
                 return None
             if retryable and int(cast(Any, row[0])) < int(cast(Any, row[1])):
-                policy_delay = RETRY_DELAYS_SECONDS[
-                    min(int(cast(Any, row[0])) - 1, len(RETRY_DELAYS_SECONDS) - 1)
-                ]
+                policy_delay = retry_delay_seconds(
+                    job_id,
+                    attempt_count=int(cast(Any, row[0])),
+                )
                 if retry_after_seconds is not None:
                     policy_delay = max(
                         policy_delay,
                         min(MAX_RETRY_AFTER_SECONDS, retry_after_seconds),
                     )
-                connection.execute(
+                updated = connection.execute(
                     """UPDATE background_jobs SET execution_status='retrying',
                     lease_owner=NULL,lease_expires_at=NULL,last_heartbeat_at=NULL,
                     error_code=NULL,error_summary=NULL,
@@ -291,8 +336,20 @@ class PostgresPromptTestStore:
                       AND execution_status='running' AND lease_owner=%s""",
                     (policy_delay, kindergarten_id, job_id, worker_id),
                 )
+                if not getattr(updated, "rowcount", 0):
+                    return None
+                self._append_attempt_audit(
+                    connection,
+                    kindergarten_id,
+                    requested_by=UUID(str(row[2])),
+                    request_id=UUID(str(row[3])) if row[3] is not None else None,
+                    run_id=UUID(str(row[4])),
+                    outcome="failure",
+                    reason=code,
+                    source="retrying",
+                )
                 return policy_delay
-            self._finish_failure(
+            finished = self._finish_failure(
                 connection,
                 kindergarten_id,
                 job_id,
@@ -300,6 +357,17 @@ class PostgresPromptTestStore:
                 code=code,
                 summary=summary,
             )
+            if finished:
+                self._append_attempt_audit(
+                    connection,
+                    kindergarten_id,
+                    requested_by=UUID(str(row[2])),
+                    request_id=UUID(str(row[3])) if row[3] is not None else None,
+                    run_id=UUID(str(row[4])),
+                    outcome="failure",
+                    reason=code,
+                    source="final",
+                )
             return None
 
     def heartbeat_prompt_test(
@@ -318,6 +386,16 @@ class PostgresPromptTestStore:
                 (LEASE_SECONDS, kindergarten_id, job_id, worker_id),
             )
             return bool(getattr(result, "rowcount", 0))
+
+    def mark_prompt_test_dispatched(self, kindergarten_id: UUID, job_id: UUID) -> None:
+        with self._connect() as connection, connection.transaction():
+            connection.execute(
+                """UPDATE background_jobs SET execution_status='queued',
+                queued_at=now(),updated_at=now()
+                WHERE kindergarten_id=%s AND id=%s AND job_type='prompt.test'
+                  AND execution_status='pending_dispatch'""",
+                (kindergarten_id, job_id),
+            )
 
     def recoverable_job_ids(
         self,
@@ -353,10 +431,13 @@ class PostgresPromptTestStore:
                       AND j.error_code='job.attempts_exhausted' AND r.status='pending'"""
                 )
             rows = connection.execute(
-                """SELECT id FROM background_jobs
+                """SELECT kindergarten_id,id FROM background_jobs
                 WHERE job_type='prompt.test' AND attempt_count<max_attempts
                   AND (
-                    execution_status='pending_dispatch'
+                    (
+                        execution_status='pending_dispatch'
+                        AND updated_at < %s - interval '15 seconds'
+                    )
                     OR (execution_status='retrying' AND queued_at<=%s)
                     OR (
                         %s
@@ -369,15 +450,16 @@ class PostgresPromptTestStore:
                     )
                   )
                 ORDER BY created_at,id LIMIT %s FOR UPDATE SKIP LOCKED""",
-                (now, include_expired, now, now, limit),
+                (now, now, include_expired, now, now, limit),
             ).fetchall()
-            job_ids = [UUID(str(row[0])) for row in rows]
-            if job_ids:
-                connection.execute(
-                    """UPDATE background_jobs SET execution_status='queued',
-                    queued_at=%s,lease_owner=NULL,lease_expires_at=NULL,
-                    last_heartbeat_at=NULL,updated_at=now()
-                    WHERE id=ANY(%s)""",
-                    (now, job_ids),
-                )
-        return job_ids
+            reservations = [(UUID(str(row[0])), UUID(str(row[1]))) for row in rows]
+            if reservations:
+                with connection.cursor() as cursor:
+                    cursor.executemany(
+                        """UPDATE background_jobs SET execution_status='pending_dispatch',
+                        lease_owner=NULL,lease_expires_at=NULL,
+                        last_heartbeat_at=NULL,updated_at=now()
+                        WHERE kindergarten_id=%s AND id=%s""",
+                        reservations,
+                    )
+        return [job_id for _kindergarten_id, job_id in reservations]

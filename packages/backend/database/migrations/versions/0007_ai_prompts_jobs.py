@@ -151,8 +151,10 @@ def upgrade() -> None:
                 AND api_key_last_four IS NULL
             ) OR (
                 api_key_ciphertext IS NOT NULL
+                AND api_key_encryption_version IS NOT NULL
                 AND api_key_encryption_version >= 1
                 AND api_key_key_id IS NOT NULL
+                AND api_key_nonce IS NOT NULL
                 AND octet_length(api_key_nonce) = 12
                 AND api_key_last_four IS NOT NULL
             )""",

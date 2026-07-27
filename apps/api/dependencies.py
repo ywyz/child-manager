@@ -12,6 +12,7 @@ from fastapi import Cookie, Depends
 from redis.asyncio import Redis
 
 from packages.backend.identity.service import IdentityError, IdentityService, SessionUser
+from packages.backend.jobs.query_service import JobQueryService
 from packages.backend.lesson_plans.service import LessonPlanService
 from packages.backend.prompts.service import PromptService
 from packages.backend.settings.ai_models import AiModelService
@@ -145,6 +146,13 @@ def prompt_service() -> PromptService:
 
 
 PromptServiceDependency = Annotated[PromptService, Depends(prompt_service)]
+
+
+def job_query_service() -> JobQueryService:
+    return JobQueryService.from_environment()
+
+
+JobQueryServiceDependency = Annotated[JobQueryService, Depends(job_query_service)]
 
 
 def authenticated_session(

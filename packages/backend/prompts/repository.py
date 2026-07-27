@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from hashlib import sha256
 from typing import Any
-from uuid import NAMESPACE_URL, UUID, uuid5
+from uuid import NAMESPACE_URL, UUID, uuid5, uuid7
 
 from packages.backend.prompts.catalog import PROMPT_SPECS
 
@@ -317,10 +317,7 @@ class PromptRepository:
                 ),
             )
         else:
-            version_id = uuid5(
-                NAMESPACE_URL,
-                f"child-manager:{kindergarten_id}:prompt-draft:{definition_id}",
-            )
+            version_id = uuid7()
             next_number = _row(
                 self.connection.execute(
                     """SELECT COALESCE(max(version_number),0)+1 FROM prompt_versions
