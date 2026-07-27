@@ -318,7 +318,15 @@ uv run pytest
 - 只有架构综述或查询结果不足时再阅读完整 `GRAPH_REPORT.md`。
 - `graphify-out/` 因查询或更新产生改动是正常现象，不能据此跳过图谱。
 - 不得手工编辑生成的图谱文件。
-- 修改业务代码或活跃治理/架构文档后运行 `graphify update .`；若工具不可用或更新失败，在交付说明中报告。
+- 仅修改业务代码时运行 `graphify update .`；该命令只做代码增量抽取，不替代文档、论文或图片的语义抽取。
+- 修改活跃治理/架构文档，或需要重新进行社区命名时，Graphify 固定优先使用大语言模型：
+  1. 首选已配置的 OpenAI 兼容后端与 `mimo-v2.5-pro`：
+     `graphify extract . --backend openai --model mimo-v2.5-pro`。
+  2. MiMo 调用失败后，使用已配置的 DeepSeek 后端：
+     `graphify extract . --backend deepseek`。
+  3. 两个后端都失败后，才按 Graphify 技能使用子代理完成语义抽取或命名；不得在首个后端失败后直接跳过 DeepSeek。
+- `graphify label`、`graphify cluster-only` 等需要大模型命名的操作沿用同一优先级。每次交付记录实际使用的模型或子代理来源，以及前序后端的失败原因；不得记录或输出 API Key、Base URL 或其他秘密。
+- 若 Graphify 全部路径不可用或更新失败，在交付说明中报告；不得用旧图谱证明新文档一致。
 
 代码结构问题按以下顺序使用 codebase-memory MCP：
 
