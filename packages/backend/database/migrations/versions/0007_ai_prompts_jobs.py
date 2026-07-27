@@ -578,6 +578,7 @@ def upgrade() -> None:
                 AND error_summary IS NULL
             ) OR (
                 status='succeeded'
+                AND output_content IS NOT NULL
                 AND jsonb_typeof(output_content)='object'
                 AND elapsed_ms IS NOT NULL
                 AND error_code IS NULL

@@ -1,7 +1,7 @@
 # Graph Report - child-manager  (2026-07-27)
 
 ## Corpus Check
-- 324 files · ~190,803 words
+- 324 files · ~190,808 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0fc7fd8a`
+- Built from commit: `080b9dbc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -434,13 +434,13 @@
 ## Surprising Connections (you probably didn't know these)
 - `密码与 TOTP 双因素备用登录` --semantically_similar_to--> `密码与 TOTP 备用认证端点`  [INFERRED] [semantically similar]
   CONTEXT.md → specs/002-password-totp-backup-login/contracts/openapi.yaml
-- `test_identity_audit_repository_is_append_only()` --indirect_call--> `AuditRepository`  [INFERRED]
-  tests/unit/identity/test_audit.py → packages/backend/audit/repository.py
 - `test_identity_repository_exposes_atomic_backup_auth_operations()` --indirect_call--> `IdentityRepository`  [INFERRED]
   tests/repository/test_backup_auth_isolation.py → packages/backend/identity/repository.py
 - `test_repository_exposes_atomic_passkey_lifecycle_operations()` --indirect_call--> `IdentityRepository`  [INFERRED]
   tests/repository/test_identity_isolation.py → packages/backend/identity/repository.py
 - `密码与 TOTP 备用认证状态模型` --semantically_similar_to--> `备用凭据与短时绑定表`  [INFERRED] [semantically similar]
+  docs/design/data-model.md → specs/002-password-totp-backup-login/data-model.md
+- `恢复与会话保证模型` --semantically_similar_to--> `备用认证会话保证状态机`  [INFERRED] [semantically similar]
   docs/design/data-model.md → specs/002-password-totp-backup-login/data-model.md
 
 ## Import Cycles
@@ -508,8 +508,8 @@ Cohesion: 0.09
 Nodes (22): 认证与恢复安全不变量, Design 到 main 的分阶段工作流, 工具优先级, 7. 服务边界与依赖方向, 6. 技术与依赖基线, 14. 审计、日志与错误处理, 11. AI 与提示词规则, 15. 测试要求 (+14 more)
 
 ### Community 9 - "Local Development Environments"
-Cohesion: 0.06
-Nodes (18): _backup_credential(), _backup_enrollment(), BackupCredentialRecord, BackupEnrollmentRecord, BackupRevocationResult, BackupSecurityEventRecord, ChallengeRecord, _credential() (+10 more)
+Cohesion: 0.07
+Nodes (17): _backup_credential(), _backup_enrollment(), BackupCredentialRecord, BackupEnrollmentRecord, BackupRevocationResult, BackupSecurityEventRecord, ChallengeRecord, IdentityRepository (+9 more)
 
 ### Community 10 - "Child Manager 项目上下文"
 Cohesion: 0.11
@@ -680,7 +680,7 @@ Cohesion: 0.21
 Nodes (9): AiClient, Clock, DependencyCheck, JobBroker, datetime, Protocol, UUID, M1 外部边界所需的最小 Protocol。 (+1 more)
 
 ### Community 301 - "identity/service.py"
-Cohesion: 0.10
+Cohesion: 0.11
 Nodes (30): _aad(), decrypt_totp_secret(), decrypt_totp_secret_with_provider(), encrypt_totp_secret(), encrypt_totp_secret_with_provider(), FileIdentitySecretKeyProvider, Path, UUID (+22 more)
 
 ### Community 302 - "Base"
@@ -720,8 +720,8 @@ Cohesion: 0.28
 Nodes (8): _job(), JobRecord, JobRepository, Any, datetime, UUID, PostgreSQL 权威后台任务 Repository。, _row()
 
 ### Community 311 - "SessionUser"
-Cohesion: 0.14
-Nodes (15): identity_service(), AuditRepository, ChallengePurpose, StrEnum, InvitationRecord, _challenge_digest(), _client_challenge(), _decode_base64url() (+7 more)
+Cohesion: 0.15
+Nodes (11): identity_service(), AuditRepository, IdentityError, IdentityService, ManagedUser, Exception, UUID, SessionUser (+3 more)
 
 ### Community 312 - "common.py"
 Cohesion: 0.19
@@ -780,8 +780,8 @@ Cohesion: 0.23
 Nodes (14): _ai_unconfigured(), build_health_dependencies(), _calendar_library_available(), _database_check(), _file_check(), _path_check(), Path, 从进程环境构造真实、无副作用的本地就绪检查。 (+6 more)
 
 ### Community 326 - "备用认证端点"
-Cohesion: 0.21
-Nodes (15): 备用认证端点, 备用认证 Schema, 敏感秘密读写标注, 会话认证保证契约, WebAuthn Ceremony OpenAPI 契约, 备用认证凭据表, 备用认证绑定表, 身份实体模型 (+7 more)
+Cohesion: 0.19
+Nodes (16): 备用认证端点, 备用认证 Schema, 敏感秘密读写标注, 会话认证保证契约, WebAuthn Ceremony OpenAPI 契约, 备用认证凭据表, 备用认证绑定表, 身份实体模型 (+8 more)
 
 ### Community 327 - "api/app.py"
 Cohesion: 0.10
@@ -828,8 +828,8 @@ Cohesion: 0.13
 Nodes (19): backup_auth_api_request(), backup_login_api_request(), backup_reauthentication_api_request(), 以请求正文提交两项备用因素，不把秘密放入 URL。, 为当前备用会话取得仅可新增通行密钥的短时证明。, 只通过同源 BFF 访问本人备用登录端点。, register_web(), api_request() (+11 more)
 
 ### Community 338 - "M3A 备用登录需求"
-Cohesion: 0.20
-Nodes (12): 密码加 TOTP 备用登录契约, 恢复安全不降级, WebAuthn 首选认证, M3A 实施门禁, M3A 里程碑, M3A 备用登录验收, 密码加 TOTP 备用登录决策, 密码与 TOTP 安全参数 (+4 more)
+Cohesion: 0.22
+Nodes (11): 密码加 TOTP 备用登录契约, 恢复安全不降级, WebAuthn 首选认证, M3A 实施门禁, M3A 里程碑, 密码加 TOTP 备用登录决策, 密码与 TOTP 安全参数, WebAuthn 首选认证决策 (+3 more)
 
 ### Community 339 - "openapi.py"
 Cohesion: 0.29
@@ -840,7 +840,7 @@ Cohesion: 0.24
 Nodes (7): Any, _resolve(), _runtime_routes(), test_backup_contract_marks_request_and_one_time_response_secrets(), test_runtime_router_exposes_the_user_story_2_endpoints(), test_runtime_router_matches_the_frozen_backup_contract(), test_runtime_user_story_2_openapi_matches_frozen_security_and_responses()
 
 ### Community 342 - "middleware.py"
-Cohesion: 0.38
+Cohesion: 0.42
 Nodes (6): datetime, _session(), test_backup_reauthentication_only_authorizes_add_passkey_for_five_minutes(), test_expired_backup_reauthentication_cannot_add_passkey(), test_recent_webauthn_proof_satisfies_high_risk_identity_boundary(), test_restricted_enrollment_session_cannot_enter_business_routes()
 
 ### Community 343 - "transactional_session"
@@ -852,8 +852,8 @@ Cohesion: 0.29
 Nodes (9): _source(), Collection, parse_trusted_bff_peers(), 只接受显式配置的回环 BFF socket peer。, resolve_client_ip(), test_configured_loopback_bff_peer_can_supply_internal_client_ip(), test_non_loopback_peer_cannot_be_configured_as_trusted_bff(), test_trusted_bff_peers_are_empty_until_explicitly_configured() (+1 more)
 
 ### Community 346 - "test_users.py"
-Cohesion: 0.50
-Nodes (3): test_identity_audit_rejects_authentication_material_hidden_in_allowed_fields(), test_identity_audit_rejects_sensitive_metadata_keys(), test_identity_audit_repository_is_append_only()
+Cohesion: 0.19
+Nodes (8): ChallengePurpose, StrEnum, _credential(), CredentialRecord, _challenge_digest(), _client_challenge(), _decode_base64url(), Any
 
 ### Community 347 - "test_secret_encryption.py"
 Cohesion: 0.39
@@ -1036,9 +1036,9 @@ Nodes (4): CompletedProcess, _run(), test_bootstrap_cli_exposes_rotation_without
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `IdentityError` connect `SessionUser` to `备用凭据与短时绑定表`, `_Connection`, `routers/auth.py`, `ContractModel`, `WebAuthn 通行密钥 ceremony`, `离线恢复码加人工核验`, `identity/service.py`, `routers/users.py`, `test_webauthn.py`, `AuditRepository`, `.authenticate_with_backup`, `test_backup_maintenance.py`, `test_recovery.py`, `create_app`, `dependencies.py`, `api/app.py`, `.require_add_passkey_authorization`, `middleware.py`, `csrf.py`?**
+- **Why does `IdentityError` connect `SessionUser` to `备用凭据与短时绑定表`, `_Connection`, `routers/auth.py`, `ContractModel`, `WebAuthn 通行密钥 ceremony`, `离线恢复码加人工核验`, `identity/service.py`, `routers/users.py`, `test_webauthn.py`, `AuditRepository`, `.authenticate_with_backup`, `test_backup_maintenance.py`, `test_recovery.py`, `create_app`, `dependencies.py`, `api/app.py`, `.require_add_passkey_authorization`, `middleware.py`, `test_users.py`, `csrf.py`?**
   _High betweenness centrality (0.033) - this node is a cross-community bridge._
-- **Why does `IdentityRepository` connect `Local Development Environments` to `test_backup_authentication.py`, `test_0004_settings.py`, `备用凭据与短时绑定表`, `issue_secret`, `identity/service.py`, `routers/users.py`, `test_webauthn.py`, `SessionUser`, `.authenticate_with_backup`?**
+- **Why does `IdentityRepository` connect `Local Development Environments` to `test_backup_authentication.py`, `test_0004_settings.py`, `备用凭据与短时绑定表`, `issue_secret`, `identity/service.py`, `routers/users.py`, `test_webauthn.py`, `SessionUser`, `test_users.py`, `.authenticate_with_backup`?**
   _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Why does `ContractModel` connect `ContractModel` to `api/app.py`, `.require_add_passkey_authorization`, `routers/auth.py`, `routers/prompts.py`, `本人内建安全事件投影`, `WebAuthn 通行密钥 ceremony`, `identity/service.py`, `setup-plan.sh`, `routers/users.py`, `test_webauthn.py`, `恢复与会话保证模型`, `离线恢复码加人工核验`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._

@@ -492,7 +492,8 @@ def test_new_prompt_test_prunes_only_finished_runs_to_the_recent_twenty(
             (actor.kindergarten_id,),
         )
         connection.execute(
-            """UPDATE prompt_test_runs SET status='succeeded',output_content='{}'::jsonb
+            """UPDATE prompt_test_runs
+            SET status='succeeded',output_content='{}'::jsonb,elapsed_ms=0
             WHERE kindergarten_id=%s""",
             (actor.kindergarten_id,),
         )
