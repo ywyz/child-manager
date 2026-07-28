@@ -36,6 +36,17 @@ logger = logging.getLogger(__name__)
 _REQUIRED_CAPABILITIES = frozenset({"text", "structured_output"})
 
 
+def _log_sanitized_exception(job_id: UUID, stage: str, exc: Exception) -> None:
+    logger.error(
+        "AI 任务执行阶段失败",
+        extra={
+            "job_id": str(job_id),
+            "diagnostic_stage": stage,
+            "exception_type": type(exc).__name__,
+        },
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class AiExecutionContext:
     kindergarten_id: UUID
@@ -571,7 +582,8 @@ class AiJobRunner:
         try:
             try:
                 context = self.store.load_execution_context(kindergarten_id, job_id)
-            except Exception:
+            except Exception as exc:
+                _log_sanitized_exception(job_id, "load_frozen_context", exc)
                 self.store.finish_failure(
                     kindergarten_id,
                     job_id,
@@ -596,7 +608,8 @@ class AiJobRunner:
                     kindergarten_id,
                     context.model_profile_id,
                 )
-            except Exception:
+            except Exception as exc:
+                _log_sanitized_exception(job_id, "load_current_profile", exc)
                 self.store.finish_failure(
                     kindergarten_id,
                     job_id,
@@ -639,7 +652,8 @@ class AiJobRunner:
             try:
                 self.validate_url(profile.api_base_url)
                 api_key = self.read_api_key(profile)
-            except Exception:
+            except Exception as exc:
+                _log_sanitized_exception(job_id, "load_model_credentials", exc)
                 self.store.finish_failure(
                     kindergarten_id,
                     job_id,
@@ -698,7 +712,8 @@ class AiJobRunner:
                     retry_after_seconds=None,
                     elapsed_ms=elapsed_ms(),
                 )
-            except Exception:
+            except Exception as exc:
+                _log_sanitized_exception(job_id, "execute_model_call", exc)
                 self._handle_error(
                     kindergarten_id,
                     job_id,

@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-07-28)
+# Graph Report - child-manager  (2026-07-28)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 347 files · ~210,506 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3076 nodes · 8776 edges · 278 communities (188 shown, 90 thin omitted)
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 760 edges (avg confidence: 0.54)
-- Token cost: 13,255 input · 10,398 output
+- 3083 nodes · 8809 edges · 273 communities (185 shown, 88 thin omitted)
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 763 edges (avg confidence: 0.54)
+- Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8113ee2a`
+- Built from commit: `bb75c199`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -112,7 +113,6 @@
 - Client IP Trust
 - Passkey Authorization
 - Workday Cache
-- Model Profile Tests
 - Settings Isolation Tests
 - Workday Service Tests
 - Development Branch & Docs
@@ -142,7 +142,6 @@
 - Identity & Audit Migration
 - Settings Migration
 - Password TOTP Migration
-- Lesson Plans Migration
 - AI Gen Results Migration
 - Word Template & Export
 - User Contract Tests
@@ -150,14 +149,12 @@
 - Service Roles & Boundaries
 - Infrastructure Components
 - Development Workflow & Review
-- AI Key Provider Methods
 - Feature Branch Script
 - Kindergarten Auth & Settings
 - AI Key Rotation CLI Tests
 - Identity Migration Tests
 - Calendar Tests
 - Git Branch Roles
-- Save Status Module
 - Dev Environment & CI
 - Core Database Tables
 - Schema Isolation & Keys
@@ -168,7 +165,6 @@
 - Clock Fixture
 - Redis Fixture
 - Knowledge Graph Tools
-- AI Key Provider
 - Migration Dependency Order
 - Json Schema Utilities
 - Lease Expiration
@@ -273,10 +269,10 @@
   graphify-out/memory/query_20260711_025449_哪些关键架构决策需要独立_adr_哪些已经确认_决策之间有什么依赖.md → docs/faq/combined-audit.md
 - `校正后的数据模型边界` --semantically_similar_to--> `权威模型与契约收敛`  [INFERRED] [semantically similar]
   graphify-out/memory/query_20260712_071357_一日活动计划系统的数据实体_关系_唯一约束_历史版本_异步任务和安全边界是什么.md → docs/faq/combined-audit.md
-- `Speckit Tasks to Issues` --semantically_similar_to--> `Implementation Issue Template`  [INFERRED] [semantically similar]
-  .agents/skills/speckit-taskstoissues/SKILL.md → .github/ISSUE_TEMPLATE/implementation.yml
-- `Retired Dual Agent Protocol` --semantically_similar_to--> `Design to Implement Workflow`  [INFERRED] [semantically similar]
-  docs/development/dual-agent-development.md → CONTRIBUTING.md
+- `test_identity_audit_repository_is_append_only()` --indirect_call--> `AuditRepository`  [INFERRED]
+  tests/unit/identity/test_audit.py → packages/backend/audit/repository.py
+- `test_identity_repository_exposes_atomic_backup_auth_operations()` --indirect_call--> `IdentityRepository`  [INFERRED]
+  tests/repository/test_backup_auth_isolation.py → packages/backend/identity/repository.py
 
 ## Import Cycles
 - None detected.
@@ -305,11 +301,11 @@
 - **身份纵深防御** — docs_security_threat_model_restricted_public_entry, docs_security_threat_model_phishing_resistant_authentication, docs_security_threat_model_password_totp_backup, docs_security_threat_model_emergency_recovery_dual_control [EXTRACTED 1.00]
 - **Password and TOTP Backup Login Baseline** — specs_002_password_totp_backup_login_spec_backup_login_feature, specs_002_password_totp_backup_login_plan_backup_login_implementation_plan, specs_002_password_totp_backup_login_data_model_backup_auth_data_model, specs_002_password_totp_backup_login_contracts_openapi_backup_login_api_fragment [EXTRACTED 1.00]
 
-## Communities (278 total, 90 thin omitted)
+## Communities (273 total, 88 thin omitted)
 
 ### Community 0 - "Backup Credential Management"
-Cohesion: 0.07
-Nodes (17): _backup_credential(), _backup_enrollment(), BackupCredentialRecord, BackupEnrollmentRecord, BackupRevocationResult, BackupSecurityEventRecord, ChallengeRecord, IdentityRepository (+9 more)
+Cohesion: 0.06
+Nodes (18): _backup_credential(), _backup_enrollment(), BackupCredentialRecord, BackupEnrollmentRecord, BackupRevocationResult, BackupSecurityEventRecord, ChallengeRecord, _credential() (+10 more)
 
 ### Community 1 - "AI Model & Age Group Settings"
 Cohesion: 0.08
@@ -317,15 +313,15 @@ Nodes (65): AgeGroup, AiModelProfile, AiModelServiceDependency, _age_group(), _a
 
 ### Community 2 - "Identity Service & Audit"
 Cohesion: 0.13
-Nodes (14): identity_service(), AuditRepository, FileIdentitySecretKeyProvider, 开发环境读取仓库外、仅属主可读的 32 字节二进制密钥文件。, IdentityError, IdentityService, ManagedUser, Exception (+6 more)
+Nodes (21): identity_service(), AuditRepository, ChallengePurpose, StrEnum, InvitationRecord, AuthResult, _challenge_digest(), _client_challenge() (+13 more)
 
 ### Community 3 - "Auth Flow & CSRF"
-Cohesion: 0.13
-Nodes (66): _allowed_origins(), authenticate_with_password_and_totp(), authentication_start(), authentication_verify(), backup_authentication_status(), bootstrap_options(), bootstrap_verify(), _check_public_throttle() (+58 more)
+Cohesion: 0.18
+Nodes (49): authenticate_with_password_and_totp(), authentication_start(), authentication_verify(), backup_authentication_status(), bootstrap_options(), bootstrap_verify(), _check_public_throttle(), _clear_auth_cookies() (+41 more)
 
 ### Community 4 - "Job Message Dispatching"
 Cohesion: 0.10
-Nodes (50): JobMessage, Redis 中唯一允许传递的最小任务消息。, SimpleNamespace, _insert_job(), _insert_other_tenant_plan(), _insert_result(), _native_url(), _provision_dependencies() (+42 more)
+Nodes (55): LogCaptureFixture, JobMessage, Redis 中唯一允许传递的最小任务消息。, SimpleNamespace, _insert_job(), _insert_other_tenant_plan(), _insert_result(), _native_url() (+47 more)
 
 ### Community 5 - "API Security Config"
 Cohesion: 0.05
@@ -336,40 +332,40 @@ Cohesion: 0.10
 Nodes (40): DeclarativeBase, AuditEvent, Base, AccountInvitation, AccountRecoveryRequest, BackupAuthCredential, BackupAuthEnrollment, BootstrapInitialization (+32 more)
 
 ### Community 7 - "Admin Init & Audit"
-Cohesion: 0.08
-Nodes (36): ArgumentParser, UUID, activate_initialization(), migrate_passkeys(), _native_url(), datetime, UUID, 首位管理员的部署控制台初始化与双人核验激活。 (+28 more)
+Cohesion: 0.18
+Nodes (11): UUID, AuditEventReference, IdentityAuditEventCode, IdentityAuditMetadata, StrEnum, 身份阶段的稳定审计事件代码与最小资源引用。, 身份审计只允许承载最小、严格类型化的非秘密元数据。, ResourceReference (+3 more)
 
 ### Community 8 - "Auth Rate Limiting"
 Cohesion: 0.10
-Nodes (32): MemoryAuthThrottle, datetime, Redis, timedelta, 公开身份 ceremony 的来源限流公共 seam。, 按可信来源和 ceremony purpose 分区的确定性滑动窗口替身。, 多进程 API 使用的 Redis 固定窗口实现。, RedisAuthThrottle (+24 more)
+Nodes (33): _auth_throttle(), MemoryAuthThrottle, datetime, Redis, timedelta, 公开身份 ceremony 的来源限流公共 seam。, 按可信来源和 ceremony purpose 分区的确定性滑动窗口替身。, 多进程 API 使用的 Redis 固定窗口实现。 (+25 more)
 
 ### Community 9 - "AI Job Execution"
-Cohesion: 0.09
-Nodes (21): AiExecutionContext, AiJobAuthorizer, AiJobRetry, AiJobRunner, AiJobStore, AiJobStoreProtocol, Any, datetime (+13 more)
+Cohesion: 0.14
+Nodes (10): AiExecutionContext, AiJobStore, AiJobStoreProtocol, _log_sanitized_exception(), Any, datetime, Exception, Protocol (+2 more)
 
 ### Community 10 - "AI Prompt Schemas"
-Cohesion: 0.28
-Nodes (38): EditableContent, prompt_spec(), PromptSpec, BaseModel, 固定提示词目录、输入与结果 Schema 路由。, _spec(), validate_prompt_result(), AiAreaGame (+30 more)
+Cohesion: 0.31
+Nodes (36): EditableContent, PromptSpec, BaseModel, 固定提示词目录、输入与结果 Schema 路由。, _spec(), AiAreaGame, AiDailyReflection, AiGroupActivity (+28 more)
 
 ### Community 11 - "Identity Credential Models"
 Cohesion: 0.08
-Nodes (42): ContractModel, BaseModel, ExportReference, AdminCredentialRevocationResult, AuthenticationCredential, AuthenticationCredentialResponse, AuthenticationPublicKey, AuthenticationResult (+34 more)
+Nodes (54): _allowed_origins(), _loopback_aliases(), 同源 Cookie、WebAuthn、邀请、恢复与会话端点。, ContractModel, BaseModel, ExportReference, AdminCredentialRevocationResult, AuthenticationCredential (+46 more)
 
 ### Community 12 - "Job Dispatching"
 Cohesion: 0.12
-Nodes (21): Broker, UUID, 仅投递 job_id 的提示词测试分发边界。, RedisJobDispatcher, AiGenerationAcceptance, AiGenerationService, dispatch_after_commit(), Dispatcher (+13 more)
+Nodes (20): Broker, UUID, 仅投递 job_id 的提示词测试分发边界。, RedisJobDispatcher, AiGenerationAcceptance, AiGenerationService, dispatch_after_commit(), Dispatcher (+12 more)
 
 ### Community 13 - "Prompt Test Actor"
-Cohesion: 0.09
-Nodes (27): Actor, build_prompt_test_executor(), Broker, datetime, Protocol, UUID, 只接收 job_id 的 Dramatiq actor 与 PostgreSQL 恢复扫描。, 按 PostgreSQL 权威状态重投 pending/过期租约任务。 (+19 more)
+Cohesion: 0.10
+Nodes (26): Actor, build_prompt_test_executor(), Broker, datetime, Protocol, UUID, 只接收 job_id 的 Dramatiq actor 与 PostgreSQL 恢复扫描。, 按 PostgreSQL 权威状态重投 pending/过期租约任务。 (+18 more)
 
 ### Community 14 - "AI Key Rotation"
-Cohesion: 0.15
-Nodes (23): UUID, run_rotation(), _aad(), AiKeyEnvelope, decrypt_api_key(), decrypt_api_key_with_provider(), encrypt_api_key(), encrypt_api_key_with_provider() (+15 more)
+Cohesion: 0.07
+Nodes (46): AiKeyProvider, ai_model_service(), ArgumentParser, _activate(), _database_url(), main(), _migrate_passkeys(), _recover_last_admin() (+38 more)
 
 ### Community 15 - "Credential Challenge"
-Cohesion: 0.12
-Nodes (25): ChallengePurpose, StrEnum, _credential(), CredentialRecord, AuthResult, _challenge_digest(), _client_challenge(), _decode_base64url() (+17 more)
+Cohesion: 0.20
+Nodes (10): get_job(), AdminSessionDependency, UUID, JobQueryServiceDependency, JobStatus, derive_batch_projection(), Job, JobAccepted (+2 more)
 
 ### Community 16 - "WebAuthn Auth Tests"
 Cohesion: 0.14
@@ -377,11 +373,11 @@ Nodes (37): csrf_headers(), _base64url(), _credential(), MonkeyPatch, TestClient
 
 ### Community 17 - "Backup Auth API Client"
 Cohesion: 0.12
-Nodes (30): backup_auth_api_request(), backup_login_api_request(), backup_reauthentication_api_request(), plan_api_request(), NiceGUI 服务端 BFF 客户端的公开接缝。, 以请求正文提交两项备用因素，不把秘密放入 URL。, 为当前备用会话取得仅可新增通行密钥的短时证明。, 读取本人最近 20 条内建安全事件，不产生已读状态。 (+22 more)
+Nodes (27): backup_auth_api_request(), backup_login_api_request(), backup_reauthentication_api_request(), plan_api_request(), NiceGUI 服务端 BFF 客户端的公开接缝。, 以请求正文提交两项备用因素，不把秘密放入 URL。, 为当前备用会话取得仅可新增通行密钥的短时证明。, 读取本人最近 20 条内建安全事件，不产生已读状态。 (+19 more)
 
 ### Community 18 - "Session & Passkey Tests"
-Cohesion: 0.10
-Nodes (27): current_session(), AuthenticatedSessionDependency, pytest, admin_client(), passkey_client(), MonkeyPatch, TestClient, 通过 FastAPI 身份依赖注入建立已 step-up 管理员，不借用密码登录。 (+19 more)
+Cohesion: 0.09
+Nodes (29): current_session(), AuthenticatedSessionDependency, pytest, admin_client(), passkey_client(), MonkeyPatch, TestClient, 通过 FastAPI 身份依赖注入建立已 step-up 管理员，不借用密码登录。 (+21 more)
 
 ### Community 19 - "Lesson Plan Endpoints"
 Cohesion: 0.15
@@ -392,16 +388,16 @@ Cohesion: 0.10
 Nodes (34): ChallengeBinding, ChallengeRecord, consume_challenge(), issue_challenge(), IssuedChallenge, datetime, WebAuthn ceremony challenge 的公共领域 seam。, 签发绑定上下文、五分钟有效且只保存摘要的 challenge。 (+26 more)
 
 ### Community 21 - "Prompt Test Store"
-Cohesion: 0.11
-Nodes (16): _native_url(), datetime, 提示词测试 Worker 的 PostgreSQL 权威状态适配器。, CurrentModelCallProfile, ProfileCallLimiter, PromptTestAuthorizer, PromptTestExecutionContext, PromptTestRetry (+8 more)
+Cohesion: 0.24
+Nodes (3): PromptTestStore, datetime, UUID
 
 ### Community 22 - "Batch Generation Tests"
 Cohesion: 0.17
-Nodes (33): provision_enabled_ai_model(), provision_editable_plan_context(), date, TestClient, TestClient, test_generation_reject_adopt_and_retry_write_sanitized_audit_rows(), _idempotent_headers(), TestClient (+25 more)
+Nodes (32): provision_enabled_ai_model(), UUID, provision_editable_plan_context(), date, TestClient, _idempotent_headers(), TestClient, test_batch_accepts_exactly_four_independent_children_and_derives_parent() (+24 more)
 
 ### Community 23 - "Settings Repository"
 Cohesion: 0.14
-Nodes (12): AgeGroupRecord, AreaInput, AreaRecord, ClassRecord, KindergartenRecord, date, UUID, 园所范围设置的 PostgreSQL Repository。 (+4 more)
+Nodes (14): AgeGroupRecord, AreaInput, AreaRecord, ClassRecord, KindergartenRecord, date, UUID, 园所范围设置的 PostgreSQL Repository。 (+6 more)
 
 ### Community 24 - "User Management"
 Cohesion: 0.19
@@ -420,12 +416,12 @@ Cohesion: 0.07
 Nodes (33): Cross-Artifact Consistency Analysis, Speckit Analyze, Requirements Quality Checks, Speckit Checklist, Incremental Clarification Integration, Speckit Clarify, Constitution Consistency Propagation, Speckit Constitution (+25 more)
 
 ### Community 28 - "Prompt Management"
-Cohesion: 0.16
-Nodes (32): alias, clear_prompt_tests(), create_prompt_test(), _definition(), get_prompt(), get_prompt_test(), get_prompt_version(), _job() (+24 more)
+Cohesion: 0.17
+Nodes (31): alias, clear_prompt_tests(), create_prompt_test(), _definition(), get_prompt(), get_prompt_test(), get_prompt_version(), _job() (+23 more)
 
 ### Community 29 - "Settings Service"
-Cohesion: 0.23
-Nodes (9): settings_service(), IntegrityError, NoReturn, 所有读写都在 SQL 中显式携带 ``kindergarten_id``。, SettingsRepository, UUID, 合并身份能力与基于当前班级关系实时计算的设置能力。, _required_display_name() (+1 more)
+Cohesion: 0.19
+Nodes (14): settings_service(), IntegrityError, NoReturn, 所有读写都在 SQL 中显式携带 ``kindergarten_id``。, SettingsRepository, _normalize_display_name(), _normalize_key(), date (+6 more)
 
 ### Community 30 - "Workday Calendar"
 Cohesion: 0.12
@@ -440,68 +436,68 @@ Cohesion: 0.17
 Nodes (11): AuthorRecord, LessonPlanRepository, _plan(), PlanCreationContext, PlanRecord, Any, date, UUID (+3 more)
 
 ### Community 33 - "AI Model Service"
-Cohesion: 0.17
-Nodes (13): ai_model_service(), AiModelService, _display(), _key(), _native_url(), UUID, AI 模型档案生命周期与调用配置 revision 事务。, _ai_profile() (+5 more)
+Cohesion: 0.25
+Nodes (7): m4_database(), MonkeyPatch, test_0007_creates_all_tenant_scoped_ai_prompt_and_job_tables(), test_background_job_batch_and_execution_attempt_constraints_are_frozen(), test_migration_seeds_exactly_seven_system_versions_per_existing_kindergarten(), test_model_activation_and_job_terminal_invariants_are_database_enforced(), test_model_revision_and_prompt_run_frozen_context_are_database_enforced()
 
 ### Community 34 - "Lesson Plan Service"
 Cohesion: 0.26
 Nodes (10): lesson_plan_service(), LessonPlanService, OpenPlanResult, PlanView, _PlanViewSeed, date, UUID, 完成单一用例响应；外网解析发生在业务事务关闭之后。 (+2 more)
 
 ### Community 35 - "AI Client Transport"
-Cohesion: 0.13
-Nodes (17): BaseTransport, ProviderNeutralAiClient, Resolver, AiClientError, RuntimeError, AddStepStore, AlwaysTimeoutClient, InvalidAddStepClient (+9 more)
+Cohesion: 0.09
+Nodes (24): BaseTransport, ProviderNeutralAiClient, Resolver, AiClientError, RuntimeError, cap_retry_after_seconds(), is_retryable_ai_error(), UUID (+16 more)
 
 ### Community 36 - "Prompt Repository"
-Cohesion: 0.20
-Nodes (11): _definition(), prompt_test_input_summary(), PromptDefinitionRecord, PromptRepository, PromptTestRunRecord, PromptVersionRecord, Any, UUID (+3 more)
+Cohesion: 0.09
+Nodes (25): prompt_service(), _ai_job(), AiJobRecord, _job(), JobRecord, JobRepository, Any, datetime (+17 more)
 
 ### Community 37 - "Core Domain Contracts"
 Cohesion: 0.07
 Nodes (29): AI Preview Adoption Transaction, Background Job State Machine, PostgreSQL Job Authority, Retry and Idempotency Semantics, Child Manager Daily Activity API, Identity and Settings Endpoints, Plans, Jobs, and Exports Endpoints, API v1 Contract (+21 more)
 
 ### Community 38 - "Settings Schema Tests"
-Cohesion: 0.10
-Nodes (22): MonkeyPatch, settings_database(), test_age_group_seed_is_fixed_and_idempotent(), test_area_constraints_allow_empty_collections_but_reject_duplicate_names(), test_postgresql_enforces_semester_and_lead_teacher_uniqueness(), test_settings_migration_creates_the_five_tenant_scoped_tables(), test_settings_relations_use_composite_tenant_foreign_keys(), lesson_plan_database() (+14 more)
+Cohesion: 0.25
+Nodes (7): MonkeyPatch, settings_database(), test_age_group_seed_is_fixed_and_idempotent(), test_area_constraints_allow_empty_collections_but_reject_duplicate_names(), test_postgresql_enforces_semester_and_lead_teacher_uniqueness(), test_settings_migration_creates_the_five_tenant_scoped_tables(), test_settings_relations_use_composite_tenant_foreign_keys()
 
 ### Community 39 - "Backup Enrollment Tests"
-Cohesion: 0.15
-Nodes (25): ActorFixture, TestClient, test_admin_is_restricted_until_complete_backup_enrollment(), test_backup_status_and_enrollment_require_authentication(), test_enrollment_requires_password_and_totp_together_and_is_single_use(), test_expired_enrollment_cannot_enable_backup_auth(), test_new_enrollment_invalidates_the_previous_pending_enrollment(), test_replacing_enabled_material_revokes_only_related_backup_sessions() (+17 more)
+Cohesion: 0.19
+Nodes (21): ActorFixture, TestClient, test_admin_is_restricted_until_complete_backup_enrollment(), test_backup_status_and_enrollment_require_authentication(), test_enrollment_requires_password_and_totp_together_and_is_single_use(), test_expired_enrollment_cannot_enable_backup_auth(), test_new_enrollment_invalidates_the_previous_pending_enrollment(), test_replacing_enabled_material_revokes_only_related_backup_sessions() (+13 more)
 
 ### Community 40 - "Job Status API"
-Cohesion: 0.12
-Nodes (21): get_job(), AdminSessionDependency, UUID, JobQueryServiceDependency, JobStatus, derive_batch_projection(), Job, JobChild (+13 more)
+Cohesion: 0.15
+Nodes (20): canonical_request_fingerprint(), _normalize_scalar(), 跨服务使用的公共 Schema 与规范化函数。, 计算覆盖路由、实际资源与语义输入的 canonical SHA-256。, test_prompt_test_fingerprint_changes_across_prompt_codes(), fingerprint(), test_fingerprint_changes_across_actual_path_resources(), test_fingerprint_is_stable_for_equivalent_query_and_json_order() (+12 more)
 
 ### Community 41 - "Login Throttle"
 Cohesion: 0.17
 Nodes (10): _digest(), MemoryLoginThrottle, datetime, Redis, timedelta, Redis 有界窗口实现；测试可使用 MemoryLoginThrottle 确定性替身。, RedisLoginThrottle, ThrottleDecision (+2 more)
 
 ### Community 42 - "TOTP Encryption"
-Cohesion: 0.18
-Nodes (19): _aad(), decrypt_totp_secret(), decrypt_totp_secret_with_provider(), encrypt_totp_secret(), encrypt_totp_secret_with_provider(), UUID, TOTP 种子的 AES-256-GCM 信封与数据库外密钥适配器。, 验证信封及 AAD 后返回种子；认证标签失败由 ``AESGCM`` 原样拒绝。 (+11 more)
+Cohesion: 0.13
+Nodes (22): _aad(), decrypt_totp_secret(), decrypt_totp_secret_with_provider(), encrypt_totp_secret(), encrypt_totp_secret_with_provider(), FileIdentitySecretKeyProvider, Path, UUID (+14 more)
 
 ### Community 43 - "Dev Environment Spec"
 Cohesion: 0.08
 Nodes (25): 本地开发环境规范, 仅回环开发依赖, 生产拓扑延后, 工作树资源隔离, M1 工程骨架, M1 Issue 执行记录, M1 质量门禁, 认证授权审计基线 (+17 more)
 
 ### Community 44 - "Job Repository"
-Cohesion: 0.24
-Nodes (10): _ai_job(), AiJobRecord, _job(), JobRecord, JobRepository, Any, datetime, PostgreSQL 权威后台任务 Repository。 (+2 more)
+Cohesion: 0.40
+Nodes (5): _cookie_secure(), csrf(), _encode(), issue_csrf_token(), verify_csrf_token()
 
 ### Community 45 - "Prompt Renderer"
-Cohesion: 0.15
-Nodes (18): Any, validate_prompt_variables(), PromptTemplateError, Any, ValueError, 仅支持固定白名单纯替换词法的提示词渲染器。, render_prompt(), _render_value() (+10 more)
+Cohesion: 0.11
+Nodes (23): AiJobAuthorizer, AiJobRetry, AiJobRunner, RuntimeError, AI 生成任务的冻结上下文执行器与 PostgreSQL 状态适配器。, 通知消息代理按权威任务给出的退避时间重投。, CurrentModelCallProfile, ProfileCallLimiter (+15 more)
 
 ### Community 46 - "Teacher Settings Validation"
-Cohesion: 0.16
-Nodes (19): TeacherInput, current_semester_selection_is_valid(), lead_teacher_selection_is_valid(), _native_url(), normalize_class_areas(), _normalize_display_name(), _normalize_key(), date (+11 more)
+Cohesion: 0.23
+Nodes (12): current_semester_selection_is_valid(), lead_teacher_selection_is_valid(), normalize_class_areas(), 规范化区域显示名，保留顺序并拒绝同类别重名。, semester_ranges_overlap(), date, test_areas_preserve_input_order_and_normalize_names(), test_duplicate_names_within_one_area_type_are_rejected() (+4 more)
 
 ### Community 47 - "Prompt Service"
-Cohesion: 0.36
-Nodes (3): prompt_service(), PromptService, UUID
+Cohesion: 0.67
+Nodes (4): prompt_spec(), Any, validate_prompt_result(), validate_prompt_variables()
 
 ### Community 48 - "Auth Browser Tests"
-Cohesion: 0.17
-Nodes (19): login_page_text(), users_page_text(), BrowserContext, Page, _add_virtual_authenticator(), _auth_cookie_names(), _bootstrap_activate(), _bootstrap_start() (+11 more)
+Cohesion: 0.18
+Nodes (18): login_page_text(), users_page_text(), BrowserContext, Page, _add_virtual_authenticator(), _auth_cookie_names(), _bootstrap_activate(), _bootstrap_start() (+10 more)
 
 ### Community 49 - "Prompt Test API Tests"
 Cohesion: 0.33
@@ -512,28 +508,28 @@ Cohesion: 0.13
 Nodes (14): AiGroupActivityStep, apply_ai_area_result(), DailyReflection, GroupActivityStep, GroupActivityStepCandidate, LessonPlanReference, 区域名称属于冻结输入；模型只能选择重点指导区域，不能改写区域列表。, 按任务冻结的过程长度校验索引；越界必须进入结构错误重试。 (+6 more)
 
 ### Community 51 - "API App Setup"
-Cohesion: 0.15
-Nodes (14): _auth_throttle(), _error_response(), FastAPI, Request, UUID, FastAPI 应用装配、统一异常转换与健康端点。, _request_id(), JSONResponse (+6 more)
+Cohesion: 0.16
+Nodes (13): _error_response(), FastAPI, Request, UUID, FastAPI 应用装配、统一异常转换与健康端点。, _request_id(), JSONResponse, ErrorResponse (+5 more)
 
 ### Community 52 - "Navigation Tests"
-Cohesion: 0.18
-Nodes (15): navigation_for_capabilities(), 按 API capabilities 生成导航。, class_areas_page_text(), settings_page_text(), BrowserActor, _free_port(), _m3_services(), MonkeyPatch (+7 more)
+Cohesion: 0.17
+Nodes (16): navigation_for_capabilities(), 按 API capabilities 生成导航。, class_areas_page_text(), settings_page_text(), test_navigation_is_derived_from_current_api_capabilities(), BrowserActor, _free_port(), _m3_services() (+8 more)
 
 ### Community 53 - "AI Result Repository"
 Cohesion: 0.30
 Nodes (10): AiGenerationResultRecord, AiGenerationResultRepository, _json_object(), _optional_uuid(), Any, datetime, 同园隔离的 AI 生成结果 Repository。, _record() (+2 more)
 
 ### Community 54 - "Prompt Test Store"
-Cohesion: 0.30
-Nodes (3): PostgresPromptTestStore, Any, UUID
+Cohesion: 0.22
+Nodes (7): _native_url(), PostgresPromptTestStore, Any, datetime, UUID, 提示词测试 Worker 的 PostgreSQL 权威状态适配器。, PromptTestExecutionContext
 
 ### Community 55 - "Auth Isolation Tests"
 Cohesion: 0.25
 Nodes (13): MonkeyPatch, UUID, RecordingConnection, RecordingResult, _seed_backup_repository(), test_admin_role_gate_restricts_and_then_releases_webauthn_sessions(), test_backup_credential_reads_are_scoped_to_kindergarten_and_user(), test_backup_version_change_revokes_only_related_sessions() (+5 more)
 
 ### Community 56 - "Backup Maintenance Tests"
-Cohesion: 0.29
-Nodes (15): authenticated_session(), IdentityServiceDependency, Cookie, _change_actor_to_teacher(), _enable_backup(), _identity_service(), _login_with_backup(), _native_url() (+7 more)
+Cohesion: 0.40
+Nodes (12): _change_actor_to_teacher(), _enable_backup(), _identity_service(), _login_with_backup(), _native_url(), TestClient, test_admin_cannot_disable_required_backup_authentication(), test_backup_maintenance_and_security_events_require_authentication() (+4 more)
 
 ### Community 57 - "Lesson Plan UI Tests"
 Cohesion: 0.18
@@ -552,8 +548,8 @@ Cohesion: 0.31
 Nodes (15): create_app(), HealthDependencies, check(), dependencies(), Path, test_database_failure_returns_stable_503_code(), test_default_dependencies_check_real_local_runtime(), test_each_optional_dependency_only_degrades_ready_response() (+7 more)
 
 ### Community 61 - "Health Checks"
-Cohesion: 0.23
-Nodes (14): _ai_unconfigured(), build_health_dependencies(), _calendar_library_available(), _database_check(), _file_check(), _path_check(), Path, 从进程环境构造真实、无副作用的本地就绪检查。 (+6 more)
+Cohesion: 0.18
+Nodes (17): _ai_unconfigured(), authenticated_session(), build_health_dependencies(), _calendar_library_available(), _database_check(), _file_check(), _path_check(), IdentityServiceDependency (+9 more)
 
 ### Community 62 - "AI Client SSRF"
 Cohesion: 0.26
@@ -580,12 +576,12 @@ Cohesion: 0.25
 Nodes (11): main(), 仅绑定回环地址的 NiceGUI Web 入口。, _require_loopback(), _validate_cookie_security(), configure_logging(), EventDict, 递归清除 Web 日志中的凭证和内部 URL。, _redact() (+3 more)
 
 ### Community 68 - "Password Management"
-Cohesion: 0.29
-Nodes (10): hash_password(), password_needs_rehash(), password_violations(), Path, verify_password(), _weak_passwords(), Path, test_backup_password_hash_uses_auditable_argon2id_floor_and_rehashes() (+2 more)
+Cohesion: 0.11
+Nodes (23): normalize_phone(), normalize_username(), hash_password(), password_needs_rehash(), password_violations(), Path, verify_password(), _weak_passwords() (+15 more)
 
 ### Community 69 - "Secret Tokens"
-Cohesion: 0.32
-Nodes (12): _digest(), issue_secret(), IssuedSecret, StrEnum, 生成 256 位一次性秘密，持久化对象中只保留 purpose 绑定摘要。, 以常量时间比较 purpose 绑定摘要。, SecretPurpose, SecretRecord (+4 more)
+Cohesion: 0.16
+Nodes (24): activate_initialization(), migrate_passkeys(), _native_url(), datetime, UUID, 首位管理员的部署控制台初始化与双人核验激活。, 仅在通行密钥已登记并完成两位预登记人员核验后激活。, 由两位预登记责任人批准最后管理员恢复，并只返回一次登记秘密。 (+16 more)
 
 ### Community 70 - "Ports & Interfaces"
 Cohesion: 0.21
@@ -596,8 +592,8 @@ Cohesion: 0.18
 Nodes (14): 安全模型档案与提示词生命周期, AI 输入、提示词、模型与 Schema 冻结上下文, 不可变脱敏审计与外部故障隔离, GitHub Issue #10, M6 T087–T126 in_progress，T103 为下一项, Batch 父任务不执行且状态由四个子任务派生, 数据库提交后 Redis 故障仍保持 202 pending_dispatch, AI 外呼前实时重验账号、角色、班级、教案与模型 (+6 more)
 
 ### Community 72 - "AI Adoption Tests"
-Cohesion: 0.30
-Nodes (11): create_completed_ai_preview(), TestClient, UUID, _native_url(), TestClient, UUID, _snapshot_count(), test_adopt_merges_preview_once_and_repeated_request_creates_no_second_snapshot() (+3 more)
+Cohesion: 0.14
+Nodes (23): create_completed_ai_preview(), TestClient, _event(), TestClient, test_ai_audit_event_codes_cover_creation_retries_result_reject_and_adopt(), test_generation_reject_adopt_and_retry_write_sanitized_audit_rows(), ai_admin_client(), _profile_payload() (+15 more)
 
 ### Community 73 - "Invitation Tests"
 Cohesion: 0.33
@@ -620,12 +616,12 @@ Cohesion: 0.15
 Nodes (13): 执行授权边界, 可收集且无错误的 RED 门禁, contracts/, data-model.md, graphify-out/graph.json, 常规测试禁止真实 AI、节假日及其他外网调用, 阶段依赖与执行顺序, plan.md (+5 more)
 
 ### Community 78 - "Credential Tests"
-Cohesion: 0.36
-Nodes (12): _base64url(), _insert_credential(), _native_url(), MonkeyPatch, TestClient, UUID, _registration_credential(), test_admin_cannot_revoke_last_active_admin_last_credential() (+4 more)
+Cohesion: 0.19
+Nodes (21): create_access_token(), decode_access_token(), hash_refresh_token(), Any, datetime, Access JWT 与 opaque Refresh token 接缝。, _base64url(), _insert_credential() (+13 more)
 
 ### Community 79 - "Identity Isolation Tests"
-Cohesion: 0.38
-Nodes (12): _insert_kindergarten(), _insert_user(), UUID, test_cross_kindergarten_role_assignment_is_rejected_by_composite_foreign_key(), test_refresh_replacement_cannot_cross_kindergarten(), test_refresh_revocation_serializes_with_rotation_and_revokes_the_new_token(), test_repository_exposes_atomic_passkey_lifecycle_operations(), test_repository_refuses_to_deactivate_last_active_admin() (+4 more)
+Cohesion: 0.23
+Nodes (20): Event, lesson_plan_database(), MonkeyPatch, test_0006_creates_tenant_scoped_plan_snapshot_author_and_cache_tables(), test_database_contains_unique_cas_week_and_unavailable_constraints(), identity_database(), _insert_kindergarten(), _insert_user() (+12 more)
 
 ### Community 80 - "Prompt Settings UI"
 Cohesion: 0.19
@@ -640,8 +636,8 @@ Cohesion: 0.30
 Nodes (9): _modules(), Any, RecordingConnection, test_all_public_repository_methods_require_explicit_kindergarten_id(), test_call_configuration_change_set_matches_the_frozen_revision_rules(), test_idempotency_lookup_is_an_explicit_read_seam_before_retention_cleanup(), test_model_reads_and_writes_are_tenant_scoped(), test_prompt_run_frozen_fields_cannot_be_updated() (+1 more)
 
 ### Community 83 - "Generation Service Tests"
-Cohesion: 0.48
-Nodes (10): _native_url(), TestClient, UUID, RecordingDispatcher, _replace_areas(), _session(), test_batch_creates_non_executable_parent_and_exactly_four_dispatched_children(), test_batch_missing_indoor_area_only_fails_indoor_child_and_single_is_rejected() (+2 more)
+Cohesion: 0.20
+Nodes (20): AiTaskCode, JsonValue, canonical_json_sha256(), generation_input_sha256(), 对 JSON 值进行稳定序列化并计算 SHA-256。, 计算逐任务实际输入哈希。      ``server_input`` 只应包含该任务白名单内的服务端输入。采用预览时，调用方必须复用任务     创建时冻结的, section_sha256(), AiGenerationRequest (+12 more)
 
 ### Community 84 - "Project Milestones"
 Cohesion: 0.24
@@ -656,8 +652,8 @@ Cohesion: 0.29
 Nodes (11): Dev Handoff 2026-07-24, 请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。, Milestone M2: Core Authentication & Permissions, Milestone M3: Settings, Milestone M3A: Password + TOTP Backup Login, Tasks T001–T002: Issue #8 & Docs Baseline, Tasks T003–T009: RED Gate for M3A, Tasks T010–T015: M3A Backup Auth Foundation (+3 more)
 
 ### Community 87 - "TOTP Primitive"
-Cohesion: 0.31
-Nodes (10): candidate_totp_counters(), _counter(), generate_totp(), _hotp(), RFC 6238 TOTP 原语；持久化重放保护由 Repository 完成。, 返回当前时间步及相邻一个时间步，按 counter 递增排序。, 按固定 SHA-1、6 位、30 秒参数生成 TOTP。, 返回匹配且尚未消费的 counter；失败或重放时返回 ``None``。 (+2 more)
+Cohesion: 0.33
+Nodes (8): candidate_totp_counters(), _counter(), generate_totp(), _hotp(), RFC 6238 TOTP 原语；持久化重放保护由 Repository 完成。, 返回当前时间步及相邻一个时间步，按 counter 递增排序。, 按固定 SHA-1、6 位、30 秒参数生成 TOTP。, _secret_bytes()
 
 ### Community 88 - "Admin CLI Tests"
 Cohesion: 0.40
@@ -670,10 +666,6 @@ Nodes (7): Any, _resolve(), _runtime_routes(), test_backup_contract_marks_reques
 ### Community 90 - "AI Client Tests"
 Cohesion: 0.44
 Nodes (10): _modules(), Any, _resolver(), test_client_caps_retry_after_at_sixty_seconds(), test_client_errors_are_stable_and_never_include_key_or_prompt(), test_client_pins_the_request_to_a_validated_ip_and_preserves_the_tls_origin(), test_client_posts_openai_compatible_request_with_fixed_limits(), test_client_rejects_redirects_without_following_them() (+2 more)
-
-### Community 91 - "Input Hashing"
-Cohesion: 0.29
-Nodes (9): AiTaskCode, JsonValue, canonical_json_sha256(), generation_input_sha256(), 对 JSON 值进行稳定序列化并计算 SHA-256。, 计算逐任务实际输入哈希。      ``server_input`` 只应包含该任务白名单内的服务端输入。采用预览时，调用方必须复用任务     创建时冻结的, section_sha256(), test_generation_input_hash_reuses_frozen_teacher_context_and_current_server_input() (+1 more)
 
 ### Community 92 - "Request Context Middleware"
 Cohesion: 0.22
@@ -698,10 +690,6 @@ Nodes (6): datetime, _session(), test_backup_reauthentication_only_authorizes_ad
 ### Community 97 - "Workday Cache"
 Cohesion: 0.38
 Nodes (5): Any, date, datetime, UUID, WorkdayCacheRepository
-
-### Community 98 - "Model Profile Tests"
-Cohesion: 0.40
-Nodes (9): ai_admin_client(), _profile_payload(), Any, TestClient, _resolver(), test_admin_creates_write_only_masked_profile_and_cannot_read_key(), test_call_fields_increment_revision_but_display_and_limits_do_not(), test_disable_preserves_profile_and_default_switch_is_tenant_local() (+1 more)
 
 ### Community 99 - "Settings Isolation Tests"
 Cohesion: 0.38
@@ -748,8 +736,8 @@ Cohesion: 0.25
 Nodes (8): Feature Specification: 首期一日活动计划完整闭环, User Story 1: Admin Setup, User Story 2: Manual Lesson Plan Loop, User Story 3: Admin Configure Model and Prompts, User Story 4: Teacher Uses AI by Section, User Story 5: Teacher Processes Group Activity Source, User Story 6: Teacher Export and Download Fixed Word, User Story 7: Admin Audit and Degradable Service
 
 ### Community 110 - "AI Prompt Contract Tests"
-Cohesion: 0.32
-Nodes (6): Any, _schema(), test_model_and_job_contracts_freeze_revision_and_stable_errors(), test_prompt_test_contract_exposes_only_redacted_input_summary(), test_prompt_test_fingerprint_changes_across_prompt_codes(), test_runtime_exposes_the_complete_frozen_m4_route_surface()
+Cohesion: 0.38
+Nodes (5): Any, _schema(), test_model_and_job_contracts_freeze_revision_and_stable_errors(), test_prompt_test_contract_exposes_only_redacted_input_summary(), test_runtime_exposes_the_complete_frozen_m4_route_surface()
 
 ### Community 111 - "OpenAPI Document Tests"
 Cohesion: 0.39
@@ -784,8 +772,8 @@ Cohesion: 0.43
 Nodes (3): job_query_service(), JobQueryService, UUID
 
 ### Community 119 - "Security Event Tests"
-Cohesion: 0.33
-Nodes (5): security_event_text(), MonkeyPatch, test_backup_login_and_reauthentication_submit_secrets_only_in_post_bodies(), test_security_event_messages_cover_the_frozen_event_codes(), test_security_events_use_read_only_same_origin_api()
+Cohesion: 0.18
+Nodes (11): api_request(), _javascript_helpers(), perform_authentication(), perform_registration(), post_same_origin(), security_event_text(), register_users_page(), MonkeyPatch (+3 more)
 
 ### Community 120 - "Passkey Expand Migration"
 Cohesion: 0.52
@@ -803,6 +791,10 @@ Nodes (7): FastAPI API 独立运行单元, 方法、路由、实际 path/query/b
 Cohesion: 0.48
 Nodes (6): _module(), Any, test_renderer_accepts_only_the_frozen_ascii_placeholder_grammar(), test_renderer_fails_for_missing_variable_before_external_call(), test_renderer_rejects_every_non_frozen_placeholder_form(), test_renderer_uses_stable_json_and_never_recursively_renders_values()
 
+### Community 124 - "Workday Cache Migration"
+Cohesion: 0.20
+Nodes (5): Alembic, Any, Column, _timestamps(), upgrade()
+
 ### Community 125 - "Identity & Audit Migration"
 Cohesion: 0.53
 Nodes (4): Column, datetime, _timestamps(), upgrade()
@@ -812,10 +804,6 @@ Cohesion: 0.47
 Nodes (4): Any, Column, _timestamps(), upgrade()
 
 ### Community 127 - "Password TOTP Migration"
-Cohesion: 0.47
-Nodes (4): Any, Column, _timestamps(), upgrade()
-
-### Community 128 - "Lesson Plans Migration"
 Cohesion: 0.47
 Nodes (4): Any, Column, _timestamps(), upgrade()
 
@@ -863,10 +851,6 @@ Nodes (4): _calendar(), test_activity_date_text_weekday_and_fixed_four_seasons_a
 Cohesion: 0.50
 Nodes (4): Dev Branch Role, Development Workflow and Git Rules, Docs Branch Role, Main Branch Role
 
-### Community 143 - "Save Status Module"
-Cohesion: 0.67
-Nodes (3): save_status(), SaveStatus, SaveState
-
 ### Community 144 - "Dev Environment & CI"
 Cohesion: 0.67
 Nodes (4): Docker Compose 开发环境配置, GitHub Actions 质量检查工作流, PostgreSQL, Redis
@@ -906,7 +890,7 @@ Nodes (3): AI-Added Step Red Text, Structured Daily Activity Sections, Daily Act
 ## Knowledge Gaps
 - **185 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+180 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **90 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **88 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
@@ -919,12 +903,12 @@ Nodes (3): AI-Added Step Red Text, Structured Daily Activity Sections, Daily Act
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `IdentityError` connect `Identity Service & Audit` to `Auth Flow & CSRF`, `Admin Init & Audit`, `Job Dispatching`, `Credential Challenge`, `Challenge Issuance`, `User Management`, `Settings Service`, `Workday Calendar`, `AI Model Service`, `Lesson Plan Service`, `TOTP Encryption`, `Prompt Renderer`, `Teacher Settings Validation`, `Prompt Service`, `API App Setup`, `Backup Maintenance Tests`, `Admin Recovery Tests`, `Health Check`, `Health Checks`, `Password Management`, `Secret Tokens`, `Generation Service Tests`, `Passkey Authorization`, `Job Query Service`?**
-  _High betweenness centrality (0.060) - this node is a cross-community bridge._
-- **Why does `ActorFixture` connect `Backup Enrollment Tests` to `Identity Service & Audit`, `Model Profile Tests`, `Job Message Dispatching`, `AI Adoption Tests`, `Auth Rate Limiting`, `TOTP Encryption`, `Invitation Tests`, `Settings Permissions`, `Credential Tests`, `WebAuthn Auth Tests`, `Prompt Test API Tests`, `Session & Passkey Tests`, `Generation Service Tests`, `Batch Generation Tests`, `Backup Maintenance Tests`, `Admin Recovery Tests`, `AI Preview Tests`?**
+- **Why does `IdentityRepository` connect `Backup Credential Management` to `Identity Service & Audit`, `Password Management`, `Secret Tokens`, `Auth Rate Limiting`, `TOTP Encryption`, `Identity Isolation Tests`, `Generation Service Tests`, `Challenge Issuance`, `Auth Isolation Tests`, `User Management`?**
   _High betweenness centrality (0.058) - this node is a cross-community bridge._
-- **Why does `csrf_headers()` connect `WebAuthn Auth Tests` to `Model Profile Tests`, `Job Message Dispatching`, `Backup Enrollment Tests`, `AI Adoption Tests`, `Auth Rate Limiting`, `Invitation Tests`, `Settings Permissions`, `Credential Tests`, `Prompt Test API Tests`, `Session & Passkey Tests`, `Generation Service Tests`, `Batch Generation Tests`, `Backup Maintenance Tests`, `Admin Recovery Tests`, `AI Preview Tests`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `IdentityError` connect `Identity Service & Audit` to `Auth Flow & CSRF`, `Admin Init & Audit`, `Identity Credential Models`, `Job Dispatching`, `AI Key Rotation`, `Challenge Issuance`, `Settings Repository`, `User Management`, `Settings Service`, `Workday Calendar`, `Lesson Plan Service`, `Prompt Repository`, `TOTP Encryption`, `Job Repository`, `API App Setup`, `Backup Maintenance Tests`, `Admin Recovery Tests`, `Health Check`, `Health Checks`, `Password Management`, `Secret Tokens`, `Generation Service Tests`, `Passkey Authorization`, `Job Query Service`?**
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
+- **Why does `ActorFixture` connect `Backup Enrollment Tests` to `Identity Service & Audit`, `Job Message Dispatching`, `AI Adoption Tests`, `Auth Rate Limiting`, `TOTP Encryption`, `Invitation Tests`, `Settings Permissions`, `Credential Tests`, `WebAuthn Auth Tests`, `Prompt Test API Tests`, `Session & Passkey Tests`, `Generation Service Tests`, `Batch Generation Tests`, `Backup Maintenance Tests`, `Admin Recovery Tests`, `AI Preview Tests`?**
+  _High betweenness centrality (0.047) - this node is a cross-community bridge._
 - **Are the 9 inferred relationships involving `ActorFixture` (e.g. with `StaticIdentitySecretKeyProvider` and `IdentityService`) actually correct?**
   _`ActorFixture` has 9 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 36 inferred relationships involving `IdentityError` (e.g. with `create_app()` and `HealthDependencies`) actually correct?**

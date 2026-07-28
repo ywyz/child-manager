@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
@@ -693,6 +694,131 @@ def test_runner_rechecks_live_gates_before_key_read_and_provider_call(
     assert store.model_calls_started == 0
     assert key_reads == expected_key_reads
     assert len(store.failures) == 1
+
+
+def test_runner_logs_sanitized_diagnostic_when_frozen_context_is_invalid(
+    caplog: pytest.LogCaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _runner()
+    monkeypatch.setattr(module.logger, "disabled", False)
+    store = StatefulStore()
+    secret_exception_text = "不得进入日志的冻结正文"
+
+    def load_execution_context(_kindergarten_id: UUID, _job_id: UUID) -> Any:
+        raise RuntimeError(secret_exception_text)
+
+    store.load_execution_context = load_execution_context  # type: ignore[method-assign]
+
+    with caplog.at_level(logging.ERROR, logger=module.__name__):
+        _executor(module, store, CountingClient()).execute(
+            store.kindergarten_id,
+            store.job_id,
+            worker_id="worker-frozen-context-diagnostic",
+        )
+
+    diagnostic = next(
+        record for record in caplog.records if record.message == "AI 任务执行阶段失败"
+    )
+    assert getattr(diagnostic, "job_id", None) == str(store.job_id)
+    assert getattr(diagnostic, "diagnostic_stage", None) == "load_frozen_context"
+    assert getattr(diagnostic, "exception_type", None) == "RuntimeError"
+    assert secret_exception_text not in caplog.text
+
+
+def test_runner_logs_sanitized_diagnostic_when_profile_lookup_fails(
+    caplog: pytest.LogCaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _runner()
+    monkeypatch.setattr(module.logger, "disabled", False)
+    store = StatefulStore()
+    secret_exception_text = "不得进入日志的模型档案内容"
+
+    def get_current_profile(_kindergarten_id: UUID, _profile_id: UUID) -> Any:
+        raise LookupError(secret_exception_text)
+
+    store.get_current_profile = get_current_profile  # type: ignore[method-assign]
+
+    with caplog.at_level(logging.ERROR, logger=module.__name__):
+        _executor(module, store, CountingClient()).execute(
+            store.kindergarten_id,
+            store.job_id,
+            worker_id="worker-profile-diagnostic",
+        )
+
+    diagnostic = next(
+        record for record in caplog.records if record.message == "AI 任务执行阶段失败"
+    )
+    assert getattr(diagnostic, "job_id", None) == str(store.job_id)
+    assert getattr(diagnostic, "diagnostic_stage", None) == "load_current_profile"
+    assert getattr(diagnostic, "exception_type", None) == "LookupError"
+    assert secret_exception_text not in caplog.text
+
+
+def test_runner_logs_sanitized_diagnostic_when_model_credentials_fail(
+    caplog: pytest.LogCaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _runner()
+    monkeypatch.setattr(module.logger, "disabled", False)
+    store = StatefulStore()
+    secret_exception_text = "不得进入日志的模型密钥内容"
+
+    def read_api_key(_profile: Any) -> str:
+        raise OSError(secret_exception_text)
+
+    runner = module.AiJobRunner(
+        store=store,
+        client=CountingClient(),
+        authorizer=SimpleNamespace(can_execute=lambda _context: True),
+        read_api_key=read_api_key,
+        validate_url=lambda value: value,
+    )
+
+    with caplog.at_level(logging.ERROR, logger=module.__name__):
+        runner.execute(
+            store.kindergarten_id,
+            store.job_id,
+            worker_id="worker-credential-diagnostic",
+        )
+
+    diagnostic = next(
+        record for record in caplog.records if record.message == "AI 任务执行阶段失败"
+    )
+    assert getattr(diagnostic, "job_id", None) == str(store.job_id)
+    assert getattr(diagnostic, "diagnostic_stage", None) == "load_model_credentials"
+    assert getattr(diagnostic, "exception_type", None) == "OSError"
+    assert secret_exception_text not in caplog.text
+
+
+def test_runner_logs_sanitized_diagnostic_when_model_execution_fails(
+    caplog: pytest.LogCaptureFixture,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _runner()
+    monkeypatch.setattr(module.logger, "disabled", False)
+    store = StatefulStore()
+    secret_exception_text = "不得进入日志的供应商响应正文"
+
+    class FailingClient:
+        def generate_structured(self, **_kwargs: object) -> dict[str, object]:
+            raise RuntimeError(secret_exception_text)
+
+    with caplog.at_level(logging.ERROR, logger=module.__name__):
+        _executor(module, store, FailingClient()).execute(
+            store.kindergarten_id,
+            store.job_id,
+            worker_id="worker-execution-diagnostic",
+        )
+
+    diagnostic = next(
+        record for record in caplog.records if record.message == "AI 任务执行阶段失败"
+    )
+    assert getattr(diagnostic, "job_id", None) == str(store.job_id)
+    assert getattr(diagnostic, "diagnostic_stage", None) == "execute_model_call"
+    assert getattr(diagnostic, "exception_type", None) == "RuntimeError"
+    assert secret_exception_text not in caplog.text
 
 
 @pytest.mark.parametrize(
