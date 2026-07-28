@@ -217,10 +217,17 @@ class LessonPlanRepository:
         assert plan is not None
         return plan, True
 
-    def get_plan(self, kindergarten_id: UUID, plan_id: UUID) -> PlanRecord | None:
+    def get_plan(
+        self,
+        kindergarten_id: UUID,
+        plan_id: UUID,
+        *,
+        for_update: bool = False,
+    ) -> PlanRecord | None:
+        suffix = " FOR UPDATE" if for_update else ""
         row = self._connection.execute(  # type: ignore[attr-defined]
             f"""SELECT {_PLAN_COLUMNS} FROM daily_activity_plans
-            WHERE kindergarten_id=%s AND id=%s""",
+            WHERE kindergarten_id=%s AND id=%s{suffix}""",
             (kindergarten_id, plan_id),
         ).fetchone()
         return _plan(row)

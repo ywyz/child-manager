@@ -310,9 +310,9 @@
     "semantic_hash": "6be73449cf339377994e807ce34c3656"
   },
   "specs/001-daily-activity-plan/tasks.md": {
-    "mtime": 1785223092.149973,
-    "ast_hash": "f726800643ba1e62e0fd40579c998da6",
-    "semantic_hash": "f726800643ba1e62e0fd40579c998da6"
+    "mtime": 1785224912.7979643,
+    "ast_hash": "b973f4cb4dfe979567779620cb472ceb",
+    "semantic_hash": "b973f4cb4dfe979567779620cb472ceb"
   },
   "docs/faq/combined-audit.md": {
     "mtime": 1785071260.5147798,
@@ -900,9 +900,9 @@
     "semantic_hash": "f6ca65ed86d4fae29b71eb35ff7a8855"
   },
   "packages/backend/jobs/dispatcher.py": {
-    "mtime": 1785123997.0090086,
-    "ast_hash": "3eef13e3c13ace0e20ac3a9dc09112cc",
-    "semantic_hash": "3eef13e3c13ace0e20ac3a9dc09112cc"
+    "mtime": 1785224760.8019652,
+    "ast_hash": "f54a9ed198fd60fd4a63cf61de4c5521",
+    "semantic_hash": "f54a9ed198fd60fd4a63cf61de4c5521"
   },
   "packages/backend/jobs/leases.py": {
     "mtime": 1785123997.0100086,
@@ -925,9 +925,9 @@
     "semantic_hash": "9da5f86253d0b75dae469a26dc326720"
   },
   "packages/backend/jobs/repository.py": {
-    "mtime": 1785123997.0100086,
-    "ast_hash": "d656faf01a7de84c2cee49f690ce65db",
-    "semantic_hash": "d656faf01a7de84c2cee49f690ce65db"
+    "mtime": 1785224860.6619647,
+    "ast_hash": "1b2d13b7955d74bf3c043d979f0a8690",
+    "semantic_hash": "1b2d13b7955d74bf3c043d979f0a8690"
   },
   "packages/backend/jobs/retry_policy.py": {
     "mtime": 1785123997.0100086,
@@ -955,9 +955,9 @@
     "semantic_hash": "8a828310087ea81e3056b576465246bf"
   },
   "packages/backend/lesson_plans/repository.py": {
-    "mtime": 1785071260.7597797,
-    "ast_hash": "8c225fbcadf8a21c45456e4f8649fae0",
-    "semantic_hash": "8c225fbcadf8a21c45456e4f8649fae0"
+    "mtime": 1785224628.7489657,
+    "ast_hash": "f7d6cf949b42c3338b9930ea8018f5a8",
+    "semantic_hash": "f7d6cf949b42c3338b9930ea8018f5a8"
   },
   "packages/backend/lesson_plans/schemas.py": {
     "mtime": 1785071260.7597797,
@@ -1035,9 +1035,9 @@
     "semantic_hash": "b69b17bb9ebfafb49ae9cd9648d1e718"
   },
   "packages/backend/settings/repository.py": {
-    "mtime": 1785123997.0120087,
-    "ast_hash": "015cef8e5bfff32910910c25c0221b2c",
-    "semantic_hash": "015cef8e5bfff32910910c25c0221b2c"
+    "mtime": 1785224635.7949657,
+    "ast_hash": "4a0c08fca50a3b134d0218a0333c57db",
+    "semantic_hash": "4a0c08fca50a3b134d0218a0333c57db"
   },
   "packages/backend/settings/service.py": {
     "mtime": 1785071260.5467799,
@@ -1758,5 +1758,15 @@
     "mtime": 1785219315.5239906,
     "ast_hash": "2ea2bae0c49c329688c8931468ed95c3",
     "semantic_hash": "2ea2bae0c49c329688c8931468ed95c3"
+  },
+  "packages/backend/lesson_plans/ai_generation.py": {
+    "mtime": 1785224860.6619647,
+    "ast_hash": "26a5ff9e46d3905018324f1a780c826b",
+    "semantic_hash": "26a5ff9e46d3905018324f1a780c826b"
+  },
+  "tests/unit/lesson_plans/test_ai_generation_service.py": {
+    "mtime": 1785224934.9979644,
+    "ast_hash": "bf1f595a6b265980205444b9d399c4f9",
+    "semantic_hash": "bf1f595a6b265980205444b9d399c4f9"
   }
 }

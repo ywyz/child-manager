@@ -15,8 +15,13 @@ class RedisJobDispatcher:
         self.actor_name = actor_name
 
     @classmethod
-    def from_url(cls, redis_url: str) -> RedisJobDispatcher:
-        return cls(RedisBroker(url=redis_url))
+    def from_url(
+        cls,
+        redis_url: str,
+        *,
+        actor_name: str = "prompt_test",
+    ) -> RedisJobDispatcher:
+        return cls(RedisBroker(url=redis_url), actor_name=actor_name)
 
     def dispatch(self, job_id: UUID) -> None:
         self.broker.enqueue(
