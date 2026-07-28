@@ -2,14 +2,14 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Updated**: 2026-07-27
+**Updated**: 2026-07-28
 **Current repository state**: M4 与 M5 均为 `complete`；最终 M4 Review SHA 为
 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，已正常 merge 到
 `main@b7676c27d07adc5eca1f0c397217780367481e9c`。`docs` 是当前文档、规格、OpenAPI
 和模板的单一事实来源。M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11)
-已创建并覆盖 T087–T126；Issue 固定到本轮新 `docs` SHA 且治理提交同步至 `dev` 后，先执行
-T087–T097 RED。只有测试全部可收集且失败只来自 M6 尚未实现，才进入 T098。下列命令覆盖
-M1～M8 验收合同，尚未完成的用户故事步骤不可执行，也不表示已经通过。
+为 `in_progress` 并覆盖 T087–T126；固定文档基线、T087–T097 RED 与 T098–T102 已完成。
+T102 直接调用生成服务的专项验证通过，批量/单栏受理路由级验收保留给 T107；当前下一项为
+T103。下列命令覆盖 M1～M8 验收合同，尚未完成的用户故事步骤不可执行，也不表示已经通过。
 
 ## 1. 前提与反目标
 

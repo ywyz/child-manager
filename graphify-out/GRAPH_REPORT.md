@@ -1,60 +1,124 @@
-# Graph Report - .  (2026-07-27)
+# Graph Report - .  (2026-07-28)
 
 ## Corpus Check
 - cluster-only mode — file stats not available
 
 ## Summary
-- 281 nodes · 291 edges · 35 communities (18 shown, 17 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 28 edges (avg confidence: 0.85)
-- Token cost: 1,390 input · 1,447 output
+- 379 nodes · 322 edges · 99 communities (23 shown, 76 thin omitted)
+- Extraction: 89% EXTRACTED · 11% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.85)
+- Token cost: 2,772 input · 5,008 output
 
 ## Graph Freshness
-- Built from commit: `50ad0e60`
+- Built from commit: `ae15e2a3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- Architecture & API Design
-- Speckit Specification Workflow
-- Development Protocols & Gates
-- Child Manager Roadmap
-- Data & AI Contracts
-- Document Baseline & Quality
-- Backup Login Implementation
+- System Architecture Decisions
+- Specification Workflow
+- Development Protocols
+- Document Baselines & Gates
+- API & Job Management
+- AI Prompt & Lesson Planning
 - Shell Script Utilities
-- Security & Data Model Review
-- Core Technologies & Specs
-- Security Model & Defense
-- Project Constitution & Boundaries
-- GitHub Issue Workflow
-- Documentation & Design Workflow
-- Feature Creation Script
-- Development Tools & AI
-- Data Model & Database Schema
+- Testing & User Stories
+- Feature Testing Phases
+- Security & Review Boundaries
+- Backup Login System
+- Project Documentation & Branches
+- Security & Access Control
+- Daily Activity Plan Feature
+- System Components Stack
+- Project Constitution & Principles
+- Development Workflow Rules
+- Feature Creation Scripts
+- Development Rules & Tools
+- Database Schema Tables
+- Database Concepts
 - Backup Login Specification
-- Migration Order Dependencies
-- Alembic Migration Chain
-- Prerequisites Check Script
+- Feature Dependencies & Sequencing
+- Word Document Layout
+- AI & Jobs Tables
+- AI Model Tables
+- Prompt Tables
+- User Roles Tables
+- Prerequisite Check Script
 - Plan Setup Script
 - Tasks Setup Script
-- AI & Prompt Rules
+- AI Prompt Rules
 - Git Branch Rules
-- Data Model & Isolation
-- Fact Sources & Conflict
+- Data Model Isolation
+- Fact Source & Conflict Handling
 - Security & Privacy Rules
-- Service Boundaries & Dependencies
+- Service Boundaries
 - Testing Requirements
-- External Key Source
-- Dev Workflow & Gates
+- Account Invitations Table
+- Account Recovery Requests Table
+- Age Groups Table
+- AI Generation Results Table
+- AI Model Profile Capabilities Table
+- AI Model Profiles Table
+- Audit Events Table
+- Background Jobs Table
+- Backup Auth Credentials Table
+- Backup Auth Enrollments Table
+- Bootstrap Initializations Table
+- Class Areas Table
+- Class Teachers Table
+- Classes Table
+- Daily Activity Plan Exports Table
+- Daily Activity Plan Snapshots Table
+- Daily Activity Plans Table
+- Identity Verification Approvals Table
+- Immutability for Snapshots/Audit
+- JSONB Schema Versioning
+- Kindergarten Isolation Principle
+- Kindergartens Table
+- Lesson Plan Sources Table
+- Prompt Definitions Table
+- Prompt Test Runs Table
+- Prompt Versions Table
+- Recovery Codes Table
+- Refresh Tokens Table
+- Roles Table
+- Semesters Table
+- User Roles Table
+- Users Table
+- WebAuthn Challenges Table
+- WebAuthn Credentials Table
+- Workday Cache Table
+- Account Invitations Table
+- Account Recovery Requests Table
+- Audit Events Table
+- Backup Auth Credentials Table
+- Backup Auth Enrollments Table
+- Bootstrap Initializations Table
+- Class Areas Table
+- Content JSONB Boundary Concept
+- Daily Activity Plan Authors Table
+- Daily Activity Plan Exports Table
+- Daily Activity Plan Snapshots Table
+- Identity Verification Approvals Table
+- Lesson Plan Sources Table
+- Prompt Test Runs Table
+- Recovery Codes Table
+- Refresh Tokens Table
+- Semesters Table
+- WebAuthn Challenges Table
+- WebAuthn Credentials Table
+- Workday Cache Table
+- Application Owned Transactions
+- External Key Source Seam
+- Development Workflow and Quality Gates
 - Governance
-- Tech & Security Constraints
-- Spec Quality Checklist
+- Technical, Security and Scope Constraints
+- Daily Activity Plan Specification Quality Checklist
 
 ## God Nodes (most connected - your core abstractions)
-1. `Child Manager Roadmap` - 14 edges
-2. `Architecture Decision Index` - 11 edges
-3. `Feature Specification: 首期一日活动计划完整闭环` - 9 edges
-4. `单一实现开发协议` - 7 edges
+1. `Architecture Decision Index` - 11 edges
+2. `单一实现开发协议` - 7 edges
+3. `Feature Specification: 首期一日活动计划完整闭环` - 7 edges
+4. `CONTEXT.md - Project Status` - 7 edges
 5. `Speckit Tasks` - 6 edges
 6. `历史合并审查` - 6 edges
 7. `安全威胁模型` - 6 edges
@@ -78,100 +142,126 @@
 - None detected.
 
 ## Hyperedges (group relationships)
+- **Daily Activity Plan Full Pipeline** — child_manager_domain_settings, child_manager_domain_lesson_plans, child_manager_domain_ai_prompts, child_manager_domain_word_export [EXTRACTED 1.00]
+- **Milestone Dependency Chain M0→M9** — child_manager_milestone_m0, child_manager_milestone_m1, child_manager_milestone_m2, child_manager_milestone_m3, child_manager_milestone_m3a, child_manager_milestone_m5, child_manager_milestone_m4, child_manager_milestone_m6, child_manager_milestone_m7, child_manager_milestone_m8, child_manager_milestone_m9 [EXTRACTED 1.00]
+- **Three-Service Architecture Pattern** — child_manager_arch_nicegui_web, child_manager_arch_fastapi_api, child_manager_arch_worker [EXTRACTED 1.00]
+- **User Story 2: Manual Lesson Plans MVP** — phase_5_us2, task_t046, task_t051 [EXTRACTED 1.00]
+- **User Story 3: Admin AI Configuration** — phase_6_us3, task_t062, task_t072 [EXTRACTED 1.00]
+- **User Story 4: Teacher AI Usage** — phase_7_us4, task_t087, task_t110 [EXTRACTED 1.00]
+- **Tables Implementing Kindergarten Isolation** — docs_design_database_schema_users, docs_design_database_schema_webauthn_credentials, docs_design_database_schema_webauthn_challenges, docs_design_database_schema_backup_auth_credentials, docs_design_database_schema_backup_auth_enrollments, docs_design_database_schema_bootstrap_initializations, docs_design_database_schema_account_invitations, docs_design_database_schema_recovery_codes, docs_design_database_schema_account_recovery_requests, docs_design_database_schema_identity_verification_approvals, docs_design_database_schema_user_roles, docs_design_database_schema_refresh_tokens, docs_design_database_schema_age_groups, docs_design_database_schema_classes, docs_design_database_schema_class_teachers, docs_design_database_schema_semesters, docs_design_database_schema_class_areas, docs_design_database_schema_ai_model_profiles, docs_design_database_schema_ai_model_profile_capabilities, docs_design_database_schema_prompt_definitions, docs_design_database_schema_prompt_versions, docs_design_database_schema_prompt_test_runs, docs_design_database_schema_daily_activity_plans, docs_design_database_schema_daily_activity_plan_authors, docs_design_database_schema_daily_activity_plan_snapshots, docs_design_database_schema_lesson_plan_sources, docs_design_database_schema_background_jobs, docs_design_database_schema_ai_generation_results, docs_design_database_schema_daily_activity_plan_exports, docs_design_database_schema_workday_cache, docs_design_database_schema_audit_events [EXTRACTED 1.00]
+- **Tables Involved in Authentication Flow** — docs_design_database_schema_users, docs_design_database_schema_webauthn_credentials, docs_design_database_schema_webauthn_challenges, docs_design_database_schema_backup_auth_credentials, docs_design_database_schema_backup_auth_enrollments, docs_design_database_schema_refresh_tokens [INFERRED 0.80]
+- **Lesson Planning System Tables** — docs_design_database_schema_daily_activity_plans, docs_design_database_schema_daily_activity_plan_authors, docs_design_database_schema_daily_activity_plan_snapshots, docs_design_database_schema_lesson_plan_sources [INFERRED 0.80]
+- **Identity and Authentication System** — docs_design_data_model_kindergartens, docs_design_data_model_users, docs_design_data_model_webauthn_credentials, docs_design_data_model_webauthn_challenges, docs_design_data_model_backup_auth_credentials, docs_design_data_model_backup_auth_enrollments, docs_design_data_model_bootstrap_initializations, docs_design_data_model_account_invitations, docs_design_data_model_recovery_codes, docs_design_data_model_account_recovery_requests, docs_design_data_model_identity_verification_approvals, docs_design_data_model_roles, docs_design_data_model_user_roles, docs_design_data_model_refresh_tokens, docs_design_data_model_audit_events, docs_design_data_model_kindergarten_isolation, docs_design_data_model_immutability [EXTRACTED 1.00]
 - **Core Principles of Constitution** — specify_memory_constitution_principle_1, specify_memory_constitution_principle_2, specify_memory_constitution_principle_3, specify_memory_constitution_principle_4, specify_memory_constitution_principle_5, specify_memory_constitution_principle_6 [EXTRACTED 1.00]
 - **Governance Framework** — specify_memory_constitution_constitution, specify_memory_constitution_technical_constraints, specify_memory_constitution_development_workflow, specify_memory_constitution_governance [EXTRACTED 1.00]
 - **项目治理与规则文档** — agents_agents, specify_memory_constitution_constitution [INFERRED 0.90]
 - **认证与安全机制** — agents_security [EXTRACTED 1.00]
 - **知识与代码分析工具** — agents_graphify, agents_codebase_mcp, agents_tools [INFERRED 0.85]
-- **Feature 001: Daily Activity Plan** — specs_001_daily_activity_plan_plan, specs_001_daily_activity_plan_spec, docs_roadmap, milestone_m6, user_story_us4, user_story_us5, user_story_us6, user_story_us7 [INFERRED 0.90]
-- **Core Project Components** — context_ai, context_word, context_postgresql, context_redis, context_webauthn [INFERRED 0.80]
 - **Speckit Full SDD Lifecycle** — _agents_skills_speckit_specify_skill_speckit_specify, _agents_skills_speckit_plan_skill_speckit_plan, _agents_skills_speckit_tasks_skill_speckit_tasks, _agents_skills_speckit_implement_skill_speckit_implement [EXTRACTED 1.00]
 - **Web API Worker Boundary Alignment** — docs_adr_adr_0002_separate_web_api_worker_modular_monolith_modular_monolith, docs_adr_adr_0002_separate_web_api_worker_modular_monolith_service_boundaries, docs_design_system_architecture_modular_runtime_architecture, docs_design_system_architecture_trust_starts_at_api [INFERRED 0.95]
-- **Kindergarten Isolation Stack** — docs_adr_adr_0001_cloud_only_kindergarten_isolation, docs_prd_lesson_management_lesson_plan_invariants, docs_design_data_model_tenant_scoped_data_model, docs_design_database_schema_composite_tenant_foreign_keys, docs_design_system_architecture_trust_starts_at_api [INFERRED 0.95]
 - **本地开发隔离模式** — docs_development_local_development_environments_worktree_resource_isolation, docs_development_local_development_environments_loopback_only_dependencies, docs_development_local_development_environments_production_topology_deferral [EXTRACTED 1.00]
 - **M0 收敛证据链** — docs_faq_combined_audit_m0_gate_framework, docs______20260713________m0_gate_closure_evidence, docs______20260713____________final_docs_baseline [INFERRED 0.85]
 - **身份纵深防御** — docs_security_threat_model_restricted_public_entry, docs_security_threat_model_phishing_resistant_authentication, docs_security_threat_model_password_totp_backup, docs_security_threat_model_emergency_recovery_dual_control [EXTRACTED 1.00]
-- **M6 Reliable AI and Group Activity** — specs_001_daily_activity_plan_tasks_m6_ai_and_group_activity, specs_001_daily_activity_plan_contracts_job_state_machine_background_job_state_machine, specs_001_daily_activity_plan_contracts_job_state_machine_ai_preview_adoption, templates_teacherplan_ai_added_step_red_text [EXTRACTED 1.00]
 - **Password and TOTP Backup Login Baseline** — specs_002_password_totp_backup_login_spec_backup_login_feature, specs_002_password_totp_backup_login_plan_backup_login_implementation_plan, specs_002_password_totp_backup_login_data_model_backup_auth_data_model, specs_002_password_totp_backup_login_contracts_openapi_backup_login_api_fragment, specs_002_password_totp_backup_login_tasks_backup_login_task_plan [EXTRACTED 1.00]
 
-## Communities (35 total, 17 thin omitted)
+## Communities (99 total, 76 thin omitted)
 
-### Community 0 - "Architecture & API Design"
+### Community 0 - "System Architecture Decisions"
+Cohesion: 0.08
+Nodes (34): Cloud Only Product, Kindergarten Isolation Boundary, Separate Web API Worker Modular Monolith, Web API Worker Service Boundaries, Recoverable Idempotent Async Execution, PostgreSQL Authoritative Job State, API Authoritative Authorization, Same Origin HttpOnly Cookie Authentication (+26 more)
+
+### Community 1 - "Specification Workflow"
 Cohesion: 0.07
-Nodes (40): Cloud Only Product, Kindergarten Isolation Boundary, Separate Web API Worker Modular Monolith, Web API Worker Service Boundaries, Recoverable Idempotent Async Execution, PostgreSQL Authoritative Job State, API Authoritative Authorization, Same Origin HttpOnly Cookie Authentication (+32 more)
+Nodes (33): Cross-Artifact Consistency Analysis, Speckit Analyze, Requirements Quality Checks, Speckit Checklist, Incremental Clarification Integration, Speckit Clarify, Constitution Consistency Propagation, Speckit Constitution (+25 more)
 
-### Community 1 - "Speckit Specification Workflow"
-Cohesion: 0.09
-Nodes (28): Cross-Artifact Consistency Analysis, Speckit Analyze, Requirements Quality Checks, Speckit Checklist, Incremental Clarification Integration, Speckit Clarify, Constitution Consistency Propagation, Speckit Constitution (+20 more)
-
-### Community 2 - "Development Protocols & Gates"
+### Community 2 - "Development Protocols"
 Cohesion: 0.08
 Nodes (25): 本地开发环境规范, 仅回环开发依赖, 生产拓扑延后, 工作树资源隔离, M1 工程骨架, M1 Issue 执行记录, M1 质量门禁, 认证授权审计基线 (+17 more)
 
-### Community 3 - "Child Manager Roadmap"
-Cohesion: 0.12
-Nodes (22): Child Manager Roadmap, M0 Shared Baseline, M1 Engineering Skeleton, M2 Authentication Authorization, M3 Initial Settings, M3A Password TOTP Backup Login, M4 AI Model and Prompt Basics, M5 Manual Lesson Plan Loop (+14 more)
-
-### Community 4 - "Data & AI Contracts"
-Cohesion: 0.11
-Nodes (20): AI Preview Adoption Transaction, Background Job State Machine, PostgreSQL Job Authority, Retry and Idempotency Semantics, API v1 Contract, Optimistic Lock and Idempotency Contract, Trusted NiceGUI BFF Boundary, Daily Activity Plan Data Model (+12 more)
-
-### Community 5 - "Document Baseline & Quality"
+### Community 3 - "Document Baselines & Gates"
 Cohesion: 0.11
 Nodes (19): 最终不可移动文档基线, 2026-07-13 编码前修复方案, 有序门禁修复, 历史清理独立授权, M0 初始阻塞判断, M0 门禁关闭证据, 2026-07-13 编码前审查报告, 隐私历史清理证据 (+11 more)
 
-### Community 6 - "Backup Login Implementation"
-Cohesion: 0.12
-Nodes (19): Child Manager Daily Activity API, Identity and Settings Endpoints, Plans, Jobs, and Exports Endpoints, Password and TOTP Backup Login API Fragment, Backup Enrollment and Authentication Endpoints, Backup Authentication Security Event Endpoint, Backup Authentication Data Model, Encrypted Credentials and Enrollments (+11 more)
+### Community 4 - "API & Job Management"
+Cohesion: 0.11
+Nodes (19): AI Preview Adoption Transaction, Background Job State Machine, PostgreSQL Job Authority, Retry and Idempotency Semantics, Child Manager Daily Activity API, Identity and Settings Endpoints, Plans, Jobs, and Exports Endpoints, API v1 Contract (+11 more)
 
-### Community 7 - "Shell Script Utilities"
+### Community 5 - "AI Prompt & Lesson Planning"
+Cohesion: 0.14
+Nodes (17): AI Prompt Management Subsystem, Daily Lesson Plan System, Settings System - Kindergarten/Semester/Class, Word Document Export, Password + TOTP Backup Login, WebAuthn Passkey Authentication, M0 Shared Design Baseline, M1 Engineering Skeleton (+9 more)
+
+### Community 6 - "Shell Script Utilities"
 Cohesion: 0.13
 Nodes (5): get_feature_paths(), get_repo_root(), _persist_feature_json(), resolve_specify_init_dir(), common.sh script
 
-### Community 8 - "Security & Data Model Review"
+### Community 7 - "Testing & User Stories"
+Cohesion: 0.12
+Nodes (16): tests/contract/test_ai_prompt_contracts.py, tests/contract/test_plan_ai_contracts.py, tests/unit/lesson_plans/test_calendar.py, tests/unit/lesson_plans/test_content_v1.py, tests/web/test_ai_prompt_settings_smoke.py, tests/web/test_plan_accessibility.py, tests/web/test_us2_manual_plan_smoke.py, Phase 5: User Story 2 - Manual Lesson Plans MVP (+8 more)
+
+### Community 8 - "Feature Testing Phases"
+Cohesion: 0.12
+Nodes (16): tests/contract/test_audit_contract.py, tests/contract/test_exports_contract.py, tests/fixtures/docx_factory.py, tests/fixtures/test_docx_factory.py, tests/web/test_first_release_acceptance.py, Phase 10: User Story 7 - Audit & Degradation, Phase 8: User Story 5 - Group Activity Processing, Phase 9: User Story 6 - Word Export (+8 more)
+
+### Community 9 - "Security & Review Boundaries"
 Cohesion: 0.17
 Nodes (13): AI 密钥安全边界, 权威模型与契约收敛, 客户端幂等作用域, 历史合并审查, M0 收敛门禁框架, Word 模板隐私与历史清理, 旧设计不具权威性, 一日活动计划 PRD 查询 (+5 more)
 
-### Community 9 - "Core Technologies & Specs"
-Cohesion: 0.24
-Nodes (10): AI, Authentication, Authorization, Branch: dev, Branch: docs, Branch: main, PostgreSQL, Redis (+2 more)
+### Community 10 - "Backup Login System"
+Cohesion: 0.18
+Nodes (13): Backup Authentication Data Model, Encrypted Credentials and Enrollments, Session Assurance and TOTP Replay Protection, Backup Login Implementation Plan, Identity Deep Module Reuse, Backup Login Acceptance Guide, Recovery Is Not Downgraded, AES-GCM Secret Envelope and Layered Throttling (+5 more)
 
-### Community 10 - "Security Model & Defense"
+### Community 11 - "Project Documentation & Branches"
+Cohesion: 0.24
+Nodes (12): dev - Implementation Branch, docs - Design & Spec Baseline, main - Stable Release Baseline, CONTEXT.md - Project Status, Issue #11 - M6 AI Async Generation, Old Repository - kindergartenManager, README.md - Product Overview, T103 Worker AI Runner (+4 more)
+
+### Community 12 - "Security & Access Control"
 Cohesion: 0.22
 Nodes (9): 纵深防御, 紧急恢复双人控制, 最小权限导出, 密码与 TOTP 备用登录, 抗钓鱼主认证, 受限公网唯一入口, 安全威胁模型, AGENTS 规则差距查询 (+1 more)
 
-### Community 11 - "Project Constitution & Boundaries"
+### Community 13 - "Daily Activity Plan Feature"
+Cohesion: 0.25
+Nodes (8): Feature Specification: 首期一日活动计划完整闭环, User Story 1: Admin Setup, User Story 2: Manual Lesson Plan Loop, User Story 3: Admin Configure Model and Prompts, User Story 4: Teacher Uses AI by Section, User Story 5: Teacher Processes Group Activity Source, User Story 6: Teacher Export and Download Fixed Word, User Story 7: Admin Audit and Degradable Service
+
+### Community 14 - "System Components Stack"
+Cohesion: 0.38
+Nodes (7): FastAPI API Service, NiceGUI Web Service, PostgreSQL Database, Redis Message Broker, Dramatiq Background Worker, packages/backend - Shared Business Logic, packages/contracts - Shared API Contracts
+
+### Community 15 - "Project Constitution & Principles"
 Cohesion: 0.29
 Nodes (7): Child Manager Project Constitution, Fact Source and Scope Fidelity, Service Boundary and Unidirectional Dependency, Kindergarten Isolation and Server Authorization, Authoritative State, Transaction and Recoverability, Teacher Control, AI and Word Fidelity, Executable Verification and Real Evidence
 
-### Community 12 - "GitHub Issue Workflow"
-Cohesion: 0.40
-Nodes (5): GitHub Issue Deduplication, Speckit Tasks to Issues, Blank Issue Policy, Immutable Docs Baseline, Implementation Issue Template
-
-### Community 13 - "Documentation & Design Workflow"
+### Community 16 - "Development Workflow Rules"
 Cohesion: 0.40
 Nodes (5): Main Docs Dev Branch Responsibilities, Design to Implement Workflow, Independent Implementation Boundaries, Read Only Cross Review, Retired Dual Agent Protocol
 
-### Community 15 - "Development Tools & AI"
+### Community 18 - "Development Rules & Tools"
 Cohesion: 0.67
 Nodes (4): AGENTS.md 开发规则文件, codebase-memory MCP, Graphify 知识图谱工具, 搜索工具优先级
 
-### Community 16 - "Data Model & Database Schema"
+### Community 19 - "Database Schema Tables"
 Cohesion: 0.50
-Nodes (4): Tenant Scoped Data Model, Composite Kindergarten Foreign Keys, PostgreSQL and SQLite Validation Matrix, PostgreSQL Physical Schema Contract
+Nodes (4): Age Groups Table, Class Teachers Table, Classes Table, Daily Activity Plans Table
 
-### Community 17 - "Backup Login Specification"
+### Community 20 - "Database Concepts"
+Cohesion: 0.50
+Nodes (4): Composite Foreign Keys Concept, Kindergarten Isolation Concept, Kindergartens Table, Users Table
+
+### Community 21 - "Backup Login Specification"
 Cohesion: 0.50
 Nodes (4): Backup Login Specification Quality Checklist, Password and TOTP Backup Login Feature, Phishing-Resistant Primary Path, Three Backup Login User Stories
 
-### Community 18 - "Migration Order Dependencies"
+### Community 22 - "Feature Dependencies & Sequencing"
 Cohesion: 1.00
 Nodes (3): 教案基础先于 AI, M5 先于 M4 的固定顺序, 0006 到 0007 迁移依赖
 
+### Community 23 - "Word Document Layout"
+Cohesion: 0.67
+Nodes (3): AI-Added Step Red Text, Structured Daily Activity Sections, Daily Activity Plan Word Layout
+
 ## Knowledge Gaps
-- **89 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+84 more)
+- **164 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+159 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **76 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
@@ -185,17 +275,17 @@ Nodes (3): 教案基础先于 AI, M5 先于 M4 的固定顺序, 0006 到 0007 �
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `API v1 Contract` connect `Data & AI Contracts` to `Backup Login Implementation`?**
-  _High betweenness centrality (0.010) - this node is a cross-community bridge._
+- **Why does `2026-07-13 编码前审查报告` connect `Document Baselines & Gates` to `Security & Review Boundaries`?**
+  _High betweenness centrality (0.004) - this node is a cross-community bridge._
+- **Why does `Phase 8: User Story 5 - Group Activity Processing` connect `Feature Testing Phases` to `Testing & User Stories`?**
+  _High betweenness centrality (0.004) - this node is a cross-community bridge._
 - **What connects `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script` to the rest of the system?**
-  _89 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Architecture & API Design` be split into smaller, more focused modules?**
-  _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._
-- **Should `Speckit Specification Workflow` be split into smaller, more focused modules?**
-  _Cohesion score 0.08994708994708994 - nodes in this community are weakly interconnected._
-- **Should `Development Protocols & Gates` be split into smaller, more focused modules?**
+  _164 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `System Architecture Decisions` be split into smaller, more focused modules?**
+  _Cohesion score 0.0784313725490196 - nodes in this community are weakly interconnected._
+- **Should `Specification Workflow` be split into smaller, more focused modules?**
+  _Cohesion score 0.07386363636363637 - nodes in this community are weakly interconnected._
+- **Should `Development Protocols` be split into smaller, more focused modules?**
   _Cohesion score 0.08333333333333333 - nodes in this community are weakly interconnected._
-- **Should `Child Manager Roadmap` be split into smaller, more focused modules?**
-  _Cohesion score 0.11688311688311688 - nodes in this community are weakly interconnected._
-- **Should `Data & AI Contracts` be split into smaller, more focused modules?**
-  _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+- **Should `Document Baselines & Gates` be split into smaller, more focused modules?**
+  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._

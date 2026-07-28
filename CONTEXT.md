@@ -1,10 +1,11 @@
 # Child Manager 项目上下文
 
-最后更新：2026-07-27
+最后更新：2026-07-28
 
 当前上下文分支：`docs`
 
-项目阶段：M4 与 M5 均为 `complete` 并已集成 `main`；M6 T087–T126 为 `ready`
+项目阶段：M4 与 M5 均为 `complete` 并已集成 `main`；M6 T087–T126 为 `in_progress`，
+T087–T102 已完成，当前下一项为 T103
 
 ## 1. 本文档的用途
 
@@ -225,7 +226,8 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 ### 阶段 6：AI 异步生成
 
 - M4 与 M5 均已完成，[M6 Issue #11](https://github.com/ywyz/child-manager/issues/11)
-  已创建；Issue 固定到本轮新 `docs` SHA 且该治理提交同步至 `dev` 后，先执行 T087–T097 RED。
+  为 `in_progress`；固定文档基线、T087–T097 RED 与 T098–T102 已完成，T102 的直接服务专项
+  验证已通过，批量/单栏路由级验收仍保留给 T107；当前下一项为 T103。
 - 接入 Redis Worker、任务状态、栏目级生成、结构校验、重试和失败恢复。
 - 支持集体活动文本与 `.docx` 导入。
 
@@ -263,13 +265,13 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 ## 9. 当前仓库与分支状态
 
-状态日期：2026-07-27。
+状态日期：2026-07-28。
 
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
 | `main` | 稳定版本与发布基线 | `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已正常 merge 最终 M4 `dev`，最终树与 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 一致；Quality Gates `30235439229` 为 458 项通过 | 保持稳定；等待 M6 完成独立验收后再接收新结果 |
-| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 已创建；实施只认 Issue 中固定的不可移动 `docs` SHA | 本轮治理提交形成新基线后更新 Issue #11，不再创建重复 Issue |
-| `dev` | Codex 唯一实现与集成 | M4 最终 Review SHA `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`；Standards/Spec 均 PASS，Quality Gates `30235090100` 为 458 项通过 | Issue #11 固定新 `docs` SHA 且治理提交同步后执行 T087–T097 RED；RED 纯净前不得进入 T098 |
+| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 已固定不可移动 `docs` 基线；本次只回写 T087–T102 的完成状态与验证边界 | 提交本次状态基线后更新 Issue #11，并同步到 `dev` |
+| `dev` | Codex 唯一实现与集成 | M6 为 `in_progress`；T087–T102 已完成，T102 实现提交为 `dev@a33441f834b0c67487c8695770c43648b1ff822d`；服务级专项验证 13 项通过，完整测试为 `513 passed, 59 failed, 1 warning`，59 项均属于 T103–T109/T107 等尚未实施行为的预期 RED | 实施 T103；在 T107 前保留批量/单栏受理路由级 RED，不提前实现路由 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -303,10 +305,10 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 9. 最终 `dev` 已通过正常 merge 集成为
    `main@b7676c27d07adc5eca1f0c397217780367481e9c`；两条等价 Dependabot 提交历史均保留，
    最终树一致，`main` Quality Gates `30235439229` 同样为 `458 passed, 1 warning`。
-10. M4 与 M5 均为 `complete`，因此 M6 为 `ready`。[Issue #11](https://github.com/ywyz/child-manager/issues/11)
-    已创建且只覆盖 T087–T126；本轮顺序固定为：将 Issue 基线更新为新的不可移动 `docs` SHA，
-    同步该治理提交到 `dev`，执行 T087–T097 RED。全部测试可收集且失败只来自尚未实现的 M6
-    行为后，才能进入 T098。
+10. M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 为 `in_progress` 且只覆盖
+    T087–T126。固定文档基线、T087–T097 RED 与 T098–T102 已完成；T102 的直接服务专项验证
+    已通过，批量/单栏受理路由级验收明确保留给 T107。当前下一项为 T103；完成 T103 的指定
+    测试前不得进入 T104，也不得提前实现 T107 路由。
 
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
