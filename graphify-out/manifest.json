@@ -855,8 +855,8 @@
     "semantic_hash": ""
   },
   "packages/backend/integrations/ai/limits.py": {
-    "mtime": 1785242771.3638868,
-    "ast_hash": "9392ed6396bc7b642a48a49686eddd40",
+    "mtime": 1785242863.1348815,
+    "ast_hash": "78621cbb8b83329c429387a38523afbe",
     "semantic_hash": ""
   },
   "packages/backend/integrations/ai/url_policy.py": {
@@ -940,8 +940,8 @@
     "semantic_hash": ""
   },
   "packages/backend/jobs/retry_policy.py": {
-    "mtime": 1785242771.3638868,
-    "ast_hash": "4cd9ce79e0137c045aa8683f41e5b7eb",
+    "mtime": 1785242863.1348815,
+    "ast_hash": "64bd2589c314cbee65d0074979ebea73",
     "semantic_hash": ""
   },
   "packages/backend/jobs/service.py": {
@@ -1305,8 +1305,8 @@
     "semantic_hash": ""
   },
   "tests/conftest.py": {
-    "mtime": 1785242771.3638868,
-    "ast_hash": "ecb8fb669bb2f6a03adf74727eec114d",
+    "mtime": 1785242863.1348815,
+    "ast_hash": "713eea4ef76d3742e229a4a3cef6bd9f",
     "semantic_hash": ""
   },
   "tests/contract/__init__.py": {
@@ -1380,8 +1380,8 @@
     "semantic_hash": ""
   },
   "tests/database_config.py": {
-    "mtime": 1785242771.3638868,
-    "ast_hash": "1475fa3f8e156effeee2c04f4dc40176",
+    "mtime": 1785242863.1348815,
+    "ast_hash": "31b5255093160f6e5c45f5ae9ea7b89f",
     "semantic_hash": ""
   },
   "tests/fixtures/__init__.py": {
@@ -1610,8 +1610,8 @@
     "semantic_hash": ""
   },
   "tests/unit/test_ai_client.py": {
-    "mtime": 1785242771.3648868,
-    "ast_hash": "e0c7b197f81917733cc9d1780f43e7bd",
+    "mtime": 1785242863.1348815,
+    "ast_hash": "840dccf61988e96ffbb7534f0988daf2",
     "semantic_hash": ""
   },
   "tests/unit/test_ai_key_envelope.py": {
@@ -1635,8 +1635,8 @@
     "semantic_hash": ""
   },
   "tests/unit/test_config.py": {
-    "mtime": 1785242771.3648868,
-    "ast_hash": "54a64daa62fd0ea89b1e051e16cdc401",
+    "mtime": 1785242863.1348815,
+    "ast_hash": "26e0e8c0299c17b7fa3f9c628d31228c",
     "semantic_hash": ""
   },
   "tests/unit/test_observability.py": {
@@ -1715,13 +1715,13 @@
     "semantic_hash": ""
   },
   "tests/worker/test_ai_job_recovery.py": {
-    "mtime": 1785242771.3648868,
-    "ast_hash": "3e53fdd48ebe4dba07d5f68c9a7cb21f",
+    "mtime": 1785244131.1828058,
+    "ast_hash": "f42d35caf1e415278ba01aecc4a9e1e6",
     "semantic_hash": ""
   },
   "tests/worker/test_ai_retry_policy.py": {
-    "mtime": 1785209012.5399973,
-    "ast_hash": "37f3ef68b2e9d644abdb0b2878d9fb24",
+    "mtime": 1785243408.468849,
+    "ast_hash": "bf6909e6663ed252126171bd777b9862",
     "semantic_hash": ""
   },
   "tests/worker/test_foundation.py": {
@@ -1767,6 +1767,11 @@
   "packages/backend/identity/data/NOTICE.md": {
     "mtime": 1785071260.5447798,
     "ast_hash": "c9ef42359d6a64748c5fa8f1dc849f68",
+    "semantic_hash": ""
+  },
+  "packages/backend/jobs/ai_runner.py": {
+    "mtime": 1785243884.8358204,
+    "ast_hash": "9b56f78f7e2c0914e5f9706e6aa04703",
     "semantic_hash": ""
   }
 }

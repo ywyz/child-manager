@@ -80,6 +80,20 @@ class RetryingStore(StatefulStore):
         if self.terminal:
             return False
         self.claimed = True
+        return True
+
+    def begin_model_call(
+        self,
+        kindergarten_id: UUID,
+        job_id: UUID,
+        *,
+        worker_id: str,
+    ) -> bool:
+        assert super().begin_model_call(
+            kindergarten_id,
+            job_id,
+            worker_id=worker_id,
+        )
         self.attempts += 1
         return True
 

@@ -5,6 +5,7 @@ import pytest
 from apps.api import __main__ as api_main
 from apps.web import __main__ as web_main
 from packages.backend.config import AppSettings, global_security_ready
+from tests.database_config import SensitiveDatabaseUrl
 
 
 def settings(**overrides: object) -> AppSettings:
@@ -40,6 +41,14 @@ def test_settings_repr_masks_all_secret_values() -> None:
     assert "database-password" not in rendered
     assert "jwt-secret-value" not in rendered
     assert "csrf-secret-value" not in rendered
+
+
+def test_test_database_url_repr_masks_external_password_without_changing_value() -> None:
+    raw = "postgresql+psycopg://child_manager:external-password@127.0.0.1/test"
+    value = SensitiveDatabaseUrl(raw)
+
+    assert str(value) == raw
+    assert "external-password" not in repr(value)
 
 
 def test_global_security_requires_jwt_and_csrf_keys() -> None:

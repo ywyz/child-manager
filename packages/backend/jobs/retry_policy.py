@@ -7,6 +7,26 @@ MAX_AI_ATTEMPTS = 3
 RETRY_DELAYS_SECONDS = (5, 30)
 MAX_RETRY_AFTER_SECONDS = 60
 JITTER_RATIO = 0.2
+RETRYABLE_AI_ERROR_CODES = frozenset(
+    {
+        "ai.timeout",
+        "ai.unavailable",
+        "ai.rate_limited",
+        "ai.provider_error",
+        "ai.invalid_response",
+        "ai.response_too_large",
+    }
+)
+
+
+def cap_retry_after_seconds(value: int | None) -> int | None:
+    if value is None:
+        return None
+    return min(value, MAX_RETRY_AFTER_SECONDS)
+
+
+def is_retryable_ai_error(code: str) -> bool:
+    return code in RETRYABLE_AI_ERROR_CODES
 
 
 def retry_delay_seconds(job_id: UUID, *, attempt_count: int) -> int:
