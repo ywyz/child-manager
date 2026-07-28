@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import unicodedata
 from datetime import date, datetime
 from typing import Annotated, Literal
 from uuid import UUID
@@ -12,16 +11,19 @@ from pydantic import (
     ConfigDict,
     Field,
     RootModel,
-    ValidationInfo,
-    field_validator,
-    model_validator,
 )
 from pydantic.json_schema import JsonSchemaValue
 
 from packages.contracts.common import ContractModel
 from packages.contracts.lesson_plans import (
+    AiAreaGame,
+    AiDailyReflection,
+    AiGroupActivity,
+    AiMorningActivity,
+    AiMorningTalk,
     AreaGame,
     GroupActivity,
+    GroupActivityAddStepResult,
     MorningActivity,
     MorningTalk,
     SeasonCode,
@@ -104,90 +106,6 @@ class ReflectionPromptVariables(ContractModel):
     class_name: Annotated[str, Field(min_length=1, max_length=120)]
     age_group_name: Annotated[str, Field(min_length=1, max_length=120)]
     current_plan: ReflectionCurrentPlan
-
-
-ExactlyThreeStatements = Annotated[
-    list[Annotated[str, Field(min_length=1, max_length=1000, pattern=r"。$")]],
-    Field(min_length=3, max_length=3),
-]
-ExactlyThreeQuestions = Annotated[
-    list[Annotated[str, Field(min_length=1, max_length=1000, pattern=r"？$")]],
-    Field(min_length=3, max_length=3),
-]
-
-
-class AiMorningActivity(ContractModel):
-    physical_cycle: Literal["体能大循环"]
-    group_game: Annotated[str, Field(min_length=1, max_length=500)]
-    free_game: Annotated[str, Field(min_length=1, max_length=500)]
-    focus_guidance: Annotated[str, Field(min_length=1, max_length=500)]
-    objectives: ExactlyThreeStatements
-    guidance_points: ExactlyThreeStatements
-
-
-class AiMorningTalk(ContractModel):
-    topic: Annotated[str, Field(min_length=1, max_length=500)]
-    questions: ExactlyThreeQuestions
-
-
-class AiAreaGame(ContractModel):
-    focus_guidance: Annotated[str, Field(min_length=1, max_length=500)]
-    objectives: ExactlyThreeStatements
-    guidance_points: ExactlyThreeStatements
-    support_strategies: ExactlyThreeStatements
-
-
-class AiGroupActivityStep(ContractModel):
-    heading: Annotated[str, Field(min_length=1, max_length=1000)]
-    lines: Annotated[
-        list[Annotated[str, Field(min_length=1, max_length=5000)]],
-        Field(min_length=1),
-    ]
-
-
-class AiGroupActivity(ContractModel):
-    theme: Annotated[str, Field(min_length=1, max_length=1000)]
-    objectives: Annotated[
-        list[Annotated[str, Field(min_length=1, max_length=5000)]],
-        Field(min_length=1),
-    ]
-    preparation: Annotated[
-        list[Annotated[str, Field(min_length=1, max_length=5000)]],
-        Field(min_length=1),
-    ]
-    focus: Annotated[str, Field(min_length=1, max_length=5000)]
-    difficulty: Annotated[str, Field(min_length=1, max_length=5000)]
-    process: Annotated[list[AiGroupActivityStep], Field(min_length=1)]
-
-
-class GroupActivityAddStepResult(ContractModel):
-    step: AiGroupActivityStep
-    suggested_insert_index: Annotated[int, Field(ge=0)]
-
-    @model_validator(mode="after")
-    def enforce_insert_index(self, info: ValidationInfo) -> GroupActivityAddStepResult:
-        context = info.context
-        maximum = context.get("max_insert_index") if isinstance(context, dict) else None
-        if isinstance(maximum, int) and self.suggested_insert_index > maximum:
-            raise ValueError("建议插入位置不能超过现有活动环节数")
-        return self
-
-
-class AiDailyReflection(ContractModel):
-    highlights: Annotated[str, Field(min_length=1, max_length=200)]
-    issues: Annotated[str, Field(min_length=1, max_length=200)]
-    adjustments: Annotated[str, Field(min_length=1, max_length=200)]
-
-    @field_validator("highlights", "issues", "adjustments")
-    @classmethod
-    def normalize_nfkc(cls, value: str) -> str:
-        return unicodedata.normalize("NFKC", value)
-
-    @model_validator(mode="after")
-    def enforce_combined_limit(self) -> AiDailyReflection:
-        if len(self.highlights + self.issues + self.adjustments) > 200:
-            raise ValueError("一日活动反思合计不能超过 200 个字符")
-        return self
 
 
 class PromptDefinition(ContractModel):

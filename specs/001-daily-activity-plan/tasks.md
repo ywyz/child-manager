@@ -284,7 +284,7 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 
 ### Implementation for User Story 4
 
-- [ ] T098 [P] [US4] 在 `packages/contracts/lesson_plans.py`、`packages/contracts/jobs.py` 实现严格 AI 结果、batch 派生响应、只允许 failed AI 的重试请求/错误和版本采用契约；batch 父任务的数据库 attempt 为 NULL，API `attempt_count/max_attempts` 固定投影为 0/0；保留晨间/区域三句、晨谈三问、区域所有权、反思 NFKC、集体封闭结构等约束；验证：`uv run pytest tests/contract/test_plan_ai_contracts.py tests/contract/test_idempotency.py tests/unit/test_ai_task_schemas.py` 通过
+- [x] T098 [P] [US4] 在 `packages/contracts/lesson_plans.py`、`packages/contracts/jobs.py` 实现严格 AI 结果、batch 派生响应、只允许 failed AI 的重试请求/错误和版本采用契约；batch 父任务的数据库 attempt 为 NULL，API `attempt_count/max_attempts` 固定投影为 0/0；保留晨间/区域三句、晨谈三问、区域所有权、反思 NFKC、集体封闭结构等约束；验证：`uv run pytest tests/contract/test_plan_ai_contracts.py tests/contract/test_idempotency.py tests/unit/test_ai_task_schemas.py` 通过
 - [ ] T099 [P] [US4] 在 `packages/backend/jobs/models.py` 实现 `ai_generation_results` pending→output 生命周期，并在 `0008_ai_generation_results.py` 创建同园任务/教案外键、每 job 唯一、包括反思/重试在内受理时非空冻结字段+空 output、完成/采用/拒绝约束；验证：`uv run alembic upgrade head && uv run pytest tests/migrations/test_0008_ai_generation_results.py` 通过
 - [ ] T100 [US4] 在 `packages/backend/jobs/ai_results.py` 实现同园 AI 结果 Repository、受理事务 pending 插入、冻结输入只读、output 条件幂等填充及从 failed 原结果精确 clone-to-pending；验证：`uv run pytest tests/repository/test_ai_generation_results.py` 通过隔离、反思占位、不可变克隆和重复 Worker 场景
 - [ ] T101 [P] [US4] 在 `packages/backend/lesson_plans/ai_schemas.py`、`packages/backend/lesson_plans/ai_fingerprints.py` 实现固定结果 Schema、规范化 JSON 哈希和逐任务实际输入指纹；指纹重算复用任务创建时不可变 `teacher_context` 快照，只重读可变服务端输入，不能读取页面后来填写的 context；验证：`uv run pytest tests/unit/test_ai_task_schemas.py tests/api/test_ai_preview_adoption.py -k 'fingerprint or teacher_context'` 通过

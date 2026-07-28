@@ -7,7 +7,7 @@ from datetime import date, datetime
 from typing import Annotated, Any, Literal
 from uuid import UUID
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import AfterValidator, Field, ValidationInfo, field_validator, model_validator
 
 from packages.contracts.common import ContractModel
 
@@ -28,6 +28,65 @@ Text500 = Annotated[str, Field(max_length=500)]
 Text1000 = Annotated[str, Field(max_length=1000)]
 Text5000 = Annotated[str, Field(max_length=5000)]
 SentenceList = Annotated[list[Annotated[str, Field(max_length=1000)]], Field(max_length=3)]
+TeacherContext = Annotated[str, Field(max_length=5000)]
+
+
+def _require_nonblank(value: str) -> str:
+    if not value.strip():
+        raise ValueError("文本不能为空")
+    return value
+
+
+def _require_statement(value: str) -> str:
+    _require_nonblank(value)
+    if not value.endswith("。"):
+        raise ValueError("陈述必须以中文句号结束")
+    return value
+
+
+def _require_question(value: str) -> str:
+    _require_nonblank(value)
+    if not value.endswith("？"):
+        raise ValueError("问题必须以中文问号结束")
+    return value
+
+
+NonEmptyText500 = Annotated[
+    str,
+    Field(min_length=1, max_length=500),
+    AfterValidator(_require_nonblank),
+]
+NonEmptyText1000 = Annotated[
+    str,
+    Field(min_length=1, max_length=1000),
+    AfterValidator(_require_nonblank),
+]
+NonEmptyText5000 = Annotated[
+    str,
+    Field(min_length=1, max_length=5000),
+    AfterValidator(_require_nonblank),
+]
+Statement = Annotated[
+    str,
+    Field(min_length=2, max_length=1000),
+    AfterValidator(_require_statement),
+]
+Question = Annotated[
+    str,
+    Field(min_length=2, max_length=1000),
+    AfterValidator(_require_question),
+]
+ExactlyThreeStatements = Annotated[list[Statement], Field(min_length=3, max_length=3)]
+ExactlyThreeQuestions = Annotated[list[Question], Field(min_length=3, max_length=3)]
+AiTaskCode = Literal[
+    "morning_activity",
+    "morning_talk",
+    "group_activity_split",
+    "group_activity_add_step",
+    "indoor_area_game",
+    "afternoon_outdoor_game",
+    "daily_reflection",
+]
 
 
 class MorningActivity(ContractModel):
@@ -91,6 +150,134 @@ class DailyReflection(ContractModel):
         return self
 
 
+class AiMorningActivity(ContractModel):
+    physical_cycle: Literal["体能大循环"]
+    group_game: NonEmptyText500
+    free_game: NonEmptyText500
+    focus_guidance: NonEmptyText500
+    objectives: ExactlyThreeStatements
+    guidance_points: ExactlyThreeStatements
+
+
+class AiMorningTalk(ContractModel):
+    topic: NonEmptyText500
+    questions: ExactlyThreeQuestions
+
+
+class AiGroupActivityStep(ContractModel):
+    heading: NonEmptyText1000
+    lines: Annotated[list[NonEmptyText5000], Field(min_length=1)]
+
+
+class AiGroupActivity(ContractModel):
+    theme: NonEmptyText1000
+    objectives: Annotated[list[NonEmptyText5000], Field(min_length=1)]
+    preparation: Annotated[list[NonEmptyText5000], Field(min_length=1)]
+    focus: NonEmptyText5000
+    difficulty: NonEmptyText5000
+    process: Annotated[list[AiGroupActivityStep], Field(min_length=1)]
+
+
+class GroupActivityStepCandidate(AiGroupActivityStep):
+    pass
+
+
+def _validate_group_add_step_index(
+    suggested_insert_index: int,
+    *,
+    process_length: int,
+) -> None:
+    if process_length < 0 or suggested_insert_index > process_length:
+        raise ValueError("建议插入索引超出生成输入的过程范围")
+
+
+class GroupActivityAddStepResult(ContractModel):
+    step: GroupActivityStepCandidate
+    suggested_insert_index: Annotated[int, Field(ge=0)]
+
+    @model_validator(mode="after")
+    def enforce_context_insert_index(
+        self,
+        info: ValidationInfo,
+    ) -> GroupActivityAddStepResult:
+        context = info.context
+        maximum = context.get("max_insert_index") if isinstance(context, dict) else None
+        if isinstance(maximum, int):
+            _validate_group_add_step_index(
+                self.suggested_insert_index,
+                process_length=maximum,
+            )
+        return self
+
+
+class AiAreaGame(ContractModel):
+    focus_guidance: NonEmptyText500
+    objectives: ExactlyThreeStatements
+    guidance_points: ExactlyThreeStatements
+    support_strategies: ExactlyThreeStatements
+
+
+class AiDailyReflection(ContractModel):
+    highlights: Annotated[str, Field(min_length=1, max_length=200)]
+    issues: Annotated[str, Field(min_length=1, max_length=200)]
+    adjustments: Annotated[str, Field(min_length=1, max_length=200)]
+
+    @field_validator("highlights", "issues", "adjustments")
+    @classmethod
+    def normalize_nfkc(cls, value: str) -> str:
+        return _require_nonblank(unicodedata.normalize("NFKC", value))
+
+    @model_validator(mode="after")
+    def enforce_combined_limit(self) -> AiDailyReflection:
+        if len(self.highlights + self.issues + self.adjustments) > 200:
+            raise ValueError("一日活动反思合计不能超过 200 个字符")
+        return self
+
+
+type AiPromptResult = (
+    AiMorningActivity
+    | AiMorningTalk
+    | AiGroupActivity
+    | GroupActivityAddStepResult
+    | AiAreaGame
+    | AiDailyReflection
+)
+
+
+def apply_ai_area_result(result: AiAreaGame, *, input_areas: list[str]) -> AreaGame:
+    """区域名称属于冻结输入；模型只能选择重点指导区域，不能改写区域列表。"""
+
+    if (
+        not input_areas
+        or len(input_areas) != len(set(input_areas))
+        or any(not area.strip() for area in input_areas)
+    ):
+        raise ValueError("输入区域必须非空、有效且不重复")
+    if result.focus_guidance not in input_areas:
+        raise ValueError("重点指导必须等于一个输入区域")
+    return AreaGame(
+        areas=list(input_areas),
+        focus_guidance=result.focus_guidance,
+        objectives=list(result.objectives),
+        guidance_points=list(result.guidance_points),
+        support_strategies=list(result.support_strategies),
+    )
+
+
+def validate_group_add_step_result(
+    result: GroupActivityAddStepResult,
+    *,
+    process_length: int,
+) -> GroupActivityAddStepResult:
+    """按任务冻结的过程长度校验索引；越界必须进入结构错误重试。"""
+
+    _validate_group_add_step_index(
+        result.suggested_insert_index,
+        process_length=process_length,
+    )
+    return result
+
+
 class PlanContentV1(ContractModel):
     morning_activity: MorningActivity = Field(default_factory=MorningActivity)
     morning_talk: MorningTalk = Field(default_factory=MorningTalk)
@@ -152,6 +339,33 @@ class Plan(ContractModel):
 class PlanOpenRequest(ContractModel):
     class_id: UUID
     plan_date: date
+
+
+class AiBatchRequest(ContractModel):
+    expected_version: Annotated[int, Field(ge=1)]
+    teacher_context: TeacherContext
+
+
+class AiGenerationRequest(ContractModel):
+    task_code: AiTaskCode
+    expected_version: Annotated[int, Field(ge=1)]
+    teacher_context: TeacherContext | None = None
+    source_id: UUID | None = None
+    content: PlanContentV1 | None = None
+
+    @model_validator(mode="after")
+    def enforce_task_specific_input(self) -> AiGenerationRequest:
+        is_reflection = self.task_code == "daily_reflection"
+        if is_reflection:
+            if self.content is None or self.teacher_context is not None:
+                raise ValueError("反思生成只接受当前正文，不接受教师补充")
+        elif self.teacher_context is None or self.content is not None:
+            raise ValueError("非反思生成必须提供教师补充且不得携带当前正文")
+
+        is_group_split = self.task_code == "group_activity_split"
+        if is_group_split != (self.source_id is not None):
+            raise ValueError("只有集体活动拆分必须提供来源 ID")
+        return self
 
 
 class PlanSaveRequest(ContractModel):
