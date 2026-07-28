@@ -310,8 +310,8 @@
     "semantic_hash": "6be73449cf339377994e807ce34c3656"
   },
   "specs/001-daily-activity-plan/tasks.md": {
-    "mtime": 1785207040.7149966,
-    "ast_hash": "67a45332da400d73db4d3e62a44330aa",
+    "mtime": 1785211032.180988,
+    "ast_hash": "e9f3e1e5f4e81b476d817b7490206222",
     "semantic_hash": ""
   },
   "docs/faq/combined-audit.md": {
@@ -910,8 +910,8 @@
     "semantic_hash": ""
   },
   "packages/backend/jobs/models.py": {
-    "mtime": 1785123997.0100086,
-    "ast_hash": "672e7a10d7030143f774eabc064e07cc",
+    "mtime": 1785210194.376992,
+    "ast_hash": "3ca9e012bb214ad917395526430ac1f0",
     "semantic_hash": ""
   },
   "packages/backend/jobs/prompt_test_store.py": {
@@ -1410,18 +1410,18 @@
     "semantic_hash": ""
   },
   "tests/migrations/test_0008_ai_generation_results.py": {
-    "mtime": 1785209573.086995,
-    "ast_hash": "a99e5fe6b2aaa93f0e40eff2e7a432da",
+    "mtime": 1785210970.5479884,
+    "ast_hash": "11359dbb963aadd1226eed9ed7221f70",
     "semantic_hash": ""
   },
   "tests/migrations/test_ai_prompts_jobs_migration.py": {
-    "mtime": 1785123997.0140088,
-    "ast_hash": "67c2b8728c653af029b233c0db2d1144",
+    "mtime": 1785210639.0649898,
+    "ast_hash": "a1bf1e8633b49c5d3807e5d04cdddd72",
     "semantic_hash": ""
   },
   "tests/migrations/test_alembic_bootstrap.py": {
-    "mtime": 1785123997.0140088,
-    "ast_hash": "7b4fea338d895ab2bb1f5f291073c02a",
+    "mtime": 1785210639.0659897,
+    "ast_hash": "4759fdbb6c7bba700a9185dddeba6129",
     "semantic_hash": ""
   },
   "tests/migrations/test_password_to_passkey.py": {
@@ -1737,6 +1737,11 @@
   "packages/backend/identity/data/NOTICE.md": {
     "mtime": 1785071260.5447798,
     "ast_hash": "c9ef42359d6a64748c5fa8f1dc849f68",
+    "semantic_hash": ""
+  },
+  "packages/backend/database/migrations/versions/0008_ai_generation_results.py": {
+    "mtime": 1785210949.3379884,
+    "ast_hash": "07a9ea2ecb74adf2ef2cf10ce9f5ef7d",
     "semantic_hash": ""
   }
 }

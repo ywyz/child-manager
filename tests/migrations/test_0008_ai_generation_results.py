@@ -421,6 +421,70 @@ def test_invalid_pending_output_and_decision_shapes_are_rejected(
             )
 
 
+def test_decision_and_cleanup_require_preexisting_output_and_are_final(
+    ai_admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
+) -> None:
+    client, actor = ai_admin_client
+    dependencies = _provision_dependencies(client, actor)
+    with psycopg.connect(_native_url(isolated_database_url)) as connection:
+        job_id = _insert_job(connection, dependencies)
+        _insert_result(connection, _result_values(dependencies, job_id))
+        output = Jsonb({"objectives": ["目标一。", "目标二。", "目标三。"]})
+
+        with (
+            pytest.raises(psycopg.errors.RaiseException),
+            connection.transaction(),
+        ):
+            connection.execute(
+                """UPDATE ai_generation_results
+                SET output_content=%s,output_sha256=%s,adopted_at=now(),adopted_by=%s
+                WHERE kindergarten_id=%s AND job_id=%s""",
+                (
+                    output,
+                    "4" * 64,
+                    actor.user_id,
+                    dependencies.kindergarten_id,
+                    job_id,
+                ),
+            )
+
+        with (
+            pytest.raises(psycopg.errors.RaiseException),
+            connection.transaction(),
+        ):
+            connection.execute(
+                """UPDATE ai_generation_results
+                SET input_context=NULL,output_sha256=%s,content_cleared_at=now()
+                WHERE kindergarten_id=%s AND job_id=%s""",
+                ("4" * 64, dependencies.kindergarten_id, job_id),
+            )
+
+        connection.execute(
+            """UPDATE ai_generation_results
+            SET output_content=%s,output_sha256=%s
+            WHERE kindergarten_id=%s AND job_id=%s""",
+            (output, "4" * 64, dependencies.kindergarten_id, job_id),
+        )
+        connection.execute(
+            """UPDATE ai_generation_results
+            SET adopted_at=now(),adopted_by=%s
+            WHERE kindergarten_id=%s AND job_id=%s""",
+            (actor.user_id, dependencies.kindergarten_id, job_id),
+        )
+
+        with (
+            pytest.raises(psycopg.errors.RaiseException),
+            connection.transaction(),
+        ):
+            connection.execute(
+                """UPDATE ai_generation_results
+                SET adopted_at=adopted_at + interval '1 second'
+                WHERE kindergarten_id=%s AND job_id=%s""",
+                (dependencies.kindergarten_id, job_id),
+            )
+
+
 def test_frozen_fields_output_once_and_cleanup_are_database_enforced(
     ai_admin_client: tuple[TestClient, ActorFixture],
     isolated_database_url: str,

@@ -155,7 +155,6 @@
   "153": "Setup Tasks Script",
   "154": "Backup Auth Zero Leak",
   "155": "Package Skeleton",
-  "156": "Error Envelope Tests",
   "157": "Pagination Tests",
   "158": "Web Tests",
   "159": "Detection Analysis Report",
@@ -240,6 +239,5 @@
   "238": "M1 Parent-Child Issue Hierarchy",
   "239": "WorkdayCacheRepository",
   "240": "normalize_username",
-  "241": "test_ai_prompt_contracts.py",
-  "242": "._snapshot"
+  "241": "test_ai_prompt_contracts.py"
 }
