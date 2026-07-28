@@ -26,10 +26,10 @@ M5 [Issue #9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed`
 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 已通过 Standards/Spec 双轴 Review 与
 Quality Gates `30235090100`（458 项通过），并正常 merge 到
 `main@b7676c27d07adc5eca1f0c397217780367481e9c`；`main` Quality Gates `30235439229`
-同样通过。M4、M5 均为 `complete`，M6
-[Issue #11](https://github.com/ywyz/child-manager/issues/11) 已创建并覆盖 T087–T126；
-Issue 固定新 `docs` SHA 且治理提交同步至 `dev` 后，先执行 T087–T097 RED，纯净 RED 后进入
-T098。
+同样通过。M4、M5 均为 `complete`；M6
+[Issue #11](https://github.com/ywyz/child-manager/issues/11) 为 `in_progress`，覆盖
+T087–T126。T087–T102 已完成，T102 服务级专项验证通过；批量/单栏受理路由仍按任务边界
+保留给 T107。当前下一项是 T103 Worker AI runner，不得把未实施的路由或后续任务写成已完成。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 

@@ -258,8 +258,9 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 
 ## Phase 6: User Story 4 — 教师按栏目使用 AI 并保留决定权（Priority: P4）
 
-**Milestone state**: M4 与 M5 均为 `complete`，M6 T087–T126 为 `ready`。只有固定引用本次
-新 docs SHA 的 M6 Issue 才能授权实现，并保持 T087–T110 先于 T111–T126。
+**Milestone state**: M4 与 M5 均为 `complete`，M6 T087–T126 为 `in_progress`。M6 Issue
+固定引用不可移动 docs SHA；T087–T102 已完成，当前下一项为 T103，并保持 T087–T110
+先于 T111–T126。
 
 **Goal**: 实现可靠任务、一键四栏、栏目级预览/采用/拒绝/重试以及五栏完整后显式反思。
 
@@ -286,8 +287,8 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 
 - [x] T098 [P] [US4] 在 `packages/contracts/lesson_plans.py`、`packages/contracts/jobs.py` 实现严格 AI 结果、batch 派生响应、只允许 failed AI 的重试请求/错误和版本采用契约；batch 父任务的数据库 attempt 为 NULL，API `attempt_count/max_attempts` 固定投影为 0/0；保留晨间/区域三句、晨谈三问、区域所有权、反思 NFKC、集体封闭结构等约束；验证：`uv run pytest tests/contract/test_plan_ai_contracts.py tests/contract/test_idempotency.py tests/unit/test_ai_task_schemas.py` 通过
 - [x] T099 [P] [US4] 在 `packages/backend/jobs/models.py` 实现 `ai_generation_results` pending→output 生命周期，并在 `0008_ai_generation_results.py` 创建同园任务/教案外键、每 job 唯一、包括反思/重试在内受理时非空冻结字段+空 output、完成/采用/拒绝约束；验证：`uv run alembic upgrade head && uv run pytest tests/migrations/test_0008_ai_generation_results.py` 通过
-- [ ] T100 [US4] 在 `packages/backend/jobs/ai_results.py` 实现同园 AI 结果 Repository、受理事务 pending 插入、冻结输入只读、output 条件幂等填充及从 failed 原结果精确 clone-to-pending；验证：`uv run pytest tests/repository/test_ai_generation_results.py` 通过隔离、反思占位、不可变克隆和重复 Worker 场景
-- [ ] T101 [P] [US4] 在 `packages/backend/lesson_plans/ai_schemas.py`、`packages/backend/lesson_plans/ai_fingerprints.py` 实现固定结果 Schema、规范化 JSON 哈希和逐任务实际输入指纹；指纹重算复用任务创建时不可变 `teacher_context` 快照，只重读可变服务端输入，不能读取页面后来填写的 context；验证：`uv run pytest tests/unit/test_ai_task_schemas.py tests/api/test_ai_preview_adoption.py::test_section_hash_changes_only_with_target_section tests/api/test_ai_preview_adoption.py::test_generation_input_hash_reuses_frozen_teacher_context_and_current_server_input` 共 8 项通过；不得使用 `teacher_context` 模糊筛选并提前带入 T107 的采用路由用例
+- [x] T100 [US4] 在 `packages/backend/jobs/ai_results.py` 实现同园 AI 结果 Repository、受理事务 pending 插入、冻结输入只读、output 条件幂等填充及从 failed 原结果精确 clone-to-pending；验证：`uv run pytest tests/repository/test_ai_generation_results.py` 通过隔离、反思占位、不可变克隆和重复 Worker 场景
+- [x] T101 [P] [US4] 在 `packages/backend/lesson_plans/ai_schemas.py`、`packages/backend/lesson_plans/ai_fingerprints.py` 实现固定结果 Schema、规范化 JSON 哈希和逐任务实际输入指纹；指纹重算复用任务创建时不可变 `teacher_context` 快照，只重读可变服务端输入，不能读取页面后来填写的 context；验证：`uv run pytest tests/unit/test_ai_task_schemas.py tests/api/test_ai_preview_adoption.py::test_section_hash_changes_only_with_target_section tests/api/test_ai_preview_adoption.py::test_generation_input_hash_reuses_frozen_teacher_context_and_current_server_input` 共 8 项通过；不得使用 `teacher_context` 模糊筛选并提前带入 T107 的采用路由用例
 - [x] T102 [US4] 在 `packages/backend/lesson_plans/ai_generation.py` 实现除反思外只基于已保存计划创建任务，并为每个执行任务创建冻结 pending result；实现 batch 非执行父+四子、单栏、区域校验及方法/路由 scope+实际 plan path fingerprint；父幂等三项非空但执行/租约/result 全空，children 三项全空且栏目唯一，dispatcher 不得领取父；新增 `tests/unit/lesson_plans/test_ai_generation_service.py` 直接调用生成服务，专项验证 batch/单栏受理、冻结输入、区域校验、幂等指纹、父子任务形状及父任务不投递；验证：`uv run pytest tests/unit/lesson_plans/test_ai_generation_service.py tests/unit/test_ai_task_schemas.py tests/repository/test_ai_generation_results.py` 通过；`tests/api/test_ai_batch_generation.py`、`tests/api/test_ai_generation_presave.py` 的路由级验收保留给 T107
 - [ ] T103 [US4] 在 `packages/backend/jobs/ai_runner.py` 复用 `packages/backend/jobs/retry_policy.py` 和 `packages/backend/prompts/renderer.py`，实现外呼前按 `requested_by` 重验账号/角色/班级、教案未归档和模型启用/密钥/能力，撤销或缺少已引用变量时不可重试且调用 0；实现调用计数、错误分类和严格结构校验；Worker 只从 pending result placeholder 读取冻结输入/模型/提示词/Schema并幂等填 output/hash，禁止重读 current plan/settings；验证：`uv run pytest tests/unit/test_prompt_renderer.py tests/worker/test_ai_retry_policy.py tests/worker/test_ai_job_recovery.py tests/worker/test_prompt_test_jobs.py tests/api/test_ai_preview_lifecycle.py tests/repository/test_ai_generation_results.py` 通过且无第二套退避实现
 - [ ] T104 [US4] 在 `packages/backend/jobs/aggregation.py`、`apps/worker/actors.py`、`apps/worker/scheduler.py` 实现 batch 只读状态投影、AI actors、租约恢复和预览过期/30 天正文清理；聚合只查询四个子行，不写父执行状态，dispatcher/扫描器忽略父，基础设施重投不增模型调用；验证：`uv run pytest tests/worker/test_ai_job_recovery.py tests/api/test_job_polling.py tests/api/test_ai_preview_lifecycle.py` 通过
