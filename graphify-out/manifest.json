@@ -310,9 +310,9 @@
     "semantic_hash": "6be73449cf339377994e807ce34c3656"
   },
   "specs/001-daily-activity-plan/tasks.md": {
-    "mtime": 1785218396.0229948,
-    "ast_hash": "efdab21db9a26b184e912d16b5f6b4e5",
-    "semantic_hash": "efdab21db9a26b184e912d16b5f6b4e5"
+    "mtime": 1785223092.149973,
+    "ast_hash": "f726800643ba1e62e0fd40579c998da6",
+    "semantic_hash": "f726800643ba1e62e0fd40579c998da6"
   },
   "docs/faq/combined-audit.md": {
     "mtime": 1785071260.5147798,
@@ -1752,11 +1752,11 @@
   "packages/backend/lesson_plans/ai_fingerprints.py": {
     "mtime": 1785219315.5249906,
     "ast_hash": "1320275eb09e45fe7bf12c389eb36ac7",
-    "semantic_hash": ""
+    "semantic_hash": "1320275eb09e45fe7bf12c389eb36ac7"
   },
   "packages/backend/lesson_plans/ai_schemas.py": {
     "mtime": 1785219315.5239906,
     "ast_hash": "2ea2bae0c49c329688c8931468ed95c3",
-    "semantic_hash": ""
+    "semantic_hash": "2ea2bae0c49c329688c8931468ed95c3"
   }
 }
