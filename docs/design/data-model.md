@@ -877,14 +877,17 @@ PostgreSQL 中的任务记录是权威状态，Redis 只投递 `job_id`。
 | `parent_job_id` | UUID | 可空，一键生成父任务；组合自外键 `(kindergarten_id, parent_job_id) -> background_jobs(kindergarten_id, id)`，删除策略为 `RESTRICT` |
 | `retry_of_job_id` | UUID | 可空，显式重试谱系；独立组合自外键 `(kindergarten_id, retry_of_job_id) -> background_jobs(kindergarten_id, id)`，删除策略为 `RESTRICT` |
 | `job_type` | VARCHAR(64) | 稳定任务类型 |
-| `status` | VARCHAR(32) | 权威状态 |
+| `execution_status` | VARCHAR(32) | 可空；执行任务的权威状态，`ai.batch` 父任务为空 |
 | `plan_id` | UUID | 首期教案任务可空外键 |
 | `target_section` | VARCHAR(64) | 栏目任务可空 |
 | `requested_resource_version` | INTEGER | 创建时教案版本，可空 |
-| `idempotency_key` | VARCHAR(200) | 园所内唯一 |
-| `attempt_count` | INTEGER | 模型实际调用次数，默认 0 |
-| `max_attempts` | INTEGER | AI 首期固定 3 |
+| `idempotency_scope` | VARCHAR(300) | 可空，外部受理请求的稳定方法与路由模板 |
+| `idempotency_key` | VARCHAR(200) | 可空，外部受理请求的客户端 key |
+| `request_fingerprint_sha256` | CHAR(64) | 可空，规范化 path/query/body 请求摘要 |
+| `attempt_count` | INTEGER | 可空，执行任务的实际调用次数；batch 父任务为空 |
+| `max_attempts` | INTEGER | 可空，AI 执行任务首期固定 3；batch 父任务为空 |
 | `requested_by` | UUID | 同园用户 |
+| `request_id` | UUID | 可空，单次 API 请求关联标识 |
 | `trace_id` | UUID | 跨服务关联标识 |
 | `lease_owner` | VARCHAR(160) | 可空，Worker 实例 |
 | `lease_expires_at` | TIMESTAMPTZ | 可空 |
@@ -912,8 +915,13 @@ expired
 
 约束与索引：
 
-- 唯一 `(kindergarten_id, idempotency_key)`。
-- `(status, lease_expires_at)` 支持恢复扫描。
+- 外部受理根任务或 batch 父任务的
+  `idempotency_scope/idempotency_key/request_fingerprint_sha256` 三项全非空，内部 batch
+  子任务三项全空；部分唯一
+  `(kindergarten_id, requested_by, idempotency_scope, idempotency_key)`。
+- batch 父任务的执行、attempt、租约和排队/开始/结束字段全空，其他执行任务的
+  `execution_status/attempt_count/max_attempts` 非空。
+- `(execution_status, lease_expires_at, created_at)` 支持领取与恢复扫描。
 - `(kindergarten_id, parent_job_id, created_at)` 支持一次读取所有栏目状态。
 - `(kindergarten_id, plan_id, created_at DESC)` 支持教案任务历史。
 - 完成状态必须有 `finished_at`；租约字段必须成组出现。
@@ -929,12 +937,15 @@ expired
 | `job_id` | UUID | 同园任务唯一外键 |
 | `plan_id` | UUID | 同园教案外键 |
 | `target_section` | VARCHAR(64) | 目标栏目 |
+| `requested_resource_version` | INTEGER | 受理时教案版本，仅供追溯 |
+| `target_section_baseline_sha256` | CHAR(64) | 目标栏目受理时规范化哈希 |
+| `input_context` | JSONB | 可清理；本次实际使用的脱敏业务输入快照，包括区域列表 |
+| `input_sha256` | CHAR(64) | 规范化输入哈希 |
 | `model_profile_id` | UUID | 同园模型档案 |
 | `model_name_snapshot` | VARCHAR(200) | 实际模型名 |
 | `prompt_definition_id` | UUID | 同园提示词定义 |
 | `prompt_version_id` | UUID | 实际提示词版本 |
-| `input_context` | JSONB | 本次实际使用的脱敏业务输入快照，包括区域列表 |
-| `input_sha256` | CHAR(64) | 规范化输入哈希 |
+| `prompt_content_sha256` | CHAR(64) | 实际提示词正文哈希 |
 | `result_schema_code` | VARCHAR(160) | 结果 Schema |
 | `result_schema_version` | INTEGER | 结果版本 |
 | `output_content` | JSONB | 可清理的结构化预览 |
@@ -943,16 +954,22 @@ expired
 | `adopted_at` | TIMESTAMPTZ | 可空 |
 | `adopted_by` | UUID | 可空 |
 | `rejected_at` | TIMESTAMPTZ | 可空 |
+| `rejected_by` | UUID | 可空 |
 | `content_cleared_at` | TIMESTAMPTZ | 可空 |
 | `created_at` | TIMESTAMPTZ | 非空 |
 | `updated_at` | TIMESTAMPTZ | 非空 |
 
-每个任务最多一条结果，唯一 `(kindergarten_id, job_id)`。`output_content` 不是教案事实；采用时 API 再次检查权限和教案版本，并在同一事务中创建快照、写入正文、标记任务与结果。
+每个任务最多一条结果，唯一 `(kindergarten_id, job_id)`；
+`(kindergarten_id, plan_id, job_id)` 强制结果与任务属于同园同教案。受理时所有冻结字段非空、
+输出为空；Worker 只能幂等填充一次输出。冻结字段不可更新，显式重试插入新结果并精确复制；
+采用/拒绝的时间与操作者分别成组且互斥。`output_content` 不是教案事实；采用时 API 再次
+检查权限和教案版本，并在同一事务中创建快照、写入正文、标记任务与结果。
 
 保留策略：
 
 - 等待确认、被放弃或最终失败的完整结果最多保留 30 天。
-- 已采用后可立即清除完整 `output_content` 和不再需要的详细输入，只保留哈希、模型、提示词、Schema、采用人和时间。
+- 已采用后可立即清除完整 `output_content` 和不再需要的 `input_context`，只保留基线与输入/
+  输出哈希、模型、提示词、Schema、采用人和时间；清理时间记录在 `content_cleared_at`。
 - 清理不得删除教案正文、历史快照、任务元数据或审计事件。
 - 完整正文不得复制到日志、Redis 消息或审计 payload。
 

@@ -4,6 +4,163 @@
   "graph": {
     "hyperedges": [
       {
+        "id": "kindergarten_isolation_tables",
+        "label": "Tables Implementing Kindergarten Isolation",
+        "nodes": [
+          "docs_design_database_schema_users",
+          "docs_design_database_schema_webauthn_credentials",
+          "docs_design_database_schema_webauthn_challenges",
+          "docs_design_database_schema_backup_auth_credentials",
+          "docs_design_database_schema_backup_auth_enrollments",
+          "docs_design_database_schema_bootstrap_initializations",
+          "docs_design_database_schema_account_invitations",
+          "docs_design_database_schema_recovery_codes",
+          "docs_design_database_schema_account_recovery_requests",
+          "docs_design_database_schema_identity_verification_approvals",
+          "docs_design_database_schema_user_roles",
+          "docs_design_database_schema_refresh_tokens",
+          "docs_design_database_schema_age_groups",
+          "docs_design_database_schema_classes",
+          "docs_design_database_schema_class_teachers",
+          "docs_design_database_schema_semesters",
+          "docs_design_database_schema_class_areas",
+          "docs_design_database_schema_ai_model_profiles",
+          "docs_design_database_schema_ai_model_profile_capabilities",
+          "docs_design_database_schema_prompt_definitions",
+          "docs_design_database_schema_prompt_versions",
+          "docs_design_database_schema_prompt_test_runs",
+          "docs_design_database_schema_daily_activity_plans",
+          "docs_design_database_schema_daily_activity_plan_authors",
+          "docs_design_database_schema_daily_activity_plan_snapshots",
+          "docs_design_database_schema_lesson_plan_sources",
+          "docs_design_database_schema_background_jobs",
+          "docs_design_database_schema_ai_generation_results",
+          "docs_design_database_schema_daily_activity_plan_exports",
+          "docs_design_database_schema_workday_cache",
+          "docs_design_database_schema_audit_events"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "docs/design/database-schema.md"
+      },
+      {
+        "id": "authentication_flow_tables",
+        "label": "Tables Involved in Authentication Flow",
+        "nodes": [
+          "docs_design_database_schema_users",
+          "docs_design_database_schema_webauthn_credentials",
+          "docs_design_database_schema_webauthn_challenges",
+          "docs_design_database_schema_backup_auth_credentials",
+          "docs_design_database_schema_backup_auth_enrollments",
+          "docs_design_database_schema_refresh_tokens"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.8,
+        "source_file": "docs/design/database-schema.md"
+      },
+      {
+        "id": "lesson_planning_system",
+        "label": "Lesson Planning System Tables",
+        "nodes": [
+          "docs_design_database_schema_daily_activity_plans",
+          "docs_design_database_schema_daily_activity_plan_authors",
+          "docs_design_database_schema_daily_activity_plan_snapshots",
+          "docs_design_database_schema_lesson_plan_sources"
+        ],
+        "relation": "form",
+        "confidence": "INFERRED",
+        "confidence_score": 0.8,
+        "source_file": "docs/design/database-schema.md"
+      },
+      {
+        "id": "identity_authentication_system",
+        "label": "Identity and Authentication System",
+        "nodes": [
+          "docs_design_data_model_kindergartens",
+          "docs_design_data_model_users",
+          "docs_design_data_model_webauthn_credentials",
+          "docs_design_data_model_webauthn_challenges",
+          "docs_design_data_model_backup_auth_credentials",
+          "docs_design_data_model_backup_auth_enrollments",
+          "docs_design_data_model_bootstrap_initializations",
+          "docs_design_data_model_account_invitations",
+          "docs_design_data_model_recovery_codes",
+          "docs_design_data_model_account_recovery_requests",
+          "docs_design_data_model_identity_verification_approvals",
+          "docs_design_data_model_roles",
+          "docs_design_data_model_user_roles",
+          "docs_design_data_model_refresh_tokens",
+          "docs_design_data_model_audit_events",
+          "docs_design_data_model_kindergarten_isolation",
+          "docs_design_data_model_immutability"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "docs/design/data-model.md"
+      },
+      {
+        "id": "lesson_plan_generation_flow",
+        "label": "Lesson Plan Generation Flow",
+        "nodes": [
+          "docs_design_data_model_daily_activity_plans",
+          "docs_design_data_model_daily_activity_plan_snapshots",
+          "docs_design_data_model_lesson_plan_sources",
+          "docs_design_data_model_background_jobs",
+          "docs_design_data_model_ai_generation_results",
+          "docs_design_data_model_daily_activity_plan_exports",
+          "docs_design_data_model_jsonb_schema",
+          "specs_001_daily_activity_plan_tasks_m6_ai_plan_generation",
+          "specs_001_daily_activity_plan_tasks_us4_ai_plan_generation"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.8,
+        "source_file": "specs/001-daily-activity-plan/tasks.md"
+      },
+      {
+        "id": "m2_m3_admin_setup",
+        "label": "M2-M3 Admin Security and Settings Setup",
+        "nodes": [
+          "specs_001_daily_activity_plan_tasks_m2_authentication",
+          "specs_001_daily_activity_plan_tasks_m3_settings",
+          "specs_001_daily_activity_plan_tasks_m3a_password_totp_backup",
+          "specs_001_daily_activity_plan_tasks_us1_admin_initialization",
+          "docs_design_data_model_kindergarten_isolation"
+        ],
+        "relation": "form",
+        "confidence": "INFERRED",
+        "confidence_score": 0.9,
+        "source_file": "specs/001-daily-activity-plan/tasks.md"
+      },
+      {
+        "id": "us4_tasks",
+        "label": "User Story 4 Implementation Tasks",
+        "nodes": [
+          "specs_001_daily_activity_plan_tasks_md_T087",
+          "specs_001_daily_activity_plan_tasks_md_T088",
+          "specs_001_daily_activity_plan_tasks_md_T098"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.8,
+        "source_file": "specs/001-daily-activity-plan/tasks.md"
+      },
+      {
+        "id": "us5_tasks",
+        "label": "User Story 5 Implementation Tasks",
+        "nodes": [
+          "specs_001_daily_activity_plan_tasks_md_T111",
+          "specs_001_daily_activity_plan_tasks_md_T112"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.8,
+        "source_file": "specs/001-daily-activity-plan/tasks.md"
+      },
+      {
         "id": "core_principles",
         "label": "Core Principles of Constitution",
         "nodes": [
@@ -131,21 +288,6 @@
         "source_file": "docs/design/system-architecture.md"
       },
       {
-        "id": "kindergarten_isolation_stack",
-        "label": "Kindergarten Isolation Stack",
-        "nodes": [
-          "docs_adr_adr_0001_cloud_only_kindergarten_isolation",
-          "docs_prd_lesson_management_lesson_plan_invariants",
-          "docs_design_data_model_tenant_scoped_data_model",
-          "docs_design_database_schema_composite_tenant_foreign_keys",
-          "docs_design_system_architecture_trust_starts_at_api"
-        ],
-        "relation": "implement",
-        "confidence": "INFERRED",
-        "confidence_score": 0.95,
-        "source_file": "docs/design/database-schema.md"
-      },
-      {
         "id": "local_development_isolation_pattern",
         "nodes": [
           "docs_development_local_development_environments_worktree_resource_isolation",
@@ -192,20 +334,6 @@
         "label": "\u8eab\u4efd\u7eb5\u6df1\u9632\u5fa1"
       },
       {
-        "id": "m6_reliable_ai_and_group_activity",
-        "label": "M6 Reliable AI and Group Activity",
-        "nodes": [
-          "specs_001_daily_activity_plan_tasks_m6_ai_and_group_activity",
-          "specs_001_daily_activity_plan_contracts_job_state_machine_background_job_state_machine",
-          "specs_001_daily_activity_plan_contracts_job_state_machine_ai_preview_adoption",
-          "templates_teacherplan_ai_added_step_red_text"
-        ],
-        "relation": "form",
-        "confidence": "EXTRACTED",
-        "confidence_score": 1.0,
-        "source_file": "specs/001-daily-activity-plan/tasks.md"
-      },
-      {
         "id": "password_totp_backup_login_baseline",
         "label": "Password and TOTP Backup Login Baseline",
         "nodes": [
@@ -233,7 +361,7 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 20,
+      "community": 29,
       "norm_label": "check-prerequisites.sh",
       "community_name": "Prerequisites Check Script",
       "id": "specify_scripts_bash_check_prerequisites"
@@ -248,7 +376,7 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 20,
+      "community": 29,
       "norm_label": "check-prerequisites.sh script",
       "community_name": "Prerequisites Check Script",
       "id": "specify_scripts_bash_check_prerequisites_sh__entry"
@@ -263,7 +391,7 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "common.sh",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common"
@@ -278,7 +406,7 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "common.sh script",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_sh__entry"
@@ -293,7 +421,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "find_specify_root()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_find_specify_root"
@@ -308,7 +436,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "resolve_specify_init_dir()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_resolve_specify_init_dir"
@@ -323,7 +451,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "get_repo_root()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_get_repo_root"
@@ -338,7 +466,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "get_current_branch()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_get_current_branch"
@@ -353,7 +481,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "read_feature_json_feature_directory()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_read_feature_json_feature_directory"
@@ -368,7 +496,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "_persist_feature_json()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_persist_feature_json"
@@ -383,7 +511,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "get_feature_paths()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_get_feature_paths"
@@ -398,7 +526,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "has_jq()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_has_jq"
@@ -413,7 +541,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "get_invoke_separator()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_get_invoke_separator"
@@ -428,7 +556,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "format_speckit_command()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_format_speckit_command"
@@ -443,7 +571,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "json_escape()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_json_escape"
@@ -458,7 +586,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "check_file()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_check_file"
@@ -473,7 +601,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "check_dir()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_check_dir"
@@ -488,7 +616,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "resolve_template()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_resolve_template"
@@ -503,7 +631,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 7,
+      "community": 6,
       "norm_label": "resolve_template_content()",
       "community_name": "Shell Script Utilities",
       "id": "specify_scripts_bash_common_resolve_template_content"
@@ -518,7 +646,7 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "create-new-feature.sh",
       "community_name": "Feature Creation Script",
       "id": "specify_scripts_bash_create_new_feature"
@@ -533,7 +661,7 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "create-new-feature.sh script",
       "community_name": "Feature Creation Script",
       "id": "specify_scripts_bash_create_new_feature_sh__entry"
@@ -548,7 +676,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "get_highest_from_specs()",
       "community_name": "Feature Creation Script",
       "id": "specify_scripts_bash_create_new_feature_get_highest_from_specs"
@@ -563,7 +691,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "clean_branch_name()",
       "community_name": "Feature Creation Script",
       "id": "specify_scripts_bash_create_new_feature_clean_branch_name"
@@ -578,7 +706,7 @@
         "kind": "bash_function"
       },
       "_origin": "ast",
-      "community": 14,
+      "community": 15,
       "norm_label": "generate_branch_name()",
       "community_name": "Feature Creation Script",
       "id": "specify_scripts_bash_create_new_feature_generate_branch_name"
@@ -593,7 +721,7 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 21,
+      "community": 30,
       "norm_label": "setup-plan.sh",
       "community_name": "Plan Setup Script",
       "id": "specify_scripts_bash_setup_plan"
@@ -608,7 +736,7 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 21,
+      "community": 30,
       "norm_label": "setup-plan.sh script",
       "community_name": "Plan Setup Script",
       "id": "specify_scripts_bash_setup_plan_sh__entry"
@@ -623,7 +751,7 @@
         "kind": "file"
       },
       "_origin": "ast",
-      "community": 22,
+      "community": 31,
       "norm_label": "setup-tasks.sh",
       "community_name": "Tasks Setup Script",
       "id": "specify_scripts_bash_setup_tasks"
@@ -638,7 +766,7 @@
         "kind": "bash_entrypoint"
       },
       "_origin": "ast",
-      "community": 22,
+      "community": 31,
       "norm_label": "setup-tasks.sh script",
       "community_name": "Tasks Setup Script",
       "id": "specify_scripts_bash_setup_tasks_sh__entry"
@@ -913,7 +1041,7 @@
       "captured_at": null,
       "author": "github-spec-kit",
       "contributor": null,
-      "community": 12,
+      "community": 1,
       "norm_label": "speckit tasks to issues",
       "community_name": "GitHub Issue Workflow",
       "id": "_agents_skills_speckit_taskstoissues_skill_speckit_taskstoissues"
@@ -928,7 +1056,7 @@
       "author": "github-spec-kit",
       "contributor": null,
       "rationale": "\u521b\u5efa Issue \u524d\u6309 TNNN \u4efb\u52a1\u7f16\u53f7\u904d\u5386\u5f00\u653e\u4e0e\u5173\u95ed Issue\uff0c\u9632\u6b62\u91cd\u590d\u521b\u5efa\u5e76\u9650\u5236\u76ee\u6807\u4ed3\u5e93\u3002",
-      "community": 12,
+      "community": 1,
       "norm_label": "github issue deduplication",
       "community_name": "GitHub Issue Workflow",
       "id": "_agents_skills_speckit_taskstoissues_skill_github_issue_deduplication"
@@ -942,7 +1070,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 12,
+      "community": 1,
       "norm_label": "blank issue policy",
       "community_name": "GitHub Issue Workflow",
       "id": "_github_issue_template_config_blank_issue_policy"
@@ -956,7 +1084,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 12,
+      "community": 1,
       "norm_label": "implementation issue template",
       "community_name": "GitHub Issue Workflow",
       "id": "_github_issue_template_implementation_implementation_issue_template"
@@ -971,7 +1099,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u5b9e\u73b0\u4efb\u52a1\u5fc5\u987b\u586b\u5199\u5b8c\u6574 docs \u63d0\u4ea4 SHA\uff0c\u5e76\u540c\u65f6\u58f0\u660e\u4e8b\u5b9e\u6765\u6e90\u3001\u8303\u56f4\u3001\u975e\u76ee\u6807\u3001\u9a8c\u6536\u548c\u9a8c\u8bc1\u8ba1\u5212\u3002",
-      "community": 12,
+      "community": 1,
       "norm_label": "immutable docs baseline",
       "community_name": "GitHub Issue Workflow",
       "id": "_github_issue_template_implementation_immutable_docs_baseline"
@@ -1129,7 +1257,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 13,
+      "community": 14,
       "norm_label": "design to implement workflow",
       "community_name": "Documentation & Design Workflow",
       "id": "contributing_design_to_implement_workflow"
@@ -1143,7 +1271,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 13,
+      "community": 14,
       "norm_label": "main docs dev branch responsibilities",
       "community_name": "Documentation & Design Workflow",
       "id": "contributing_branch_responsibilities"
@@ -1563,161 +1691,6 @@
       "id": "docs_prd_lesson_management_account_security_requirements"
     },
     {
-      "label": "Tenant Scoped Data Model",
-      "file_type": "concept",
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "tenant scoped data model",
-      "community_name": "Data Model & Database Schema",
-      "id": "docs_design_data_model_tenant_scoped_data_model"
-    },
-    {
-      "label": "Immutable Snapshot and Audit Model",
-      "file_type": "concept",
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 0,
-      "norm_label": "immutable snapshot and audit model",
-      "community_name": "Architecture & API Design",
-      "id": "docs_design_data_model_immutable_history_model"
-    },
-    {
-      "label": "Background Job and AI Result Model",
-      "file_type": "concept",
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 0,
-      "norm_label": "background job and ai result model",
-      "community_name": "Architecture & API Design",
-      "id": "docs_design_data_model_background_job_model"
-    },
-    {
-      "label": "AI Profile and Prompt Version Model",
-      "file_type": "concept",
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 0,
-      "norm_label": "ai profile and prompt version model",
-      "community_name": "Architecture & API Design",
-      "id": "docs_design_data_model_ai_prompt_model"
-    },
-    {
-      "label": "Cross Row Transaction Invariants",
-      "file_type": "rationale",
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "rationale": "Operations that change current content, immutable history, authentication material, authorization state, or audit evidence must commit or roll back together.",
-      "community": 0,
-      "norm_label": "cross row transaction invariants",
-      "community_name": "Architecture & API Design",
-      "id": "docs_design_data_model_transaction_invariants"
-    },
-    {
-      "label": "Ordered Alembic Migration Chain",
-      "file_type": "concept",
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 19,
-      "norm_label": "ordered alembic migration chain",
-      "community_name": "Alembic Migration Chain",
-      "id": "docs_design_data_model_migration_chain"
-    },
-    {
-      "label": "PostgreSQL Physical Schema Contract",
-      "file_type": "document",
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "postgresql physical schema contract",
-      "community_name": "Data Model & Database Schema",
-      "id": "docs_design_database_schema_postgresql_physical_contract"
-    },
-    {
-      "label": "Composite Kindergarten Foreign Keys",
-      "file_type": "concept",
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "composite kindergarten foreign keys",
-      "community_name": "Data Model & Database Schema",
-      "id": "docs_design_database_schema_composite_tenant_foreign_keys"
-    },
-    {
-      "label": "AI Prompt and Job Physical Schema",
-      "file_type": "concept",
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 0,
-      "norm_label": "ai prompt and job physical schema",
-      "community_name": "Architecture & API Design",
-      "id": "docs_design_database_schema_ai_prompt_job_schema"
-    },
-    {
-      "label": "PostgreSQL and SQLite Validation Matrix",
-      "file_type": "concept",
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 16,
-      "norm_label": "postgresql and sqlite validation matrix",
-      "community_name": "Data Model & Database Schema",
-      "id": "docs_design_database_schema_postgres_sqlite_validation"
-    },
-    {
-      "label": "Incremental Alembic Sequence",
-      "file_type": "concept",
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 19,
-      "norm_label": "incremental alembic sequence",
-      "community_name": "Alembic Migration Chain",
-      "id": "docs_design_database_schema_alembic_sequence"
-    },
-    {
       "label": "Modular Runtime Architecture",
       "file_type": "concept",
       "source_file": "docs/design/system-architecture.md",
@@ -1755,7 +1728,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 0,
+      "community": 76,
       "norm_label": "application owned transactions",
       "community_name": "Architecture & API Design",
       "id": "docs_design_system_architecture_application_owned_transactions"
@@ -1798,7 +1771,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 30,
+      "community": 77,
       "norm_label": "external key source seam",
       "community_name": "External Key Source",
       "id": "docs_design_system_architecture_key_source_seam"
@@ -1826,7 +1799,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 13,
+      "community": 14,
       "norm_label": "retired dual agent protocol",
       "community_name": "Documentation & Design Workflow",
       "id": "docs_development_dual_agent_development_retired_dual_agent_protocol"
@@ -1840,7 +1813,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 13,
+      "community": 14,
       "norm_label": "independent implementation boundaries",
       "community_name": "Documentation & Design Workflow",
       "id": "docs_development_dual_agent_development_independent_implementation_boundaries"
@@ -1854,7 +1827,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 13,
+      "community": 14,
       "norm_label": "read only cross review",
       "community_name": "Documentation & Design Workflow",
       "id": "docs_development_dual_agent_development_read_only_cross_review"
@@ -2261,7 +2234,7 @@
       "contributor": null,
       "label": "\u5b89\u5168\u5a01\u80c1\u6a21\u578b",
       "source_location": null,
-      "community": 10,
+      "community": 12,
       "norm_label": "\u5b89\u5168\u5a01\u80c1\u6a21\u578b",
       "community_name": "Security Model & Defense",
       "id": "docs_security_threat_model_threat_model"
@@ -2277,7 +2250,7 @@
       "contributor": null,
       "label": "\u53d7\u9650\u516c\u7f51\u552f\u4e00\u5165\u53e3",
       "source_location": null,
-      "community": 10,
+      "community": 12,
       "norm_label": "\u53d7\u9650\u516c\u7f51\u552f\u4e00\u5165\u53e3",
       "community_name": "Security Model & Defense",
       "id": "docs_security_threat_model_restricted_public_entry"
@@ -2293,7 +2266,7 @@
       "contributor": null,
       "label": "\u6297\u9493\u9c7c\u4e3b\u8ba4\u8bc1",
       "source_location": null,
-      "community": 10,
+      "community": 12,
       "norm_label": "\u6297\u9493\u9c7c\u4e3b\u8ba4\u8bc1",
       "community_name": "Security Model & Defense",
       "id": "docs_security_threat_model_phishing_resistant_authentication"
@@ -2309,7 +2282,7 @@
       "contributor": null,
       "label": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55",
       "source_location": null,
-      "community": 10,
+      "community": 12,
       "norm_label": "\u5bc6\u7801\u4e0e totp \u5907\u7528\u767b\u5f55",
       "community_name": "Security Model & Defense",
       "id": "docs_security_threat_model_password_totp_backup"
@@ -2325,7 +2298,7 @@
       "contributor": null,
       "label": "\u7d27\u6025\u6062\u590d\u53cc\u4eba\u63a7\u5236",
       "source_location": null,
-      "community": 10,
+      "community": 12,
       "norm_label": "\u7d27\u6025\u6062\u590d\u53cc\u4eba\u63a7\u5236",
       "community_name": "Security Model & Defense",
       "id": "docs_security_threat_model_emergency_recovery_dual_control"
@@ -2341,7 +2314,7 @@
       "contributor": null,
       "label": "\u6700\u5c0f\u6743\u9650\u5bfc\u51fa",
       "source_location": null,
-      "community": 10,
+      "community": 12,
       "norm_label": "\u6700\u5c0f\u6743\u9650\u5bfc\u51fa",
       "community_name": "Security Model & Defense",
       "id": "docs_security_threat_model_least_privilege_export"
@@ -2358,7 +2331,7 @@
       "contributor": null,
       "label": "\u7eb5\u6df1\u9632\u5fa1",
       "source_location": null,
-      "community": 10,
+      "community": 12,
       "norm_label": "\u7eb5\u6df1\u9632\u5fa1",
       "community_name": "Security Model & Defense",
       "id": "docs_security_threat_model_defense_in_depth"
@@ -2374,7 +2347,7 @@
       "contributor": null,
       "label": "2026-07-13 \u7f16\u7801\u524d\u5ba1\u67e5\u62a5\u544a",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "2026-07-13 \u7f16\u7801\u524d\u5ba1\u67e5\u62a5\u544a",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260713________preimplementation_review"
@@ -2391,7 +2364,7 @@
       "contributor": null,
       "label": "M0 \u521d\u59cb\u963b\u585e\u5224\u65ad",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "m0 \u521d\u59cb\u963b\u585e\u5224\u65ad",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260713________initial_m0_blocking_assessment"
@@ -2407,7 +2380,7 @@
       "contributor": null,
       "label": "M0 \u95e8\u7981\u5173\u95ed\u8bc1\u636e",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "m0 \u95e8\u7981\u5173\u95ed\u8bc1\u636e",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260713________m0_gate_closure_evidence"
@@ -2423,7 +2396,7 @@
       "contributor": null,
       "label": "\u9690\u79c1\u5386\u53f2\u6e05\u7406\u8bc1\u636e",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "\u9690\u79c1\u5386\u53f2\u6e05\u7406\u8bc1\u636e",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260713________privacy_history_cleanup_evidence"
@@ -2439,7 +2412,7 @@
       "contributor": null,
       "label": "2026-07-13 \u7f16\u7801\u524d\u4fee\u590d\u65b9\u6848",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "2026-07-13 \u7f16\u7801\u524d\u4fee\u590d\u65b9\u6848",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260713____________m0_remediation_plan"
@@ -2455,7 +2428,7 @@
       "contributor": null,
       "label": "\u6709\u5e8f\u95e8\u7981\u4fee\u590d",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "\u6709\u5e8f\u95e8\u7981\u4fee\u590d",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260713____________ordered_gate_remediation"
@@ -2472,7 +2445,7 @@
       "contributor": null,
       "label": "\u5386\u53f2\u6e05\u7406\u72ec\u7acb\u6388\u6743",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "\u5386\u53f2\u6e05\u7406\u72ec\u7acb\u6388\u6743",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260713____________separate_history_cleanup"
@@ -2488,7 +2461,7 @@
       "contributor": null,
       "label": "\u6700\u7ec8\u4e0d\u53ef\u79fb\u52a8\u6587\u6863\u57fa\u7ebf",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "\u6700\u7ec8\u4e0d\u53ef\u79fb\u52a8\u6587\u6863\u57fa\u7ebf",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260713____________final_docs_baseline"
@@ -2504,7 +2477,7 @@
       "contributor": null,
       "label": "2026-07-14 \u7f16\u7801\u524d\u5ba1\u67e5\u62a5\u544a",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "2026-07-14 \u7f16\u7801\u524d\u5ba1\u67e5\u62a5\u544a",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260714____preimplementation_review"
@@ -2520,7 +2493,7 @@
       "contributor": null,
       "label": "M1 Issue \u8349\u6848\u5c31\u7eea",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "m1 issue \u8349\u6848\u5c31\u7eea",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260714____m1_issue_drafting_readiness"
@@ -2536,7 +2509,7 @@
       "contributor": null,
       "label": "M1 Issue \u5c42\u7ea7",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "m1 issue \u5c42\u7ea7",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260714____m1_issue_hierarchy"
@@ -2553,7 +2526,7 @@
       "contributor": null,
       "label": "Graphify \u5de5\u4f5c\u6811\u4fdd\u62a4",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "graphify \u5de5\u4f5c\u6811\u4fdd\u62a4",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260714____graphify_worktree_preservation"
@@ -2569,7 +2542,7 @@
       "contributor": null,
       "label": "2026-07-14 \u542f\u52a8\u89e3\u51b3\u65b9\u6848",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "2026-07-14 \u542f\u52a8\u89e3\u51b3\u65b9\u6848",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260714____m1_startup_solution"
@@ -2585,7 +2558,7 @@
       "contributor": null,
       "label": "Issue\u3001\u5206\u652f\u4e0e\u5b9e\u73b0\u987a\u5e8f",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "issue\u3001\u5206\u652f\u4e0e\u5b9e\u73b0\u987a\u5e8f",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260714____issue_branch_implementation_sequence"
@@ -2601,7 +2574,7 @@
       "contributor": null,
       "label": "T003 \u5171\u4eab\u57fa\u7ebf",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "t003 \u5171\u4eab\u57fa\u7ebf",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260714____t003_shared_baseline"
@@ -2618,7 +2591,7 @@
       "contributor": null,
       "label": "\u72ec\u7acb\u6388\u6743\u77e9\u9635",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "\u72ec\u7acb\u6388\u6743\u77e9\u9635",
       "community_name": "Document Baseline & Quality",
       "id": "docs______20260714____independent_authorization_matrix"
@@ -2634,7 +2607,7 @@
       "contributor": "graphify",
       "label": "AGENTS \u89c4\u5219\u5dee\u8ddd\u67e5\u8be2",
       "source_location": null,
-      "community": 10,
+      "community": 12,
       "norm_label": "agents \u89c4\u5219\u5dee\u8ddd\u67e5\u8be2",
       "community_name": "Security Model & Defense",
       "id": "graphify_out_memory_query_20260710_131311____________agents_md___ywyz_kindergartenmanager_gi_agents_rules_gap_query"
@@ -2650,7 +2623,7 @@
       "contributor": "graphify",
       "label": "AI\u3001\u65e5\u671f\u3001\u56ed\u6240\u4e0e Word \u8fb9\u754c",
       "source_location": null,
-      "community": 10,
+      "community": 12,
       "norm_label": "ai\u3001\u65e5\u671f\u3001\u56ed\u6240\u4e0e word \u8fb9\u754c",
       "community_name": "Security Model & Defense",
       "id": "graphify_out_memory_query_20260710_131311____________agents_md___ywyz_kindergartenmanager_gi_ai_date_tenant_word_boundaries"
@@ -2895,7 +2868,7 @@
       "contributor": "graphify",
       "label": "Graphify \u66f4\u65b0\u540e\u7eed\u4efb\u52a1\u67e5\u8be2",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "graphify \u66f4\u65b0\u540e\u7eed\u4efb\u52a1\u67e5\u8be2",
       "community_name": "Document Baseline & Quality",
       "id": "graphify_out_memory_query_20260713_043702_____graphify_update_______________________________graphify_update_next_tasks_query"
@@ -2912,7 +2885,7 @@
       "contributor": "graphify",
       "label": "T003 \u6388\u6743\u95e8\u7981",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "t003 \u6388\u6743\u95e8\u7981",
       "community_name": "Document Baseline & Quality",
       "id": "graphify_out_memory_query_20260713_043702_____graphify_update_______________________________t003_authorization_gate"
@@ -2928,7 +2901,7 @@
       "contributor": "graphify",
       "label": "T004 \u81f3 T008 \u8bbe\u7f6e\u987a\u5e8f",
       "source_location": null,
-      "community": 5,
+      "community": 4,
       "norm_label": "t004 \u81f3 t008 \u8bbe\u7f6e\u987a\u5e8f",
       "community_name": "Document Baseline & Quality",
       "id": "graphify_out_memory_query_20260713_043702_____graphify_update_______________________________setup_sequence_t004_t008"
@@ -2944,7 +2917,7 @@
       "contributor": "graphify",
       "label": "M5 \u5148\u4e8e M4 \u7684\u56fa\u5b9a\u987a\u5e8f",
       "source_location": null,
-      "community": 18,
+      "community": 22,
       "norm_label": "m5 \u5148\u4e8e m4 \u7684\u56fa\u5b9a\u987a\u5e8f",
       "community_name": "Migration Order Dependencies",
       "id": "graphify_out_memory_query_20260726_004336_t046_t061___t062_t086______________m5_before_m4_decision"
@@ -2961,7 +2934,7 @@
       "contributor": "graphify",
       "label": "\u6559\u6848\u57fa\u7840\u5148\u4e8e AI",
       "source_location": null,
-      "community": 18,
+      "community": 22,
       "norm_label": "\u6559\u6848\u57fa\u7840\u5148\u4e8e ai",
       "community_name": "Migration Order Dependencies",
       "id": "graphify_out_memory_query_20260726_004336_t046_t061___t062_t086______________lesson_plan_before_ai"
@@ -2977,7 +2950,7 @@
       "contributor": "graphify",
       "label": "0006 \u5230 0007 \u8fc1\u79fb\u4f9d\u8d56",
       "source_location": null,
-      "community": 18,
+      "community": 22,
       "norm_label": "0006 \u5230 0007 \u8fc1\u79fb\u4f9d\u8d56",
       "community_name": "Migration Order Dependencies",
       "id": "graphify_out_memory_query_20260726_004336_t046_t061___t062_t086______________migration_0006_before_0007"
@@ -2992,7 +2965,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u5341\u516d\u9879\u89c4\u683c\u8d28\u91cf\u68c0\u67e5\u5747\u901a\u8fc7\uff0c\u4ea7\u54c1\u6b67\u4e49\u3001\u6743\u9650\u8fb9\u754c\u3001\u4efb\u52a1\u5e42\u7b49\u4e0e\u8eab\u4efd\u6062\u590d\u7ea6\u675f\u5df2\u7ecf\u5386\u591a\u8f6e\u590d\u6838\u3002",
-      "community": 34,
+      "community": 81,
       "norm_label": "daily activity plan specification quality checklist",
       "community_name": "Spec Quality Checklist",
       "id": "specs_001_daily_activity_plan_checklists_requirements_specification_quality_checklist"
@@ -3006,7 +2979,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "api v1 contract",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_contracts_readme_api_v1_contract"
@@ -3021,7 +2994,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u6d4f\u89c8\u5668\u53ea\u8bbf\u95ee NiceGUI Web\uff1bBFF \u5265\u79bb\u4f2a\u9020\u4ee3\u7406\u5934\u5e76\u8f6c\u53d1 Cookie\u3001\u6765\u6e90\u3001CSRF \u548c\u591a\u4e2a Set-Cookie\uff0cAPI \u53ea\u4fe1\u4efb\u663e\u5f0f\u56de\u73af BFF \u91cd\u5efa\u7684\u6765\u6e90\u3002",
-      "community": 4,
+      "community": 5,
       "norm_label": "trusted nicegui bff boundary",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_contracts_readme_trusted_bff_boundary"
@@ -3036,7 +3009,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u6559\u6848\u5199\u5165\u4f7f\u7528 expected_version\uff1bAI\u3001\u63d0\u793a\u8bcd\u6d4b\u8bd5\u3001\u663e\u5f0f\u91cd\u8bd5\u548c\u5bfc\u51fa\u4ee5\u56ed\u6240\u3001\u64cd\u4f5c\u8005\u3001\u65b9\u6cd5\u3001\u8def\u7531\u6a21\u677f\u548c\u8bf7\u6c42\u6458\u8981\u5b9a\u4e49\u5e42\u7b49\u4f5c\u7528\u57df\u3002",
-      "community": 4,
+      "community": 5,
       "norm_label": "optimistic lock and idempotency contract",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_contracts_readme_optimistic_lock_and_idempotency"
@@ -3050,7 +3023,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "background job state machine",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_contracts_job_state_machine_background_job_state_machine"
@@ -3065,7 +3038,7 @@
       "author": null,
       "contributor": null,
       "rationale": "PostgreSQL background_jobs \u662f\u552f\u4e00\u4efb\u52a1\u4e8b\u5b9e\u6765\u6e90\uff1bRedis \u548c Dramatiq \u53ea\u4f20\u9012\u6700\u5c0f job_id\uff0cpending_dispatch \u626b\u63cf\u4e0e\u79df\u7ea6\u6062\u590d\u6536\u655b\u6545\u969c\u7a97\u53e3\u3002",
-      "community": 4,
+      "community": 5,
       "norm_label": "postgresql job authority",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_contracts_job_state_machine_postgresql_authority"
@@ -3080,7 +3053,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u6a21\u578b\u8c03\u7528\u6700\u591a\u4e09\u6b21\uff1b\u663e\u5f0f\u91cd\u8bd5\u521b\u5efa\u5173\u8054\u7684\u65b0\u4efb\u52a1\u5e76\u590d\u5236\u51bb\u7ed3\u8f93\u5165\uff0c\u57fa\u7840\u8bbe\u65bd\u91cd\u6295\u4e0d\u589e\u52a0\u4e1a\u52a1 attempt_count\u3002",
-      "community": 4,
+      "community": 5,
       "norm_label": "retry and idempotency semantics",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_contracts_job_state_machine_retry_and_idempotency"
@@ -3095,7 +3068,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u91c7\u7528\u4e8b\u52a1\u91cd\u65b0\u9274\u6743\u5e76\u6821\u9a8c\u7248\u672c\u3001\u680f\u76ee\u57fa\u7ebf\u4e0e\u8f93\u5165\u54c8\u5e0c\uff0c\u53ea\u6709\u6709\u6548\u9884\u89c8\u624d\u5408\u5e76\u6b63\u6587\u3001\u521b\u5efa\u5feb\u7167\u5e76\u5199\u5ba1\u8ba1\u3002",
-      "community": 4,
+      "community": 5,
       "norm_label": "ai preview adoption transaction",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_contracts_job_state_machine_ai_preview_adoption"
@@ -3109,7 +3082,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 5,
       "norm_label": "child manager daily activity api",
       "community_name": "Backup Login Implementation",
       "id": "specs_001_daily_activity_plan_contracts_openapi_child_manager_daily_activity_api"
@@ -3123,7 +3096,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 5,
       "norm_label": "identity and settings endpoints",
       "community_name": "Backup Login Implementation",
       "id": "specs_001_daily_activity_plan_contracts_openapi_identity_and_settings_endpoints"
@@ -3137,7 +3110,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 5,
       "norm_label": "plans, jobs, and exports endpoints",
       "community_name": "Backup Login Implementation",
       "id": "specs_001_daily_activity_plan_contracts_openapi_plans_jobs_and_exports_endpoints"
@@ -3151,7 +3124,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "daily activity plan data model",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_data_model_daily_activity_data_model"
@@ -3166,7 +3139,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u4e1a\u52a1\u8868\u3001\u590d\u5408\u5916\u952e\u3001Repository \u4e0e\u552f\u4e00\u7ea6\u675f\u5171\u540c\u643a\u5e26 kindergarten_id\uff0c\u907f\u514d\u8de8\u56ed\u8bfb\u53d6\u548c\u5199\u5165\u3002",
-      "community": 4,
+      "community": 5,
       "norm_label": "kindergarten-scoped entities",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_data_model_kindergarten_scoped_entities"
@@ -3181,7 +3154,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u6559\u6848\u7248\u672c\u3001\u4e0d\u53ef\u53d8\u5feb\u7167\u3001\u540e\u53f0\u4efb\u52a1\u3001AI \u7ed3\u679c\u5360\u4f4d\u4e0e\u5bfc\u51fa\u8bb0\u5f55\u4ee5\u7ec4\u5408\u5916\u952e\u548c\u5355\u4e8b\u52a1\u7ef4\u62a4\u4e00\u81f4\u6027\u3002",
-      "community": 4,
+      "community": 5,
       "norm_label": "plan, job, and ai result invariants",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_data_model_plan_job_result_invariants"
@@ -3195,7 +3168,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 5,
       "norm_label": "daily activity plan research",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_research_daily_activity_research"
@@ -3210,7 +3183,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u4e03\u4e2a\u7a33\u5b9a\u63d0\u793a\u8bcd\u4f7f\u7528\u767d\u540d\u5355\u53d8\u91cf\u548c\u56fa\u5b9a\u7ed3\u6784\u5316\u7ed3\u679c\uff0c\u4e1a\u52a1\u901a\u8fc7 OpenAI \u517c\u5bb9\u8fb9\u754c\u800c\u4e0d\u7ed1\u5b9a\u4f9b\u5e94\u5546\u3002",
-      "community": 4,
+      "community": 5,
       "norm_label": "provider-neutral ai and prompt contracts",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_research_provider_neutral_ai_and_prompts"
@@ -3225,69 +3198,10 @@
       "author": null,
       "contributor": null,
       "rationale": "PostgreSQL \u6743\u5a01\u4efb\u52a1\u4e0e\u79df\u7ea6\u6062\u590d\u4fdd\u8bc1\u5f02\u6b65\u53ef\u9760\u6027\uff1bAI Key \u4f7f\u7528 AEAD \u4fe1\u5c01\uff0c\u6a21\u578b\u5730\u5740\u5728\u53d7\u7406\u548c\u5916\u547c\u524d\u6267\u884c SSRF \u5b89\u5168\u590d\u6838\u3002",
-      "community": 4,
+      "community": 5,
       "norm_label": "reliable jobs, key envelope, and ssrf security",
       "community_name": "Data & AI Contracts",
       "id": "specs_001_daily_activity_plan_research_reliable_jobs_and_security"
-    },
-    {
-      "label": "Daily Activity Plan Task Plan",
-      "file_type": "document",
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "community": 4,
-      "norm_label": "daily activity plan task plan",
-      "community_name": "Data & AI Contracts",
-      "id": "specs_001_daily_activity_plan_tasks_daily_activity_task_plan"
-    },
-    {
-      "label": "Intentional RED Gate",
-      "file_type": "rationale",
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "rationale": "RED \u6d4b\u8bd5\u5fc5\u987b\u6210\u529f\u6536\u96c6\u4e14\u53ea\u5728\u4e1a\u52a1\u65ad\u8a00\u5931\u8d25\uff1b\u5bfc\u5165\u3001\u914d\u7f6e\u3001fixture \u6216\u6570\u636e\u5e93\u57fa\u7840\u9519\u8bef\u4e0d\u6784\u6210\u6709\u6548 RED\u3002",
-      "community": 4,
-      "norm_label": "intentional red gate",
-      "community_name": "Data & AI Contracts",
-      "id": "specs_001_daily_activity_plan_tasks_intentional_red_gate"
-    },
-    {
-      "label": "M6 AI and Group Activity Tasks T087-T126",
-      "file_type": "concept",
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "rationale": "M6 \u5728 M4 \u4e0e M5 \u5b8c\u6210\u540e\u4f9d\u6b21\u6267\u884c T087-T110 \u7684\u53ef\u9760 AI \u9884\u89c8\u91c7\u7528\u548c T111-T126 \u7684\u5b89\u5168\u96c6\u4f53\u6d3b\u52a8\u4e24\u9636\u6bb5\u751f\u6210\u3002",
-      "community": 4,
-      "norm_label": "m6 ai and group activity tasks t087-t126",
-      "community_name": "Data & AI Contracts",
-      "id": "specs_001_daily_activity_plan_tasks_m6_ai_and_group_activity"
-    },
-    {
-      "label": "Post-M3A Migration Sequence",
-      "file_type": "rationale",
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "rationale": "0005_password_totp_backup_login \u540e\u56fa\u5b9a\u4e3a 0006_lesson_plans\u30010007_ai_prompts_jobs\u30010008_ai_generation_results\u30010009_group_activity_sources\u30010010_word_exports\u3002",
-      "community": 4,
-      "norm_label": "post-m3a migration sequence",
-      "community_name": "Data & AI Contracts",
-      "id": "specs_001_daily_activity_plan_tasks_migration_sequence"
     },
     {
       "label": "Backup Login Specification Quality Checklist",
@@ -3299,7 +3213,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u5bc6\u7801\u4e0e TOTP \u5907\u7528\u767b\u5f55\u89c4\u683c\u7684\u5341\u516d\u9879\u5185\u5bb9\u3001\u5b8c\u6574\u6027\u4e0e\u53ef\u9a8c\u6536\u6027\u68c0\u67e5\u5168\u90e8\u901a\u8fc7\u3002",
-      "community": 17,
+      "community": 19,
       "norm_label": "backup login specification quality checklist",
       "community_name": "Backup Login Specification",
       "id": "specs_002_password_totp_backup_login_checklists_requirements_specification_quality_checklist"
@@ -3313,7 +3227,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 5,
       "norm_label": "password and totp backup login api fragment",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_contracts_openapi_backup_login_api_fragment"
@@ -3327,7 +3241,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 5,
       "norm_label": "backup enrollment and authentication endpoints",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_contracts_openapi_enrollment_and_authentication_endpoints"
@@ -3341,7 +3255,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 5,
       "norm_label": "backup authentication security event endpoint",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_contracts_openapi_security_event_endpoint"
@@ -3355,7 +3269,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 9,
       "norm_label": "backup authentication data model",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_data_model_backup_auth_data_model"
@@ -3370,7 +3284,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u5bc6\u7801\u6458\u8981\u4e0e TOTP \u4fe1\u5c01\u4f4d\u4e8e\u72ec\u7acb\u56ed\u6240\u8303\u56f4\u8868\uff1b\u77ed\u65f6 enrollment \u4e0e\u5df2\u542f\u7528\u51ed\u636e\u5206\u79bb\uff0c\u79cd\u5b50\u53ea\u5c55\u793a\u4e00\u6b21\u5e76\u4ee5 AES-256-GCM \u4fdd\u5b58\u3002",
-      "community": 6,
+      "community": 9,
       "norm_label": "encrypted credentials and enrollments",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_data_model_encrypted_credentials_and_enrollments"
@@ -3385,7 +3299,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u4f1a\u8bdd\u8bb0\u5f55 authentication_method \u4e0e\u77ed\u65f6\u518d\u9a8c\u8bc1\uff0clast_accepted_counter \u4ee5\u539f\u5b50\u6761\u4ef6\u66f4\u65b0\u963b\u6b62 TOTP \u91cd\u653e\uff0cbackup_auth_version \u64a4\u9500\u65e7\u5907\u7528\u4f1a\u8bdd\u3002",
-      "community": 6,
+      "community": 9,
       "norm_label": "session assurance and totp replay protection",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_data_model_session_assurance_and_replay_protection"
@@ -3399,7 +3313,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 9,
       "norm_label": "backup login implementation plan",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_plan_backup_login_implementation_plan"
@@ -3414,7 +3328,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u5907\u7528\u767b\u5f55\u590d\u7528\u65e2\u6709\u8eab\u4efd\u3001\u4f1a\u8bdd\u3001\u9650\u6d41\u3001\u5ba1\u8ba1\u4e0e WebAuthn \u8fb9\u754c\uff0c\u4e0d\u521b\u5efa\u7b2c\u4e8c\u5957\u8ba4\u8bc1\u670d\u52a1\uff0c\u4e5f\u4e0d\u628a\u79d8\u5bc6\u5b57\u6bb5\u653e\u56de users\u3002",
-      "community": 6,
+      "community": 9,
       "norm_label": "identity deep module reuse",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_plan_identity_deep_module_reuse"
@@ -3428,7 +3342,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 9,
       "norm_label": "backup login acceptance guide",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_quickstart_backup_login_acceptance"
@@ -3443,7 +3357,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u5931\u53bb\u5168\u90e8\u901a\u884c\u5bc6\u94a5\u65f6\u4ecd\u8981\u6c42\u79bb\u7ebf\u6062\u590d\u7801\u4e0e\u4eba\u5de5\u6838\u9a8c\uff1b\u6062\u590d\u540e\u65e7\u5bc6\u7801\u3001TOTP\u3001\u901a\u884c\u5bc6\u94a5\u3001\u4f1a\u8bdd\u3001\u9080\u8bf7\u548c\u6062\u590d\u7801\u5168\u90e8\u5931\u6548\u3002",
-      "community": 6,
+      "community": 9,
       "norm_label": "recovery is not downgraded",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_quickstart_recovery_not_downgraded"
@@ -3457,7 +3371,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 9,
       "norm_label": "backup login research",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_research_backup_login_research"
@@ -3472,7 +3386,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u5bc6\u7801\u91c7\u7528 Argon2id \u548c\u6e10\u8fdb\u91cd\u6458\u8981\uff1bTOTP \u4f7f\u7528 RFC 6238 \u56fa\u5b9a\u53c2\u6570\u3001\u6709\u9650\u65f6\u95f4\u7a97\u4e0e\u6301\u4e45 counter \u91cd\u653e\u4fdd\u62a4\u3002",
-      "community": 6,
+      "community": 9,
       "norm_label": "argon2id and rfc 6238 totp",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_research_argon2id_and_totp"
@@ -3487,7 +3401,7 @@
       "author": null,
       "contributor": null,
       "rationale": "TOTP \u79cd\u5b50\u4f7f\u7528\u6570\u636e\u5e93\u5916\u4e3b\u5bc6\u94a5\u4e0e AAD \u7ed1\u5b9a\u7684 AES-GCM \u4fe1\u5c01\uff1b\u516c\u5f00\u5907\u7528\u767b\u5f55\u6309\u6765\u6e90\u3001\u8d26\u53f7\u6458\u8981\u548c\u5168\u5c40\u4e09\u5c42\u72ec\u7acb\u9650\u6d41\u3002",
-      "community": 6,
+      "community": 9,
       "norm_label": "aes-gcm secret envelope and layered throttling",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_research_aes_gcm_and_throttling"
@@ -3501,7 +3415,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 19,
       "norm_label": "password and totp backup login feature",
       "community_name": "Backup Login Specification",
       "id": "specs_002_password_totp_backup_login_spec_backup_login_feature"
@@ -3515,7 +3429,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 19,
       "norm_label": "three backup login user stories",
       "community_name": "Backup Login Specification",
       "id": "specs_002_password_totp_backup_login_spec_three_backup_login_stories"
@@ -3530,7 +3444,7 @@
       "author": null,
       "contributor": null,
       "rationale": "WebAuthn \u4fdd\u6301\u9996\u9009\u767b\u5f55\u548c\u9ad8\u98ce\u9669\u56e0\u7d20\u7ba1\u7406\u624b\u6bb5\uff0c\u5bc6\u7801\u4e0e TOTP \u5fc5\u987b\u540c\u65f6\u6210\u7acb\u4e14\u5176\u518d\u9a8c\u8bc1\u53ea\u5141\u8bb8\u65b0\u589e\u901a\u884c\u5bc6\u94a5\u3002",
-      "community": 17,
+      "community": 19,
       "norm_label": "phishing-resistant primary path",
       "community_name": "Backup Login Specification",
       "id": "specs_002_password_totp_backup_login_spec_phishing_resistant_primary_path"
@@ -3544,7 +3458,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 9,
       "norm_label": "backup login task plan",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_tasks_backup_login_task_plan"
@@ -3559,7 +3473,7 @@
       "author": null,
       "contributor": null,
       "rationale": "T003-T009 \u5148\u51bb\u7ed3\u53ef\u6536\u96c6\u7684\u5b89\u5168 RED\uff0c\u518d\u6309\u57fa\u7840 GREEN\u3001\u4e09\u4e2a\u7528\u6237\u6545\u4e8b\u548c\u5b8c\u6574\u590d\u6838\u987a\u5e8f\u5b9e\u65bd\u3002",
-      "community": 6,
+      "community": 9,
       "norm_label": "backup login red to green gate",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_tasks_red_green_gate"
@@ -3573,7 +3487,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 9,
       "norm_label": "migration 0005 password totp backup login",
       "community_name": "Backup Login Implementation",
       "id": "specs_002_password_totp_backup_login_tasks_migration_0005"
@@ -3587,7 +3501,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 23,
       "norm_label": "daily activity plan word layout",
       "community_name": "Data & AI Contracts",
       "id": "templates_teacherplan_word_layout"
@@ -3601,7 +3515,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 23,
       "norm_label": "structured daily activity sections",
       "community_name": "Data & AI Contracts",
       "id": "templates_teacherplan_structured_activity_sections"
@@ -3616,7 +3530,7 @@
       "author": null,
       "contributor": null,
       "rationale": "\u6559\u5e08\u5148\u91c7\u7528\u5e76\u4fdd\u5b58\u96c6\u4f53\u6d3b\u52a8\u62c6\u5206\uff0c\u518d\u751f\u6210\u5355\u4e2a\u9002\u9f84\u73af\u8282\uff1b\u53ea\u6709 is_ai_added=true \u7684\u65b0\u589e\u73af\u8282\u5728 Word \u4e2d\u4f7f\u7528\u7ea2\u8272\u5b57\u4f53\u3002",
-      "community": 4,
+      "community": 23,
       "norm_label": "ai-added step red text",
       "community_name": "Data & AI Contracts",
       "id": "templates_teacherplan_ai_added_step_red_text"
@@ -3630,7 +3544,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "context.md",
       "community_name": "Core Technologies & Specs",
       "id": "context_context"
@@ -3644,7 +3558,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "specs/001-daily-activity-plan/quickstart.md",
       "community_name": "Core Technologies & Specs",
       "id": "specs_001_daily_activity_plan_quickstart"
@@ -3658,7 +3572,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "branch: main",
       "community_name": "Core Technologies & Specs",
       "id": "context_main"
@@ -3672,7 +3586,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "branch: docs",
       "community_name": "Core Technologies & Specs",
       "id": "context_docs"
@@ -3686,7 +3600,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "branch: dev",
       "community_name": "Core Technologies & Specs",
       "id": "context_dev"
@@ -3700,7 +3614,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "ai",
       "community_name": "Core Technologies & Specs",
       "id": "context_ai"
@@ -3714,7 +3628,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "word",
       "community_name": "Core Technologies & Specs",
       "id": "context_word"
@@ -3728,7 +3642,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "postgresql",
       "community_name": "Core Technologies & Specs",
       "id": "context_postgresql"
@@ -3742,7 +3656,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "redis",
       "community_name": "Core Technologies & Specs",
       "id": "context_redis"
@@ -3756,7 +3670,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "webauthn",
       "community_name": "Core Technologies & Specs",
       "id": "context_webauthn"
@@ -3770,7 +3684,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "authentication",
       "community_name": "Core Technologies & Specs",
       "id": "context_authentication"
@@ -3784,7 +3698,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 9,
+      "community": 10,
       "norm_label": "authorization",
       "community_name": "Core Technologies & Specs",
       "id": "context_authorization"
@@ -4106,7 +4020,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 15,
+      "community": 16,
       "norm_label": "agents.md \u5f00\u53d1\u89c4\u5219\u6587\u4ef6",
       "community_name": "Development Tools & AI",
       "id": "agents_agents"
@@ -4120,7 +4034,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 26,
+      "community": 35,
       "norm_label": "\u4e8b\u5b9e\u6765\u6e90\u4e0e\u51b2\u7a81\u5904\u7406",
       "community_name": "Fact Sources & Conflict",
       "id": "agents_fact_sources"
@@ -4134,7 +4048,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 24,
+      "community": 33,
       "norm_label": "\u5206\u652f\u4e0e git \u89c4\u5219",
       "community_name": "Git Branch Rules",
       "id": "agents_branches"
@@ -4148,7 +4062,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 28,
+      "community": 37,
       "norm_label": "\u670d\u52a1\u8fb9\u754c\u4e0e\u4f9d\u8d56\u65b9\u5411",
       "community_name": "Service Boundaries & Dependencies",
       "id": "agents_services"
@@ -4162,7 +4076,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 25,
+      "community": 34,
       "norm_label": "\u6570\u636e\u6a21\u578b\u4e0e\u56ed\u6240\u9694\u79bb",
       "community_name": "Data Model & Isolation",
       "id": "agents_data_isolation"
@@ -4176,7 +4090,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 23,
+      "community": 32,
       "norm_label": "ai \u4e0e\u63d0\u793a\u8bcd\u89c4\u5219",
       "community_name": "AI & Prompt Rules",
       "id": "agents_ai_rules"
@@ -4190,7 +4104,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 27,
+      "community": 36,
       "norm_label": "\u5b89\u5168\u4e0e\u9690\u79c1\u786c\u6027\u89c4\u5219",
       "community_name": "Security & Privacy Rules",
       "id": "agents_security"
@@ -4204,7 +4118,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 38,
       "norm_label": "\u6d4b\u8bd5\u8981\u6c42",
       "community_name": "Testing Requirements",
       "id": "agents_testing"
@@ -4218,7 +4132,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 15,
+      "community": 16,
       "norm_label": "graphify \u77e5\u8bc6\u56fe\u8c31\u5de5\u5177",
       "community_name": "Development Tools & AI",
       "id": "agents_graphify"
@@ -4232,7 +4146,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 15,
+      "community": 16,
       "norm_label": "codebase-memory mcp",
       "community_name": "Development Tools & AI",
       "id": "agents_codebase_mcp"
@@ -4246,7 +4160,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 15,
+      "community": 16,
       "norm_label": "\u641c\u7d22\u5de5\u5177\u4f18\u5148\u7ea7",
       "community_name": "Development Tools & AI",
       "id": "agents_tools"
@@ -4260,7 +4174,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 13,
       "norm_label": "child manager project constitution",
       "community_name": "Project Constitution & Boundaries",
       "id": "specify_memory_constitution_constitution"
@@ -4274,7 +4188,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 13,
       "norm_label": "fact source and scope fidelity",
       "community_name": "Project Constitution & Boundaries",
       "id": "specify_memory_constitution_principle_1"
@@ -4288,7 +4202,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 13,
       "norm_label": "service boundary and unidirectional dependency",
       "community_name": "Project Constitution & Boundaries",
       "id": "specify_memory_constitution_principle_2"
@@ -4302,7 +4216,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 13,
       "norm_label": "kindergarten isolation and server authorization",
       "community_name": "Project Constitution & Boundaries",
       "id": "specify_memory_constitution_principle_3"
@@ -4316,7 +4230,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 13,
       "norm_label": "authoritative state, transaction and recoverability",
       "community_name": "Project Constitution & Boundaries",
       "id": "specify_memory_constitution_principle_4"
@@ -4330,7 +4244,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 13,
       "norm_label": "teacher control, ai and word fidelity",
       "community_name": "Project Constitution & Boundaries",
       "id": "specify_memory_constitution_principle_5"
@@ -4344,7 +4258,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 11,
+      "community": 13,
       "norm_label": "executable verification and real evidence",
       "community_name": "Project Constitution & Boundaries",
       "id": "specify_memory_constitution_principle_6"
@@ -4358,7 +4272,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 33,
+      "community": 80,
       "norm_label": "technical, security and scope constraints",
       "community_name": "Tech & Security Constraints",
       "id": "specify_memory_constitution_technical_constraints"
@@ -4372,7 +4286,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 31,
+      "community": 78,
       "norm_label": "development workflow and quality gates",
       "community_name": "Dev Workflow & Gates",
       "id": "specify_memory_constitution_development_workflow"
@@ -4386,10 +4300,1232 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 32,
+      "community": 79,
       "norm_label": "governance",
       "community_name": "Governance",
       "id": "specify_memory_constitution_governance"
+    },
+    {
+      "label": "Kindergartens Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 50,
+      "norm_label": "kindergartens table",
+      "id": "docs_design_data_model_kindergartens"
+    },
+    {
+      "label": "Users Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "users table",
+      "id": "docs_design_data_model_users"
+    },
+    {
+      "label": "WebAuthn Credentials Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "webauthn credentials table",
+      "id": "docs_design_data_model_webauthn_credentials"
+    },
+    {
+      "label": "WebAuthn Challenges Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "webauthn challenges table",
+      "id": "docs_design_data_model_webauthn_challenges"
+    },
+    {
+      "label": "Backup Auth Credentials Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 44,
+      "norm_label": "backup auth credentials table",
+      "id": "docs_design_data_model_backup_auth_credentials"
+    },
+    {
+      "label": "Backup Auth Enrollments Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 45,
+      "norm_label": "backup auth enrollments table",
+      "id": "docs_design_data_model_backup_auth_enrollments"
+    },
+    {
+      "label": "Bootstrap Initializations Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 46,
+      "norm_label": "bootstrap initializations table",
+      "id": "docs_design_data_model_bootstrap_initializations"
+    },
+    {
+      "label": "Account Invitations Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 41,
+      "norm_label": "account invitations table",
+      "id": "docs_design_data_model_account_invitations"
+    },
+    {
+      "label": "Recovery Codes Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 52,
+      "norm_label": "recovery codes table",
+      "id": "docs_design_data_model_recovery_codes"
+    },
+    {
+      "label": "Account Recovery Requests Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 42,
+      "norm_label": "account recovery requests table",
+      "id": "docs_design_data_model_account_recovery_requests"
+    },
+    {
+      "label": "Identity Verification Approvals Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 49,
+      "norm_label": "identity verification approvals table",
+      "id": "docs_design_data_model_identity_verification_approvals"
+    },
+    {
+      "label": "Roles Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 53,
+      "norm_label": "roles table",
+      "id": "docs_design_data_model_roles"
+    },
+    {
+      "label": "User Roles Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 54,
+      "norm_label": "user roles table",
+      "id": "docs_design_data_model_user_roles"
+    },
+    {
+      "label": "Refresh Tokens Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "refresh tokens table",
+      "id": "docs_design_data_model_refresh_tokens"
+    },
+    {
+      "label": "Age Groups Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "age groups table",
+      "id": "docs_design_data_model_age_groups"
+    },
+    {
+      "label": "Classes Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "classes table",
+      "id": "docs_design_data_model_classes"
+    },
+    {
+      "label": "Class Teachers Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "class teachers table",
+      "id": "docs_design_data_model_class_teachers"
+    },
+    {
+      "label": "Semesters Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "semesters table",
+      "id": "docs_design_data_model_semesters"
+    },
+    {
+      "label": "Class Areas Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "class areas table",
+      "id": "docs_design_data_model_class_areas"
+    },
+    {
+      "label": "AI Model Profiles Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "ai model profiles table",
+      "id": "docs_design_data_model_ai_model_profiles"
+    },
+    {
+      "label": "AI Model Profile Capabilities Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 43,
+      "norm_label": "ai model profile capabilities table",
+      "id": "docs_design_data_model_ai_model_profile_capabilities"
+    },
+    {
+      "label": "Prompt Definitions Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "prompt definitions table",
+      "id": "docs_design_data_model_prompt_definitions"
+    },
+    {
+      "label": "Prompt Versions Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "prompt versions table",
+      "id": "docs_design_data_model_prompt_versions"
+    },
+    {
+      "label": "Prompt Test Runs Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "prompt test runs table",
+      "id": "docs_design_data_model_prompt_test_runs"
+    },
+    {
+      "label": "Daily Activity Plans Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "daily activity plans table",
+      "id": "docs_design_data_model_daily_activity_plans"
+    },
+    {
+      "label": "Daily Activity Plan Snapshots Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 48,
+      "norm_label": "daily activity plan snapshots table",
+      "id": "docs_design_data_model_daily_activity_plan_snapshots"
+    },
+    {
+      "label": "Lesson Plan Sources Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 51,
+      "norm_label": "lesson plan sources table",
+      "id": "docs_design_data_model_lesson_plan_sources"
+    },
+    {
+      "label": "Background Jobs Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "background jobs table",
+      "id": "docs_design_data_model_background_jobs"
+    },
+    {
+      "label": "AI Generation Results Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "ai generation results table",
+      "id": "docs_design_data_model_ai_generation_results"
+    },
+    {
+      "label": "Daily Activity Plan Exports Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 47,
+      "norm_label": "daily activity plan exports table",
+      "id": "docs_design_data_model_daily_activity_plan_exports"
+    },
+    {
+      "label": "Workday Cache Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 55,
+      "norm_label": "workday cache table",
+      "id": "docs_design_data_model_workday_cache"
+    },
+    {
+      "label": "Audit Events Table",
+      "file_type": "document",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "audit events table",
+      "id": "docs_design_data_model_audit_events"
+    },
+    {
+      "label": "Kindergarten Isolation Principle",
+      "file_type": "concept",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "kindergarten isolation principle",
+      "id": "docs_design_data_model_kindergarten_isolation"
+    },
+    {
+      "label": "Immutability for Snapshots/Audit",
+      "file_type": "concept",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "immutability for snapshots/audit",
+      "id": "docs_design_data_model_immutability"
+    },
+    {
+      "label": "JSONB Schema Versioning",
+      "file_type": "concept",
+      "source_file": "docs/design/data-model.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 24,
+      "norm_label": "jsonb schema versioning",
+      "id": "docs_design_data_model_jsonb_schema"
+    },
+    {
+      "label": "Phase 1: Setup",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 85,
+      "norm_label": "phase 1: setup",
+      "id": "specs_001_daily_activity_plan_tasks_phase_1_setup"
+    },
+    {
+      "label": "Phase 2: Foundational",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 86,
+      "norm_label": "phase 2: foundational",
+      "id": "specs_001_daily_activity_plan_tasks_phase_2_foundational"
+    },
+    {
+      "label": "Phase 3: User Story 1",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 87,
+      "norm_label": "phase 3: user story 1",
+      "id": "specs_001_daily_activity_plan_tasks_phase_3_user_story_1"
+    },
+    {
+      "label": "M2: Authentication & Authorization",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "m2: authentication & authorization",
+      "id": "specs_001_daily_activity_plan_tasks_m2_authentication"
+    },
+    {
+      "label": "M3: Initial Settings",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "m3: initial settings",
+      "id": "specs_001_daily_activity_plan_tasks_m3_settings"
+    },
+    {
+      "label": "M3A: Password/TOTP Backup Login",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 82,
+      "norm_label": "m3a: password/totp backup login",
+      "id": "specs_001_daily_activity_plan_tasks_m3a_password_totp_backup"
+    },
+    {
+      "label": "M4: AI Model & Prompt Config",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "m4: ai model & prompt config",
+      "id": "specs_001_daily_activity_plan_tasks_m4_ai_prompts"
+    },
+    {
+      "label": "M5: Async Prompt Testing",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "m5: async prompt testing",
+      "id": "specs_001_daily_activity_plan_tasks_m5_ai_test_jobs"
+    },
+    {
+      "label": "M6: AI Plan Generation",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "m6: ai plan generation",
+      "id": "specs_001_daily_activity_plan_tasks_m6_ai_plan_generation"
+    },
+    {
+      "label": "US1: Admin Security Initialization",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 7,
+      "norm_label": "us1: admin security initialization",
+      "id": "specs_001_daily_activity_plan_tasks_us1_admin_initialization"
+    },
+    {
+      "label": "US2: Manual Lesson Plan Flow",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 24,
+      "norm_label": "us2: manual lesson plan flow",
+      "id": "specs_001_daily_activity_plan_tasks_us2_manual_lesson_plan"
+    },
+    {
+      "label": "US3: Model & Prompt Configuration",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "us3: model & prompt configuration",
+      "id": "specs_001_daily_activity_plan_tasks_us3_model_prompt_configuration"
+    },
+    {
+      "label": "US4: AI Plan Generation",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 11,
+      "norm_label": "us4: ai plan generation",
+      "id": "specs_001_daily_activity_plan_tasks_us4_ai_plan_generation"
+    },
+    {
+      "label": "Daily Activity Plan Tasks Document",
+      "file_type": "document",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 83,
+      "norm_label": "daily activity plan tasks document",
+      "id": "specs_001_daily_activity_plan_tasks_md"
+    },
+    {
+      "label": "User Story 4 - AI Integration",
+      "file_type": "concept",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 20,
+      "norm_label": "user story 4 - ai integration",
+      "id": "concept_user_story_4"
+    },
+    {
+      "label": "User Story 5 - Group Activity",
+      "file_type": "concept",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 21,
+      "norm_label": "user story 5 - group activity",
+      "id": "concept_user_story_5"
+    },
+    {
+      "label": "User Story 6 - Word Export",
+      "file_type": "concept",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 39,
+      "norm_label": "user story 6 - word export",
+      "id": "concept_user_story_6"
+    },
+    {
+      "label": "User Story 7 - Audit and Degradation",
+      "file_type": "concept",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 40,
+      "norm_label": "user story 7 - audit and degradation",
+      "id": "concept_user_story_7"
+    },
+    {
+      "label": "Task T087: Write AI contract tests",
+      "file_type": "concept",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 20,
+      "norm_label": "task t087: write ai contract tests",
+      "id": "specs_001_daily_activity_plan_tasks_md_T087"
+    },
+    {
+      "label": "Task T088: Write AI generation results tests",
+      "file_type": "concept",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 84,
+      "norm_label": "task t088: write ai generation results tests",
+      "id": "specs_001_daily_activity_plan_tasks_md_T088"
+    },
+    {
+      "label": "Task T098: Implement AI contracts",
+      "file_type": "concept",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 20,
+      "norm_label": "task t098: implement ai contracts",
+      "id": "specs_001_daily_activity_plan_tasks_md_T098"
+    },
+    {
+      "label": "Task T111: Create DOCX factory fixtures",
+      "file_type": "concept",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 21,
+      "norm_label": "task t111: create docx factory fixtures",
+      "id": "specs_001_daily_activity_plan_tasks_md_T111"
+    },
+    {
+      "label": "Task T112: Write DOCX extractor tests",
+      "file_type": "concept",
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "community": 21,
+      "norm_label": "task t112: write docx extractor tests",
+      "id": "specs_001_daily_activity_plan_tasks_md_T112"
+    },
+    {
+      "label": "Kindergartens Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_kindergartens",
+      "community": 18,
+      "norm_label": "kindergartens table"
+    },
+    {
+      "label": "Users Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_users",
+      "community": 18,
+      "norm_label": "users table"
+    },
+    {
+      "label": "WebAuthn Credentials Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_webauthn_credentials",
+      "community": 74,
+      "norm_label": "webauthn credentials table"
+    },
+    {
+      "label": "WebAuthn Challenges Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_webauthn_challenges",
+      "community": 73,
+      "norm_label": "webauthn challenges table"
+    },
+    {
+      "label": "Backup Auth Credentials Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_backup_auth_credentials",
+      "community": 59,
+      "norm_label": "backup auth credentials table"
+    },
+    {
+      "label": "Backup Auth Enrollments Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_backup_auth_enrollments",
+      "community": 60,
+      "norm_label": "backup auth enrollments table"
+    },
+    {
+      "label": "Bootstrap Initializations Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_bootstrap_initializations",
+      "community": 61,
+      "norm_label": "bootstrap initializations table"
+    },
+    {
+      "label": "Account Invitations Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_account_invitations",
+      "community": 56,
+      "norm_label": "account invitations table"
+    },
+    {
+      "label": "Recovery Codes Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_recovery_codes",
+      "community": 70,
+      "norm_label": "recovery codes table"
+    },
+    {
+      "label": "Account Recovery Requests Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_account_recovery_requests",
+      "community": 57,
+      "norm_label": "account recovery requests table"
+    },
+    {
+      "label": "Identity Verification Approvals Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_identity_verification_approvals",
+      "community": 67,
+      "norm_label": "identity verification approvals table"
+    },
+    {
+      "label": "Roles Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_roles",
+      "community": 28,
+      "norm_label": "roles table"
+    },
+    {
+      "label": "User Roles Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_user_roles",
+      "community": 28,
+      "norm_label": "user roles table"
+    },
+    {
+      "label": "Refresh Tokens Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_refresh_tokens",
+      "community": 71,
+      "norm_label": "refresh tokens table"
+    },
+    {
+      "label": "Age Groups Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_age_groups",
+      "community": 17,
+      "norm_label": "age groups table"
+    },
+    {
+      "label": "Classes Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_classes",
+      "community": 17,
+      "norm_label": "classes table"
+    },
+    {
+      "label": "Class Teachers Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_class_teachers",
+      "community": 17,
+      "norm_label": "class teachers table"
+    },
+    {
+      "label": "Semesters Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_semesters",
+      "community": 72,
+      "norm_label": "semesters table"
+    },
+    {
+      "label": "Class Areas Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_class_areas",
+      "community": 62,
+      "norm_label": "class areas table"
+    },
+    {
+      "label": "AI Model Profiles Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_ai_model_profiles",
+      "community": 26,
+      "norm_label": "ai model profiles table"
+    },
+    {
+      "label": "AI Model Profile Capabilities Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_ai_model_profile_capabilities",
+      "community": 26,
+      "norm_label": "ai model profile capabilities table"
+    },
+    {
+      "label": "Prompt Definitions Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_prompt_definitions",
+      "community": 27,
+      "norm_label": "prompt definitions table"
+    },
+    {
+      "label": "Prompt Versions Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_prompt_versions",
+      "community": 27,
+      "norm_label": "prompt versions table"
+    },
+    {
+      "label": "Prompt Test Runs Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_prompt_test_runs",
+      "community": 69,
+      "norm_label": "prompt test runs table"
+    },
+    {
+      "label": "Daily Activity Plans Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_daily_activity_plans",
+      "community": 17,
+      "norm_label": "daily activity plans table"
+    },
+    {
+      "label": "Daily Activity Plan Authors Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_daily_activity_plan_authors",
+      "community": 64,
+      "norm_label": "daily activity plan authors table"
+    },
+    {
+      "label": "Daily Activity Plan Snapshots Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_daily_activity_plan_snapshots",
+      "community": 66,
+      "norm_label": "daily activity plan snapshots table"
+    },
+    {
+      "label": "Lesson Plan Sources Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_lesson_plan_sources",
+      "community": 68,
+      "norm_label": "lesson plan sources table"
+    },
+    {
+      "label": "Background Jobs Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_background_jobs",
+      "community": 25,
+      "norm_label": "background jobs table"
+    },
+    {
+      "label": "AI Generation Results Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_ai_generation_results",
+      "community": 25,
+      "norm_label": "ai generation results table"
+    },
+    {
+      "label": "Daily Activity Plan Exports Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_daily_activity_plan_exports",
+      "community": 65,
+      "norm_label": "daily activity plan exports table"
+    },
+    {
+      "label": "Workday Cache Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_workday_cache",
+      "community": 75,
+      "norm_label": "workday cache table"
+    },
+    {
+      "label": "Audit Events Table",
+      "file_type": "code",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_audit_events",
+      "community": 58,
+      "norm_label": "audit events table"
+    },
+    {
+      "label": "Kindergarten Isolation Concept",
+      "file_type": "concept",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_kindergarten_isolation",
+      "community": 18,
+      "norm_label": "kindergarten isolation concept"
+    },
+    {
+      "label": "Composite Foreign Keys Concept",
+      "file_type": "concept",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_composite_foreign_keys",
+      "community": 18,
+      "norm_label": "composite foreign keys concept"
+    },
+    {
+      "label": "Content JSONB Boundary Concept",
+      "file_type": "concept",
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "docs_design_database_schema_content_jsonb_boundary",
+      "community": 63,
+      "norm_label": "content jsonb boundary concept"
     }
   ],
   "links": [
@@ -5111,16 +6247,6 @@
       "target": "docs_adr_adr_0001_cloud_only_cloud_only_product"
     },
     {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_data_model_tenant_scoped_data_model",
-      "target": "docs_adr_adr_0001_cloud_only_kindergarten_isolation"
-    },
-    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -5188,16 +6314,6 @@
       "source_location": null,
       "weight": 1.0,
       "source": "docs_adr_readme_adr_decision_index",
-      "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_job_authority"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_data_model_background_job_model",
       "target": "docs_adr_adr_0003_postgresql_authoritative_dramatiq_redis_jobs_postgresql_job_authority"
     },
     {
@@ -5279,16 +6395,6 @@
       "weight": 1.0,
       "source": "docs_design_system_architecture_ai_adapter",
       "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_provider_neutral_ai"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_data_model_ai_prompt_model",
-      "target": "docs_adr_adr_0005_provider_neutral_ai_and_central_prompts_central_prompt_system"
     },
     {
       "relation": "references",
@@ -5531,16 +6637,6 @@
       "target": "docs_prd_lesson_management_word_export_requirements"
     },
     {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_data_model_immutable_history_model",
-      "target": "docs_prd_lesson_management_lesson_plan_invariants"
-    },
-    {
       "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -5549,96 +6645,6 @@
       "weight": 1.0,
       "source": "docs_design_system_architecture_ai_adapter",
       "target": "docs_prd_lesson_management_ai_preview_adoption"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_database_schema_composite_tenant_foreign_keys",
-      "target": "docs_design_data_model_tenant_scoped_data_model"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_database_schema_postgresql_physical_contract",
-      "target": "docs_design_data_model_tenant_scoped_data_model"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_data_model_transaction_invariants",
-      "target": "docs_design_data_model_immutable_history_model"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/data-model.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_data_model_transaction_invariants",
-      "target": "docs_design_data_model_background_job_model"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_database_schema_ai_prompt_job_schema",
-      "target": "docs_design_data_model_background_job_model"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_database_schema_ai_prompt_job_schema",
-      "target": "docs_design_data_model_ai_prompt_model"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/system-architecture.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_system_architecture_application_owned_transactions",
-      "target": "docs_design_data_model_transaction_invariants"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_database_schema_alembic_sequence",
-      "target": "docs_design_data_model_migration_chain"
-    },
-    {
-      "relation": "conceptually_related_to",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/design/database-schema.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "docs_design_database_schema_postgres_sqlite_validation",
-      "target": "docs_design_database_schema_postgresql_physical_contract"
     },
     {
       "relation": "conceptually_related_to",
@@ -6602,16 +7608,6 @@
       "relation": "implements",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_m6_ai_and_group_activity",
-      "target": "specs_001_daily_activity_plan_contracts_job_state_machine_ai_preview_adoption"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
       "source_file": "specs/001-daily-activity-plan/contracts/openapi.yaml",
       "source_location": null,
       "weight": 1.0,
@@ -6677,46 +7673,6 @@
       "weight": 1.0,
       "source": "specs_001_daily_activity_plan_research_daily_activity_research",
       "target": "specs_001_daily_activity_plan_research_reliable_jobs_and_security"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_daily_activity_task_plan",
-      "target": "specs_001_daily_activity_plan_tasks_intentional_red_gate"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_daily_activity_task_plan",
-      "target": "specs_001_daily_activity_plan_tasks_m6_ai_and_group_activity"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_daily_activity_task_plan",
-      "target": "specs_001_daily_activity_plan_tasks_migration_sequence"
-    },
-    {
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
-      "source_location": null,
-      "weight": 1.0,
-      "source": "specs_001_daily_activity_plan_tasks_m6_ai_and_group_activity",
-      "target": "templates_teacherplan_ai_added_step_red_text"
     },
     {
       "relation": "references",
@@ -7467,9 +8423,566 @@
       "weight": 1.0,
       "source": "specify_memory_constitution_constitution",
       "target": "specify_memory_constitution_principle_6"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m2_authentication",
+      "target": "docs_design_data_model_users"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m2_authentication",
+      "target": "docs_design_data_model_webauthn_credentials"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m2_authentication",
+      "target": "docs_design_data_model_webauthn_challenges"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m2_authentication",
+      "target": "docs_design_data_model_refresh_tokens"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m3_settings",
+      "target": "docs_design_data_model_age_groups"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m3_settings",
+      "target": "docs_design_data_model_classes"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m3_settings",
+      "target": "docs_design_data_model_class_teachers"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m3_settings",
+      "target": "docs_design_data_model_semesters"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m3_settings",
+      "target": "docs_design_data_model_class_areas"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m4_ai_prompts",
+      "target": "docs_design_data_model_ai_model_profiles"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m4_ai_prompts",
+      "target": "docs_design_data_model_prompt_definitions"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m4_ai_prompts",
+      "target": "docs_design_data_model_prompt_versions"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m5_ai_test_jobs",
+      "target": "docs_design_data_model_prompt_test_runs"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m6_ai_plan_generation",
+      "target": "docs_design_data_model_daily_activity_plans"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m5_ai_test_jobs",
+      "target": "docs_design_data_model_background_jobs"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m6_ai_plan_generation",
+      "target": "docs_design_data_model_background_jobs"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m6_ai_plan_generation",
+      "target": "docs_design_data_model_ai_generation_results"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m2_authentication",
+      "target": "docs_design_data_model_audit_events"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m2_authentication",
+      "target": "docs_design_data_model_kindergarten_isolation"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m2_authentication",
+      "target": "docs_design_data_model_immutability"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_us2_manual_lesson_plan",
+      "target": "docs_design_data_model_jsonb_schema"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m2_authentication",
+      "target": "specs_001_daily_activity_plan_tasks_us1_admin_initialization"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m3_settings",
+      "target": "specs_001_daily_activity_plan_tasks_us1_admin_initialization"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m4_ai_prompts",
+      "target": "specs_001_daily_activity_plan_tasks_us3_model_prompt_configuration"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m5_ai_test_jobs",
+      "target": "specs_001_daily_activity_plan_tasks_us3_model_prompt_configuration"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_m6_ai_plan_generation",
+      "target": "specs_001_daily_activity_plan_tasks_us4_ai_plan_generation"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_md_T087",
+      "target": "concept_user_story_4"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_md_T098",
+      "target": "concept_user_story_4"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_md_T111",
+      "target": "concept_user_story_5"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "specs_001_daily_activity_plan_tasks_md_T112",
+      "target": "concept_user_story_5"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_kindergartens",
+      "target": "docs_design_database_schema_kindergarten_isolation"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_users",
+      "target": "docs_design_database_schema_kindergartens"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_user_roles",
+      "target": "docs_design_database_schema_roles"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_classes",
+      "target": "docs_design_database_schema_age_groups"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_class_teachers",
+      "target": "docs_design_database_schema_classes"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_daily_activity_plans",
+      "target": "docs_design_database_schema_classes"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_ai_model_profile_capabilities",
+      "target": "docs_design_database_schema_ai_model_profiles"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_prompt_versions",
+      "target": "docs_design_database_schema_prompt_definitions"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_ai_generation_results",
+      "target": "docs_design_database_schema_background_jobs"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "docs/design/database-schema.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "docs_design_database_schema_composite_foreign_keys",
+      "target": "docs_design_database_schema_kindergarten_isolation"
     }
   ],
   "hyperedges": [
+    {
+      "id": "kindergarten_isolation_tables",
+      "label": "Tables Implementing Kindergarten Isolation",
+      "nodes": [
+        "docs_design_database_schema_users",
+        "docs_design_database_schema_webauthn_credentials",
+        "docs_design_database_schema_webauthn_challenges",
+        "docs_design_database_schema_backup_auth_credentials",
+        "docs_design_database_schema_backup_auth_enrollments",
+        "docs_design_database_schema_bootstrap_initializations",
+        "docs_design_database_schema_account_invitations",
+        "docs_design_database_schema_recovery_codes",
+        "docs_design_database_schema_account_recovery_requests",
+        "docs_design_database_schema_identity_verification_approvals",
+        "docs_design_database_schema_user_roles",
+        "docs_design_database_schema_refresh_tokens",
+        "docs_design_database_schema_age_groups",
+        "docs_design_database_schema_classes",
+        "docs_design_database_schema_class_teachers",
+        "docs_design_database_schema_semesters",
+        "docs_design_database_schema_class_areas",
+        "docs_design_database_schema_ai_model_profiles",
+        "docs_design_database_schema_ai_model_profile_capabilities",
+        "docs_design_database_schema_prompt_definitions",
+        "docs_design_database_schema_prompt_versions",
+        "docs_design_database_schema_prompt_test_runs",
+        "docs_design_database_schema_daily_activity_plans",
+        "docs_design_database_schema_daily_activity_plan_authors",
+        "docs_design_database_schema_daily_activity_plan_snapshots",
+        "docs_design_database_schema_lesson_plan_sources",
+        "docs_design_database_schema_background_jobs",
+        "docs_design_database_schema_ai_generation_results",
+        "docs_design_database_schema_daily_activity_plan_exports",
+        "docs_design_database_schema_workday_cache",
+        "docs_design_database_schema_audit_events"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/database-schema.md"
+    },
+    {
+      "id": "authentication_flow_tables",
+      "label": "Tables Involved in Authentication Flow",
+      "nodes": [
+        "docs_design_database_schema_users",
+        "docs_design_database_schema_webauthn_credentials",
+        "docs_design_database_schema_webauthn_challenges",
+        "docs_design_database_schema_backup_auth_credentials",
+        "docs_design_database_schema_backup_auth_enrollments",
+        "docs_design_database_schema_refresh_tokens"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "docs/design/database-schema.md"
+    },
+    {
+      "id": "lesson_planning_system",
+      "label": "Lesson Planning System Tables",
+      "nodes": [
+        "docs_design_database_schema_daily_activity_plans",
+        "docs_design_database_schema_daily_activity_plan_authors",
+        "docs_design_database_schema_daily_activity_plan_snapshots",
+        "docs_design_database_schema_lesson_plan_sources"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "docs/design/database-schema.md"
+    },
+    {
+      "id": "identity_authentication_system",
+      "label": "Identity and Authentication System",
+      "nodes": [
+        "docs_design_data_model_kindergartens",
+        "docs_design_data_model_users",
+        "docs_design_data_model_webauthn_credentials",
+        "docs_design_data_model_webauthn_challenges",
+        "docs_design_data_model_backup_auth_credentials",
+        "docs_design_data_model_backup_auth_enrollments",
+        "docs_design_data_model_bootstrap_initializations",
+        "docs_design_data_model_account_invitations",
+        "docs_design_data_model_recovery_codes",
+        "docs_design_data_model_account_recovery_requests",
+        "docs_design_data_model_identity_verification_approvals",
+        "docs_design_data_model_roles",
+        "docs_design_data_model_user_roles",
+        "docs_design_data_model_refresh_tokens",
+        "docs_design_data_model_audit_events",
+        "docs_design_data_model_kindergarten_isolation",
+        "docs_design_data_model_immutability"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/design/data-model.md"
+    },
+    {
+      "id": "lesson_plan_generation_flow",
+      "label": "Lesson Plan Generation Flow",
+      "nodes": [
+        "docs_design_data_model_daily_activity_plans",
+        "docs_design_data_model_daily_activity_plan_snapshots",
+        "docs_design_data_model_lesson_plan_sources",
+        "docs_design_data_model_background_jobs",
+        "docs_design_data_model_ai_generation_results",
+        "docs_design_data_model_daily_activity_plan_exports",
+        "docs_design_data_model_jsonb_schema",
+        "specs_001_daily_activity_plan_tasks_m6_ai_plan_generation",
+        "specs_001_daily_activity_plan_tasks_us4_ai_plan_generation"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "specs/001-daily-activity-plan/tasks.md"
+    },
+    {
+      "id": "m2_m3_admin_setup",
+      "label": "M2-M3 Admin Security and Settings Setup",
+      "nodes": [
+        "specs_001_daily_activity_plan_tasks_m2_authentication",
+        "specs_001_daily_activity_plan_tasks_m3_settings",
+        "specs_001_daily_activity_plan_tasks_m3a_password_totp_backup",
+        "specs_001_daily_activity_plan_tasks_us1_admin_initialization",
+        "docs_design_data_model_kindergarten_isolation"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "specs/001-daily-activity-plan/tasks.md"
+    },
+    {
+      "id": "us4_tasks",
+      "label": "User Story 4 Implementation Tasks",
+      "nodes": [
+        "specs_001_daily_activity_plan_tasks_md_T087",
+        "specs_001_daily_activity_plan_tasks_md_T088",
+        "specs_001_daily_activity_plan_tasks_md_T098"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.8,
+      "source_file": "specs/001-daily-activity-plan/tasks.md"
+    },
+    {
+      "id": "us5_tasks",
+      "label": "User Story 5 Implementation Tasks",
+      "nodes": [
+        "specs_001_daily_activity_plan_tasks_md_T111",
+        "specs_001_daily_activity_plan_tasks_md_T112"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.8,
+      "source_file": "specs/001-daily-activity-plan/tasks.md"
+    },
     {
       "id": "core_principles",
       "label": "Core Principles of Constitution",
@@ -7598,21 +9111,6 @@
       "source_file": "docs/design/system-architecture.md"
     },
     {
-      "id": "kindergarten_isolation_stack",
-      "label": "Kindergarten Isolation Stack",
-      "nodes": [
-        "docs_adr_adr_0001_cloud_only_kindergarten_isolation",
-        "docs_prd_lesson_management_lesson_plan_invariants",
-        "docs_design_data_model_tenant_scoped_data_model",
-        "docs_design_database_schema_composite_tenant_foreign_keys",
-        "docs_design_system_architecture_trust_starts_at_api"
-      ],
-      "relation": "implement",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "docs/design/database-schema.md"
-    },
-    {
       "id": "local_development_isolation_pattern",
       "nodes": [
         "docs_development_local_development_environments_worktree_resource_isolation",
@@ -7659,20 +9157,6 @@
       "label": "\u8eab\u4efd\u7eb5\u6df1\u9632\u5fa1"
     },
     {
-      "id": "m6_reliable_ai_and_group_activity",
-      "label": "M6 Reliable AI and Group Activity",
-      "nodes": [
-        "specs_001_daily_activity_plan_tasks_m6_ai_and_group_activity",
-        "specs_001_daily_activity_plan_contracts_job_state_machine_background_job_state_machine",
-        "specs_001_daily_activity_plan_contracts_job_state_machine_ai_preview_adoption",
-        "templates_teacherplan_ai_added_step_red_text"
-      ],
-      "relation": "form",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "specs/001-daily-activity-plan/tasks.md"
-    },
-    {
       "id": "password_totp_backup_login_baseline",
       "label": "Password and TOTP Backup Login Baseline",
       "nodes": [
@@ -7688,5 +9172,5 @@
       "source_file": "specs/002-password-totp-backup-login/plan.md"
     }
   ],
-  "built_at_commit": "50ad0e609205d94f153419aa7c62a53ba26d75ad"
+  "built_at_commit": "87b1b76156dd1cb06370a04ead3b1c4b446b8c2e"
 }
