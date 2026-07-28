@@ -830,6 +830,8 @@ daily_reflection
 
 ## 10. 后台任务与 AI 结果 Schema
 
+本节展开 M6 状态机与数据模型的物理字段；字段名、空值分组和部分唯一索引必须与两份契约一致。
+
 ### 10.1 `background_jobs`
 
 ```text
@@ -838,14 +840,17 @@ kindergarten_id UUID NOT NULL
 parent_job_id UUID NULL
 retry_of_job_id UUID NULL
 job_type VARCHAR(64) NOT NULL
-status VARCHAR(32) NOT NULL
+execution_status VARCHAR(32) NULL
 plan_id UUID NULL
 target_section VARCHAR(64) NULL
 requested_resource_version INTEGER NULL
-idempotency_key VARCHAR(200) NOT NULL
-attempt_count INTEGER NOT NULL DEFAULT 0
-max_attempts INTEGER NOT NULL DEFAULT 3
+idempotency_scope VARCHAR(300) NULL
+idempotency_key VARCHAR(200) NULL
+request_fingerprint_sha256 CHAR(64) NULL
+attempt_count INTEGER NULL
+max_attempts INTEGER NULL
 requested_by UUID NOT NULL
+request_id UUID NULL
 trace_id UUID NOT NULL
 lease_owner VARCHAR(160) NULL
 lease_expires_at TIMESTAMPTZ NULL
@@ -861,24 +866,35 @@ updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 
 约束：
 
-- `UNIQUE (kindergarten_id, id)` 和 `UNIQUE (kindergarten_id, idempotency_key)`。
-- `UNIQUE (kindergarten_id, parent_job_id, target_section)` 防止同一批次重复栏目子任务。
+- `UNIQUE (kindergarten_id, id)` 和与教案关联任务所需的
+  `UNIQUE (kindergarten_id, plan_id, id)`。
+- 外部受理根任务或 `ai.batch` 父任务的
+  `idempotency_scope/idempotency_key/request_fingerprint_sha256` 三项全非空；内部 batch
+  子任务三项全空。部分唯一索引
+  `(kindergarten_id, requested_by, idempotency_scope, idempotency_key)
+  WHERE idempotency_scope IS NOT NULL` 只约束外部请求。
+- 部分唯一索引
+  `(kindergarten_id, parent_job_id, target_section) WHERE parent_job_id IS NOT NULL`
+  防止同一批次重复栏目子任务。
 - 组合自外键 `(kindergarten_id, parent_job_id) -> background_jobs(kindergarten_id, id)`，删除策略为 `RESTRICT`；禁止自引用。
 - 组合自外键 `(kindergarten_id, retry_of_job_id) -> background_jobs(kindergarten_id, id)`，删除策略为 `RESTRICT`；禁止自引用。
 - 可空组合外键指向同园教案；请求人指向同园用户。
-- `CHECK (status IN ('pending_dispatch', 'queued', 'running', 'retrying', 'awaiting_confirmation', 'succeeded', 'failed', 'adopted', 'rejected', 'expired'))`。
-- `CHECK (attempt_count >= 0 AND max_attempts > 0 AND attempt_count <= max_attempts)`。
+- `job_type='ai.batch'` 时 `execution_status/attempt_count/max_attempts`、租约、排队/开始/结束时间
+  全为空；其他执行任务三项非空。AI 执行任务首期 `max_attempts=3`。
+- 非空 `execution_status` 只能为
+  `pending_dispatch/queued/running/retrying/awaiting_confirmation/succeeded/failed/adopted/rejected/expired`。
+- 执行任务满足 `attempt_count >= 0 AND max_attempts > 0 AND attempt_count <= max_attempts`。
 - `CHECK (requested_resource_version IS NULL OR requested_resource_version > 0)`。
 - 租约组约束：`lease_owner`、`lease_expires_at`、`last_heartbeat_at` 要么全空，要么前两者非空；心跳允许在领取后稍后写入。
-- 完成状态 `succeeded/failed/adopted/rejected/expired` 必须有 `finished_at`；非完成状态必须无 `finished_at`。
-- 失败必须有 `error_code`；非失败状态不保存过期错误摘要。
+- 完成状态 `succeeded/failed/adopted/rejected/expired` 必须有 `finished_at`；其他执行状态必须无
+  `finished_at`；batch 父任务始终无 `finished_at`。
+- `failed` 必须有 `error_code`；其他状态不保存过期错误摘要。
 
 索引：
 
-- `(status, lease_expires_at)` 支持恢复扫描。
+- `(execution_status, lease_expires_at, created_at)` 支持领取与恢复扫描。
 - `(kindergarten_id, parent_job_id, created_at)` 支持父任务汇总。
 - `(kindergarten_id, plan_id, created_at DESC)` 支持教案任务历史。
-- 部分索引 `(status, created_at) WHERE status = 'pending_dispatch'`。
 
 Worker 租约领取使用 PostgreSQL 行锁或条件 `UPDATE ... RETURNING`，重复 Redis 消息不得绕过状态与租约校验。
 
@@ -890,12 +906,15 @@ kindergarten_id UUID NOT NULL
 job_id UUID NOT NULL
 plan_id UUID NOT NULL
 target_section VARCHAR(64) NOT NULL
+requested_resource_version INTEGER NOT NULL
+target_section_baseline_sha256 CHAR(64) NOT NULL
+input_context JSONB NULL
+input_sha256 CHAR(64) NOT NULL
 model_profile_id UUID NOT NULL
 model_name_snapshot VARCHAR(200) NOT NULL
 prompt_definition_id UUID NOT NULL
 prompt_version_id UUID NOT NULL
-input_context JSONB NULL
-input_sha256 CHAR(64) NOT NULL
+prompt_content_sha256 CHAR(64) NOT NULL
 result_schema_code VARCHAR(160) NOT NULL
 result_schema_version INTEGER NOT NULL
 output_content JSONB NULL
@@ -904,16 +923,28 @@ expires_at TIMESTAMPTZ NOT NULL
 adopted_at TIMESTAMPTZ NULL
 adopted_by UUID NULL
 rejected_at TIMESTAMPTZ NULL
+rejected_by UUID NULL
 content_cleared_at TIMESTAMPTZ NULL
 created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 ```
 
 - `UNIQUE (kindergarten_id, id)` 和 `UNIQUE (kindergarten_id, job_id)`。
-- 组合外键指向同园任务、教案、模型档案和采用人；`(kindergarten_id, prompt_definition_id, prompt_version_id)` 指向当前定义的提示词版本。
-- `CHECK (result_schema_version > 0)`、`CHECK (input_context IS NULL OR jsonb_typeof(input_context) = 'object')`、`CHECK (output_content IS NULL OR jsonb_typeof(output_content) = 'object')`。
-- 采用与拒绝互斥；`adopted_at` 与 `adopted_by` 同时为空或同时非空；`rejected_at` 非空时采用组必须为空。
-- `content_cleared_at` 非空时 `output_content` 必须为空，但 `output_sha256`、模型、提示词和 Schema 追溯信息保留。
+- `(kindergarten_id, plan_id, job_id)` 组合外键保证结果、任务和教案同园同教案；模型档案、采用人
+  和拒绝人均使用同园外键；`(kindergarten_id, prompt_definition_id, prompt_version_id)`
+  指向同一定义的提示词版本。
+- `requested_resource_version > 0`、`result_schema_version > 0`；非空
+  `input_context/output_content` 必须为 JSON 对象。
+- 受理时冻结字段全部非空，`output_content/output_sha256` 全空。Worker 只能把二者从全空
+  幂等填为全非空；不得覆盖已有输出。
+- `plan_id/target_section/requested_resource_version/target_section_baseline_sha256/input_context/
+  input_sha256/model_profile_id/model_name_snapshot/prompt_definition_id/prompt_version_id/
+  prompt_content_sha256/result_schema_code/result_schema_version` 是冻结字段。除内容清理允许把
+  `input_context` 置空外，数据库触发器拒绝更新；显式重试必须插入新行并精确复制这些字段。
+- 采用与拒绝互斥；`adopted_at/adopted_by`、`rejected_at/rejected_by` 各自同时为空或同时
+  非空。采用、拒绝和清理只能在已有输出哈希后发生。
+- `content_cleared_at` 非空时 `input_context/output_content` 必须为空，但基线与输入/输出
+  哈希、模型、提示词和 Schema 追溯信息保留；清理前 `input_context` 必须非空。
 - 索引 `(kindergarten_id, plan_id, target_section, created_at DESC)` 和 `(expires_at) WHERE adopted_at IS NULL AND rejected_at IS NULL`。
 
 ## 11. Word 导出 Schema
