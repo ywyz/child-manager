@@ -320,9 +320,9 @@ uv run pytest
 - 不得手工编辑生成的图谱文件。
 - 仅修改业务代码时运行 `graphify update .`；该命令只做代码增量抽取，不替代文档、论文或图片的语义抽取。
 - 修改活跃治理/架构文档，或需要重新进行社区命名时，Graphify 固定优先使用大语言模型：
-  1. 首选已配置的 OpenAI 兼容后端与 `mimo-v2.5-pro`：
-     `graphify extract . --backend openai --model mimo-v2.5-pro`。
-  2. MiMo 调用失败后，使用已配置的 DeepSeek 后端：
+  1. 首选已配置的 OpenAI 兼容后端；模型由仓库外的 `OPENAI_MODEL` 指定，仓库内不固定
+     机器本地模型名：`graphify extract . --backend openai`。
+  2. OpenAI 兼容后端调用失败后，使用已配置的 DeepSeek 后端：
      `graphify extract . --backend deepseek`。
   3. 两个后端都失败后，才按 Graphify 技能使用子代理完成语义抽取或命名；不得在首个后端失败后直接跳过 DeepSeek。
 - `graphify label`、`graphify cluster-only` 等需要大模型命名的操作沿用同一优先级。每次交付记录实际使用的模型或子代理来源，以及前序后端的失败原因；不得记录或输出 API Key、Base URL 或其他秘密。
