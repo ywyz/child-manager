@@ -1295,9 +1295,9 @@
     "semantic_hash": "fb613bd4f23b05820e05eb6c8850f575"
   },
   "tests/architecture/test_local_development_profiles.py": {
-    "mtime": 1785071260.5527797,
-    "ast_hash": "89c62158cb669a7e9494adf6e964b6e1",
-    "semantic_hash": "89c62158cb669a7e9494adf6e964b6e1"
+    "mtime": 1785298741.523142,
+    "ast_hash": "c83441a783c6fa491a5dd383c88eb650",
+    "semantic_hash": ""
   },
   "tests/architecture/test_package_skeleton.py": {
     "mtime": 1785071260.5527797,
@@ -1380,9 +1380,9 @@
     "semantic_hash": "6a7e5b8123fdf70bb9094600054537be"
   },
   "tests/database_config.py": {
-    "mtime": 1785242863.1348815,
-    "ast_hash": "31b5255093160f6e5c45f5ae9ea7b89f",
-    "semantic_hash": "31b5255093160f6e5c45f5ae9ea7b89f"
+    "mtime": 1785299033.2520077,
+    "ast_hash": "bd9099f3dd67d7e47a3f7f5cc191e30a",
+    "semantic_hash": ""
   },
   "tests/fixtures/__init__.py": {
     "mtime": 1785071260.5537798,
@@ -1772,6 +1772,11 @@
   "packages/backend/jobs/ai_runner.py": {
     "mtime": 1785246627.082657,
     "ast_hash": "249a2d2e72cebe2bb1b8371f9060573b",
+    "semantic_hash": ""
+  },
+  "tests/architecture/test_test_database_profile.py": {
+    "mtime": 1785299017.091007,
+    "ast_hash": "614b672d59e29d0f0d6535ffb8ee1e90",
     "semantic_hash": ""
   }
 }

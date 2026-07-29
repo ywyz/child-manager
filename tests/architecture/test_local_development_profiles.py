@@ -102,10 +102,17 @@ def test_compose_accepts_temporary_image_overrides() -> None:
     assert services["redis"]["image"] == REDIS_IMAGE.replace("redis:", "mirror.example/redis:")
 
 
-def test_test_database_url_requires_an_explicit_profile(monkeypatch) -> None:
+def test_test_database_url_requires_an_explicit_profile(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.delenv("CHILD_MANAGER_TEST_DATABASE_URL", raising=False)
+    monkeypatch.setenv(
+        "CHILD_MANAGER_TEST_DATABASE_URL_FILE",
+        str(tmp_path / "missing-test-database-url"),
+    )
 
-    with pytest.raises(RuntimeError, match="CHILD_MANAGER_TEST_DATABASE_URL"):
+    with pytest.raises(
+        RuntimeError,
+        match=r"CHILD_MANAGER_TEST_DATABASE_URL.*CHILD_MANAGER_TEST_DATABASE_URL_FILE",
+    ):
         require_test_database_url()
 
 
