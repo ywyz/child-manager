@@ -164,6 +164,24 @@ class LessonPlanRepository:
             is not None
         )
 
+    def has_active_role(
+        self,
+        kindergarten_id: UUID,
+        user_id: UUID,
+        role_code: str,
+    ) -> bool:
+        return (
+            self._connection.execute(  # type: ignore[attr-defined]
+                """SELECT 1 FROM users u
+                JOIN user_roles ur
+                  ON ur.kindergarten_id=u.kindergarten_id AND ur.user_id=u.id
+                JOIN roles r ON r.id=ur.role_id AND r.code=%s
+                WHERE u.kindergarten_id=%s AND u.id=%s AND u.status='active'""",
+                (role_code, kindergarten_id, user_id),
+            ).fetchone()
+            is not None
+        )
+
     def create_plan(
         self,
         kindergarten_id: UUID,

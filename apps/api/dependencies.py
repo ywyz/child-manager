@@ -12,7 +12,11 @@ from fastapi import Cookie, Depends
 from redis.asyncio import Redis
 
 from packages.backend.identity.service import IdentityError, IdentityService, SessionUser
+from packages.backend.jobs.ai_retry import AiRetryService
 from packages.backend.jobs.query_service import JobQueryService
+from packages.backend.lesson_plans.ai_adoption import AiAdoptionService
+from packages.backend.lesson_plans.ai_generation import AiGenerationService
+from packages.backend.lesson_plans.reflection import ReflectionGenerationService
 from packages.backend.lesson_plans.service import LessonPlanService
 from packages.backend.prompts.service import PromptService
 from packages.backend.settings.ai_models import AiModelService
@@ -132,6 +136,43 @@ def lesson_plan_service() -> LessonPlanService:
 
 
 LessonPlanServiceDependency = Annotated[LessonPlanService, Depends(lesson_plan_service)]
+
+
+def ai_generation_service() -> AiGenerationService:
+    return AiGenerationService.from_environment()
+
+
+AiGenerationServiceDependency = Annotated[
+    AiGenerationService,
+    Depends(ai_generation_service),
+]
+
+
+def reflection_generation_service() -> ReflectionGenerationService:
+    return ReflectionGenerationService.from_environment()
+
+
+ReflectionGenerationServiceDependency = Annotated[
+    ReflectionGenerationService,
+    Depends(reflection_generation_service),
+]
+
+
+def ai_adoption_service() -> AiAdoptionService:
+    return AiAdoptionService.from_environment()
+
+
+AiAdoptionServiceDependency = Annotated[
+    AiAdoptionService,
+    Depends(ai_adoption_service),
+]
+
+
+def ai_retry_service() -> AiRetryService:
+    return AiRetryService.from_environment()
+
+
+AiRetryServiceDependency = Annotated[AiRetryService, Depends(ai_retry_service)]
 
 
 def ai_model_service() -> AiModelService:

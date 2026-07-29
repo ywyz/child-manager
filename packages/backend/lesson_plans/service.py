@@ -115,7 +115,11 @@ class LessonPlanService:
         kindergarten_id: UUID,
         plan: PlanRecord,
     ) -> None:
-        if "admin" in session.role_codes:
+        if "admin" in session.role_codes and repository.has_active_role(
+            kindergarten_id,
+            session.user.id,
+            "admin",
+        ):
             return
         if "teacher" in session.role_codes and repository.is_class_teacher(
             kindergarten_id, plan.class_id, session.user.id
@@ -624,6 +628,21 @@ class LessonPlanService:
                     code="calendar.unknown",
                     message="暂时无法确认所选日期是否为工作日。",
                     detail=detail,
+                )
+            )
+        try:
+            content = PlanContentV1.model_validate(plan.content)
+        except ValueError:
+            content = None
+        if (
+            content is not None
+            and content.group_activity.process
+            and not any(step.is_ai_added for step in content.group_activity.process)
+        ):
+            warnings.append(
+                SoftWarning(
+                    code="group_activity.ai_step_missing",
+                    message="集体活动尚未包含 AI 新增的适龄环节，可继续使用纯手工内容。",
                 )
             )
         return warnings

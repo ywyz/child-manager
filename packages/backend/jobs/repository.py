@@ -311,6 +311,7 @@ class JobRepository:
         *,
         job_id: UUID,
         parent_job_id: UUID | None,
+        retry_of_job_id: UUID | None = None,
         job_type: str,
         plan_id: UUID,
         target_section: str,
@@ -328,11 +329,11 @@ class JobRepository:
     ) -> AiJobRecord:
         result = self.connection.execute(
             """INSERT INTO background_jobs
-            (id,kindergarten_id,parent_job_id,job_type,execution_status,plan_id,
+            (id,kindergarten_id,parent_job_id,retry_of_job_id,job_type,execution_status,plan_id,
              target_section,requested_resource_version,idempotency_scope,idempotency_key,
              request_fingerprint_sha256,attempt_count,max_attempts,requested_by,request_id,
              trace_id,finished_at,error_code,error_summary)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,0,3,%s,%s,%s,%s,%s,%s)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,0,3,%s,%s,%s,%s,%s,%s)
             RETURNING id,parent_job_id,retry_of_job_id,job_type,execution_status,
                       plan_id,target_section,requested_resource_version,idempotency_scope,
                       idempotency_key,request_fingerprint_sha256,attempt_count,max_attempts,
@@ -342,6 +343,7 @@ class JobRepository:
                 job_id,
                 kindergarten_id,
                 parent_job_id,
+                retry_of_job_id,
                 job_type,
                 status,
                 plan_id,
@@ -361,6 +363,35 @@ class JobRepository:
         record = _ai_job(_row(result))
         assert record is not None
         return record
+
+    def list_ai_roots_for_plan(
+        self,
+        kindergarten_id: UUID,
+        plan_id: UUID,
+        *,
+        page: int,
+        page_size: int,
+    ) -> tuple[list[AiJobRecord], int]:
+        select_with_total = _AI_SELECT.replace(
+            " FROM background_jobs",
+            ",count(*) OVER() FROM background_jobs",
+            1,
+        )
+        rows = self.connection.execute(
+            select_with_total
+            + """
+            WHERE kindergarten_id=%s AND plan_id=%s
+              AND job_type LIKE 'ai.%%' AND parent_job_id IS NULL
+            ORDER BY created_at DESC,id DESC LIMIT %s OFFSET %s""",
+            (
+                kindergarten_id,
+                plan_id,
+                page_size,
+                (page - 1) * page_size,
+            ),
+        ).fetchall()
+        records = [record for row in rows if (record := _ai_job(row[:22])) is not None]
+        return records, int(rows[0][22]) if rows else 0
 
     def claim(
         self,

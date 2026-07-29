@@ -4,17 +4,23 @@ from datetime import date
 from typing import Annotated, cast
 from uuid import UUID
 
-from fastapi import APIRouter, Query, Request, Response
+from fastapi import APIRouter, Header, Query, Request, Response, status
 
 from apps.api.dependencies import (
+    AiGenerationServiceDependency,
     CurrentSessionDependency,
+    JobQueryServiceDependency,
     LessonPlanServiceDependency,
+    ReflectionGenerationServiceDependency,
 )
 from apps.api.routers.auth import require_csrf
 from packages.backend.lesson_plans.repository import SnapshotRecord
 from packages.backend.lesson_plans.schemas import readable_content
 from packages.backend.lesson_plans.service import PlanView
+from packages.contracts.jobs import JobAccepted, JobPage
 from packages.contracts.lesson_plans import (
+    AiBatchRequest,
+    AiGenerationRequest,
     Author,
     Plan,
     PlanOpenRequest,
@@ -136,6 +142,104 @@ def get_plan(
     service: LessonPlanServiceDependency,
 ) -> Plan:
     return _plan(service.get_plan(session, plan_id))
+
+
+def _request_id(request: Request) -> UUID:
+    return UUID(str(request.state.request_id))
+
+
+@router.post(
+    "/{plan_id}/ai/batch",
+    response_model=JobAccepted,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+def create_ai_batch(
+    plan_id: UUID,
+    body: AiBatchRequest,
+    request: Request,
+    session: CurrentSessionDependency,
+    generation: AiGenerationServiceDependency,
+    query: JobQueryServiceDependency,
+    idempotency_key: Annotated[
+        str,
+        Header(alias="Idempotency-Key", min_length=1, max_length=200),
+    ],
+) -> JobAccepted:
+    require_csrf(request)
+    accepted = generation.create_batch(
+        session,
+        plan_id,
+        body,
+        idempotency_key=idempotency_key,
+        request_id=_request_id(request),
+    )
+    return JobAccepted(
+        job=query.get(session, accepted.job.id),
+        related_resource_id=plan_id,
+    )
+
+
+@router.post(
+    "/{plan_id}/ai/generations",
+    response_model=JobAccepted,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+def create_ai_generation(
+    plan_id: UUID,
+    body: AiGenerationRequest,
+    request: Request,
+    session: CurrentSessionDependency,
+    generation: AiGenerationServiceDependency,
+    reflection: ReflectionGenerationServiceDependency,
+    query: JobQueryServiceDependency,
+    idempotency_key: Annotated[
+        str,
+        Header(alias="Idempotency-Key", min_length=1, max_length=200),
+    ],
+) -> JobAccepted:
+    require_csrf(request)
+    if body.task_code == "daily_reflection":
+        accepted = reflection.create(
+            session,
+            plan_id,
+            body,
+            idempotency_key=idempotency_key,
+            request_id=_request_id(request),
+        )
+    else:
+        accepted = generation.create_single(
+            session,
+            plan_id,
+            body,
+            idempotency_key=idempotency_key,
+            request_id=_request_id(request),
+        )
+    return JobAccepted(
+        job=query.get(session, accepted.job.id),
+        related_resource_id=plan_id,
+    )
+
+
+@router.get("/{plan_id}/jobs", response_model=JobPage)
+def list_plan_jobs(
+    plan_id: UUID,
+    session: CurrentSessionDependency,
+    query: JobQueryServiceDependency,
+    page: Annotated[int, Query(ge=1)] = 1,
+    page_size: Annotated[int, Query(ge=1, le=100)] = 20,
+) -> JobPage:
+    items, total = query.list_plan(
+        session,
+        plan_id,
+        page=page,
+        page_size=page_size,
+    )
+    return JobPage(
+        items=items,
+        page=page,
+        page_size=page_size,
+        total=total,
+    )
 
 
 def _save(

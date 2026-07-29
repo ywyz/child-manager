@@ -23,12 +23,31 @@ def _headers(client: TestClient) -> dict[str, str]:
     return csrf_headers(client) | {"Idempotency-Key": str(uuid4())}
 
 
+def _configure_batch_areas(client: TestClient, class_id: str) -> None:
+    for area_type, name in (("indoor", "建构区"), ("outdoor", "沙水区")):
+        response = client.put(
+            f"/api/v1/settings/classes/{class_id}/areas/{area_type}",
+            json={
+                "areas": [
+                    {
+                        "name": name,
+                        "sort_order": 0,
+                        "is_active": True,
+                    }
+                ]
+            },
+            headers=csrf_headers(client),
+        )
+        assert response.status_code == 204
+
+
 def test_plan_job_history_restores_batch_with_exactly_four_children(
     ai_admin_client: tuple[TestClient, ActorFixture],
 ) -> None:
     client, actor = ai_admin_client
     provision_enabled_ai_model(client)
-    _class_id, plan_id = provision_editable_plan_context(client, actor)
+    class_id, plan_id = provision_editable_plan_context(client, actor)
+    _configure_batch_areas(client, class_id)
     plan = client.get(f"/api/v1/plans/{plan_id}").json()
     created = client.post(
         f"/api/v1/plans/{plan_id}/ai/batch",
@@ -54,7 +73,8 @@ def test_each_get_rederives_parent_projection_without_writing_parent_state(
 ) -> None:
     client, actor = ai_admin_client
     provision_enabled_ai_model(client)
-    _class_id, plan_id = provision_editable_plan_context(client, actor)
+    class_id, plan_id = provision_editable_plan_context(client, actor)
+    _configure_batch_areas(client, class_id)
     plan = client.get(f"/api/v1/plans/{plan_id}").json()
     created = client.post(
         f"/api/v1/plans/{plan_id}/ai/batch",

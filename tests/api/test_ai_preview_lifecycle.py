@@ -401,7 +401,7 @@ def test_worker_rechecks_live_gate_before_reading_key_or_calling_provider(
             raise LookupError("test key unavailable")
         return "test-key"
 
-    with psycopg.connect(native_url) as connection:
+    with psycopg.connect(native_url, autocommit=True) as connection:
         connection.execute(
             """UPDATE background_jobs SET execution_status='queued',queued_at=now()
             WHERE kindergarten_id=%s AND id=%s""",

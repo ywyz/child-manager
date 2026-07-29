@@ -2,7 +2,7 @@
 
 from collections.abc import Sequence
 from datetime import datetime
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
 from uuid import UUID
 
 from pydantic import Field, model_validator
@@ -152,3 +152,20 @@ class Job(ContractModel):
 class JobAccepted(ContractModel):
     job: Job
     related_resource_id: UUID | None = None
+
+
+class JobPage(ContractModel):
+    items: list[Job] = Field(default_factory=list)
+    page: Annotated[int, Field(ge=1)]
+    page_size: Annotated[int, Field(ge=1, le=100)]
+    total: Annotated[int, Field(ge=0)]
+
+
+class JobPreview(ContractModel):
+    job_id: UUID
+    target_section: str
+    result_schema_code: str
+    result_schema_version: Annotated[int, Field(ge=1)]
+    output_content: dict[str, Any]
+    expires_at: datetime
+    warnings: list[dict[str, Any]] = Field(default_factory=list)
