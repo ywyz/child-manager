@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 from uuid import UUID
 
@@ -283,3 +283,83 @@ class AiGenerationResultRepository:
             ),
         )
         return _record(_row(result))
+
+    def expire_due_previews(
+        self,
+        kindergarten_id: UUID,
+        *,
+        now: datetime,
+        limit: int,
+    ) -> int:
+        """将同园到期预览条件收敛为 expired，不修改结果正文或决策字段。"""
+
+        result = self.connection.execute(
+            """WITH due AS (
+                SELECT job.id
+                FROM background_jobs AS job
+                JOIN ai_generation_results AS ai_result
+                  ON ai_result.kindergarten_id=job.kindergarten_id
+                 AND ai_result.job_id=job.id
+                WHERE job.kindergarten_id=%s
+                  AND job.execution_status='awaiting_confirmation'
+                  AND ai_result.expires_at<=%s
+                  AND ai_result.adopted_at IS NULL
+                  AND ai_result.rejected_at IS NULL
+                  AND ai_result.content_cleared_at IS NULL
+                ORDER BY ai_result.expires_at,job.id
+                LIMIT %s
+                FOR UPDATE OF job SKIP LOCKED
+            )
+            UPDATE background_jobs AS job
+            SET execution_status='expired',finished_at=%s,updated_at=%s
+            FROM due
+            WHERE job.kindergarten_id=%s AND job.id=due.id
+              AND job.execution_status='awaiting_confirmation'
+            RETURNING job.id""",
+            (kindergarten_id, now, limit, now, now, kindergarten_id),
+        )
+        return len(result.fetchall())
+
+    def clear_retained_content(
+        self,
+        kindergarten_id: UUID,
+        *,
+        now: datetime,
+        limit: int,
+    ) -> int:
+        """按园所幂等清理短期正文，同时保留哈希和追溯元数据。"""
+
+        cutoff = now - timedelta(days=30)
+        result = self.connection.execute(
+            """WITH removable AS (
+                SELECT ai_result.id
+                FROM ai_generation_results AS ai_result
+                JOIN background_jobs AS job
+                  ON job.kindergarten_id=ai_result.kindergarten_id
+                 AND job.id=ai_result.job_id
+                WHERE ai_result.kindergarten_id=%s
+                  AND ai_result.content_cleared_at IS NULL
+                  AND ai_result.output_content IS NOT NULL
+                  AND ai_result.output_sha256 IS NOT NULL
+                  AND (
+                    ai_result.adopted_at IS NOT NULL
+                    OR (
+                      ai_result.created_at<=%s
+                      AND job.execution_status IN ('rejected','expired','failed')
+                    )
+                  )
+                ORDER BY ai_result.created_at,ai_result.id
+                LIMIT %s
+                FOR UPDATE OF ai_result SKIP LOCKED
+            )
+            UPDATE ai_generation_results AS ai_result
+            SET input_context=NULL,output_content=NULL,
+                content_cleared_at=%s,updated_at=%s
+            FROM removable
+            WHERE ai_result.kindergarten_id=%s
+              AND ai_result.id=removable.id
+              AND ai_result.content_cleared_at IS NULL
+            RETURNING ai_result.id""",
+            (kindergarten_id, cutoff, limit, now, now, kindergarten_id),
+        )
+        return len(result.fetchall())

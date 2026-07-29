@@ -20,6 +20,7 @@ import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
+from packages.backend.jobs.scope_resolver import WorkerScopeResolver
 from packages.contracts.jobs import JobMessage
 from tests.api.passkey_helpers import (  # noqa: F401
     ActorFixture,
@@ -233,6 +234,21 @@ def test_scheduler_tick_redispatches_expired_ai_job_and_ignores_batch_parent(
                 job_id,
             ),
         )
+        exhausted_job_id = _insert_job(connection, dependencies)
+        _insert_result(connection, _result_values(dependencies, exhausted_job_id))
+        connection.execute(
+            """UPDATE background_jobs
+            SET execution_status='running',attempt_count=3,started_at=%s,
+                lease_owner='exhausted-worker',lease_expires_at=%s,last_heartbeat_at=%s
+            WHERE kindergarten_id=%s AND id=%s""",
+            (
+                now - timedelta(seconds=90),
+                now - timedelta(seconds=1),
+                now - timedelta(seconds=31),
+                actor.kindergarten_id,
+                exhausted_job_id,
+            ),
+        )
         batch_id = uuid4()
         connection.execute(
             """INSERT INTO background_jobs
@@ -248,26 +264,32 @@ def test_scheduler_tick_redispatches_expired_ai_job_and_ignores_batch_parent(
             ),
         )
         store = _runner().AiJobStore(connection)
+        scope_resolver = WorkerScopeResolver(connection)
         scheduler = import_module("apps.worker.scheduler")
 
+        assert scope_resolver.kindergarten_id_for_ai_job(job_id) == actor.kindergarten_id
+        assert scope_resolver.kindergarten_id_for_ai_job(batch_id) is None
+        assert actor.kindergarten_id in scope_resolver.active_kindergarten_ids()
         recovered = scheduler.run_ai_recovery_scan(
             store=store,
             dispatch=dispatched.append,
+            kindergarten_ids=[actor.kindergarten_id],
             now=now,
             limit=100,
         )
         states = connection.execute(
-            """SELECT id,execution_status FROM background_jobs
+            """SELECT id,execution_status,attempt_count FROM background_jobs
             WHERE kindergarten_id=%s AND id=ANY(%s)
             ORDER BY id""",
-            (actor.kindergarten_id, [job_id, batch_id]),
+            (actor.kindergarten_id, [job_id, exhausted_job_id, batch_id]),
         ).fetchall()
 
     assert scheduler.EXPIRED_LEASE_SCAN_SECONDS == 30
     assert recovered == 1
     assert dispatched == [job_id]
-    assert (batch_id, None) in states
-    assert (job_id, "queued") in states
+    assert (batch_id, None, None) in states
+    assert (job_id, "queued", 1) in states
+    assert (exhausted_job_id, "failed", 3) in states
 
 
 @dataclass

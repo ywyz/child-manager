@@ -508,6 +508,91 @@ class AiJobStore:
         )
         return [UUID(str(row[0])) for row in result.fetchall()]
 
+    def reserve_recoverable_jobs(
+        self,
+        kindergarten_id: UUID,
+        *,
+        now: datetime,
+        limit: int,
+        include_expired: bool,
+    ) -> list[UUID]:
+        """锁定全园可恢复执行任务并仅迁移为 queued，调用次数保持不变。"""
+
+        with self.connection.transaction():
+            self.connection.execute(
+                """UPDATE background_jobs AS job
+                SET execution_status='failed',finished_at=%s,
+                    error_code='job.attempts_exhausted',
+                    error_summary='AI 任务已达到最大模型调用次数。',
+                    lease_owner=NULL,lease_expires_at=NULL,
+                    last_heartbeat_at=NULL,updated_at=%s
+                WHERE job.job_type LIKE 'ai.%%' AND job.job_type<>'ai.batch'
+                  AND job.kindergarten_id=%s
+                  AND job.execution_status='running'
+                  AND job.lease_expires_at<%s
+                  AND job.attempt_count>=job.max_attempts
+                  AND EXISTS (
+                    SELECT 1 FROM ai_generation_results AS ai_result
+                    WHERE ai_result.kindergarten_id=job.kindergarten_id
+                      AND ai_result.job_id=job.id
+                      AND ai_result.output_content IS NULL
+                      AND ai_result.content_cleared_at IS NULL
+                  )""",
+                (now, now, kindergarten_id, now),
+            )
+            rows = self.connection.execute(
+                """SELECT kindergarten_id,id
+                FROM background_jobs
+                WHERE kindergarten_id=%s
+                  AND job_type LIKE 'ai.%%' AND job_type<>'ai.batch'
+                  AND attempt_count<max_attempts
+                  AND (
+                    (
+                      execution_status='pending_dispatch'
+                      AND updated_at<%s-interval '15 seconds'
+                    )
+                    OR (
+                      execution_status='queued'
+                      AND queued_at<%s-interval '15 seconds'
+                    )
+                    OR (execution_status='retrying' AND queued_at<=%s)
+                    OR (
+                      %s
+                      AND execution_status='running'
+                      AND lease_expires_at<%s
+                    )
+                  )
+                  AND EXISTS (
+                    SELECT 1 FROM ai_generation_results AS ai_result
+                    WHERE ai_result.kindergarten_id=background_jobs.kindergarten_id
+                      AND ai_result.job_id=background_jobs.id
+                      AND ai_result.input_context IS NOT NULL
+                      AND ai_result.output_content IS NULL
+                      AND ai_result.output_sha256 IS NULL
+                      AND ai_result.content_cleared_at IS NULL
+                  )
+                ORDER BY created_at,id
+                LIMIT %s
+                FOR UPDATE SKIP LOCKED""",
+                (kindergarten_id, now, now, now, include_expired, now, limit),
+            ).fetchall()
+            reservations = [(UUID(str(row[0])), UUID(str(row[1]))) for row in rows]
+            if reservations:
+                with self.connection.cursor() as cursor:
+                    cursor.executemany(
+                        """UPDATE background_jobs
+                        SET execution_status='queued',queued_at=%s,
+                            lease_owner=NULL,lease_expires_at=NULL,
+                            last_heartbeat_at=NULL,updated_at=%s
+                        WHERE kindergarten_id=%s AND id=%s
+                          AND job_type LIKE 'ai.%%' AND job_type<>'ai.batch'""",
+                        [
+                            (now, now, kindergarten_id, job_id)
+                            for kindergarten_id, job_id in reservations
+                        ],
+                    )
+        return [job_id for _kindergarten_id, job_id in reservations]
+
 
 class AiJobRunner:
     def __init__(
