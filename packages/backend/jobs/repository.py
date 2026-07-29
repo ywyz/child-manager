@@ -158,13 +158,21 @@ class JobRepository:
             )
         )
 
-    def get_ai(self, kindergarten_id: UUID, job_id: UUID) -> AiJobRecord | None:
+    def get_ai(
+        self,
+        kindergarten_id: UUID,
+        job_id: UUID,
+        *,
+        for_update: bool = False,
+    ) -> AiJobRecord | None:
+        suffix = " FOR UPDATE" if for_update else ""
         return _ai_job(
             _row(
                 self.connection.execute(
                     _AI_SELECT
                     + """ WHERE kindergarten_id=%s AND id=%s
-                    AND job_type LIKE 'ai.%%'""",
+                    AND job_type LIKE 'ai.%%'"""
+                    + suffix,
                     (kindergarten_id, job_id),
                 )
             )
@@ -382,6 +390,26 @@ class JobRepository:
             WHERE kindergarten_id=%s AND id=%s AND execution_status='pending_dispatch'""",
             (kindergarten_id, job_id),
         )
+
+    def mark_ai_preview_decided(
+        self,
+        kindergarten_id: UUID,
+        job_id: UUID,
+        *,
+        status: str,
+        decided_at: datetime,
+    ) -> bool:
+        if status not in {"adopted", "rejected"}:
+            raise ValueError("AI 预览决策状态无效")
+        result = self.connection.execute(
+            """UPDATE background_jobs
+            SET execution_status=%s,finished_at=%s,updated_at=now()
+            WHERE kindergarten_id=%s AND id=%s
+              AND job_type LIKE 'ai.%%' AND job_type<>'ai.batch'
+              AND execution_status='awaiting_confirmation'""",
+            (status, decided_at, kindergarten_id, job_id),
+        )
+        return bool(getattr(result, "rowcount", 0))
 
     def recoverable_job_ids(
         self,

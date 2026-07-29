@@ -51,6 +51,8 @@ class IdentityAuditEventCode(StrEnum):
     PROMPT_RESTORED = "prompt.restored"
     PROMPT_TEST_ATTEMPTED = "prompt.test_attempted"
     PROMPT_TESTS_CLEARED = "prompt.tests_cleared"
+    AI_PREVIEW_REJECTED = "ai.preview_rejected"
+    AI_PREVIEW_ADOPTED = "ai.preview_adopted"
 
     # 通用登录审计名称保留为认证 ceremony 的兼容别名, 不代表密码登录。
     INITIALIZED = "identity.bootstrap_started"

@@ -161,12 +161,15 @@ class AiGenerationResultRepository:
         self,
         kindergarten_id: UUID,
         job_id: UUID,
+        *,
+        for_update: bool = False,
     ) -> AiGenerationResultRecord | None:
+        suffix = " FOR UPDATE" if for_update else ""
         return _record(
             _row(
                 self.connection.execute(
                     f"""SELECT {_COLUMNS} FROM ai_generation_results
-                    WHERE kindergarten_id=%s AND job_id=%s""",
+                    WHERE kindergarten_id=%s AND job_id=%s{suffix}""",
                     (kindergarten_id, job_id),
                 )
             )
