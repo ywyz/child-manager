@@ -54,7 +54,7 @@ WCAG 2.2 AA 可验证要求
 
 *GATE: M0、M1、M2、M3、M3A、M5 与 M4 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
 `main/docs/dev` 单实现流程。M4 #10 已完成 T062–T086；M6 T087–T126 为 `in_progress`，
-T087–T102 已完成，当前下一项为 T103。*
+T087–T103 已完成，当前下一项为 T104。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
@@ -294,7 +294,7 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 
 - 当前 `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已包含 M1–M3A、M5 与 M4，
   `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 是 M4 最终 Review SHA；quickstart
-  同时保留后续故事的可执行验收合同，尚未实施的 T103 以后步骤不得声称已经通过。
+  同时保留后续故事的可执行验收合同，尚未实施的 T104 以后步骤不得声称已经通过。
 - M1 后使用 API、Worker、Web 三个可执行入口；T032 完成后再使用已冻结的初始化与最后管理员
   恢复子命令；后者只接受恢复请求 ID，交互匹配初始化时保存的两项预登记引用，Web/API 对
   最后管理员审批只返回 `identity.last_admin_recovery_requires_cli`；
@@ -310,8 +310,9 @@ T046～T061 与 M4 T062～T086 均已完成。M4 [Issue #10](https://github.com/
 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，并已集成
 `main@b7676c27d07adc5eca1f0c397217780367481e9c`。M6 为 `in_progress`；
 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126。固定文档基线、
-T087–T097 RED 与 T098–T102 已完成；T102 直接调用生成服务的专项验证通过，批量/单栏受理
-路由级验收保留给 T107。当前下一项为 T103。
+T087–T097 RED 与 T098–T103 已完成；T103 自有门禁为 `66 passed, 1 deselected`。当前
+下一项为 T104，其门禁使用直接聚合、Actor、恢复扫描和预览维护测试；批量/单栏受理、任务
+轮询和预览生命周期薄路由验收保留给 T107。
 
 ## Phase 2: Task Generation Strategy
 

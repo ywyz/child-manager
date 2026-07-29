@@ -2,14 +2,15 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Updated**: 2026-07-28
+**Updated**: 2026-07-29
 **Current repository state**: M4 与 M5 均为 `complete`；最终 M4 Review SHA 为
 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，已正常 merge 到
 `main@b7676c27d07adc5eca1f0c397217780367481e9c`。`docs` 是当前文档、规格、OpenAPI
 和模板的单一事实来源。M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11)
-为 `in_progress` 并覆盖 T087–T126；固定文档基线、T087–T097 RED 与 T098–T102 已完成。
-T102 直接调用生成服务的专项验证通过，批量/单栏受理路由级验收保留给 T107；当前下一项为
-T103。下列命令覆盖 M1～M8 验收合同，尚未完成的用户故事步骤不可执行，也不表示已经通过。
+为 `in_progress` 并覆盖 T087–T126；固定文档基线、T087–T097 RED 与 T098–T103 已完成。
+T103 已完成且自有门禁为 `66 passed, 1 deselected`；当前下一项为 T104。批量/单栏受理、
+任务轮询和预览生命周期薄路由验收保留给 T107。下列命令覆盖 M1～M8 验收合同，尚未完成的
+用户故事步骤不可执行，也不表示已经通过。
 
 ## 1. 前提与反目标
 
@@ -66,14 +67,21 @@ export CHILD_MANAGER_ENV=development
 export CHILD_MANAGER_BIND_HOST=127.0.0.1
 export CHILD_MANAGER_COOKIE_SECURE=false
 export CHILD_MANAGER_DATABASE_URL="postgresql+psycopg://child_manager:${CHILD_MANAGER_POSTGRES_PASSWORD}@127.0.0.1:${CHILD_MANAGER_POSTGRES_PORT}/${CHILD_MANAGER_DATABASE_NAME}"
-export CHILD_MANAGER_TEST_DATABASE_URL="postgresql+psycopg://child_manager:${CHILD_MANAGER_POSTGRES_PASSWORD}@127.0.0.1:${CHILD_MANAGER_POSTGRES_PORT}/${CHILD_MANAGER_TEST_DATABASE_NAME}"
 export CHILD_MANAGER_REDIS_URL="redis://127.0.0.1:${CHILD_MANAGER_REDIS_PORT}/0"
 export CHILD_MANAGER_JWT_SIGNING_KEY="$(openssl rand -base64 32)"
 export CHILD_MANAGER_CSRF_SIGNING_KEY="$(openssl rand -base64 32)"
+test_database_profile="${XDG_CONFIG_HOME:-$HOME/.config}/child-manager/test-database-url"
+install -d -m 700 "$(dirname "$test_database_profile")"
+printf '%s\n' "postgresql+psycopg://child_manager:${CHILD_MANAGER_POSTGRES_PASSWORD}@127.0.0.1:${CHILD_MANAGER_POSTGRES_PORT}/${CHILD_MANAGER_TEST_DATABASE_NAME}" \
+  | install -m 600 /dev/stdin "$test_database_profile"
+unset test_database_profile
 ```
 
 预期：开发配置只允许回环地址使用 `Secure=false` Cookie。把 API 使用的
 `CHILD_MANAGER_BIND_HOST` 或 Web 的 `--host` 参数改为 `0.0.0.0` 或 `::` 时，对应进程必须拒绝启动。
+pytest 默认读取上述仓库外 `0600` 档位；CI 或临时专项环境仍可显式设置
+`CHILD_MANAGER_TEST_DATABASE_URL`，并优先于档位文件。两种来源都必须指向名称以 `_test`
+或 `_ci` 结尾的 PostgreSQL 数据库；不得指向开发共享库。
 
 ## 3. 数据库与首次初始化
 
