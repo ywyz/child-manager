@@ -2,6 +2,7 @@
 
 from enum import StrEnum
 from typing import Annotated
+from uuid import UUID
 
 from pydantic import Field, StrictStr
 
@@ -51,6 +52,11 @@ class IdentityAuditEventCode(StrEnum):
     PROMPT_RESTORED = "prompt.restored"
     PROMPT_TEST_ATTEMPTED = "prompt.test_attempted"
     PROMPT_TESTS_CLEARED = "prompt.tests_cleared"
+    AI_GENERATION_CREATED = "ai.generation_created"
+    AI_AUTOMATIC_RETRY_SCHEDULED = "ai.automatic_retry_scheduled"
+    AI_GENERATION_RETRIED = "ai.generation_retried"
+    AI_GENERATION_SUCCEEDED = "ai.generation_succeeded"
+    AI_GENERATION_FAILED = "ai.generation_failed"
     AI_PREVIEW_REJECTED = "ai.preview_rejected"
     AI_PREVIEW_ADOPTED = "ai.preview_adopted"
 
@@ -69,6 +75,16 @@ class IdentityAuditMetadata(ContractModel):
     elapsed_ms: Annotated[int, Field(ge=0)] | None = None
     error_summary: Annotated[StrictStr, Field(max_length=1000)] | None = None
     target_role_codes: list[Annotated[StrictStr, Field(max_length=64)]] | None = None
+
+
+class AiGenerationAuditMetadata(ContractModel):
+    """AI 审计只保留任务谱系与脱敏执行摘要。"""
+
+    job_id: UUID | None = None
+    retry_of_job_id: UUID | None = None
+    attempt_count: Annotated[int, Field(ge=0, le=3)] | None = None
+    error_code: Annotated[StrictStr, Field(max_length=160)] | None = None
+    target_section: Annotated[StrictStr, Field(max_length=160)] | None = None
 
 
 class AuditEventReference(ContractModel):

@@ -8,6 +8,7 @@ from uuid import UUID, uuid7
 
 import psycopg
 
+from packages.backend.audit.events import append_ai_event
 from packages.backend.identity.service import IdentityError, SessionUser
 from packages.backend.jobs.ai_results import AiGenerationResultRepository
 from packages.backend.jobs.repository import JobRepository
@@ -18,6 +19,7 @@ from packages.backend.lesson_plans.ai_generation import (
 )
 from packages.backend.lesson_plans.repository import LessonPlanRepository
 from packages.backend.lesson_plans.service import LessonPlanService
+from packages.contracts.audit import IdentityAuditEventCode
 from packages.contracts.common import canonical_request_fingerprint
 from packages.contracts.jobs import JOB_RETRY_NOT_ALLOWED, is_explicit_ai_retry_allowed
 
@@ -150,6 +152,20 @@ class AiRetryService:
                 )
                 if cloned is None:
                     raise self._not_allowed()
+                append_ai_event(
+                    connection,
+                    kindergarten_id,
+                    event_code=IdentityAuditEventCode.AI_GENERATION_RETRIED,
+                    job_id=retry_job.id,
+                    actor_user_id=session.user.id,
+                    actor_role_codes=list(session.role_codes),
+                    outcome="success",
+                    request_id=request_id,
+                    trace_id=retry_job.trace_id,
+                    retry_of_job_id=source.id,
+                    attempt_count=retry_job.attempt_count,
+                    target_section=retry_job.target_section,
+                )
                 acceptance = AiGenerationAcceptance(
                     retry_job,
                     results=(cloned,),

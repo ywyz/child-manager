@@ -9,6 +9,7 @@ from uuid import UUID, uuid7
 
 import psycopg
 
+from packages.backend.audit.events import append_ai_event
 from packages.backend.identity.service import IdentityError, SessionUser
 from packages.backend.jobs.ai_results import AiGenerationResultRepository
 from packages.backend.jobs.repository import JobRepository
@@ -27,6 +28,7 @@ from packages.backend.lesson_plans.schemas import content_completeness
 from packages.backend.prompts.catalog import validate_prompt_variables
 from packages.backend.prompts.repository import PromptRepository
 from packages.backend.settings.repository import AiModelProfileRepository
+from packages.contracts.audit import IdentityAuditEventCode
 from packages.contracts.common import canonical_request_fingerprint
 from packages.contracts.lesson_plans import AiGenerationRequest
 
@@ -226,6 +228,19 @@ class ReflectionGenerationService:
                     result_schema_code=definition.result_schema_code,
                     result_schema_version=definition.result_schema_version,
                     expires_at=datetime.now(UTC) + _PREVIEW_RETENTION,
+                )
+                append_ai_event(
+                    connection,
+                    kindergarten_id,
+                    event_code=IdentityAuditEventCode.AI_GENERATION_CREATED,
+                    job_id=job.id,
+                    actor_user_id=session.user.id,
+                    actor_role_codes=list(session.role_codes),
+                    outcome="success",
+                    request_id=request_id,
+                    trace_id=job.trace_id,
+                    attempt_count=job.attempt_count,
+                    target_section=job.target_section,
                 )
                 acceptance = AiGenerationAcceptance(job, results=(result,))
         except psycopg.OperationalError as exc:

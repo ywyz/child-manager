@@ -15,6 +15,7 @@ from uuid import UUID
 from psycopg.types.json import Jsonb
 from pydantic import ValidationError
 
+from packages.backend.audit.events import append_ai_event
 from packages.backend.integrations.ai.errors import AiClientError
 from packages.backend.integrations.crypto.ai_keys import AiKeyEnvelope
 from packages.backend.jobs.retry_policy import (
@@ -30,6 +31,7 @@ from packages.backend.jobs.service import (
 from packages.backend.lesson_plans.ai_fingerprints import JsonValue, canonical_json_sha256
 from packages.backend.prompts.catalog import validate_prompt_result_schema
 from packages.backend.prompts.renderer import PromptTemplateError, render_prompt
+from packages.contracts.audit import IdentityAuditEventCode
 
 logger = logging.getLogger(__name__)
 
@@ -409,7 +411,18 @@ class AiJobStore:
                 worker_id,
             ),
         )
-        return bool(getattr(result, "rowcount", 0))
+        completed = bool(getattr(result, "rowcount", 0))
+        if completed:
+            append_ai_event(
+                self.connection,
+                kindergarten_id,
+                event_code=IdentityAuditEventCode.AI_GENERATION_SUCCEEDED,
+                job_id=job_id,
+                actor_user_id=None,
+                actor_role_codes=[],
+                outcome="success",
+            )
+        return completed
 
     def finish_failure(
         self,
@@ -422,7 +435,7 @@ class AiJobStore:
         elapsed_ms: int,
     ) -> None:
         del elapsed_ms
-        self.connection.execute(
+        result = self.connection.execute(
             """UPDATE background_jobs
             SET execution_status='failed',finished_at=now(),
                 error_code=%s,error_summary=%s,
@@ -433,6 +446,17 @@ class AiJobStore:
               AND execution_status='running' AND lease_owner=%s""",
             (code, summary[:1000], kindergarten_id, job_id, worker_id),
         )
+        if getattr(result, "rowcount", 0):
+            append_ai_event(
+                self.connection,
+                kindergarten_id,
+                event_code=IdentityAuditEventCode.AI_GENERATION_FAILED,
+                job_id=job_id,
+                actor_user_id=None,
+                actor_role_codes=[],
+                outcome="failure",
+                error_code=code,
+            )
 
     def handle_error(
         self,
@@ -474,7 +498,20 @@ class AiJobStore:
                       AND execution_status='running' AND lease_owner=%s""",
                     (delay, kindergarten_id, job_id, worker_id),
                 )
-                return delay if getattr(result, "rowcount", 0) else None
+                if getattr(result, "rowcount", 0):
+                    append_ai_event(
+                        self.connection,
+                        kindergarten_id,
+                        event_code=IdentityAuditEventCode.AI_AUTOMATIC_RETRY_SCHEDULED,
+                        job_id=job_id,
+                        actor_user_id=None,
+                        actor_role_codes=[],
+                        outcome="failure",
+                        attempt_count=attempt_count,
+                        error_code=code,
+                    )
+                    return delay
+                return None
             self.finish_failure(
                 kindergarten_id,
                 job_id,

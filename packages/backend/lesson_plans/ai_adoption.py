@@ -11,7 +11,7 @@ from uuid import UUID
 import psycopg
 from pydantic import ValidationError
 
-from packages.backend.audit.repository import AuditRepository
+from packages.backend.audit.events import append_ai_event
 from packages.backend.identity.service import IdentityError, SessionUser
 from packages.backend.jobs.ai_results import (
     AiGenerationResultRecord,
@@ -402,13 +402,18 @@ class AiAdoptionService:
                 decided_at=now,
             ):
                 raise self._unavailable()
-            AuditRepository(connection, kindergarten_id).append(
+            append_ai_event(
+                connection,
+                kindergarten_id,
                 event_code=IdentityAuditEventCode.AI_PREVIEW_ADOPTED,
+                job_id=job_id,
                 actor_user_id=session.user.id,
                 actor_role_codes=list(session.role_codes),
-                resource_type="background_job",
-                resource_id=job_id,
                 outcome="success",
+                request_id=getattr(session, "request_id", None),
+                trace_id=job.trace_id,
+                attempt_count=job.attempt_count,
+                target_section=job.target_section,
             )
             return updated
 
@@ -452,13 +457,18 @@ class AiAdoptionService:
                 decided_at=now,
             ):
                 raise self._unavailable()
-            AuditRepository(connection, kindergarten_id).append(
+            append_ai_event(
+                connection,
+                kindergarten_id,
                 event_code=IdentityAuditEventCode.AI_PREVIEW_REJECTED,
+                job_id=job_id,
                 actor_user_id=session.user.id,
                 actor_role_codes=list(session.role_codes),
-                resource_type="background_job",
-                resource_id=job_id,
                 outcome="success",
+                request_id=getattr(session, "request_id", None),
+                trace_id=job.trace_id,
+                attempt_count=job.attempt_count,
+                target_section=job.target_section,
             )
             decided = jobs.get_ai(kindergarten_id, job_id)
             assert decided is not None
