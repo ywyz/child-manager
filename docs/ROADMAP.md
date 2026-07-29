@@ -122,10 +122,10 @@ flowchart LR
 
 M5 已按固定路线完成 T046–T061，交付完全不依赖 AI 的手工教案 MVP；M4 也已完成
 T062–T086 并通过双轴 Review、`dev`/`main` Quality Gates 与正常 merge。M6 T087–T126
-现为 `in_progress`，T087–T104 已完成，继续遵守 `0006_lesson_plans → 0007_ai_prompts_jobs →
-0008_ai_generation_results → 0009_group_activity_sources` 迁移链。M6 Issue 必须固定引用
-不可移动 docs 基线，并保持 US4 T087–T110 先于 US5 T111–T126；当前下一项为 T105，
-批量/单栏受理、任务轮询和预览生命周期薄路由验收保留给 T107。
+现为 `in_progress`，US4 T087–T110 已完成，继续遵守 `0006_lesson_plans →
+0007_ai_prompts_jobs → 0008_ai_generation_results → 0009_group_activity_sources` 迁移链。
+M6 Issue 必须固定引用不可移动 docs 基线，并保持 US4 T087–T110 先于 US5 T111–T126；
+当前下一项为 T111。
 
 ## 6. M0：共享设计基线
 
@@ -449,13 +449,13 @@ Quality Gates `30235090100` 为 458 项通过；正常 merge 后
 | M3A | `complete` | [#8](https://github.com/ywyz/child-manager/issues/8) 已按 `completed` 关闭；固定 `docs@2f7894c`，最终实现 `dev@6a9e269`，Quality Gates `30161645948` 与独立复验通过 | 保留验收记录；已集成 `main` |
 | M5 | `complete` | [#9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed` 关闭；固定 `docs@7d9af6c`，最终 `dev@ae74c83`，双轴 Review 均通过，Quality Gates `30202886134` 为 347 项通过 | 已随最终 M4 树集成 `main`；保留验收记录 |
 | M4 | `complete` | [#10](https://github.com/ywyz/child-manager/issues/10) 已按 `completed` 关闭；固定 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，Review `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，双轴 PASS；`dev`/`main` Quality Gates `30235090100`/`30235439229` 均为 458 项通过；最终 `main@b7676c27d07adc5eca1f0c397217780367481e9c` | 保留验收记录 |
-| M6 | `in_progress` | [#11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；固定文档基线、T087–T097 RED 与 T098–T104 已完成；T104 `dev@a75e05576f8dfae98b199ea3411f29bc7f76466a` 自有门禁为 `10 passed` | 实施 T105 AI 预览采用/拒绝直接服务门禁；T107 前保留 API 路由级 RED |
+| M6 | `in_progress` | [#11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；US4 T087–T110 已完成，最终实现与图谱提交为 `dev@cda96f2e60be844801f200490b41df4dc0b77bce`，独立门禁为 `126 passed`，完整测试为 `610 passed, 1 warning` | 实施 US5 T111 确定性 DOCX/ZIP 测试工厂 |
 | M7–M8 | `pending` | 尚未开始实现 | 等待 M6 及各自前序里程碑完成 |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010/ADR-0011 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 
 该快照只能根据实际分支、文件、命令与验收证据更新。不得根据历史分支、计划文件或未执行命令猜测状态。
 
-M4 T062–T086、M5 T046–T061 以及 M6 T087–T104 均已完成；M6 当前下一项为 T105。共享
+M4 T062–T086、M5 T046–T061 以及 M6 US4 T087–T110 均已完成；M6 当前下一项为 T111。共享
 [`specs/001-daily-activity-plan/tasks.md`](../specs/001-daily-activity-plan/tasks.md)
 的现有任务顺序、迁移编号和依赖图无需重编号；M6 Issue 必须引用不可移动 `docs` 提交，
 并保持 T087–T110 → T111–T126 的内部顺序。
