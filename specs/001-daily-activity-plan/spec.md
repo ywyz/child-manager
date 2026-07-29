@@ -9,8 +9,8 @@
 **Updated**: 2026-07-29
 
 **Status**: M0–M3A、M4、M5 `complete` / M6 `in_progress` / M7–M8 `pending` — M6
-[Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；T087–T103
-已完成，当前下一项为 T104
+[Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；T087–T104
+已完成，当前下一项为 T105
 
 **Input**: 将 Child Manager 首期 M1–M8 作为一个完整 feature，交付工程与安全基础、
 认证授权、必要设置、手工教案、AI 模型与提示词、异步 AI、固定 Word 导出和功能验收。

@@ -5,7 +5,7 @@
 当前上下文分支：`docs`
 
 项目阶段：M4 与 M5 均为 `complete` 并已集成 `main`；M6 T087–T126 为 `in_progress`，
-T087–T103 已完成，当前下一项为 T104
+T087–T104 已完成，当前下一项为 T105
 
 ## 1. 本文档的用途
 
@@ -226,9 +226,10 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 ### 阶段 6：AI 异步生成
 
 - M4 与 M5 均已完成，[M6 Issue #11](https://github.com/ywyz/child-manager/issues/11)
-  为 `in_progress`；固定文档基线、T087–T097 RED 与 T098–T103 已完成，T103 自有门禁为
-  `66 passed, 1 deselected`。当前下一项为 T104；其门禁只覆盖直接聚合、Actor、恢复扫描和
-  预览维护测试，批量/单栏受理、任务轮询与预览生命周期薄路由验收仍保留给 T107。
+  为 `in_progress`；固定文档基线、T087–T097 RED 与 T098–T104 已完成。T104 完成提交为
+  `dev@a75e05576f8dfae98b199ea3411f29bc7f76466a`，自有门禁为 `10 passed`。当前下一项为
+  T105 AI 预览采用/拒绝事务；批量/单栏受理、任务轮询与预览生命周期薄路由验收仍保留给
+  T107。
 - 接入 Redis Worker、任务状态、栏目级生成、结构校验、重试和失败恢复。
 - 支持集体活动文本与 `.docx` 导入。
 
@@ -271,8 +272,8 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
 | `main` | 稳定版本与发布基线 | `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已正常 merge 最终 M4 `dev`，最终树与 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 一致；Quality Gates `30235439229` 为 458 项通过 | 保持稳定；等待 M6 完成独立验收后再接收新结果 |
-| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 已固定不可移动 `docs` 基线；本次修正 T104 的直接测试归属并回写 T103 完成证据 | 提交新的不可移动状态基线后更新 Issue #11，并同步到 `dev` |
-| `dev` | Codex 唯一实现与集成 | M6 为 `in_progress`；T087–T103 已完成，T103 最终修复提交为 `dev@4a9974eaa80ae1e9b0e6a15035512bbb32b6b2d1`，自有门禁为 `66 passed, 1 deselected` | 实施 T104；只运行其直接聚合、Actor、恢复扫描和预览维护门禁，不提前实现 T105/T107 |
+| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 已固定不可移动 `docs` 基线；本次回写 T104 完成状态与 T105 交接门禁 | 提交新的不可移动状态基线后更新 Issue #11，并同步到 `dev` |
+| `dev` | Codex 唯一实现与集成 | M6 为 `in_progress`；T087–T104 已完成，T104 完成提交为 `dev@a75e05576f8dfae98b199ea3411f29bc7f76466a`，自有门禁为 `10 passed` | 实施 T105 AI 预览采用/拒绝事务；其直接服务门禁通过前不进入 T106 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -307,9 +308,10 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
    `main@b7676c27d07adc5eca1f0c397217780367481e9c`；两条等价 Dependabot 提交历史均保留，
    最终树一致，`main` Quality Gates `30235439229` 同样为 `458 passed, 1 warning`。
 10. M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 为 `in_progress` 且只覆盖
-    T087–T126。固定文档基线、T087–T097 RED 与 T098–T103 已完成；T103 自有门禁为
-    `66 passed, 1 deselected`。当前下一项为 T104；先用不经过 T105 采用服务或 T107 路由的
-    直接测试完成只读聚合、AI Actor、租约恢复和预览维护，再进入后续任务。
+    T087–T126。固定文档基线、T087–T097 RED 与 T098–T104 已完成；T104
+    `dev@a75e05576f8dfae98b199ea3411f29bc7f76466a` 自有门禁为 `10 passed`。当前下一项为
+    T105；先用不经过 T107 路由的直接服务测试完成重新鉴权、双哈希、版本 CAS、正文合并和
+    单一快照事务，再进入 T106。
 
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
