@@ -5,10 +5,13 @@ import json
 from datetime import date
 from typing import Any
 from urllib.parse import urlencode
+from uuid import uuid4
 
 from nicegui import ui
 
 from apps.web.api_client import plan_api_request, same_origin_api_request
+from apps.web.components.ai_preview import AI_SECTION_ACTIONS, preview_title
+from apps.web.components.job_status import ai_job_status, poll_interval_ms, should_poll
 from apps.web.components.plan_editor import AUTOSAVE_DELAY_SECONDS, SECTION_LABELS
 from apps.web.components.save_status import SaveState, save_status
 
@@ -168,9 +171,13 @@ def build_plan_editor_page(plan_id: str) -> None:
     warnings = ui.column()
     state_label = ui.label(save_status("idle").text).props('role="status" aria-live="polite"')
     fields: dict[str, Any] = {}
+    ai_containers: dict[str, Any] = {}
     current: dict[str, Any] = {}
     debounce_generation = [0]
     pending_autosave: list[asyncio.Task[None] | None] = [None]
+    polling_jobs: set[str] = set()
+    polling_tasks: set[asyncio.Task[None]] = set()
+    loaded = asyncio.Event()
 
     def set_state(state: SaveState) -> None:
         value = save_status(state)
@@ -202,10 +209,10 @@ def build_plan_editor_page(plan_id: str) -> None:
         archive_button.set_visibility(can_archive and not archived)
         unarchive_button.set_visibility(can_archive and archived)
 
-    async def save(*, explicit: bool) -> None:
+    async def save(*, explicit: bool) -> bool:
         content = editor_content()
         if content is None or not current:
-            return
+            return False
         set_state("saving")
         result = await plan_api_request(
             f"/{plan_id}/{'save' if explicit else 'autosave'}",
@@ -227,10 +234,12 @@ def build_plan_editor_page(plan_id: str) -> None:
             current.update(body)
             apply_capabilities()
             set_state("saved")
+            return True
         elif result.get("status") == 409:
             set_state("conflict")
         else:
             set_state("failed")
+        return False
 
     async def autosave_after_delay(generation: int) -> None:
         try:
@@ -254,7 +263,143 @@ def build_plan_editor_page(plan_id: str) -> None:
             .classes("w-full")
             .on("input", changed)
         )
+        ai_containers[key] = ui.column().classes("w-full")
     state_label.props('id="plan-save-status"')
+    teacher_context = ui.input("本次生成补充").props('aria-label="本次生成补充"').classes("w-full")
+    batch_container = ui.column().classes("w-full")
+
+    def apply_plan_body(body: dict[str, object]) -> None:
+        current.update(body)
+        content = body.get("content", {})
+        if isinstance(content, dict):
+            for key, field in fields.items():
+                field.value = json.dumps(
+                    content.get(key, {}),
+                    ensure_ascii=False,
+                    indent=2,
+                )
+        apply_capabilities()
+
+    async def render_job(job: dict[str, object]) -> None:
+        job_id = str(job.get("id", ""))
+        target_section = str(job.get("target_section") or "")
+        container = ai_containers.get(target_section, batch_container)
+        container.clear()
+        status_view = ai_job_status(job)
+        with container:
+            ui.label(status_view.message).props('role="status" aria-live="polite"')
+        if not job_id:
+            return
+        if status_view.can_decide:
+            preview = await plan_api_request(f"/jobs/{job_id}/preview")
+            preview_body = preview.get("body", {})
+            if not preview.get("ok") or not isinstance(preview_body, dict):
+                return
+            with container:
+                ui.label(preview_title(target_section)).classes("text-subtitle2")
+                ui.label(
+                    json.dumps(
+                        preview_body.get("output_content", {}),
+                        ensure_ascii=False,
+                        indent=2,
+                    )
+                ).classes("whitespace-pre-wrap")
+
+                async def adopt() -> None:
+                    result = await plan_api_request(
+                        f"/jobs/{job_id}/adopt",
+                        method="POST",
+                        payload={"expected_version": current["version"]},
+                    )
+                    body = result.get("body", {})
+                    if result.get("ok") and isinstance(body, dict):
+                        apply_plan_body(body)
+                        await render_job(job | {"status": "adopted"})
+                        set_state("saved")
+                    elif result.get("status") == 409:
+                        set_state("conflict")
+                    else:
+                        set_state("failed")
+
+                async def reject() -> None:
+                    result = await plan_api_request(
+                        f"/jobs/{job_id}/reject",
+                        method="POST",
+                    )
+                    body = result.get("body", {})
+                    if result.get("ok") and isinstance(body, dict):
+                        await render_job(body)
+                    else:
+                        set_state("failed")
+
+                adopt_button = (
+                    ui.button("采用此预览", on_click=adopt)
+                    .props('aria-label="采用此预览"')
+                    .classes("min-h-[44px]")
+                )
+                adopt_button.on("keydown.enter", adopt)
+                reject_button = (
+                    ui.button("保留原内容", on_click=reject)
+                    .props('aria-label="保留原内容"')
+                    .classes("min-h-[44px]")
+                )
+                reject_button.on("keydown.enter", reject)
+        elif status_view.can_retry:
+            with container:
+
+                async def retry() -> None:
+                    result = await plan_api_request(
+                        f"/jobs/{job_id}/retry",
+                        method="POST",
+                        request_headers={"Idempotency-Key": str(uuid4())},
+                    )
+                    body = result.get("body", {})
+                    accepted = body.get("job", {}) if isinstance(body, dict) else {}
+                    if result.get("ok") and isinstance(accepted, dict):
+                        await render_job(accepted)
+                    else:
+                        set_state("failed")
+
+                retry_button = (
+                    ui.button("重试失败栏目", on_click=retry)
+                    .props('aria-label="重试失败栏目"')
+                    .classes("min-h-[44px]")
+                )
+                retry_button.on("keydown.enter", retry)
+        elif should_poll(str(job.get("status", ""))) and job_id not in polling_jobs:
+            polling_jobs.add(job_id)
+            task = asyncio.create_task(poll_job(job_id))
+            polling_tasks.add(task)
+            task.add_done_callback(polling_tasks.discard)
+
+    async def poll_job(job_id: str) -> None:
+        try:
+            for _attempt in range(120):
+                await asyncio.sleep(poll_interval_ms("pending") / 1000)
+                result = await plan_api_request(f"/jobs/{job_id}")
+                body = result.get("body", {})
+                if not result.get("ok") or not isinstance(body, dict):
+                    return
+                await render_job(body)
+                if not should_poll(str(body.get("status", ""))):
+                    return
+        finally:
+            polling_jobs.discard(job_id)
+
+    async def load_jobs() -> None:
+        result = await plan_api_request(f"/{plan_id}/jobs")
+        body = result.get("body", {})
+        if not result.get("ok") or not isinstance(body, dict):
+            return
+        for item in body.get("items", []):
+            if not isinstance(item, dict):
+                continue
+            if item.get("job_type") == "ai.batch":
+                for child in item.get("children", []):
+                    if isinstance(child, dict):
+                        await render_job(child)
+            else:
+                await render_job(item)
 
     async def load() -> None:
         result = await plan_api_request(f"/{plan_id}")
@@ -276,10 +421,7 @@ def build_plan_editor_page(plan_id: str) -> None:
                 if body.get(key)
             )
         )
-        content = body.get("content", {})
-        if isinstance(content, dict):
-            for key, field in fields.items():
-                field.value = json.dumps(content.get(key, {}), ensure_ascii=False, indent=2)
+        apply_plan_body(body)
         warnings.clear()
         with warnings:
             for warning in body.get("soft_warnings", []):
@@ -287,9 +429,84 @@ def build_plan_editor_page(plan_id: str) -> None:
                     ui.label(str(warning.get("message", ""))).props('role="alert"')
         apply_capabilities()
         set_state("saved")
+        loaded.set()
+        await load_jobs()
 
     async def explicit_save() -> None:
         await save(explicit=True)
+
+    async def create_generation(task_code: str) -> None:
+        await loaded.wait()
+        if not await save(explicit=False):
+            return
+        result = await plan_api_request(
+            f"/{plan_id}/ai/generations",
+            method="POST",
+            payload={
+                "task_code": task_code,
+                "expected_version": current["version"],
+                "teacher_context": str(teacher_context.value or ""),
+            },
+            request_headers={"Idempotency-Key": str(uuid4())},
+        )
+        body = result.get("body", {})
+        job = body.get("job", {}) if isinstance(body, dict) else {}
+        if result.get("ok") and isinstance(job, dict):
+            await render_job(job)
+        elif result.get("status") == 409:
+            set_state("conflict")
+        else:
+            set_state("failed")
+
+    async def create_batch() -> None:
+        await loaded.wait()
+        if not await save(explicit=False):
+            return
+        result = await plan_api_request(
+            f"/{plan_id}/ai/batch",
+            method="POST",
+            payload={
+                "expected_version": current["version"],
+                "teacher_context": str(teacher_context.value or ""),
+            },
+            request_headers={"Idempotency-Key": str(uuid4())},
+        )
+        body = result.get("body", {})
+        job = body.get("job", {}) if isinstance(body, dict) else {}
+        if result.get("ok") and isinstance(job, dict):
+            await render_job(job)
+            for child in job.get("children", []):
+                if isinstance(child, dict):
+                    await render_job(child)
+        else:
+            set_state("failed")
+
+    async def create_reflection() -> None:
+        await loaded.wait()
+        content = editor_content()
+        if content is None or not current:
+            return
+        result = await plan_api_request(
+            f"/{plan_id}/ai/generations",
+            method="POST",
+            payload={
+                "task_code": "daily_reflection",
+                "expected_version": current["version"],
+                "content": content,
+            },
+            request_headers={"Idempotency-Key": str(uuid4())},
+        )
+        body = result.get("body", {})
+        job = body.get("job", {}) if isinstance(body, dict) else {}
+        if result.get("ok") and isinstance(job, dict):
+            version = job.get("requested_resource_version")
+            if isinstance(version, int):
+                current["version"] = version
+            await render_job(job)
+        elif result.get("status") == 409:
+            set_state("conflict")
+        else:
+            set_state("failed")
 
     async def set_archived(*, archived: bool) -> None:
         if not current:
@@ -353,6 +570,33 @@ def build_plan_editor_page(plan_id: str) -> None:
                 ui.button("恢复此版本", on_click=restore).classes("min-h-[44px]")
 
     save_button = ui.button("保存", on_click=explicit_save).classes("min-h-[44px]")
+
+    def generation_handler(task_code: str) -> Any:
+        async def generate() -> None:
+            await create_generation(task_code)
+
+        return generate
+
+    for action in AI_SECTION_ACTIONS:
+        generate = generation_handler(action.task_code)
+        button = (
+            ui.button(action.button_label, on_click=generate)
+            .props(f'aria-label="{action.button_label}"')
+            .classes("min-h-[44px]")
+        )
+        button.on("keydown.enter", generate)
+    batch_button = (
+        ui.button("一键生成四栏", on_click=create_batch)
+        .props('aria-label="一键生成四栏"')
+        .classes("min-h-[44px]")
+    )
+    batch_button.on("keydown.enter", create_batch)
+    reflection_button = (
+        ui.button("生成一日活动反思", on_click=create_reflection)
+        .props('aria-label="生成一日活动反思"')
+        .classes("min-h-[44px]")
+    )
+    reflection_button.on("keydown.enter", create_reflection)
     archive_button = ui.button(
         "归档",
         on_click=lambda: set_archived(archived=True),

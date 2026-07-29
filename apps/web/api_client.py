@@ -144,13 +144,15 @@ async def plan_api_request(
     *,
     method: str = "GET",
     payload: dict[str, object] | None = None,
+    request_headers: dict[str, str] | None = None,
 ) -> dict[str, object]:
-    """只通过同源 BFF 访问教案端点。"""
+    """只通过同源 BFF 访问教案及其任务端点。"""
 
     return await same_origin_api_request(
-        f"{PLANS_API_PATH}{suffix}",
+        f"/api/v1{suffix}" if suffix.startswith("/jobs/") else f"{PLANS_API_PATH}{suffix}",
         method=method,
         payload=payload,
+        request_headers=request_headers,
     )
 
 
