@@ -18,6 +18,7 @@ from packages.backend.lesson_plans.ai_adoption import AiAdoptionService
 from packages.backend.lesson_plans.ai_generation import AiGenerationService
 from packages.backend.lesson_plans.reflection import ReflectionGenerationService
 from packages.backend.lesson_plans.service import LessonPlanService
+from packages.backend.lesson_plans.sources import LessonPlanSourceService
 from packages.backend.prompts.service import PromptService
 from packages.backend.settings.ai_models import AiModelService
 from packages.backend.settings.service import SettingsService
@@ -136,6 +137,16 @@ def lesson_plan_service() -> LessonPlanService:
 
 
 LessonPlanServiceDependency = Annotated[LessonPlanService, Depends(lesson_plan_service)]
+
+
+def lesson_plan_source_service() -> LessonPlanSourceService:
+    return LessonPlanSourceService.from_environment()
+
+
+LessonPlanSourceServiceDependency = Annotated[
+    LessonPlanSourceService,
+    Depends(lesson_plan_source_service),
+]
 
 
 def ai_generation_service() -> AiGenerationService:

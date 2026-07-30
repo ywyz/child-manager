@@ -85,15 +85,15 @@ def retry_ai_job(
     retry: AiRetryServiceDependency,
     query: JobQueryServiceDependency,
     idempotency_key: Annotated[
-        str,
+        str | None,
         Header(alias="Idempotency-Key", min_length=1, max_length=200),
-    ],
+    ] = None,
 ) -> JobAccepted:
     require_csrf(request)
     accepted = retry.retry(
         session,
         job_id,
-        idempotency_key=idempotency_key,
+        idempotency_key=idempotency_key or str(_request_id(request)),
         request_id=_request_id(request),
     )
     return JobAccepted(

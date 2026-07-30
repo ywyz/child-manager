@@ -823,7 +823,7 @@ class AiJobRunner:
                     retry_after_seconds=exc.retry_after_seconds,
                     elapsed_ms=elapsed_ms(),
                 )
-            except ValidationError:
+            except ValidationError, ValueError:
                 self._handle_error(
                     kindergarten_id,
                     job_id,

@@ -4,24 +4,31 @@ from datetime import date
 from typing import Annotated, cast
 from uuid import UUID
 
-from fastapi import APIRouter, Header, Query, Request, Response, status
+from fastapi import APIRouter, File, Header, Query, Request, Response, UploadFile, status
 
 from apps.api.dependencies import (
     AiGenerationServiceDependency,
     CurrentSessionDependency,
     JobQueryServiceDependency,
     LessonPlanServiceDependency,
+    LessonPlanSourceServiceDependency,
     ReflectionGenerationServiceDependency,
 )
 from apps.api.routers.auth import require_csrf
+from packages.backend.integrations.files.docx import ARCHIVE_LIMIT_BYTES
 from packages.backend.lesson_plans.repository import SnapshotRecord
 from packages.backend.lesson_plans.schemas import readable_content
 from packages.backend.lesson_plans.service import PlanView
+from packages.backend.lesson_plans.sources import LessonPlanSourceRecord
 from packages.contracts.jobs import JobAccepted, JobPage
 from packages.contracts.lesson_plans import (
     AiBatchRequest,
     AiGenerationRequest,
     Author,
+    LessonPlanSource,
+    LessonPlanSourcePage,
+    LessonPlanSourceTextWrite,
+    LessonPlanSourceType,
     Plan,
     PlanOpenRequest,
     PlanPage,
@@ -86,6 +93,19 @@ def _snapshot(record: SnapshotRecord) -> PlanSnapshot:
     )
 
 
+def _source(record: LessonPlanSourceRecord) -> LessonPlanSource:
+    return LessonPlanSource(
+        id=record.id,
+        plan_id=record.plan_id,
+        source_type=cast(LessonPlanSourceType, record.source_type),
+        original_filename=record.original_filename,
+        source_sha256=record.source_sha256,
+        extracted_character_count=record.extracted_character_count,
+        uploaded_by=record.uploaded_by,
+        created_at=record.created_at,
+    )
+
+
 @router.get("", response_model=PlanPage)
 def list_plans(
     session: CurrentSessionDependency,
@@ -146,6 +166,71 @@ def get_plan(
 
 def _request_id(request: Request) -> UUID:
     return UUID(str(request.state.request_id))
+
+
+@router.get("/{plan_id}/group-activity-sources", response_model=LessonPlanSourcePage)
+def list_group_activity_sources(
+    plan_id: UUID,
+    session: CurrentSessionDependency,
+    service: LessonPlanSourceServiceDependency,
+    page: Annotated[int, Query(ge=1)] = 1,
+    page_size: Annotated[int, Query(ge=1, le=100)] = 20,
+) -> LessonPlanSourcePage:
+    records, total = service.list_history(
+        session,
+        plan_id=plan_id,
+        page=page,
+        page_size=page_size,
+    )
+    return LessonPlanSourcePage(
+        items=[_source(record) for record in records],
+        page=page,
+        page_size=page_size,
+        total=total,
+    )
+
+
+@router.post(
+    "/{plan_id}/group-activity-sources/text",
+    response_model=LessonPlanSource,
+    status_code=status.HTTP_201_CREATED,
+)
+def confirm_group_activity_text_source(
+    plan_id: UUID,
+    body: LessonPlanSourceTextWrite,
+    request: Request,
+    session: CurrentSessionDependency,
+    service: LessonPlanSourceServiceDependency,
+) -> LessonPlanSource:
+    require_csrf(request)
+    return _source(service.confirm_text(session, plan_id=plan_id, text=body.text))
+
+
+@router.post(
+    "/{plan_id}/group-activity-sources/docx",
+    response_model=LessonPlanSource,
+    status_code=status.HTTP_201_CREATED,
+)
+async def confirm_group_activity_docx_source(
+    plan_id: UUID,
+    file: Annotated[UploadFile, File()],
+    request: Request,
+    session: CurrentSessionDependency,
+    service: LessonPlanSourceServiceDependency,
+) -> LessonPlanSource:
+    require_csrf(request)
+    try:
+        payload = await file.read(ARCHIVE_LIMIT_BYTES + 1)
+    finally:
+        await file.close()
+    record = service.confirm_docx(
+        session,
+        plan_id=plan_id,
+        filename=file.filename or "",
+        content_type=file.content_type or "",
+        payload=payload,
+    )
+    return _source(record)
 
 
 @router.post(

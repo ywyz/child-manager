@@ -216,6 +216,26 @@ class JobRepository:
         )
         return [record for row in result.fetchall() if (record := _ai_job(row)) is not None]
 
+    def has_adopted_group_activity_split(
+        self,
+        kindergarten_id: UUID,
+        plan_id: UUID,
+    ) -> bool:
+        row = self.connection.execute(
+            """SELECT EXISTS(
+                SELECT 1 FROM background_jobs AS job
+                JOIN ai_generation_results AS result
+                  ON result.kindergarten_id=job.kindergarten_id
+                 AND result.job_id=job.id
+                WHERE job.kindergarten_id=%s AND job.plan_id=%s
+                  AND job.job_type='ai.group_activity_split'
+                  AND job.execution_status='adopted'
+                  AND result.adopted_at IS NOT NULL
+            )""",
+            (kindergarten_id, plan_id),
+        ).fetchone()
+        return bool(row and row[0])
+
     def lock_idempotency(
         self,
         kindergarten_id: UUID,

@@ -87,6 +87,7 @@ AiTaskCode = Literal[
     "afternoon_outdoor_game",
     "daily_reflection",
 ]
+LessonPlanSourceType = Literal["pasted_text", "docx"]
 
 
 class MorningActivity(ContractModel):
@@ -425,6 +426,30 @@ class PlanSnapshotPage(ContractModel):
     page: PageNumber
     page_size: PageSize
     total: Total
+
+
+class LessonPlanSource(ContractModel):
+    """已确认集体活动来源的脱敏元数据，正文和附件不得跨服务返回。"""
+
+    id: UUID
+    plan_id: UUID
+    source_type: LessonPlanSourceType
+    original_filename: Annotated[str | None, Field(max_length=255)]
+    source_sha256: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
+    extracted_character_count: Annotated[int, Field(ge=1, le=200000)]
+    uploaded_by: UUID
+    created_at: datetime
+
+
+class LessonPlanSourcePage(ContractModel):
+    items: list[LessonPlanSource] = Field(default_factory=list)
+    page: PageNumber
+    page_size: PageSize
+    total: Total
+
+
+class LessonPlanSourceTextWrite(ContractModel):
+    text: Annotated[str, Field(min_length=1, max_length=200_000)]
 
 
 class LessonPlanReference(ContractModel):

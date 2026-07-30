@@ -276,5 +276,12 @@
   "274": "Unit Tests Module",
   "275": "Settings Unit Tests",
   "276": "Word Module",
-  "277": "Worker Tests Module"
+  "277": "Worker Tests Module",
+  "278": "test_ai_adoption_service.py",
+  "279": "schemas.py",
+  "280": "test_group_activity_contract.py",
+  "281": "test_0009_group_activity_sources.py",
+  "282": "lesson_plans/calendar.py",
+  "283": "test_0001_identity.py",
+  "284": "files/__init__.py"
 }

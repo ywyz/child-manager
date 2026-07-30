@@ -244,12 +244,13 @@ def _insert_other_tenant_plan(
     return kindergarten_id, plan_id
 
 
-def test_0008_follows_ai_prompts_jobs_and_is_the_only_head() -> None:
+def test_0008_follows_ai_prompts_jobs_and_precedes_current_head() -> None:
     script = ScriptDirectory.from_config(Config("alembic.ini"))
     revisions = {revision.revision: revision.down_revision for revision in script.walk_revisions()}
 
     assert revisions.get(REVISION) == "0007_ai_prompts_jobs"
-    assert script.get_heads() == [REVISION]
+    assert revisions.get("0009_group_activity_sources") == REVISION
+    assert script.get_heads() == ["0009_group_activity_sources"]
 
 
 def test_0008_creates_the_frozen_result_shape(

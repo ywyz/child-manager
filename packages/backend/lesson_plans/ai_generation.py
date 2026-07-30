@@ -27,8 +27,10 @@ from packages.backend.lesson_plans.ai_fingerprints import (
     section_sha256,
 )
 from packages.backend.lesson_plans.ai_schemas import ai_result_model
+from packages.backend.lesson_plans.group_activity_ai import GroupActivityJobService
 from packages.backend.lesson_plans.repository import LessonPlanRepository, PlanRecord
 from packages.backend.lesson_plans.service import LessonPlanService
+from packages.backend.lesson_plans.sources import LessonPlanSourceRepository
 from packages.backend.prompts.catalog import validate_prompt_variables
 from packages.backend.prompts.repository import (
     PromptDefinitionRecord,
@@ -116,7 +118,22 @@ _BATCH_TASKS = (
         "outdoor",
     ),
 )
-_TASKS = {spec.task_code: spec for spec in _BATCH_TASKS}
+
+_GROUP_ACTIVITY_TASKS = (
+    _TaskSpec(
+        "group_activity_split",
+        "ai.group_activity_split",
+        "group_activity",
+        "daily_activity_plan.group_activity_split",
+    ),
+    _TaskSpec(
+        "group_activity_add_step",
+        "ai.group_activity_add_step",
+        "group_activity",
+        "daily_activity_plan.group_activity_add_step",
+    ),
+)
+_TASKS = {spec.task_code: spec for spec in _BATCH_TASKS + _GROUP_ACTIVITY_TASKS}
 
 
 def _native_url(value: str) -> str:
@@ -261,6 +278,8 @@ class AiGenerationService:
         prompts: PromptRepository,
         profiles: AiModelProfileRepository,
         settings: SettingsRepository,
+        sources: LessonPlanSourceRepository | None = None,
+        source_id: UUID | None = None,
     ) -> _FrozenTask | None:
         variables: dict[str, Any] = {
             "plan_date": plan.plan_date,
@@ -271,6 +290,46 @@ class AiGenerationService:
             "age_group_name": plan.age_group_name_snapshot,
             "teacher_context": teacher_context,
         }
+        if spec.task_code == "group_activity_split":
+            if source_id is None or sources is None:
+                raise IdentityError(
+                    422,
+                    "group_activity.source_required",
+                    "请先确认当前教案的集体活动来源。",
+                )
+            try:
+                source_text = sources.get_confirmed_text(
+                    kindergarten_id=kindergarten_id,
+                    plan_id=plan.id,
+                    source_id=source_id,
+                )
+            except LookupError as exc:
+                raise IdentityError(
+                    422,
+                    "group_activity.source_required",
+                    "请先确认当前教案的集体活动来源。",
+                ) from exc
+            variables = {
+                "source_text": source_text,
+                "age_group_name": plan.age_group_name_snapshot,
+                "teacher_context": teacher_context,
+            }
+        elif spec.task_code == "group_activity_add_step":
+            try:
+                group_activity = GroupActivityJobService.require_complete_saved_group_activity(
+                    content["group_activity"]
+                )
+            except ValueError as exc:
+                raise IdentityError(
+                    409,
+                    "group_activity.split_not_adopted",
+                    "请先采用并保存集体活动拆分结果。",
+                ) from exc
+            variables = {
+                "group_activity": group_activity,
+                "age_group_name": plan.age_group_name_snapshot,
+                "teacher_context": teacher_context,
+            }
         if spec.area_type is not None:
             areas = AiGenerationService._active_areas(
                 settings,
@@ -510,6 +569,15 @@ class AiGenerationService:
                     body.expected_version,
                 )
                 content = self._content(plan)
+                if (
+                    spec.task_code == "group_activity_add_step"
+                    and not jobs.has_adopted_group_activity_split(kindergarten_id, plan.id)
+                ):
+                    raise IdentityError(
+                        409,
+                        "group_activity.split_not_adopted",
+                        "请先采用并保存集体活动拆分结果。",
+                    )
                 prompts = PromptRepository(connection)
                 prompts.ensure_defaults(kindergarten_id)
                 teacher_context = cast(str, body.teacher_context)
@@ -522,6 +590,8 @@ class AiGenerationService:
                     prompts=prompts,
                     profiles=AiModelProfileRepository(connection),
                     settings=SettingsRepository(connection),
+                    sources=LessonPlanSourceRepository(connection),
+                    source_id=body.source_id,
                 )
                 if frozen is None:
                     raise IdentityError(

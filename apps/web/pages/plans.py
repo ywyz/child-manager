@@ -205,6 +205,7 @@ def build_plan_editor_page(plan_id: str) -> None:
         can_archive = "plans:archive" in capabilities
         for field in fields.values():
             field.set_enabled(editable)
+        source_editor.set_enabled(editable)
         save_button.set_enabled(editable)
         archive_button.set_visibility(can_archive and not archived)
         unarchive_button.set_visibility(can_archive and archived)
@@ -267,6 +268,84 @@ def build_plan_editor_page(plan_id: str) -> None:
     state_label.props('id="plan-save-status"')
     teacher_context = ui.input("本次生成补充").props('aria-label="本次生成补充"').classes("w-full")
     batch_container = ui.column().classes("w-full")
+    source_editor = ui.textarea("集体活动原文").props('aria-label="集体活动原文"').classes("w-full")
+    group_activity_controls = ui.column().classes("w-full")
+    add_step_button: list[Any | None] = [None]
+
+    def group_activity_content() -> dict[str, Any]:
+        content = current.get("content", {})
+        group_activity = content.get("group_activity", {}) if isinstance(content, dict) else {}
+        return group_activity if isinstance(group_activity, dict) else {}
+
+    def group_activity_is_complete(group_activity: dict[str, Any]) -> bool:
+        process = group_activity.get("process")
+        return (
+            all(
+                group_activity.get(key)
+                for key in ("theme", "objectives", "preparation", "focus", "difficulty")
+            )
+            and isinstance(process, list)
+            and bool(process)
+            and all(
+                isinstance(step, dict)
+                and bool(step.get("heading"))
+                and isinstance(step.get("lines"), list)
+                and bool(step["lines"])
+                for step in process
+            )
+        )
+
+    def group_activity_has_ai_added(group_activity: dict[str, Any]) -> bool:
+        process = group_activity.get("process", [])
+        return isinstance(process, list) and any(
+            isinstance(step, dict) and step.get("is_ai_added") is True for step in process
+        )
+
+    def refresh_group_activity_controls() -> None:
+        group_activity = group_activity_content()
+        complete = group_activity_is_complete(group_activity)
+        has_ai_added = group_activity_has_ai_added(group_activity)
+        group_activity_controls.clear()
+        with group_activity_controls:
+            if has_ai_added:
+                ui.label("AI 新增环节")
+
+                async def clear_ai_added_marker() -> None:
+                    content = editor_content()
+                    if content is None:
+                        return
+                    target = content.get("group_activity")
+                    if not isinstance(target, dict):
+                        return
+                    process = target.get("process")
+                    if not isinstance(process, list):
+                        return
+                    target["process"] = [
+                        {**step, "is_ai_added": False}
+                        if isinstance(step, dict) and step.get("is_ai_added") is True
+                        else step
+                        for step in process
+                    ]
+                    fields["group_activity"].value = json.dumps(
+                        target, ensure_ascii=False, indent=2
+                    )
+                    if await save(explicit=False):
+                        refresh_group_activity_controls()
+
+                button = ui.button("取消 AI 新增标记", on_click=clear_ai_added_marker).classes(
+                    "min-h-[44px]"
+                )
+                button.on("keydown.enter", clear_ai_added_marker)
+            elif complete:
+                ui.label("可新增适龄环节")
+            else:
+                ui.label("尚未新增适龄环节")
+        editable = (
+            "plans:edit" in current.get("capabilities", []) and current.get("archived_at") is None
+        )
+        button = add_step_button[0]
+        if button is not None:
+            button.set_enabled(editable and complete and not has_ai_added)
 
     def apply_plan_body(body: dict[str, object]) -> None:
         current.update(body)
@@ -279,15 +358,19 @@ def build_plan_editor_page(plan_id: str) -> None:
                     indent=2,
                 )
         apply_capabilities()
+        refresh_group_activity_controls()
 
     async def render_job(job: dict[str, object]) -> None:
         job_id = str(job.get("id", ""))
         target_section = str(job.get("target_section") or "")
+        is_group_activity = target_section == "group_activity"
         container = ai_containers.get(target_section, batch_container)
         container.clear()
         status_view = ai_job_status(job)
         with container:
             ui.label(status_view.message).props('role="status" aria-live="polite"')
+            if is_group_activity and str(job.get("status")) == "failed":
+                ui.label("新增环节失败，已采用的拆分结果未变化").props('role="alert"')
         if not job_id:
             return
         if status_view.can_decide:
@@ -295,11 +378,17 @@ def build_plan_editor_page(plan_id: str) -> None:
             preview_body = preview.get("body", {})
             if not preview.get("ok") or not isinstance(preview_body, dict):
                 return
+            output_content = preview_body.get("output_content", {})
+            is_group_split = (
+                is_group_activity and isinstance(output_content, dict) and "theme" in output_content
+            )
+            preview_label = "拆分预览" if is_group_split else preview_title(target_section)
+            adopt_label = "采用拆分结果" if is_group_split else "采用此预览"
             with container:
-                ui.label(preview_title(target_section)).classes("text-subtitle2")
+                ui.label(preview_label).classes("text-subtitle2")
                 ui.label(
                     json.dumps(
-                        preview_body.get("output_content", {}),
+                        output_content,
                         ensure_ascii=False,
                         indent=2,
                     )
@@ -333,8 +422,8 @@ def build_plan_editor_page(plan_id: str) -> None:
                         set_state("failed")
 
                 adopt_button = (
-                    ui.button("采用此预览", on_click=adopt)
-                    .props('aria-label="采用此预览"')
+                    ui.button(adopt_label, on_click=adopt)
+                    .props(f'aria-label="{adopt_label}"')
                     .classes("min-h-[44px]")
                 )
                 adopt_button.on("keydown.enter", adopt)
@@ -345,6 +434,7 @@ def build_plan_editor_page(plan_id: str) -> None:
                 )
                 reject_button.on("keydown.enter", reject)
         elif status_view.can_retry:
+            retry_label = "重试新增适龄环节" if is_group_activity else "重试失败栏目"
             with container:
 
                 async def retry() -> None:
@@ -361,8 +451,8 @@ def build_plan_editor_page(plan_id: str) -> None:
                         set_state("failed")
 
                 retry_button = (
-                    ui.button("重试失败栏目", on_click=retry)
-                    .props('aria-label="重试失败栏目"')
+                    ui.button(retry_label, on_click=retry)
+                    .props(f'aria-label="{retry_label}"')
                     .classes("min-h-[44px]")
                 )
                 retry_button.on("keydown.enter", retry)
@@ -435,18 +525,21 @@ def build_plan_editor_page(plan_id: str) -> None:
     async def explicit_save() -> None:
         await save(explicit=True)
 
-    async def create_generation(task_code: str) -> None:
+    async def create_generation(task_code: str, *, source_id: str | None = None) -> None:
         await loaded.wait()
         if not await save(explicit=False):
             return
+        payload: dict[str, object] = {
+            "task_code": task_code,
+            "expected_version": current["version"],
+            "teacher_context": str(teacher_context.value or ""),
+        }
+        if source_id is not None:
+            payload["source_id"] = source_id
         result = await plan_api_request(
             f"/{plan_id}/ai/generations",
             method="POST",
-            payload={
-                "task_code": task_code,
-                "expected_version": current["version"],
-                "teacher_context": str(teacher_context.value or ""),
-            },
+            payload=payload,
             request_headers={"Idempotency-Key": str(uuid4())},
         )
         body = result.get("body", {})
@@ -457,6 +550,31 @@ def build_plan_editor_page(plan_id: str) -> None:
             set_state("conflict")
         else:
             set_state("failed")
+
+    async def confirm_source_and_split() -> None:
+        await loaded.wait()
+        source_text = str(source_editor.value or "").strip()
+        if not source_text:
+            set_state("failed")
+            return
+        result = await plan_api_request(
+            f"/{plan_id}/group-activity-sources/text",
+            method="POST",
+            payload={"text": source_text},
+        )
+        body = result.get("body", {})
+        source_id = body.get("id") if isinstance(body, dict) else None
+        if not result.get("ok") or not source_id:
+            set_state("failed")
+            return
+        await create_generation("group_activity_split", source_id=str(source_id))
+
+    async def create_add_step() -> None:
+        await loaded.wait()
+        if not group_activity_is_complete(group_activity_content()):
+            set_state("failed")
+            return
+        await create_generation("group_activity_add_step")
 
     async def create_batch() -> None:
         await loaded.wait()
@@ -570,6 +688,14 @@ def build_plan_editor_page(plan_id: str) -> None:
                 ui.button("恢复此版本", on_click=restore).classes("min-h-[44px]")
 
     save_button = ui.button("保存", on_click=explicit_save).classes("min-h-[44px]")
+    source_confirm_button = ui.button(
+        "确认集体活动原文", on_click=confirm_source_and_split
+    ).classes("min-h-[44px]")
+    source_confirm_button.on("keydown.enter", confirm_source_and_split)
+    add_button = ui.button("新增适龄环节", on_click=create_add_step).classes("min-h-[44px]")
+    add_button.set_enabled(False)
+    add_button.on("keydown.enter", create_add_step)
+    add_step_button[0] = add_button
 
     def generation_handler(task_code: str) -> Any:
         async def generate() -> None:
