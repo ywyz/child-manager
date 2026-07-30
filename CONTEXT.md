@@ -271,7 +271,7 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
 | `main` | 稳定版本与发布基线 | `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已正常 merge 最终 M4 `dev`，最终树与 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 一致；Quality Gates `30235439229` 为 458 项通过 | 保持稳定；等待 M6 完成独立验收后再接收新结果 |
-| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 已固定不可移动 `docs` 基线；本次回写 US4 T087–T110 完成状态与 T111 交接门禁 | 提交新的不可移动状态基线后更新 Issue #11，并同步到 `dev` |
+| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 已固定不可移动 `docs` 基线；本次回写 US4 T087–T110 完成状态与 T111 交接门禁 | 保持 T111 基线；其直接门禁通过前不进入 T112 |
 | `dev` | Codex 唯一实现与集成 | M6 为 `in_progress`；US4 T087–T110 已完成，最终实现与图谱提交为 `dev@cda96f2e60be844801f200490b41df4dc0b77bce`，独立门禁为 `126 passed` | 实施 US5 T111 确定性 DOCX/ZIP 测试工厂；其直接门禁通过前不进入 T112 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
