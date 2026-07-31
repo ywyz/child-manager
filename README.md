@@ -27,7 +27,7 @@ M5 [Issue #9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed`
 Quality Gates `30235090100`（458 项通过），并正常 merge 到
 `main@b7676c27d07adc5eca1f0c397217780367481e9c`；`main` Quality Gates `30235439229`
 同样通过。M4、M5 均为 `complete`；M6
-[Issue #11](https://github.com/ywyz/child-manager/issues/11) 为 `in_progress`，覆盖
+[Issue #11](https://github.com/ywyz/child-manager/issues/11) 已完成并覆盖
 T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
 `dev@9932aa928132152cabedb2e273980f60cdd51f6c`；US4 独立门禁为 `126 passed`，完整测试为
 `610 passed, 1 warning`。US5 T111–T126 已完成，T126 US5 独立验收已完成；实现提交
@@ -37,7 +37,8 @@ headSha 通过完整检查，设置页专项为 49 项收集、49 项通过，US
 诊断无缺失、悬空、自环、重复或折叠边。T126 已勾选；固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
 `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
-PASS。`main` 集成已获授权，正常 merge 后回填最终 `main` SHA。
+PASS；dev 已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，M6
+完成证据已回填 Issue #11，后续门禁为 M7。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 
