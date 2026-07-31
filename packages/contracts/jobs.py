@@ -159,6 +159,7 @@ class JobPage(ContractModel):
     page: Annotated[int, Field(ge=1)]
     page_size: Annotated[int, Field(ge=1, le=100)]
     total: Annotated[int, Field(ge=0)]
+    has_adopted_group_activity_split: bool = False
 
 
 class JobPreview(ContractModel):

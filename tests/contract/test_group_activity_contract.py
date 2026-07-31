@@ -43,6 +43,25 @@ def test_source_metadata_is_closed_and_never_exposes_original_text_or_attachment
         source_type(**(_source_payload() | {"attachment": "不得保存附件"}))
 
 
+def test_docx_extraction_preview_is_separate_from_confirmed_source_metadata() -> None:
+    preview_type = _contract("LessonPlanSourceDocxPreview")
+    preview = preview_type(
+        original_filename="教师原始教案.docx",
+        extracted_text="仅在确认前展示的提取文本。",
+    )
+
+    assert preview.model_dump() == {
+        "original_filename": "教师原始教案.docx",
+        "extracted_text": "仅在确认前展示的提取文本。",
+    }
+    with pytest.raises(ValidationError):
+        preview_type(
+            original_filename="教师原始教案.docx",
+            extracted_text="仅在确认前展示的提取文本。",
+            attachment="不得返回附件",
+        )
+
+
 def test_source_page_is_closed_and_preserves_pagination_metadata() -> None:
     page_type = _contract("LessonPlanSourcePage")
     page = page_type(items=[_source_payload()], page=2, page_size=20, total=21)

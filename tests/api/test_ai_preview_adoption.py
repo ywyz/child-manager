@@ -97,34 +97,6 @@ def test_generation_input_hash_reuses_frozen_teacher_context_and_current_server_
     )
 
 
-def test_preview_validity_ignores_unrelated_sections_but_rejects_related_changes() -> None:
-    adoption = import_module("packages.backend.lesson_plans.ai_adoption")
-    validator = getattr(adoption, "preview_is_current", None)
-    assert callable(validator), "M6 adoption missing: preview_is_current"
-
-    assert validator(
-        frozen_section={"topic": "春天"},
-        current_section={"topic": "春天"},
-        frozen_server_input={"class_name": "向日葵班"},
-        current_server_input={"class_name": "向日葵班"},
-        teacher_context="冻结补充",
-    )
-    assert not validator(
-        frozen_section={"topic": "春天"},
-        current_section={"topic": "夏天"},
-        frozen_server_input={"class_name": "向日葵班"},
-        current_server_input={"class_name": "向日葵班"},
-        teacher_context="冻结补充",
-    )
-    assert not validator(
-        frozen_section={"topic": "春天"},
-        current_section={"topic": "春天"},
-        frozen_server_input={"class_name": "向日葵班"},
-        current_server_input={"class_name": "毕业班"},
-        teacher_context="冻结补充",
-    )
-
-
 def test_adopt_merges_preview_once_and_repeated_request_creates_no_second_snapshot(
     ai_admin_client: tuple[TestClient, ActorFixture],
     isolated_database_url: str,

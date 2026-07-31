@@ -6,9 +6,11 @@ from typing import Any, cast
 
 import pytest
 from nicegui import ui
+from nicegui.elements.upload import Upload
 from nicegui.testing.user_interaction import UserInteraction
 from nicegui.testing.user_simulation import user_simulation
 
+from tests.fixtures.docx_factory import DOCX_MIME, SYNTHETIC_TEXT
 from tests.web.test_plan_ai_smoke import PLAN_ID, _job, _plan
 
 SPLIT_JOB_ID = "00000000-0000-0000-0000-000000000031"
@@ -140,6 +142,37 @@ async def test_source_confirmation_then_adopted_split_enables_add_step(
 
 
 @pytest.mark.asyncio
+async def test_manual_complete_group_activity_does_not_enable_add_step(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pages = import_module("apps.web.pages.plans")
+    plan = cast(dict[str, Any], _plan())
+    plan["content"]["group_activity"] = deepcopy(SPLIT_RESULT)
+
+    async def fake_request(
+        path: str,
+        *,
+        method: str = "GET",
+        payload: dict[str, object] | None = None,
+        **_kwargs: object,
+    ) -> dict[str, object]:
+        del method, payload
+        if path.endswith("/jobs"):
+            return {
+                "ok": True,
+                "status": 200,
+                "body": {"items": [], "page": 1, "page_size": 20, "total": 0},
+            }
+        return {"ok": True, "status": 200, "body": plan}
+
+    monkeypatch.setattr(pages, "plan_api_request", fake_request)
+    async with user_simulation(root=lambda: pages.build_plan_editor_page(PLAN_ID)) as user:
+        await user.open("/")
+        await user.should_see("请先采用并保存集体活动拆分结果")
+        assert not _button(user, "新增适龄环节").enabled
+
+
+@pytest.mark.asyncio
 async def test_failed_add_preserves_split_and_added_step_marker_can_be_cleared(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -230,3 +263,159 @@ async def test_failed_add_preserves_split_and_added_step_marker_can_be_cleared(
         for path, method, payload in requests
     )
     assert plan["content"]["group_activity"]["process"][-1]["is_ai_added"] is False
+
+
+@pytest.mark.asyncio
+async def test_docx_preview_must_be_confirmed_before_creating_split_job(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pages = import_module("apps.web.pages.plans")
+    plan = cast(dict[str, Any], _plan())
+    requests: list[tuple[str, str, dict[str, object] | None]] = []
+    uploads: list[tuple[str, str, bytes]] = []
+
+    async def fake_request(
+        path: str,
+        *,
+        method: str = "GET",
+        payload: dict[str, object] | None = None,
+        **_kwargs: object,
+    ) -> dict[str, object]:
+        requests.append((path, method, payload))
+        if path.endswith("/jobs"):
+            return {
+                "ok": True,
+                "status": 200,
+                "body": {"items": [], "page": 1, "page_size": 20, "total": 0},
+            }
+        if path.endswith("/docx/confirm"):
+            assert payload == {
+                "original_filename": "教师原始教案.docx",
+                "extracted_text": SYNTHETIC_TEXT,
+            }
+            return {"ok": True, "status": 201, "body": {"id": "docx-source-1"}}
+        if path.endswith("/ai/generations"):
+            assert payload is not None
+            assert payload["task_code"] == "group_activity_split"
+            assert payload["source_id"] == "docx-source-1"
+            return {
+                "ok": True,
+                "status": 202,
+                "body": {
+                    "job": _job(
+                        job_id=SPLIT_JOB_ID,
+                        status="pending_dispatch",
+                        target_section="group_activity",
+                    )
+                },
+            }
+        return {"ok": True, "status": 200, "body": plan}
+
+    async def fake_docx_preview(
+        target_plan_id: str,
+        *,
+        filename: str,
+        content_type: str,
+        payload: bytes,
+    ) -> dict[str, object]:
+        assert target_plan_id == PLAN_ID
+        uploads.append((filename, content_type, payload))
+        return {
+            "ok": True,
+            "status": 200,
+            "body": {
+                "original_filename": "教师原始教案.docx",
+                "extracted_text": SYNTHETIC_TEXT,
+            },
+        }
+
+    monkeypatch.setattr(pages, "plan_api_request", fake_request)
+    monkeypatch.setattr(pages, "plan_docx_preview_request", fake_docx_preview, raising=False)
+    async with user_simulation(root=lambda: pages.build_plan_editor_page(PLAN_ID)) as user:
+        await user.open("/")
+        upload = next(
+            control
+            for control in user.find(Upload).elements
+            if control.props.get("label") == "上传 DOCX 原始教案"
+        )
+        await upload.handle_uploads(
+            [Upload.SmallFileUpload("教师原始教案.docx", DOCX_MIME, b"synthetic-docx")]
+        )
+        await user.should_see(SYNTHETIC_TEXT)
+        UserInteraction(user, {_button(user, "确认 DOCX 提取文本")}, "确认 DOCX 提取文本").trigger(
+            "keydown.enter", {"key": "Enter"}
+        )
+        await user.should_see("等待投递")
+
+    assert uploads == [("教师原始教案.docx", DOCX_MIME, b"synthetic-docx")]
+    assert any(path.endswith("/docx/confirm") and method == "POST" for path, method, _ in requests)
+
+
+@pytest.mark.asyncio
+async def test_reloaded_plan_uses_authoritative_adopted_split_status_beyond_first_job_page(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pages = import_module("apps.web.pages.plans")
+    plan = cast(dict[str, Any], _plan())
+    plan["content"]["group_activity"] = deepcopy(SPLIT_RESULT)
+    requests: list[tuple[str, str, dict[str, object] | None]] = []
+
+    async def fake_request(
+        path: str,
+        *,
+        method: str = "GET",
+        payload: dict[str, object] | None = None,
+        **_kwargs: object,
+    ) -> dict[str, object]:
+        requests.append((path, method, payload))
+        if path.endswith("/jobs"):
+            return {
+                "ok": True,
+                "status": 200,
+                "body": {
+                    "items": [],
+                    "page": 1,
+                    "page_size": 20,
+                    "total": 21,
+                    "has_adopted_group_activity_split": True,
+                },
+            }
+        if path.endswith("/autosave"):
+            assert payload is not None
+            plan["content"] = deepcopy(cast(dict[str, object], payload["content"]))
+            plan["version"] = int(plan["version"]) + 1
+            return {"ok": True, "status": 200, "body": plan}
+        if path.endswith("/ai/generations"):
+            assert payload is not None
+            assert payload["task_code"] == "group_activity_add_step"
+            return {
+                "ok": True,
+                "status": 202,
+                "body": {
+                    "job": _job(
+                        job_id=ADD_JOB_ID,
+                        status="pending_dispatch",
+                        target_section="group_activity",
+                    )
+                },
+            }
+        return {"ok": True, "status": 200, "body": plan}
+
+    monkeypatch.setattr(pages, "plan_api_request", fake_request)
+    async with user_simulation(root=lambda: pages.build_plan_editor_page(PLAN_ID)) as user:
+        await user.open("/")
+        await user.should_see("可新增适龄环节")
+        add_button = _button(user, "新增适龄环节")
+        assert add_button.enabled
+        UserInteraction(user, {add_button}, "新增适龄环节").trigger(
+            "keydown.enter", {"key": "Enter"}
+        )
+        await user.should_see("等待投递")
+
+    assert any(
+        path.endswith("/ai/generations")
+        and method == "POST"
+        and payload is not None
+        and payload["task_code"] == "group_activity_add_step"
+        for path, method, payload in requests
+    )

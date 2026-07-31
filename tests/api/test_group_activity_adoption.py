@@ -389,3 +389,16 @@ def test_failed_add_job_preserves_adopted_split_and_only_retries_that_addition(
         )
         == 1
     )
+
+
+def test_plan_job_page_reports_authoritative_adopted_split_status(
+    ai_admin_client: tuple[TestClient, ActorFixture],
+    isolated_database_url: str,
+) -> None:
+    client, actor = ai_admin_client
+    plan_id, _split = _prepare_adopted_split(client, actor, isolated_database_url)
+
+    page = client.get(f"/api/v1/plans/{plan_id}/jobs?page=1&page_size=20")
+
+    assert page.status_code == 200
+    assert page.json()["has_adopted_group_activity_split"] is True

@@ -452,6 +452,13 @@ class LessonPlanSourceTextWrite(ContractModel):
     text: Annotated[str, Field(min_length=1, max_length=200_000)]
 
 
+class LessonPlanSourceDocxPreview(ContractModel):
+    """DOCX 提取的临时预览；教师确认前不得持久化。"""
+
+    original_filename: Annotated[str, Field(min_length=1, max_length=255)]
+    extracted_text: Annotated[str, Field(min_length=1, max_length=200_000)]
+
+
 class LessonPlanReference(ContractModel):
     id: UUID
     class_id: UUID

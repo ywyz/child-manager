@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from nicegui import ui
 
-from apps.web.api_client import plan_api_request, same_origin_api_request
+from apps.web.api_client import plan_api_request, plan_docx_preview_request, same_origin_api_request
 from apps.web.components.ai_preview import AI_SECTION_ACTIONS, preview_title
 from apps.web.components.job_status import ai_job_status, poll_interval_ms, should_poll
 from apps.web.components.plan_editor import AUTOSAVE_DELAY_SECONDS, SECTION_LABELS
@@ -207,6 +207,11 @@ def build_plan_editor_page(plan_id: str) -> None:
             field.set_enabled(editable)
         source_editor.set_enabled(editable)
         save_button.set_enabled(editable)
+        docx_upload.set_enabled(editable)
+        docx_preview_text.set_enabled(False)
+        docx_confirm = docx_confirm_button[0]
+        if docx_confirm is not None:
+            docx_confirm.set_enabled(editable and bool(docx_preview))
         archive_button.set_visibility(can_archive and not archived)
         unarchive_button.set_visibility(can_archive and archived)
 
@@ -269,8 +274,15 @@ def build_plan_editor_page(plan_id: str) -> None:
     teacher_context = ui.input("本次生成补充").props('aria-label="本次生成补充"').classes("w-full")
     batch_container = ui.column().classes("w-full")
     source_editor = ui.textarea("集体活动原文").props('aria-label="集体活动原文"').classes("w-full")
+    docx_preview: dict[str, str] = {}
+    docx_preview_text = (
+        ui.textarea("DOCX 提取文本").props('aria-label="DOCX 提取文本" readonly').classes("w-full")
+    )
+    docx_preview_text.set_visibility(False)
+    docx_confirm_button: list[Any | None] = [None]
     group_activity_controls = ui.column().classes("w-full")
     add_step_button: list[Any | None] = [None]
+    adopted_group_activity_split = [False]
 
     def group_activity_content() -> dict[str, Any]:
         content = current.get("content", {})
@@ -305,6 +317,7 @@ def build_plan_editor_page(plan_id: str) -> None:
         group_activity = group_activity_content()
         complete = group_activity_is_complete(group_activity)
         has_ai_added = group_activity_has_ai_added(group_activity)
+        may_add_step = complete and adopted_group_activity_split[0] and not has_ai_added
         group_activity_controls.clear()
         with group_activity_controls:
             if has_ai_added:
@@ -336,8 +349,10 @@ def build_plan_editor_page(plan_id: str) -> None:
                     "min-h-[44px]"
                 )
                 button.on("keydown.enter", clear_ai_added_marker)
-            elif complete:
+            elif may_add_step:
                 ui.label("可新增适龄环节")
+            elif complete:
+                ui.label("请先采用并保存集体活动拆分结果")
             else:
                 ui.label("尚未新增适龄环节")
         editable = (
@@ -345,7 +360,7 @@ def build_plan_editor_page(plan_id: str) -> None:
         )
         button = add_step_button[0]
         if button is not None:
-            button.set_enabled(editable and complete and not has_ai_added)
+            button.set_enabled(editable and may_add_step)
 
     def apply_plan_body(body: dict[str, object]) -> None:
         current.update(body)
@@ -363,6 +378,9 @@ def build_plan_editor_page(plan_id: str) -> None:
     async def render_job(job: dict[str, object]) -> None:
         job_id = str(job.get("id", ""))
         target_section = str(job.get("target_section") or "")
+        if job.get("job_type") == "ai.group_activity_split" and job.get("status") == "adopted":
+            adopted_group_activity_split[0] = True
+            refresh_group_activity_controls()
         is_group_activity = target_section == "group_activity"
         container = ai_containers.get(target_section, batch_container)
         container.clear()
@@ -402,6 +420,8 @@ def build_plan_editor_page(plan_id: str) -> None:
                     )
                     body = result.get("body", {})
                     if result.get("ok") and isinstance(body, dict):
+                        if is_group_split:
+                            adopted_group_activity_split[0] = True
                         apply_plan_body(body)
                         await render_job(job | {"status": "adopted"})
                         set_state("saved")
@@ -481,6 +501,10 @@ def build_plan_editor_page(plan_id: str) -> None:
         body = result.get("body", {})
         if not result.get("ok") or not isinstance(body, dict):
             return
+        has_adopted_split = body.get("has_adopted_group_activity_split")
+        if isinstance(has_adopted_split, bool):
+            adopted_group_activity_split[0] = has_adopted_split
+            refresh_group_activity_controls()
         for item in body.get("items", []):
             if not isinstance(item, dict):
                 continue
@@ -569,9 +593,64 @@ def build_plan_editor_page(plan_id: str) -> None:
             return
         await create_generation("group_activity_split", source_id=str(source_id))
 
+    async def preview_docx_source(event: Any) -> None:
+        await loaded.wait()
+        uploaded = event.file
+        result = await plan_docx_preview_request(
+            plan_id,
+            filename=uploaded.name,
+            content_type=uploaded.content_type,
+            payload=await uploaded.read(),
+        )
+        body = result.get("body", {})
+        if not result.get("ok") or not isinstance(body, dict):
+            set_state("failed")
+            return
+        original_filename = body.get("original_filename")
+        extracted_text = body.get("extracted_text")
+        if not isinstance(original_filename, str) or not isinstance(extracted_text, str):
+            set_state("failed")
+            return
+        docx_preview.clear()
+        docx_preview.update(
+            original_filename=original_filename,
+            extracted_text=extracted_text,
+        )
+        docx_preview_text.value = extracted_text
+        docx_preview_text.set_visibility(True)
+        apply_capabilities()
+
+    async def confirm_docx_source_and_split() -> None:
+        await loaded.wait()
+        original_filename = docx_preview.get("original_filename")
+        extracted_text = docx_preview.get("extracted_text")
+        if not original_filename or not extracted_text:
+            set_state("failed")
+            return
+        result = await plan_api_request(
+            f"/{plan_id}/group-activity-sources/docx/confirm",
+            method="POST",
+            payload={
+                "original_filename": original_filename,
+                "extracted_text": extracted_text,
+            },
+        )
+        body = result.get("body", {})
+        source_id = body.get("id") if isinstance(body, dict) else None
+        if not result.get("ok") or not source_id:
+            set_state("failed")
+            return
+        docx_preview.clear()
+        docx_preview_text.value = ""
+        docx_preview_text.set_visibility(False)
+        apply_capabilities()
+        await create_generation("group_activity_split", source_id=str(source_id))
+
     async def create_add_step() -> None:
         await loaded.wait()
-        if not group_activity_is_complete(group_activity_content()):
+        if not adopted_group_activity_split[0] or not group_activity_is_complete(
+            group_activity_content()
+        ):
             set_state("failed")
             return
         await create_generation("group_activity_add_step")
@@ -692,6 +771,19 @@ def build_plan_editor_page(plan_id: str) -> None:
         "确认集体活动原文", on_click=confirm_source_and_split
     ).classes("min-h-[44px]")
     source_confirm_button.on("keydown.enter", confirm_source_and_split)
+    docx_upload = ui.upload(
+        label="上传 DOCX 原始教案",
+        on_upload=preview_docx_source,
+        auto_upload=True,
+    ).props(
+        'accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"'
+    )
+    docx_confirm = ui.button("确认 DOCX 提取文本", on_click=confirm_docx_source_and_split).classes(
+        "min-h-[44px]"
+    )
+    docx_confirm.set_enabled(False)
+    docx_confirm.on("keydown.enter", confirm_docx_source_and_split)
+    docx_confirm_button[0] = docx_confirm
     add_button = ui.button("新增适龄环节", on_click=create_add_step).classes("min-h-[44px]")
     add_button.set_enabled(False)
     add_button.on("keydown.enter", create_add_step)

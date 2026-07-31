@@ -1,5 +1,7 @@
 """BFF 请求和原始多值响应头转发契约。"""
 
+from typing import cast
+
 import httpx
 import pytest
 
@@ -171,3 +173,62 @@ async def test_proxy_preserves_auth_set_cookie_as_raw_headers(
 
     raw_cookies = [value for name, value in response.headers if name.lower() == b"set-cookie"]
     assert raw_cookies == list(cookies)
+
+
+@pytest.mark.asyncio
+async def test_plan_docx_preview_request_forwards_csrf_cookie_and_multipart(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from importlib import import_module
+
+    from nicegui import app, ui
+    from nicegui.testing.user_interaction import UserInteraction
+    from nicegui.testing.user_simulation import user_simulation
+
+    client = import_module("apps.web.api_client")
+    captured: list[dict[str, object]] = []
+
+    async def fake_proxy(**kwargs: object) -> object:
+        captured.append(kwargs)
+        if kwargs["path"] == "/api/v1/auth/csrf":
+            return client.BffResponse(200, (), b'{"csrf_token":"signed-token"}')
+        return client.BffResponse(
+            200,
+            ((b"content-type", b"application/json"),),
+            '{"original_filename":"教学.docx","extracted_text":"合成预览"}'.encode(),
+        )
+
+    monkeypatch.setattr(app.state, "child_manager_api_base_url", "http://api.test", raising=False)
+    monkeypatch.setattr(client, "proxy_request", fake_proxy)
+
+    def page() -> None:
+        result_label = ui.label("")
+
+        async def upload() -> None:
+            result = await client.plan_docx_preview_request(
+                "plan-1",
+                filename="教学.docx",
+                content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                payload=b"synthetic-docx",
+            )
+            result_label.set_text(str(result["body"].get("extracted_text", "")))
+
+        ui.button("上传", on_click=upload)
+
+    async with user_simulation(root=page) as user:
+        await user.open("/")
+        button = next(button for button in user.find(ui.button).elements if button.text == "上传")
+        UserInteraction(user, {button}, "上传").click()
+        await user.should_see("合成预览")
+    assert [item["path"] for item in captured] == [
+        "/api/v1/auth/csrf",
+        "/api/v1/plans/plan-1/group-activity-sources/docx",
+    ]
+    post_headers = cast(tuple[tuple[bytes, bytes], ...], captured[1]["headers"])
+    headers = {name.lower(): value for name, value in post_headers}
+    post_body = cast(bytes, captured[1]["body"])
+    assert headers[b"x-csrf-token"] == b"signed-token"
+    assert b"child_manager_csrf=signed-token" in headers[b"cookie"]
+    assert b"multipart/form-data" in headers[b"content-type"]
+    assert "教学.docx".encode() in post_body
+    assert b"synthetic-docx" in post_body

@@ -14,7 +14,7 @@ from tests.api.passkey_helpers import (
     passkey_client,  # noqa: F401
 )
 from tests.api.plan_helpers import provision_editable_plan_context
-from tests.fixtures.docx_factory import make_valid_docx
+from tests.fixtures.docx_factory import SYNTHETIC_TEXT, make_valid_docx
 
 
 def _source_url(plan_id: str, suffix: str = "") -> str:
@@ -135,16 +135,29 @@ def test_confirmed_text_creates_metadata_only_and_each_confirmation_is_retained(
     assert history.json()["total"] == 2
 
 
-def test_docx_confirmation_sanitizes_filename_and_persists_only_extracted_metadata(
+def test_docx_extraction_requires_explicit_confirmation_before_persisting_metadata(
     admin_client: tuple[TestClient, ActorFixture],
 ) -> None:
     client, actor = admin_client
     _class_id, plan_id = provision_editable_plan_context(client, actor)
     upload = make_valid_docx()
 
-    response = client.post(
+    preview = client.post(
         _source_url(plan_id, "/docx"),
         files={"file": ("../班级\\原始?教案.docx", upload.payload, upload.content_type)},
+        headers=csrf_headers(client),
+    )
+
+    assert preview.status_code == 200
+    assert preview.json() == {
+        "original_filename": "原始_教案.docx",
+        "extracted_text": SYNTHETIC_TEXT,
+    }
+    assert _source_history_total(client, plan_id) == 0
+
+    response = client.post(
+        _source_url(plan_id, "/docx/confirm"),
+        json=preview.json(),
         headers=csrf_headers(client),
     )
 
@@ -156,6 +169,7 @@ def test_docx_confirmation_sanitizes_filename_and_persists_only_extracted_metada
     assert "\\" not in body["original_filename"]
     assert "text" not in body
     assert "attachment" not in body
+    assert _source_history_total(client, plan_id) == 1
 
 
 def test_text_limit_and_live_class_authorization_are_rejected_before_source_write(

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-from collections.abc import Mapping
 from datetime import UTC, datetime
 from typing import Any, cast
 from uuid import UUID
@@ -69,31 +68,6 @@ _TARGET_SECTIONS = {
 
 def _native_url(value: str) -> str:
     return value.replace("postgresql+psycopg://", "postgresql://", 1)
-
-
-def preview_is_current(
-    *,
-    frozen_section: Mapping[str, JsonValue],
-    current_section: Mapping[str, JsonValue],
-    frozen_server_input: Mapping[str, JsonValue],
-    current_server_input: Mapping[str, JsonValue],
-    teacher_context: str | None,
-) -> bool:
-    """比较预览的目标栏目与实际输入，不依赖全局教案版本。"""
-
-    return section_sha256(frozen_section) == section_sha256(
-        current_section
-    ) and canonical_json_sha256(
-        {
-            "server_input": dict(frozen_server_input),
-            "teacher_context": teacher_context,
-        }
-    ) == canonical_json_sha256(
-        {
-            "server_input": dict(current_server_input),
-            "teacher_context": teacher_context,
-        }
-    )
 
 
 class AiAdoptionService:
@@ -498,4 +472,4 @@ class AiAdoptionService:
             return expired
 
 
-__all__ = ["AiAdoptionService", "preview_is_current"]
+__all__ = ["AiAdoptionService"]

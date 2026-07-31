@@ -26,6 +26,7 @@ from packages.contracts.lesson_plans import (
     AiGenerationRequest,
     Author,
     LessonPlanSource,
+    LessonPlanSourceDocxPreview,
     LessonPlanSourcePage,
     LessonPlanSourceTextWrite,
     LessonPlanSourceType,
@@ -208,29 +209,54 @@ def confirm_group_activity_text_source(
 
 @router.post(
     "/{plan_id}/group-activity-sources/docx",
-    response_model=LessonPlanSource,
-    status_code=status.HTTP_201_CREATED,
+    response_model=LessonPlanSourceDocxPreview,
 )
-async def confirm_group_activity_docx_source(
+async def preview_group_activity_docx_source(
     plan_id: UUID,
     file: Annotated[UploadFile, File()],
     request: Request,
     session: CurrentSessionDependency,
     service: LessonPlanSourceServiceDependency,
-) -> LessonPlanSource:
+) -> LessonPlanSourceDocxPreview:
     require_csrf(request)
     try:
         payload = await file.read(ARCHIVE_LIMIT_BYTES + 1)
     finally:
         await file.close()
-    record = service.confirm_docx(
+    preview = service.preview_docx(
         session,
         plan_id=plan_id,
         filename=file.filename or "",
         content_type=file.content_type or "",
         payload=payload,
     )
-    return _source(record)
+    return LessonPlanSourceDocxPreview(
+        original_filename=preview.original_filename,
+        extracted_text=preview.extracted_text,
+    )
+
+
+@router.post(
+    "/{plan_id}/group-activity-sources/docx/confirm",
+    response_model=LessonPlanSource,
+    status_code=status.HTTP_201_CREATED,
+)
+def confirm_group_activity_docx_source(
+    plan_id: UUID,
+    body: LessonPlanSourceDocxPreview,
+    request: Request,
+    session: CurrentSessionDependency,
+    service: LessonPlanSourceServiceDependency,
+) -> LessonPlanSource:
+    require_csrf(request)
+    return _source(
+        service.confirm_docx(
+            session,
+            plan_id=plan_id,
+            filename=body.original_filename,
+            text=body.extracted_text,
+        )
+    )
 
 
 @router.post(
@@ -313,7 +339,7 @@ def list_plan_jobs(
     page: Annotated[int, Query(ge=1)] = 1,
     page_size: Annotated[int, Query(ge=1, le=100)] = 20,
 ) -> JobPage:
-    items, total = query.list_plan(
+    items, total, has_adopted_group_activity_split = query.list_plan(
         session,
         plan_id,
         page=page,
@@ -324,6 +350,7 @@ def list_plan_jobs(
         page=page,
         page_size=page_size,
         total=total,
+        has_adopted_group_activity_split=has_adopted_group_activity_split,
     )
 
 

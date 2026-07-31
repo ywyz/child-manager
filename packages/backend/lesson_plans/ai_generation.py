@@ -27,7 +27,7 @@ from packages.backend.lesson_plans.ai_fingerprints import (
     section_sha256,
 )
 from packages.backend.lesson_plans.ai_schemas import ai_result_model
-from packages.backend.lesson_plans.group_activity_ai import GroupActivityJobService
+from packages.backend.lesson_plans.group_activity_ai import require_complete_saved_group_activity
 from packages.backend.lesson_plans.repository import LessonPlanRepository, PlanRecord
 from packages.backend.lesson_plans.service import LessonPlanService
 from packages.backend.lesson_plans.sources import LessonPlanSourceRepository
@@ -316,9 +316,7 @@ class AiGenerationService:
             }
         elif spec.task_code == "group_activity_add_step":
             try:
-                group_activity = GroupActivityJobService.require_complete_saved_group_activity(
-                    content["group_activity"]
-                )
+                group_activity = require_complete_saved_group_activity(content["group_activity"])
             except ValueError as exc:
                 raise IdentityError(
                     409,

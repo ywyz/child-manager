@@ -14,6 +14,7 @@ from apps.web.pages.users import register_users_page
 
 def register_web(*, api_base_url: str) -> None:
     register_auth_pages()
+    app.state.child_manager_api_base_url = api_base_url
     register_users_page()
     register_settings_pages()
     register_class_area_pages()

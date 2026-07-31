@@ -140,12 +140,13 @@ class JobQueryService:
         *,
         page: int,
         page_size: int,
-    ) -> tuple[list[Job], int]:
+    ) -> tuple[list[Job], int, bool]:
         kindergarten_id = self._kindergarten_id(session)
         with psycopg.connect(_native_url(self.database_url)) as connection:
             plans = LessonPlanRepository(connection)
             self._authorize_plan(session, plans, kindergarten_id, plan_id)
-            records, total = JobRepository(connection).list_ai_roots_for_plan(
+            jobs = JobRepository(connection)
+            records, total = jobs.list_ai_roots_for_plan(
                 kindergarten_id,
                 plan_id,
                 page=page,
@@ -154,6 +155,7 @@ class JobQueryService:
             return (
                 [self._project_ai(connection, kindergarten_id, record) for record in records],
                 total,
+                jobs.has_adopted_group_activity_split(kindergarten_id, plan_id),
             )
 
     def preview(self, session: SessionUser, job_id: UUID) -> JobPreview:

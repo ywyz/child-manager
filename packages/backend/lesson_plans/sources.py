@@ -34,6 +34,12 @@ class LessonPlanSourceRecord:
     created_at: datetime
 
 
+@dataclass(frozen=True, slots=True)
+class LessonPlanSourceDocxPreviewRecord:
+    original_filename: str
+    extracted_text: str
+
+
 def _record(row: tuple[object, ...] | None) -> LessonPlanSourceRecord | None:
     if row is None:
         return None
@@ -238,6 +244,13 @@ class LessonPlanSourceService:
             raise LessonPlanService._not_found()
         LessonPlanService._require_view(session, repository, kindergarten_id, plan)
 
+    @staticmethod
+    def _require_valid_source_text(text: str) -> None:
+        if not text or len(text) > 200_000:
+            raise IdentityError(
+                422, "group_activity.source_invalid", "来源文本长度必须在 1 到 200000 字符之间。"
+            )
+
     def confirm_text(
         self,
         session: SessionUser,
@@ -245,10 +258,7 @@ class LessonPlanSourceService:
         plan_id: UUID,
         text: str,
     ) -> LessonPlanSourceRecord:
-        if not text or len(text) > 200_000:
-            raise IdentityError(
-                422, "group_activity.source_invalid", "来源文本长度必须在 1 到 200000 字符之间。"
-            )
+        self._require_valid_source_text(text)
         kindergarten_id = self._kindergarten_id(session)
         with self._connect() as connection:
             plans = LessonPlanRepository(connection)
@@ -260,7 +270,7 @@ class LessonPlanSourceService:
                 text=text,
             )
 
-    def confirm_docx(
+    def preview_docx(
         self,
         session: SessionUser,
         *,
@@ -268,8 +278,11 @@ class LessonPlanSourceService:
         filename: str,
         content_type: str,
         payload: bytes,
-    ) -> LessonPlanSourceRecord:
+    ) -> LessonPlanSourceDocxPreviewRecord:
         kindergarten_id = self._kindergarten_id(session)
+        with self._connect() as connection:
+            plans = LessonPlanRepository(connection)
+            self._require_edit(session, plans, kindergarten_id, plan_id)
         try:
             with TemporaryDirectory(prefix="child-manager-docx-") as temporary_directory:
                 extracted_text = extract_docx_text(
@@ -282,7 +295,21 @@ class LessonPlanSourceService:
             raise IdentityError(
                 422, "group_activity.source_invalid", "DOCX 文件无效或不安全。"
             ) from error
+        return LessonPlanSourceDocxPreviewRecord(
+            original_filename=sanitize_filename(filename),
+            extracted_text=extracted_text,
+        )
 
+    def confirm_docx(
+        self,
+        session: SessionUser,
+        *,
+        plan_id: UUID,
+        filename: str,
+        text: str,
+    ) -> LessonPlanSourceRecord:
+        self._require_valid_source_text(text)
+        kindergarten_id = self._kindergarten_id(session)
         with self._connect() as connection:
             plans = LessonPlanRepository(connection)
             self._require_edit(session, plans, kindergarten_id, plan_id)
@@ -291,7 +318,7 @@ class LessonPlanSourceService:
                 plan_id=plan_id,
                 uploaded_by=session.user.id,
                 original_filename=filename,
-                text=extracted_text,
+                text=text,
             )
 
     def list_history(
