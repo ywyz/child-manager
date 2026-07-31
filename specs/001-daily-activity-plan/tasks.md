@@ -261,9 +261,9 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 **Milestone state**: M4 与 M5 均为 `complete`，M6 T087–T126 为 `in_progress`。M6 Issue
 固定引用不可移动 docs SHA；US4 T087–T110 已完成，US5 T111–T126 已完成，下一门禁为
 固定 `main..dev` Standards/Spec 双轴 Review，并保持 T087–T110 先于 T111–T126。
+
 **US5 当前状态（2026-07-31）**：T126 独立验收已完成；实现提交 dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查。
 设置页先 collect-only 收集 49 项并通过，再重跑为 49 passed；US5 专项 56 passed，完整 pytest 666 passed；恶意样本临时残留为 0，Graphify 诊断通过。
-**US5 当前状态（2026-07-31）**：T126 独立验收已完成；实现提交 dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查。
 
 **Goal**: 实现可靠任务、一键四栏、栏目级预览/采用/拒绝/重试以及五栏完整后显式反思。
 
