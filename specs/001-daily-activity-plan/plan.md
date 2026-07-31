@@ -1,6 +1,6 @@
 # Implementation Plan: 首期一日活动计划完整闭环
 
-**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-07-27 | **Spec**: [spec.md](./spec.md)
+**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-07-31 | **Spec**: [spec.md](./spec.md)
 
 **Input**: `specs/001-daily-activity-plan/spec.md`；范围为 Roadmap M1–M8，M9 生产部署复审排除。
 

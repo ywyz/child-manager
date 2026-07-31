@@ -5,7 +5,8 @@
 当前上下文分支：`docs`
 
 项目阶段：M4 与 M5 均为 complete 并已集成 main；M6 T087–T126 为 in_progress，
-US4 T087–T110 已完成，US5 T111–T125 已实现，当前下一项为 T126
+US4 T087–T110 已完成，US5 T111–T126 已完成，当前下一门禁为固定 `main..dev`
+Standards/Spec 双轴 Review；`main` 集成仍需单独授权。
 
 ## 1. 本文档的用途
 
@@ -228,10 +229,12 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 - M4 与 M5 均已完成，[M6 Issue #11](https://github.com/ywyz/child-manager/issues/11)
   为 in_progress；US4 T087–T110 已完成，最终实现与图谱提交为
   dev@9932aa928132152cabedb2e273980f60cdd51f6c。US4 独立门禁为 126 passed，五条标准
-  命令全部退出 0，完整测试为 610 passed, 1 warning。US5 T111–T125 已实现并由
+  命令全部退出 0，完整测试为 610 passed, 1 warning。US5 T111–T126 已完成并由
   dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731（headSha 同一完整 SHA）通过完整检查。
-  本地设置页专项收集 38 项、26 passed、12 errors，均为 127.0.0.1:15432 PostgreSQL 连接拒绝；
-  该环境故障已纳入本轮排障，不计为业务 RED。T126 保持未完成。
+  设置页先 collect-only 收集 49 项并通过，再重跑为 49 passed；US5 专项为 56 passed；
+  完整本地 pytest 为 666 passed, 1 warning。恶意样本临时残留为 0，Graphify 诊断的缺失、
+  悬空、自环、重复和折叠边均为 0。T126 已完成，下一门禁为固定 `main..dev`
+  Standards/Spec 双轴 Review，`main` 集成仍需单独授权。
 - 接入 Redis Worker、任务状态、栏目级生成、结构校验、重试和失败恢复。
 - 支持集体活动文本与 `.docx` 导入。
 
@@ -274,8 +277,8 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
 | `main` | 稳定版本与发布基线 | `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已正常 merge 最终 M4 `dev`，最终树与 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 一致；Quality Gates `30235439229` 为 458 项通过 | 保持稳定；等待 M6 完成独立验收后再接收新结果 |
-| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 Issue #11 本次同步 OpenAPI、US5 T111–T125 状态与 T126 排障门禁 | 保持 T126 未完成；先完成本轮排障与最终验收 |
-| dev | Codex 唯一实现与集成 | M6 in_progress；US5 T111–T125 已实现，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过 | 恢复 PostgreSQL 后重跑设置页与 US5 专项，完成 T126 |
+| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 Issue #11 已同步 OpenAPI、US5 T111–T126 状态与最终验收证据 | 等待固定 `main..dev` Standards/Spec 双轴 Review |
+| dev | Codex 唯一实现与集成 | M6 in_progress；US5 T111–T126 已实现，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过；本地专项与 Graphify 诊断完成 | 执行固定 `main..dev` Standards/Spec 双轴 Review；`main` 集成需单独授权 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -310,9 +313,11 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
    `main@b7676c27d07adc5eca1f0c397217780367481e9c`；两条等价 Dependabot 提交历史均保留，
    最终树一致，`main` Quality Gates `30235439229` 同样为 `458 passed, 1 warning`。
 10. M6 Issue #11 为 in_progress 且只覆盖 T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
-    dev@9932aa928132152cabedb2e273980f60cdd51f6c；US5 T111–T125 已实现，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731
-    在同一 headSha 上通过完整检查；本地设置页专项的 12 个 PostgreSQL 连接错误已纳入本轮排障，不计为业务 RED。
-    当前下一项为 T126；恢复隔离 PostgreSQL 后重跑设置页与 US5 专项验收，再完成最终 Graphify/文档闭环。
+    dev@9932aa928132152cabedb2e273980f60cdd51f6c；US5 T111–T126 已完成，dev@32d3c102152848f7488da036ddada461b3d8d3ab
+    的 Quality run 30602225731 在同一 headSha 上通过完整检查；设置页先收集 49 项再通过 49 项，
+    US5 专项为 56 项通过，完整本地 pytest 为 666 项通过、1 条既有弃用警告；恶意样本临时残留为 0，
+    Graphify 诊断无结构性异常。下一门禁为固定 `main..dev` Standards/Spec 双轴 Review；`main`
+    集成仍需单独授权。
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
 ## 11. 高风险点

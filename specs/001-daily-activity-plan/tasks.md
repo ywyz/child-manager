@@ -259,12 +259,11 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 ## Phase 6: User Story 4 — 教师按栏目使用 AI 并保留决定权（Priority: P4）
 
 **Milestone state**: M4 与 M5 均为 `complete`，M6 T087–T126 为 `in_progress`。M6 Issue
-固定引用不可移动 docs SHA；US4 T087–T110 已完成，US5 T111–T125 已实现，当前下一项为 T126，并保持
-T087–T110 先于 T111–T126。
-
-**US5 当前状态（2026-07-31）**：T111–T125 已在 dev@32d3c102152848f7488da036ddada461b3d8d3ab 完成；Quality run 30602225731 在同一 headSha 上通过格式、静态检查、类型检查、OpenAPI 校验和完整 pytest。
-本地不依赖 PostgreSQL 的 US5 专项已通过 54 项；设置页专项收集 38 项，其中 26 passed、12 errors，错误均为连接 127.0.0.1:15432 被拒绝。该 PostgreSQL/Docker socket 环境故障已纳入本轮排障，不计为业务 RED。
-T126 保持未完成：恢复隔离 PostgreSQL 后重跑设置页与 US5 专项验收，确认恶意样本临时残留为 0，并完成最终 Graphify/文档闭环。
+固定引用不可移动 docs SHA；US4 T087–T110 已完成，US5 T111–T126 已完成，下一门禁为
+固定 `main..dev` Standards/Spec 双轴 Review，并保持 T087–T110 先于 T111–T126。
+**US5 当前状态（2026-07-31）**：T126 独立验收已完成；实现提交 dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查。
+设置页先 collect-only 收集 49 项并通过，再重跑为 49 passed；US5 专项 56 passed，完整 pytest 666 passed；恶意样本临时残留为 0，Graphify 诊断通过。
+**US5 当前状态（2026-07-31）**：T126 独立验收已完成；实现提交 dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查。
 
 **Goal**: 实现可靠任务、一键四栏、栏目级预览/采用/拒绝/重试以及五栏完整后显式反思。
 
@@ -336,7 +335,7 @@ T126 保持未完成：恢复隔离 PostgreSQL 后重跑设置页与 US5 专项�
 - [x] T123 [US5] 在 `packages/backend/lesson_plans/ai_adoption.py` 合并单个 step、强制 `is_ai_added=true`、编辑保留标记并支持显式取消；验证：`uv run pytest tests/api/test_group_activity_adoption.py` 通过
 - [x] T124 [US5] 在 `apps/api/routers/plans.py` 实现来源文本/DOCX、集体拆分和新增环节的薄路由映射，采用前新增请求拒绝、实时授权、事务和采用规则留在 service；验证：`uv run pytest tests/contract/test_group_activity_contract.py tests/api/test_group_activity_sources.py tests/api/test_group_activity_adoption.py` 通过
 - [x] T125 [US5] 在 `apps/web/pages/plans.py`、`apps/web/components/group_activity.py` 实现提取确认、拆分采用前禁用新增、采用保存后独立生成新增、失败保留拆分、两阶段预览提示和取消新增标记交互；验证：`uv run pytest tests/web/test_group_activity_smoke.py` 通过
-- [ ] T126 [US5] 完成 US5 独立验收并更新 `graphify-out/graph.json`；验证：先运行 `uv run pytest tests/fixtures/test_docx_factory.py tests/unit/test_docx_extractor.py tests/contract/test_group_activity_contract.py tests/migrations/test_0009_group_activity_sources.py tests/repository/test_lesson_plan_sources.py tests/api/test_group_activity_sources.py tests/worker/test_group_activity_jobs.py tests/api/test_group_activity_adoption.py tests/web/test_group_activity_smoke.py`，再逐条运行五条标准命令 `uv sync --locked`、`uv run ruff format --check .`、`uv run ruff check .`、`uv run pyright`、`uv run pytest`，最后运行 `graphify update .`；所有命令退出 0，且恶意样本临时残留必须为 0
+- [x] T126 [US5] 完成 US5 独立验收并更新 `graphify-out/graph.json`；验证：先运行 `uv run pytest tests/fixtures/test_docx_factory.py tests/unit/test_docx_extractor.py tests/contract/test_group_activity_contract.py tests/migrations/test_0009_group_activity_sources.py tests/repository/test_lesson_plan_sources.py tests/api/test_group_activity_sources.py tests/worker/test_group_activity_jobs.py tests/api/test_group_activity_adoption.py tests/web/test_group_activity_smoke.py`，再逐条运行五条标准命令 `uv sync --locked`、`uv run ruff format --check .`、`uv run ruff check .`、`uv run pyright`、`uv run pytest`，最后运行 `graphify update .`；所有命令退出 0，且恶意样本临时残留必须为 0
 
 **Checkpoint**: 集体活动拆分可先采用保存，再独立生成新增环节；新增失败时已采用拆分保持不变，
 并可稍后重新生成只补新增环节。

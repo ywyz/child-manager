@@ -5,12 +5,12 @@
 **Updated**: 2026-07-31
 **Current repository state**: M4 与 M5 均为 `complete`；最终 M4 Review SHA 为
 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，已正常 merge 到
-`main@b7676c27d07adc5eca1f0c397217780367481e9c`。`docs` 是当前文档、规格、OpenAPI
-和模板的单一事实来源。M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11)
-为 `in_progress` 并覆盖 T087–T126；US4 T087–T110 已完成，最终实现与图谱提交为
-`dev@9932aa928132152cabedb2e273980f60cdd51f6c`；US4 独立门禁为 `126 passed`，五条标准
-命令全部退出 0，完整测试为 `610 passed, 1 warning`。当前 dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查；US5 T111–T125 已实现，当前下一项为 T126；设置页本地 PostgreSQL 环境故障已纳入排障。下列命令
-覆盖 M1～M8 验收合同，尚未完成的用户故事步骤不可执行，也不表示已经通过。
+`main@b7676c27d07adc5eca1f0c397217780367481e9c`。`docs` 是当前文档、规格、OpenAPI 和模板的单一事实来源。
+M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 为 `in_progress` 并覆盖 T087–T126；
+US4 T087–T110 已完成；US5 T111–T126 已完成，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查；
+设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed，恶意样本临时残留为 0，Graphify 诊断通过。
+下一门禁为固定 `main..dev` Standards/Spec 双轴 Review；`main` 集成仍需单独授权。下列命令
+覆盖 M1～M8 验收合同，已完成的用户故事步骤仍需以固定证据复核，不表示 M6 已可集成 main。
 
 ## 1. 前提与反目标
 
