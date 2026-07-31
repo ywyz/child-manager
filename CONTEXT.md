@@ -4,11 +4,11 @@
 
 当前上下文分支：`docs`
 
-项目阶段：M4 与 M5 均为 complete 并已集成 main；M6 T087–T126 为 in_progress，
+项目阶段：M4、M5、M6 均为 complete 并已集成 main；M6 T087–T126 已完成，
 US4 T087–T110 已完成，US5 T111–T126 已完成。固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
 `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
-PASS；`main` 集成已获授权，正常 merge 后回填最终 SHA。
+PASS；dev 已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，Issue #11 收尾后进入 M7。
 
 ## 1. 本文档的用途
 
@@ -229,7 +229,7 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 ### 阶段 6：AI 异步生成
 
 - M4 与 M5 均已完成，[M6 Issue #11](https://github.com/ywyz/child-manager/issues/11)
-  为 in_progress；US4 T087–T110 已完成，最终实现与图谱提交为
+  已完成；US4 T087–T110 已完成，最终实现与图谱提交为
   dev@9932aa928132152cabedb2e273980f60cdd51f6c。US4 独立门禁为 126 passed，五条标准
   命令全部退出 0，完整测试为 610 passed, 1 warning。US5 T111–T126 已完成并由
   dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731（headSha 同一完整 SHA）通过完整检查。
@@ -238,7 +238,7 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
   悬空、自环、重复和折叠边均为 0。T126 已完成；固定
   `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
   `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
-  PASS，`main` 集成已获授权，正常 merge 后回填最终 SHA。
+  PASS，dev 已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，Issue #11 收尾后进入 M7。
 - 接入 Redis Worker、任务状态、栏目级生成、结构校验、重试和失败恢复。
 - 支持集体活动文本与 `.docx` 导入。
 
@@ -280,9 +280,9 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
-| `main` | 稳定版本与发布基线 | `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已正常 merge 最终 M4 `dev`，最终树与 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 一致；Quality Gates `30235439229` 为 458 项通过 | 接收已完成 Review 的 M6 `dev` 结果 |
-| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 Issue #11 已同步 OpenAPI、US5 T111–T126 状态、最终验收证据与 Review PASS | main merge 后回填最终 main SHA |
-| dev | Codex 唯一实现与集成 | M6 in_progress；US5 T111–T126 已实现，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过；本地专项与 Graphify 诊断完成 | 已通过固定 `main..dev` Standards/Spec 双轴 Review；执行已授权的 main 集成 |
+| `main` | 稳定版本与发布基线 | `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f` 已正常 merge M6 `dev`，包含 Review 通过结果、T126 代码和状态文档；M6 质量证据已回填 | Issue #11 收尾后进入 M7 |
+| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 Issue #11 已同步 OpenAPI、US5 T111–T126 状态、最终验收证据、Review PASS 与 main 集成结果 | 维护 M7 及后续共享设计 |
+| dev | Codex 唯一实现与集成 | M6 已完成；US5 T111–T126 已实现，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过；本地专项与 Graphify 诊断完成 | 进入 M7 前保持与 main/docs 一致 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -316,13 +316,13 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 9. 最终 `dev` 已通过正常 merge 集成为
    `main@b7676c27d07adc5eca1f0c397217780367481e9c`；两条等价 Dependabot 提交历史均保留，
    最终树一致，`main` Quality Gates `30235439229` 同样为 `458 passed, 1 warning`。
-10. M6 Issue #11 为 in_progress 且只覆盖 T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
+10. M6 Issue #11 为 complete 且只覆盖 T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
     dev@9932aa928132152cabedb2e273980f60cdd51f6c；US5 T111–T126 已完成，dev@32d3c102152848f7488da036ddada461b3d8d3ab
     的 Quality run 30602225731 在同一 headSha 上通过完整检查；设置页先收集 49 项再通过 49 项，
     US5 专项为 56 项通过，完整本地 pytest 为 666 项通过、1 条既有弃用警告；恶意样本临时残留为 0，
     Graphify 诊断无结构性异常。固定 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
     `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS；
-    `main` 集成已获授权，正常 merge 后回填最终 SHA。
+    dev 已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，Issue #11 收尾后进入 M7。
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
 ## 11. 高风险点
