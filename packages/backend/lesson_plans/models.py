@@ -14,6 +14,7 @@ from sqlalchemy import (
     Integer,
     SmallInteger,
     String,
+    Text,
     UniqueConstraint,
     func,
 )
@@ -98,6 +99,50 @@ class DailyActivityPlan(Timestamped, Base):
             name="ck_daily_activity_plans_season",
         ),
         Index("ix_daily_activity_plans_list", "kindergarten_id", "plan_date", "class_id"),
+    )
+
+
+class LessonPlanSource(Timestamped, Base):
+    __tablename__ = "lesson_plan_sources"
+
+    id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True)
+    kindergarten_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False)
+    plan_id: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False)
+    source_type: Mapped[str] = mapped_column(String(16), nullable=False)
+    original_filename: Mapped[str | None] = mapped_column(String(255))
+    source_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    extracted_character_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    extracted_text: Mapped[str] = mapped_column(Text, nullable=False)
+    uploaded_by: Mapped[UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("kindergarten_id", "id", name="uq_lesson_plan_sources_kg_id"),
+        ForeignKeyConstraint(["kindergarten_id"], ["kindergartens.id"]),
+        ForeignKeyConstraint(
+            ["kindergarten_id", "plan_id"],
+            ["daily_activity_plans.kindergarten_id", "daily_activity_plans.id"],
+        ),
+        ForeignKeyConstraint(
+            ["kindergarten_id", "uploaded_by"], ["users.kindergarten_id", "users.id"]
+        ),
+        CheckConstraint(
+            "source_type IN ('pasted_text','docx')",
+            name="ck_lesson_plan_sources_type",
+        ),
+        CheckConstraint(
+            "extracted_character_count BETWEEN 1 AND 200000",
+            name="ck_lesson_plan_sources_character_count",
+        ),
+        CheckConstraint(
+            "source_sha256 ~ '^[0-9a-f]{64}$'",
+            name="ck_lesson_plan_sources_sha256",
+        ),
+        Index(
+            "ix_lesson_plan_sources_history",
+            "kindergarten_id",
+            "plan_id",
+            "created_at",
+        ),
     )
 
 

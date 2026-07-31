@@ -9,6 +9,7 @@ from typing import Protocol
 from uuid import UUID, uuid7
 
 import dramatiq
+import psycopg
 from dramatiq import Retry
 from dramatiq.actor import Actor
 from dramatiq.broker import Broker
@@ -19,7 +20,10 @@ from packages.backend.integrations.crypto.ai_keys import (
     AiKeyEnvelope,
     decrypt_api_key_with_provider,
 )
+from packages.backend.jobs.ai_results import AiGenerationResultRepository
+from packages.backend.jobs.ai_runner import AiJobRetry, AiJobRunner, AiJobStore
 from packages.backend.jobs.prompt_test_store import PostgresPromptTestStore
+from packages.backend.jobs.scope_resolver import WorkerScopeResolver
 from packages.backend.jobs.service import (
     CurrentModelCallProfile,
     PromptTestExecutor,
@@ -29,6 +33,14 @@ from packages.backend.prompts.catalog import validate_prompt_result_schema
 from packages.backend.settings.ai_models import AiModelService
 
 logger = logging.getLogger(__name__)
+
+
+class AiJobScopeResolver(Protocol):
+    def kindergarten_id_for_ai_job(self, job_id: UUID) -> UUID | None: ...
+
+
+class AiRunner(Protocol):
+    def execute(self, kindergarten_id: UUID, job_id: UUID, *, worker_id: str) -> None: ...
 
 
 def _worker_id() -> str:
@@ -69,6 +81,54 @@ def build_prompt_test_executor() -> PromptTestExecutor:
             input_context=input_context,
         ),
     )
+
+
+def _native_url(value: str) -> str:
+    return value.replace("postgresql+psycopg://", "postgresql://", 1)
+
+
+def build_ai_job_runner() -> AiJobRunner:
+    settings = AiModelService.from_environment()
+    connection = psycopg.connect(_native_url(settings.database_url), autocommit=True)
+    store = AiJobStore(connection)
+    client = ProviderNeutralAiClient(
+        resolver=settings.resolver,
+        allowed_hosts=settings.allowed_hosts,
+    )
+
+    def read_api_key(profile: CurrentModelCallProfile) -> str:
+        if not isinstance(profile.key_envelope, AiKeyEnvelope):
+            raise LookupError("模型密钥不可用")
+        return decrypt_api_key_with_provider(
+            profile.key_envelope,
+            key_provider=settings.key_provider,
+            kindergarten_id=profile.kindergarten_id,
+            profile_id=profile.profile_id,
+        )
+
+    return AiJobRunner(
+        store=store,
+        client=client,
+        authorizer=store,
+        read_api_key=read_api_key,
+        validate_url=lambda value: validate_ai_base_url(
+            value,
+            resolver=settings.resolver,
+            allowed_hosts=settings.allowed_hosts,
+        ),
+    )
+
+
+def build_ai_result_repository() -> AiGenerationResultRepository:
+    settings = AiModelService.from_environment()
+    connection = psycopg.connect(_native_url(settings.database_url), autocommit=True)
+    return AiGenerationResultRepository(connection)
+
+
+def build_worker_scope_resolver() -> WorkerScopeResolver:
+    settings = AiModelService.from_environment()
+    connection = psycopg.connect(_native_url(settings.database_url), autocommit=True)
+    return WorkerScopeResolver(connection)
 
 
 class RecoveryStore(Protocol):
@@ -123,6 +183,8 @@ def register_actors(
     broker: Broker,
     *,
     executor: PromptTestExecutor | None = None,
+    ai_runner: AiRunner | None = None,
+    ai_job_scope_resolver: AiJobScopeResolver | None = None,
 ) -> tuple[Actor[..., str], ...]:
     def run_prompt_test(job_id: str) -> str:
         parsed_job_id = UUID(job_id)
@@ -133,11 +195,34 @@ def register_actors(
                 raise Retry(delay=exc.delay_seconds * 1000) from None
         return str(parsed_job_id)
 
-    actor = dramatiq.actor(
+    prompt_actor = dramatiq.actor(
         actor_name="prompt_test",
         broker=broker,
         max_retries=3,
         min_backoff=5000,
         max_backoff=30000,
     )(run_prompt_test)
-    return (actor,)
+
+    def run_ai_job(job_id: str) -> str:
+        parsed_job_id = UUID(job_id)
+        if ai_runner is not None and ai_job_scope_resolver is not None:
+            kindergarten_id = ai_job_scope_resolver.kindergarten_id_for_ai_job(parsed_job_id)
+            if kindergarten_id is not None:
+                try:
+                    ai_runner.execute(
+                        kindergarten_id,
+                        parsed_job_id,
+                        worker_id=_worker_id(),
+                    )
+                except AiJobRetry as exc:
+                    raise Retry(delay=exc.delay_seconds * 1000) from None
+        return str(parsed_job_id)
+
+    ai_actor = dramatiq.actor(
+        actor_name="ai_job",
+        broker=broker,
+        max_retries=3,
+        min_backoff=5000,
+        max_backoff=30000,
+    )(run_ai_job)
+    return prompt_actor, ai_actor

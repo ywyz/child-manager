@@ -1,10 +1,14 @@
 # Child Manager 项目上下文
 
-最后更新：2026-07-26
+最后更新：2026-07-31
 
 当前上下文分支：`docs`
 
-项目阶段：M3 与 M3A 已集成 `main`；M5 T046–T061 已完成，下一阶段为 M4 T062–T086
+项目阶段：M4 与 M5 均为 complete 并已集成 main；M6 T087–T126 为 in_progress，
+US4 T087–T110 已完成，US5 T111–T126 已完成。固定
+`main@b7676c27d07adc5eca1f0c397217780367481e9c` →
+`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
+PASS；`main` 集成已获授权，正常 merge 后回填最终 SHA。
 
 ## 1. 本文档的用途
 
@@ -218,12 +222,23 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 ### 阶段 4：AI 基础能力
 
-- M5 手工教案闭环已完成；下一实施即本阶段，保持稳定名称但不按里程碑编号推导执行先后。
+- M5 手工教案闭环完成后实施；M4 Issue #10、T062–T086、双轴 Review 与集成门禁均已完成。
 - 实现多个模型档案、密钥加密和能力标签。
 - 实现提示词草稿、发布、版本和回滚。
 
 ### 阶段 6：AI 异步生成
 
+- M4 与 M5 均已完成，[M6 Issue #11](https://github.com/ywyz/child-manager/issues/11)
+  为 in_progress；US4 T087–T110 已完成，最终实现与图谱提交为
+  dev@9932aa928132152cabedb2e273980f60cdd51f6c。US4 独立门禁为 126 passed，五条标准
+  命令全部退出 0，完整测试为 610 passed, 1 warning。US5 T111–T126 已完成并由
+  dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731（headSha 同一完整 SHA）通过完整检查。
+  设置页先 collect-only 收集 49 项并通过，再重跑为 49 passed；US5 专项为 56 passed；
+  完整本地 pytest 为 666 passed, 1 warning。恶意样本临时残留为 0，Graphify 诊断的缺失、
+  悬空、自环、重复和折叠边均为 0。T126 已完成；固定
+  `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
+  `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
+  PASS，`main` 集成已获授权，正常 merge 后回填最终 SHA。
 - 接入 Redis Worker、任务状态、栏目级生成、结构校验、重试和失败恢复。
 - 支持集体活动文本与 `.docx` 导入。
 
@@ -261,13 +276,13 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 ## 9. 当前仓库与分支状态
 
-状态日期：2026-07-26。
+状态日期：2026-07-31。
 
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
-| `main` | 稳定版本与发布基线 | 已接收通过独立 Review 的 `dev@6a9e269`，包含 M1–M3A 实现；M5 已验收但尚未集成 | 接收完成最终图谱更新的 M5 `dev` |
-| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M5 Issue #9 已按 `completed` 关闭；固定 `docs@7d9af6c`，最终实现与 Review 证据为 `dev@ae74c83` | 以本次状态提交固定 M4 单一实施 Issue |
-| `dev` | Codex 唯一实现与集成 | M5 `dev@ae74c83` 已通过双轴 Review 与 Quality Gates `30202886134`，完整回归 347 项通过 | 更新并检查图谱，集成 `main`，随后实施 M4 T062–T086 |
+| `main` | 稳定版本与发布基线 | `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已正常 merge 最终 M4 `dev`，最终树与 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 一致；Quality Gates `30235439229` 为 458 项通过 | 接收已完成 Review 的 M6 `dev` 结果 |
+| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 Issue #11 已同步 OpenAPI、US5 T111–T126 状态、最终验收证据与 Review PASS | main merge 后回填最终 main SHA |
+| dev | Codex 唯一实现与集成 | M6 in_progress；US5 T111–T126 已实现，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过；本地专项与 Graphify 诊断完成 | 已通过固定 `main..dev` Standards/Spec 双轴 Review；执行已授权的 main 集成 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -289,15 +304,25 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
    `dev@f5f0084`，T036～T045 全部完成。
 5. M3A Issue #8 已按 `completed` 关闭；固定基线为 `docs@2f7894c`，最终实现为
    `dev@6a9e269`，同提交 Quality Gates `30161645948` 与本地 310 项完整复验均通过。
-6. `dev@6a9e269` 已经明确授权和独立 Review 后集成 `main`；该稳定开发基线只证明
-   M1–M3A，不得表述为首期功能完成或生产可发布。
+6. `dev@6a9e269` 已经明确授权和独立 Review 后集成历史 `main`；该历史基线只证明
+   M1–M3A。
 7. M5 Issue #9 已按 `completed` 关闭；固定需求基线为 `docs@7d9af6c`，最终实现为
    `dev@ae74c83`。Standards 与 Spec 双轴 Review 均为 `PASS`，同提交 Quality Gates
    `30202886134` 通过，结果为 `347 passed, 1 warning`。
-8. M5 关闭后的下一动作是对最终 `dev` 运行并检查 `graphify update .`，再集成 `main`。
-   随后创建固定引用本次 docs 状态提交的 M4 单一实施 Issue，依次执行 T062–T072 RED、
-   T073–T085 GREEN 与 T086 验收；不得提前进入 T087。
-
+8. M4 [Issue #10](https://github.com/ywyz/child-manager/issues/10) 已按 `completed` 关闭；固定
+   需求基线为 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，最终 Review SHA 为
+   `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`。Standards 与 Spec 双轴 Review 均为
+   `PASS`，同提交 Quality Gates `30235090100` 通过，结果为 `458 passed, 1 warning`。
+9. 最终 `dev` 已通过正常 merge 集成为
+   `main@b7676c27d07adc5eca1f0c397217780367481e9c`；两条等价 Dependabot 提交历史均保留，
+   最终树一致，`main` Quality Gates `30235439229` 同样为 `458 passed, 1 warning`。
+10. M6 Issue #11 为 in_progress 且只覆盖 T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
+    dev@9932aa928132152cabedb2e273980f60cdd51f6c；US5 T111–T126 已完成，dev@32d3c102152848f7488da036ddada461b3d8d3ab
+    的 Quality run 30602225731 在同一 headSha 上通过完整检查；设置页先收集 49 项再通过 49 项，
+    US5 专项为 56 项通过，完整本地 pytest 为 666 项通过、1 条既有弃用警告；恶意样本临时残留为 0，
+    Graphify 诊断无结构性异常。固定 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
+    `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS；
+    `main` 集成已获授权，正常 merge 后回填最终 SHA。
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
 ## 11. 高风险点
@@ -343,10 +368,11 @@ uv run pyright
 uv run pytest
 ```
 
-`main` 当前包含 M1–M3A 稳定实现，`dev@ae74c83` 进一步包含已独立验收的 M5。2026-07-26
-最终 Quality Gates `30202886134` 中，锁定安装、Ruff format/check、Pyright、OpenAPI 校验
-和完整 Pytest 均通过；Pytest 结果为 `347 passed, 1 warning`，warning 是已记录的 Pydantic
-2.11 弃用提示。后续里程碑仍必须重新执行这些命令，不得复用本次结果代替新变更验证。
+`main@b7676c27d07adc5eca1f0c397217780367481e9c` 当前包含 M1–M3A、M5 与已独立验收的 M4。
+2026-07-27 的 `dev` Quality Gates `30235090100` 和 `main` Quality Gates `30235439229`
+中，锁定安装、Ruff format/check、Pyright、OpenAPI 校验和完整 Pytest 均通过；两次 Pytest
+结果均为 `458 passed, 1 warning`，warning 是已记录的 Pydantic 2.11 弃用提示。后续里程碑
+仍必须重新执行这些命令，不得复用本次结果代替新变更验证。
 
 各阶段还必须执行与风险匹配的专项验证：
 

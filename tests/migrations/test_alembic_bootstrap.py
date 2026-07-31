@@ -7,10 +7,10 @@ from alembic.config import Config
 from alembic.script import ScriptDirectory
 
 
-def test_ai_prompts_jobs_revision_is_declared_as_head() -> None:
+def test_group_activity_sources_revision_is_declared_as_head() -> None:
     heads = ScriptDirectory.from_config(Config("alembic.ini")).get_heads()
 
-    assert heads == ["0007_ai_prompts_jobs"]
+    assert heads == ["0009_group_activity_sources"]
 
 
 def test_empty_database_can_upgrade_to_current_head(isolated_database_url: str) -> None:
@@ -32,7 +32,7 @@ def test_empty_database_can_upgrade_to_current_head(isolated_database_url: str) 
 
     assert upgrade.returncode == 0, upgrade.stderr
     assert current.returncode == 0, current.stderr
-    assert "0007_ai_prompts_jobs" in current.stdout
+    assert "0009_group_activity_sources" in current.stdout
 
 
 def test_migrations_reject_missing_database_url() -> None:

@@ -1,6 +1,6 @@
 # Implementation Plan: 首期一日活动计划完整闭环
 
-**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-07-26 | **Spec**: [spec.md](./spec.md)
+**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-07-31 | **Spec**: [spec.md](./spec.md)
 
 **Input**: `specs/001-daily-activity-plan/spec.md`；范围为 Roadmap M1–M8，M9 生产部署复审排除。
 
@@ -52,17 +52,21 @@ WCAG 2.2 AA 可验证要求
 
 ## Constitution Check
 
-*GATE: M0–M3A、M5 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
-`main/docs/dev` 单实现流程。M5 #9 已完成 T046–T061；下一实施固定为 M4 T062–T086。*
+*GATE: M0、M1、M2、M3、M3A、M5 与 M4 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
+`main/docs/dev` 单实现流程。M4 #10 已完成 T062–T086；M6 T087–T126 为 `in_progress`，
+US4 T087–T110 已完成，US5 T111–T126 已完成，T126 独立验收已完成；固定
+`main@b7676c27d07adc5eca1f0c397217780367481e9c` →
+`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS，
+`main` 集成已获授权。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
 | I. 事实来源与范围忠实 | PASS | **PASS（M0）** | canonical 文档、历史清理与最终共享基线均已验证 |
 | II. 服务边界与单向依赖 | PASS | **PASS（M1）** | 历史 Codex、Trae 实现均通过 BFF/API/Worker 边界与依赖方向验证；当前 `dev` 仍须维持该门禁 |
-| III. 园所隔离与服务端授权 | PASS | **PASS（M2/M3/M5）/ PENDING（M4+ 业务）** | 身份、会话、设置与教案 Repository/API 园所隔离均已验证；后续业务实体仍按里程碑验收 |
-| IV. 权威状态、事务与可恢复性 | PASS | **PASS（M1 基础）** | 历史实现已建立 PostgreSQL 事务与迁移基础；业务幂等、租约、恢复扫描和文件补偿由后续里程碑实现 |
-| V. 教师控制、AI 与 Word 保真 | PASS | **PASS（M5 手工教师控制）/ PENDING（M4+ AI 与 Word）** | 六栏目手工编辑、乐观锁、历史和归档已验证；栏目级 AI 采用、模板副本/哈希和红字边界按后续里程碑验收 |
-| VI. 可执行验证与真实证据 | PASS | **PASS（M1）** | M1 工程入口与质量门禁已有历史证据；当前和后续用户故事仍须在 `dev` 按对应里程碑重新验收 |
+| III. 园所隔离与服务端授权 | PASS | **PASS（M2/M3/M4/M5）/ PENDING（M6+ 业务）** | 身份、会话、设置、教案和 M4 AI/任务 Repository/API 园所隔离均已验证；后续业务实体仍按里程碑验收 |
+| IV. 权威状态、事务与可恢复性 | PASS | **PASS（M4 提示词测试）/ PENDING（M6+ 业务）** | PostgreSQL 权威任务、幂等、租约、心跳、恢复扫描和脱敏失败审计已验证；教师 AI 结果与文件补偿由后续里程碑实现 |
+| V. 教师控制、AI 与 Word 保真 | PASS | **PASS（M4 AI 基础、M5 手工教师控制）/ PENDING（M6+ 教师生成与 Word）** | 模型/提示词安全基础、六栏目手工编辑、乐观锁、历史和归档已验证；栏目级 AI 采用、模板副本/哈希和红字边界按后续里程碑验收 |
+| VI. 可执行验证与真实证据 | PASS | **PASS（M4）** | M4 双轴 Review、`dev`/`main` Quality Gates 与 Graphify 完整性诊断均有固定 SHA 证据；后续用户故事仍须重新验收 |
 
 **前置同步与授权处理**: T001～T003 以及 Codex/Trae 的 M1 T004～T020 保留为历史记录。自 2026-07-21 起，新的实现必须由 Issue 固定引用已确认的 `docs` 提交，并只在 `dev` 执行；历史验收不自动替代当前文档基线的验证。
 
@@ -196,8 +200,8 @@ uv run python -m apps.web --host 127.0.0.1 --port "$CHILD_MANAGER_WEB_PORT" \
   --api-base-url "http://127.0.0.1:${CHILD_MANAGER_API_PORT}"
 ```
 
-入口名称属于本 feature 的实现契约；当前 `main` 与 `dev` 已包含通过验收的 M1–M3A
-实现，上述 API、Worker、Web 和初始化命令均已有稳定入口。T046–T061 只能复用这些入口，
+入口名称属于本 feature 的实现契约；当前 `main` 与 `dev` 已包含通过验收的 M1–M3A、M5
+与 M4 实现，上述 API、Worker、Web 和初始化命令均已有稳定入口。M6 必须复用这些入口，
 不得另建平行运行单元。
 
 ## Phase 0: Research
@@ -291,8 +295,9 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 
 ### Quickstart 验收合同
 
-- 当前 `main` 已包含 M1–M3A，`dev` 已包含 M1–M3A 与 M5 的代码和测试；quickstart
-  同时保留后续故事的可执行验收合同，尚未实施的 T062 以后步骤不得声称已经通过。
+- 当前 `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已包含 M1–M3A、M5 与 M4，
+  `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 是 M4 最终 Review SHA；quickstart
+  同时保留后续故事的可执行验收合同，尚未实施的 T111 以后步骤不得声称已经通过。
 - M1 后使用 API、Worker、Web 三个可执行入口；T032 完成后再使用已冻结的初始化与最后管理员
   恢复子命令；后者只接受恢复请求 ID，交互匹配初始化时保存的两项预登记引用，Web/API 对
   最后管理员审批只返回 `identity.last_admin_recovery_requires_cli`；
@@ -302,9 +307,15 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
   Word 样式与审计，并明确生产部署和未来子系统反目标。
 
 **Post-design Constitution Check**: 内部设计、T002 最终 Pre-M1 审查、M0-G1～M0-G8、
-T003、M1 T004～T020、M2 T021～T035、M3 T036～T045 与独立 M3A T001～T034 均已完成。
-M0–M3A、M5 为 `complete`；下一实施门禁是由固定 docs 提交的单一 Issue 执行
-M4 T062–T086。
+T003、M1 T004～T020、M2 T021～T035、M3 T036～T045、独立 M3A T001～T034、M5
+T046～T061 与 M4 T062～T086 均已完成。M4 [Issue #10](https://github.com/ywyz/child-manager/issues/10)
+的固定基线为 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，最终 Review SHA 为
+`dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，并已集成
+`main@b7676c27d07adc5eca1f0c397217780367481e9c`。M6 为 `in_progress`；
+[Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；当前 handoff 基线为 `docs@dcc8553aa8ecf0fdf3be215430666aabd80793f2`。US4 T087–T110 已完成，US5 T111–T126 已完成。
+实现验证提交为 `dev@32d3c102152848f7488da036ddada461b3d8d3ab`，Quality run `30602225731` 在同一 headSha 通过完整检查。
+设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed；恶意样本临时残留为 0，Graphify 诊断通过，T126 已完成。
+固定 `main..dev` Standards/Spec 双轴 Review 均为 PASS；`main` 集成已获授权，正常 merge 后回填最终 SHA。
 
 ## Phase 2: Task Generation Strategy
 
@@ -360,4 +371,5 @@ US1–US7 建立可独立验收的纵向切片：
 
 ## Complexity Tracking
 
-无内部设计复杂度例外；M0、M1 已完成。当前只有 `dev` 承载实现，任何历史分支结果都不能替代 #4 与后续 Issue 的当前验收门禁。
+无内部设计复杂度例外；M0、M1、M2、M3、M3A、M5 与 M4 已完成。当前只有 `dev` 承载
+新实现，任何历史分支结果都不能替代 M6 与后续 Issue 的固定 docs 基线和当前验收门禁。

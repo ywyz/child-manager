@@ -51,8 +51,8 @@ def test_client_posts_openai_compatible_request_with_fixed_limits() -> None:
     assert len(captured) == 1
     assert captured[0].url.path == "/v1/chat/completions"
     assert captured[0].headers["authorization"] == "Bearer super-secret-api-key"
-    assert client.timeout.connect <= 5
-    assert client.timeout.read <= 60
+    assert client.timeout.connect == 10
+    assert client.timeout.read == 120
 
 
 def test_client_rejects_redirects_without_following_them() -> None:

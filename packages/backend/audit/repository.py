@@ -7,7 +7,11 @@ from uuid import UUID, uuid7
 import psycopg
 from pydantic import ValidationError
 
-from packages.contracts.audit import IdentityAuditEventCode, IdentityAuditMetadata
+from packages.contracts.audit import (
+    AiGenerationAuditMetadata,
+    IdentityAuditEventCode,
+    IdentityAuditMetadata,
+)
 
 
 class AuditRepository:
@@ -27,19 +31,27 @@ class AuditRepository:
         resource_id: UUID | None,
         outcome: str,
         request_id: UUID | None = None,
+        trace_id: UUID | None = None,
+        job_id: UUID | None = None,
         metadata: dict[str, object] | None = None,
     ) -> None:
         try:
-            safe_metadata = IdentityAuditMetadata.model_validate(metadata or {}).model_dump(
-                exclude_none=True
+            metadata_model = (
+                AiGenerationAuditMetadata
+                if event_code.value.startswith("ai.")
+                else IdentityAuditMetadata
+            )
+            safe_metadata = metadata_model.model_validate(metadata or {}).model_dump(
+                mode="json",
+                exclude_none=True,
             )
         except ValidationError as exc:
             raise ValueError("审计 metadata 包含非白名单字段或值") from exc
         self.connection.execute(
             """INSERT INTO audit_events
             (id, kindergarten_id, event_code, actor_user_id, actor_role_codes, resource_type,
-             resource_id, request_id, outcome, metadata, occurred_at)
-            VALUES (%s,%s,%s,%s,%s::jsonb,%s,%s,%s,%s,%s::jsonb,%s)""",
+             resource_id, request_id, trace_id, job_id, outcome, metadata, occurred_at)
+            VALUES (%s,%s,%s,%s,%s::jsonb,%s,%s,%s,%s,%s,%s,%s::jsonb,%s)""",
             (
                 uuid7(),
                 self.kindergarten_id,
@@ -49,6 +61,8 @@ class AuditRepository:
                 resource_type,
                 resource_id,
                 request_id,
+                trace_id,
+                job_id,
                 outcome,
                 json.dumps(safe_metadata),
                 datetime.now(UTC),

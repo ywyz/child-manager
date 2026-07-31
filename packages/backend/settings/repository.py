@@ -186,6 +186,15 @@ class AiModelProfileRepository:
         )
         return _ai_profile(_row(result))
 
+    def get_default(self, kindergarten_id: UUID) -> AiModelProfileRecord | None:
+        result = self.connection.execute(
+            _AI_PROFILE_SELECT
+            + """ WHERE p.kindergarten_id=%s AND p.is_default
+                GROUP BY p.id""",
+            (kindergarten_id,),
+        )
+        return _ai_profile(_row(result))
+
     def list(
         self,
         kindergarten_id: UUID,

@@ -10,14 +10,16 @@ from pydantic import BaseModel
 
 from packages.backend.prompts.renderer import validate_prompt_template
 from packages.backend.prompts.system_defaults import SYSTEM_DEFAULTS
-from packages.contracts.prompts import (
+from packages.contracts.lesson_plans import (
     AiAreaGame,
     AiDailyReflection,
     AiGroupActivity,
     AiMorningActivity,
     AiMorningTalk,
-    CommonPlanPromptVariables,
     GroupActivityAddStepResult,
+)
+from packages.contracts.prompts import (
+    CommonPlanPromptVariables,
     GroupAddStepPromptVariables,
     GroupSplitPromptVariables,
     IndoorAreaPromptVariables,
@@ -164,14 +166,16 @@ def validate_prompt_result_schema(
 ) -> dict[str, Any]:
     for spec in PROMPT_SPECS.values():
         if spec.result_schema_code == schema_code:
-            validation_context: dict[str, object] | None = None
             if schema_code == "prompt.group_activity_add_step.v1":
                 variables = GroupAddStepPromptVariables.model_validate(input_context)
-                validation_context = {
-                    "max_insert_index": len(variables.group_activity.process),
-                }
-            return spec.result_model.model_validate(
-                result,
-                context=validation_context,
-            ).model_dump(mode="json")
+                parsed = spec.result_model.model_validate(
+                    result,
+                    context={
+                        "max_insert_index": len(variables.group_activity.process),
+                    },
+                )
+                assert isinstance(parsed, GroupActivityAddStepResult)
+            else:
+                parsed = spec.result_model.model_validate(result)
+            return parsed.model_dump(mode="json")
     raise LookupError("提示词结果 Schema 不存在")

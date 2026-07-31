@@ -318,7 +318,15 @@ uv run pytest
 - 只有架构综述或查询结果不足时再阅读完整 `GRAPH_REPORT.md`。
 - `graphify-out/` 因查询或更新产生改动是正常现象，不能据此跳过图谱。
 - 不得手工编辑生成的图谱文件。
-- 修改业务代码或活跃治理/架构文档后运行 `graphify update .`；若工具不可用或更新失败，在交付说明中报告。
+- 仅修改业务代码时运行 `graphify update .`；该命令只做代码增量抽取，不替代文档、论文或图片的语义抽取。
+- 修改活跃治理/架构文档，或需要重新进行社区命名时，Graphify 固定优先使用大语言模型：
+  1. 首选已配置的 OpenAI 兼容后端；模型由仓库外的 `OPENAI_MODEL` 指定，仓库内不固定
+     机器本地模型名：`graphify extract . --backend openai`。
+  2. OpenAI 兼容后端调用失败后，使用已配置的 DeepSeek 后端：
+     `graphify extract . --backend deepseek`。
+  3. 两个后端都失败后，才按 Graphify 技能使用子代理完成语义抽取或命名；不得在首个后端失败后直接跳过 DeepSeek。
+- `graphify label`、`graphify cluster-only` 等需要大模型命名的操作沿用同一优先级。每次交付记录实际使用的模型或子代理来源，以及前序后端的失败原因；不得记录或输出 API Key、Base URL 或其他秘密。
+- 若 Graphify 全部路径不可用或更新失败，在交付说明中报告；不得用旧图谱证明新文档一致。
 
 代码结构问题按以下顺序使用 codebase-memory MCP：
 
@@ -353,7 +361,7 @@ uv run pytest
 ### 已安装工具与技能
 
 - 当前环境已安装 `fdfind`、`rg`、`sg` 与 graphify；文件名搜索、文本搜索和 AST 搜索仍分别遵循上述优先级。
-- 跨文档和架构决策关系优先使用 graphify；代码符号、调用与影响分析优先使用 codebase-memory MCP；只有需要本地静态图或导出物时才使用 codegraph。业务代码或重大文档变更后运行 `graphify update .` 并报告失败原因。
+- 跨文档和架构决策关系优先使用 graphify；代码符号、调用与影响分析优先使用 codebase-memory MCP；只有需要本地静态图或导出物时才使用 codegraph。业务代码或重大文档变更后，必须按第 17 节分别执行代码增量抽取或文档语义抽取，并报告失败原因。
 - 已安装 Spec Kit 技能（`.agents/skills/speckit-*`），适用于规格、计划、任务及其一致性审查；生成 `tasks.md` 后，实施前应运行 `speckit-analyze`。
 - 已安装 Superpowers 与 `mattpocock/skills` 工程技能集合。任务命中其适用范围时，应先阅读对应 `SKILL.md` 并按其流程执行；技能不改变本文件的安全、数据隔离、Git 与验证要求。
 

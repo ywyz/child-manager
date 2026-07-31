@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-26T13:02:36.707594+00:00",
+  "generated_at": "2026-07-27T11:26:35.630249+00:00",
   "nodes": {
     "config_compose_dev": {
       "code_fingerprint": "af8c0efe85e58c41d20297521a5b8c53c572553ce1193204f79352457213b2e2",
@@ -12,7 +12,7 @@
           "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
         }
       ],
-      "score": 0.953521943,
+      "score": 0.933180036,
       "source_file": "docs/development/local-development-environments.md",
       "status": "tentative",
       "uses": 1
@@ -28,31 +28,10 @@
           "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
         }
       ],
-      "score": 0.953521943,
+      "score": 0.933180036,
       "source_file": "docs/development/local-development-environments.md",
       "status": "tentative",
       "uses": 1
-    },
-    "context_service_boundaries": {
-      "code_fingerprint": "369f9ca588e7a517652fe3571aa776c06dac3e66a6fde76885a62efaa5166129",
-      "label": "Web、API 与 Worker 服务边界",
-      "last": "2026-07-11T02:42:18.471052+00:00",
-      "provenance": [
-        {
-          "date": "2026-07-11T02:42:18.471052+00:00",
-          "outcome": "useful",
-          "q": "系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
-        },
-        {
-          "date": "2026-07-11T02:19:23.469077+00:00",
-          "outcome": "useful",
-          "q": "接下来需要生成什么文件呢"
-        }
-      ],
-      "score": 1.399950578,
-      "source_file": "CONTEXT.md",
-      "status": "preferred",
-      "uses": 2
     },
     "docs_development_local_dev_environments": {
       "code_fingerprint": "af8c0efe85e58c41d20297521a5b8c53c572553ce1193204f79352457213b2e2",
@@ -65,8 +44,24 @@
           "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
         }
       ],
-      "score": 0.953521943,
+      "score": 0.933180036,
       "source_file": "docs/development/local-development-environments.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "docs_roadmap": {
+      "code_fingerprint": "65053d1c3862778d2caffcc2ede8eae314830383bd626eb891da2e3ad93bbf50",
+      "label": "Child Manager 产品与工程路线图",
+      "last": "2026-07-26T00:43:36.051824+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-26T00:43:36.051824+00:00",
+          "outcome": "useful",
+          "q": "T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？"
+        }
+      ],
+      "score": 0.967130561,
+      "source_file": "docs/ROADMAP.md",
       "status": "tentative",
       "uses": 1
     },
@@ -86,24 +81,72 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 1.382386519,
+      "score": 1.352895454,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2
     },
-    "struct_specs_002_password_totp_backup_login_tasks_md_heading_595456058962": {
-      "code_fingerprint": "437ddc7cf541e418cae4156661a3469ff6e4a212d1577e846d757b8379c6afce",
-      "label": "Tasks: 密码与 TOTP 备用登录",
-      "last": "2026-07-24T11:36:24.917450+00:00",
+    "kindergarten_isolation": {
+      "code_fingerprint": "33f75e8b8d703a690bc6103fdd99759a8420bed11b98c672224f9a97d51c3f90",
+      "label": "园所数据隔离",
+      "last": "2026-07-11T02:07:08.074638+00:00",
       "provenance": [
         {
-          "date": "2026-07-24T11:36:24.917450+00:00",
+          "date": "2026-07-11T02:07:08.074638+00:00",
           "outcome": "useful",
-          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
         }
       ],
-      "score": 0.953521943,
-      "source_file": "specs/002-password-totp-backup-login/tasks.md",
+      "score": 0.68478178,
+      "source_file": "AGENTS.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "lesson_plan": {
+      "code_fingerprint": "43c973a8d5fa50f0967eadd45c08828a9e9db43f1a767a3eb727353981e8fcec",
+      "label": "一日活动计划",
+      "last": "2026-07-11T02:07:08.074638+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        }
+      ],
+      "score": 0.68478178,
+      "source_file": "docs/PRD/lesson-management.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "specs_001_daily_activity_plan_plan": {
+      "code_fingerprint": "768898db076081825b43dbf0909759cfceffbdf4573c3daf6403d99ae0511acb",
+      "label": "Implementation Plan",
+      "last": "2026-07-26T00:43:36.051824+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-26T00:43:36.051824+00:00",
+          "outcome": "useful",
+          "q": "T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？"
+        }
+      ],
+      "score": 0.967130561,
+      "source_file": "specs/001-daily-activity-plan/plan.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "specs_001_daily_activity_plan_tasks": {
+      "code_fingerprint": "21f9ff134178c3d09c06fb30a44f773b9614ff2ed95ba41d7bb2a57d431c8d48",
+      "label": "Tasks (001 Daily Activity Plan)",
+      "last": "2026-07-26T00:43:36.051824+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-26T00:43:36.051824+00:00",
+          "outcome": "useful",
+          "q": "T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？"
+        }
+      ],
+      "score": 0.967130561,
+      "source_file": "specs/001-daily-activity-plan/tasks.md",
       "status": "tentative",
       "uses": 1
     }

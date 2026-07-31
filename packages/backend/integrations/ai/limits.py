@@ -2,5 +2,5 @@
 
 import httpx
 
-AI_TIMEOUT = httpx.Timeout(connect=5.0, read=60.0, write=10.0, pool=5.0)
+AI_TIMEOUT = httpx.Timeout(connect=10.0, read=120.0, write=10.0, pool=5.0)
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024

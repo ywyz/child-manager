@@ -10,7 +10,7 @@ import psycopg
 import pytest
 from psycopg import sql
 
-from tests.database_config import require_test_database_url
+from tests.database_config import SensitiveDatabaseUrl, require_test_database_url
 
 BASE_DATABASE_URL = require_test_database_url()
 
@@ -48,7 +48,7 @@ def isolated_database_url() -> Iterator[str]:
         connection.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(schema)))
     options = quote(f"-csearch_path={schema}")
     try:
-        yield f"{BASE_DATABASE_URL}?options={options}"
+        yield SensitiveDatabaseUrl(f"{BASE_DATABASE_URL}?options={options}")
     finally:
         with psycopg.connect(_native_psycopg_url(BASE_DATABASE_URL), autocommit=True) as connection:
             connection.execute(sql.SQL("DROP SCHEMA {} CASCADE").format(sql.Identifier(schema)))

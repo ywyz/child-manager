@@ -29,12 +29,11 @@ def m4_database(
         yield connection
 
 
-def test_0007_follows_lesson_plans_and_is_the_only_head() -> None:
+def test_0007_follows_lesson_plans() -> None:
     script = ScriptDirectory.from_config(Config("alembic.ini"))
     revisions = {revision.revision: revision.down_revision for revision in script.walk_revisions()}
 
     assert revisions[REVISION] == "0006_lesson_plans"
-    assert script.get_heads() == [REVISION]
 
 
 def test_0007_creates_all_tenant_scoped_ai_prompt_and_job_tables(

@@ -24,7 +24,7 @@ def test_test_broker_registers_minimal_actor_without_redis() -> None:
 
     actors = register_actors(broker)
 
-    assert [actor.actor_name for actor in actors] == ["prompt_test"]
+    assert [actor.actor_name for actor in actors] == ["prompt_test", "ai_job"]
 
 
 def test_worker_keeps_running_until_stop_is_requested() -> None:

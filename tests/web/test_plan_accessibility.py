@@ -63,9 +63,16 @@ async def test_rendered_plan_editor_has_labelled_status_fields_focus_order_and_t
             "室内区域游戏",
             "下午户外游戏",
             "一日活动反思",
+            "集体活动原文",
         ]
         assert all(field.props.get("aria-label") for field in textareas)
-        assert all(field.props.get("aria-describedby") == "plan-save-status" for field in textareas)
+        plan_content_fields = [
+            field for field in textareas if field.props["label"] != "集体活动原文"
+        ]
+        assert all(
+            field.props.get("aria-describedby") == "plan-save-status"
+            for field in plan_content_fields
+        )
         assert status.props.get("id") == "plan-save-status"
         assert status.props.get("aria-live") == "polite"
         assert status.text == "已保存"

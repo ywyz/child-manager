@@ -70,6 +70,18 @@ export CHILD_MANAGER_RUNTIME_ROOT="${XDG_RUNTIME_DIR:-/tmp}/child-manager-dev"
 
 Dev 档位必须从当前 shell 或仓库外、权限受控的档位文件加载 `CHILD_MANAGER_POSTGRES_PASSWORD`。首次创建时使用 `openssl rand -hex 32` 生成；不得把结果写入仓库、`.env`、Compose、日志、测试快照或本文。所有需要连接数据库的终端必须加载同一档位的同一值。
 
+### 4.2 测试数据库档位
+
+本地 pytest 默认从 `${XDG_CONFIG_HOME:-$HOME/.config}/child-manager/test-database-url`
+读取完整测试数据库连接字符串；可用 `CHILD_MANAGER_TEST_DATABASE_URL_FILE` 指向另一个仓库
+外文件。文件必须属于当前用户、权限严格为 `0600`、不是符号链接且只含一行。CI 或临时专项
+环境可以显式设置 `CHILD_MANAGER_TEST_DATABASE_URL`，该变量优先于文件。
+
+无论使用哪一种来源，连接都必须是 PostgreSQL，数据库名必须以 `_test` 或 `_ci` 结尾；
+禁止静默回退到开发共享库。pytest 只负责安全加载和校验连接，不自动启动 Docker 或创建
+数据库；每次会话仍先按 Quickstart 幂等启动 Compose 并确认测试库存在。这样 shell 重开后
+无需重复导出含密码的 URL，同时基础设施停止仍会被如实报告为环境失败。
+
 ## 5. Compose、数据与文件隔离
 
 `compose.dev.yaml` 只允许包含本地开发和自动化测试所需的 PostgreSQL、Redis 及其健康检查，不得加入 Caddy、生产 Web/API/Worker 编排、DNS、证书、Tailscale、备份或发布任务。

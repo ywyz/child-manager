@@ -6,10 +6,11 @@
 
 **Created**: 2026-07-12
 
-**Updated**: 2026-07-26
+**Updated**: 2026-07-31
 
-**Status**: M0–M3A、M5 `complete` / M4 `ready` / M6–M8 `pending` — 下一实施固定为
-M4 T062–T086
+**Status**: M0–M3A、M4、M5 `complete` / M6 `in_progress` / M7–M8 `pending` — M6
+[Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；US4
+T087–T110 已完成；US5 T111–T126 已完成，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查；设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed，恶意样本临时残留为 0，Graphify 诊断通过；固定 `main@b7676c27d07adc5eca1f0c397217780367481e9c` → `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS，`main` 集成已获授权，正常 merge 后回填最终 SHA
 
 **Input**: 将 Child Manager 首期 M1–M8 作为一个完整 feature，交付工程与安全基础、
 认证授权、必要设置、手工教案、AI 模型与提示词、异步 AI、固定 Word 导出和功能验收。
@@ -792,8 +793,8 @@ AI 和在线节假日服务。
 - 本 feature 覆盖整个首期一日活动计划闭环，并以 Roadmap M1–M3、M3A、M5、M4、M6–M8 作为依赖
   实施阶段；M9
   生产安全与部署复审不属于本 feature。
-- 当前 `main` 与 `dev` 已包含通过验收的 M1–M3A 实现；本规格中的 M5、M4 及后续目标仍
-  不能据此视为已实现。
+- 当前 `main` 与 `dev` 已包含通过验收的 M1–M3A、M5 与 M4 实现；M6 及后续目标仍不能
+  据此视为已实现。
 - 一个运行实例首期只服务一所幼儿园，但园所隔离必须从数据、授权和验收层面完整保留。
 - 当前学期是创建教案的必需设置；学期外日期仍绑定当前学期快照，周次为空。
 - 班级允许暂时缺少区域；对应类别的 AI 栏目在至少有一个启用区域前不可生成。
