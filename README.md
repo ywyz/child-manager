@@ -34,8 +34,10 @@ T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
 `dev@32d3c102152848f7488da036ddada461b3d8d3ab` 的 Quality run `30602225731` 在同一
 headSha 通过完整检查，设置页专项为 49 项收集、49 项通过，US5 专项为 56 项通过，完整
 本地 pytest 为 666 项通过（仅有既有 Pydantic 弃用警告）。恶意样本临时残留为 0，Graphify
-诊断无缺失、悬空、自环、重复或折叠边。T126 已勾选，下一门禁为固定 `main..dev`
-Standards/Spec 双轴 Review；`main` 集成仍需单独授权。
+诊断无缺失、悬空、自环、重复或折叠边。T126 已勾选；固定
+`main@b7676c27d07adc5eca1f0c397217780367481e9c` →
+`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
+PASS。`main` 集成已获授权，正常 merge 后回填最终 `main` SHA。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 
