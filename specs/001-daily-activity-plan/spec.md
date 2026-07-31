@@ -10,7 +10,7 @@
 
 **Status**: M0–M3A、M4、M5 `complete` / M6 `in_progress` / M7–M8 `pending` — M6
 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；US4
-T087–T110 已完成；US5 T111–T126 已完成，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查；设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed，恶意样本临时残留为 0，Graphify 诊断通过；当前下一门禁为固定 `main..dev` Standards/Spec 双轴 Review，`main` 集成仍需单独授权
+T087–T110 已完成；US5 T111–T126 已完成，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查；设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed，恶意样本临时残留为 0，Graphify 诊断通过；固定 `main@b7676c27d07adc5eca1f0c397217780367481e9c` → `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS，`main` 集成已获授权，正常 merge 后回填最终 SHA
 
 **Input**: 将 Child Manager 首期 M1–M8 作为一个完整 feature，交付工程与安全基础、
 认证授权、必要设置、手工教案、AI 模型与提示词、异步 AI、固定 Word 导出和功能验收。

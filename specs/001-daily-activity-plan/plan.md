@@ -54,7 +54,10 @@ WCAG 2.2 AA 可验证要求
 
 *GATE: M0、M1、M2、M3、M3A、M5 与 M4 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
 `main/docs/dev` 单实现流程。M4 #10 已完成 T062–T086；M6 T087–T126 为 `in_progress`，
-US4 T087–T110 已完成，US5 T111–T126 已完成，T126 独立验收已完成，下一门禁为固定 `main..dev` Standards/Spec 双轴 Review。*
+US4 T087–T110 已完成，US5 T111–T126 已完成，T126 独立验收已完成；固定
+`main@b7676c27d07adc5eca1f0c397217780367481e9c` →
+`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS，
+`main` 集成已获授权。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
@@ -312,7 +315,7 @@ T046～T061 与 M4 T062～T086 均已完成。M4 [Issue #10](https://github.com/
 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；当前 handoff 基线为 `docs@dcc8553aa8ecf0fdf3be215430666aabd80793f2`。US4 T087–T110 已完成，US5 T111–T126 已完成。
 实现验证提交为 `dev@32d3c102152848f7488da036ddada461b3d8d3ab`，Quality run `30602225731` 在同一 headSha 通过完整检查。
 设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed；恶意样本临时残留为 0，Graphify 诊断通过，T126 已完成。
-下一门禁为固定 `main..dev` Standards/Spec 双轴 Review；`main` 集成仍需单独授权。
+固定 `main..dev` Standards/Spec 双轴 Review 均为 PASS；`main` 集成已获授权，正常 merge 后回填最终 SHA。
 
 ## Phase 2: Task Generation Strategy
 
