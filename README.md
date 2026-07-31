@@ -29,8 +29,8 @@ Quality Gates `30235090100`（458 项通过），并正常 merge 到
 同样通过。M4、M5 均为 `complete`；M6
 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 为 `in_progress`，覆盖
 T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
-`dev@cda96f2e60be844801f200490b41df4dc0b77bce`；US4 独立门禁为 `126 passed`，完整测试为
-`610 passed, 1 warning`。当前下一项是 US5 T111 确定性 DOCX/ZIP 测试工厂。
+`dev@9932aa928132152cabedb2e273980f60cdd51f6c`；US4 独立门禁为 `126 passed`，完整测试为
+`610 passed, 1 warning`。US5 T111–T125 已实现，当前下一项是 T126 最终验收；当前 dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查，设置页本地 PostgreSQL 环境故障已纳入排障。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 

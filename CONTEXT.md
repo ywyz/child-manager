@@ -1,11 +1,11 @@
 # Child Manager 项目上下文
 
-最后更新：2026-07-29
+最后更新：2026-07-31
 
 当前上下文分支：`docs`
 
-项目阶段：M4 与 M5 均为 `complete` 并已集成 `main`；M6 T087–T126 为 `in_progress`，
-US4 T087–T110 已完成，当前下一项为 US5 T111
+项目阶段：M4 与 M5 均为 complete 并已集成 main；M6 T087–T126 为 in_progress，
+US4 T087–T110 已完成，US5 T111–T125 已实现，当前下一项为 T126
 
 ## 1. 本文档的用途
 
@@ -226,9 +226,12 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 ### 阶段 6：AI 异步生成
 
 - M4 与 M5 均已完成，[M6 Issue #11](https://github.com/ywyz/child-manager/issues/11)
-  为 `in_progress`；固定文档基线与 US4 T087–T110 已完成，最终实现与图谱提交为
-  `dev@cda96f2e60be844801f200490b41df4dc0b77bce`。US4 独立门禁为 `126 passed`，五条标准
-  命令全部退出 0，完整测试为 `610 passed, 1 warning`。当前下一项为 US5 T111。
+  为 in_progress；US4 T087–T110 已完成，最终实现与图谱提交为
+  dev@9932aa928132152cabedb2e273980f60cdd51f6c。US4 独立门禁为 126 passed，五条标准
+  命令全部退出 0，完整测试为 610 passed, 1 warning。US5 T111–T125 已实现并由
+  dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731（headSha 同一完整 SHA）通过完整检查。
+  本地设置页专项收集 38 项、26 passed、12 errors，均为 127.0.0.1:15432 PostgreSQL 连接拒绝；
+  该环境故障已纳入本轮排障，不计为业务 RED。T126 保持未完成。
 - 接入 Redis Worker、任务状态、栏目级生成、结构校验、重试和失败恢复。
 - 支持集体活动文本与 `.docx` 导入。
 
@@ -266,13 +269,13 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 ## 9. 当前仓库与分支状态
 
-状态日期：2026-07-29。
+状态日期：2026-07-31。
 
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
 | `main` | 稳定版本与发布基线 | `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已正常 merge 最终 M4 `dev`，最终树与 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 一致；Quality Gates `30235439229` 为 458 项通过 | 保持稳定；等待 M6 完成独立验收后再接收新结果 |
-| `docs` | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 已固定不可移动 `docs` 基线；本次回写 US4 T087–T110 完成状态与 T111 交接门禁 | 保持 T111 基线；其直接门禁通过前不进入 T112 |
-| `dev` | Codex 唯一实现与集成 | M6 为 `in_progress`；US4 T087–T110 已完成，最终实现与图谱提交为 `dev@cda96f2e60be844801f200490b41df4dc0b77bce`，独立门禁为 `126 passed` | 实施 US5 T111 确定性 DOCX/ZIP 测试工厂；其直接门禁通过前不进入 T112 |
+| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 Issue #11 本次同步 OpenAPI、US5 T111–T125 状态与 T126 排障门禁 | 保持 T126 未完成；先完成本轮排障与最终验收 |
+| dev | Codex 唯一实现与集成 | M6 in_progress；US5 T111–T125 已实现，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过 | 恢复 PostgreSQL 后重跑设置页与 US5 专项，完成 T126 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -306,12 +309,10 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 9. 最终 `dev` 已通过正常 merge 集成为
    `main@b7676c27d07adc5eca1f0c397217780367481e9c`；两条等价 Dependabot 提交历史均保留，
    最终树一致，`main` Quality Gates `30235439229` 同样为 `458 passed, 1 warning`。
-10. M6 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 为 `in_progress` 且只覆盖
-    T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
-    `dev@cda96f2e60be844801f200490b41df4dc0b77bce`；独立门禁为 `126 passed`，完整测试为
-    `610 passed, 1 warning`。当前下一项为 US5 T111；先完成确定性 DOCX/ZIP 测试工厂并
-    通过直接门禁，再进入 T112。
-
+10. M6 Issue #11 为 in_progress 且只覆盖 T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
+    dev@9932aa928132152cabedb2e273980f60cdd51f6c；US5 T111–T125 已实现，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731
+    在同一 headSha 上通过完整检查；本地设置页专项的 12 个 PostgreSQL 连接错误已纳入本轮排障，不计为业务 RED。
+    当前下一项为 T126；恢复隔离 PostgreSQL 后重跑设置页与 US5 专项验收，再完成最终 Graphify/文档闭环。
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
 ## 11. 高风险点

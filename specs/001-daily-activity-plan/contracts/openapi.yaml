@@ -1414,10 +1414,11 @@ paths:
   /api/v1/plans/{plan_id}/group-activity-sources/docx:
     post:
       tags: [Plans]
-      summary: 安全提取 DOCX 文本并立即清理临时文件
+      summary: 安全提取 DOCX 文本并等待教师确认
       description: |
         压缩文件不超过 10 MiB，展开不超过 50 MiB，ZIP 条目不超过 1000，
         提取文本不超过 200000 字符；拒绝宏、外部关系、路径穿越和嵌套压缩。
+        本操作只返回临时预览，教师确认前不得创建来源记录；临时文件在请求结束时清理。
       parameters:
         - $ref: "#/components/parameters/PlanId"
         - $ref: "#/components/parameters/CsrfHeader"
@@ -1435,11 +1436,27 @@ paths:
                   format: binary
                   maxLength: 10485760
       responses:
+        "200": { $ref: "#/components/responses/LessonPlanSourceDocxPreviewOk" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /api/v1/plans/{plan_id}/group-activity-sources/docx/confirm:
+    post:
+      tags: [Plans]
+      summary: 确认并保存 DOCX 提取的来源文本
+      description: 教师确认临时预览后才创建来源记录；服务端不保存原始附件。
+      parameters:
+        - $ref: "#/components/parameters/PlanId"
+        - $ref: "#/components/parameters/CsrfHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LessonPlanSourceDocxPreview" }
+      responses:
         "201": { $ref: "#/components/responses/LessonPlanSourceCreated" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
-        "413": { $ref: "#/components/responses/ValidationError" }
-        "415": { $ref: "#/components/responses/ValidationError" }
         "422": { $ref: "#/components/responses/ValidationError" }
   /api/v1/plans/{plan_id}/ai/batch:
     post:
@@ -1864,6 +1881,9 @@ components:
     LessonPlanSourceCreated:
       description: 已确认来源文本
       content: { application/json: { schema: { $ref: "#/components/schemas/LessonPlanSource" } } }
+    LessonPlanSourceDocxPreviewOk:
+      description: DOCX 提取的临时预览，教师确认前不创建来源记录
+      content: { application/json: { schema: { $ref: "#/components/schemas/LessonPlanSourceDocxPreview" } } }
     LessonPlanSourcePage:
       description: 分页来源文本
       content: { application/json: { schema: { $ref: "#/components/schemas/LessonPlanSourcePage" } } }
@@ -2901,7 +2921,7 @@ components:
     JobPage:
       type: object
       additionalProperties: false
-      required: [items, page, page_size, total]
+      required: [items, page, page_size, total, has_adopted_group_activity_split]
       properties:
         items:
           type: array
@@ -2909,6 +2929,7 @@ components:
         page: { type: integer, minimum: 1 }
         page_size: { type: integer, minimum: 1, maximum: 100 }
         total: { type: integer, minimum: 0 }
+        has_adopted_group_activity_split: { type: boolean, default: false, description: 当前教案是否已采用并保存集体活动拆分 }
     GroupActivityAddStepResult:
       type: object
       additionalProperties: false
@@ -3736,6 +3757,14 @@ components:
         extracted_character_count: { type: integer, minimum: 1, maximum: 200000 }
         uploaded_by: { $ref: "#/components/schemas/Uuid" }
         created_at: { type: string, format: date-time }
+    LessonPlanSourceDocxPreview:
+      type: object
+      additionalProperties: false
+      required: [original_filename, extracted_text]
+      properties:
+        original_filename: { type: string, minLength: 1, maxLength: 255 }
+        extracted_text: { type: string, minLength: 1, maxLength: 200000 }
+      description: DOCX 提取的临时预览；教师确认前不得持久化
     LessonPlanSourcePage:
       type: object
       additionalProperties: false

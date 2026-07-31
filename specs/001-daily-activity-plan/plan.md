@@ -54,7 +54,7 @@ WCAG 2.2 AA 可验证要求
 
 *GATE: M0、M1、M2、M3、M3A、M5 与 M4 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
 `main/docs/dev` 单实现流程。M4 #10 已完成 T062–T086；M6 T087–T126 为 `in_progress`，
-US4 T087–T110 已完成，当前下一项为 US5 T111。*
+US4 T087–T110 已完成，US5 T111–T125 已实现，当前下一项为 T126。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
@@ -311,8 +311,9 @@ T046～T061 与 M4 T062～T086 均已完成。M4 [Issue #10](https://github.com/
 `main@b7676c27d07adc5eca1f0c397217780367481e9c`。M6 为 `in_progress`；
 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126。固定文档基线、
 US4 T087–T110 已完成；最终实现与图谱提交为
-`dev@cda96f2e60be844801f200490b41df4dc0b77bce`，US4 独立门禁为 `126 passed`，完整测试为
-`610 passed, 1 warning`。当前下一项为 US5 T111。
+`dev@9932aa928132152cabedb2e273980f60cdd51f6c`，US4 独立门禁为 `126 passed`，完整测试为
+`610 passed, 1 warning`。US5 T111–T125 已实现，当前下一项为 T126。
+当前 dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查；设置页本地 PostgreSQL 环境故障已纳入本轮排障，不计为业务 RED，T126 仍待最终验收。
 
 ## Phase 2: Task Generation Strategy
 
