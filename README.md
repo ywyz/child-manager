@@ -29,8 +29,13 @@ Quality Gates `30235090100`（458 项通过），并正常 merge 到
 同样通过。M4、M5 均为 `complete`；M6
 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 为 `in_progress`，覆盖
 T087–T126。US4 T087–T110 已完成，最终实现与图谱提交为
-`dev@cda96f2e60be844801f200490b41df4dc0b77bce`；US4 独立门禁为 `126 passed`，完整测试为
-`610 passed, 1 warning`。当前下一项是 US5 T111 确定性 DOCX/ZIP 测试工厂。
+`dev@9932aa928132152cabedb2e273980f60cdd51f6c`；US4 独立门禁为 `126 passed`，完整测试为
+`610 passed, 1 warning`。US5 T111–T125 已实现，T126 US5 独立验收已完成；实现提交
+`dev@32d3c102152848f7488da036ddada461b3d8d3ab` 的 Quality run `30602225731` 在同一
+headSha 通过完整检查，设置页专项为 49 项收集、49 项通过，US5 专项为 56 项通过，完整
+本地 pytest 为 666 项通过（仅有既有 Pydantic 弃用警告）。恶意样本临时残留为 0，Graphify
+诊断无缺失、悬空、自环、重复或折叠边。T126 已勾选，下一门禁为固定 `main..dev`
+Standards/Spec 双轴 Review；`main` 集成仍需单独授权。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 
