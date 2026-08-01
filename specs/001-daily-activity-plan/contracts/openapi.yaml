@@ -1648,7 +1648,7 @@ paths:
               schema: { $ref: "#/components/schemas/ExportAccepted" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
-        "409": { $ref: "#/components/responses/Conflict" }
+        "409": { $ref: "#/components/responses/ExportConfirmationRequired" }
         "422": { $ref: "#/components/responses/ValidationError" }
         "503": { $ref: "#/components/responses/Unavailable" }
   /api/v1/exports/{export_id}:
@@ -2001,6 +2001,11 @@ components:
       content:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
+    ExportConfirmationRequired:
+      description: 前五栏存在缺失，教师确认后仍可继续导出
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ExportConfirmationRequiredError" }
     LastAdminRecoveryRequiresCli:
       description: |
         目标是最后一名有效管理员，Web/API 不得审批；响应 code 固定为
@@ -2981,6 +2986,31 @@ components:
     ExportStatus:
       type: string
       enum: [pending, succeeded, failed]
+    ExportSection:
+      type: string
+      enum:
+        - morning_activity
+        - morning_talk
+        - group_activity
+        - indoor_area_game
+        - afternoon_outdoor_game
+    ExportConfirmationRequiredError:
+      type: object
+      additionalProperties: false
+      required: [code, message, request_id, field_errors, missing_sections]
+      properties:
+        code: { type: string, const: export.confirmation_required }
+        message: { type: string }
+        request_id: { type: string, format: uuid }
+        field_errors:
+          type: array
+          items: { $ref: "#/components/schemas/ErrorField" }
+        missing_sections:
+          type: array
+          minItems: 1
+          maxItems: 5
+          uniqueItems: true
+          items: { $ref: "#/components/schemas/ExportSection" }
     Export:
       type: object
       additionalProperties: false
