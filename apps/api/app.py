@@ -16,6 +16,7 @@ from apps.api.dependencies import HealthDependencies, build_health_dependencies
 from apps.api.middleware import RequestContextMiddleware
 from apps.api.openapi import configure_openapi
 from apps.api.routers.auth import router as auth_router
+from apps.api.routers.exports import router as exports_router
 from apps.api.routers.jobs import router as jobs_router
 from apps.api.routers.plans import router as plans_router
 from apps.api.routers.prompts import router as prompts_router
@@ -30,6 +31,7 @@ from packages.contracts.common import (
     ErrorResponse,
     FieldError,
 )
+from packages.contracts.exports import ExportConfirmationRequiredError
 
 LOGGER = structlog.get_logger(__name__)
 
@@ -70,7 +72,13 @@ def _request_id(request: Request) -> UUID:
     return UUID(str(request.state.request_id))
 
 
-def _error_response(request: Request, *, status_code: int, code: str, message: str) -> JSONResponse:
+def _error_response(
+    request: Request,
+    *,
+    status_code: int,
+    code: str,
+    message: str,
+) -> JSONResponse:
     request_id = _request_id(request)
     payload = ErrorResponse(
         code=code,
@@ -79,6 +87,30 @@ def _error_response(request: Request, *, status_code: int, code: str, message: s
     )
     return JSONResponse(
         status_code=status_code,
+        content=payload.model_dump(mode="json"),
+        headers={"X-Request-ID": str(request_id)},
+    )
+
+
+def _identity_error_response(request: Request, exc: IdentityError) -> JSONResponse:
+    if exc.code != "export.confirmation_required":
+        return _error_response(
+            request,
+            status_code=exc.status_code,
+            code=exc.code,
+            message=exc.message,
+        )
+    request_id = _request_id(request)
+    payload = ExportConfirmationRequiredError.model_validate(
+        {
+            "code": exc.code,
+            "message": exc.message,
+            "request_id": request_id,
+            "missing_sections": exc.details.get("missing_sections", []),
+        }
+    )
+    return JSONResponse(
+        status_code=exc.status_code,
         content=payload.model_dump(mode="json"),
         headers={"X-Request-ID": str(request_id)},
     )
@@ -104,6 +136,7 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
     )
     application.state.clock = lambda: datetime.now(UTC)
     application.include_router(auth_router)
+    application.include_router(exports_router)
     application.include_router(users_router)
     application.include_router(settings_router)
     application.include_router(plans_router)
@@ -166,12 +199,7 @@ def create_app(dependencies: HealthDependencies | None = None) -> FastAPI:
 
     @application.exception_handler(IdentityError)
     async def identity_error(request: Request, exc: IdentityError) -> JSONResponse:
-        response = _error_response(
-            request,
-            status_code=exc.status_code,
-            code=exc.code,
-            message=exc.message,
-        )
+        response = _identity_error_response(request, exc)
         if exc.status_code == 429:
             response.headers["Retry-After"] = "60"
         return response

@@ -20,6 +20,14 @@ class WorkerScopeResolver:
         ).fetchone()
         return UUID(str(row[0])) if row is not None else None
 
+    def kindergarten_id_for_word_job(self, job_id: UUID) -> UUID | None:
+        row = self.connection.execute(
+            """SELECT kindergarten_id FROM background_jobs
+            WHERE id=%s AND job_type='word.export'""",
+            (job_id,),
+        ).fetchone()
+        return UUID(str(row[0])) if row is not None else None
+
     def active_kindergarten_ids(self) -> list[UUID]:
         result = self.connection.execute(
             """SELECT id FROM kindergartens

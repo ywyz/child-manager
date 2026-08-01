@@ -16,6 +16,7 @@ from apps.worker.actors import (
     build_ai_job_runner,
     build_ai_result_repository,
     build_prompt_test_executor,
+    build_word_export_runner,
     build_worker_scope_resolver,
     recover_prompt_test_jobs,
     register_actors,
@@ -24,9 +25,12 @@ from apps.worker.broker import build_redis_broker
 from apps.worker.scheduler import (
     AiRecoveryStore,
     AiResultMaintenanceRepository,
+    WordRecoveryStore,
     run_ai_recovery_scan,
     run_ai_result_maintenance,
+    run_word_recovery_scan,
 )
+from packages.backend.exports.runner import WordExportRunner
 from packages.backend.jobs.ai_results import AiGenerationResultRepository
 from packages.backend.jobs.ai_runner import AiJobRunner
 from packages.backend.jobs.scope_resolver import WorkerScopeResolver
@@ -46,6 +50,7 @@ def serve(
     stop_event: Event | None = None,
     executor: PromptTestExecutor | None = None,
     ai_runner: AiJobRunner | None = None,
+    word_runner: WordExportRunner | None = None,
     ai_result_repository: AiGenerationResultRepository | None = None,
     worker_scope_resolver: WorkerScopeResolver | None = None,
 ) -> None:
@@ -55,6 +60,8 @@ def serve(
         executor = build_prompt_test_executor()
     if ai_runner is None and stop_event is None:
         ai_runner = build_ai_job_runner()
+    if word_runner is None and stop_event is None:
+        word_runner = build_word_export_runner()
     if ai_result_repository is None and stop_event is None:
         ai_result_repository = build_ai_result_repository()
     if worker_scope_resolver is None and stop_event is None:
@@ -65,14 +72,17 @@ def serve(
         executor=executor,
         ai_runner=ai_runner,
         ai_job_scope_resolver=worker_scope_resolver,
+        word_runner=word_runner,
+        word_job_scope_resolver=worker_scope_resolver,
     )
     worker = Worker(broker, worker_threads=threads)
     worker.start()
     shutdown = stop_event or Event()
     recovery_thread: Thread | None = None
-    if executor is not None or ai_runner is not None:
+    if executor is not None or ai_runner is not None or word_runner is not None:
         prompt_actor = actors[0]
         ai_actor = actors[1]
+        word_actor = next((actor for actor in actors if actor.actor_name == "word_export"), None)
 
         def recover() -> None:
             def dispatch_prompt_test(job_id: UUID) -> None:
@@ -80,6 +90,10 @@ def serve(
 
             def dispatch_ai_job(job_id: UUID) -> None:
                 ai_actor.send(str(job_id))
+
+            def dispatch_word_export(job_id: UUID) -> None:
+                assert word_actor is not None
+                word_actor.send(str(job_id))
 
             last_expired_scan = float("-inf")
             while not shutdown.is_set():
@@ -117,6 +131,23 @@ def serve(
                     except Exception as exc:
                         logger.error(
                             "AI 任务恢复扫描失败",
+                            extra={"exception_type": type(exc).__name__},
+                        )
+                if (
+                    word_runner is not None
+                    and worker_scope_resolver is not None
+                    and word_actor is not None
+                ):
+                    try:
+                        run_word_recovery_scan(
+                            store=cast(WordRecoveryStore, word_runner.store),
+                            dispatch=dispatch_word_export,
+                            kindergarten_ids=kindergarten_ids,
+                            include_expired=include_expired,
+                        )
+                    except Exception as exc:
+                        logger.error(
+                            "Word 导出恢复扫描失败",
                             extra={"exception_type": type(exc).__name__},
                         )
                 if (

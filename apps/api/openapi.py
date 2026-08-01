@@ -115,6 +115,37 @@ _SCHEMAS = {
             },
         },
     },
+    "ExportSection": {
+        "type": "string",
+        "enum": [
+            "morning_activity",
+            "morning_talk",
+            "group_activity",
+            "indoor_area_game",
+            "afternoon_outdoor_game",
+        ],
+    },
+    "ExportConfirmationRequiredError": {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["code", "message", "request_id", "field_errors", "missing_sections"],
+        "properties": {
+            "code": {"type": "string", "const": "export.confirmation_required"},
+            "message": {"type": "string"},
+            "request_id": {"type": "string", "format": "uuid"},
+            "field_errors": {
+                "type": "array",
+                "items": {"$ref": "#/components/schemas/ErrorField"},
+            },
+            "missing_sections": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 5,
+                "uniqueItems": True,
+                "items": {"$ref": "#/components/schemas/ExportSection"},
+            },
+        },
+    },
     "Health": {
         "type": "object",
         "additionalProperties": False,
@@ -140,6 +171,43 @@ _SCHEMAS = {
             "display_name": {"type": "string", "minLength": 1, "maxLength": 120},
         },
     },
+}
+
+_FROZEN_CONTENT_REQUIRED_FIELDS = {
+    "PlanContentV1": [
+        "morning_activity",
+        "morning_talk",
+        "group_activity",
+        "indoor_area_game",
+        "afternoon_outdoor_game",
+        "daily_reflection",
+    ],
+    "MorningActivity": [
+        "physical_cycle",
+        "group_game",
+        "free_game",
+        "focus_guidance",
+        "objectives",
+        "guidance_points",
+    ],
+    "MorningTalk": ["topic", "questions"],
+    "GroupActivityStep": ["heading", "lines", "is_ai_added"],
+    "GroupActivity": [
+        "theme",
+        "objectives",
+        "preparation",
+        "focus",
+        "difficulty",
+        "process",
+    ],
+    "AreaGame": [
+        "areas",
+        "focus_guidance",
+        "objectives",
+        "guidance_points",
+        "support_strategies",
+    ],
+    "DailyReflection": ["highlights", "issues", "adjustments"],
 }
 
 
@@ -248,6 +316,32 @@ _RESPONSES = {
     "Forbidden": _response("CSRF/来源错误或无权限", "Error"),
     "NotFound": _response("资源不存在或不应向当前用户暴露", "Error"),
     "Conflict": _response("版本、幂等、预览有效性或业务不变量冲突", "Error"),
+    "ExportAccepted": _response("导出已受理", "ExportAccepted"),
+    "ExportPage": _response("导出历史", "ExportPage"),
+    "ExportOk": _response("导出记录", "Export"),
+    "ExportConflict": {
+        "description": "前五栏缺失确认、版本、幂等或其他导出业务冲突",
+        "content": {
+            "application/json": {
+                "schema": {
+                    "oneOf": [
+                        {"$ref": "#/components/schemas/ExportConfirmationRequiredError"},
+                        {"$ref": "#/components/schemas/Error"},
+                    ]
+                }
+            }
+        },
+    },
+    "ExportDownload": {
+        "description": "DOCX 文件；写入下载审计",
+        "headers": {"Content-Disposition": {"schema": {"type": "string"}}},
+        "content": {
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+                "schema": {"type": "string", "format": "binary"}
+            }
+        },
+    },
+    "Gone": _response("历史导出记录存在但服务器副本缺失", "Error"),
     "LastAdminRecoveryRequiresCli": _response(
         "目标是最后一名有效管理员，Web/API 不得审批；必须改走部署控制台双人核验。",
         "Error",
@@ -280,6 +374,30 @@ _RESPONSES = {
 _OPERATION_RESPONSES: dict[OperationKey, dict[str, str]] = {
     ("/health/live", "get"): {"200": "HealthOk"},
     ("/health/ready", "get"): {"200": "HealthOk", "503": "Unavailable"},
+    ("/api/v1/plans/{plan_id}/exports", "get"): {
+        "200": "ExportPage",
+        "403": "Forbidden",
+        "404": "NotFound",
+    },
+    ("/api/v1/plans/{plan_id}/exports", "post"): {
+        "202": "ExportAccepted",
+        "403": "Forbidden",
+        "404": "NotFound",
+        "409": "ExportConflict",
+        "422": "ValidationError",
+        "503": "Unavailable",
+    },
+    ("/api/v1/exports/{export_id}", "get"): {
+        "200": "ExportOk",
+        "403": "Forbidden",
+        "404": "NotFound",
+    },
+    ("/api/v1/exports/{export_id}/download", "get"): {
+        "200": "ExportDownload",
+        "403": "Forbidden",
+        "404": "NotFound",
+        "410": "Gone",
+    },
     ("/api/v1/auth/csrf", "get"): {"200": ""},
     ("/api/v1/auth/bootstrap/registration/options", "post"): {
         "200": "RegistrationOptionsOk",
@@ -647,6 +765,41 @@ def configure_openapi(application: FastAPI) -> Callable[[], dict[str, Any]]:
         components.setdefault("parameters", {}).update(_PARAMETERS)
         schemas = components.setdefault("schemas", {})
         schemas.update(_SCHEMAS)
+        for schema_name, required_fields in _FROZEN_CONTENT_REQUIRED_FIELDS.items():
+            schemas[schema_name]["required"] = required_fields
+        job_schema = schemas["Job"]
+        job_schema["required"] = [
+            "id",
+            "job_type",
+            "status",
+            "attempt_count",
+            "max_attempts",
+            "trace_id",
+            "created_at",
+            "poll_after_ms",
+            "children",
+        ]
+        job_schema["allOf"] = [
+            {
+                "if": {
+                    "required": ["job_type"],
+                    "properties": {"job_type": {"const": "ai.batch"}},
+                },
+                "then": {
+                    "properties": {
+                        "attempt_count": {"const": 0},
+                        "max_attempts": {"const": 0},
+                        "children": {"minItems": 4, "maxItems": 4},
+                    }
+                },
+                "else": {
+                    "properties": {
+                        "max_attempts": {"minimum": 1, "maximum": 3},
+                        "children": {"maxItems": 0},
+                    }
+                },
+            }
+        ]
         schemas["RegistrationPublicKey"]["properties"]["extensions"] = {
             "$ref": "#/components/schemas/RegistrationExtensions"
         }

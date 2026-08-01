@@ -250,7 +250,8 @@ def test_0008_follows_ai_prompts_jobs_and_precedes_current_head() -> None:
 
     assert revisions.get(REVISION) == "0007_ai_prompts_jobs"
     assert revisions.get("0009_group_activity_sources") == REVISION
-    assert script.get_heads() == ["0009_group_activity_sources"]
+    assert revisions.get("0010_word_exports") == "0009_group_activity_sources"
+    assert script.get_heads() == ["0010_word_exports"]
 
 
 def test_0008_creates_the_frozen_result_shape(

@@ -27,7 +27,9 @@ SortOrder = Annotated[int, Field(ge=0)]
 Text500 = Annotated[str, Field(max_length=500)]
 Text1000 = Annotated[str, Field(max_length=1000)]
 Text5000 = Annotated[str, Field(max_length=5000)]
-SentenceList = Annotated[list[Annotated[str, Field(max_length=1000)]], Field(max_length=3)]
+SentenceList = Annotated[
+    list[Annotated[str, Field(max_length=1000)]], Field(min_length=0, max_length=3)
+]
 TeacherContext = Annotated[str, Field(max_length=5000)]
 
 
@@ -120,7 +122,9 @@ class GroupActivity(ContractModel):
 
 
 class AreaGame(ContractModel):
-    areas: list[Annotated[str, Field(max_length=120)]] = Field(default_factory=list)
+    areas: list[Annotated[str, Field(max_length=120)]] = Field(
+        default_factory=list, json_schema_extra={"uniqueItems": True}
+    )
     focus_guidance: Text500 = ""
     objectives: SentenceList = Field(default_factory=list)
     guidance_points: SentenceList = Field(default_factory=list)

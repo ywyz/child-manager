@@ -5,6 +5,7 @@ import os
 import socket
 from collections.abc import Callable
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Protocol
 from uuid import UUID, uuid7
 
@@ -14,12 +15,20 @@ from dramatiq import Retry
 from dramatiq.actor import Actor
 from dramatiq.broker import Broker
 
+from packages.backend.exports.rules import TEMPLATE_SHA256
+from packages.backend.exports.runner import (
+    PostgresWordExportStore,
+    WordExportRetry,
+    WordExportRunner,
+)
+from packages.backend.exports.service import ExportService
 from packages.backend.integrations.ai.client import ProviderNeutralAiClient
 from packages.backend.integrations.ai.url_policy import validate_ai_base_url
 from packages.backend.integrations.crypto.ai_keys import (
     AiKeyEnvelope,
     decrypt_api_key_with_provider,
 )
+from packages.backend.integrations.files.teacherplan_renderer import TeacherplanRenderer
 from packages.backend.jobs.ai_results import AiGenerationResultRepository
 from packages.backend.jobs.ai_runner import AiJobRetry, AiJobRunner, AiJobStore
 from packages.backend.jobs.prompt_test_store import PostgresPromptTestStore
@@ -40,6 +49,14 @@ class AiJobScopeResolver(Protocol):
 
 
 class AiRunner(Protocol):
+    def execute(self, kindergarten_id: UUID, job_id: UUID, *, worker_id: str) -> None: ...
+
+
+class WordJobScopeResolver(Protocol):
+    def kindergarten_id_for_word_job(self, job_id: UUID) -> UUID | None: ...
+
+
+class WordRunner(Protocol):
     def execute(self, kindergarten_id: UUID, job_id: UUID, *, worker_id: str) -> None: ...
 
 
@@ -125,6 +142,17 @@ def build_ai_result_repository() -> AiGenerationResultRepository:
     return AiGenerationResultRepository(connection)
 
 
+def build_word_export_runner() -> WordExportRunner:
+    service = ExportService.from_environment()
+    connection = psycopg.connect(_native_url(service.database_url), autocommit=True)
+    template_path = Path(__file__).resolve().parents[2] / "templates/teacherplan/teacherplan.docx"
+    return WordExportRunner(
+        store=PostgresWordExportStore(connection),
+        renderer=TeacherplanRenderer(template_path, expected_sha256=TEMPLATE_SHA256),
+        storage=service.storage,
+    )
+
+
 def build_worker_scope_resolver() -> WorkerScopeResolver:
     settings = AiModelService.from_environment()
     connection = psycopg.connect(_native_url(settings.database_url), autocommit=True)
@@ -185,6 +213,8 @@ def register_actors(
     executor: PromptTestExecutor | None = None,
     ai_runner: AiRunner | None = None,
     ai_job_scope_resolver: AiJobScopeResolver | None = None,
+    word_runner: WordRunner | None = None,
+    word_job_scope_resolver: WordJobScopeResolver | None = None,
 ) -> tuple[Actor[..., str], ...]:
     def run_prompt_test(job_id: str) -> str:
         parsed_job_id = UUID(job_id)
@@ -225,4 +255,33 @@ def register_actors(
         min_backoff=5000,
         max_backoff=30000,
     )(run_ai_job)
-    return prompt_actor, ai_actor
+    actors: list[Actor[..., str]] = [prompt_actor, ai_actor]
+    if word_runner is not None or word_job_scope_resolver is not None:
+
+        def run_word_export(job_id: str) -> str:
+            parsed_job_id = UUID(job_id)
+            if word_runner is not None and word_job_scope_resolver is not None:
+                kindergarten_id = word_job_scope_resolver.kindergarten_id_for_word_job(
+                    parsed_job_id
+                )
+                if kindergarten_id is not None:
+                    try:
+                        word_runner.execute(
+                            kindergarten_id,
+                            parsed_job_id,
+                            worker_id=_worker_id(),
+                        )
+                    except WordExportRetry as exc:
+                        raise Retry(delay=exc.delay_seconds * 1000) from None
+            return str(parsed_job_id)
+
+        actors.append(
+            dramatiq.actor(
+                actor_name="word_export",
+                broker=broker,
+                max_retries=3,
+                min_backoff=5000,
+                max_backoff=30000,
+            )(run_word_export)
+        )
+    return tuple(actors)

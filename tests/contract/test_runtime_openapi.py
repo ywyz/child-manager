@@ -20,6 +20,7 @@ M2_SESSION["required"].remove("authentication_method")
 M2_SESSION["properties"].pop("authentication_method")
 M2_PREFIXES = ("/health/", "/api/v1/auth", "/api/v1/users")
 M3A_PREFIXES = ("/api/v1/auth/backup", "/api/v1/auth/security-events")
+M7_PREFIXES = ("/api/v1/plans/{plan_id}/exports", "/api/v1/exports")
 HTTP_METHODS = {"get", "post", "put", "patch", "delete"}
 
 
@@ -240,6 +241,25 @@ def test_runtime_m3a_openapi_matches_frozen_operation_contract() -> None:
         runtime_operations=_operations(
             runtime,
             prefixes=M3A_PREFIXES,
+            excluded_prefixes=(),
+        ),
+    )
+
+
+def test_runtime_m7_openapi_matches_frozen_operation_contract() -> None:
+    runtime = create_app().openapi()
+    validate(runtime)
+    _assert_operation_contract(
+        frozen_document=FROZEN,
+        runtime_document=runtime,
+        frozen_operations=_operations(
+            FROZEN,
+            prefixes=M7_PREFIXES,
+            excluded_prefixes=(),
+        ),
+        runtime_operations=_operations(
+            runtime,
+            prefixes=M7_PREFIXES,
             excluded_prefixes=(),
         ),
     )

@@ -57,3 +57,22 @@ def test_openapi_locks_two_unavailable_codes() -> None:
     codes = schemas["UnavailableError"]["properties"]["code"]["enum"]
 
     assert codes == ["database.unavailable", "configuration.unavailable"]
+
+
+def test_openapi_declares_confirmation_and_generic_word_export_conflicts() -> None:
+    document = load_document()
+    operation = document["paths"]["/api/v1/plans/{plan_id}/exports"]["post"]
+    response = operation["responses"]["409"]
+    conflict_schema = document["components"]["responses"]["ExportConflict"]["content"][
+        "application/json"
+    ]["schema"]
+    schema = document["components"]["schemas"]["ExportConfirmationRequiredError"]
+
+    assert response["$ref"] == "#/components/responses/ExportConflict"
+    assert conflict_schema["oneOf"] == [
+        {"$ref": "#/components/schemas/ExportConfirmationRequiredError"},
+        {"$ref": "#/components/schemas/Error"},
+    ]
+    assert schema["additionalProperties"] is False
+    assert schema["properties"]["code"]["const"] == "export.confirmation_required"
+    assert schema["properties"]["missing_sections"]["uniqueItems"] is True

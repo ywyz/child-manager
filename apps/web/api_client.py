@@ -1,12 +1,15 @@
 """NiceGUI 服务端 BFF 客户端的公开接缝。"""
 
 import json
+import logging
 from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import cast
 
 import httpx
 from nicegui import app, ui
+
+logger = logging.getLogger(__name__)
 
 _REQUEST_HEADER_ALLOWLIST = {
     b"accept",
@@ -85,6 +88,59 @@ async def same_origin_api_request(
     """
     result = await ui.run_javascript(script, timeout=15.0)
     return result if isinstance(result, dict) else {"ok": False, "status": 0, "body": {}}
+
+
+async def export_file_download(path: str) -> dict[str, object]:
+    """通过同源 fetch 下载受保护文件，并保留 API 错误反馈。"""
+
+    script = """
+    return await (async () => {
+      const response = await fetch(__PATH__, {credentials: 'same-origin'});
+      if (!response.ok) {
+        let body = {};
+        try { body = await response.json(); } catch (_error) {}
+        return {ok: false, status: response.status, body};
+      }
+      const blob = await response.blob();
+      const disposition = response.headers.get('Content-Disposition') || '';
+      const encoded = disposition.match(/filename\\*=UTF-8''([^;]+)/i);
+      let filename = 'daily_activity_plan.docx';
+      if (encoded) {
+        try { filename = decodeURIComponent(encoded[1]); } catch (_error) {}
+      }
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = objectUrl;
+      anchor.download = filename;
+      anchor.style.display = 'none';
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(objectUrl);
+      return {ok: true, status: response.status, body: {}};
+    })();
+    """.replace("__PATH__", json.dumps(path))
+    try:
+        result = await ui.run_javascript(script, timeout=30.0)
+    except Exception as exc:
+        logger.error(
+            "Word 导出浏览器下载失败",
+            extra={"exception_type": type(exc).__name__},
+        )
+        return {
+            "ok": False,
+            "status": 0,
+            "body": {"message": "下载失败，请稍后重试。"},
+        }
+    return (
+        result
+        if isinstance(result, dict)
+        else {
+            "ok": False,
+            "status": 0,
+            "body": {"message": "下载失败，请稍后重试。"},
+        }
+    )
 
 
 async def plan_docx_preview_request(
@@ -220,8 +276,9 @@ async def plan_api_request(
 ) -> dict[str, object]:
     """只通过同源 BFF 访问教案及其任务端点。"""
 
+    is_top_level = suffix.startswith(("/jobs/", "/exports/"))
     return await same_origin_api_request(
-        f"/api/v1{suffix}" if suffix.startswith("/jobs/") else f"{PLANS_API_PATH}{suffix}",
+        f"/api/v1{suffix}" if is_top_level else f"{PLANS_API_PATH}{suffix}",
         method=method,
         payload=payload,
         request_headers=request_headers,
