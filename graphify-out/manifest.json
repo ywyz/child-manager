@@ -10,9 +10,9 @@
     "semantic_hash": "a902d6a68899280db0e05069a07f358d"
   },
   "AGENTS.md": {
-    "mtime": 1785244982.927755,
-    "ast_hash": "f05efcb6cb938e94720683a65f211fae",
-    "semantic_hash": "f05efcb6cb938e94720683a65f211fae"
+    "mtime": 1785566045.4399905,
+    "ast_hash": "725086d572f0b4a10b022aac2b22ca77",
+    "semantic_hash": "725086d572f0b4a10b022aac2b22ca77"
   },
   "CONTEXT.md": {
     "mtime": 1785550477.2849948,
@@ -310,9 +310,9 @@
     "semantic_hash": "67b25d9ed2372ec01bc4df849c57bc2e"
   },
   "specs/001-daily-activity-plan/tasks.md": {
-    "mtime": 1785550477.286995,
-    "ast_hash": "c869d2fd1c9ab3bac62df0f296ff94ad",
-    "semantic_hash": "c869d2fd1c9ab3bac62df0f296ff94ad"
+    "mtime": 1785566045.4409907,
+    "ast_hash": "ece9ed75df9e3c7a8ec0b77be68968b2",
+    "semantic_hash": "ece9ed75df9e3c7a8ec0b77be68968b2"
   },
   "docs/faq/combined-audit.md": {
     "mtime": 1784860386.1640103,

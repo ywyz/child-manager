@@ -368,7 +368,7 @@ attempt 2 在同一 headSha 全部通过，并保持 T087–T110 先于 T111–T
 
 ### Implementation for User Story 6
 
-- [ ] T133 [P] [US6] 在 `packages/contracts/exports.py` 实现前五栏缺失枚举（明确排除反思）、导出请求/记录/分页、精确文件名、稳定状态和下载元数据并对齐 OpenAPI；验证：`uv run pytest tests/contract/test_exports_contract.py tests/contract/test_idempotency.py` 通过
+- [ ] T133 [P] [US6] 在 `packages/contracts/exports.py` 实现前五栏稳定枚举（明确排除反思）、导出请求/记录/分页、稳定状态和下载元数据并对齐 OpenAPI；在 `packages/backend/exports/rules.py` 实现前五栏缺失业务判断；精确文件名由 T136 的文件集成层实现；验证：`uv run pytest tests/contract/test_exports_contract.py tests/contract/test_idempotency.py tests/api/test_exports.py -k 'confirmation or empty_reflection'` 通过
 - [ ] T134 [P] [US6] 在 `packages/backend/database/migrations/versions/0010_word_exports.py`、`packages/backend/exports/models.py`、`packages/backend/exports/repository.py` 实现导出表、到任务/教案/操作者的同园组合外键、非空不可变上下文/正文/Schema 版本/正文哈希快照、状态约束、唯一 `job_id/storage_key` 和园所 Repository；验证：`uv run pytest tests/migrations/test_word_exports_migration.py tests/repository/test_export_repository.py` 通过
 - [ ] T135 [P] [US6] 在 `packages/backend/integrations/files/teacherplan_renderer.py` 实现只复制并校验固定模板的映射渲染器，保持结构/样式、空反思三行并且只标红仍标记的新增 step；验证：`uv run pytest tests/word/test_teacherplan_renderer.py` 通过
 - [ ] T136 [P] [US6] 在 `packages/backend/integrations/files/export_storage.py` 实现 FR-054 的确定性显示文件名清理、唯一内部 key、受控临时目录、流式哈希、原子落位、授权后读取、半成品/孤儿清理且不暴露路径；验证：`uv run pytest tests/word/test_export_storage.py` 通过
