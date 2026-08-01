@@ -37,8 +37,10 @@ headSha 通过完整检查，设置页专项为 49 项收集、49 项通过，US
 诊断无缺失、悬空、自环、重复或折叠边。T126 已勾选；固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
 `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
-PASS；dev 已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，M6
-完成证据已回填 Issue #11，后续门禁为 M7。
+PASS；dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`。状态文档与语义
+图谱收敛后的最终基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run
+`30631050997` attempt 2 在同一 headSha 全部通过。M6 完成证据已回填并关闭 Issue #11；
+M7 为 `ready`。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 

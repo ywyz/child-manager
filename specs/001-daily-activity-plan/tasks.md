@@ -261,8 +261,9 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 **Milestone state**: M4、M5、M6 均为 `complete`，M6 T087–T126 已完成。M6 Issue
 固定引用不可移动 docs SHA；US4 T087–T110 已完成，US5 T111–T126 已完成；固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
-`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS，已正常 merge 到
-`main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，并保持 T087–T110 先于 T111–T126。
+`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS；
+最终稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，其 Quality run `30631050997`
+attempt 2 在同一 headSha 全部通过，并保持 T087–T110 先于 T111–T126。M7 为 `ready`。
 
 **US5 当前状态（2026-07-31）**：T126 独立验收已完成；实现提交 dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查。
 设置页先 collect-only 收集 49 项并通过，再重跑为 49 passed；US5 专项 56 passed，完整 pytest 666 passed；恶意样本临时残留为 0，Graphify 诊断通过。
@@ -345,6 +346,9 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 ---
 
 ## Phase 8: User Story 6 — 教师导出并重新下载固定 Word（Priority: P6）
+
+**Milestone state**: M7 `ready`；实现范围固定为 T127–T141，必须由引用不可移动 docs SHA
+的 GitHub Issue 驱动。
 
 **Goal**: 从已保存版本严格生成固定模板 `.docx`，保留独立历史和受保护副本，并在每次下载时重新授权。
 
