@@ -57,7 +57,8 @@ WCAG 2.2 AA 可验证要求
 US4 T087–T110 已完成，US5 T111–T126 已完成，T126 独立验收已完成；固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
 `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS，
-已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`。*
+最终稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，其 Quality run
+`30631050997` attempt 2 在同一 headSha 全部通过；M7 为 `ready`。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
@@ -315,7 +316,9 @@ T046～T061 与 M4 T062～T086 均已完成。M4 [Issue #10](https://github.com/
 [Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；当前 handoff 基线为 `docs@dcc8553aa8ecf0fdf3be215430666aabd80793f2`。US4 T087–T110 已完成，US5 T111–T126 已完成。
 实现验证提交为 `dev@32d3c102152848f7488da036ddada461b3d8d3ab`，Quality run `30602225731` 在同一 headSha 通过完整检查。
 设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed；恶意样本临时残留为 0，Graphify 诊断通过，T126 已完成。
-固定 `main..dev` Standards/Spec 双轴 Review 均为 PASS；已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`。
+固定 `main..dev` Standards/Spec 双轴 Review 均为 PASS；最终稳定基线为
+`main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run `30631050997`
+attempt 2 在同一 headSha 全部通过。M7 为 `ready`。
 
 ## Phase 2: Task Generation Strategy
 
