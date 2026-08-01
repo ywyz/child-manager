@@ -1648,7 +1648,7 @@ paths:
               schema: { $ref: "#/components/schemas/ExportAccepted" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
-        "409": { $ref: "#/components/responses/ExportConfirmationRequired" }
+        "409": { $ref: "#/components/responses/ExportConflict" }
         "422": { $ref: "#/components/responses/ValidationError" }
         "503": { $ref: "#/components/responses/Unavailable" }
   /api/v1/exports/{export_id}:
@@ -2001,11 +2001,14 @@ components:
       content:
         application/json:
           schema: { $ref: "#/components/schemas/Error" }
-    ExportConfirmationRequired:
-      description: 前五栏存在缺失，教师确认后仍可继续导出
+    ExportConflict:
+      description: 前五栏缺失确认、版本、幂等或其他导出业务冲突
       content:
         application/json:
-          schema: { $ref: "#/components/schemas/ExportConfirmationRequiredError" }
+          schema:
+            oneOf:
+              - { $ref: "#/components/schemas/ExportConfirmationRequiredError" }
+              - { $ref: "#/components/schemas/Error" }
     LastAdminRecoveryRequiresCli:
       description: |
         目标是最后一名有效管理员，Web/API 不得审批；响应 code 固定为
