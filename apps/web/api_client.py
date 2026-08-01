@@ -15,6 +15,7 @@ _REQUEST_HEADER_ALLOWLIST = {
     b"accept",
     b"content-type",
     b"cookie",
+    b"idempotency-key",
     b"origin",
     b"referer",
     b"x-csrf-token",

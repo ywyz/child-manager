@@ -1,7 +1,7 @@
 # Graph Report - child-manager  (2026-08-01)
 
 ## Corpus Check
-- 395 files · ~239,895 words
+- 395 files · ~239,902 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `31d50f3a`
+- Built from commit: `b92f03db`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -391,8 +391,8 @@ Cohesion: 0.11
 Nodes (33): AiJobScopeResolver, AiRunner, build_ai_job_runner(), build_ai_result_repository(), build_prompt_test_executor(), build_word_export_runner(), build_worker_scope_resolver(), _native_url() (+25 more)
 
 ### Community 42 - "create_app"
-Cohesion: 0.08
-Nodes (49): ContractModel, BaseModel, AdminCredentialRevocationResult, AuthenticationCredential, AuthenticationCredentialResponse, AuthenticationPublicKey, AuthenticationResult, AuthenticatorSelection (+41 more)
+Cohesion: 0.07
+Nodes (50): ContractModel, BaseModel, AdminCredentialRevocationResult, AuthenticationCredential, AuthenticationCredentialResponse, AuthenticationPublicKey, AuthenticationResult, AuthenticatorSelection (+42 more)
 
 ### Community 43 - "dependencies.py"
 Cohesion: 0.29
@@ -475,8 +475,8 @@ Cohesion: 0.11
 Nodes (25): export_file_download(), plan_api_request(), plan_docx_preview_request(), 通过同源 BFF 提取 DOCX，返回待教师确认的临时文本。, 只通过同源 BFF 访问教案及其任务端点。, 通过同源 fetch 下载受保护文件，并保留 API 错误反馈。, AiSectionAction, preview_title() (+17 more)
 
 ### Community 63 - "common.sh"
-Cohesion: 0.19
-Nodes (32): activate(), create_user(), credential_revoke(), credentials(), deactivate(), get_user(), _invitation(), invitation_issue() (+24 more)
+Cohesion: 0.21
+Nodes (31): activate(), create_user(), credential_revoke(), credentials(), deactivate(), get_user(), _invitation(), invitation_issue() (+23 more)
 
 ### Community 64 - "test_ai_preview_lifecycle.py"
 Cohesion: 0.13
@@ -527,8 +527,8 @@ Cohesion: 0.13
 Nodes (15): _auth_throttle(), MemoryAuthThrottle, datetime, Redis, timedelta, 公开身份 ceremony 的来源限流公共 seam。, 按可信来源和 ceremony purpose 分区的确定性滑动窗口替身。, 多进程 API 使用的 Redis 固定窗口实现。 (+7 more)
 
 ### Community 76 - "build_health_dependencies"
-Cohesion: 0.12
-Nodes (27): backup_auth_api_request(), backup_login_api_request(), backup_reauthentication_api_request(), 只通过同源 BFF 访问本人备用登录端点。, 以请求正文提交两项备用因素，不把秘密放入 URL。, 为当前备用会话取得仅可新增通行密钥的短时证明。, 读取本人最近 20 条内建安全事件，不产生已读状态。, 从浏览器经同源 BFF 调用 API，并为写请求取得 CSRF token。 (+19 more)
+Cohesion: 0.11
+Nodes (29): backup_auth_api_request(), backup_login_api_request(), backup_reauthentication_api_request(), BffResponse, NiceGUI 服务端 BFF 客户端的公开接缝。, 只通过同源 BFF 访问本人备用登录端点。, 以请求正文提交两项备用因素，不把秘密放入 URL。, 为当前备用会话取得仅可新增通行密钥的短时证明。 (+21 more)
 
 ### Community 77 - "run_ai_result_maintenance"
 Cohesion: 0.15
@@ -663,8 +663,8 @@ Cohesion: 0.43
 Nodes (15): _complete_preview(), _headers(), _native_url(), _prepare_adopted_split(), Any, TestClient, UUID, _request_generation() (+7 more)
 
 ### Community 110 - "安全威胁模型"
-Cohesion: 0.21
-Nodes (12): BffResponse, proxy_request(), AsyncBaseTransport, NiceGUI 服务端 BFF 客户端的公开接缝。, 按固定 allowlist 转发请求，并保留响应原始多值头。, HTTPX (外部 HTTP 客户端), MonkeyPatch, test_plan_docx_preview_request_forwards_csrf_cookie_and_multipart() (+4 more)
+Cohesion: 0.31
+Nodes (9): proxy_request(), AsyncBaseTransport, 按固定 allowlist 转发请求，并保留响应原始多值头。, MonkeyPatch, test_plan_docx_preview_request_forwards_csrf_cookie_and_multipart(), test_proxy_ignores_process_proxy_environment(), test_proxy_preserves_auth_set_cookie_as_raw_headers(), test_proxy_preserves_request_and_rebuilds_client_ip() (+1 more)
 
 ### Community 111 - "test_group_activity_contract.py"
 Cohesion: 0.19
@@ -815,8 +815,8 @@ Cohesion: 0.25
 Nodes (7): MonkeyPatch, T129 Word 导出迁移与数据库不变量 RED。, test_0010_can_downgrade_to_0009_and_upgrade_again(), test_export_status_uniqueness_and_success_failure_shapes_are_database_enforced(), test_export_table_has_frozen_input_and_long_term_history_columns(), test_export_uses_same_tenant_composite_foreign_keys(), word_export_database()
 
 ### Community 148 - "Classes Table"
-Cohesion: 0.29
-Nodes (6): _module(), MonkeyPatch, test_confirmed_and_unavailable_results_use_24_hour_and_5_minute_ttls(), test_local_result_wins_conflict_and_uses_one_hour_cache(), test_timor_client_enforces_one_total_deadline(), test_unsupported_local_calendar_range_softly_falls_back_to_online()
+Cohesion: 0.23
+Nodes (7): HTTPX (外部 HTTP 客户端), _module(), MonkeyPatch, test_confirmed_and_unavailable_results_use_24_hour_and_5_minute_ttls(), test_local_result_wins_conflict_and_uses_one_hour_cache(), test_timor_client_enforces_one_total_deadline(), test_unsupported_local_calendar_range_softly_falls_back_to_online()
 
 ### Community 149 - "Kindergarten Isolation Concept"
 Cohesion: 0.58

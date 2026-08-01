@@ -61,6 +61,7 @@ async def test_proxy_preserves_request_and_rebuilds_client_ip() -> None:
             (b"origin", b"http://127.0.0.1:8080"),
             (b"referer", b"http://127.0.0.1:8080/login"),
             (b"x-csrf-token", b"signed"),
+            (b"idempotency-key", b"export-request-123"),
             (b"content-type", b"application/json"),
         ),
         body=b'{"username":"teacher"}',
@@ -78,6 +79,7 @@ async def test_proxy_preserves_request_and_rebuilds_client_ip() -> None:
     assert request.headers["origin"] == "http://127.0.0.1:8080"
     assert request.headers["referer"] == "http://127.0.0.1:8080/login"
     assert request.headers["x-csrf-token"] == "signed"
+    assert request.headers["idempotency-key"] == "export-request-123"
     assert request.headers["x-child-manager-client-ip"] == "127.0.0.1"
     assert response.status_code == 201
     assert response.body == b'{"ok":true}'
