@@ -11,6 +11,7 @@ import psycopg
 from fastapi import Cookie, Depends
 from redis.asyncio import Redis
 
+from packages.backend.exports.service import ExportService
 from packages.backend.identity.service import IdentityError, IdentityService, SessionUser
 from packages.backend.jobs.ai_retry import AiRetryService
 from packages.backend.jobs.query_service import JobQueryService
@@ -137,6 +138,13 @@ def lesson_plan_service() -> LessonPlanService:
 
 
 LessonPlanServiceDependency = Annotated[LessonPlanService, Depends(lesson_plan_service)]
+
+
+def export_service() -> ExportService:
+    return ExportService.from_environment()
+
+
+ExportServiceDependency = Annotated[ExportService, Depends(export_service)]
 
 
 def lesson_plan_source_service() -> LessonPlanSourceService:

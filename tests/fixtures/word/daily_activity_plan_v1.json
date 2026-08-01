@@ -1,0 +1,78 @@
+{
+  "context_snapshot": {
+    "kindergarten_name": "星河幼儿园",
+    "class_name": "向日葵班",
+    "age_group_name": "中班",
+    "semester_name": "2026 春季学期",
+    "semester_start_date": "2026-02-04",
+    "semester_end_date": "2026-06-30",
+    "teaching_week_number": 4,
+    "teaching_week_text": "第（四）周",
+    "activity_date_text": "周（一）3月2日",
+    "season": "spring",
+    "authors": [
+      {
+        "user_id": "00000000-0000-0000-0000-000000000101",
+        "sort_order": 0,
+        "display_name_snapshot": "陈老师"
+      },
+      {
+        "user_id": "00000000-0000-0000-0000-000000000102",
+        "sort_order": 1,
+        "display_name_snapshot": "李老师"
+      }
+    ]
+  },
+  "content_snapshot": {
+    "morning_activity": {
+      "physical_cycle": "体能大循环",
+      "group_game": "合作运球",
+      "free_game": "自主器械",
+      "focus_guidance": "合作运球",
+      "objectives": ["练习双人合作。", "发展身体协调。", "体验共同游戏。"],
+      "guidance_points": ["保持适当距离。", "听清同伴提醒。", "结束后收好器材。"]
+    },
+    "morning_talk": {
+      "topic": "春天的发现",
+      "questions": ["你看到了什么？", "你听到了什么？", "你想到了什么？"]
+    },
+    "group_activity": {
+      "theme": "寻找春天",
+      "objectives": ["观察季节变化。", "尝试完整表达。"],
+      "preparation": ["春景图片。", "记录纸。"],
+      "focus": "表达观察结果。",
+      "difficulty": "连续描述变化。",
+      "process": [
+        {
+          "heading": "一、观察图片",
+          "lines": ["师：请看看图片里有什么。", "幼：我看到了花。"],
+          "is_ai_added": false
+        },
+        {
+          "heading": "二、新增延伸",
+          "lines": ["师：请把发现画下来。"],
+          "is_ai_added": true
+        }
+      ]
+    },
+    "indoor_area_game": {
+      "areas": ["建构区", "阅读区"],
+      "focus_guidance": "建构区",
+      "objectives": ["尝试合作搭建。", "发展空间想象。", "学习整理材料。"],
+      "guidance_points": ["先商量再搭建。", "按标记取放材料。", "结束后共同整理。"],
+      "support_strategies": ["提供结构图片。", "补充连接材料。", "展示幼儿作品。"]
+    },
+    "afternoon_outdoor_game": {
+      "areas": ["球类区", "平衡区"],
+      "focus_guidance": "球类区",
+      "objectives": ["练习双手滚球。", "发展手眼协调。", "遵守游戏规则。"],
+      "guidance_points": ["面向同伴滚球。", "控制滚球力量。", "等待轮流游戏。"],
+      "support_strategies": ["提供不同大小软球。", "设置宽窄目标线。", "鼓励同伴合作。"]
+    },
+    "daily_reflection": {
+      "highlights": "",
+      "issues": "",
+      "adjustments": ""
+    }
+  }
+}

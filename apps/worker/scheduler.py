@@ -10,6 +10,7 @@ from uuid import UUID
 PENDING_DISPATCH_SCAN_SECONDS = 15
 EXPIRED_LEASE_SCAN_SECONDS = 30
 PROMPT_TEST_RECOVERY_LIMIT = 100
+WORD_EXPORT_RECOVERY_LIMIT = 100
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +93,60 @@ def run_ai_recovery_scan(
                 )
                 continue
             dispatched += 1
+    return dispatched
+
+
+class WordRecoveryStore(Protocol):
+    def reserve_recoverable_jobs(
+        self,
+        kindergarten_id: UUID,
+        *,
+        now: datetime,
+        limit: int,
+        include_expired: bool,
+    ) -> list[UUID]: ...
+
+
+def run_word_recovery_scan(
+    *,
+    store: WordRecoveryStore,
+    dispatch: Callable[[UUID], None],
+    kindergarten_ids: Iterable[UUID],
+    now: datetime | None = None,
+    limit: int = WORD_EXPORT_RECOVERY_LIMIT,
+    include_expired: bool = True,
+) -> int:
+    """按园所恢复待投递或租约过期的 Word 导出任务。"""
+
+    effective_now = now or datetime.now(UTC)
+    dispatched = 0
+    for kindergarten_id in kindergarten_ids:
+        try:
+            job_ids = store.reserve_recoverable_jobs(
+                kindergarten_id,
+                now=effective_now,
+                limit=limit,
+                include_expired=include_expired,
+            )
+        except Exception as exc:
+            logger.error(
+                "Word 导出恢复扫描失败",
+                extra={
+                    "kindergarten_id": str(kindergarten_id),
+                    "exception_type": type(exc).__name__,
+                },
+            )
+            continue
+        for job_id in job_ids:
+            try:
+                dispatch(job_id)
+            except Exception as exc:
+                logger.error(
+                    "Word 导出恢复投递失败",
+                    extra={"job_id": str(job_id), "exception_type": type(exc).__name__},
+                )
+            else:
+                dispatched += 1
     return dispatched
 
 

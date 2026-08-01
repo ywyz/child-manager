@@ -1,6 +1,6 @@
 # Child Manager 项目上下文
 
-最后更新：2026-07-31
+最后更新：2026-08-01
 
 当前上下文分支：`docs`
 
@@ -8,7 +8,10 @@
 US4 T087–T110 已完成，US5 T111–T126 已完成。固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
 `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
-PASS；dev 已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，Issue #11 收尾后进入 M7。
+PASS；dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，状态文档与
+语义图谱收敛后的最终基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`。
+Quality run `30631050997` attempt 2 在该 headSha 全部通过；Issue #11 已按
+`completed` 关闭，M7 为 `ready`。
 
 ## 1. 本文档的用途
 
@@ -238,7 +241,8 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
   悬空、自环、重复和折叠边均为 0。T126 已完成；固定
   `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
   `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
-  PASS，dev 已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，Issue #11 收尾后进入 M7。
+  PASS；最终稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，其 Quality run
+  `30631050997` attempt 2 在同一 headSha 全部通过。Issue #11 已关闭，M7 为 `ready`。
 - 接入 Redis Worker、任务状态、栏目级生成、结构校验、重试和失败恢复。
 - 支持集体活动文本与 `.docx` 导入。
 
@@ -276,13 +280,13 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 ## 9. 当前仓库与分支状态
 
-状态日期：2026-07-31。
+状态日期：2026-08-01。
 
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
-| `main` | 稳定版本与发布基线 | `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f` 已正常 merge M6 `dev`，包含 Review 通过结果、T126 代码和状态文档；M6 质量证据已回填 | Issue #11 收尾后进入 M7 |
-| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 Issue #11 已同步 OpenAPI、US5 T111–T126 状态、最终验收证据、Review PASS 与 main 集成结果 | 维护 M7 及后续共享设计 |
-| dev | Codex 唯一实现与集成 | M6 已完成；US5 T111–T126 已实现，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过；本地专项与 Graphify 诊断完成 | 进入 M7 前保持与 main/docs 一致 |
+| `main` | 稳定版本与发布基线 | 最终 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098` 包含 M6 Review 结果、T126、状态文档和语义图谱；Quality run `30631050997` attempt 2 在同一 headSha 全部通过 | 保持稳定，等待 M7 完成 Review |
+| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 Issue #11、T087–T126、Review、main 集成与最终 CI 证据均已收敛 | 固定新的 immutable docs SHA，驱动 M7/US6 |
+| dev | Codex 唯一实现与集成 | M6 已完成；US5 T111–T126 已实现并通过专项、完整 CI 与 Graphify 诊断 | 同步最终 main/docs 后进入 M7 T127 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -322,7 +326,10 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
     US5 专项为 56 项通过，完整本地 pytest 为 666 项通过、1 条既有弃用警告；恶意样本临时残留为 0，
     Graphify 诊断无结构性异常。固定 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
     `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS；
-    dev 已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，Issue #11 收尾后进入 M7。
+    dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`；状态文档与语义图谱
+    收敛后的最终基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run
+    `30631050997` attempt 2 在同一 headSha 全部通过。Issue #11 已按 `completed` 关闭，
+    M7 为 `ready`。
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
 ## 11. 高风险点
@@ -368,7 +375,7 @@ uv run pyright
 uv run pytest
 ```
 
-`main@b7676c27d07adc5eca1f0c397217780367481e9c` 当前包含 M1–M3A、M5 与已独立验收的 M4。
+`main@b7676c27d07adc5eca1f0c397217780367481e9c` 是已独立验收 M4 的历史稳定基线。
 2026-07-27 的 `dev` Quality Gates `30235090100` 和 `main` Quality Gates `30235439229`
 中，锁定安装、Ruff format/check、Pyright、OpenAPI 校验和完整 Pytest 均通过；两次 Pytest
 结果均为 `458 passed, 1 warning`，warning 是已记录的 Pydantic 2.11 弃用提示。后续里程碑

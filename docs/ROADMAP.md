@@ -129,7 +129,10 @@ US5 T111–T126 已完成，T126 验收为设置页 49 passed、US5 专项 56 pa
 666 passed、恶意样本临时残留 0，Graphify 诊断通过；固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
 dev@d654b704d1bd0653f7d0209ac58665090a934311 的 Standards/Spec 双轴 Review 均为 PASS，
-dev 已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，Issue #11 收尾后进入 M7。
+dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`；状态文档与语义图谱
+收敛后的最终基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run
+`30631050997` attempt 2 在同一 headSha 全部通过。Issue #11 已按 `completed` 关闭，
+M7 为 `ready`。
 
 ## 6. M0：共享设计基线
 
@@ -351,14 +354,14 @@ Quality Gates `30235090100` 为 458 项通过；正常 merge 后
 
 ### 出口门禁
 
-- [ ] 数据库已提交但 Redis 失败时保留 `pending_dispatch`，恢复扫描可重投。
-- [ ] Redis 已收到消息但 `queued` 回写失败时，Worker 可幂等领取且不产生重复结果。
-- [ ] 重复投递、Worker 中断、过期租约和恢复扫描不突破最多三次模型调用。
-- [ ] 一键生成中某一栏目失败不回滚已成功栏目，可只重试失败栏目。
-- [ ] Schema 校验失败触发至多两次自动重试；认证、余额、权限、模型和配置错误立即失败。
-- [ ] 任务消息、日志和审计不含 API Key、令牌、完整教案或上传文件。
-- [ ] 教案在预览生成后发生版本变化时，采用请求冲突且不覆盖教师内容。
-- [ ] 浏览器冒烟覆盖生成、重试提示、部分失败、预览、采用、拒绝和页面重载恢复。
+- [x] 数据库已提交但 Redis 失败时保留 `pending_dispatch`，恢复扫描可重投。
+- [x] Redis 已收到消息但 `queued` 回写失败时，Worker 可幂等领取且不产生重复结果。
+- [x] 重复投递、Worker 中断、过期租约和恢复扫描不突破最多三次模型调用。
+- [x] 一键生成中某一栏目失败不回滚已成功栏目，可只重试失败栏目。
+- [x] Schema 校验失败触发至多两次自动重试；认证、余额、权限、模型和配置错误立即失败。
+- [x] 任务消息、日志和审计不含 API Key、令牌、完整教案或上传文件。
+- [x] 教案在预览生成后发生版本变化时，采用请求冲突且不覆盖教师内容。
+- [x] 浏览器冒烟覆盖生成、重试提示、部分失败、预览、采用、拒绝和页面重载恢复。
 
 ## 13. M7：固定 Word 导出与历史
 
@@ -442,7 +445,7 @@ Quality Gates `30235090100` 为 458 项通过；正常 merge 后
 
 ## 16. 当前状态快照
 
-状态日期：2026-07-31
+状态日期：2026-08-01
 
 | 里程碑 | 状态 | 当前证据 | 下一个解锁动作 |
 | --- | --- | --- | --- |
@@ -453,13 +456,14 @@ Quality Gates `30235090100` 为 458 项通过；正常 merge 后
 | M3A | `complete` | [#8](https://github.com/ywyz/child-manager/issues/8) 已按 `completed` 关闭；固定 `docs@2f7894c`，最终实现 `dev@6a9e269`，Quality Gates `30161645948` 与独立复验通过 | 保留验收记录；已集成 `main` |
 | M5 | `complete` | [#9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed` 关闭；固定 `docs@7d9af6c`，最终 `dev@ae74c83`，双轴 Review 均通过，Quality Gates `30202886134` 为 347 项通过 | 已随最终 M4 树集成 `main`；保留验收记录 |
 | M4 | `complete` | [#10](https://github.com/ywyz/child-manager/issues/10) 已按 `completed` 关闭；固定 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，Review `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，双轴 PASS；`dev`/`main` Quality Gates `30235090100`/`30235439229` 均为 458 项通过；最终 `main@b7676c27d07adc5eca1f0c397217780367481e9c` | 保留验收记录 |
-| M6 | `complete` | Issue #11 覆盖 T087–T126；US4 T087–T110 已完成，US5 T111–T126 已在 dev@32d3c102152848f7488da036ddada461b3d8d3ab 完成；Quality run 30602225731 在同一 headSha 通过完整检查；设置页 49 passed、US5 专项 56 passed、完整 pytest 666 passed，恶意样本临时残留 0，Graphify 诊断通过；固定 main..dev 双轴 Review 均为 PASS，已正常 merge 到 main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f | Issue #11 收尾后进入 M7 |
-| M7–M8 | `pending` | 尚未开始实现 | 等待 M6 及各自前序里程碑完成 |
+| M6 | `complete` | Issue #11 覆盖 T087–T126；US4/US5、专项与完整测试、Graphify、固定 main..dev 双轴 Review 均已通过；最终 main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098 的 Quality run 30631050997 attempt 2 在同一 headSha 全部通过 | 保留验收记录 |
+| M7 | `ready` | M6 已完成并集成最终 main；US6 设计、模板哈希、T127–T141 顺序和验收命令已冻结 | 固定新的 docs SHA 并创建 M7/US6 Issue |
+| M8 | `pending` | 尚未开始实现 | 等待 M7 `complete` |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010/ADR-0011 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 
 该快照只能根据实际分支、文件、命令与验收证据更新。不得根据历史分支、计划文件或未执行命令猜测状态。
 
-M4 T062–T086、M5 T046–T061 以及 M6 T087–T126 均已完成并通过同一 dev SHA 的远端完整检查，固定 `main..dev` Standards/Spec 双轴 Review 均为 PASS，已正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`。共享
+M4 T062–T086、M5 T046–T061 以及 M6 T087–T126 均已完成并通过对应固定 dev SHA 的远端完整检查，固定 `main..dev` Standards/Spec 双轴 Review 均为 PASS；M6 的最终稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`。共享
 [`specs/001-daily-activity-plan/tasks.md`](../specs/001-daily-activity-plan/tasks.md)
 的现有任务顺序、迁移编号和依赖图无需重编号；M6 Issue 必须引用不可移动 `docs` 提交，
 并保持 T087–T110 → T111–T126 的内部顺序。

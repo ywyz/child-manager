@@ -9,11 +9,24 @@ from uuid import uuid4
 
 from nicegui import ui
 
-from apps.web.api_client import plan_api_request, plan_docx_preview_request, same_origin_api_request
+from apps.web.api_client import (
+    export_file_download,
+    plan_api_request,
+    plan_docx_preview_request,
+    same_origin_api_request,
+)
 from apps.web.components.ai_preview import AI_SECTION_ACTIONS, preview_title
+from apps.web.components.export_history import (
+    is_terminal_export_status,
+    missing_section_labels,
+    render_export_history,
+)
 from apps.web.components.job_status import ai_job_status, poll_interval_ms, should_poll
 from apps.web.components.plan_editor import AUTOSAVE_DELAY_SECONDS, SECTION_LABELS
 from apps.web.components.save_status import SaveState, save_status
+
+EXPORT_POLL_INTERVAL_SECONDS = 1.5
+EXPORT_POLL_MAX_ATTEMPTS = 120
 
 
 def build_plans_page() -> None:
@@ -176,8 +189,19 @@ def build_plan_editor_page(plan_id: str) -> None:
     debounce_generation = [0]
     pending_autosave: list[asyncio.Task[None] | None] = [None]
     polling_jobs: set[str] = set()
+    polling_exports: set[str] = set()
     polling_tasks: set[asyncio.Task[None]] = set()
     loaded = asyncio.Event()
+
+    def cancel_polling_tasks() -> None:
+        for task in tuple(polling_tasks):
+            task.cancel()
+        polling_tasks.clear()
+        polling_jobs.clear()
+        polling_exports.clear()
+
+    ui.context.client.on_disconnect(cancel_polling_tasks)
+    ui.context.client.on_delete(cancel_polling_tasks)
 
     def set_state(state: SaveState) -> None:
         value = save_status(state)
@@ -545,6 +569,7 @@ def build_plan_editor_page(plan_id: str) -> None:
         set_state("saved")
         loaded.set()
         await load_jobs()
+        await load_exports()
 
     async def explicit_save() -> None:
         await save(explicit=True)
@@ -724,6 +749,153 @@ def build_plan_editor_page(plan_id: str) -> None:
         else:
             set_state("failed")
 
+    def set_export_feedback(message: str, *, error: bool = False) -> None:
+        target = export_alert if error else export_feedback
+        other = export_feedback if error else export_alert
+        other.set_visibility(False)
+        target.set_text(message)
+        target.set_visibility(bool(message))
+
+    async def download_export(export_id: str) -> None:
+        result = await export_file_download(f"/api/v1/exports/{export_id}/download")
+        body = result.get("body", {})
+        if result.get("ok"):
+            set_export_feedback("已开始下载 Word 文件")
+            return
+        message = (
+            str(body.get("message", "下载失败，请稍后重试。"))
+            if isinstance(body, dict)
+            else "下载失败，请稍后重试。"
+        )
+        set_export_feedback(message, error=True)
+
+    async def load_exports() -> None:
+        result = await plan_api_request(f"/{plan_id}/exports?page=1&page_size=20")
+        body = result.get("body", {})
+        if not result.get("ok") or not isinstance(body, dict):
+            message = (
+                str(body.get("message", "导出历史加载失败，请稍后重试"))
+                if isinstance(body, dict)
+                else "导出历史加载失败，请稍后重试"
+            )
+            set_export_feedback(message, error=True)
+            return
+        raw_items = body.get("items", [])
+        items = [item for item in raw_items if isinstance(item, dict)]
+        render_export_history(
+            export_history,
+            items=items,
+            on_download=download_export,
+        )
+        for item in items:
+            export_id = str(item.get("id", ""))
+            if item.get("status") == "pending":
+                start_export_poll(export_id)
+
+    async def poll_export(export_id: str) -> None:
+        try:
+            with export_history:
+                for _attempt in range(EXPORT_POLL_MAX_ATTEMPTS):
+                    await asyncio.sleep(EXPORT_POLL_INTERVAL_SECONDS)
+                    result = await plan_api_request(f"/exports/{export_id}")
+                    body = result.get("body", {})
+                    if not result.get("ok") or not isinstance(body, dict):
+                        set_export_feedback("无法获取导出状态，请稍后重试", error=True)
+                        return
+                    if not is_terminal_export_status(body.get("status")):
+                        continue
+                    if body.get("status") == "succeeded":
+                        set_export_feedback("导出成功")
+                    else:
+                        set_export_feedback("导出失败，请重试", error=True)
+                    await load_exports()
+                    return
+                set_export_feedback("导出状态查询超时，请稍后重试", error=True)
+        finally:
+            polling_exports.discard(export_id)
+
+    def start_export_poll(export_id: str) -> None:
+        if not export_id or export_id in polling_exports:
+            return
+        polling_exports.add(export_id)
+        task = asyncio.create_task(poll_export(export_id))
+        polling_tasks.add(task)
+        task.add_done_callback(polling_tasks.discard)
+
+    async def create_export(*, confirm_incomplete: bool = False) -> None:
+        await loaded.wait()
+        content = editor_content()
+        if content is None or not current:
+            return
+        result = await plan_api_request(
+            f"/{plan_id}/exports",
+            method="POST",
+            payload={
+                "expected_version": current["version"],
+                "content": content,
+                "authors": [
+                    {
+                        "user_id": author["user_id"],
+                        "sort_order": author["sort_order"],
+                    }
+                    for author in current.get("authors", [])
+                ],
+                "confirm_incomplete": confirm_incomplete,
+            },
+            request_headers={"Idempotency-Key": str(uuid4())},
+        )
+        body = result.get("body", {})
+        if result.get("ok") and isinstance(body, dict):
+            export = body.get("export", {})
+            if not isinstance(export, dict):
+                set_export_feedback("导出任务受理失败", error=True)
+                return
+            version = export.get("plan_version")
+            if isinstance(version, int):
+                current["version"] = version
+            current["content"] = content
+            debounce_generation[0] += 1
+            if pending_autosave[0] is not None:
+                pending_autosave[0].cancel()
+                pending_autosave[0] = None
+            set_state("saved")
+            export_confirmation.clear()
+            set_export_feedback("导出任务已受理")
+            await load_exports()
+            start_export_poll(str(export.get("id", "")))
+            return
+
+        if (
+            result.get("status") == 409
+            and isinstance(body, dict)
+            and body.get("code") == "export.confirmation_required"
+        ):
+            raw_missing = body.get("missing_sections", [])
+            labels = missing_section_labels(raw_missing if isinstance(raw_missing, list) else [])
+            export_confirmation.clear()
+            with export_confirmation:
+                ui.label("以下栏目内容不完整，确认后仍可导出").props('role="alert"')
+                for label in labels:
+                    ui.label(label)
+
+                async def confirm() -> None:
+                    await create_export(confirm_incomplete=True)
+
+                button = (
+                    ui.button("确认并导出", on_click=confirm)
+                    .props('aria-label="确认并导出"')
+                    .classes("min-h-[44px]")
+                )
+                button.on("keydown.enter", confirm)
+            return
+
+        message = (
+            str(body.get("message", "导出服务暂不可用"))
+            if isinstance(body, dict)
+            else "导出服务暂不可用"
+        )
+        set_export_feedback(message, error=True)
+
     async def show_history() -> None:
         result = await plan_api_request(f"/{plan_id}/snapshots?page=1&page_size=100")
         body = result.get("body", {})
@@ -823,6 +995,21 @@ def build_plan_editor_page(plan_id: str) -> None:
         "恢复归档",
         on_click=lambda: set_archived(archived=False),
     ).classes("min-h-[44px]")
+    ui.separator()
+    ui.label("Word 导出").props('role="heading" aria-level="2"')
+    export_button = (
+        ui.button("导出 Word", on_click=create_export)
+        .props('aria-label="导出 Word"')
+        .classes("min-h-[44px]")
+    )
+    export_button.on("keydown.enter", create_export)
+    export_feedback = ui.label("").props('role="status" aria-live="polite"')
+    export_feedback.set_visibility(False)
+    export_alert = ui.label("").props('role="alert" aria-live="assertive"')
+    export_alert.set_visibility(False)
+    export_confirmation = ui.column().classes("w-full")
+    ui.label("导出历史").props('role="heading" aria-level="2"')
+    export_history = ui.column().classes("w-full")
     ui.button("历史版本", on_click=show_history).classes("min-h-[44px]")
     history = ui.column()
     ui.timer(0.1, load, once=True)

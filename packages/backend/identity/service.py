@@ -71,11 +71,14 @@ _VIRTUAL_BACKUP_TOTP_SECRET = base64.b32encode(
 
 
 class IdentityError(Exception):
-    def __init__(self, status_code: int, code: str, message: str) -> None:
+    def __init__(
+        self, status_code: int, code: str, message: str, *, details: dict[str, object] | None = None
+    ) -> None:
         super().__init__(message)
         self.status_code = status_code
         self.code = code
         self.message = message
+        self.details = details or {}
 
 
 @dataclass(frozen=True, slots=True)

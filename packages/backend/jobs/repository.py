@@ -283,6 +283,46 @@ class JobRepository:
         assert record is not None
         return record
 
+    def create_word_export(
+        self,
+        kindergarten_id: UUID,
+        *,
+        job_id: UUID,
+        plan_id: UUID,
+        requested_resource_version: int,
+        requested_by: UUID,
+        request_id: UUID | None,
+        trace_id: UUID,
+        scope: str,
+        key: str,
+        fingerprint: str,
+    ) -> JobRecord:
+        result = self.connection.execute(
+            """INSERT INTO background_jobs
+            (id,kindergarten_id,job_type,execution_status,plan_id,requested_resource_version,
+             idempotency_scope,idempotency_key,request_fingerprint_sha256,attempt_count,
+             max_attempts,requested_by,request_id,trace_id)
+            VALUES (%s,%s,'word.export','pending_dispatch',%s,%s,%s,%s,%s,0,3,%s,%s,%s)
+            RETURNING id,job_type,execution_status,requested_by,request_fingerprint_sha256,
+                      attempt_count,max_attempts,trace_id,created_at,queued_at,started_at,
+                      finished_at,error_code,error_summary""",
+            (
+                job_id,
+                kindergarten_id,
+                plan_id,
+                requested_resource_version,
+                scope,
+                key,
+                fingerprint,
+                requested_by,
+                request_id,
+                trace_id,
+            ),
+        )
+        record = _job(_row(result))
+        assert record is not None
+        return record
+
     def create_ai_batch(
         self,
         kindergarten_id: UUID,

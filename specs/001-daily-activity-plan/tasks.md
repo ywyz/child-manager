@@ -261,8 +261,9 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 **Milestone state**: M4、M5、M6 均为 `complete`，M6 T087–T126 已完成。M6 Issue
 固定引用不可移动 docs SHA；US4 T087–T110 已完成，US5 T111–T126 已完成；固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
-`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS，已正常 merge 到
-`main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，并保持 T087–T110 先于 T111–T126。
+`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS；
+最终稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，其 Quality run `30631050997`
+attempt 2 在同一 headSha 全部通过，并保持 T087–T110 先于 T111–T126。M7 为 `ready`。
 
 **US5 当前状态（2026-07-31）**：T126 独立验收已完成；实现提交 dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查。
 设置页先 collect-only 收集 49 项并通过，再重跑为 49 passed；US5 专项 56 passed，完整 pytest 666 passed；恶意样本临时残留为 0，Graphify 诊断通过。
@@ -346,6 +347,9 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 
 ## Phase 8: User Story 6 — 教师导出并重新下载固定 Word（Priority: P6）
 
+**Milestone state**: M7 `ready`；实现范围固定为 T127–T141，必须由引用不可移动 docs SHA
+的 GitHub Issue 驱动。
+
 **Goal**: 从已保存版本严格生成固定模板 `.docx`，保留独立历史和受保护副本，并在每次下载时重新授权。
 
 **Requirements covered**: FR-049–FR-057、FR-072；SC-001、SC-003、SC-007、SC-009、SC-015。
@@ -355,7 +359,7 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 
 ### Tests for User Story 6（先 RED）
 
-- [ ] T127 [P] [US6] 在 `tests/contract/test_exports_contract.py` 编写创建/历史/详情/下载契约测试，锁定缺失集合只含前五栏、空反思不确认且仍 202、`expected_version`、plan_id 进入 fingerprint、`409 export.confirmation_required`、`410 export.file_missing`、分页/文件名及 DB/配置前稳定 503、Redis 后仍 202；验证：`uv run pytest --collect-only tests/contract/test_exports_contract.py` 退出 0，再运行该文件并因五栏确认、幂等、文件名或受理语义断言未满足而 RED
+- [ ] T127 [P] [US6] 在 `tests/contract/test_exports_contract.py` 编写创建/历史/详情/下载契约测试，锁定缺失集合只含前五栏、空反思不确认且仍 202、`expected_version`、plan_id 进入 fingerprint、专用封闭 `ExportConfirmationRequiredError` 的顶层 `missing_sections`，并以 409 `oneOf` 同时覆盖其他通用 `Error` 冲突；同时覆盖 `410 export.file_missing`、分页/文件名及 DB/配置前稳定 503、Redis 后仍 202；验证：`uv run pytest --collect-only tests/contract/test_exports_contract.py` 退出 0，再运行该文件并因五栏确认、幂等、文件名或受理语义断言未满足而 RED
 - [ ] T128 [P] [US6] 在 `tests/api/test_exports.py` 覆盖前五栏缺失且未确认时无副作用 409，反思为空但五栏完整时直接 CAS 无快照保存+export snapshot+job 同事务；覆盖版本冲突、跨 plan 同 key 冲突、新 key 独立记录、DB/配置前失败全回滚、Redis 后仍 202、权限和跨园；验证：`uv run pytest --collect-only tests/api/test_exports.py` 退出 0，再运行该文件并因五栏确认、冻结快照、事务、幂等、受理或权限断言未满足而 RED
 - [ ] T129 [P] [US6] 在 `tests/migrations/test_word_exports_migration.py`、`tests/repository/test_export_repository.py` 覆盖导出到任务/教案/操作者的同园组合外键、唯一 `job_id/storage_key`、非空不可变 `context_snapshot/content_snapshot/content_schema_version/content_sha256`、状态一致性、园所隔离和历史长期保留；验证：`uv run pytest --collect-only tests/migrations/test_word_exports_migration.py tests/repository/test_export_repository.py` 退出 0，再运行两文件并因迁移约束、快照不可变、隔离或历史行为断言未满足而 RED
 - [ ] T130 [P] [US6] 在 `tests/fixtures/word/daily_activity_plan_v1.json`、`tests/word/test_teacherplan_renderer.py` 建立虚构固定样本，断言模板哈希、表格/固定文本/字段位置、字体字号、段落换行、空周次、空反思仍输出三行空内容和仅新增 step 红色；验证：`uv run pytest --collect-only tests/word/test_teacherplan_renderer.py` 退出 0，确认原模板哈希仍为冻结值，再运行该文件并因渲染结构或样式断言未满足而 RED
@@ -364,7 +368,7 @@ M6/M7 完成，SC-008 仅由 T160 跨阶段验收。
 
 ### Implementation for User Story 6
 
-- [ ] T133 [P] [US6] 在 `packages/contracts/exports.py` 实现前五栏缺失枚举（明确排除反思）、导出请求/记录/分页、精确文件名、稳定状态和下载元数据并对齐 OpenAPI；验证：`uv run pytest tests/contract/test_exports_contract.py tests/contract/test_idempotency.py` 通过
+- [ ] T133 [P] [US6] 在 `packages/contracts/exports.py` 实现前五栏稳定枚举（明确排除反思）、专用封闭 `ExportConfirmationRequiredError`、导出请求/记录/分页、稳定状态和下载元数据，并让 OpenAPI 的创建导出 409 以 `oneOf` 同时覆盖专用确认与通用冲突；在 `packages/backend/exports/rules.py` 实现前五栏缺失业务判断；精确文件名由 T136 的文件集成层实现；验证：`uv run pytest tests/contract/test_exports_contract.py tests/contract/test_idempotency.py tests/contract/test_openapi_document.py tests/api/test_exports.py -k 'confirmation or conflict or empty_reflection'` 通过
 - [ ] T134 [P] [US6] 在 `packages/backend/database/migrations/versions/0010_word_exports.py`、`packages/backend/exports/models.py`、`packages/backend/exports/repository.py` 实现导出表、到任务/教案/操作者的同园组合外键、非空不可变上下文/正文/Schema 版本/正文哈希快照、状态约束、唯一 `job_id/storage_key` 和园所 Repository；验证：`uv run pytest tests/migrations/test_word_exports_migration.py tests/repository/test_export_repository.py` 通过
 - [ ] T135 [P] [US6] 在 `packages/backend/integrations/files/teacherplan_renderer.py` 实现只复制并校验固定模板的映射渲染器，保持结构/样式、空反思三行并且只标红仍标记的新增 step；验证：`uv run pytest tests/word/test_teacherplan_renderer.py` 通过
 - [ ] T136 [P] [US6] 在 `packages/backend/integrations/files/export_storage.py` 实现 FR-054 的确定性显示文件名清理、唯一内部 key、受控临时目录、流式哈希、原子落位、授权后读取、半成品/孤儿清理且不暴露路径；验证：`uv run pytest tests/word/test_export_storage.py` 通过

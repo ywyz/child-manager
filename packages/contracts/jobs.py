@@ -114,7 +114,7 @@ class Job(ContractModel):
     retry_of_job_id: UUID | None = None
     plan_id: UUID | None = None
     target_section: str | None = None
-    requested_resource_version: int | None = None
+    requested_resource_version: Annotated[int, Field(ge=1)] | None = None
     attempt_count: Annotated[int, Field(ge=0, le=3)]
     max_attempts: Annotated[int, Field(ge=0, le=3)]
     trace_id: UUID
