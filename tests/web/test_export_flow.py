@@ -143,6 +143,9 @@ async def test_empty_reflection_exports_current_editor_content_polls_and_keeps_t
                 },
             }
         if any(path.endswith(f"/exports/{export_id}") for export_id in (EXPORT_ID_1, EXPORT_ID_2)):
+            # NiceGUI background tasks have no implicit slot; production polling needs
+            # an explicit container context before browser-side API requests can run.
+            assert ui.context.client is not None
             export_id = path.rsplit("/", 1)[-1]
             record = next(item for item in histories if item["id"] == export_id)
             record.update(

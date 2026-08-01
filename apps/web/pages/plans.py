@@ -794,22 +794,23 @@ def build_plan_editor_page(plan_id: str) -> None:
 
     async def poll_export(export_id: str) -> None:
         try:
-            for _attempt in range(EXPORT_POLL_MAX_ATTEMPTS):
-                await asyncio.sleep(EXPORT_POLL_INTERVAL_SECONDS)
-                result = await plan_api_request(f"/exports/{export_id}")
-                body = result.get("body", {})
-                if not result.get("ok") or not isinstance(body, dict):
-                    set_export_feedback("无法获取导出状态，请稍后重试", error=True)
+            with export_history:
+                for _attempt in range(EXPORT_POLL_MAX_ATTEMPTS):
+                    await asyncio.sleep(EXPORT_POLL_INTERVAL_SECONDS)
+                    result = await plan_api_request(f"/exports/{export_id}")
+                    body = result.get("body", {})
+                    if not result.get("ok") or not isinstance(body, dict):
+                        set_export_feedback("无法获取导出状态，请稍后重试", error=True)
+                        return
+                    if not is_terminal_export_status(body.get("status")):
+                        continue
+                    if body.get("status") == "succeeded":
+                        set_export_feedback("导出成功")
+                    else:
+                        set_export_feedback("导出失败，请重试", error=True)
+                    await load_exports()
                     return
-                if not is_terminal_export_status(body.get("status")):
-                    continue
-                if body.get("status") == "succeeded":
-                    set_export_feedback("导出成功")
-                else:
-                    set_export_feedback("导出失败，请重试", error=True)
-                await load_exports()
-                return
-            set_export_feedback("导出状态查询超时，请稍后重试", error=True)
+                set_export_feedback("导出状态查询超时，请稍后重试", error=True)
         finally:
             polling_exports.discard(export_id)
 

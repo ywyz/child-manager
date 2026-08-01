@@ -1,7 +1,7 @@
 # Graph Report - child-manager  (2026-08-01)
 
 ## Corpus Check
-- 395 files · ~239,902 words
+- 395 files · ~239,931 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b92f03db`
+- Built from commit: `e56bdd35`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -391,8 +391,8 @@ Cohesion: 0.11
 Nodes (33): AiJobScopeResolver, AiRunner, build_ai_job_runner(), build_ai_result_repository(), build_prompt_test_executor(), build_word_export_runner(), build_worker_scope_resolver(), _native_url() (+25 more)
 
 ### Community 42 - "create_app"
-Cohesion: 0.07
-Nodes (50): ContractModel, BaseModel, AdminCredentialRevocationResult, AuthenticationCredential, AuthenticationCredentialResponse, AuthenticationPublicKey, AuthenticationResult, AuthenticatorSelection (+42 more)
+Cohesion: 0.08
+Nodes (49): ContractModel, BaseModel, AdminCredentialRevocationResult, AuthenticationCredential, AuthenticationCredentialResponse, AuthenticationPublicKey, AuthenticationResult, AuthenticatorSelection (+41 more)
 
 ### Community 43 - "dependencies.py"
 Cohesion: 0.29
@@ -475,8 +475,8 @@ Cohesion: 0.11
 Nodes (25): export_file_download(), plan_api_request(), plan_docx_preview_request(), 通过同源 BFF 提取 DOCX，返回待教师确认的临时文本。, 只通过同源 BFF 访问教案及其任务端点。, 通过同源 fetch 下载受保护文件，并保留 API 错误反馈。, AiSectionAction, preview_title() (+17 more)
 
 ### Community 63 - "common.sh"
-Cohesion: 0.21
-Nodes (31): activate(), create_user(), credential_revoke(), credentials(), deactivate(), get_user(), _invitation(), invitation_issue() (+23 more)
+Cohesion: 0.19
+Nodes (32): activate(), create_user(), credential_revoke(), credentials(), deactivate(), get_user(), _invitation(), invitation_issue() (+24 more)
 
 ### Community 64 - "test_ai_preview_lifecycle.py"
 Cohesion: 0.13
