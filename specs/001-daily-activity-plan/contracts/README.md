@@ -342,8 +342,10 @@ AI 结果占位创建；占位冻结五栏实际输入/哈希、目标基线、�
 导出缺失确认只检查晨间、晨谈、集体、室内和户外五栏。`daily_reflection` 为空不触发
 `export.confirmation_required`，但 Word 仍保留反思三行固定位置并输出空内容。
 
-栏目缺失且 `confirm_incomplete=false` 返回 `409 export.confirmation_required` 与缺失字段，
-且不保存正文、不创建任务、不消耗该 key。确认或内容完整后，API 在同一事务执行版本 CAS、
+栏目缺失且 `confirm_incomplete=false` 返回专用的封闭 409 响应
+`ExportConfirmationRequiredError`：`code` 固定为 `export.confirmation_required`，顶层
+`missing_sections` 返回缺失栏目；通用 `Error` 不开放任意扩展字段。该拒绝不保存正文、
+不创建任务、不消耗该 key。确认或内容完整后，API 在同一事务执行版本 CAS、
 无快照保存、复制不可变上下文/正文到导出记录并创建 `pending_dispatch` 任务；任一步失败全
 回滚。Worker 只读该导出输入快照，不重读可能已变化的当前教案。每次明确新导出用新 key；
 历史文件缺失返回 `410 export.file_missing`，不得重建旧文件。
