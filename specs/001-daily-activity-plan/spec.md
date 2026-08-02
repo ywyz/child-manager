@@ -6,11 +6,16 @@
 
 **Created**: 2026-07-12
 
-**Updated**: 2026-08-01
+**Updated**: 2026-08-02
 
-**Status**: M0–M3A、M4、M5、M6 `complete` / M7 `ready` / M8 `pending` — M6
-[Issue #11](https://github.com/ywyz/child-manager/issues/11) 覆盖 T087–T126；US4
-T087–T110 已完成；US5 T111–T126 已完成，dev@32d3c102152848f7488da036ddada461b3d8d3ab 的 Quality run 30602225731 在同一 headSha 通过完整检查；设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed，恶意样本临时残留为 0，Graphify 诊断通过；固定 `main@b7676c27d07adc5eca1f0c397217780367481e9c` → `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS；最终 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098` 的 Quality run `30631050997` attempt 2 在同一 headSha 全部通过
+**Status**: M0–M3A、M4、M5、M6、M7 `complete` / M8 `ready` — M7
+[Issue #12](https://github.com/ywyz/child-manager/issues/12) 覆盖 T127–T141；固定
+`docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，最终
+`dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 的 Quality run `30697998054` 与
+`main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 的 Quality run `30698318868` 均在对应
+headSha 全部通过；Standards/Spec 双轴 Review、729 项完整测试、真实 Chromium + PostgreSQL +
+实际 Word Worker/DOCX 验收、模板哈希与 Graphify 诊断均通过，Issue #12 已按 `completed`
+关闭；T142–T169 尚未开始
 
 **Input**: 将 Child Manager 首期 M1–M8 作为一个完整 feature，交付工程与安全基础、
 认证授权、必要设置、手工教案、AI 模型与提示词、异步 AI、固定 Word 导出和功能验收。
@@ -793,8 +798,8 @@ AI 和在线节假日服务。
 - 本 feature 覆盖整个首期一日活动计划闭环，并以 Roadmap M1–M3、M3A、M5、M4、M6–M8 作为依赖
   实施阶段；M9
   生产安全与部署复审不属于本 feature。
-- 当前 `main` 与 `dev` 已包含通过验收的 M1–M3A、M5、M4 与 M6 T087–T126 实现；M7–M8
-  仍不能据此视为已实现。
+- 当前 `main` 与 `dev` 已包含通过验收的 M1–M3A、M5、M4、M6 T087–T126 与 M7
+  T127–T141 实现；M8 虽为 `ready`，T142–T169 尚未开始，不能据此视为已实现。
 - 一个运行实例首期只服务一所幼儿园，但园所隔离必须从数据、授权和验收层面完整保留。
 - 当前学期是创建教案的必需设置；学期外日期仍绑定当前学期快照，周次为空。
 - 班级允许暂时缺少区域；对应类别的 AI 栏目在至少有一个启用区域前不可生成。

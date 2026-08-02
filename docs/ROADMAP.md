@@ -1,10 +1,10 @@
 # Child Manager 产品与工程路线图
 
-文档版本：v1.3
+文档版本：v1.4
 
 状态：共享路线已确认
 
-日期：2026-07-26
+日期：2026-08-02
 
 适用分支：`main`、`docs`、`dev`
 
@@ -129,10 +129,14 @@ US5 T111–T126 已完成，T126 验收为设置页 49 passed、US5 专项 56 pa
 666 passed、恶意样本临时残留 0，Graphify 诊断通过；固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
 dev@d654b704d1bd0653f7d0209ac58665090a934311 的 Standards/Spec 双轴 Review 均为 PASS，
-dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`；状态文档与语义图谱
-收敛后的最终基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run
-`30631050997` attempt 2 在同一 headSha 全部通过。Issue #11 已按 `completed` 关闭，
-M7 为 `ready`。
+dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`；M6 状态文档与语义图谱
+收敛后的稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run
+`30631050997` attempt 2 在同一 headSha 全部通过。Issue #11 已按 `completed` 关闭。
+M7 T127–T141 也已完成：Issue #12 固定 `docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，
+最终 `dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 与集成后的
+`main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 均由对应 headSha 的 Quality run 验证成功；
+双轴 Review、真实 DOCX 浏览器验收、模板哈希与 Graphify 诊断均通过。M7 为 `complete`，
+M8 为 `ready`。
 
 ## 6. M0：共享设计基线
 
@@ -377,14 +381,14 @@ Quality Gates `30235090100` 为 458 项通过；正常 merge 后
 
 ### 出口门禁
 
-- [ ] 原始模板 SHA-256 与 Git 状态未改变，模板缺失或哈希不符时明确失败，不从零重建近似文档。
-- [ ] 园所名称、学期月份范围、周次、日期、班级、作者顺序和六大栏目位置正确。
-- [ ] 只有 `is_ai_added = true` 的集体活动新增环节正文为红色，其他 AI 内容不整体标红。
-- [ ] 重复导出产生独立记录和存储键，不覆盖旧文件。
-- [ ] 成功记录具备文件大小、文件哈希、模板哈希和导出时间；失败记录不指向半成品。
-- [ ] 文件已原子改名但数据库失败时，重试补偿或清理器不留下静默孤儿。
-- [ ] 不同园所、未关联班级教师和无权用户无法下载导出。
-- [ ] 使用虚构教师/班级数据完成真实 `.docx` 浏览器导出与重新下载冒烟。
+- [x] 原始模板 SHA-256 与 Git 状态未改变，模板缺失或哈希不符时明确失败，不从零重建近似文档。
+- [x] 园所名称、学期月份范围、周次、日期、班级、作者顺序和六大栏目位置正确。
+- [x] 只有 `is_ai_added = true` 的集体活动新增环节正文为红色，其他 AI 内容不整体标红。
+- [x] 重复导出产生独立记录和存储键，不覆盖旧文件。
+- [x] 成功记录具备文件大小、文件哈希、模板哈希和导出时间；失败记录不指向半成品。
+- [x] 文件已原子改名但数据库失败时，重试补偿或清理器不留下静默孤儿。
+- [x] 不同园所、未关联班级教师和无权用户无法下载导出。
+- [x] 使用虚构教师/班级数据完成真实 `.docx` 浏览器导出与重新下载冒烟。
 
 ## 14. M8：首期功能验收
 
@@ -445,7 +449,7 @@ Quality Gates `30235090100` 为 458 项通过；正常 merge 后
 
 ## 16. 当前状态快照
 
-状态日期：2026-08-01
+状态日期：2026-08-02
 
 | 里程碑 | 状态 | 当前证据 | 下一个解锁动作 |
 | --- | --- | --- | --- |
@@ -457,16 +461,18 @@ Quality Gates `30235090100` 为 458 项通过；正常 merge 后
 | M5 | `complete` | [#9](https://github.com/ywyz/child-manager/issues/9) 已按 `completed` 关闭；固定 `docs@7d9af6c`，最终 `dev@ae74c83`，双轴 Review 均通过，Quality Gates `30202886134` 为 347 项通过 | 已随最终 M4 树集成 `main`；保留验收记录 |
 | M4 | `complete` | [#10](https://github.com/ywyz/child-manager/issues/10) 已按 `completed` 关闭；固定 `docs@c9401c5a189fcc10ee2e15903a186c06b94cea30`，Review `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，双轴 PASS；`dev`/`main` Quality Gates `30235090100`/`30235439229` 均为 458 项通过；最终 `main@b7676c27d07adc5eca1f0c397217780367481e9c` | 保留验收记录 |
 | M6 | `complete` | Issue #11 覆盖 T087–T126；US4/US5、专项与完整测试、Graphify、固定 main..dev 双轴 Review 均已通过；最终 main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098 的 Quality run 30631050997 attempt 2 在同一 headSha 全部通过 | 保留验收记录 |
-| M7 | `ready` | M6 已完成并集成最终 main；US6 设计、模板哈希、T127–T141 顺序和验收命令已冻结 | 固定新的 docs SHA 并创建 M7/US6 Issue |
-| M8 | `pending` | 尚未开始实现 | 等待 M7 `complete` |
+| M7 | `complete` | [#12](https://github.com/ywyz/child-manager/issues/12) 已按 `completed` 关闭；固定 `docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，最终 `dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 与 `main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 的 Quality run `30697998054` / `30698318868` 均在对应 headSha 通过；双轴 Review、真实 DOCX 验收、模板与 Graphify 门禁通过 | 保留验收记录 |
+| M8 | `ready` | M7 已完成并集成最终 main；T142–T169 范围、顺序和验收命令已冻结，尚未开始 | 固定新的 docs SHA，按 T142 起始顺序创建 M8 Issue |
 | M9 生产安全与部署实现复审 | `pending` | ADR-0010/ADR-0011 已提前冻结威胁模型、访问和认证边界；ADR-0009 继续延后生产实现 | 等待 M8 `complete` |
 
 该快照只能根据实际分支、文件、命令与验收证据更新。不得根据历史分支、计划文件或未执行命令猜测状态。
 
-M4 T062–T086、M5 T046–T061 以及 M6 T087–T126 均已完成并通过对应固定 dev SHA 的远端完整检查，固定 `main..dev` Standards/Spec 双轴 Review 均为 PASS；M6 的最终稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`。共享
+M4 T062–T086、M5 T046–T061、M6 T087–T126 以及 M7 T127–T141 均已完成并通过对应固定
+dev SHA 的远端完整检查；M7 的固定双轴 Review 均为 PASS，最终稳定基线为
+`main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244`。共享
 [`specs/001-daily-activity-plan/tasks.md`](../specs/001-daily-activity-plan/tasks.md)
-的现有任务顺序、迁移编号和依赖图无需重编号；M6 Issue 必须引用不可移动 `docs` 提交，
-并保持 T087–T110 → T111–T126 的内部顺序。
+的现有任务顺序、迁移编号和依赖图无需重编号；M8 Issue 必须引用本轮产生的不可移动 `docs`
+提交，并从 T142 开始保持 T142–T158 → T159–T169 的内部顺序。
 
 ## 17. Roadmap 更新规则
 

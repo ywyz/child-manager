@@ -1,17 +1,17 @@
 # Child Manager 项目上下文
 
-最后更新：2026-08-01
+最后更新：2026-08-02
 
 当前上下文分支：`docs`
 
-项目阶段：M4、M5、M6 均为 complete 并已集成 main；M6 T087–T126 已完成，
-US4 T087–T110 已完成，US5 T111–T126 已完成。固定
-`main@b7676c27d07adc5eca1f0c397217780367481e9c` →
-`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
-PASS；dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`，状态文档与
-语义图谱收敛后的最终基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`。
-Quality run `30631050997` attempt 2 在该 headSha 全部通过；Issue #11 已按
-`completed` 关闭，M7 为 `ready`。
+项目阶段：M4、M5、M6、M7 均为 `complete` 并已集成 main；M7 T127–T141 已完成。
+[Issue #12](https://github.com/ywyz/child-manager/issues/12) 固定
+`docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，最终
+`dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 与
+`main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 的 Quality run
+`30697998054` / `30698318868` 均在对应 headSha 全部通过。双轴 Review、完整自动化、真实
+Chromium + PostgreSQL + 实际 Word Worker/DOCX 验收、模板哈希与 Graphify 诊断均通过，
+Issue #12 已按 `completed` 关闭。M8 为 `ready`；T142–T169 尚未开始。
 
 ## 1. 本文档的用途
 
@@ -241,18 +241,24 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
   悬空、自环、重复和折叠边均为 0。T126 已完成；固定
   `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
   `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
-  PASS；最终稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，其 Quality run
-  `30631050997` attempt 2 在同一 headSha 全部通过。Issue #11 已关闭，M7 为 `ready`。
+  PASS；M6 稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，其 Quality run
+  `30631050997` attempt 2 在同一 headSha 全部通过。Issue #11 已关闭，M6 为 `complete`。
 - 接入 Redis Worker、任务状态、栏目级生成、结构校验、重试和失败恢复。
 - 支持集体活动文本与 `.docx` 导入。
 
 ### 阶段 7：Word 导出
 
-- 按固定模板填充完整教案。
-- 验证字段位置、中文字体、换行和新增环节红字。
+- M7 [Issue #12](https://github.com/ywyz/child-manager/issues/12) 与 T127–T141 已完成；固定
+  `docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，最终
+  `dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 的 Quality run `30697998054` 通过。
+- Standards/Spec 双轴 Review、729 项完整测试、真实 Chromium + PostgreSQL + 实际 Word
+  Worker/DOCX 验收、模板哈希与 Graphify 诊断均通过。
+- 已正常集成 `main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244`；Quality run
+  `30698318868` 在同一 headSha 全部通过，Issue #12 已按 `completed` 关闭。
 
 ### 阶段 8：功能验收
 
+- M8 为 `ready`；T142–T169 尚未开始，不得把 M7 专项证据当作首期汇总验收已经完成。
 - 完成首期功能、权限、数据隔离、审计、日志和迁移验收。
 - 完成桌面浏览器与平板关键流程验收。
 
@@ -280,13 +286,13 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 ## 9. 当前仓库与分支状态
 
-状态日期：2026-08-01。
+状态日期：2026-08-02。
 
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
-| `main` | 稳定版本与发布基线 | 最终 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098` 包含 M6 Review 结果、T126、状态文档和语义图谱；Quality run `30631050997` attempt 2 在同一 headSha 全部通过 | 保持稳定，等待 M7 完成 Review |
-| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M6 Issue #11、T087–T126、Review、main 集成与最终 CI 证据均已收敛 | 固定新的 immutable docs SHA，驱动 M7/US6 |
-| dev | Codex 唯一实现与集成 | M6 已完成；US5 T111–T126 已实现并通过专项、完整 CI 与 Graphify 诊断 | 同步最终 main/docs 后进入 M7 T127 |
+| `main` | 稳定版本与发布基线 | 最终 `main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 已集成 M7；Quality run `30698318868` 在同一 headSha 全部通过 | 保持稳定，等待 M8 完成 Review |
+| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M7 Issue #12、T127–T141、双轴 Review、真实 DOCX 验收、main 集成与最终 CI 证据均已收敛 | 固定新的 immutable docs SHA，驱动 M8 |
+| dev | Codex 唯一实现与集成 | M7 最终 `dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 已通过完整 CI 并集成 main | 同步新的 docs 基线后，从 M8 T142 开始 |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -326,10 +332,18 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
     US5 专项为 56 项通过，完整本地 pytest 为 666 项通过、1 条既有弃用警告；恶意样本临时残留为 0，
     Graphify 诊断无结构性异常。固定 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
     `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS；
-    dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`；状态文档与语义图谱
-    收敛后的最终基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run
+    dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`；M6 状态文档与语义图谱
+    收敛后的稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run
     `30631050997` attempt 2 在同一 headSha 全部通过。Issue #11 已按 `completed` 关闭，
-    M7 为 `ready`。
+    M6 为 `complete`。
+11. M7 [Issue #12](https://github.com/ywyz/child-manager/issues/12) 为 `complete` 且只覆盖
+    T127–T141；固定基线为 `docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，最终实现为
+    `dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69`，Quality run `30697998054` 在同一
+    headSha 全部通过。Standards/Spec 双轴 Review、729 项完整测试、真实 Chromium + PostgreSQL +
+    实际 Word Worker/DOCX 验收、模板哈希与 Graphify 诊断均通过；正常集成后的
+    `main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 由 Quality run `30698318868` 在同一
+    headSha 验证成功，Issue #12 已按 `completed` 关闭。M8 为 `ready`，下一任务为 T142；
+    T142–T169 均未开始。
 不得在 `main` 临时开发，也不得因历史 Codex/Trae 验证通过就跳过新 `dev` 的当前文档基线验证。
 
 ## 11. 高风险点
