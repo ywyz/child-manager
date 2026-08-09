@@ -1,0 +1,95 @@
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any
+
+import pytest
+from docx import Document
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFileDialog, QLineEdit, QPushButton, QStackedWidget, QWidget
+from pytestqt.qtbot import QtBot
+
+from kindergarten_manager.app import create_desktop_window
+from kindergarten_manager.infrastructure.paths import DesktopPaths
+from tests.desktop.helpers import implemented
+
+
+def _child(window: QWidget, widget_type: type[Any], name: str) -> Any:
+    child = window.findChild(widget_type, name)
+    assert child is not None, name
+    return child
+
+
+def test_composition_root_persists_first_daily_plan_across_restart_and_exports_word(
+    qtbot: QtBot,
+    tmp_path: Path,
+    teacherplan_template_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = tmp_path / "GenericDataLocation" / "cn.kindergartenmanager.desktop"
+    paths = DesktopPaths(
+        root=root,
+        data=root / "data",
+        database=root / "data" / "child-manager.sqlite3",
+        backups=root / "backups",
+        daily_backups=root / "backups" / "daily",
+        pre_migration_backups=root / "backups" / "pre-migration",
+        pre_restore_backups=root / "backups" / "pre-restore",
+        recovery=root / "recovery",
+        staging=root / "staging",
+        cache=root / "cache",
+        logs=root / "logs",
+    )
+
+    window = implemented(
+        lambda: create_desktop_window(paths=paths, template_path=teacherplan_template_path)
+    )
+    qtbot.addWidget(window)
+
+    stack = window.findChild(QStackedWidget, "main_stack")
+    assert paths.database.exists()
+    assert stack is not None
+    assert stack.currentIndex() == 0
+
+    values = {
+        "teacher_name": "测试教师",
+        "kindergarten_name": "星河幼儿园",
+        "semester_name": "2026 秋季学期",
+        "class_name": "向日葵班",
+    }
+    for object_name, value in values.items():
+        field = _child(window, QLineEdit, object_name)
+        assert isinstance(field, QLineEdit)
+        field.setText(value)
+    complete = _child(window, QPushButton, "complete_setup")
+    qtbot.mouseClick(complete, Qt.MouseButton.LeftButton)
+    theme = _child(window, QLineEdit, "group_activity_theme")
+    assert isinstance(theme, QLineEdit)
+    theme.setText("寻找秋天")
+    qtbot.mouseClick(
+        _child(window, QPushButton, "save_plan"),
+        Qt.MouseButton.LeftButton,
+    )
+    window.close()
+
+    reopened = implemented(
+        lambda: create_desktop_window(paths=paths, template_path=teacherplan_template_path)
+    )
+    qtbot.addWidget(reopened)
+    reopened_theme = _child(reopened, QLineEdit, "group_activity_theme")
+    assert isinstance(reopened_theme, QLineEdit)
+    assert reopened_theme.text() == "寻找秋天"
+
+    destination = tmp_path / "当天教案.docx"
+    monkeypatch.setattr(
+        QFileDialog,
+        "getSaveFileName",
+        lambda *_args, **_kwargs: (str(destination), "Word 文档 (*.docx)"),
+    )
+    qtbot.mouseClick(
+        _child(reopened, QPushButton, "export_day"),
+        Qt.MouseButton.LeftButton,
+    )
+    assert destination.is_file()
+    exported = Document(str(destination))
+    assert exported.tables[0].cell(6, 1).text == "活动主题：《寻找秋天》"

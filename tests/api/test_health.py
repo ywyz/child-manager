@@ -187,7 +187,7 @@ def test_default_dependencies_check_real_local_runtime(
 ) -> None:
     runtime_root = tmp_path / "runtime"
     (runtime_root / "exports").mkdir(parents=True)
-    monkeypatch.setenv("CHILD_MANAGER_DATABASE_URL", BASE_DATABASE_URL)
+    monkeypatch.setenv("CHILD_MANAGER_DATABASE_URL", str(BASE_DATABASE_URL))
     monkeypatch.delenv("CHILD_MANAGER_REDIS_URL", raising=False)
     monkeypatch.setenv("CHILD_MANAGER_JWT_SIGNING_KEY", "test-jwt-secret")
     monkeypatch.setenv("CHILD_MANAGER_CSRF_SIGNING_KEY", "test-csrf-secret")

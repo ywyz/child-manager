@@ -1,147 +1,127 @@
 <!--
 Sync Impact Report
-- Version change: 3.0.0 -> 3.0.1
+- Version change: 3.0.1 -> 4.1.0
 - Modified principles:
-  - VI. 可执行验证与真实证据 -> 区分代码增量抽取与活跃文档语义抽取
-- Added sections: none
-- Removed sections: none
+  - 事实来源与范围忠实 -> 事实来源、阶段边界与最小模块
+  - 服务边界与单向依赖 -> 本地优先与深模块
+  - 园所隔离与服务端授权 -> 单教师边界与未来隐私门禁
+  - 权威状态、事务与可恢复性 -> 本地权威状态与可恢复性
+  - 教师控制、AI 与 Word 保真 -> 教师控制、可选 AI 与 Word 保真
+  - 可执行验证与真实证据 -> 可执行验证与平台证据
+- Added sections:
+  - 无（扩展桌面界面的主题约束）
+- Removed sections:
+  - Cloud-only、多服务、PostgreSQL、Redis、WebAuthn、多园服务端授权强制约束
 - Templates reviewed:
-  - ✅ .specify/templates/plan-template.md（无需修改）
-  - ✅ .specify/templates/spec-template.md（无需修改）
-  - ✅ .specify/templates/tasks-template.md（无需修改）
+  - ✅ .specify/templates/plan-template.md（通用 Constitution Check 可继续使用）
+  - ✅ .specify/templates/spec-template.md（通用用户故事与验收结构可继续使用）
+  - ✅ .specify/templates/tasks-template.md（通用分阶段任务结构可继续使用）
   - ✅ .specify/templates/checklist-template.md（无需修改）
-  - ✅ .specify/templates/constitution-template.md（无需修改）
-- Runtime guidance reviewed:
-  - ✅ AGENTS.md（已同步 Graphify 命令与模型降级顺序）
-  - ✅ CONTEXT.md、README.md、docs/ROADMAP.md（无需额外修改）
-  - ✅ CONTRIBUTING.md、docs/development/single-implementation-development.md（无需修改）
-- Command templates: .specify/templates/commands/ is not present in this installation
-- Migration and compatibility:
-  - 业务代码继续使用 `graphify update .`
-  - 活跃治理/架构文档改用 `graphify extract` 语义抽取并按 AGENTS.md 命名
-  - 不涉及数据库、API、依赖或运行时兼容迁移
-- Follow-up condition: 新 `docs` SHA 固定到 Issue #11 并同步至 `dev` 后，才可执行 M6 RED
+- Runtime guidance:
+  - ✅ AGENTS.md、README.md、CONTEXT.md 与 docs/ROADMAP.md 已依据 ADR 和新规格同步；
+    CONTRIBUTING.md 保持通用分支与门禁规则，无需修改。
+- Follow-up:
+  - 桌面设计确认后，按新的 docs 提交固定 Issue，再进入 dev 实现。
 -->
-# Child Manager 项目宪章
+# 幼儿园管理助手项目宪章
 
 ## Core Principles
 
-### I. 事实来源与范围忠实
+### I. 事实来源、阶段边界与最小模块
 
-每项规格、计划、任务和实现都必须先依据其领域事实来源：`AGENTS.md` 管理开发过程，
-`docs` 分支中的 `docs/`、`specs/`、OpenAPI 契约和 `templates/` 管理产品、架构、稳定契约与
-导出版式，`README.md` 管理稳定概览与导航，GitHub Issue 管理执行状态与验收证据。
-旧仓库只能提供经验，不能成为本项目需求。若来源冲突，
-必须指出位置和影响，并停止会固化冲突的工作，直到获得明确确认。实现必须保持当前任务
-的最小范围；不得预建照片、视觉、对象存储、审批、多园运营或生产部署空壳。
+每项设计、规格、任务和实现必须依据其领域事实来源：`AGENTS.md` 管理开发过程，已确认的
+`docs/`、`specs/`、ADR 和模板管理产品与稳定契约，GitHub Issue 管理执行范围和验收证据。
+旧 `kindergartenManager` 与本仓库既有 B/S 实现只能提供经验，不得成为桌面产品需求。
+发生冲突时必须指出并停止会固化冲突的工作。产品保持“幼儿园管理助手”的模块化定位，
+但每个版本只交付已确认模块；首期只显示和实现一日活动计划、数据与备份及必要设置，禁止
+预建观察记录、一对一倾听、幼儿档案、照片、同步或云端服务空壳。
 
-### II. 服务边界与单向依赖
+### II. 本地优先与深模块
 
-NiceGUI Web、FastAPI API 和 Dramatiq Worker 必须保持独立运行边界。Web 只能通过 API
-使用业务能力，不得连接数据库或导入 ORM、Repository、`packages/backend`。API 必须拥有
-认证、授权、输入校验、事务和业务编排；Worker 只能依据 PostgreSQL 中的权威任务上下文
-执行 AI、Word 等长任务。`packages/contracts` 只能承载稳定请求、响应、事件、任务、错误
-和枚举契约。新增抽象必须对应第二个实现、外部集成边界或明确测试替身，禁止机械工厂、
-通用插件系统和无业务价值的接口层。
+Windows 首发产品必须是单进程 PySide6 桌面应用，本地 SQLite 是业务数据唯一权威；核心
+手工流程不得依赖本地 HTTP 服务、浏览器、FastAPI、Redis、独立 Worker 或外部数据库。
+界面只能调用明确的应用服务，不得在 Widget 事件中散落事务、文件、备份或 AI 规则。
+领域规则、SQLite Repository、外部 AI、Word 导出、操作系统凭据和远程备份必须形成清晰
+边界。只有存在第二个实现、外部集成或明确测试替身时才增加接口，禁止为未来模块预建通用
+插件平台。
 
-### III. 园所隔离与服务端授权（NON-NEGOTIABLE）
+### III. 单教师边界与未来隐私门禁（NON-NEGOTIABLE）
 
-所有园所范围业务表、Repository 方法、查询、写入、唯一性校验和组合外键都必须显式包含
-`kindergarten_id`。园所身份只能来自 API 的服务端会话上下文，客户端提交值不能作为授权
-依据。API 必须在每次请求验证账号状态、角色、园所和教师—班级关系；页面隐藏按钮不构成
-权限控制。教师只能访问关联班级；管理员可查看、导出、归档和恢复全园教案，但未同时
-具备该班教师身份时不得编辑正文、调用 AI 或维护班级区域。任何跨园或跨班越权均为发布
-阻断缺陷。
+首期面向一位本机教师，可以管理多个班级，不提供账号、角色、认证、多人并发或多园权限
+体系，也不得把这些已移除的机制伪装成安全保证。首期禁止保存幼儿姓名、照片、观察记录或
+其他幼儿个人信息。未来模块需要个人信息时，必须先通过新的 Design、隐私威胁分析、数据
+最小化、附件存储、备份、访问、保留和彻底删除设计，未经确认不得增加表、字段或空入口。
 
-### IV. 权威状态、事务与可恢复性
+### IV. 本地权威状态与可恢复性
 
-PostgreSQL 必须是业务数据和后台任务状态的唯一权威，数据库结构只能通过 Alembic 修改。
-教案唯一性、乐观锁、快照时机、归档只读和历史不可变等不变量必须由数据库约束与应用
-事务共同保证。Redis 只负责任务投递和运行协调；API 与 Worker 必须使用最小任务契约、
-幂等键、租约和恢复扫描收敛数据库/Redis/文件之间的失败窗口。重复消息、重试或进程恢复
-不得重复创建版本、覆盖人工内容、突破最多三次模型调用或覆盖既有导出。
+应用管理单一本地 SQLite 数据库，数据库和备份不得放在安装目录。Schema 只能通过有版本
+迁移改变；每次结构升级前必须自动备份。自动保存只更新当前正文；显式保存版本、采用 AI
+预览、恢复历史、归档和恢复归档必须按规格创建不可变快照。归档内容默认只读。应用必须
+提供本地备份和恢复；恢复前必须备份当前状态。WebDAV/S3 只能存放在本机加密后的单向
+备份，不得宣传或实现多设备同步、冲突合并或远端直接访问 SQLite。
 
-### V. 教师控制、AI 与 Word 保真
+### V. 教师控制、可选 AI 与 Word 保真
 
-系统必须在 AI 或在线节假日服务不可用时保持手工创建、编辑、保存、归档和导出主流程。
-AI 必须通过供应商中立的 OpenAI 兼容适配器与已发布提示词运行，使用固定结构化 Schema
-校验，并先保存预览；只有教师明确采用且版本校验通过后才能写入正文和创建快照。外部
-请求必须最小化数据。Word 导出必须复制固定模板、保持表格与样式、校验模板哈希，且只有
-带结构化新增标记的集体活动新增环节使用红色字体；不得覆盖原模板或从零重建近似文档。
+未配置网络和 AI 时，教师必须能完成创建、编辑、保存、查找、归档、历史恢复和 Word 导出。
+AI 只能通过供应商中立的 OpenAI 兼容边界访问；首期只有一个当前模型配置和可恢复默认值的
+本地提示词。AI 在应用内后台执行，同一时间只有一个生成操作，关闭应用不恢复未完成任务。
+结果必须通过结构校验并先成为预览，只有教师明确采用后才能更新正文和创建快照；外部请求
+必须最小化数据且不得包含幼儿身份信息。Word 导出必须复制固定模板并保持表格和样式，禁止
+覆盖原模板或从零重建近似文档。
 
-### VI. 可执行验证与真实证据
+### VI. 可执行验证与平台证据
 
-每个用户故事必须可独立验收，每项任务必须包含明确路径与验证方式。缺陷修复必须先添加
-可复现失败的测试。实现必须按风险覆盖单元、API、Repository 园所隔离、PostgreSQL 迁移、
-Worker 幂等与恢复、AI 替身、Word 样式和关键 Web 流程；常规测试不得访问真实 AI、在线
-节假日接口或其他外部网络。只有实际执行的命令和观察到的结果才能作为完成证据；不得
-通过删除测试、放宽断言、伪造状态或把计划文件当作实现来宣告完成。
+每个用户故事必须可独立验收，每项任务必须包含明确路径和验证方式。缺陷修复必须先添加可
+复现测试。实现按风险覆盖领域规则、SQLite 迁移与事务、备份加密/恢复、AI 替身、Word 样式
+和关键桌面流程；常规测试不得调用真实 AI、WebDAV、S3 或其他外部网络。Windows 是首发
+验收平台，Linux 开发结果不能代替 Windows 高 DPI、安装、升级、数据目录和 Word 打开验证。
+只有实际执行并观察到的命令、截图和人工流程才能成为完成证据。
 
-## 技术、安全与范围约束
+## 桌面产品、备份与分发约束
 
-- 目标基线必须是 Python 3.14+、NiceGUI、FastAPI、PostgreSQL、SQLAlchemy 2.x、
-  Alembic、Redis、Dramatiq 2.x、`uv`、Ruff、Pyright 和 Pytest。
-- 产品只交付 Cloud 版本；首期一个运行实例服务一所幼儿园，同时保留未来多园隔离边界。
-  PostgreSQL 是生产数据库；SQLite 只可用于快速开发和确定性测试，不得替代 PostgreSQL
-  的迁移、组合外键、部分索引、GiST、并发和事务验证。
-- 首期仅有管理员和教师，界面使用简体中文；业务日期按 `Asia/Shanghai` 计算，时间点以
-  UTC 存储。
-- WebAuthn 通行密钥必须是首选且具备钓鱼抗性的登录方式；系统可以提供密码与 TOTP
-  两项共同成立的独立备用登录，但不得提供密码单独、TOTP 单独、短信/邮件验证码、默认
-  管理员或万能恢复码弱兜底。管理员必须配置完整备用登录，教师可以选择启用。备用会话
-  可以使用角色允许的普通业务；最近五分钟再次完成密码与 TOTP 验证只可新增通行密钥，
-  不能删除旧凭据或修改其他高风险身份材料。备用因素的建立、重设和关闭必须由 WebAuthn
-  重新验证保护；所有通行密钥均不可用时仍必须同时满足离线恢复码与人工核验，最后管理员
-  继续要求双人核验。首位管理员和后续账号仍分别使用本机短时初始化凭据或管理员单次邀请
-  绑定首个通行密钥。访问与刷新令牌只能通过安全的 HttpOnly Cookie 传递；状态变更必须
-  具备 SameSite、来源校验和 CSRF 防护。开发关闭 Cookie `Secure` 仅允许显式配置与回环
-  地址绑定。
-- AI Key 必须由服务端认证加密保存；初始化/邀请/恢复秘密、令牌、API Key、主密钥、完整
-  敏感教案和未来照片不得进入 Git、Redis 消息、日志、异常、审计或测试快照。
-- 首期功能验收完成前，不得设计、创建或验收生产 Caddyfile、生产 Compose、公网 DNS、
-  证书、端口映射、Tailscale、生产密钥托管、生产备份任务或发布流程。ADR-0007 中相关
-  旧结论已由 ADR-0009 取代。
-- 原始 Word 模板 `templates/teacherplan/teacherplan.docx` 必须保持只读；运行时输出只能
-  写入专用临时或导出目录，测试数据不得包含真实教师或幼儿身份。
+- 技术基线为 Python 3.14+、PySide6、Qt Widgets、SQLite、SQLAlchemy 2.x、Alembic、`uv`、
+  Ruff、Pyright 和 Pytest；`chinesecalendar` 提供中国法定节假日与调休数据，本地人工覆盖
+  优先，超出数据覆盖年份必须返回“待确认”。
+- 产品显示名为“幼儿园管理助手”，仓库目标名为 `kindergarten-manager-desktop`，稳定应用
+  标识为 `cn.kindergartenmanager.desktop`，Python 根命名空间为 `kindergarten_manager`。
+- 界面必须使用简体中文，首期同时提供浅色、深色和跟随 Windows 系统三种主题选择，主题
+  切换必须即时生效并持久化。两套主题都必须支持 Windows 125%/150% 缩放，并以 1366x768
+  为最低可用窗口。不得依赖第三方 Fluent 控件库；统一主题令牌、SVG 图标和状态反馈。
+- API Key、WebDAV 密码、S3 Secret Key 和可自动备份使用的恢复口令必须进入操作系统凭据
+  存储，不得进入 SQLite、备份包、日志、异常或 Git。远程备份必须使用独立恢复口令在本机
+  加密；忘记口令时不得提供万能恢复或后台解密。
+- 首期提供标准 Windows 安装程序，程序与用户数据分离；更新只检查版本并打开下载页，不
+  静默执行安装包。后期同时提供 Microsoft Store MSIX 和未签名 EXE：Store 负责 MSIX 签名
+  与更新，EXE 必须公布 HTTPS 下载地址、版本、大小、SHA-256 和构建 Git SHA，且不得引导
+  用户关闭 SmartScreen 或安全软件。
+- 原始 `templates/teacherplan/teacherplan.docx` 必须保持只读，运行时输出只能写入专用导出
+  或临时目录，测试和示例不得包含真实教师或幼儿身份信息。
+- 首期不迁移本仓库 PostgreSQL 数据或旧 `kindergartenManager` 数据。桌面下一期必须实现
+  `.docx` 原始教案导入、AI 拆分/补全、采用拆分结果和新增适龄环节；新增失败不得回滚已
+  采用的拆分结果。
 
 ## 开发工作流与质量门禁
 
-1. 工作开始前必须按 `AGENTS.md`、`README.md`、`CONTEXT.md`、`CONTRIBUTING.md`、`docs`
-   分支中任务对应的 Roadmap/PRD/设计/ADR/规格/契约/模板、GitHub Issue、迁移和测试的顺序
-   建立事实底稿；仓库可查信息不得转问用户。
-2. 多步骤任务必须先列出最短计划，并为每步给出可执行验证。正式实现 Issue 必须固定引用
-   已确认的 `docs` 提交，并包含范围、非目标、验收标准和验证方式；缺少任一项不得开始实现。
-3. 长期分支固定为：`main` 保存稳定版本与发布基线，禁止临时开发；`docs` 保存 PRD、架构、
-   ADR、Context、Development Guide、共享规格、OpenAPI 和模板，禁止修改业务代码、迁移、
-   实现测试或依赖锁；`dev` 是 Codex 唯一实现与集成分支。流程必须是
-   `Design -> docs -> Issue -> dev -> 测试 -> Review -> main`。未经明确授权不得切换/创建
-   分支、提交、推送、创建 PR、合并或改写历史。
-4. 从工程骨架建立后，每个相关实现阶段至少执行：
-
-   ```bash
-   uv sync --locked
-   uv run ruff format --check .
-   uv run ruff check .
-   uv run pyright
-   uv run pytest
-   ```
-
-   尚未配置的命令必须如实报告；数据库、Worker、Word 和真实 UI 流程还必须执行对应专项
-   检查。业务代码变化后应运行 `graphify update .`；活跃治理/架构文档变化后应按
-   `AGENTS.md` 的模型优先级运行 `graphify extract` 语义抽取及社区命名。失败时记录原因。
-5. 评审必须逐项检查本宪章、PRD 验收、服务依赖、园所隔离、权限、迁移、事务、任务幂等、
-   数据最小化、模板哈希和非目标。任何未解释的宪章违反都必须在进入实现前消除。
+1. 工作前必须阅读根目录治理、当前桌面 ADR/规格/计划/任务和对应 Issue；仓库可查事实不得
+   转问用户。旧 Cloud 文档若尚未完成迁移，必须显式标记为历史，不能驱动桌面实现。
+2. 多步骤任务必须先列出最短计划和可执行验证。正式实现 Issue 必须固定引用已确认的 docs
+   完整提交 SHA，并包含范围、非目标、验收标准和验证方式。
+3. 流程保持 `Design -> docs 确认 -> Issue -> dev 实现 -> 测试 -> Review -> main`。产品方向
+   重置期间允许维护者明确授权的临时 `design/*` 分支承载未确认设计和可丢弃原型；确认后
+   必须把事实文档收敛到 `docs`，实现不得直接从原型晋升。未经明确授权不得提交、推送、
+   创建 PR、合并、切换其他分支或改写历史。
+4. 正式实现至少执行锁定安装、格式检查、Lint、类型检查和相关 Pytest；涉及桌面、迁移、
+   Word、备份或打包时运行专项验证。业务代码变化后运行 Graphify 代码增量；活跃治理和
+   架构文档变化后按 `AGENTS.md` 的模型优先级重新进行语义抽取并诊断图谱。
+5. Review 必须独立检查 Standards 与 Spec，并核对本地/远端 SHA、测试、Windows 人工验收、
+   模板保真、安全凭据、备份恢复和非目标。不得用原型、旧 Cloud 测试或旧图谱证明桌面实现
+   完成。
 
 ## Governance
 
-本宪章是 Spec Kit 规格、计划和任务的强制治理门禁，但不替代 `AGENTS.md` 的开发规则，
-也不改写 PRD、ADR、数据模型或 Word 模板的领域事实。发现冲突时必须按“事实来源与范围
-忠实”原则暂停，而不是降低本宪章或其他已确认约束。
+本宪章是 Spec Kit 规格、计划和任务的强制门禁，但不替代已确认 ADR、规格和模板。冲突时
+必须暂停并按事实来源处理。宪章修订必须说明动机和影响，同步受影响模板、运行指导和活动
+规格，并记录迁移措施。版本遵循语义化版本：移除或重定义不可协商原则为 MAJOR，新增原则
+或实质扩展为 MINOR，非语义澄清为 PATCH。所有规格、计划、任务和交付必须再次执行宪章检查。
 
-宪章修订必须：说明动机和影响；同步受影响的 Spec Kit 模板、运行指导和活动规格；记录
-迁移或兼容措施；经项目维护者明确批准。版本遵循语义化版本：移除或重新定义不可协商原则
-为 MAJOR，新增原则或实质扩展治理为 MINOR，澄清且不改变语义为 PATCH。所有规格评审、
-计划评审、任务生成和实现交付都必须再次执行宪章检查；复杂度例外必须在计划中列出更简单
-方案及其被拒理由。
-
-**Version**: 3.0.1 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-27
+**Version**: 4.1.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-08-08

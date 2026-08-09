@@ -12,7 +12,21 @@ from psycopg import sql
 
 from tests.database_config import SensitiveDatabaseUrl, require_test_database_url
 
-BASE_DATABASE_URL = require_test_database_url()
+
+class _LazyTestDatabaseUrl:
+    """只在旧 PostgreSQL 测试真正使用 URL 时读取环境配置。"""
+
+    def resolve(self) -> SensitiveDatabaseUrl:
+        return require_test_database_url()
+
+    def __str__(self) -> str:
+        return str(self.resolve())
+
+    def __repr__(self) -> str:
+        return "<test-database-url>"
+
+
+BASE_DATABASE_URL = _LazyTestDatabaseUrl()
 
 
 def _native_psycopg_url(value: str) -> str:
@@ -43,12 +57,13 @@ def block_external_network(monkeypatch: pytest.MonkeyPatch) -> None:
 def isolated_database_url() -> Iterator[str]:
     """为请求该夹具的测试创建并清理独立 PostgreSQL schema。"""
 
+    base_database_url = BASE_DATABASE_URL.resolve()
     schema = f"test_{uuid4().hex}"
-    with psycopg.connect(_native_psycopg_url(BASE_DATABASE_URL), autocommit=True) as connection:
+    with psycopg.connect(_native_psycopg_url(base_database_url), autocommit=True) as connection:
         connection.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(schema)))
     options = quote(f"-csearch_path={schema}")
     try:
-        yield SensitiveDatabaseUrl(f"{BASE_DATABASE_URL}?options={options}")
+        yield SensitiveDatabaseUrl(f"{base_database_url}?options={options}")
     finally:
-        with psycopg.connect(_native_psycopg_url(BASE_DATABASE_URL), autocommit=True) as connection:
+        with psycopg.connect(_native_psycopg_url(base_database_url), autocommit=True) as connection:
             connection.execute(sql.SQL("DROP SCHEMA {} CASCADE").format(sql.Identifier(schema)))

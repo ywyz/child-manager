@@ -1,5 +1,17 @@
 # Child Manager Agent 开发规则
 
+> **2026-08-08 桌面产品方向重置（Design 阶段）**
+>
+> 项目维护者已确认以本地优先桌面产品正式替代既有 B/S 产品方向。当前事实基线为
+> `.specify/memory/constitution.md` v4.1.0、
+> `docs/ADR/ADR-0012-local-first-desktop-product-reset.md` 和
+> `specs/003-desktop-local-first/spec.md`。本文件下方仍包含大量旧 Cloud 实现约束，在完整
+> 治理迁移完成前只作为历史规则：凡与 ADR-0012 或 003 规格冲突的 NiceGUI/FastAPI、
+> PostgreSQL、Redis/Worker、WebAuthn、园所隔离、Cloud-only 和生产部署要求，不得驱动桌面
+> 实现。安全、数据最小化、Word 模板保真、分阶段授权、精确修改和真实验证规则继续有效。
+> 当前 `design/desktop-local-first` 只允许设计文档与可丢弃原型；未经新 Issue 和授权不得迁移
+> 正式业务实现、提交或推送。
+
 本文件适用于仓库根目录及其所有子目录。实现分支可以在 `apps/web/`、`apps/api/` 等目录增加更具体的 `AGENTS.md`；局部规则只能细化当前规则，不得降低安全、数据隔离、业务不变量和验证要求。
 
 这些规则强调正确性、可验证性和长期可维护性。对简单任务保持简洁，不要为了形式增加无价值步骤。
@@ -325,9 +337,14 @@ uv run pytest
      机器本地模型名：`graphify extract . --backend openai`。
   2. OpenAI 兼容后端调用失败后，使用已配置的 DeepSeek 后端：
      `graphify extract . --backend deepseek`。
-  3. 两个后端都失败后，才按 Graphify 技能使用子代理完成语义抽取或命名；不得在首个后端失败后直接跳过 DeepSeek。
+  3. OpenAI 兼容后端和 DeepSeek 后端都失败后，必须调用已安装的 `luna_worker` 子代理，按
+     Graphify 技能完成语义抽取或命名；不得在首个后端失败后直接跳过 DeepSeek，也不得以未指定
+     的其他子代理替代 `luna_worker`。
+
+  固定降级链：`OpenAI 兼容后端 -> DeepSeek -> luna_worker`。任一阶段成功即停止继续降级。
 - `graphify label`、`graphify cluster-only` 等需要大模型命名的操作沿用同一优先级。每次交付记录实际使用的模型或子代理来源，以及前序后端的失败原因；不得记录或输出 API Key、Base URL 或其他秘密。
-- 若 Graphify 全部路径不可用或更新失败，在交付说明中报告；不得用旧图谱证明新文档一致。
+- 只有 `luna_worker` 也失败或不可用时，才判定 Graphify 全部路径不可用；必须在交付说明中按
+  OpenAI 兼容后端、DeepSeek、`luna_worker` 的顺序报告失败原因，不得用旧图谱证明新文档一致。
 
 代码结构问题按以下顺序使用 codebase-memory MCP：
 
