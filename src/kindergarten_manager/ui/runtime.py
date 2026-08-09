@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import fields, is_dataclass
 from pathlib import Path
@@ -15,6 +16,9 @@ from kindergarten_manager.application.dto import (
     ErrorCode,
     TaskProgress,
 )
+from kindergarten_manager.observability import safe_exception_summary
+
+logger = logging.getLogger(__name__)
 
 ProgressReporter = Callable[[str, int, int | None, str], None]
 BackgroundTask = Callable[[object, CancellationToken, ProgressReporter], CommandResult[object]]
@@ -62,6 +66,7 @@ class _Worker(QRunnable):
         token: CancellationToken,
     ) -> None:
         super().__init__()
+        self.setAutoDelete(False)
         self.operation_id = operation_id
         self.task = task
         self.frozen_input = frozen_input
@@ -82,7 +87,19 @@ class _Worker(QRunnable):
 
         try:
             result = self.task(self.frozen_input, self.token, report)
-        except Exception:
+        except Exception as error:
+            summary = safe_exception_summary(error)
+            logger.disabled = False
+            logger.error(
+                "desktop_runtime_task_failed error_code=%s error_type=%s",
+                ErrorCode.OPERATION_FAILED,
+                summary["error_type"],
+                extra={
+                    "error_code": str(ErrorCode.OPERATION_FAILED),
+                    "error_type": summary["error_type"],
+                    "safe_message": summary["message"],
+                },
+            )
             self.signals.crashed.emit(self.operation_id)
         else:
             self.signals.completed.emit(self.operation_id, result)
@@ -108,6 +125,12 @@ class RuntimeBridge(QObject):
     def active_operation_ids(self) -> tuple[UUID, ...]:
         return tuple(self._tokens)
 
+    @property
+    def retained_worker_ids(self) -> tuple[UUID, ...]:
+        """仍由 bridge 持有、等待线程池安全释放的 operation。"""
+
+        return tuple(self._workers)
+
     def submit(
         self,
         operation_id: UUID,
@@ -115,6 +138,7 @@ class RuntimeBridge(QObject):
         frozen_input: object,
         cancellation_token: CancellationToken | None = None,
     ) -> CancellationToken:
+        self._discard_finished_workers_if_idle()
         if not self._accepting:
             raise RuntimeError("应用正在退出，不能启动新任务")
         if operation_id in self._tokens:
@@ -142,7 +166,11 @@ class RuntimeBridge(QObject):
         self._accepting = False
         for token in self._tokens.values():
             token.request_cancel()
-        return self._pool.waitForDone(timeout_ms)
+        finished = self._pool.waitForDone(timeout_ms)
+        if finished:
+            self._tokens.clear()
+            self._workers.clear()
+        return finished
 
     @Slot(object, object)
     def _on_progress(self, operation_id: UUID, progress: TaskProgress) -> None:
@@ -177,5 +205,11 @@ class RuntimeBridge(QObject):
         if operation_id not in self._tokens:
             return
         self._tokens.pop(operation_id, None)
-        self._workers.pop(operation_id, None)
         self.finished.emit(operation_id)
+
+    def _discard_finished_workers_if_idle(self) -> None:
+        if self._pool.activeThreadCount() != 0 or not self._pool.waitForDone(0):
+            return
+        for operation_id in tuple(self._workers):
+            if operation_id not in self._tokens:
+                self._workers.pop(operation_id, None)

@@ -1,12 +1,20 @@
 from __future__ import annotations
 
+from datetime import date
 from pathlib import Path
 from typing import Any
 
 import pytest
 from docx import Document
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFileDialog, QLineEdit, QPushButton, QStackedWidget, QWidget
+from PySide6.QtWidgets import (
+    QDateEdit,
+    QFileDialog,
+    QLineEdit,
+    QPushButton,
+    QStackedWidget,
+    QWidget,
+)
 from pytestqt.qtbot import QtBot
 
 from kindergarten_manager.app import create_desktop_window
@@ -42,7 +50,11 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
     )
 
     window = implemented(
-        lambda: create_desktop_window(paths=paths, template_path=teacherplan_template_path)
+        lambda: create_desktop_window(
+            paths=paths,
+            template_path=teacherplan_template_path,
+            today=lambda: date(2026, 9, 7),
+        )
     )
     qtbot.addWidget(window)
 
@@ -70,10 +82,22 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
         _child(window, QPushButton, "save_plan"),
         Qt.MouseButton.LeftButton,
     )
+    date_context = _child(window, QDateEdit, "plan_date")
+    original_date = date_context.date()
+    date_context.setDate(original_date.addDays(1))
+    assert theme.text() == ""
+    theme.setText("第二天的活动")
+    qtbot.mouseClick(_child(window, QPushButton, "save_plan"), Qt.MouseButton.LeftButton)
+    date_context.setDate(original_date)
+    assert theme.text() == "寻找秋天"
     window.close()
 
     reopened = implemented(
-        lambda: create_desktop_window(paths=paths, template_path=teacherplan_template_path)
+        lambda: create_desktop_window(
+            paths=paths,
+            template_path=teacherplan_template_path,
+            today=lambda: date(2026, 9, 7),
+        )
     )
     qtbot.addWidget(reopened)
     reopened_theme = _child(reopened, QLineEdit, "group_activity_theme")
@@ -81,10 +105,15 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
     assert reopened_theme.text() == "寻找秋天"
 
     destination = tmp_path / "当天教案.docx"
+
+    def choose_destination(*args: object, **_kwargs: object) -> tuple[str, str]:
+        assert "一日活动计划-向日葵班-2026-09-07.docx" in str(args[2])
+        return str(destination), "Word 文档 (*.docx)"
+
     monkeypatch.setattr(
         QFileDialog,
         "getSaveFileName",
-        lambda *_args, **_kwargs: (str(destination), "Word 文档 (*.docx)"),
+        choose_destination,
     )
     qtbot.mouseClick(
         _child(reopened, QPushButton, "export_day"),

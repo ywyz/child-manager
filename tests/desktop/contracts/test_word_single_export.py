@@ -128,7 +128,7 @@ def test_snapshot_is_frozen_and_renderer_preserves_template_contract(
         (18, 1): "活动亮点：\n存在问题：\n调整策略：",
     }
     assert {
-        coordinates: table.cell(*coordinates).text for coordinates in expected_cells
+        coordinates: table.cell(*coordinates).text.rstrip("\n") for coordinates in expected_cells
     } == expected_cells
     process = table.cell(11, 1)
     red_text = "".join(
@@ -193,6 +193,18 @@ class BytesRenderer:
         if self.failure is not None:
             raise self.failure
         return self.payload
+
+    def validate_day(self, path: Path, snapshot: DailyPlanExportSnapshot) -> None:
+        document = Document(str(path))
+        if len(document.tables) != 1:
+            raise ValueError("表格数量不匹配")
+        table = document.tables[0]
+        if (len(table.rows), len(table.columns)) != (19, 2):
+            raise ValueError("模板表格结构不匹配")
+        if table.cell(0, 0).text != snapshot.teaching_week_text:
+            raise ValueError("教学周不匹配")
+        if table.cell(1, 0).text != snapshot.activity_date_text:
+            raise ValueError("活动日期不匹配")
 
 
 def _opaque_snapshot() -> DailyPlanExportSnapshot:

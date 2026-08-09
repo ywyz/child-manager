@@ -4,7 +4,9 @@ import sqlite3
 from pathlib import Path
 
 import pytest
+import sqlalchemy as sa
 
+from kindergarten_manager.infrastructure.database.models import metadata
 from kindergarten_manager.infrastructure.database.upgrade import (
     DESKTOP_INITIAL_REVISION,
     upgrade_database,
@@ -136,3 +138,27 @@ def test_version_rows_are_immutable_at_database_boundary(tmp_path: Path) -> None
             )
         with pytest.raises(sqlite3.IntegrityError):
             connection.execute("DELETE FROM lesson_plan_versions WHERE id = ?", (version_id,))
+
+
+def test_sqlalchemy_metadata_exposes_named_constraints_and_indexes() -> None:
+    constraint_names = {
+        constraint.name
+        for table in metadata.tables.values()
+        for constraint in table.constraints
+        if constraint.name is not None
+    }
+    index_names = {
+        index.name
+        for table in metadata.tables.values()
+        for index in table.indexes
+        if index.name is not None
+    }
+
+    assert "fk_lesson_plans_class_id_class_groups" in constraint_names
+    assert "ck_lesson_plans_revision" in constraint_names
+    assert "uq_lesson_plans_class_date" in index_names
+    assert "uq_semesters_one_current" in index_names
+    assert isinstance(metadata.naming_convention, dict)
+    assert sa.ForeignKeyConstraint in {
+        type(item) for table in metadata.tables.values() for item in table.constraints
+    }

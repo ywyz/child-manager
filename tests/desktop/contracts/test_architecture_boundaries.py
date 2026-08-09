@@ -108,3 +108,10 @@ def test_application_and_domain_dependencies_point_inward() -> None:
         )
         == []
     )
+
+
+def test_composition_root_only_wires_adapters_and_application_services() -> None:
+    assert _violations([SOURCE_ROOT / "app.py"], ("sqlite3", "docx")) == []
+
+    application_paths = sorted((SOURCE_ROOT / "application").rglob("*.py"))
+    assert _violations(application_paths, ("docx", "sqlalchemy")) == []

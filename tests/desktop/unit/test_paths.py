@@ -29,19 +29,9 @@ def test_paths_use_stable_generic_data_location_and_never_install_directory(tmp_
     assert paths.staging == paths.root / "staging"
     assert paths.cache == paths.root / "cache"
     assert paths.logs == paths.root / "logs"
-    assert all(
-        path.is_dir()
-        for path in (
-            paths.root,
-            paths.data,
-            paths.backups,
-            paths.daily_backups,
-            paths.pre_migration_backups,
-            paths.pre_restore_backups,
-            paths.recovery,
-            paths.staging,
-            paths.cache,
-            paths.logs,
-        )
-    )
+    assert not paths.root.exists(), "路径解析不得在 Bootstrap 错误映射之前写文件系统"
+
+    implemented(paths.ensure_directories)
+
+    assert all(path.is_dir() for path in paths.directories)
     assert not paths.database.is_relative_to(install_directory)

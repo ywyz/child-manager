@@ -41,7 +41,7 @@ def _paths(root: Path) -> DesktopPaths:
 def test_empty_data_root_starts_at_desktop_revision_and_requires_first_run(data_root: Path) -> None:
     state = implemented(lambda: BootstrapService(_paths(data_root)).start())
 
-    assert state.data_root == str(data_root)
+    assert state.data_root == data_root
     assert state.schema_revision == "0001_desktop_initial"
     assert state.first_run is True
     assert state.setup_complete is False
@@ -81,3 +81,41 @@ def test_invalid_database_states_refuse_writable_main_window(
         paths.database.chmod(0o600)
 
     assert captured.value.error_code == expected_code
+
+
+def test_unwritable_empty_data_root_is_reported_before_migration(data_root: Path) -> None:
+    paths = _paths(data_root)
+    paths.data.chmod(0o555)
+    try:
+        with pytest.raises(StartupError) as captured:
+            implemented(lambda: BootstrapService(paths).start())
+    finally:
+        paths.data.chmod(0o700)
+
+    assert captured.value.error_code == "startup.path_unavailable"
+
+
+def test_existing_database_is_checked_before_and_after_upgrade(
+    data_root: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = _paths(data_root)
+    implemented(lambda: BootstrapService(paths).start())
+    service = BootstrapService(paths)
+    events: list[str] = []
+    real_verify = service._verify_database
+
+    def verify() -> None:
+        events.append("verify")
+        real_verify()
+
+    def upgrade(_database: Path) -> str:
+        events.append("upgrade")
+        return "0001_desktop_initial"
+
+    monkeypatch.setattr(service, "_verify_database", verify)
+    monkeypatch.setattr("kindergarten_manager.application.bootstrap.upgrade_database", upgrade)
+
+    implemented(service.start)
+
+    assert events == ["verify", "upgrade", "verify"]

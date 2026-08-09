@@ -6,9 +6,10 @@
 **Docs Baseline**: `eaee3592aedeef6a01f8c11d2df2c977489828ef` |
 **Issue**: https://github.com/ywyz/child-manager/issues/14 | **Implementation Branch**: `dev`
 
-**Authorization Record (2026-08-09)**: 维护者只授权在 `dev` 执行 T001–T018，并停在 Slice 1
-干净 RED；T019–T034 GREEN、T035 以后、Agent Foundation、commit、push、PR、Review 与
-`main` 集成均未授权。
+**Authorization Record (2026-08-09)**: 维护者已授权补齐公共 seam tracer、固定基线双轴
+Review、本地 RED 检查点，以及 T019–T033 GREEN；本地全绿和第二次 Review 后可提交、推送并
+等待 CI。T034 Windows 独立人工验收继续作为单独门禁；T035 以后须在 T034 后先进入 Slice 2A，
+PR 与 `main` 集成不在当前授权范围。
 
 **Tests**: 规格与宪章明确要求自动化测试；每个切片先收集测试并得到只来自本切片未实现行为的
 RED，再实施并运行该切片自有门禁。导入、fixture、数据库配置或运行环境错误均不是有效 RED。
@@ -72,21 +73,21 @@ RED，再实施并运行该切片自有门禁。导入、fixture、数据库配�
 
 ### Implementation for Slice 1
 
-- [ ] T019 [P] [US1] 实现 `src/kindergarten_manager/infrastructure/paths.py`，创建 plan.md 冻结的数据/备份/staging/cache/logs 子目录并通过 T011 路径用例
-- [ ] T020 [P] [US1] 实现 `src/kindergarten_manager/domain/content.py` 与 `src/kindergarten_manager/domain/calendar.py`，仅提取旧纯函数/值对象行为并通过 T014，不运行时导入旧 backend
-- [ ] T021 [US1] 实现 `src/kindergarten_manager/infrastructure/database/engine.py` 的同步 SQLAlchemy Session 工厂与 SQLite PRAGMA，禁止跨线程共享连接和 `create_all()`
-- [ ] T022 [US1] 实现 `src/kindergarten_manager/infrastructure/database/models.py` 的首期基础表、命名约束与状态字段，不加入账号、租户、幼儿、Cloud Job、同步、Agent 会话/记忆或尚未解锁的 Agent 写入审计实体
-- [ ] T023 [US1] 创建独立 Alembic 链 `src/kindergarten_manager/infrastructure/database/migrations/versions/0001_desktop_initial.py` 与 `env.py`，启用 batch mode 并使 T012 全部通过
-- [ ] T024 [US1] 实现 `src/kindergarten_manager/infrastructure/database/upgrade.py` 和 `src/kindergarten_manager/application/bootstrap.py` 的路径检查、完整性检查、Alembic 升级与首次设置判定；每日备份行为留给 US3 接入
-- [ ] T025 [US1] 实现 `src/kindergarten_manager/infrastructure/database/repositories.py` 中本切片需要的设置、班级、学期和当前教案具体 SQLite 操作，并通过 T013/T015 的事务与唯一性用例
-- [ ] T026 [US1] 实现 `src/kindergarten_manager/application/settings.py` 的首次设置、班级、区域和学期用例，使每个聚合保存只占一个事务
-- [ ] T027 [US1] 实现 `src/kindergarten_manager/application/lesson_plans.py` 的 `open_or_create`、revision 校验、正文保存和日期软提示；本切片不实现 AI、历史、归档或搜索
-- [ ] T028 [US1] 在 `src/kindergarten_manager/infrastructure/exports/teacherplan_renderer.py` 提取旧模板字段映射并实现只读模板副本的 `render_day(snapshot)`，不得导入旧 Job/Export Store/HTTP 下载层
-- [ ] T029 [US1] 实现 `src/kindergarten_manager/application/exports.py` 的 `prepare_single` 与单日原子发布，覆盖已有目标确认、锁文件、磁盘满和失败清理
-- [ ] T030 [P] [US1] 实现 `src/kindergarten_manager/ui/pages/first_run.py` 的教师、园所、学期和班级最少设置向导，失败时不得进入可写主窗口
-- [ ] T031 [US1] 实现 `src/kindergarten_manager/ui/pages/daily_plan.py` 的班级/日期上下文、01–05 与反思结构化编辑、显式保存和固定状态区
-- [ ] T032 [US1] 实现 `src/kindergarten_manager/ui/pages/single_export.py` 的“导出当天 Word”、原生目标选择、覆盖确认和完成/失败反馈
-- [ ] T033 [US1] 实现 `src/kindergarten_manager/__main__.py`、`src/kindergarten_manager/app.py` 与 `src/kindergarten_manager/ui/main_window.py` 的唯一 composition root，把首次设置和主窗口串成可启动闭环
+- [x] T019 [P] [US1] 实现 `src/kindergarten_manager/infrastructure/paths.py`，创建 plan.md 冻结的数据/备份/staging/cache/logs 子目录并通过 T011 路径用例
+- [x] T020 [P] [US1] 实现 `src/kindergarten_manager/domain/content.py` 与 `src/kindergarten_manager/domain/calendar.py`，仅提取旧纯函数/值对象行为并通过 T014，不运行时导入旧 backend
+- [x] T021 [US1] 实现 `src/kindergarten_manager/infrastructure/database/engine.py` 的同步 SQLAlchemy Session 工厂与 SQLite PRAGMA，禁止跨线程共享连接和 `create_all()`
+- [x] T022 [US1] 实现 `src/kindergarten_manager/infrastructure/database/models.py` 的首期基础表、命名约束与状态字段，不加入账号、租户、幼儿、Cloud Job、同步、Agent 会话/记忆或尚未解锁的 Agent 写入审计实体
+- [x] T023 [US1] 创建独立 Alembic 链 `src/kindergarten_manager/infrastructure/database/migrations/versions/0001_desktop_initial.py` 与 `env.py`，启用 batch mode 并使 T012 全部通过
+- [x] T024 [US1] 实现 `src/kindergarten_manager/infrastructure/database/upgrade.py` 和 `src/kindergarten_manager/application/bootstrap.py` 的路径检查、完整性检查、Alembic 升级与首次设置判定；每日备份行为留给 US3 接入
+- [x] T025 [US1] 实现 `src/kindergarten_manager/infrastructure/database/repositories.py` 中本切片需要的设置、班级、学期和当前教案具体 SQLite 操作，并通过 T013/T015 的事务与唯一性用例
+- [x] T026 [US1] 实现 `src/kindergarten_manager/application/settings.py` 的首次设置、班级、区域和学期用例，使每个聚合保存只占一个事务
+- [x] T027 [US1] 实现 `src/kindergarten_manager/application/lesson_plans.py` 的 `open_or_create`、revision 校验、正文保存和日期软提示；本切片不实现 AI、历史、归档或搜索
+- [x] T028 [US1] 在 `src/kindergarten_manager/infrastructure/exports/teacherplan_renderer.py` 提取旧模板字段映射并实现只读模板副本的 `render_day(snapshot)`，不得导入旧 Job/Export Store/HTTP 下载层
+- [x] T029 [US1] 实现 `src/kindergarten_manager/application/exports.py` 的 `prepare_single` 与单日原子发布，覆盖已有目标确认、锁文件、磁盘满和失败清理
+- [x] T030 [P] [US1] 实现 `src/kindergarten_manager/ui/pages/first_run.py` 的教师、园所、学期和班级最少设置向导，失败时不得进入可写主窗口
+- [x] T031 [US1] 实现 `src/kindergarten_manager/ui/pages/daily_plan.py` 的班级/日期上下文、01–05 与反思结构化编辑、显式保存和固定状态区
+- [x] T032 [US1] 实现 `src/kindergarten_manager/ui/pages/single_export.py` 的“导出当天 Word”、原生目标选择、覆盖确认和完成/失败反馈
+- [x] T033 [US1] 实现 `src/kindergarten_manager/__main__.py`、`src/kindergarten_manager/app.py` 与 `src/kindergarten_manager/ui/main_window.py` 的唯一 composition root，把首次设置和主窗口串成可启动闭环
 - [ ] T034 [US1] 运行 T011–T017、`uv run ruff format --check .`、`uv run ruff check .`、`uv run pyright`，并由一名未参与实现、只依赖界面提示的验收参与者在断网 Windows 上从首次启动开始计时；在 `docs/implementation-evidence/desktop-slice-1-acceptance.md` 记录开始/完成时间、5 分钟内完成设置并创建第一份教案，以及重启→当天 Word 打开证据
 
 **Checkpoint**: MVP 可单独使用；AI、远程备份、批量 Word、历史/归档和完整视觉收敛均不得计入本切片。

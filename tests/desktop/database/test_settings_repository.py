@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from kindergarten_manager.application.settings import SettingsError, SettingsService
+from kindergarten_manager.infrastructure.database.engine import create_session_factory
 from kindergarten_manager.infrastructure.database.repositories import SettingsRepository
 from kindergarten_manager.infrastructure.database.upgrade import upgrade_database
 from tests.desktop.conftest import FixedClock
@@ -20,7 +21,7 @@ def test_sqlite_settings_persist_single_current_semester_and_atomic_areas(
     database = tmp_path / "desktop.sqlite3"
     implemented(lambda: upgrade_database(database))
     service = SettingsService(
-        SettingsRepository(database),
+        SettingsRepository(create_session_factory(database)),
         now_utc_ms=fixed_clock.now_utc_ms,
     )
 

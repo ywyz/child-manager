@@ -8,6 +8,7 @@ import pytest
 
 from kindergarten_manager.application.lesson_plans import LessonPlanError
 from kindergarten_manager.domain.content import PlanContentV1
+from kindergarten_manager.infrastructure.database.engine import create_session_factory
 from kindergarten_manager.infrastructure.database.repositories import LessonPlanRepository
 from tests.desktop.helpers import implemented
 
@@ -42,7 +43,7 @@ def _database(path: Path) -> None:
 def test_repository_enforces_one_current_plan_and_survives_reopen(tmp_path: Path) -> None:
     database = tmp_path / "desktop.sqlite3"
     _database(database)
-    repository = LessonPlanRepository(database)
+    repository = LessonPlanRepository(create_session_factory(database))
 
     first = implemented(
         lambda: repository.open_or_create(
@@ -71,7 +72,7 @@ def test_repository_enforces_one_current_plan_and_survives_reopen(tmp_path: Path
         )
     )
     reopened = implemented(
-        lambda: LessonPlanRepository(database).open_or_create(
+        lambda: LessonPlanRepository(create_session_factory(database)).open_or_create(
             class_id=1,
             semester_id=1,
             plan_date=date(2026, 9, 7),
@@ -88,7 +89,7 @@ def test_repository_enforces_one_current_plan_and_survives_reopen(tmp_path: Path
 def test_repository_rejects_stale_revision_without_changing_content(tmp_path: Path) -> None:
     database = tmp_path / "desktop.sqlite3"
     _database(database)
-    repository = LessonPlanRepository(database)
+    repository = LessonPlanRepository(create_session_factory(database))
     plan = implemented(
         lambda: repository.open_or_create(
             class_id=1,

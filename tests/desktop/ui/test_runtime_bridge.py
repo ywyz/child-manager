@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from threading import Event
 from uuid import UUID
@@ -42,6 +43,26 @@ def test_runtime_emits_progress_success_and_operation_id(qtbot: QtBot) -> None:
     assert progress == [TaskProgress(operation_id, "render", 1, 1, "生成完成")]
     assert len(successes) == 1
     assert successes[0].value == "完成"
+
+
+def test_finished_worker_is_retained_until_thread_pool_confirms_return(qtbot: QtBot) -> None:
+    bridge = RuntimeBridge(max_workers=1)
+    operation_id = UUID("00000000-0000-0000-0000-000000000017")
+
+    def task(
+        _work: object,
+        _token: CancellationToken,
+        _report: ProgressReporter,
+    ) -> CommandResult[object]:
+        return CommandResult.success(None, message="完成")
+
+    bridge.submit(operation_id, task, FrozenWork("生命周期"))
+    with qtbot.waitSignal(bridge.finished, timeout=2_000):
+        pass
+
+    assert operation_id in bridge.retained_worker_ids
+    assert bridge.shutdown(1_000)
+    assert operation_id not in bridge.retained_worker_ids
 
 
 def test_cancelled_operation_discards_late_progress_and_result(qtbot: QtBot) -> None:
@@ -121,3 +142,29 @@ def test_shutdown_requests_cancel_and_waits_for_cooperative_task(qtbot: QtBot) -
     qtbot.waitUntil(lambda: operation_id not in bridge.active_operation_ids, timeout=1_000)
     with pytest.raises(RuntimeError, match="正在退出"):
         bridge.submit(UUID(int=15), task, FrozenWork("新任务"))
+
+
+def test_runtime_crash_returns_stable_code_and_logs_only_safe_summary(
+    qtbot: QtBot,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    bridge = RuntimeBridge(max_workers=1)
+    failures: list[CommandResult[object]] = []
+    bridge.failed.connect(failures.append)
+    caplog.set_level(logging.ERROR)
+
+    def task(
+        _work: object,
+        _token: CancellationToken,
+        _report: ProgressReporter,
+    ) -> CommandResult[object]:
+        raise RuntimeError("秘密教案正文")
+
+    with qtbot.waitSignal(bridge.finished, timeout=2_000):
+        bridge.submit(UUID(int=18), task, FrozenWork("异常"))
+
+    assert len(failures) == 1
+    assert failures[0].error_code == "operation.failed"
+    assert "operation.failed" in caplog.text
+    assert "RuntimeError" in caplog.text
+    assert "秘密教案正文" not in caplog.text
