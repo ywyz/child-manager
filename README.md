@@ -1,5 +1,15 @@
 # Child Manager 幼儿园教育管理系统
 
+> **产品方向重置中（2026-08-08）**：维护者已确认将本项目重置为 Windows 首发、PySide6、
+> SQLite 本地优先的“幼儿园管理助手”。首期只交付一日活动计划、可选 AI、Word 导出和
+> 本地/远程加密备份，并按“手工 MVP -> 可选 AI -> READ/DRAFT Agent -> 备份恢复 -> 确认
+> WRITE”引入受控单 Agent；Level 3 Workflow 继续延后。下方 M1-M7 与 Cloud/B/S 架构内容是
+> 已完成历史基线，不再代表新产品的目标架构。新事实来源见
+> [`ADR-0012`](docs/ADR/ADR-0012-local-first-desktop-product-reset.md) 和
+> [`ADR-0013`](docs/ADR/ADR-0013-controlled-agent-runtime.md)、
+> [`Agent Runtime 契约`](specs/003-desktop-local-first/contracts/agent-runtime.md) 与
+> [`specs/003-desktop-local-first`](specs/003-desktop-local-first/spec.md)。
+
 Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统。项目以模块化、可扩展和可审计为基本原则，首期交付在线“一日活动计划”管理系统，后续逐步接入游戏观察记录、一对一倾听等子系统。
 
 当前项目服务于单所幼儿园，但核心业务数据保留 `kindergarten_id`，为未来多园部署和数据隔离预留扩展边界。

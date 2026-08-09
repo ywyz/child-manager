@@ -1,10 +1,17 @@
 # Child Manager 项目上下文
 
-最后更新：2026-08-02
+> **当前方向（2026-08-09）**：维护者已确认以 Windows 首发、PySide6、SQLite、本地优先的
+> 单教师“幼儿园管理助手”替代既有 Cloud/B/S 产品方向。旧 Cloud 状态和完成证据只作为历史，
+> 不得驱动桌面实现。当前桌面事实来源为 `.specify/memory/constitution.md` v4.1.0、ADR-0012、
+> ADR-0013 与 `specs/003-desktop-local-first/`。本次 `docs` 发布只冻结已确认的桌面重置和受控
+> Agent Design Amendment；发布后必须先以完整 docs SHA 创建实施 Issue，再在 `dev` 从 T001
+> 和 Slice 1 手工 MVP 的 RED 开始，不能直接进入 Agent Foundation。
+
+最后更新：2026-08-09
 
 当前上下文分支：`docs`
 
-项目阶段：M4、M5、M6、M7 均为 `complete` 并已集成 main；M7 T127–T141 已完成。
+历史 Cloud 路线中 M4、M5、M6、M7 均为 `complete` 并已集成 main；M7 T127–T141 已完成。
 [Issue #12](https://github.com/ywyz/child-manager/issues/12) 固定
 `docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，最终
 `dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 与
@@ -35,7 +42,11 @@ Issue #12 已按 `completed` 关闭。M8 为 `ready`；T142–T169 尚未开始�
 4. [`docs/ROADMAP.md`](docs/ROADMAP.md)：共享里程碑、阶段依赖、完成门禁和当前路线状态。
 5. [`CONTRIBUTING.md`](CONTRIBUTING.md) 与 [`docs/development/single-implementation-development.md`](docs/development/single-implementation-development.md)：`main/docs/dev`、Issue 驱动、Design → Implement、Review 和发布规则。
 6. 本地启动或处理依赖下载时阅读 [`docs/development/local-development-environments.md`](docs/development/local-development-environments.md)：worktree、端口、Compose、数据与镜像隔离规则。
-7. 当前任务对应的 `docs/`、模板、迁移和测试；教案管理任务必须阅读 [`docs/PRD/lesson-management.md`](docs/PRD/lesson-management.md)。
+7. 桌面任务阅读 [`ADR-0012`](docs/ADR/ADR-0012-local-first-desktop-product-reset.md)、
+   [`ADR-0013`](docs/ADR/ADR-0013-controlled-agent-runtime.md)、
+   [`desktop-system-architecture.md`](docs/design/desktop-system-architecture.md) 与
+   [`specs/003-desktop-local-first/`](specs/003-desktop-local-first/spec.md)；历史 Cloud 教案任务才
+   继续使用 [`docs/PRD/lesson-management.md`](docs/PRD/lesson-management.md)。
 8. 旧仓库文档仅在需要历史经验时查阅，不作为本项目事实来源。
 
 涉及跨模块技术选型或修改既有架构决策时，还必须阅读 [`docs/ADR/`](docs/ADR/README.md) 与 [`docs/design/system-architecture.md`](docs/design/system-architecture.md)。
@@ -290,9 +301,9 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 
 | 分支 | 职责 | 当前状态 | 下一步 |
 | --- | --- | --- | --- |
-| `main` | 稳定版本与发布基线 | 最终 `main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 已集成 M7；Quality run `30698318868` 在同一 headSha 全部通过 | 保持稳定，等待 M8 完成 Review |
-| docs | 文档、共享规格、OpenAPI 和模板的单一事实来源 | M7 Issue #12、T127–T141、双轴 Review、真实 DOCX 验收、main 集成与最终 CI 证据均已收敛 | 固定新的 immutable docs SHA，驱动 M8 |
-| dev | Codex 唯一实现与集成 | M7 最终 `dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 已通过完整 CI 并集成 main | 同步新的 docs 基线后，从 M8 T142 开始 |
+| `main` | 稳定版本与发布基线 | `main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 保留已验收 Cloud M7 历史基线；桌面产品尚未集成 | 不开始桌面临时开发 |
+| docs | 文档、共享规格和模板的单一事实来源 | 本次发布冻结桌面重置、受控 Agent Design Amendment 与 003 实施顺序 | 以发布后的完整 SHA 创建桌面实施 Issue |
+| dev | Codex 唯一实现与集成 | 当前仍为历史 Cloud M7 实现基线，尚未同步桌面规格 | 同步完整 docs SHA，完成 T001 后只开始 Slice 1 RED |
 
 历史 `trae` 最终提交 `2023d9e` 通过归档标签保留，原分支删除，Issue #6 以 `not planned` 关闭；该结果没有被改写为已通过最终独立验收。历史 `codex` 只作为 `dev` 的迁移来源，不再接受新开发。
 
@@ -305,6 +316,11 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 - 不在 CONTEXT 中记录临时工作树脏文件；Agent 应直接运行 `git status` 获取瞬时状态。
 
 ## 10. 当前共同下一步
+
+桌面路线的当前动作固定为：发布本轮 `docs` -> 创建引用完整 docs SHA 的实施 Issue -> 在
+`dev` 完成 T001 和 Slice 1 测试先行 RED。Agent Foundation 位于 Slice 2B，必须等待 Slice 1、
+Slice 2A 及其正式 Application Use Cases，不得提前开始。以下编号内容只保留旧 Cloud 路线的
+历史交付证据，不再解锁 M8/M9 Cloud 实现。
 
 1. M0、M1 均已完成；M1 的双实现 Issue #1～#3 保留为历史验收记录。
 2. M2 为 `complete`。Issue #4 已按 `completed` 关闭；Issue #5 保留为历史 Codex 实现证据，Issue #6 仍按 `not planned` 归档。
@@ -369,8 +385,12 @@ README 只提供产品概览与导航；本文只维护当前状态、交接与�
 
 ## 12. 系统架构基线
 
-服务边界、Dramatiq 任务可靠性、短轮询和认证安全结果已经确认，统一见
-[`docs/design/system-architecture.md`](docs/design/system-architecture.md)。ADR-0010 已冻结
+桌面当前系统架构见
+[`docs/design/desktop-system-architecture.md`](docs/design/desktop-system-architecture.md)，受控
+Agent 接口见
+[`specs/003-desktop-local-first/contracts/agent-runtime.md`](specs/003-desktop-local-first/contracts/agent-runtime.md)。
+旧 Cloud 的服务边界、Dramatiq 任务可靠性、短轮询和认证安全结果只作为历史，统一见
+[`docs/design/system-architecture.md`](docs/design/system-architecture.md)。ADR-0010 曾冻结
 受限公网、Web/BFF 唯一公网应用入口、WebAuthn 和恢复边界；ADR-0011 增加密码与 TOTP
 双因素备用登录并保留 WebAuthn 保护的高风险身份边界。根据 ADR-0009，具体生产部署、反向
 代理产品、拓扑和密钥托管实现仍然延后。

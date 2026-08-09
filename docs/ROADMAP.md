@@ -1,10 +1,23 @@
 # Child Manager 产品与工程路线图
 
+> **历史路线提示（2026-08-09）**：下方 M0–M9 描述已完成或曾计划的 Cloud/B/S 路线。
+> ADR-0012 已将正式方向重置为本地优先桌面产品，ADR-0013 已冻结受控单 Agent Runtime；
+> 不得继续执行历史 M8/M9，也不得以旧路线启动 Cloud 实现。
+>
+> 当前桌面实施顺序固定为：**Slice 1 手工 MVP -> Slice 2A 可选 AI Provider/结构化预览 ->
+> Slice 2B Agent Foundation + Context + READ/DRAFT Tools（零正式写入）-> Slice 3 备份恢复 ->
+> Agent 写入阶段（PlanPatch + 逐次确认 + 最小审计 + 单事务 WRITE）**。Level 3 Workflow、
+> 多 Agent 和长期业务记忆继续延后。详细事实来源为
+> [`ADR-0012`](ADR/ADR-0012-local-first-desktop-product-reset.md)、
+> [`ADR-0013`](ADR/ADR-0013-controlled-agent-runtime.md)、
+> [`agent-runtime.md`](../specs/003-desktop-local-first/contracts/agent-runtime.md) 与
+> [`003 tasks.md`](../specs/003-desktop-local-first/tasks.md)。
+
 文档版本：v1.4
 
 状态：共享路线已确认
 
-日期：2026-08-02
+日期：2026-08-09
 
 适用分支：`main`、`docs`、`dev`
 
@@ -32,6 +45,9 @@
 - [`system-architecture.md`](design/system-architecture.md)：运行单元、模块接口、事务、任务可靠性与降级边界。
 - [`data-model.md`](design/data-model.md) 与 [`database-schema.md`](design/database-schema.md)：领域模型、PostgreSQL 物理约束和 Alembic 顺序。
 - [`ADR/`](ADR/README.md)：难以逆转的架构决策与复审条件。
+- [`desktop-system-architecture.md`](design/desktop-system-architecture.md) 与
+  [`003 desktop spec`](../specs/003-desktop-local-first/spec.md)：当前桌面运行结构、分阶段能力与
+  可执行任务；下方 Cloud 里程碑只保留历史证据。
 
 上述文档发生冲突时，按 `AGENTS.md` 的事实来源规则停止实现并请求确认，不在 Roadmap 中静默选择。
 
