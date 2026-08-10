@@ -2210,8 +2210,8 @@
     "semantic_hash": ""
   },
   "tests/desktop/ui/test_first_run_daily_plan_flow.py": {
-    "mtime": 1786366016.7579648,
-    "ast_hash": "f2b972540b10a1ca62ae326ab78e4043",
+    "mtime": 1786367605.1369803,
+    "ast_hash": "aa9c3a1abdca869c0751fec89b36b190",
     "semantic_hash": ""
   },
   "tests/desktop/ui/test_runtime_bridge.py": {
@@ -2460,8 +2460,8 @@
     "semantic_hash": ""
   },
   "src/kindergarten_manager/ui/theme.py": {
-    "mtime": 1786365164.7311516,
-    "ast_hash": "758be10fa947dba2ef27f952dafa13ca",
+    "mtime": 1786367635.5279787,
+    "ast_hash": "f91d20dec6c5f8ea083e6009a228bf9f",
     "semantic_hash": ""
   },
   "src/kindergarten_manager/ui/pages/settings.py": {
@@ -2477,6 +2477,11 @@
   "graphify-out/memory/query_20260810_124826_windows_\u4e0b\u4e3b\u9898\u989c\u8272\u767d\u5e95\u767d\u5b57_\u6697\u9ed1\u6a21\u5f0f\u7f3a\u5931_\u7f3a\u4e4f\u8bbe\u7f6e\u9009\u9879\u5bfc\u81f4\u5b66\u671f\u65e0\u6cd5\u4fee\u6539_\u65e5\u671f\u65e0\u6cd5\u4e00\u952e\u56de\u5230\u4eca\u5929.md": {
     "mtime": 1786366106.5929596,
     "ast_hash": "a262123bfa93da33b0655489da6cb243",
+    "semantic_hash": ""
+  },
+  "graphify-out/memory/query_20260810_131514_\u901a\u8fc7\u4eba\u5de5\u6d4b\u8bd5_\u540e\u53f0_ps_c__users_admin_code_child_manager__uv.md": {
+    "mtime": 1786367714.088974,
+    "ast_hash": "ecdf8936802bedac740162c008660732",
     "semantic_hash": ""
   }
 }

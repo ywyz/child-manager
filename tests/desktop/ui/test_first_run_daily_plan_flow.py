@@ -256,6 +256,25 @@ def test_light_theme_overrides_dark_system_palette_for_readable_text(
         app.setPalette(original_palette)
 
 
+def test_desktop_theme_keeps_widget_fonts_in_points_for_windows_native_style(
+    qtbot: QtBot,
+    tmp_path: Path,
+) -> None:
+    services = FakeDesktopServices(tmp_path / "当天教案.docx")
+    services.setup = {"teacher_name": "测试教师", "theme": "light"}
+    window = _build(services)
+    qtbot.addWidget(window)
+    window.show()
+    window.ensurePolished()
+
+    pixel_sized_widgets = [
+        widget.objectName() or type(widget).__name__
+        for widget in window.findChildren(QWidget)
+        if widget.font().pixelSize() > 0
+    ]
+    assert pixel_sized_widgets == []
+
+
 def test_settings_page_changes_theme_and_current_semester_without_restarting(
     qtbot: QtBot,
     tmp_path: Path,

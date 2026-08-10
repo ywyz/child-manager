@@ -56,17 +56,17 @@ def desktop_stylesheet(theme: ResolvedTheme = "light") -> str:
     QWidget {{
         color: {colors["text"]};
         font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
-        font-size: 14px;
+        font-size: 10.5pt;
     }}
     QWidget#desktop_shell, QWidget#first_run_page, QWidget#daily_plan_page,
     QWidget#settings_page {{
         color: {colors["text"]}; background: {colors["canvas"]};
     }}
     QLabel {{ color: {colors["text"]}; background: transparent; }}
-    QLabel[role="pageTitle"] {{ font-size: 21px; font-weight: 700; }}
-    QLabel[role="sectionTitle"] {{ font-size: 16px; font-weight: 700; }}
-    QLabel[role="fieldLabel"] {{ color: {colors["muted"]}; font-size: 12px; font-weight: 700; }}
-    QLabel[role="muted"] {{ color: {colors["muted"]}; font-size: 12px; }}
+    QLabel[role="pageTitle"] {{ font-size: 15.75pt; font-weight: 700; }}
+    QLabel[role="sectionTitle"] {{ font-size: 12pt; font-weight: 700; }}
+    QLabel[role="fieldLabel"] {{ color: {colors["muted"]}; font-size: 9pt; font-weight: 700; }}
+    QLabel[role="muted"] {{ color: {colors["muted"]}; font-size: 9pt; }}
     QLabel[tone="status"] {{
         color: {colors["selected_text"]}; background: {colors["primary_soft"]};
         border-radius: 10px; padding: 5px 10px;
