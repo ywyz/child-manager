@@ -3,6 +3,7 @@ from __future__ import annotations
 import errno
 import json
 import os
+from copy import deepcopy
 from dataclasses import FrozenInstanceError
 from datetime import date
 from hashlib import sha256
@@ -71,6 +72,16 @@ def _east_asia_font(run: object) -> str | None:
     if element.rPr is None or element.rPr.rFonts is None:
         return None
     return element.rPr.rFonts.get(qn("w:eastAsia"))
+
+
+def _paragraph_properties_without_numbering(paragraph: object) -> str | None:
+    properties = paragraph._p.pPr  # type: ignore[attr-defined]
+    if properties is None:
+        return None
+    normalized = deepcopy(properties)
+    if normalized.numPr is not None:
+        normalized.remove(normalized.numPr)
+    return normalized.xml
 
 
 def test_snapshot_is_frozen_and_renderer_preserves_template_contract(
@@ -169,12 +180,71 @@ def test_snapshot_is_frozen_and_renderer_preserves_template_contract(
             after_paragraphs = table.cell(row_index, column_index).paragraphs
             assert len(after_paragraphs) == len(before_paragraphs)
             assert [
-                paragraph._p.pPr.xml if paragraph._p.pPr is not None else None
-                for paragraph in after_paragraphs
+                _paragraph_properties_without_numbering(paragraph) for paragraph in after_paragraphs
             ] == [
-                paragraph._p.pPr.xml if paragraph._p.pPr is not None else None
+                _paragraph_properties_without_numbering(paragraph)
                 for paragraph in before_paragraphs
             ]
+
+
+@pytest.mark.parametrize("keep_input_numbers", [False, True])
+def test_area_game_lists_render_one_numbering_layer_without_numbered_labels(
+    teacherplan_template_path: Path,
+    keep_input_numbers: bool,
+) -> None:
+    def lines(first: str, second: str) -> list[str]:
+        if keep_input_numbers:
+            return [f"1.{first}", f"2.{second}"]
+        return [first, second]
+
+    payload = PlanContentV1.empty().model_dump()
+    payload["indoor_area_game"] = {
+        "areas": ["娃娃家", "阅读区"],
+        "focus_guidance": "娃娃家",
+        "objectives": lines("娃娃家", "阅读区"),
+        "guidance_points": lines("娃娃家指导要点", "阅读区指导要点"),
+        "support_strategies": lines("娃娃家支持策略", "阅读区支持策略"),
+    }
+    payload["afternoon_outdoor_game"] = {
+        "areas": ["七星区"],
+        "focus_guidance": "玩水区",
+        "objectives": lines("欸哦赛", "alksdjnk"),
+        "guidance_points": lines("七星区指导要点", "阅读区指导要点"),
+        "support_strategies": lines("骑行区支持策略", "阅读区支持策略"),
+    }
+    renderer = TeacherplanRenderer(teacherplan_template_path, expected_sha256=TEMPLATE_SHA256)
+
+    rendered = renderer.render_day(_snapshot(PlanContentV1.model_validate(payload)))
+    table = Document(BytesIO(rendered)).tables[0]
+
+    expected = {
+        13: [
+            "重点指导：娃娃家",
+            "活动目标：",
+            "1.娃娃家",
+            "2.阅读区",
+            "指导要点：",
+            "1.娃娃家指导要点",
+            "2.阅读区指导要点",
+        ],
+        14: ["支持策略：", "1.娃娃家支持策略", "2.阅读区支持策略"],
+        16: [
+            "重点指导：玩水区",
+            "活动目标：",
+            "1.欸哦赛",
+            "2.alksdjnk",
+            "指导要点：",
+            "1.七星区指导要点",
+            "2.阅读区指导要点",
+        ],
+        17: ["支持策略：", "1.骑行区支持策略", "2.阅读区支持策略"],
+    }
+    for row_index, expected_lines in expected.items():
+        paragraphs = table.cell(row_index, 1).paragraphs
+        assert [paragraph.text for paragraph in paragraphs if paragraph.text] == expected_lines
+        assert all(
+            paragraph._p.pPr is None or paragraph._p.pPr.numPr is None for paragraph in paragraphs
+        )
 
 
 class BytesRenderer:

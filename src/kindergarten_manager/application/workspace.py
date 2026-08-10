@@ -17,7 +17,7 @@ from kindergarten_manager.application.exports import (
     ExportService,
 )
 from kindergarten_manager.application.lesson_plans import LessonPlanEditorState, LessonPlanService
-from kindergarten_manager.application.settings import SettingsService
+from kindergarten_manager.application.settings import SettingsError, SettingsService
 from kindergarten_manager.domain.calendar import activity_date_text, teaching_week
 from kindergarten_manager.domain.content import PlanContentV1
 
@@ -50,6 +50,7 @@ class DailyPlanContext:
     selected_class_id: int
     plan_date: date
     warnings: tuple[str, ...] = ()
+    teaching_week_text: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,14 +98,27 @@ class DailyPlanWorkspace:
         self._exports = ExportService(renderer, snapshot_reader=self)
 
     def complete_setup(self, values: dict[str, str]) -> None:
+        try:
+            semester_start = date.fromisoformat(values.get("semester_start_date", ""))
+            semester_end = date.fromisoformat(values.get("semester_end_date", ""))
+        except ValueError as error:
+            raise SettingsError(
+                "settings.invalid_semester_dates",
+                "请选择有效的学期开始日期和结束日期",
+            ) from error
+        if semester_end < semester_start:
+            raise SettingsError(
+                "settings.invalid_semester_dates",
+                "学期结束日期不能早于开始日期",
+            )
         self._settings.save_profile(values.get("teacher_name", ""), "system")
         self._settings.save_kindergarten(values.get("kindergarten_name", ""))
         current_date = self._today()
         semester = self._settings.create_or_update_semester(
             semester_id=None,
             name=values.get("semester_name", ""),
-            start_date=date(current_date.year, 1, 1),
-            end_date=date(current_date.year, 12, 31),
+            start_date=semester_start,
+            end_date=semester_end,
             is_current=True,
         )
         class_view = self._settings.create_or_update_class(
@@ -138,11 +152,17 @@ class DailyPlanWorkspace:
             plan_date,
             setup.semester_id,
         )
+        calendar_week = teaching_week(
+            plan_date,
+            setup.semester_start_date,
+            setup.semester_end_date,
+        )
         return DailyPlanContext(
             classes=setup.classes,
             selected_class_id=class_id,
             plan_date=plan_date,
             warnings=self._current_plan.warnings,
+            teaching_week_text=calendar_week.text or "",
         )
 
     def load_current_plan(self) -> dict[str, Any]:

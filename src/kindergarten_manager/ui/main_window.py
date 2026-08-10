@@ -7,16 +7,21 @@ from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
 from kindergarten_manager.ui.pages.daily_plan import DailyPlanPage
 from kindergarten_manager.ui.pages.first_run import build_first_run_page
 from kindergarten_manager.ui.ports import DesktopServices
+from kindergarten_manager.ui.theme import desktop_stylesheet
 
 
 class DesktopMainWindow(QWidget):
     def __init__(self, services: DesktopServices) -> None:
         super().__init__()
+        self.setObjectName("desktop_shell")
         self.setWindowTitle("幼儿园一日活动计划")
-        self.resize(900, 700)
+        self.resize(1366, 768)
+        self.setMinimumSize(1100, 680)
+        self.setStyleSheet(desktop_stylesheet())
         self._services = services
 
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
         self.stack = QStackedWidget()
         self.stack.setObjectName("main_stack")
         self._editor = DailyPlanPage(services)

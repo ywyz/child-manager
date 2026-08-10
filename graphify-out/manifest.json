@@ -1980,8 +1980,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/quality.yml": {
-    "mtime": 1786261954.872551,
-    "ast_hash": "71ea7a981cdcbf1a442b2dd72e15dc99",
+    "mtime": 1786291065.5399933,
+    "ast_hash": "f902de0b1add0efbdcecd5a9e4fb4204",
     "semantic_hash": ""
   },
   "compose.dev.yaml": {
@@ -2090,8 +2090,8 @@
     "semantic_hash": ""
   },
   "src/kindergarten_manager/infrastructure/exports/teacherplan_renderer.py": {
-    "mtime": 1786270692.957767,
-    "ast_hash": "a9a3e0a83e479373984b8daf7cd4af94",
+    "mtime": 1786363677.5242403,
+    "ast_hash": "af9a26887ee77399fca22bddc98ea924",
     "semantic_hash": ""
   },
   "src/kindergarten_manager/infrastructure/paths.py": {
@@ -2115,8 +2115,8 @@
     "semantic_hash": ""
   },
   "src/kindergarten_manager/ui/pages/first_run.py": {
-    "mtime": 1786270862.227757,
-    "ast_hash": "c3672a1040e945460720c84f488b95bb",
+    "mtime": 1786363708.5702384,
+    "ast_hash": "f4a36f5b23680f8ab020bf8c2d06937b",
     "semantic_hash": ""
   },
   "src/kindergarten_manager/ui/runtime.py": {
@@ -2165,8 +2165,8 @@
     "semantic_hash": ""
   },
   "tests/desktop/contracts/test_word_single_export.py": {
-    "mtime": 1786270692.9587672,
-    "ast_hash": "9166383c22b9ae8f580de86003b47bff",
+    "mtime": 1786363488.5062516,
+    "ast_hash": "01ba4206e9ebc5c0bc654d7ef2c643db",
     "semantic_hash": ""
   },
   "tests/desktop/database/__init__.py": {
@@ -2210,8 +2210,8 @@
     "semantic_hash": ""
   },
   "tests/desktop/ui/test_first_run_daily_plan_flow.py": {
-    "mtime": 1786272146.8636804,
-    "ast_hash": "b883d3ee7a4518eb72a446480dc0adf7",
+    "mtime": 1786363270.4402645,
+    "ast_hash": "6521a3a98f28b102f0e88b5f193ceb2a",
     "semantic_hash": ""
   },
   "tests/desktop/ui/test_runtime_bridge.py": {
@@ -2385,8 +2385,8 @@
     "semantic_hash": ""
   },
   "tests/desktop/integration/test_composition_root.py": {
-    "mtime": 1786273090.2476242,
-    "ast_hash": "b994de3b4895c2545ced008e416ae2da",
+    "mtime": 1786363043.355278,
+    "ast_hash": "49c74327c4d7c01e77b0fc911522e6ca",
     "semantic_hash": ""
   },
   "tests/desktop/database/test_settings_repository.py": {
@@ -2425,13 +2425,13 @@
     "semantic_hash": ""
   },
   "src/kindergarten_manager/ui/main_window.py": {
-    "mtime": 1786268335.9519076,
-    "ast_hash": "8dd4d2091661470866b8e6b44f797c3b",
+    "mtime": 1786363476.0012522,
+    "ast_hash": "80fd8d193240002032c7ab8ebf1afd74",
     "semantic_hash": ""
   },
   "src/kindergarten_manager/ui/pages/daily_plan.py": {
-    "mtime": 1786271084.7267437,
-    "ast_hash": "a4d52f4345b6f94dcc3b4fa84b2d6e7d",
+    "mtime": 1786363867.615229,
+    "ast_hash": "e4ba5e76bf5e63270ad9bb21c4b79c71",
     "semantic_hash": ""
   },
   "src/kindergarten_manager/ui/pages/single_export.py": {
@@ -2445,8 +2445,8 @@
     "semantic_hash": ""
   },
   "src/kindergarten_manager/application/workspace.py": {
-    "mtime": 1786273174.7246192,
-    "ast_hash": "286500d325c736a84a6803469ffd02c0",
+    "mtime": 1786363438.7472544,
+    "ast_hash": "68284d00311ca2877a194bd42922952a",
     "semantic_hash": ""
   },
   "src/kindergarten_manager/ui/errors.py": {
@@ -2457,6 +2457,11 @@
   "tests/desktop/packaging/test_entrypoint.py": {
     "mtime": 1786273090.2476242,
     "ast_hash": "bba8cd89f9c75996e1e5f01452476fcf",
+    "semantic_hash": ""
+  },
+  "src/kindergarten_manager/ui/theme.py": {
+    "mtime": 1786363476.0002522,
+    "ast_hash": "2ebeeec7deaa6218bdcd0b0df51968c0",
     "semantic_hash": ""
   }
 }

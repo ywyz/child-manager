@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QDate, Qt
 from PySide6.QtWidgets import (
     QComboBox,
     QDateEdit,
@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QStackedWidget,
+    QTableWidget,
     QWidget,
 )
 from pytestqt.qtbot import QtBot
@@ -97,9 +98,19 @@ def test_first_run_collects_minimum_settings_and_opens_structured_editor(
     }
     for object_name, value in values.items():
         _child(window, QLineEdit, object_name).setText(value)
+    semester_dates = {
+        "semester_start_date": QDate(2026, 9, 1),
+        "semester_end_date": QDate(2027, 1, 31),
+    }
+    for object_name, value in semester_dates.items():
+        _child(window, QDateEdit, object_name).setDate(value)
     qtbot.mouseClick(_child(window, QPushButton, "complete_setup"), Qt.MouseButton.LeftButton)
 
-    assert services.setup == values
+    assert services.setup == {
+        **values,
+        "semester_start_date": "2026-09-01",
+        "semester_end_date": "2027-01-31",
+    }
     stack = _child(window, QStackedWidget, "main_stack")
     assert stack.currentIndex() == 1
     assert _child(window, QComboBox, "class_context").currentText() == "向日葵班"
@@ -135,6 +146,49 @@ def test_first_run_collects_minimum_settings_and_opens_structured_editor(
         "daily_reflection_adjustments",
     ):
         assert window.findChild(QWidget, field_name) is not None
+
+
+def test_daily_plan_uses_week_workspace_and_gives_collective_activity_room(
+    qtbot: QtBot,
+    tmp_path: Path,
+) -> None:
+    services = FakeDesktopServices(tmp_path / "当天教案.docx")
+    services.setup = {"teacher_name": "测试教师"}
+    window = _build(services)
+    qtbot.addWidget(window)
+    window.resize(1366, 768)
+    window.show()
+    qtbot.waitExposed(window)
+
+    navigation = _child(window, QWidget, "section_navigation")
+    editor_stack = _child(window, QStackedWidget, "section_editor_stack")
+    assert navigation.isVisible()
+    assert editor_stack.isVisible()
+    assert editor_stack.currentIndex() == 0
+
+    expected_sections = (
+        "01 晨间活动",
+        "02 晨间谈话",
+        "03 室内区域游戏",
+        "04 下午户外游戏",
+        "05 集体活动",
+        "06 一日活动反思",
+    )
+    section_buttons = [
+        _child(window, QPushButton, f"section_nav_{index}")
+        for index in range(len(expected_sections))
+    ]
+    assert tuple(button.text() for button in section_buttons) == expected_sections
+
+    qtbot.mouseClick(section_buttons[4], Qt.MouseButton.LeftButton)
+    assert editor_stack.currentIndex() == 4
+    process_table = _child(window, QTableWidget, "group_activity_process_table")
+    assert process_table.minimumHeight() >= 240
+    assert process_table.horizontalHeader().stretchLastSection()
+
+    qtbot.mouseClick(_child(window, QPushButton, "next_week"), Qt.MouseButton.LeftButton)
+    assert services.selected_contexts[-1] == (1, date(2026, 9, 14))
+    assert _child(window, QDateEdit, "plan_date").date().toPython() == date(2026, 9, 14)
 
 
 def test_save_restart_and_native_destination_adapter_form_daily_word_loop(

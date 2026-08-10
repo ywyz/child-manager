@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 from docx import Document
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QDate, Qt
 from PySide6.QtWidgets import (
     QDateEdit,
     QFileDialog,
@@ -73,6 +73,8 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
         field = _child(window, QLineEdit, object_name)
         assert isinstance(field, QLineEdit)
         field.setText(value)
+    _child(window, QDateEdit, "semester_start_date").setDate(QDate(2026, 9, 1))
+    _child(window, QDateEdit, "semester_end_date").setDate(QDate(2027, 1, 31))
     complete = _child(window, QPushButton, "complete_setup")
     qtbot.mouseClick(complete, Qt.MouseButton.LeftButton)
     theme = _child(window, QLineEdit, "group_activity_theme")
@@ -121,4 +123,5 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
     )
     assert destination.is_file()
     exported = Document(str(destination))
+    assert exported.paragraphs[0].text == "星河幼儿园一日活动计划（2026.9-2027.1）"
     assert exported.tables[0].cell(6, 1).text == "活动主题：《寻找秋天》"

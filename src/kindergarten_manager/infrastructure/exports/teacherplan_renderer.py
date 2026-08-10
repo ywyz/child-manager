@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterable, Mapping, Sequence
 from copy import deepcopy
 from hashlib import sha256
@@ -23,6 +24,8 @@ class TeacherplanTemplateError(ValueError):
 
 
 class TeacherplanRenderer:
+    _LIST_PREFIX = re.compile(r"^(?:\s*\d+\s*[.．、]\s*)+")
+
     def __init__(self, template_path: Path, *, expected_sha256: str) -> None:
         self._template_path = Path(template_path)
         if not self._template_path.is_file():
@@ -174,7 +177,12 @@ class TeacherplanRenderer:
     def _numbered(value: object) -> str:
         if not isinstance(value, list):
             return ""
-        return "\n".join(f"{index}.{item}" for index, item in enumerate(value, 1))
+        items = [
+            normalized
+            for item in value
+            if (normalized := TeacherplanRenderer._LIST_PREFIX.sub("", str(item)).strip())
+        ]
+        return "\n".join(f"{index}.{item}" for index, item in enumerate(items, 1))
 
     @staticmethod
     def _mapping(value: object) -> Mapping[str, object]:
@@ -242,6 +250,9 @@ class TeacherplanRenderer:
         font_name: str,
         font_size: int,
     ) -> None:
+        paragraph_properties = paragraph._p.pPr
+        if paragraph_properties is not None and paragraph_properties.numPr is not None:
+            paragraph_properties.remove(paragraph_properties.numPr)
         run_properties = (
             deepcopy(paragraph.runs[0]._r.rPr)
             if paragraph.runs and paragraph.runs[0]._r.rPr is not None
