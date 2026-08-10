@@ -82,7 +82,7 @@ RED，再实施并运行该切片自有门禁。导入、fixture、数据库配�
 - [ ] T031 [US1] 实现 `src/kindergarten_manager/ui/pages/daily_plan.py` 的班级/日期上下文、01–05 与反思结构化编辑、显式保存和固定状态区
 - [ ] T032 [US1] 实现 `src/kindergarten_manager/ui/pages/single_export.py` 的“导出当天 Word”、原生目标选择、覆盖确认和完成/失败反馈
 - [ ] T033 [US1] 实现 `src/kindergarten_manager/__main__.py`、`src/kindergarten_manager/app.py` 与 `src/kindergarten_manager/ui/main_window.py` 的唯一 composition root，把首次设置和主窗口串成可启动闭环
-- [ ] T034 [US1] 运行 T011–T017、`uv run ruff format --check .`、`uv run ruff check .`、`uv run pyright`，并由一名未参与实现、只依赖界面提示的验收参与者在断网 Windows 上从首次启动开始计时；在 `docs/implementation-evidence/desktop-slice-1-acceptance.md` 记录开始/完成时间、5 分钟内完成设置并创建第一份教案，以及重启→当天 Word 打开证据
+- [ ] T034 [US1] 运行 T011–T017、`uv run ruff format --check .`、`uv run ruff check .`、`uv run pyright`，并由一名未参与实现、只依赖界面提示的验收参与者在断网 Windows 上完成首次启动、基础设置并创建第一份教案；在 `docs/implementation-evidence/desktop-slice-1-acceptance.md` 记录上述流程通过，以及重启→当天 Word 打开证据
 
 **Checkpoint**: MVP 可单独使用；AI、远程备份、批量 Word、历史/归档和完整视觉收敛均不得计入本切片。
 

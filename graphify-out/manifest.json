@@ -125,7 +125,7 @@
     "semantic_hash": "e14f8f495d74efcb1c5af2010327223c"
   },
   ".specify/feature.json": {
-    "mtime": 1786257896.389793,
+    "mtime": 1786372974.1399708,
     "ast_hash": "170a63fea9c2601de3f069ac4b47e462",
     "semantic_hash": "170a63fea9c2601de3f069ac4b47e462"
   },
@@ -475,9 +475,9 @@
     "semantic_hash": "9a39323c5c83c62048daef4ddc3a4a74"
   },
   "specs/003-desktop-local-first/checklists/requirements.md": {
-    "mtime": 1786257771.1318004,
-    "ast_hash": "044660345735b0c606f6ffffdacde8fd",
-    "semantic_hash": "044660345735b0c606f6ffffdacde8fd"
+    "mtime": 1786372962.3119714,
+    "ast_hash": "ac66c611138aeeb30ae78fdc524c9b93",
+    "semantic_hash": "ac66c611138aeeb30ae78fdc524c9b93"
   },
   "specs/003-desktop-local-first/contracts/agent-runtime.md": {
     "mtime": 1786257771.1348004,
@@ -505,12 +505,12 @@
     "semantic_hash": "027dc15b5ebe37897ff15435c115ef6b"
   },
   "specs/003-desktop-local-first/plan.md": {
-    "mtime": 1786257974.4047883,
-    "ast_hash": "120bd83a0749d4a85203e01a39791225",
-    "semantic_hash": "120bd83a0749d4a85203e01a39791225"
+    "mtime": 1786372911.1949744,
+    "ast_hash": "7e44fb0f0a9ea86c39d7857b45161d9f",
+    "semantic_hash": "7e44fb0f0a9ea86c39d7857b45161d9f"
   },
   "specs/003-desktop-local-first/quickstart.md": {
-    "mtime": 1786257974.4057882,
+    "mtime": 1786372943.3889725,
     "ast_hash": "000b5e5a162ff58cd81f3e04d73c1811",
     "semantic_hash": "000b5e5a162ff58cd81f3e04d73c1811"
   },
@@ -520,14 +520,14 @@
     "semantic_hash": "7cdefa4ce8a9027101f4a7abb6e96068"
   },
   "specs/003-desktop-local-first/spec.md": {
-    "mtime": 1786257771.1588004,
-    "ast_hash": "a579d6c8777cd53aa3a27f9df20491cb",
-    "semantic_hash": "a579d6c8777cd53aa3a27f9df20491cb"
+    "mtime": 1786371155.2568128,
+    "ast_hash": "ccfad5bc23bcd90d71a8b55e3079bc58",
+    "semantic_hash": "ccfad5bc23bcd90d71a8b55e3079bc58"
   },
   "specs/003-desktop-local-first/tasks.md": {
-    "mtime": 1786257771.1618004,
-    "ast_hash": "f9f2cf50fbe2f6d5219b5b01f6e97856",
-    "semantic_hash": "f9f2cf50fbe2f6d5219b5b01f6e97856"
+    "mtime": 1786372878.5379765,
+    "ast_hash": "fbd8cd009decbcb9bcbb24cc78ae4d0a",
+    "semantic_hash": "fbd8cd009decbcb9bcbb24cc78ae4d0a"
   },
   "docs/design/assets/desktop-prototype/desktop-prototype-a-classic.png": {
     "mtime": 1786257771.1648004,
@@ -568,5 +568,20 @@
     "mtime": 1786257771.1888003,
     "ast_hash": "8d2f4e1668f50bd62a3f80ba02473f1a",
     "semantic_hash": "8d2f4e1668f50bd62a3f80ba02473f1a"
+  },
+  "graphify-out/memory/query_20260810_141246_\u4e0d\u9700\u8981\u8ba1\u65f6\u8981\u6c42_\u8bf7\u6839\u636e\u8fd9\u4e2a\u53e3\u5f84\u6765\u4fee\u6539docs.md": {
+    "mtime": 1786371166.9438121,
+    "ast_hash": "fd1d1d199af61d647c5b51ca64ff965f",
+    "semantic_hash": "fd1d1d199af61d647c5b51ca64ff965f"
+  },
+  "graphify-out/memory/query_20260810_144328_\u8bf7\u89e3\u51b3\u7f16\u53f7\u51b2\u7a81_\u5e76\u601d\u8003\u63a5\u4e0b\u6765\u5e94\u8be5\u505a\u4ec0\u4e48.md": {
+    "mtime": 1786373008.2019687,
+    "ast_hash": "ee13a929505bc73b4b71e7cceee411bc",
+    "semantic_hash": "ee13a929505bc73b4b71e7cceee411bc"
+  },
+  "specs/003-desktop-local-first/proposals/desktop-cloud-retirement.md": {
+    "mtime": 1786372838.527979,
+    "ast_hash": "1475d465d75eacbfbed38e8521f947ef",
+    "semantic_hash": "1475d465d75eacbfbed38e8521f947ef"
   }
 }

@@ -1,28 +1,30 @@
 {
-  "generated_at": "2026-07-26T00:43:40.496807+00:00",
+  "generated_at": "2026-08-10T15:48:13.015594+00:00",
   "nodes": {
-    "context_service_boundaries": {
-      "code_fingerprint": "8152afd80f78c71e46a62806f3d383fa3f02e9e5287928ad0210eb0d6d73ec19",
-      "label": "Web、API 与 Worker 服务边界",
-      "last": "2026-07-11T02:42:18.471052+00:00",
+    "concept_ai_prompt_rules": {
+      "code_fingerprint": "4ac1b1f2d5f4e4eb4b28a192ffac45c99fd5c8b567d995a91519251e6ece7931",
+      "label": "AI 生成与提示词规则",
+      "last": "2026-07-12T07:13:57.938292+00:00",
+      "neg": 1,
       "provenance": [
         {
-          "date": "2026-07-11T02:42:18.471052+00:00",
-          "outcome": "useful",
-          "q": "系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
+          "date": "2026-07-12T07:13:57.938292+00:00",
+          "outcome": "corrected",
+          "q": "一日活动计划系统的数据实体、关系、唯一约束、历史版本、异步任务和安全边界是什么？"
         },
         {
-          "date": "2026-07-11T02:19:23.469077+00:00",
+          "date": "2026-07-11T02:07:08.074638+00:00",
           "outcome": "useful",
-          "q": "接下来需要生成什么文件呢"
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
         }
       ],
-      "score": 1.416647594,
-      "source_file": "CONTEXT.md",
-      "status": "preferred",
-      "uses": 2
+      "score": -0.014026248,
+      "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
+      "status": "contested",
+      "uses": 1,
+      "verdict": "dead end"
     },
-    "graphify_out_memory_query_20260710_131311_agents_md_ywyz_kindergartenmanager_gi_class_teacher_configuration": {
+    "concept_class_teacher_config": {
       "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
       "label": "班级与教师配置",
       "last": "2026-07-10T13:34:44.437455+00:00",
@@ -38,10 +40,152 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 1.39887405,
+      "score": 0.974900982,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2
+    },
+    "concept_date_selection_validation": {
+      "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
+      "label": "日期选择与校验",
+      "last": "2026-07-11T02:07:08.074638+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        },
+        {
+          "date": "2026-07-10T13:34:44.437455+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的README.md,AGENTS.md,还有ywyz/kindergartenManager.git的文档，你认为CONTEXT.md需要再加入点什么？"
+        },
+        {
+          "date": "2026-07-10T13:13:11.768287+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
+        }
+      ],
+      "score": 1.46835702,
+      "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
+      "status": "preferred",
+      "uses": 3
+    },
+    "concept_implementation_route": {
+      "code_fingerprint": "04e0aaf769d176cab9e6fd905af93a55f57e1072f91b258bb536c4b30fcf0acf",
+      "label": "共同实施路线",
+      "last": "2026-07-11T02:42:18.471052+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:42:18.471052+00:00",
+          "outcome": "useful",
+          "q": "系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
+        },
+        {
+          "date": "2026-07-11T02:19:23.469077+00:00",
+          "outcome": "useful",
+          "q": "接下来需要生成什么文件呢"
+        }
+      ],
+      "score": 0.987287691,
+      "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "concept_lesson_plan_structuring": {
+      "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
+      "label": "教案结构化",
+      "last": "2026-07-10T13:34:44.437455+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-10T13:34:44.437455+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的README.md,AGENTS.md,还有ywyz/kindergartenManager.git的文档，你认为CONTEXT.md需要再加入点什么？"
+        },
+        {
+          "date": "2026-07-10T13:13:11.768287+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
+        }
+      ],
+      "score": 0.974900982,
+      "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "concept_repo_branch_state": {
+      "code_fingerprint": "04e0aaf769d176cab9e6fd905af93a55f57e1072f91b258bb536c4b30fcf0acf",
+      "label": "当前仓库与分支状态",
+      "last": "2026-07-11T02:19:23.469077+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:19:23.469077+00:00",
+          "outcome": "useful",
+          "q": "接下来需要生成什么文件呢"
+        }
+      ],
+      "score": 0.493553089,
+      "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "concept_service_boundaries": {
+      "code_fingerprint": "04e0aaf769d176cab9e6fd905af93a55f57e1072f91b258bb536c4b30fcf0acf",
+      "label": "Web、API 与 Worker 服务边界",
+      "last": "2026-07-11T02:42:18.471052+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:42:18.471052+00:00",
+          "outcome": "useful",
+          "q": "系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
+        },
+        {
+          "date": "2026-07-11T02:19:23.469077+00:00",
+          "outcome": "useful",
+          "q": "接下来需要生成什么文件呢"
+        }
+      ],
+      "score": 0.987287691,
+      "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "concept_target_architecture": {
+      "code_fingerprint": "04e0aaf769d176cab9e6fd905af93a55f57e1072f91b258bb536c4b30fcf0acf",
+      "label": "目标服务架构",
+      "last": "2026-07-11T02:42:18.471052+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:42:18.471052+00:00",
+          "outcome": "useful",
+          "q": "系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
+        },
+        {
+          "date": "2026-07-11T02:19:23.469077+00:00",
+          "outcome": "useful",
+          "q": "接下来需要生成什么文件呢"
+        }
+      ],
+      "score": 0.987287691,
+      "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "concept_word_template_protection": {
+      "code_fingerprint": "4ac1b1f2d5f4e4eb4b28a192ffac45c99fd5c8b567d995a91519251e6ece7931",
+      "label": "Word 模板保护与导出验证",
+      "last": "2026-07-11T02:07:08.074638+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        }
+      ],
+      "score": 0.493456037,
+      "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
+      "status": "tentative",
+      "uses": 1
     }
   },
   "version": 1

@@ -40,6 +40,10 @@
   field groups instead of a single unstructured editor.
 - Validation iteration 5 passed after defining direct current-day export and same-semester custom-range
   export into one date-ordered Word document with preview, skipping, progress, and cancellation rules.
+- 验证迭代 6：移除首次使用耗时目标和起止时间记录，保留首次启动、基础设置、第一份教案、
+  重启与 Word 打开作为二元通过证据。
+- 验证迭代 7：保持已发布的 T001–T124 稳定编号；T034 仍为 Windows 验收，T035–T040 仍为
+  Slice 2A clean RED，旧 Cloud 退役内容移入未授权候选提案。
 - Distribution channel behavior is a product requirement; concrete package tooling belongs in the plan.
 - FC-001/FC-002 record the explicitly committed post-first-release boundaries and are not part of
   first-release requirements, task coverage, or acceptance.

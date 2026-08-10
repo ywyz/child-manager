@@ -1,113 +1,119 @@
-# Graph Report - .  (2026-08-09)
+# Graph Report - .  (2026-08-10)
 
 ## Corpus Check
 - cluster-only mode — file stats not available
 
 ## Summary
-- 731 nodes · 1044 edges · 90 communities (53 shown, 37 thin omitted)
-- Extraction: 87% EXTRACTED · 12% INFERRED · 1% AMBIGUOUS · INFERRED: 129 edges (avg confidence: 0.82)
-- Token cost: 5,141 input · 9,359 output
+- 765 nodes · 1086 edges · 96 communities (55 shown, 41 thin omitted)
+- Extraction: 86% EXTRACTED · 13% INFERRED · 1% AMBIGUOUS · INFERRED: 140 edges (avg confidence: 0.82)
+- Token cost: 6,804 input · 4,864 output
 
 ## Graph Freshness
-- Built from commit: `4c863b6b`
+- Built from commit: `eaee3592`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- System Architecture Audit
-- Pre-Coding Review
-- Core Domain Tables
-- Dual-Agent Workflow
-- Project Charter & Scope
-- Phase 1 Contracts
-- Specification Quality Checklist
+- System Architecture Overview
+- Pre-Coding Review AI Rules
+- User Management Auth
+- 双 Agent 独立开发协议 (已退役)
+- 幼儿园管理助手项目宪章 (Constitution v4.1.0)
+- 同日教案 自动保存 快照 冲突 归档与历史验收
 - Security Threat Model
-- Backup Authentication Design
-- Speckit Skill Library
-- Milestone Status Tracking
-- Technology Stack Research
-- Repository Workflow Reset
-- Shell Helper Functions
-- Desktop Reset Workflow
-- Auth & Identity Tables
-- Monorepo Architecture
-- Milestone Planning & Gates
-- Reference Data & Libraries
-- Lesson Plan Domain Tables
-- Lesson Plan Features
-- AI Prompt Pipeline
-- Morning Activity UI
-- Collective Activity UI
-- Morning Activity Week Editor
-- Architecture Components
-- Implementation Tasks & Phases
-- Database Schema Migrations
-- Background Job Handling
-- Prompt & Model Governance
-- Architecture & Roadmap
-- Daily Activity Plan Spec
-- Daily Plan Desktop UI
-- Feature Creation Script
-- Export Job Pipeline
-- Authentication Security
-- Access Control Boundaries
-- Batch Export UI
-- Task Authorization Boundaries
-- Test-Driven Delivery Strategy
-- US4 AI Batch Completion
-- US5 DOCX Import
-- Slice 2B Acceptance
-- Contribution Guide
-- Encrypted Backup Restore
-- M7/M8 Milestone Status
-- Foundation Phase Delivery
-- M2 Identity Delivery
-- M3 Settings Delivery
-- US2 Manual Lesson Delivery
-- US3 AI Generation
-- Agent Runtime Boundaries
-- Authorization Gates
-- ADR Decision Research
-- Desktop Runtime Stack
-- Weekly Workbench Design
-- Prerequisite Check Script
-- Plan Setup Script
-- Task Setup Script
-- Tenant Data Isolation
-- Graphify Extraction Fallback
-- Branch Status Boundaries
-- Deploy Deferral Decision
-- ADR Status Conventions
-- Data Model Documentation
-- Database Schema Documentation
-- OS Credential Storage
-- Desktop SQLite Backup
-- UI Dependency Direction
-- Navigation & Empty States
-- State Feedback & Accessibility
-- Backend Package
-- Contracts Package
-- System Architecture Documentation
+- 003 活动任务 T001–T124 稳定编号
+- Backup Login Data Model
+- 教案管理 PRD v1.3
+- speckit-tasks Skill
+- 状态 complete
+- 001 研究 research.md
+- common.sh
+- 桌面首期实施后快速验收指南
+- 本地优先桌面产品方向重置
+- users 用户
+- Repository Workflow Reset 2026-07-21
+- Python 3.14 Monorepo
+- M1 至 M8 首期完整范围
+- kindergartens 园所根表
+- daily_activity_plans 一日活动计划
+- 一日活动计划
+- Word template fidelity invariant: teacherplan.docx is the sole SHA-256-verified source, every export uses a copy and shared render_day/field mapping, with no hardcoded identities or source overwrite
+- Query 2026-07-12: 数据实体/关系/约束/历史/异步/安全边界
+- B Focus 浅色晨间活动编辑界面
+- C 浅色集体活动周编辑界面
+- C 浅色晨间活动周编辑界面
+- FastAPI API (apps/api)
+- 001 数据模型 data-model.md
+- Query 2026-07-13: graphify update 与剩余任务
+- 完整质量门禁与 Windows 人工证据：只有实际观察结果才能标记通过
+- PostgreSQL 权威后台任务
+- 提示词草稿发布历史与回滚
+- 目标服务架构
+- 首期一日活动计划完整闭环规格
+- A Classic 一日活动计划桌面界面
+- create-new-feature.sh
+- PostgreSQL 权威业务状态
+- WebAuthn 通行密钥认证
+- READ、DRAFT、确认 WRITE 权限门禁
+- C 批量导出日期范围对话框
+- 首期一日活动计划完整闭环任务清单
+- 有效 RED：collect-only 退出 0 且 errors=0，业务断言 failed>0 且 errors=0
+- T098–T109：AI 结果、生成、执行、采用、反思、路由、Web 和审计实现，已完成
+- T112–T117：DOCX 安全、来源、拆分、新增环节、采用和 Web RED，已完成
+- Consistent backup and envelope: sqlite3.Connection.backup plus integrity/FK/count/hash and atomic package publication; portable/remote packages use scrypt-derived AES-256-GCM with random salt/nonce, AAD and fail-closed tag validation
+- CONTRIBUTING.md Contribution Guide
+- 教师控制的可选 AI 与加密备份
+- M8 命令 环境 浏览器 结果 证据 风险完整报告
+- T013–T019：公共契约、配置、数据库、替身及三运行入口实现，已完成
+- T026–T034：身份模型、ceremony、限流、状态机、CLI、API 与 Web 实现，已完成
+- T040–T044：园所、学期、班级、教师、年龄段和区域实现，已完成
+- T052–T060：手工教案契约、模型、日历、Repository、服务、API 与 Web 实现，已完成
+- T073–T085：AI 模型、提示词、加密、任务、Worker、API 与 Web 实现，已完成
+- Controlled capability sequence: Slice 1 manual MVP → Slice 2A optional AI preview → Slice 2B Agent Foundation with Context and READ/DRAFT only → Slice 3 backup/restore → Agent WRITE with PlanPatch/Confirmation/audit/transaction → Level 3 deferred
+- 需要直接比较文件
+- 单进程 PySide6 与 SQLite 权威
+- C 方案周计划工作台
+- check-prerequisites.sh
+- setup-plan.sh
+- setup-tasks.sh
+- 园所数据隔离
+- Single Application-layer AgentRuntime with one turn, closed registered Tools and untrusted Provider boundary; minimal frozen Context, no direct Repository/Session/file/network/code access and no durable Agent state
+- Slice 2B registry permits only READ/DRAFT; DRAFT returns a validated PlanPatch without ai_previews、正文、audit or backup writes, with Scripted Provider rejection and cancellation matrix
+- Graphify 语义抽取降级链
+- docs、dev、main 当前状态边界
+- ADR-0009 Defer Production Deployment
+- ADR 状态与双向链接约定
+- docs/design/data-model.md 数据模型
+- docs/design/database-schema.md 数据库Schema
+- 操作系统凭据存储边界
+- 桌面 SQLite 权威与迁移备份
+- ui 到 application 到 domain 依赖方向
+- 首期导航与禁止空入口
+- 桌面状态反馈与可访问性
+- Backend Package (packages/backend)
+- Contracts Package (packages/contracts)
+- docs/design/system-architecture.md 系统架构
 - Integrations Module
 - Local Development Environments
 - Workflow Reset Notes
-- Lesson Management PRD
-- Milestone Exit Evidence
+- docs/PRD/lesson-management.md 产品PRD
+- 里程碑状态与可重复出口证据
 - Issue Template Config
-- Constitution Template
-- OpenAPI Contract
-- Contracts README
-- Daily Plan OpenAPI
-- Information Architecture Research
-- Specification Quality Checklist
-- Desktop Service Boundary
-- Daily Activity Plan Guide
-- Word Export Template
-- Resilience & Concurrency
+- Constitution 模板
+- OpenAPI Contract (001)
+- Contracts README (001)
+- specs/001-daily-activity-plan/contracts/openapi.yaml OpenAPI契约
+- Page IA Research (001)
+- 002 Specification Quality Checklist
+- Desktop service boundary: Qt UI uses DTO/application services only, application owns transactions/snapshots, domain has no PySide6/infrastructure dependency, and frozen background DTOs plus redacted stable errors
+- Lesson-plan invariants: unique class/date current plan, content revision and archived read-only state, soft date warnings, immutable version snapshots and UPDATE/DELETE rejection triggers
+- Research decision for the desktop stack: CPython 3.14.6, PySide6/Qt Widgets, SQLite/SQLAlchemy/Alembic, stable local data root and ui → application → domain without old B/S runtime
+- Daily Activity Plan System Guide
+- 固定 Word 模板 teacherplan.docx
 
 ## God Nodes (most connected - your core abstractions)
 1. `Combined Audit Conclusion (Q1–Q26)` - 41 edges
-2. `001 研究 research.md` - 36 edges
+2. `001 研究 research.md` - 35 edges
 3. `Security Threat Model` - 29 edges
 4. `2026-07-14 编码前审查报告（Codex + Trae 收敛版）` - 25 edges
 5. `20260713 Pre-Coding Review Report (Codex + Trae)` - 21 edges
@@ -133,6 +139,12 @@
 - None detected.
 
 ## Hyperedges (group relationships)
+- **快速指南的授权、Slice 1 RED 与质量验证前门禁** — specs_003_desktop_local_first_quickstart_guide, specs_003_desktop_local_first_quickstart_authorization_gate, specs_003_desktop_local_first_quickstart_slice_1_red_boundary, specs_003_desktop_local_first_quickstart_locked_install_checks, specs_003_desktop_local_first_quickstart_desktop_test_layers [EXTRACTED 1.00]
+- **离线桌面从首次启动到 Word、Windows UI 与 standalone 的验收流** — specs_003_desktop_local_first_quickstart_first_run_data_root, specs_003_desktop_local_first_quickstart_p1_daily_plan_flow, specs_003_desktop_local_first_quickstart_word_single_export, specs_003_desktop_local_first_quickstart_windows_ui_dpi, specs_003_desktop_local_first_quickstart_windows_standalone_installer, specs_003_desktop_local_first_quickstart_complete_quality_gate [INFERRED 0.85]
+- **可选 AI、READ/DRAFT Agent、备份恢复与确认写入的受控序列** — specs_003_desktop_local_first_quickstart_slice_2a_ai_preview, specs_003_desktop_local_first_quickstart_slice_2b_agent_read_draft, specs_003_desktop_local_first_quickstart_slice_3_backup_restore, specs_003_desktop_local_first_quickstart_agent_confirmed_write, specs_003_desktop_local_first_quickstart_level3_deferred [EXTRACTED 1.00]
+- **SC-001、Slice 1 与 T034 的无计时 Windows 二元验收** — specs_003_desktop_local_first_spec_sc_001, specs_003_desktop_local_first_spec_windows_binary_evidence, specs_003_desktop_local_first_plan_slice_1_mvp, specs_003_desktop_local_first_tasks_t034, specs_003_desktop_local_first_checklists_requirements_validation_6 [INFERRED 0.85]
+- **Slice 2A clean RED：T035–T040** — specs_003_desktop_local_first_tasks_t035, specs_003_desktop_local_first_tasks_t036, specs_003_desktop_local_first_tasks_t037, specs_003_desktop_local_first_tasks_t038, specs_003_desktop_local_first_tasks_t039, specs_003_desktop_local_first_tasks_t040 [EXTRACTED 1.00]
+- **未授权 CDR-01–CDR-08 候选提案，不阻塞现行门禁** — specs_003_desktop_local_first_proposals_desktop_cloud_retirement, specs_003_desktop_local_first_proposals_desktop_cloud_retirement_nonblocking, specs_003_desktop_local_first_proposals_desktop_cloud_retirement_cdr_01, specs_003_desktop_local_first_proposals_desktop_cloud_retirement_cdr_02, specs_003_desktop_local_first_proposals_desktop_cloud_retirement_cdr_03, specs_003_desktop_local_first_proposals_desktop_cloud_retirement_cdr_04, specs_003_desktop_local_first_proposals_desktop_cloud_retirement_cdr_05, specs_003_desktop_local_first_proposals_desktop_cloud_retirement_cdr_06, specs_003_desktop_local_first_proposals_desktop_cloud_retirement_cdr_07, specs_003_desktop_local_first_proposals_desktop_cloud_retirement_cdr_08, specs_003_desktop_local_first_tasks_t034, specs_003_desktop_local_first_tasks_t035, specs_003_desktop_local_first_tasks_t040 [EXTRACTED 1.00]
 - **六大核心原则构成宪章治理框架** — specify_memory_constitution_principle_fact_sources, specify_memory_constitution_principle_local_first, specify_memory_constitution_principle_single_teacher, specify_memory_constitution_principle_local_authority, specify_memory_constitution_principle_teacher_control, specify_memory_constitution_principle_verification [EXTRACTED 1.00]
 - **桌面技术基线 (Python 3.14 / PySide6 / SQLite / SQLAlchemy / Alembic / uv / Ruff / Pyright / Pytest / chinesecalendar)** — tech_python, tech_pyside6, tech_qt_widgets, tech_sqlite, tech_sqlalchemy, tech_alembic, tech_uv, tech_ruff, tech_pyright, tech_pytest, tech_chinesecalendar [EXTRACTED 1.00]
 - **首期交付范围 (一日活动计划、数据与备份、必要设置)** — specify_memory_constitution_daily_activity_plan, specify_memory_constitution_data_backup, specify_memory_constitution_settings [EXTRACTED 1.00]
@@ -159,219 +171,227 @@
 - **身份认证与会话族 (WebAuthn + 备用认证 + 邀请恢复 + Refresh 轮换)** — specs_001_daily_activity_plan_data_model_users, specs_001_daily_activity_plan_data_model_webauthn_credentials, specs_001_daily_activity_plan_data_model_webauthn_challenges, specs_001_daily_activity_plan_data_model_backup_auth_credentials, specs_001_daily_activity_plan_data_model_backup_auth_enrollments, specs_001_daily_activity_plan_data_model_bootstrap_initializations, specs_001_daily_activity_plan_data_model_account_invitations, specs_001_daily_activity_plan_data_model_recovery_codes, specs_001_daily_activity_plan_data_model_account_recovery_requests, specs_001_daily_activity_plan_data_model_identity_verification_approvals, specs_001_daily_activity_plan_data_model_user_roles, specs_001_daily_activity_plan_data_model_roles, specs_001_daily_activity_plan_data_model_refresh_tokens [EXTRACTED 0.90]
 - **AI 生成与提示词测试管线 (PostgreSQL 权威任务状态驱动)** — specs_001_daily_activity_plan_data_model_ai_model_profiles, specs_001_daily_activity_plan_data_model_ai_model_profile_capabilities, specs_001_daily_activity_plan_data_model_prompt_definitions, specs_001_daily_activity_plan_data_model_prompt_versions, specs_001_daily_activity_plan_data_model_prompt_test_runs, specs_001_daily_activity_plan_data_model_background_jobs, specs_001_daily_activity_plan_data_model_ai_generation_results, specs_001_daily_activity_plan_data_model_daily_activity_plans, specs_001_daily_activity_plan_data_model_daily_activity_plan_snapshots [EXTRACTED 0.90]
 
-## Communities (90 total, 37 thin omitted)
+## Communities (96 total, 41 thin omitted)
 
-### Community 0 - "System Architecture Audit"
-Cohesion: 0.05
-Nodes (80): chinesecalendar Library, CSRF & Origin Verification, Daily Reflection, Degraded Operations & Failure Matrix, ADR-0001 Cloud Only, ADR-0002 独立 Web/API/Worker 模块化单体, background_job 权威任务状态机, ADR-0003 PostgreSQL 权威任务状态 + Dramatiq/Redis (+72 more)
+### Community 0 - "System Architecture Overview"
+Cohesion: 0.07
+Nodes (59): chinesecalendar Library, CSRF & Origin Verification, Daily Reflection, Degraded Operations & Failure Matrix, ADR-0001 Cloud Only, ADR-0002 独立 Web/API/Worker 模块化单体, Data Model Design, Database Schema Design (+51 more)
 
-### Community 1 - "Pre-Coding Review"
+### Community 1 - "Pre-Coding Review AI Rules"
 Cohesion: 0.10
 Nodes (40): codex 实现分支（待授权创建）, main 分支（docs-only 基线）, trae 实现分支（待授权创建）, AI 生成与提示词规则, 班级与教师配置, 一日活动计划, 日期选择与校验, 教案结构化 (+32 more)
 
-### Community 2 - "Core Domain Tables"
+### Community 2 - "User Management Auth"
 Cohesion: 0.08
 Nodes (39): Account Invitations, Account Recovery Requests, Age Groups, AI Generation Results, AI Model Profile Capabilities, AI Model Profiles, Audit Events, Background Jobs (+31 more)
 
-### Community 3 - "Dual-Agent Workflow"
+### Community 3 - "双 Agent 独立开发协议 (已退役)"
 Cohesion: 0.11
 Nodes (35): codex 分支 (历史双实现线), dev 分支 (唯一实现与集成), docs 分支 (文档与契约), main 分支 (稳定发布基线), trae 分支 (历史双实现线), Codex Agent, Dev 本地档位 (端口/Compose/数据库隔离), graphify 知识图谱工具与 graphify-out 输出 (+27 more)
 
-### Community 4 - "Project Charter & Scope"
+### Community 4 - "幼儿园管理助手项目宪章 (Constitution v4.1.0)"
 Cohesion: 0.08
 Nodes (35): 幼儿园管理助手项目宪章 (Constitution v4.1.0), ADR (架构决策记录), 可选 AI (OpenAI 兼容边界), 幼儿档案 (Child Profiles, 首期禁止), 操作系统凭据存储, 一日活动计划 (Daily Activity Plan), 数据与备份 (Data & Backup), GitHub Issue (执行范围与验收证据) (+27 more)
 
-### Community 5 - "Phase 1 Contracts"
+### Community 5 - "同日教案 自动保存 快照 冲突 归档与历史验收"
 Cohesion: 0.06
 Nodes (32): Phase 1 Quickstart 首期实现与验收合同, 四栏目任务 pending_dispatch 重试预览与采用验收, 分页 错误 幂等 expected_version 权限与降级 API 合同, 审计覆盖与秘密正文绝对路径零暴露, 同源 BFF Cookie CSRF 来源头与 Set-Cookie 合同, Alembic 与 init-admin 首位管理员初始化, 10 MiB 50 MiB 1000 条目 200000 字符 DOCX 安全边界, 409 identity.last_admin_recovery_requires_cli 双人恢复 (+24 more)
 
-### Community 6 - "Specification Quality Checklist"
-Cohesion: 0.07
-Nodes (31): Specification quality/readiness checklist: testable, measurable, technology-agnostic requirements, acceptance scenarios, edge cases, bounded scope and dependencies, Checklist iteration 5 and frozen post-release boundaries: direct current-day and same-semester range Word export with preview, skipping, progress and cancellation; FC-001/FC-002 excluded, Controlled capability sequence: Slice 1 manual MVP → Slice 2A optional AI preview → Slice 2B Agent Foundation with Context and READ/DRAFT only → Slice 3 backup/restore → Agent WRITE with PlanPatch/Confirmation/audit/transaction → Level 3 deferred, Post-Slice-3 WRITE contract: one-time Confirmation bound to Patch hash, target, revision, session/turn, expiry and nonce; one short atomic transaction creates version, body revision and minimal audit, with rollback/no retry, AiGenerationCoordinator remains Slice 2A structured preview; Slice 2B adds Agent Context and READ/DRAFT; confirmation WRITE is only after Slice 3, with Agent transient state in memory, Bootstrap startup order: path/database checks → daily or pre-upgrade backup decision → Alembic upgrade → integrity/count review → minimum settings; failures never enter writable main window, ExportService freezes snapshots and previews before background rendering; BackupService exposes daily/manual/upload/list/inspect/restore, with final cancellation checks and detailed Word/backup contracts, Consistent backup and envelope: sqlite3.Connection.backup plus integrity/FK/count/hash and atomic package publication; portable/remote packages use scrypt-derived AES-256-GCM with random salt/nonce, AAD and fail-closed tag validation (+23 more)
-
-### Community 7 - "Security Threat Model"
+### Community 6 - "Security Threat Model"
 Cohesion: 0.12
 Nodes (28): ADR-0010 Restricted Public Entry & Passkey Auth, ADR-0011 Password+TOTP Backup Login, ADR-0009 Defer Production Deployment Until Feature Complete, Security Threat Model, AES-256-GCM Secret Encryption, Argon2id Password Hashing, External AI Service, FastAPI API (private network) (+20 more)
 
-### Community 8 - "Backup Authentication Design"
+### Community 7 - "003 活动任务 T001–T124 稳定编号"
+Cohesion: 0.11
+Nodes (28): query memory：去计时历史记录（非现行规范）, 历史图谱曾将 T042 标为 Windows Manual Acceptance（已纠正）, query memory：编号校正历史记录（非现行规范）, 现行 spec/tasks 事实基线，不由 query memory 覆盖, 验证迭代 6：移除耗时与起止时间，保留二元证据, 验证迭代 7：T001–T124 稳定、T034 Windows、T035–T040 Slice 2A clean RED, Slice 1 MVP：首次启动到当天 Word, 桌面默认门禁与旧 Cloud 退役候选工作包 (+20 more)
+
+### Community 8 - "Backup Login Data Model"
 Cohesion: 0.16
 Nodes (24): ADR-0010 Identity Rewrite, ADR-0011 Password+TOTP Backup, audit_events Table, authentication_method Enum, backup_auth_credentials Table, backup_auth_enrollments Table, backup_auth_status Enum, M3A: Password+TOTP Backup Login (+16 more)
 
-### Community 9 - "Speckit Skill Library"
+### Community 9 - "教案管理 PRD v1.3"
+Cohesion: 0.13
+Nodes (24): background_job 权威任务状态机, ADR-0003 PostgreSQL 权威任务状态 + Dramatiq/Redis, ADR-0004 同源 Cookie 认证, 提示词草稿/发布/回滚生命周期, ADR-0005 AI 供应商中立与提示词系统, ADR-0006 固定 Word 模板导出边界, ADR-0007 Caddy/Compose/Secrets（已被取代）, ADR-0008 日期与外部服务本地优先/软降级 (+16 more)
+
+### Community 10 - "speckit-tasks Skill"
 Cohesion: 0.19
 Nodes (21): speckit-analyze Skill, speckit-checklist Skill, speckit-clarify Skill, speckit-constitution Skill, speckit-converge Skill, speckit-implement Skill, speckit-plan Skill, speckit-specify Skill (+13 more)
 
-### Community 10 - "Milestone Status Tracking"
+### Community 11 - "状态 complete"
 Cohesion: 0.14
 Nodes (21): M0 共同基线 c1b363331c5b8d611aa4c8b0e2fb775f5e64ccc7, M6 Review main@b7676c27d07adc5eca1f0c397217780367481e9c→dev@d654b704d1bd0653f7d0209ac58665090a934311 PASS；main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098；run 30631050997 attempt 2, Issue #12 completed；docs@47eae46c6efec2e7596063bea2fc3352c2ece189；dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69 run 30697998054；main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244 run 30698318868；729 passed, Issue #10 completed；docs@c9401c5a189fcc10ee2e15903a186c06b94cea30；Review dev@8695b04161ea96bddc31c3bfeab2e0957ef68562 PASS；runs 30235090100/30235439229；main@b7676c27d07adc5eca1f0c397217780367481e9c, US5 dev@32d3c102152848f7488da036ddada461b3d8d3ab；run 30602225731；49 passed、56 passed、完整 666 passed；恶意样本残留 0, US1/M2 安全身份：T021–T035，complete, US1/M3 必要设置：T036–T045，complete, US1/M3A 密码与 TOTP 备用登录：独立 specs/002 T001–T034 (+13 more)
 
-### Community 11 - "Technology Stack Research"
-Cohesion: 0.18
-Nodes (19): Alembic 迁移, Dramatiq 2 + Redis, FastAPI, HTTPX (外部 HTTP 客户端), NiceGUI 3.x, 旧仓库 adapt_client.py (新增环节参考), 旧仓库 generate_client.py (提示词措辞参考), 旧仓库 lesson_plan_client.py (拆分参考) (+11 more)
+### Community 12 - "001 研究 research.md"
+Cohesion: 0.20
+Nodes (18): Dramatiq 2 + Redis, FastAPI, HTTPX (外部 HTTP 客户端), NiceGUI 3.x, 旧仓库 adapt_client.py (新增环节参考), 旧仓库 generate_client.py (提示词措辞参考), 旧仓库 lesson_plan_client.py (拆分参考), Psycopg 3 (+10 more)
 
-### Community 12 - "Repository Workflow Reset"
-Cohesion: 0.19
-Nodes (18): Repository Workflow Reset 2026-07-21, Codex Agent, dev Branch (Codex implementation branch), Development Flow (需求→docs→Issue→dev→测试→Review→main), docs Branch (single source of truth), M2 Parent Issue #4 (shared parent → dev acceptance entry), M2 Codex Issue #5 (implementation & acceptance evidence), M2 Trae Issue #6 (closed not planned) (+10 more)
-
-### Community 13 - "Shell Helper Functions"
+### Community 13 - "common.sh"
 Cohesion: 0.13
 Nodes (5): get_feature_paths(), get_repo_root(), _persist_feature_json(), resolve_specify_init_dir(), common.sh script
 
-### Community 14 - "Desktop Reset Workflow"
+### Community 14 - "桌面首期实施后快速验收指南"
+Cohesion: 0.13
+Nodes (17): Agent 写入阶段：PlanPatch、逐次确认、stale 拒绝、最小审计与单事务回滚, Agent 隐私与零写入：Context、ToolResult、PlanPatch、Confirmation 不进入 SQLite、备份或日志, AI Endpoint 验收：回环 HTTP 允许，非回环 HTTP、userinfo 与重定向拒绝，HTTPS 校验证书, 指南本身不授权实现：docs 完整 SHA、Issue 与 dev T001 齐全后按授权切片执行, 备份安全与故障隔离：KMBACKUP1、scrypt/AES-GCM、篡改拒绝及远程失败不阻断本地保存, 数据根失败矩阵：只读、空间不足、零字节、损坏数据库与未来 Alembic revision, 首次启动与本地数据根：QStandardPaths GenericDataLocation/cn.kindergartenmanager.desktop, 桌面首期实施后快速验收指南 (+9 more)
+
+### Community 15 - "本地优先桌面产品方向重置"
 Cohesion: 0.17
 Nodes (15): main、docs、dev 分支职责, 桌面重置与设计阶段边界, 固定 docs SHA 的 Issue 驱动实现门禁, 当前桌面方向与事实来源, docs 发布到 Slice 1 RED 的下一步, 本地优先桌面产品方向重置, 设计确认到新 Issue 的迁移门禁, 有界 Context 与无长期业务记忆 (+7 more)
 
-### Community 15 - "Auth & Identity Tables"
+### Community 16 - "users 用户"
 Cohesion: 0.15
 Nodes (15): PyJWT (HS256 Access Token), account_invitations 账号邀请, account_recovery_requests 恢复请求, backup_auth_credentials 密码+TOTP 备用材料, backup_auth_enrollments 备用绑定流程, bootstrap_initializations 首位管理员初始化, identity_verification_approvals 身份核验批准, recovery_codes 离线恢复码 (+7 more)
 
-### Community 16 - "Monorepo Architecture"
-Cohesion: 0.33
-Nodes (7): 应用用例拥有授权事务幂等与审计, FastAPI API, NiceGUI Web, Python 3.14 Monorepo, Repository 不自行提交事务, NiceGUI 同源 BFF, 共享契约包纯契约边界
+### Community 17 - "Repository Workflow Reset 2026-07-21"
+Cohesion: 0.24
+Nodes (14): Repository Workflow Reset 2026-07-21, Codex Agent, dev Branch (Codex implementation branch), Development Flow (需求→docs→Issue→dev→测试→Review→main), docs Branch (single source of truth), M2 Parent Issue #4 (shared parent → dev acceptance entry), M2 Codex Issue #5 (implementation & acceptance evidence), M2 Trae Issue #6 (closed not planned) (+6 more)
 
-### Community 17 - "Milestone Planning & Gates"
+### Community 18 - "Python 3.14 Monorepo"
+Cohesion: 0.17
+Nodes (13): 应用用例拥有授权事务幂等与审计, FastAPI API, 健康就绪与功能降级边界, NiceGUI Web, Python 3.14 Monorepo, Repository 不自行提交事务, NiceGUI 同源 BFF, 共享契约包纯契约边界 (+5 more)
+
+### Community 19 - "M1 至 M8 首期完整范围"
 Cohesion: 0.18
 Nodes (11): Phase 1 Design and Contracts, Graphify 代码增量更新, Pre-M1 至 M8 里程碑门禁, 固定 SHA 的质量与验收证据, Phase 0 Research, Spec Kit 一致性审查, 按用户故事组织的任务生成策略, 测试优先的用户故事纵向切片 (+3 more)
 
-### Community 18 - "Reference Data & Libraries"
+### Community 20 - "kindergartens 园所根表"
 Cohesion: 0.20
 Nodes (10): chinesecalendar (本地工作日库), cryptography (AES-GCM/Argon2id), age_groups 年龄段, ai_model_profile_capabilities 模型能力, ai_model_profiles AI 模型档案, audit_events 审计事件, kindergartens 园所根表, semesters 学期 (+2 more)
 
-### Community 19 - "Lesson Plan Domain Tables"
+### Community 21 - "daily_activity_plans 一日活动计划"
 Cohesion: 0.22
 Nodes (10): python-docx (Word 导出), class_areas 班级区域(室内/户外), class_teachers 班级教师关联, classes 班级, daily_activity_plan_authors 教案作者, daily_activity_plan_exports Word 导出记录, daily_activity_plan_snapshots 不可变快照, daily_activity_plans 一日活动计划 (+2 more)
 
-### Community 20 - "Lesson Plan Features"
+### Community 22 - "一日活动计划"
 Cohesion: 0.24
 Nodes (10): AI Batch 子任务派生状态, 班级室内与户外区域, 一日活动计划, 四栏一键 AI 批次, 集体活动原始教案导入与生成, 首期必要设置, 受限且可清理的 DOCX 导入, 教师与班级多对多关系 (+2 more)
 
-### Community 21 - "AI Prompt Pipeline"
+### Community 23 - "Word template fidelity invariant: teacherplan.docx is the sole SHA-256-verified source, every export uses a copy and shared render_day/field mapping, with no hardcoded identities or source overwrite"
+Cohesion: 0.20
+Nodes (10): Post-Slice-3 WRITE contract: one-time Confirmation bound to Patch hash, target, revision, session/turn, expiry and nonce; one short atomic transaction creates version, body revision and minimal audit, with rollback/no retry, Bootstrap startup order: path/database checks → daily or pre-upgrade backup decision → Alembic upgrade → integrity/count review → minimum settings; failures never enter writable main window, ExportService freezes snapshots and previews before background rendering; BackupService exposes daily/manual/upload/list/inspect/restore, with final cancellation checks and detailed Word/backup contracts, KMBACKUP1 scope and manifest: whitelist ZIP containing manifest.json plus payload/application.sqlite3, no attachments/PII/secrets, and no sync, incremental merge, automatic-latest choice or remote SQLite, Atomic export and acceptance: same-directory temporary file, reopen/validate/fsync/os.replace, cancellation or failure preserves old target; Microsoft Word on Windows is required evidence, Batch DOCX structure: exactly one document, full template content for each included day, explicit page breaks and style equivalence to single-day output; no ZIP-byte concatenation or secret metadata, Frozen export inputs: DailyPlanExportSnapshot and same-semester BatchExportPreview determine deterministic skip reasons and ascending included dates; background rendering never re-queries changing plans, Word template fidelity invariant: teacherplan.docx is the sole SHA-256-verified source, every export uses a copy and shared render_day/field mapping, with no hardcoded identities or source overwrite (+2 more)
+
+### Community 24 - "Query 2026-07-12: 数据实体/关系/约束/历史/异步/安全边界"
 Cohesion: 0.28
 Nodes (9): AI 生成与提示词规则 (graphify 源节点), Pydantic 2, Query 2026-07-12: 数据实体/关系/约束/历史/异步/安全边界, ai_generation_results AI 生成结果预览, background_jobs PostgreSQL 权威异步任务, prompt_test_runs 提示词异步测试, prompt_versions 提示词版本(草稿/不可变发布), 异步 AI 生成管线 (graphify 源节点) (+1 more)
 
-### Community 22 - "Morning Activity UI"
+### Community 25 - "B Focus 浅色晨间活动编辑界面"
 Cohesion: 0.22
 Nodes (9): AI 工作台生成当前栏目, 自动保存、版本保存与 Word 导出, AI 工作台生成当前栏目, 自动保存、版本保存与 Word 导出, 深色主题晨间活动编辑, 教案栏目状态侧栏, B Focus 浅色晨间活动编辑界面, 浅色主题晨间活动编辑 (+1 more)
 
-### Community 23 - "Collective Activity UI"
+### Community 26 - "C 浅色集体活动周编辑界面"
 Cohesion: 0.22
 Nodes (9): AI 建议对照、重新生成与采用, 集体活动主题、准备、目标、重点、难点与过程字段, AI 建议对照、重新生成与采用, 集体活动主题、准备、目标、重点、难点与过程字段, 今日栏目六项导航, 深色主题集体活动周编辑, C 浅色集体活动周编辑界面, 今日栏目六项导航 (+1 more)
 
-### Community 24 - "Morning Activity Week Editor"
+### Community 27 - "C 浅色晨间活动周编辑界面"
 Cohesion: 0.22
 Nodes (9): AI 建议对照、重新生成与采用, AI 建议对照、重新生成与采用, 晨间活动固定项目、集体游戏、自主游戏、重点指导、目标与指导要点字段, 今日栏目六项导航, 深色主题晨间活动周编辑, C 浅色晨间活动周编辑界面, 晨间活动固定项目、集体游戏、自主游戏、重点指导、目标与指导要点字段, 今日栏目六项导航 (+1 more)
 
-### Community 25 - "Architecture Components"
+### Community 28 - "FastAPI API (apps/api)"
 Cohesion: 0.31
 Nodes (9): OpenAI-Compatible Model Service, FastAPI API (apps/api), Export Storage Seam, Holiday Adapter, Key Source Seam, PostgreSQL, Redis, NiceGUI Web / BFF (apps/web) (+1 more)
 
-### Community 26 - "Implementation Tasks & Phases"
+### Community 29 - "001 数据模型 data-model.md"
+Cohesion: 0.43
+Nodes (8): Spec Kit Consistency Check (72 FR / 17 SC / T001–T165), Migration 0006 lesson_plans, Migration 0007 ai_prompts_jobs, Migration 0008 ai_generation_results, Migration 0009 group_activity_sources, Migration 0010 word_exports, Query 2026-07-26: T046–T061 与 T062–T086 固定实施顺序, 001 数据模型 data-model.md
+
+### Community 30 - "Query 2026-07-13: graphify update 与剩余任务"
 Cohesion: 0.25
 Nodes (8): Phase 1 Setup T001–T008 (graphify 源节点), PostgreSQL (业务与任务权威状态), Python 3.14+, Query 2026-07-13: graphify update 与剩余任务, Redis (消息投递/短期协调), 实施顺序 M1–M8 (graphify 源节点), 实现分支授权边界 (graphify 源节点), 首期一日活动计划实现任务清单 (graphify 源节点)
 
-### Community 27 - "Database Schema Migrations"
-Cohesion: 0.52
-Nodes (7): Migration 0006 lesson_plans, Migration 0007 ai_prompts_jobs, Migration 0008 ai_generation_results, Migration 0009 group_activity_sources, Migration 0010 word_exports, Query 2026-07-26: T046–T061 与 T062–T086 固定实施顺序, 001 数据模型 data-model.md
+### Community 31 - "完整质量门禁与 Windows 人工证据：只有实际观察结果才能标记通过"
+Cohesion: 0.29
+Nodes (8): 完整质量门禁与 Windows 人工证据：只有实际观察结果才能标记通过, 分层桌面测试与替身外部服务：unit/application/database/contracts/integration/ui/full, 旧 Cloud 测试通过不等于桌面用户故事通过, 锁定安装与静态检查：uv sync --locked、Ruff、Pyright, 后期 MSIX 兼容性验证（非首期完成门禁）, 验收只用虚构园所、教师、班级和教案，不调用真实付费 AI/WebDAV/S3, Windows standalone 与 per-user 安装器：CPython、MSVC、Nuitka、Qt 资源、升级卸载保留, Windows UI 与 DPI 验收：1366x768、125%/150%、主题、焦点、凭据与文件对话框
 
-### Community 28 - "Background Job Handling"
+### Community 32 - "PostgreSQL 权威后台任务"
 Cohesion: 0.29
 Nodes (7): 唯一 Pending AI 结果占位, 反思任务单事务受理, 脱敏审计事件, PostgreSQL 权威后台任务, 显式一日活动反思生成, 资源感知幂等作用域, pending_dispatch 投递恢复机制
 
-### Community 29 - "Prompt & Model Governance"
+### Community 33 - "提示词草稿发布历史与回滚"
 Cohesion: 0.33
 Nodes (7): 提示词测试配置修订冻结, AI 模型档案, 外部 AI 数据最小化, 提示词草稿发布历史与回滚, 白名单纯替换提示词语法, 提示词测试冻结上下文与配置修订, 七个稳定 AI 任务
 
-### Community 30 - "Architecture & Roadmap"
+### Community 34 - "目标服务架构"
 Cohesion: 0.60
 Nodes (6): 共同实施路线, 当前仓库与分支状态, Web、API 与 Worker 服务边界, 目标服务架构, 查询记录 2026-07-11 02:19：接下来需要生成什么文件, 查询记录 2026-07-11 02:42：系统架构文档要素
 
-### Community 31 - "Daily Activity Plan Spec"
+### Community 35 - "首期一日活动计划完整闭环规格"
 Cohesion: 0.33
 Nodes (6): 首期一日活动计划实现计划, 首期一日活动计划完整闭环规格, 固定模板 Word 导出, GitHub Issue #12, 一日活动计划 PRD, 固定 Word 教案模板
 
-### Community 32 - "Daily Plan Desktop UI"
+### Community 36 - "A Classic 一日活动计划桌面界面"
 Cohesion: 0.40
 Nodes (5): AI 助手生成与预览采用, 自动保存、版本保存与 Word 导出, 班级、日期与教学周选择, 一日活动计划编辑, A Classic 一日活动计划桌面界面
 
-### Community 34 - "Export Job Pipeline"
+### Community 38 - "PostgreSQL 权威业务状态"
 Cohesion: 0.50
 Nodes (5): Dramatiq Worker, PostgreSQL 权威业务状态, Redis 投递与短期协调, Word 导出单事务冻结受理, 不可变导出历史与独立副本
 
-### Community 35 - "Authentication Security"
+### Community 39 - "WebAuthn 通行密钥认证"
 Cohesion: 0.40
 Nodes (5): 同源 BFF 可信来源边界, 密码与 TOTP 双因素备用登录, 密码与 TOTP 备用登录独立规格, 安全初始化与带外核验, WebAuthn 通行密钥认证
 
-### Community 36 - "Access Control Boundaries"
+### Community 40 - "READ、DRAFT、确认 WRITE 权限门禁"
 Cohesion: 0.50
 Nodes (4): READ、DRAFT、确认 WRITE 权限门禁, Tool-only 业务访问, Application Layer Agent 与 Tool 边界, 冻结 DTO、短事务与失败回滚
 
-### Community 37 - "Batch Export UI"
+### Community 41 - "C 批量导出日期范围对话框"
 Cohesion: 0.50
 Nodes (4): 按日期范围批量导出, C 批量导出日期范围对话框, 合并导出 Word 并可取消, 跳过日期原因汇总
 
-### Community 38 - "Task Authorization Boundaries"
+### Community 42 - "首期一日活动计划完整闭环任务清单"
 Cohesion: 0.50
 Nodes (4): 任务清单不授权文档修改、分支切换、提交、cherry-pick、推送或 PR, 首期一日活动计划完整闭环任务清单, 范围：Roadmap M1–M8；M9 生产部署复审排除, 2026-07-21 工作流重置：后续仅在 dev 实现且 Issue 固定引用 docs SHA
 
-### Community 39 - "Test-Driven Delivery Strategy"
+### Community 43 - "有效 RED：collect-only 退出 0 且 errors=0，业务断言 failed>0 且 errors=0"
 Cohesion: 0.50
 Nodes (4): 有效 RED→最小实现→快速测试→故事 checkpoint 的增量交付策略, 固定 RED→GREEN 配对范围 T009–T157, RED 仅可在配对实现最终路径创建无业务规则、无副作用的最小 import skeleton, 有效 RED：collect-only 退出 0 且 errors=0，业务断言 failed>0 且 errors=0
 
-### Community 40 - "US4 AI Batch Completion"
+### Community 44 - "T098–T109：AI 结果、生成、执行、采用、反思、路由、Web 和审计实现，已完成"
 Cohesion: 0.50
 Nodes (4): US4 commits：dev@4a9974eaa80ae1e9b0e6a15035512bbb32b6b2d1、dev@a75e05576f8dfae98b199ea3411f29bc7f76466a、dev@9798aa0、dev@386cccb、dev@c83a4f0、dev@9b6809e、dev@d6754cb、dev@9932aa928132152cabedb2e273980f60cdd51f6c, T087–T097：AI batch、预览、Worker、反思、轮询和 Web RED，已完成, T098–T109：AI 结果、生成、执行、采用、反思、路由、Web 和审计实现，已完成, T110：US4 验收，dev@9932aa928132152cabedb2e273980f60cdd51f6c，126 passed，完整 610 passed、1 warning
 
-### Community 41 - "US5 DOCX Import"
+### Community 45 - "T112–T117：DOCX 安全、来源、拆分、新增环节、采用和 Web RED，已完成"
 Cohesion: 0.50
 Nodes (4): T111：确定性安全/恶意 DOCX/ZIP 测试工厂，已完成, T112–T117：DOCX 安全、来源、拆分、新增环节、采用和 Web RED，已完成, T118–T125：来源、OOXML、两阶段 AI、采用、API 和 Web 实现，已完成, T126：US5 独立验收，已完成
 
-### Community 42 - "Slice 2B Acceptance"
+### Community 46 - "Consistent backup and envelope: sqlite3.Connection.backup plus integrity/FK/count/hash and atomic package publication; portable/remote packages use scrypt-derived AES-256-GCM with random salt/nonce, AAD and fail-closed tag validation"
 Cohesion: 0.50
-Nodes (4): Slice 2B registry permits only READ/DRAFT; DRAFT returns a validated PlanPatch without ai_previews、正文、audit or backup writes, with Scripted Provider rejection and cancellation matrix, AI/Agent persistence split: Slice 2A persists only schema-validated previews and adoption; Agent Foundation DRAFT never writes ai_previews, and agent_action_audits arrive only after Slice 3, Slice 2B Scripted Provider acceptance: READ/DRAFT whitelist and PlanPatch, all SQLite/version/preview/audit unchanged, unknown or WRITE Tool rejection and zero Agent persistence, T049–T053 Slice 2B RED and T054–T060 implementation/acceptance: Scripted Provider Tool/Context/READ-DRAFT zero-write tests and persistence scan, then no WRITE/Confirmation or memory
+Nodes (4): Consistent backup and envelope: sqlite3.Connection.backup plus integrity/FK/count/hash and atomic package publication; portable/remote packages use scrypt-derived AES-256-GCM with random salt/nonce, AAD and fail-closed tag validation, Remote backup boundary and rotation: immutable encrypted WebDAV/S3 objects, remote failures/retries never block local transactions, daily keeps 30 successes while pre_migration/pre_restore are retained, Restore transaction: teacher explicitly chooses a concrete version; decrypt/validate in staging, reject future schema, create pre_restore protection, stop tasks, atomically replace and rollback on failure, Research decision for backup security: Connection.backup snapshots, KMBACKUP1 authenticated encryption and Windows keyring credentials; WebDAV/S3 are one-way immutable stores, not sync
 
-### Community 43 - "Contribution Guide"
+### Community 47 - "CONTRIBUTING.md Contribution Guide"
 Cohesion: 1.00
 Nodes (3): CONTRIBUTING.md Contribution Guide, Design → Implement Workflow, Implementation Issue Template
 
-### Community 44 - "Encrypted Backup Restore"
+### Community 48 - "教师控制的可选 AI 与加密备份"
 Cohesion: 0.67
 Nodes (3): 教师控制的可选 AI 与加密备份, 加密备份与原子恢复, 单向备份而非同步
 
-### Community 45 - "M7/M8 Milestone Status"
+### Community 49 - "M8 命令 环境 浏览器 结果 证据 风险完整报告"
 Cohesion: 0.67
 Nodes (3): M7 complete M8 ready T142-T169 未开始, M8 命令 环境 浏览器 结果 证据 风险完整报告, 架构 契约 迁移 Repository API Worker Word Web 与标准五命令
 
-### Community 46 - "Foundation Phase Delivery"
+### Community 50 - "T013–T019：公共契约、配置、数据库、替身及三运行入口实现，已完成"
 Cohesion: 0.67
 Nodes (3): T009–T012：依赖、公共契约、健康与事务/Alembic RED，已完成, T013–T019：公共契约、配置、数据库、替身及三运行入口实现，已完成, T020：Foundational 专项、五条质量命令与 Graphify 门禁，已完成
 
-### Community 47 - "M2 Identity Delivery"
+### Community 51 - "T026–T034：身份模型、ceremony、限流、状态机、CLI、API 与 Web 实现，已完成"
 Cohesion: 0.67
 Nodes (3): T021–T025：WebAuthn、身份迁移、API 契约和浏览器流程 RED，已完成, T026–T034：身份模型、ceremony、限流、状态机、CLI、API 与 Web 实现，已完成, T035：M2 独立验收，已完成
 
-### Community 48 - "M3 Settings Delivery"
+### Community 52 - "T040–T044：园所、学期、班级、教师、年龄段和区域实现，已完成"
 Cohesion: 0.67
 Nodes (3): T036–T039：Settings 契约、规则、权限和 Web RED，已完成, T040–T044：园所、学期、班级、教师、年龄段和区域实现，已完成, T045：M3 独立验收，已完成
 
-### Community 49 - "US2 Manual Lesson Delivery"
+### Community 53 - "T052–T060：手工教案契约、模型、日历、Repository、服务、API 与 Web 实现，已完成"
 Cohesion: 0.67
 Nodes (3): T046–T051：手工教案 Schema、持久化、API、日历和 Web RED，已完成, T052–T060：手工教案契约、模型、日历、Repository、服务、API 与 Web 实现，已完成, T061：关闭 AI、Worker 和在线工作日后的 US2 独立验收，已完成
 
-### Community 50 - "US3 AI Generation"
+### Community 54 - "T073–T085：AI 模型、提示词、加密、任务、Worker、API 与 Web 实现，已完成"
 Cohesion: 0.67
 Nodes (3): T062–T072：模型、密钥、SSRF、提示词、任务和 Web RED，已完成, T073–T085：AI 模型、提示词、加密、任务、Worker、API 与 Web 实现，已完成, T086：US3 独立验收，已完成
 
-### Community 51 - "Agent Runtime Boundaries"
+### Community 55 - "Controlled capability sequence: Slice 1 manual MVP → Slice 2A optional AI preview → Slice 2B Agent Foundation with Context and READ/DRAFT only → Slice 3 backup/restore → Agent WRITE with PlanPatch/Confirmation/audit/transaction → Level 3 deferred"
 Cohesion: 0.67
-Nodes (3): Single Application-layer AgentRuntime with one turn, closed registered Tools and untrusted Provider boundary; minimal frozen Context, no direct Repository/Session/file/network/code access and no durable Agent state, Data authority boundary: one SQLite file is authoritative, secrets stay in OS credential storage, and no account/tenant/child/photo/sync or Agent conversation/Context/Patch/Confirmation tables exist, FR-033–FR-041 Agent requirements: one Application AgentRuntime, Tool-only Provider boundary, minimal Context, Slice 2B READ/DRAFT zero-write, bound Patch/Confirmation transactional WRITE, provider-port/thread isolation and no long-term memory
-
-### Community 52 - "Authorization Gates"
-Cohesion: 0.67
-Nodes (3): Plan authorization gate: design documents do not authorize code; publish docs, create Issue with full immutable SHA, then dev T001; current authorization is Slice 1 RED only and Agent Foundation/GREEN remain closed, Quickstart is a post-implementation acceptance guide, not authorization: docs full SHA + Issue + dev T001 are prerequisites; only Slice 1 RED is open and Agent Foundation cannot start, T001 authorization task: record confirmed docs full SHA, GitHub Issue URL and authorization in tasks.md, verify dev branch, and do not treat the task list as implementation permission
-
-### Community 89 - "Resilience & Concurrency"
-Cohesion: 0.33
-Nodes (6): 健康就绪与功能降级边界, 故障边界内降级, 不可变教案历史快照, 纯手工教案闭环, 版本号乐观并发控制, 工作日未知与冲突软提示
+Nodes (3): Controlled capability sequence: Slice 1 manual MVP → Slice 2A optional AI preview → Slice 2B Agent Foundation with Context and READ/DRAFT only → Slice 3 backup/restore → Agent WRITE with PlanPatch/Confirmation/audit/transaction → Level 3 deferred, AiGenerationCoordinator remains Slice 2A structured preview; Slice 2B adds Agent Context and READ/DRAFT; confirmation WRITE is only after Slice 3, with Agent transient state in memory, Research decision for controlled Agent: one Application AgentRuntime, Provider port and closed Tool registry; Slice 2B READ/DRAFT zero-write, Slice 3 gate before WRITE and no long-term memory
 
 ## Ambiguous Edges - Review These
 - `Repository Workflow Reset 2026-07-21` → `Combined Audit Conclusion (Q1–Q26)`  [AMBIGUOUS]
@@ -392,15 +412,19 @@ Nodes (6): 健康就绪与功能降级边界, 故障边界内降级, 不可变�
   .specify/memory/constitution.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **222 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+217 more)
+- **233 isolated node(s):** `check-prerequisites.sh script`, `common.sh script`, `create-new-feature.sh script`, `setup-plan.sh script`, `setup-tasks.sh script` (+228 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **37 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **41 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Work-memory lessons
 
 **Preferred sources** — corroborated by past sessions; start here.
-- `Web、API 与 Worker 服务边界` (2× useful, score=1.416647594) _(code changed — re-verify)_
-- `班级与教师配置` (2× useful, score=1.39887405)
+- `日期选择与校验` (3× useful, score=1.470027644)
+- `共同实施路线` (2× useful, score=0.988410978)
+- `Web、API 与 Worker 服务边界` (2× useful, score=0.988410978)
+- `目标服务架构` (2× useful, score=0.988410978)
+- `班级与教师配置` (2× useful, score=0.976010177)
+- `教案结构化` (2× useful, score=0.976010177)
 
 **Known dead ends** — questions that led nowhere; don't re-derive.
 - "哪些关键架构决策需要独立 ADR，哪些已经确认，决策之间有什么依赖？" -> `需要直接比较文件`
