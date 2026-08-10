@@ -1,71 +1,30 @@
 {
-  "generated_at": "2026-07-27T11:26:35.630249+00:00",
+  "generated_at": "2026-08-10T12:27:57.943330+00:00",
   "nodes": {
-    "config_compose_dev": {
-      "code_fingerprint": "af8c0efe85e58c41d20297521a5b8c53c572553ce1193204f79352457213b2e2",
-      "label": "compose.dev.yaml",
-      "last": "2026-07-24T11:36:24.917450+00:00",
+    "concept_ai_prompt_rules": {
+      "code_fingerprint": "4ac1b1f2d5f4e4eb4b28a192ffac45c99fd5c8b567d995a91519251e6ece7931",
+      "label": "AI 生成与提示词规则",
+      "last": "2026-07-12T07:13:57.938292+00:00",
+      "neg": 1,
       "provenance": [
         {
-          "date": "2026-07-24T11:36:24.917450+00:00",
-          "outcome": "useful",
-          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
-        }
-      ],
-      "score": 0.933180036,
-      "source_file": "docs/development/local-development-environments.md",
-      "status": "tentative",
-      "uses": 1
-    },
-    "config_pyproject_toml": {
-      "code_fingerprint": "af8c0efe85e58c41d20297521a5b8c53c572553ce1193204f79352457213b2e2",
-      "label": "pyproject.toml",
-      "last": "2026-07-24T11:36:24.917450+00:00",
-      "provenance": [
+          "date": "2026-07-12T07:13:57.938292+00:00",
+          "outcome": "corrected",
+          "q": "一日活动计划系统的数据实体、关系、唯一约束、历史版本、异步任务和安全边界是什么？"
+        },
         {
-          "date": "2026-07-24T11:36:24.917450+00:00",
+          "date": "2026-07-11T02:07:08.074638+00:00",
           "outcome": "useful",
-          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
         }
       ],
-      "score": 0.933180036,
-      "source_file": "docs/development/local-development-environments.md",
-      "status": "tentative",
-      "uses": 1
+      "score": -0.014071387,
+      "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
+      "status": "contested",
+      "uses": 1,
+      "verdict": "dead end"
     },
-    "docs_development_local_dev_environments": {
-      "code_fingerprint": "af8c0efe85e58c41d20297521a5b8c53c572553ce1193204f79352457213b2e2",
-      "label": "Local Development Environments",
-      "last": "2026-07-24T11:36:24.917450+00:00",
-      "provenance": [
-        {
-          "date": "2026-07-24T11:36:24.917450+00:00",
-          "outcome": "useful",
-          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
-        }
-      ],
-      "score": 0.933180036,
-      "source_file": "docs/development/local-development-environments.md",
-      "status": "tentative",
-      "uses": 1
-    },
-    "docs_roadmap": {
-      "code_fingerprint": "65053d1c3862778d2caffcc2ede8eae314830383bd626eb891da2e3ad93bbf50",
-      "label": "Child Manager 产品与工程路线图",
-      "last": "2026-07-26T00:43:36.051824+00:00",
-      "provenance": [
-        {
-          "date": "2026-07-26T00:43:36.051824+00:00",
-          "outcome": "useful",
-          "q": "T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？"
-        }
-      ],
-      "score": 0.967130561,
-      "source_file": "docs/ROADMAP.md",
-      "status": "tentative",
-      "uses": 1
-    },
-    "graphify_out_memory_query_20260710_131311_agents_md_ywyz_kindergartenmanager_gi_class_teacher_configuration": {
+    "concept_class_teacher_config": {
       "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
       "label": "班级与教师配置",
       "last": "2026-07-10T13:34:44.437455+00:00",
@@ -81,29 +40,13 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 1.352895454,
+      "score": 0.978038421,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2
     },
-    "kindergarten_isolation": {
-      "code_fingerprint": "33f75e8b8d703a690bc6103fdd99759a8420bed11b98c672224f9a97d51c3f90",
-      "label": "园所数据隔离",
-      "last": "2026-07-11T02:07:08.074638+00:00",
-      "provenance": [
-        {
-          "date": "2026-07-11T02:07:08.074638+00:00",
-          "outcome": "useful",
-          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
-        }
-      ],
-      "score": 0.68478178,
-      "source_file": "AGENTS.md",
-      "status": "tentative",
-      "uses": 1
-    },
-    "lesson_plan": {
-      "code_fingerprint": "43c973a8d5fa50f0967eadd45c08828a9e9db43f1a767a3eb727353981e8fcec",
+    "concept_daily_activity_plan": {
+      "code_fingerprint": "4ac1b1f2d5f4e4eb4b28a192ffac45c99fd5c8b567d995a91519251e6ece7931",
       "label": "一日活动计划",
       "last": "2026-07-11T02:07:08.074638+00:00",
       "provenance": [
@@ -113,14 +56,225 @@
           "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
         }
       ],
-      "score": 0.68478178,
-      "source_file": "docs/PRD/lesson-management.md",
+      "score": 0.495044084,
+      "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "concept_date_selection_validation": {
+      "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
+      "label": "日期选择与校验",
+      "last": "2026-08-10T12:12:39.248599+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-10T12:12:39.248599+00:00",
+          "outcome": "useful",
+          "q": "desktop gui prototype semester date teacherplan renderer word export 室内区域游戏 下午户外游戏 日期选择与校验：C 周计划工作台、用户选择学期起止日期、集体活动编辑空间与 Word 单层编号应由哪些节点和契约约束？"
+        },
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        },
+        {
+          "date": "2026-07-10T13:34:44.437455+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的README.md,AGENTS.md,还有ywyz/kindergartenManager.git的文档，你认为CONTEXT.md需要再加入点什么？"
+        },
+        {
+          "date": "2026-07-10T13:13:11.768287+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
+        }
+      ],
+      "score": 2.47283686,
+      "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
+      "status": "preferred",
+      "uses": 4
+    },
+    "concept_implementation_route": {
+      "code_fingerprint": "04e0aaf769d176cab9e6fd905af93a55f57e1072f91b258bb536c4b30fcf0acf",
+      "label": "共同实施路线",
+      "last": "2026-07-11T02:42:18.471052+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:42:18.471052+00:00",
+          "outcome": "useful",
+          "q": "系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
+        },
+        {
+          "date": "2026-07-11T02:19:23.469077+00:00",
+          "outcome": "useful",
+          "q": "接下来需要生成什么文件呢"
+        }
+      ],
+      "score": 0.990464992,
+      "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "concept_lesson_plan_structuring": {
+      "code_fingerprint": "d2efab91077773fa430dc0a96ea34eacc32b7cf72327c13c63cea8968faa6928",
+      "label": "教案结构化",
+      "last": "2026-07-10T13:34:44.437455+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-10T13:34:44.437455+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的README.md,AGENTS.md,还有ywyz/kindergartenManager.git的文档，你认为CONTEXT.md需要再加入点什么？"
+        },
+        {
+          "date": "2026-07-10T13:13:11.768287+00:00",
+          "outcome": "useful",
+          "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
+        }
+      ],
+      "score": 0.978038421,
+      "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "concept_repo_branch_state": {
+      "code_fingerprint": "04e0aaf769d176cab9e6fd905af93a55f57e1072f91b258bb536c4b30fcf0acf",
+      "label": "当前仓库与分支状态",
+      "last": "2026-07-11T02:19:23.469077+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:19:23.469077+00:00",
+          "outcome": "useful",
+          "q": "接下来需要生成什么文件呢"
+        }
+      ],
+      "score": 0.495141448,
+      "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "concept_service_boundaries": {
+      "code_fingerprint": "04e0aaf769d176cab9e6fd905af93a55f57e1072f91b258bb536c4b30fcf0acf",
+      "label": "Web、API 与 Worker 服务边界",
+      "last": "2026-07-11T02:42:18.471052+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:42:18.471052+00:00",
+          "outcome": "useful",
+          "q": "系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
+        },
+        {
+          "date": "2026-07-11T02:19:23.469077+00:00",
+          "outcome": "useful",
+          "q": "接下来需要生成什么文件呢"
+        }
+      ],
+      "score": 0.990464992,
+      "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "concept_target_architecture": {
+      "code_fingerprint": "04e0aaf769d176cab9e6fd905af93a55f57e1072f91b258bb536c4b30fcf0acf",
+      "label": "目标服务架构",
+      "last": "2026-07-11T02:42:18.471052+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:42:18.471052+00:00",
+          "outcome": "useful",
+          "q": "系统架构文档应如何定义目标服务架构、服务边界、共享契约、部署拓扑与首期实施顺序？"
+        },
+        {
+          "date": "2026-07-11T02:19:23.469077+00:00",
+          "outcome": "useful",
+          "q": "接下来需要生成什么文件呢"
+        }
+      ],
+      "score": 0.990464992,
+      "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "concept_tenant_isolation": {
+      "code_fingerprint": "4ac1b1f2d5f4e4eb4b28a192ffac45c99fd5c8b567d995a91519251e6ece7931",
+      "label": "园所数据隔离",
+      "last": "2026-07-11T02:07:08.074638+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        }
+      ],
+      "score": 0.495044084,
+      "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "concept_word_template_protection": {
+      "code_fingerprint": "4ac1b1f2d5f4e4eb4b28a192ffac45c99fd5c8b567d995a91519251e6ece7931",
+      "label": "Word 模板保护与导出验证",
+      "last": "2026-07-11T02:07:08.074638+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-11T02:07:08.074638+00:00",
+          "outcome": "useful",
+          "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
+        }
+      ],
+      "score": 0.495044084,
+      "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "docs_design_desktop_ui_design_system_4_已确认教案编辑布局": {
+      "code_fingerprint": "adecbb70270dcf102622c1f5669a0959994835be006678fb75f923a9aefe94ad",
+      "label": "4. 已确认教案编辑布局",
+      "last": "2026-08-10T12:12:39.248599+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-10T12:12:39.248599+00:00",
+          "outcome": "useful",
+          "q": "desktop gui prototype semester date teacherplan renderer word export 室内区域游戏 下午户外游戏 日期选择与校验：C 周计划工作台、用户选择学期起止日期、集体活动编辑空间与 Word 单层编号应由哪些节点和契约约束？"
+        }
+      ],
+      "score": 0.999754355,
+      "source_file": "docs/design/desktop-ui-design-system.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "docs_development_local_env": {
+      "code_fingerprint": "d5a2182902ec5dbc59ea06a258a65bd9c2a73532a031f8d9825cd1c8b466f387",
+      "label": "Local Development Environments",
+      "last": "2026-07-24T11:36:24.917450+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-24T11:36:24.917450+00:00",
+          "outcome": "useful",
+          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
+        }
+      ],
+      "score": 0.674616746,
+      "source_file": "docs/development/local-development-environments.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "docs_roadmap": {
+      "code_fingerprint": "29fe6d04ba7c23a6b607dd1f72621301dd5fd95a008d6b75fc1ee54a279df825",
+      "label": "ROADMAP.md",
+      "last": "2026-07-26T00:43:36.051824+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-26T00:43:36.051824+00:00",
+          "outcome": "useful",
+          "q": "T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？"
+        }
+      ],
+      "score": 0.699160341,
+      "source_file": "docs/ROADMAP.md",
       "status": "tentative",
       "uses": 1
     },
     "specs_001_daily_activity_plan_plan": {
-      "code_fingerprint": "768898db076081825b43dbf0909759cfceffbdf4573c3daf6403d99ae0511acb",
-      "label": "Implementation Plan",
+      "code_fingerprint": "80f9fb090ef2b9eeb8e036b6d99f5c1071653b391bb9de65d8f024199ebd8e8a",
+      "label": "实施计划 plan.md",
       "last": "2026-07-26T00:43:36.051824+00:00",
       "provenance": [
         {
@@ -129,24 +283,40 @@
           "q": "T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？"
         }
       ],
-      "score": 0.967130561,
+      "score": 0.699160341,
       "source_file": "specs/001-daily-activity-plan/plan.md",
       "status": "tentative",
       "uses": 1
     },
-    "specs_001_daily_activity_plan_tasks": {
-      "code_fingerprint": "21f9ff134178c3d09c06fb30a44f773b9614ff2ed95ba41d7bb2a57d431c8d48",
-      "label": "Tasks (001 Daily Activity Plan)",
-      "last": "2026-07-26T00:43:36.051824+00:00",
+    "specs_001_daily_activity_plan_spec_semester": {
+      "code_fingerprint": "1b34850d5fe7fca33468f07de34154e750088b3df5d818e2c4c477501a1cf4da",
+      "label": "学期 (Semester)",
+      "last": "2026-08-10T12:12:39.248599+00:00",
       "provenance": [
         {
-          "date": "2026-07-26T00:43:36.051824+00:00",
+          "date": "2026-08-10T12:12:39.248599+00:00",
           "outcome": "useful",
-          "q": "T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？"
+          "q": "desktop gui prototype semester date teacherplan renderer word export 室内区域游戏 下午户外游戏 日期选择与校验：C 周计划工作台、用户选择学期起止日期、集体活动编辑空间与 Word 单层编号应由哪些节点和契约约束？"
         }
       ],
-      "score": 0.967130561,
-      "source_file": "specs/001-daily-activity-plan/tasks.md",
+      "score": 0.999754355,
+      "source_file": "specs/001-daily-activity-plan/spec.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "specs_003_desktop_local_first_contracts_word_export_word_导出契约": {
+      "code_fingerprint": "4af349cca2008ed6981242e1a5713edd4a7abae51a36849ec9945c0e41833c4c",
+      "label": "Word 导出契约",
+      "last": "2026-08-10T12:12:39.248599+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-10T12:12:39.248599+00:00",
+          "outcome": "useful",
+          "q": "desktop gui prototype semester date teacherplan renderer word export 室内区域游戏 下午户外游戏 日期选择与校验：C 周计划工作台、用户选择学期起止日期、集体活动编辑空间与 Word 单层编号应由哪些节点和契约约束？"
+        }
+      ],
+      "score": 0.999754355,
+      "source_file": "specs/003-desktop-local-first/contracts/word-export.md",
       "status": "tentative",
       "uses": 1
     }

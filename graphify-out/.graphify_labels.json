@@ -277,8 +277,21 @@
   "275": "desktop/ui/__init__.py",
   "276": "desktop/unit/__init__.py",
   "277": "0005_password_totp_backup_login.py",
+  "278": "aggregation.py",
   "279": "0009_group_activity_sources.py",
+  "280": "totp.py",
   "281": "authenticated_session",
   "282": "infrastructure/database/migrations/__init__.py",
-  "283": "infrastructure/database/migrations/versions/__init__.py"
+  "283": "infrastructure/database/migrations/versions/__init__.py",
+  "284": "tokens.py",
+  "285": "test_ai_generation_results.py",
+  "286": "AiRetryService",
+  "287": "test_ai_prompt_contracts.py",
+  "288": "test_job_aggregation.py",
+  "289": "ErrorResponse",
+  "290": "Q: desktop gui prototype semester date teacherplan renderer word export 室内区域游戏 下午户外游戏 日期选择与校验：C 周计划工作台、用户选择学期起止日期、集体活动编辑空间与 Word 单层编号应由哪些节点和契约约束？",
+  "291": "Q: Windows 下主题颜色白底白字、暗黑模式缺失、缺乏设置选项导致学期无法修改、日期无法一键回到今天，应如何修复？",
+  "292": "csrf.py",
+  "293": "test_idempotency.py",
+  "294": "_render_prompt_test_run_schema"
 }

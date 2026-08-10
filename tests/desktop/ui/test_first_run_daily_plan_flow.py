@@ -8,10 +8,13 @@ from typing import Any
 
 import pytest
 from PySide6.QtCore import QDate, Qt
+from PySide6.QtGui import QColor, QPalette
 from PySide6.QtWidgets import (
+    QApplication,
     QComboBox,
     QDateEdit,
     QFileDialog,
+    QLabel,
     QLineEdit,
     QMessageBox,
     QPushButton,
@@ -22,7 +25,11 @@ from PySide6.QtWidgets import (
 from pytestqt.qtbot import QtBot
 
 from kindergarten_manager.application.settings import SettingsError
-from kindergarten_manager.application.workspace import ClassContext, DailyPlanContext
+from kindergarten_manager.application.workspace import (
+    ClassContext,
+    DailyPlanContext,
+    DesktopSettingsContext,
+)
 from kindergarten_manager.domain.content import PlanContentV1
 from kindergarten_manager.ui.pages.first_run import build_first_run_daily_plan_window
 from tests.desktop.helpers import implemented
@@ -35,6 +42,7 @@ class FakeDesktopServices:
     saved_content: dict[str, Any] = field(default_factory=dict)
     exported: list[Path] = field(default_factory=list)
     selected_contexts: list[tuple[int, date]] = field(default_factory=list)
+    settings_updates: list[dict[str, str]] = field(default_factory=list)
     failure: Exception | None = None
 
     def complete_setup(self, values: dict[str, str]) -> None:
@@ -47,6 +55,7 @@ class FakeDesktopServices:
             classes=(ClassContext(id=1, name=self.setup.get("class_name", "向日葵班")),),
             selected_class_id=1,
             plan_date=date(2026, 9, 7),
+            today=date(2026, 8, 10),
             warnings=("所选日期不是工作日",),
         )
 
@@ -56,6 +65,7 @@ class FakeDesktopServices:
             classes=(ClassContext(id=1, name="向日葵班"),),
             selected_class_id=class_id,
             plan_date=plan_date,
+            today=date(2026, 8, 10),
         )
 
     def load_current_plan(self) -> dict[str, Any]:
@@ -63,6 +73,21 @@ class FakeDesktopServices:
 
     def save_current_plan(self, content: dict[str, Any]) -> None:
         self.saved_content = dict(content)
+
+    def load_settings(self) -> DesktopSettingsContext:
+        return DesktopSettingsContext(
+            theme=self.setup.get("theme", "system"),
+            semester_name=self.setup.get("semester_name", "2026 秋季学期"),
+            semester_start_date=date.fromisoformat(
+                self.setup.get("semester_start_date", "2026-09-01")
+            ),
+            semester_end_date=date.fromisoformat(self.setup.get("semester_end_date", "2027-01-31")),
+        )
+
+    def update_settings(self, values: dict[str, str]) -> DesktopSettingsContext:
+        self.settings_updates.append(dict(values))
+        self.setup.update(values)
+        return self.load_settings()
 
     def suggested_export_filename(self) -> str:
         return self.destination.name
@@ -189,6 +214,93 @@ def test_daily_plan_uses_week_workspace_and_gives_collective_activity_room(
     qtbot.mouseClick(_child(window, QPushButton, "next_week"), Qt.MouseButton.LeftButton)
     assert services.selected_contexts[-1] == (1, date(2026, 9, 14))
     assert _child(window, QDateEdit, "plan_date").date().toPython() == date(2026, 9, 14)
+
+    qtbot.mouseClick(_child(window, QPushButton, "today"), Qt.MouseButton.LeftButton)
+    assert services.selected_contexts[-1] == (1, date(2026, 8, 10))
+    assert _child(window, QDateEdit, "plan_date").date().toPython() == date(2026, 8, 10)
+
+
+def test_light_theme_overrides_dark_system_palette_for_readable_text(
+    qtbot: QtBot,
+    tmp_path: Path,
+) -> None:
+    app = QApplication.instance()
+    assert isinstance(app, QApplication)
+    original_palette = QPalette(app.palette())
+    dark_system_palette = QPalette(original_palette)
+    for role in (
+        QPalette.ColorRole.WindowText,
+        QPalette.ColorRole.ButtonText,
+        QPalette.ColorRole.Text,
+    ):
+        dark_system_palette.setColor(role, QColor("#ffffff"))
+    dark_system_palette.setColor(QPalette.ColorRole.Window, QColor("#181818"))
+    dark_system_palette.setColor(QPalette.ColorRole.Button, QColor("#181818"))
+    dark_system_palette.setColor(QPalette.ColorRole.Base, QColor("#181818"))
+    app.setPalette(dark_system_palette)
+    try:
+        services = FakeDesktopServices(tmp_path / "当天教案.docx")
+        services.setup = {"teacher_name": "测试教师"}
+        window = _build(services)
+        qtbot.addWidget(window)
+        window.show()
+        qtbot.waitExposed(window)
+
+        title = next(
+            label for label in window.findChildren(QLabel) if label.text() == "一日活动计划"
+        )
+        previous_week = _child(window, QPushButton, "previous_week")
+        assert title.palette().color(QPalette.ColorRole.WindowText) == QColor("#183033")
+        assert previous_week.palette().color(QPalette.ColorRole.ButtonText) == QColor("#183033")
+    finally:
+        app.setPalette(original_palette)
+
+
+def test_settings_page_changes_theme_and_current_semester_without_restarting(
+    qtbot: QtBot,
+    tmp_path: Path,
+) -> None:
+    services = FakeDesktopServices(tmp_path / "当天教案.docx")
+    services.setup = {
+        "teacher_name": "测试教师",
+        "theme": "light",
+        "semester_name": "2026 秋季学期",
+        "semester_start_date": "2026-09-01",
+        "semester_end_date": "2027-01-31",
+    }
+    window = _build(services)
+    qtbot.addWidget(window)
+    window.show()
+
+    qtbot.mouseClick(_child(window, QPushButton, "open_settings"), Qt.MouseButton.LeftButton)
+    assert _child(window, QStackedWidget, "main_stack").currentIndex() == 2
+    theme = _child(window, QComboBox, "theme_preference")
+    assert tuple(theme.itemText(index) for index in range(theme.count())) == (
+        "跟随系统",
+        "浅色",
+        "深色",
+    )
+    assert theme.currentData() == "light"
+    assert _child(window, QLineEdit, "semester_settings_name").text() == "2026 秋季学期"
+
+    theme.setCurrentIndex(theme.findData("dark"))
+    _child(window, QLineEdit, "semester_settings_name").setText("2027 春季学期")
+    _child(window, QDateEdit, "semester_settings_start_date").setDate(QDate(2027, 2, 15))
+    _child(window, QDateEdit, "semester_settings_end_date").setDate(QDate(2027, 7, 15))
+    qtbot.mouseClick(_child(window, QPushButton, "save_settings"), Qt.MouseButton.LeftButton)
+
+    assert services.settings_updates[-1] == {
+        "theme": "dark",
+        "semester_name": "2027 春季学期",
+        "semester_start_date": "2027-02-15",
+        "semester_end_date": "2027-07-15",
+    }
+    settings_page = _child(window, QWidget, "settings_page")
+    assert settings_page.palette().color(QPalette.ColorRole.Window) == QColor("#101718")
+    assert settings_page.palette().color(QPalette.ColorRole.WindowText) == QColor("#e7eeee")
+
+    qtbot.mouseClick(_child(window, QPushButton, "back_to_plan"), Qt.MouseButton.LeftButton)
+    assert _child(window, QStackedWidget, "main_stack").currentIndex() == 1
 
 
 def test_save_restart_and_native_destination_adapter_form_daily_word_loop(

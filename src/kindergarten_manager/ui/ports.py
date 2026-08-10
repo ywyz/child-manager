@@ -6,7 +6,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Protocol
 
-from kindergarten_manager.application.workspace import DailyPlanContext
+from kindergarten_manager.application.workspace import DailyPlanContext, DesktopSettingsContext
 
 
 class DesktopServices(Protocol):
@@ -19,6 +19,10 @@ class DesktopServices(Protocol):
     def load_current_plan(self) -> dict[str, Any]: ...
 
     def save_current_plan(self, content: dict[str, Any]) -> None: ...
+
+    def load_settings(self) -> DesktopSettingsContext: ...
+
+    def update_settings(self, values: dict[str, str]) -> DesktopSettingsContext: ...
 
     def suggested_export_filename(self) -> str: ...
 

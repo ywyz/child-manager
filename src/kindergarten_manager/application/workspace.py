@@ -37,6 +37,7 @@ class ClassContext:
 @dataclass(frozen=True, slots=True)
 class SetupContextRecord:
     teacher_name: str
+    theme: str
     semester_id: int
     semester_name: str
     semester_start_date: date
@@ -49,8 +50,17 @@ class DailyPlanContext:
     classes: tuple[ClassContext, ...]
     selected_class_id: int
     plan_date: date
+    today: date
     warnings: tuple[str, ...] = ()
     teaching_week_text: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class DesktopSettingsContext:
+    theme: str
+    semester_name: str
+    semester_start_date: date
+    semester_end_date: date
 
 
 @dataclass(frozen=True, slots=True)
@@ -143,6 +153,43 @@ class DailyPlanWorkspace:
         )
         return self.select_plan_context(selected_class_id, selected_date)
 
+    def load_settings(self) -> DesktopSettingsContext:
+        setup = self._required_setup_context()
+        return DesktopSettingsContext(
+            theme=setup.theme,
+            semester_name=setup.semester_name,
+            semester_start_date=setup.semester_start_date,
+            semester_end_date=setup.semester_end_date,
+        )
+
+    def update_settings(self, values: dict[str, str]) -> DesktopSettingsContext:
+        theme = values.get("theme", "")
+        if theme not in {"system", "light", "dark"}:
+            raise SettingsError("settings.invalid_theme", "主题设置无效")
+        try:
+            semester_start = date.fromisoformat(values.get("semester_start_date", ""))
+            semester_end = date.fromisoformat(values.get("semester_end_date", ""))
+        except ValueError as error:
+            raise SettingsError(
+                "settings.invalid_semester_dates",
+                "请选择有效的学期开始日期和结束日期",
+            ) from error
+        setup = self._required_setup_context()
+        semester = self._settings.create_or_update_semester(
+            semester_id=setup.semester_id,
+            name=values.get("semester_name", ""),
+            start_date=semester_start,
+            end_date=semester_end,
+            is_current=True,
+        )
+        profile = self._settings.save_profile(setup.teacher_name, theme)
+        return DesktopSettingsContext(
+            theme=profile.theme,
+            semester_name=semester.name,
+            semester_start_date=semester.start_date,
+            semester_end_date=semester.end_date,
+        )
+
     def select_plan_context(self, class_id: int, plan_date: date) -> DailyPlanContext:
         setup = self._required_setup_context()
         if class_id not in {item.id for item in setup.classes}:
@@ -161,6 +208,7 @@ class DailyPlanWorkspace:
             classes=setup.classes,
             selected_class_id=class_id,
             plan_date=plan_date,
+            today=self._today(),
             warnings=self._current_plan.warnings,
             teaching_week_text=calendar_week.text or "",
         )

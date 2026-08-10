@@ -326,7 +326,8 @@ class WorkspaceRepository:
             setup = (
                 connection.exec_driver_sql(
                     """
-                SELECT p.teacher_display_name, s.id AS semester_id, s.name AS semester_name,
+                SELECT p.teacher_display_name, p.theme,
+                       s.id AS semester_id, s.name AS semester_name,
                        s.start_date, s.end_date
                 FROM app_profile AS p
                 CROSS JOIN semesters AS s
@@ -352,6 +353,7 @@ class WorkspaceRepository:
             return None
         return SetupContextRecord(
             teacher_name=str(setup["teacher_display_name"]),
+            theme=str(setup["theme"]),
             semester_id=int(setup["semester_id"]),
             semester_name=str(setup["semester_name"]),
             semester_start_date=date.fromisoformat(str(setup["start_date"])),

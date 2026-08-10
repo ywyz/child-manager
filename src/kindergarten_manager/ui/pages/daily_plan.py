@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date, timedelta
 from typing import Any, Literal
@@ -283,14 +284,14 @@ class ProcessEditor(QWidget):
 
 
 class DailyPlanPage(QWidget):
-    def __init__(self, services: DesktopServices) -> None:
+    def __init__(self, services: DesktopServices, *, on_open_settings: Callable[[], None]) -> None:
         super().__init__()
         self.setObjectName("daily_plan_page")
         self._services = services
         self._content: dict[str, Any] = {}
         self._fields: dict[str, QWidget] = {}
         self._loading_context = False
-        self._home_date: date | None = None
+        self._today: date | None = None
         self._teaching_week_text = ""
         self._section_buttons: list[QPushButton] = []
         self._week_day_buttons: list[QPushButton] = []
@@ -332,6 +333,10 @@ class DailyPlanPage(QWidget):
         self.save_status.setObjectName("save_status")
         self.save_status.setProperty("tone", "status")
         context.addWidget(self.save_status)
+        settings = QPushButton("设置")
+        settings.setObjectName("open_settings")
+        settings.clicked.connect(on_open_settings)
+        context.addWidget(settings)
         save = QPushButton("保存教案")
         save.setObjectName("save_plan")
         save.clicked.connect(self.save)
@@ -359,9 +364,9 @@ class DailyPlanPage(QWidget):
         self.week_range.setProperty("role", "sectionTitle")
         week_controls.addWidget(self.week_range)
         week_controls.addStretch()
-        current = QPushButton("回到本周")
-        current.setObjectName("current_week")
-        current.clicked.connect(self._return_home_week)
+        current = QPushButton("回到今天")
+        current.setObjectName("today")
+        current.clicked.connect(self._return_today)
         week_controls.addWidget(current)
         following = QPushButton("下一周 →")
         following.setObjectName("next_week")
@@ -482,8 +487,7 @@ class DailyPlanPage(QWidget):
             self.plan_date.setDate(
                 QDate(context.plan_date.year, context.plan_date.month, context.plan_date.day)
             )
-            if self._home_date is None:
-                self._home_date = context.plan_date
+            self._today = context.today
             self._teaching_week_text = context.teaching_week_text
             self.calendar_warnings.setText("；".join(context.warnings))
             self.calendar_warnings.setVisible(bool(context.warnings))
@@ -566,11 +570,9 @@ class DailyPlanPage(QWidget):
     def _move_week(self, days: int) -> None:
         self.plan_date.setDate(self.plan_date.date().addDays(days))
 
-    def _return_home_week(self) -> None:
-        if self._home_date is not None:
-            self.plan_date.setDate(
-                QDate(self._home_date.year, self._home_date.month, self._home_date.day)
-            )
+    def _return_today(self) -> None:
+        if self._today is not None:
+            self.plan_date.setDate(QDate(self._today.year, self._today.month, self._today.day))
 
     def _select_weekday(self, weekday: int) -> None:
         selected = self.plan_date.date().toPython()

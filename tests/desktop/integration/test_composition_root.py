@@ -8,6 +8,7 @@ import pytest
 from docx import Document
 from PySide6.QtCore import QDate, Qt
 from PySide6.QtWidgets import (
+    QComboBox,
     QDateEdit,
     QFileDialog,
     QLineEdit,
@@ -77,6 +78,14 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
     _child(window, QDateEdit, "semester_end_date").setDate(QDate(2027, 1, 31))
     complete = _child(window, QPushButton, "complete_setup")
     qtbot.mouseClick(complete, Qt.MouseButton.LeftButton)
+    qtbot.mouseClick(_child(window, QPushButton, "open_settings"), Qt.MouseButton.LeftButton)
+    theme_preference = _child(window, QComboBox, "theme_preference")
+    theme_preference.setCurrentIndex(theme_preference.findData("dark"))
+    _child(window, QLineEdit, "semester_settings_name").setText("2026—2027 学年")
+    _child(window, QDateEdit, "semester_settings_start_date").setDate(QDate(2026, 8, 20))
+    _child(window, QDateEdit, "semester_settings_end_date").setDate(QDate(2027, 7, 15))
+    qtbot.mouseClick(_child(window, QPushButton, "save_settings"), Qt.MouseButton.LeftButton)
+    qtbot.mouseClick(_child(window, QPushButton, "back_to_plan"), Qt.MouseButton.LeftButton)
     theme = _child(window, QLineEdit, "group_activity_theme")
     assert isinstance(theme, QLineEdit)
     theme.setText("寻找秋天")
@@ -105,6 +114,13 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
     reopened_theme = _child(reopened, QLineEdit, "group_activity_theme")
     assert isinstance(reopened_theme, QLineEdit)
     assert reopened_theme.text() == "寻找秋天"
+    qtbot.mouseClick(_child(reopened, QPushButton, "open_settings"), Qt.MouseButton.LeftButton)
+    reopened_preference = _child(reopened, QComboBox, "theme_preference")
+    assert reopened_preference.currentData() == "dark"
+    assert _child(reopened, QLineEdit, "semester_settings_name").text() == "2026—2027 学年"
+    assert _child(reopened, QDateEdit, "semester_settings_start_date").date() == QDate(2026, 8, 20)
+    assert _child(reopened, QDateEdit, "semester_settings_end_date").date() == QDate(2027, 7, 15)
+    qtbot.mouseClick(_child(reopened, QPushButton, "back_to_plan"), Qt.MouseButton.LeftButton)
 
     destination = tmp_path / "当天教案.docx"
 
@@ -123,5 +139,5 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
     )
     assert destination.is_file()
     exported = Document(str(destination))
-    assert exported.paragraphs[0].text == "星河幼儿园一日活动计划（2026.9-2027.1）"
+    assert exported.paragraphs[0].text == "星河幼儿园一日活动计划（2026.8-2027.7）"
     assert exported.tables[0].cell(6, 1).text == "活动主题：《寻找秋天》"
