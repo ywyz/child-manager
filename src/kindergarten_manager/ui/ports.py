@@ -1,0 +1,29 @@
+"""Qt 页面可调用的应用门面。"""
+
+from __future__ import annotations
+
+from datetime import date
+from pathlib import Path
+from typing import Any, Protocol
+
+from kindergarten_manager.application.workspace import DailyPlanContext, DesktopSettingsContext
+
+
+class DesktopServices(Protocol):
+    def complete_setup(self, values: dict[str, str]) -> None: ...
+
+    def load_plan_context(self) -> DailyPlanContext: ...
+
+    def select_plan_context(self, class_id: int, plan_date: date) -> DailyPlanContext: ...
+
+    def load_current_plan(self) -> dict[str, Any]: ...
+
+    def save_current_plan(self, content: dict[str, Any]) -> None: ...
+
+    def load_settings(self) -> DesktopSettingsContext: ...
+
+    def update_settings(self, values: dict[str, str]) -> DesktopSettingsContext: ...
+
+    def suggested_export_filename(self) -> str: ...
+
+    def export_current_day(self, destination: Path) -> None: ...

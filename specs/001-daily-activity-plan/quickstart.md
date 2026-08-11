@@ -2,7 +2,7 @@
 
 **Feature**: `001-daily-activity-plan`
 **Date**: 2026-07-12
-**Updated**: 2026-08-01
+**Updated**: 2026-08-02
 **Current repository state**: M4 与 M5 均为 `complete`；最终 M4 Review SHA 为
 `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562`，已正常 merge 到
 `main@b7676c27d07adc5eca1f0c397217780367481e9c`。`docs` 是当前文档、规格、OpenAPI 和模板的单一事实来源。
@@ -11,9 +11,15 @@ US4 T087–T110 已完成；US5 T111–T126 已完成，dev@32d3c102152848f7488d
 设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed，恶意样本临时残留为 0，Graphify 诊断通过。
 固定 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
 `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS；
-最终稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`；Quality run `30631050997`
-attempt 2 在同一 headSha 全部通过。M7 为 `ready`。下列命令覆盖 M1～M8 验收合同，
-已完成的用户故事步骤仍需以固定证据复核。
+M6 稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`；Quality run `30631050997`
+attempt 2 在同一 headSha 全部通过。M7
+[Issue #12](https://github.com/ywyz/child-manager/issues/12) 已完成 T127–T141；固定
+`docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，最终
+`dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 与
+`main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 的 Quality run `30697998054` /
+`30698318868` 均在对应 headSha 全部通过，双轴 Review、真实 DOCX 验收、模板与 Graphify
+门禁均通过。M7 为 `complete`，M8 为 `ready`；T142–T169 尚未开始。下列命令覆盖 M1～M8
+验收合同，已完成的用户故事步骤仍需以固定证据复核。
 
 ## 1. 前提与反目标
 

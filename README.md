@@ -1,5 +1,15 @@
 # Child Manager 幼儿园教育管理系统
 
+> **产品方向重置中（2026-08-08）**：维护者已确认将本项目重置为 Windows 首发、PySide6、
+> SQLite 本地优先的“幼儿园管理助手”。首期只交付一日活动计划、可选 AI、Word 导出和
+> 本地/远程加密备份，并按“手工 MVP -> 可选 AI -> READ/DRAFT Agent -> 备份恢复 -> 确认
+> WRITE”引入受控单 Agent；Level 3 Workflow 继续延后。下方 M1-M7 与 Cloud/B/S 架构内容是
+> 已完成历史基线，不再代表新产品的目标架构。新事实来源见
+> [`ADR-0012`](docs/ADR/ADR-0012-local-first-desktop-product-reset.md) 和
+> [`ADR-0013`](docs/ADR/ADR-0013-controlled-agent-runtime.md)、
+> [`Agent Runtime 契约`](specs/003-desktop-local-first/contracts/agent-runtime.md) 与
+> [`specs/003-desktop-local-first`](specs/003-desktop-local-first/spec.md)。
+
 Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统。项目以模块化、可扩展和可审计为基本原则，首期交付在线“一日活动计划”管理系统，后续逐步接入游戏观察记录、一对一倾听等子系统。
 
 当前项目服务于单所幼儿园，但核心业务数据保留 `kindergarten_id`，为未来多园部署和数据隔离预留扩展边界。
@@ -13,7 +23,8 @@ Child Manager 是面向幼儿园日常教育工作的 Cloud 教育管理系统�
 负责的唯一实现与集成分支。业务实现开始前必须读取并固定引用已确认的 `docs` 提交。
 
 项目已完成 M1 工程骨架、M2 认证授权、M3 首期必要设置、M3A 密码与 TOTP 备用登录、
-M5 无 AI 教案手工闭环，以及 M4 AI 模型与提示词基础验收。
+M5 无 AI 教案手工闭环、M4 AI 模型与提示词基础验收、M6 AI 异步生成与人工采用，以及
+M7 固定 Word 导出与历史下载。
 M3 [Issue #7](https://github.com/ywyz/child-manager/issues/7) 固定 `docs@bd98a1a`，M3A
 [Issue #8](https://github.com/ywyz/child-manager/issues/8) 固定 `docs@2f7894c`；两者均已按
 `completed` 关闭。`dev@6a9e269` 在本地 310 项完整测试、独立 Review 和同提交远端 Quality
@@ -37,10 +48,18 @@ headSha 通过完整检查，设置页专项为 49 项收集、49 项通过，US
 诊断无缺失、悬空、自环、重复或折叠边。T126 已勾选；固定
 `main@b7676c27d07adc5eca1f0c397217780367481e9c` →
 `dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为
-PASS；dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`。状态文档与语义
-图谱收敛后的最终基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run
-`30631050997` attempt 2 在同一 headSha 全部通过。M6 完成证据已回填并关闭 Issue #11；
-M7 为 `ready`。
+PASS；dev 先正常 merge 到 `main@5cd6186a5fc6d291e0d1f0220f2f989d8c77b77f`。M6 状态文档与
+语义图谱收敛后的稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run
+`30631050997` attempt 2 在同一 headSha 全部通过。M6 完成证据已回填并关闭 Issue #11。
+
+M7 [Issue #12](https://github.com/ywyz/child-manager/issues/12) 固定
+`docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，最终
+`dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 的 Quality run `30697998054` 在同一
+headSha 全部通过；Standards/Spec 双轴 Review、729 项完整测试、真实 Chromium + PostgreSQL +
+实际 Word Worker/DOCX 验收、模板哈希与 Graphify 诊断均通过。该树已正常集成为
+`main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244`，其 Quality run `30698318868` 在同一
+headSha 全部通过；Issue #12 已按 `completed` 关闭。M7 为 `complete`，M8 为 `ready`；
+T142–T169 尚未开始。
 
 共享实施顺序、阶段依赖和完成门禁见 [`docs/ROADMAP.md`](docs/ROADMAP.md)。
 

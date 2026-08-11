@@ -1,6 +1,6 @@
 # Implementation Plan: 首期一日活动计划完整闭环
 
-**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-07-31 | **Spec**: [spec.md](./spec.md)
+**Branch**: `docs`（共享规格）；`dev`（唯一实现） | **Date**: 2026-07-12 | **Updated**: 2026-08-02 | **Spec**: [spec.md](./spec.md)
 
 **Input**: `specs/001-daily-activity-plan/spec.md`；范围为 Roadmap M1–M8，M9 生产部署复审排除。
 
@@ -52,22 +52,22 @@ WCAG 2.2 AA 可验证要求
 
 ## Constitution Check
 
-*GATE: M0、M1、M2、M3、M3A、M5 与 M4 为 `complete`；历史双实现证据保留。自 2026-07-21 起采用
-`main/docs/dev` 单实现流程。M4 #10 已完成 T062–T086；M6 T087–T126 为 `complete`，
-US4 T087–T110 已完成，US5 T111–T126 已完成，T126 独立验收已完成；固定
-`main@b7676c27d07adc5eca1f0c397217780367481e9c` →
-`dev@d654b704d1bd0653f7d0209ac58665090a934311` 的 Standards/Spec 双轴 Review 均为 PASS，
-最终稳定基线为 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，其 Quality run
-`30631050997` attempt 2 在同一 headSha 全部通过；M7 为 `ready`。*
+*GATE: M0、M1、M2、M3、M3A、M5、M4、M6 与 M7 为 `complete`；历史双实现证据保留。
+自 2026-07-21 起采用 `main/docs/dev` 单实现流程。M7 #12 已完成 T127–T141；固定
+`docs@47eae46c6efec2e7596063bea2fc3352c2ece189`，最终
+`dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 与
+`main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 的 Quality run 均在对应 headSha 全部通过；
+Standards/Spec 双轴 Review、真实 DOCX 验收、模板哈希与 Graphify 诊断均通过。M8 为
+`ready`，T142–T169 尚未开始。*
 
 | 宪章门禁 | 内部设计检查 | 当前 Pre-M1 实现门禁 | 计划证据 |
 | --- | --- | --- | --- |
 | I. 事实来源与范围忠实 | PASS | **PASS（M0）** | canonical 文档、历史清理与最终共享基线均已验证 |
 | II. 服务边界与单向依赖 | PASS | **PASS（M1）** | 历史 Codex、Trae 实现均通过 BFF/API/Worker 边界与依赖方向验证；当前 `dev` 仍须维持该门禁 |
-| III. 园所隔离与服务端授权 | PASS | **PASS（M2/M3/M4/M5/M6）** | 身份、会话、设置、教案、AI/任务和集体活动来源 Repository/API 园所隔离均已验证 |
-| IV. 权威状态、事务与可恢复性 | PASS | **PASS（M4/M6）** | PostgreSQL 权威任务、幂等、租约、心跳、恢复扫描、AI 结果维护和脱敏失败审计均已验证；后续里程碑不得回退该边界 |
-| V. 教师控制、AI 与 Word 保真 | PASS | **PASS（M4 AI 基础、M5 手工教师控制、M6 AI 采用与来源安全）/ PENDING（M7 Word）** | 模型/提示词安全基础、六栏目手工编辑、AI 生成采用、DOCX 资源限制与教师控制已验证；模板副本/哈希和红字边界按 M7 验收 |
-| VI. 可执行验证与真实证据 | PASS | **PASS（M4/M6）** | M4/M6 双轴 Review、`dev`/`main` Quality Gates 与 Graphify 完整性诊断均有固定 SHA 证据；后续用户故事仍须重新验收 |
+| III. 园所隔离与服务端授权 | PASS | **PASS（M2/M3/M4/M5/M6/M7）** | 身份、会话、设置、教案、AI/任务、集体活动来源与导出 Repository/API 园所隔离均已验证 |
+| IV. 权威状态、事务与可恢复性 | PASS | **PASS（M4/M6/M7）** | PostgreSQL 权威任务、幂等、租约、心跳、恢复扫描、AI 结果维护、不可变导出快照与文件补偿均已验证；后续里程碑不得回退该边界 |
+| V. 教师控制、AI 与 Word 保真 | PASS | **PASS（M4 AI 基础、M5 手工教师控制、M6 AI 采用与来源安全、M7 Word）** | 模型/提示词安全基础、六栏目手工编辑、AI 生成采用、DOCX 资源限制、模板副本/哈希、红字边界与教师控制均已验证 |
+| VI. 可执行验证与真实证据 | PASS | **PASS（M4/M6/M7）** | M4/M6/M7 双轴 Review、`dev`/`main` Quality Gates、真实浏览器验收与 Graphify 完整性诊断均有固定 SHA 证据；M8 仍须重新执行汇总验收 |
 
 **前置同步与授权处理**: T001～T003 以及 Codex/Trae 的 M1 T004～T020 保留为历史记录。自 2026-07-21 起，新的实现必须由 Issue 固定引用已确认的 `docs` 提交，并只在 `dev` 执行；历史验收不自动替代当前文档基线的验证。
 
@@ -296,9 +296,9 @@ rg -n "NEEDS CLARIFICATION|\[FEATURE\]|\[DATE\]|\[###" specs/001-daily-activity-
 
 ### Quickstart 验收合同
 
-- 当前 `main@b7676c27d07adc5eca1f0c397217780367481e9c` 已包含 M1–M3A、M5 与 M4，
-  `dev@8695b04161ea96bddc31c3bfeab2e0957ef68562` 是 M4 最终 Review SHA；quickstart
-  同时保留后续故事的可执行验收合同，尚未实施的 T111 以后步骤不得声称已经通过。
+- 当前 `main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 已包含 M1–M3A、M5、M4、M6 与
+  M7，`dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 是 M7 最终实现 SHA；quickstart
+  同时保留后续故事的可执行验收合同，尚未实施的 T142 以后步骤不得声称已经通过。
 - M1 后使用 API、Worker、Web 三个可执行入口；T032 完成后再使用已冻结的初始化与最后管理员
   恢复子命令；后者只接受恢复请求 ID，交互匹配初始化时保存的两项预登记引用，Web/API 对
   最后管理员审批只返回 `identity.last_admin_recovery_requires_cli`；
@@ -318,7 +318,12 @@ T046～T061 与 M4 T062～T086 均已完成。M4 [Issue #10](https://github.com/
 设置页专项 49 passed，US5 专项 56 passed，完整 pytest 666 passed；恶意样本临时残留为 0，Graphify 诊断通过，T126 已完成。
 固定 `main..dev` Standards/Spec 双轴 Review 均为 PASS；最终稳定基线为
 `main@beb8784cd5dd5cb2f1ddd39a46f7d0bff0ab3098`，Quality run `30631050997`
-attempt 2 在同一 headSha 全部通过。M7 为 `ready`。
+attempt 2 在同一 headSha 全部通过。M7 [Issue #12](https://github.com/ywyz/child-manager/issues/12)
+覆盖 T127–T141，固定 `docs@47eae46c6efec2e7596063bea2fc3352c2ece189`；最终
+`dev@ba9251d2ee74c8959ea53e888cd5a030571fdc69` 与
+`main@70ba267fab3a3a0e5c43dc25cb510b4acdd6b244` 的 Quality run `30697998054` /
+`30698318868` 均在对应 headSha 全部通过，双轴 Review、真实 DOCX 验收、模板与 Graphify
+门禁均通过。M7 为 `complete`，M8 为 `ready`；T142–T169 尚未开始。
 
 ## Phase 2: Task Generation Strategy
 
@@ -334,7 +339,7 @@ US1–US7 建立可独立验收的纵向切片：
 7. **US4**: 可靠异步任务、一键四栏、独立预览/采用和显式反思。
 8. **US5**: 安全导入、集体拆分和新增环节部分成功。
 9. **US6**: 固定 Word、独立导出历史和授权下载。
-9. **US7**: 审计查询与故障边界降级；性能、安全汇总、可访问性和完整验收由最终 Polish
+10. **US7**: 审计查询与故障边界降级；性能、安全汇总、可访问性和完整验收由最终 Polish
    跨故事阶段完成，不在 US7 checkpoint 提前标记通过。
 
 每个故事先写失败的单元/API/Repository/专项测试，再实现最小通过行为；常规测试不访问
