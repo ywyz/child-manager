@@ -317,15 +317,20 @@ failed -> creating            # 新 attempt/新 backup_id，不改写已完成�
 
 ## 6. 迁移与完整性门禁
 
-1. `0001_desktop_initial` 建立 Agent 写入审计之外的桌面首期表、命名约束、索引和版本不可变
-   触发器；Slice 2B 不增加 Agent 状态表。
-2. Slice 3 备份恢复完成后，Agent 写入阶段用独立 `0002_agent_action_audit` 增加最小审计表及
-   UPDATE/DELETE 拒绝触发器；迁移前必须先走已验收的 `pre_migration` 备份。
-3. 后续 revision 在 SQLite 上使用 Alembic batch mode；不得依赖 PostgreSQL 方言或旧 revision。
-4. 每个 revision 测试空库到 head、上一发行 head 到当前 head、失败回滚/备份保留，以及：
+1. `0001_desktop_initial` 只建立 Slice 1 所需的 4.1–4.8 表、命名约束、索引和版本不可变
+   触发器；已经验收或投入使用的 `0001` 数据库不得通过改写该 revision 追加表。
+2. Slice 2A 使用独立 `0002_desktop_ai`，从 `0001_desktop_initial` 增加 4.9–4.11 的
+   `ai_configuration`、`prompt_overrides` 和 `ai_previews` 及其约束/索引；API Key 和运行中
+   任务仍不得落库。`0001 -> 0002` 前必须生成并验证最小本地 `pre_migration` 保护副本，失败
+   即停止升级；完整每日/远程备份与恢复仍留在 Slice 3。
+3. Slice 2B 不增加 Agent 状态表。Slice 3 备份恢复完成后，Agent 写入阶段使用独立
+   `0003_agent_action_audit` 增加最小审计表及 UPDATE/DELETE 拒绝触发器；迁移前必须先走已
+   验收的 `pre_migration` 备份。
+4. 后续 revision 在 SQLite 上使用 Alembic batch mode；不得依赖 PostgreSQL 方言或旧 revision。
+5. 每个 revision 测试空库到 head、上一发行 head 到当前 head、失败回滚/备份保留，以及：
    `foreign_key_check`、`integrity_check`、表/索引/触发器清单和关键行数。
-5. Schema 升级前一定生成并验证 `pre_migration` 备份。备份失败即不迁移。
-5. 比应用支持版本更新的数据库只读拒绝打开，不允许自动降级。
+6. Schema 升级前一定生成并验证 `pre_migration` 备份。备份失败即不迁移。
+7. 比应用支持版本更新的数据库只读拒绝打开，不允许自动降级。
 
 ## 7. 明确不迁移的旧模型
 

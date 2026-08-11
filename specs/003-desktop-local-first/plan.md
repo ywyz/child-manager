@@ -197,8 +197,10 @@ Qt Widgets -> application services -> domain
 
 ### 3. SQLite、事务与 Alembic
 
-- 新数据库使用独立迁移链 `0001_desktop_initial`，不继承旧 `0001`–`0010` PostgreSQL
-  revision，也不迁移旧数据。
+- 新数据库使用独立迁移链，不继承旧 `0001`–`0010` PostgreSQL revision，也不迁移旧数据：
+  Slice 1 固定为 `0001_desktop_initial`；Slice 2A 用 `0002_desktop_ai` 从已存在的 `0001`
+  数据库增加非敏感 AI 配置、提示词覆盖和已校验预览；Slice 3 通过后，Agent WRITE 再用
+  `0003_agent_action_audit` 增加最小不可变审计。不得改写已发布 revision 来追加后续表。
 - 应用首次启动和每次升级只调用 Alembic `upgrade head`；禁止 `create_all()` 修改正式库。
 - `env.py` 启用命名约定和 `render_as_batch=True`。迁移必须显式检查 SQLite 上的外键、唯一
   约束、CHECK 和索引，不信任未经审阅的 autogenerate 输出。
@@ -300,8 +302,9 @@ GenericDataLocation/cn.kindergartenmanager.desktop/
 2. **Slice 1 / MVP：首次启动到当天 Word**：路径、SQLite/Alembic、首次设置、当前教案编辑、
    日期软提示和单日原子导出。验证：断网 Windows 完成首次设置和第一份教案，
    重启后内容仍在且当天 Word 保持模板哈希与样式；历史、归档、批量 Word 暂不计入。
-3. **Slice 2A / P2 现有可选 AI**：凭据、一个模型、提示词覆盖、Qt 后台单任务、结构校验、
-   预览有效性和采用前快照。验证：全替身的成功/重试/失败/取消/过期矩阵。
+3. **Slice 2A / P2 现有可选 AI**：`0002_desktop_ai` 与升级前最小保护副本、凭据、一个模型、
+   提示词覆盖、Qt 后台单任务、结构校验、预览有效性和采用前快照。验证：`0001 -> 0002`
+   保护性升级，以及全替身的成功/重试/失败/取消/过期矩阵。
 4. **Slice 2B / Agent Foundation**：单 `AgentRuntime`、最小 `AgentContext`、Provider port、Tool
    registry 与 READ/DRAFT Tools。验证：Scripted Provider 的 Tool-only、越权拒绝、零写入、
    无长期业务记忆、单 turn 和取消矩阵；本切片不存在 WRITE Tool。

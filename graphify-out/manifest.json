@@ -125,7 +125,7 @@
     "semantic_hash": "e14f8f495d74efcb1c5af2010327223c"
   },
   ".specify/feature.json": {
-    "mtime": 1786372974.1399708,
+    "mtime": 1786419847.9429913,
     "ast_hash": "170a63fea9c2601de3f069ac4b47e462",
     "semantic_hash": "170a63fea9c2601de3f069ac4b47e462"
   },
@@ -500,19 +500,19 @@
     "semantic_hash": "29e1a5ba413fab8173d6076630d7c4ea"
   },
   "specs/003-desktop-local-first/data-model.md": {
-    "mtime": 1786257771.1468003,
-    "ast_hash": "027dc15b5ebe37897ff15435c115ef6b",
-    "semantic_hash": "027dc15b5ebe37897ff15435c115ef6b"
+    "mtime": 1786419776.0899956,
+    "ast_hash": "cff8a37aa3ca6eb13c257ad862ac11fc",
+    "semantic_hash": "cff8a37aa3ca6eb13c257ad862ac11fc"
   },
   "specs/003-desktop-local-first/plan.md": {
-    "mtime": 1786372911.1949744,
-    "ast_hash": "7e44fb0f0a9ea86c39d7857b45161d9f",
-    "semantic_hash": "7e44fb0f0a9ea86c39d7857b45161d9f"
+    "mtime": 1786419883.6429892,
+    "ast_hash": "576773abc13047aebc718cc8032c8474",
+    "semantic_hash": "576773abc13047aebc718cc8032c8474"
   },
   "specs/003-desktop-local-first/quickstart.md": {
-    "mtime": 1786372943.3889725,
-    "ast_hash": "000b5e5a162ff58cd81f3e04d73c1811",
-    "semantic_hash": "000b5e5a162ff58cd81f3e04d73c1811"
+    "mtime": 1786419776.0939956,
+    "ast_hash": "1a16adb878453e86a638682f0e8a87c8",
+    "semantic_hash": "1a16adb878453e86a638682f0e8a87c8"
   },
   "specs/003-desktop-local-first/research.md": {
     "mtime": 1786257771.1558003,
@@ -525,9 +525,9 @@
     "semantic_hash": "ccfad5bc23bcd90d71a8b55e3079bc58"
   },
   "specs/003-desktop-local-first/tasks.md": {
-    "mtime": 1786372878.5379765,
-    "ast_hash": "fbd8cd009decbcb9bcbb24cc78ae4d0a",
-    "semantic_hash": "fbd8cd009decbcb9bcbb24cc78ae4d0a"
+    "mtime": 1786419805.6059937,
+    "ast_hash": "30da1e9582d8f0ea648ce9705341cc23",
+    "semantic_hash": "30da1e9582d8f0ea648ce9705341cc23"
   },
   "docs/design/assets/desktop-prototype/desktop-prototype-a-classic.png": {
     "mtime": 1786257771.1648004,

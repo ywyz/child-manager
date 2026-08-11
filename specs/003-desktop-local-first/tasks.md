@@ -108,11 +108,11 @@ RED，再实施并运行该切片自有门禁。导入、fixture、数据库配�
 - [ ] T041 [P] [US2] 实现 `src/kindergarten_manager/domain/ai.py` 的结果模型、Schema registry、规范 hash 和过期预览判定，只提取旧纯行为而不复制 Job/tenant 状态
 - [ ] T042 [P] [US2] 实现 `src/kindergarten_manager/infrastructure/credentials.py` 的 keyring 窄边界，确保秘密不进入 DTO repr、SQLite、日志或异常
 - [ ] T043 [US2] 实现 `src/kindergarten_manager/infrastructure/ai/client.py` 与只读默认提示词 `src/kindergarten_manager/infrastructure/ai/prompts/`，满足 T036 URL/重试规则
-- [ ] T044 [US2] 扩展 `src/kindergarten_manager/infrastructure/database/repositories.py` 支持单例 AI 非敏感配置、提示词覆盖和已校验 preview，运行中任务不得落库
+- [ ] T044 [US2] 创建 `src/kindergarten_manager/infrastructure/database/migrations/versions/0002_desktop_ai.py`，扩展同目录 `models.py`、`repositories.py` 和 `upgrade.py`，支持单例 AI 非敏感配置、提示词覆盖、已校验 preview 及升级前最小本地 `pre_migration` 保护副本；在 `tests/desktop/database/test_migrations.py` 覆盖空库到 head、`0001 -> 0002`、命名约束/索引、完整性检查，以及保护副本成功和失败即停止，运行中任务与 Key 不得落库
 - [ ] T045 [US2] 实现 `src/kindergarten_manager/application/ai_generation.py` 的冻结输入、Qt 后台单任务、逐栏结果、取消、预览采用/拒绝与事务式采用前快照
 - [ ] T046 [US2] 实现 `src/kindergarten_manager/ui/pages/ai_settings.py` 与 `src/kindergarten_manager/ui/widgets/ai_preview.py`，只暴露一个当前模型和可恢复默认提示词
 - [ ] T047 [US2] 在 `src/kindergarten_manager/app.py` 装配凭据、AI client、Coordinator 和退出取消顺序，不引入 Redis、Dramatiq、recovery scan 或独立 Worker
-- [ ] T048 [US2] 运行 T035–T039、Slice 1 回归、Ruff/Pyright，并在 `docs/implementation-evidence/desktop-slice-2a-acceptance.md` 保存完全使用替身的成功/重试/失败/取消/过期矩阵证据
+- [ ] T048 [US2] 运行 T035–T039、迁移专项、Slice 1 回归、Ruff/Pyright，并在 `docs/implementation-evidence/desktop-slice-2a-acceptance.md` 保存完全使用替身的成功/重试/失败/取消/过期矩阵，以及 `0001 -> 0002_desktop_ai` 保护性备份与升级证据
 
 **Checkpoint**: AI 是可拆除的可选增强；原正文只有教师采用有效预览时才改变。
 
@@ -175,7 +175,7 @@ audit、备份和日志中没有 Agent 状态或秘密。
 - [ ] T072 [P] [US3] 实现 `src/kindergarten_manager/infrastructure/backups/webdav.py` 的不可变加密对象操作与脱敏错误
 - [ ] T073 [P] [US3] 实现 `src/kindergarten_manager/infrastructure/backups/s3.py` 的 boto3 SigV4 对象操作，不自行实现签名且不把 multipart ETag 当 SHA-256
 - [ ] T074 [US3] 实现 `src/kindergarten_manager/application/backups.py` 的 daily/manual/轮换、上传、列举、下载和恢复事务，恢复前停止新任务并关闭全部 Session/engine
-- [ ] T075 [US3] 在 `src/kindergarten_manager/application/bootstrap.py` 接入“当日本地备份”和“迁移前备份失败即停止升级”，只有成功后更新 last backup date
+- [ ] T075 [US3] 在 `src/kindergarten_manager/application/bootstrap.py` 接入“当日本地备份”，并把 T044 的最小迁移前保护副本收敛到完整、已验收的备份服务；继续保持迁移前备份失败即停止升级，只有成功后更新 last backup date
 - [ ] T076 [US3] 实现 `src/kindergarten_manager/ui/pages/backups.py` 的本地/远程清单、具体版本选择、进度/取消、口令输入、恢复确认和失败重试
 - [ ] T077 [US3] 在 `src/kindergarten_manager/app.py` 装配备份适配器并保证远程操作只经 Qt runtime 后台运行，普通数据库事务不等待远程网络
 - [ ] T078 [US3] 运行 T061–T066、Slice 1/2A/2B 回归、Ruff/Pyright，并在 `docs/implementation-evidence/desktop-slice-3-acceptance.md` 记录篡改/错口令/远端中断/跨新安装恢复及远程失败下 100 次本地保存证据
@@ -196,7 +196,7 @@ audit、备份和日志中没有 Agent 状态或秘密。
 ### Tests for Agent WRITE（必须先 RED）
 
 - [ ] T079 [P] [US2] 在 `tests/desktop/contracts/test_agent_patch_confirmation.py` 覆盖规范 `PlanPatch`、关闭字段路径、稳定 hash、字段级 before/after，以及 Confirmation 绑定 patch/target/revision/session/turn/expiry/nonce
-- [ ] T080 [P] [US2] 在 `tests/desktop/database/test_agent_action_audit_migration.py` 覆盖 `0001` -> `0002_agent_action_audit`、命名 FK/unique/check、UPDATE/DELETE 拒绝、无正文列和迁移前备份失败即停止
+- [ ] T080 [P] [US2] 在 `tests/desktop/database/test_agent_action_audit_migration.py` 覆盖 `0002_desktop_ai` -> `0003_agent_action_audit`、命名 FK/unique/check、UPDATE/DELETE 拒绝、无正文列和迁移前备份失败即停止
 - [ ] T081 [P] [US2] 在 `tests/desktop/application/test_agent_confirmed_write.py` 覆盖未确认/伪造/错 hash/错目标/错 turn/过期/复用/stale 零写入、有效确认精确字段提交和未知 commit action ID 对账不重放
 - [ ] T082 [P] [US2] 在 `tests/desktop/contracts/test_agent_write_privacy.py` 覆盖 audit/SQLite/备份/log/repr 不含 Prompt、Provider 原文、Context、Tool 输入输出、before/after 正文、Key、口令或绝对路径
 - [ ] T083 [P] [US2] 在 `tests/desktop/ui/test_agent_confirmation_flow.py` 覆盖完整差异/警告/快照影响展示、明确确认、拒绝、修改后重新生成、stale 后重新确认和无“总是允许”
@@ -205,7 +205,7 @@ audit、备份和日志中没有 Agent 状态或秘密。
 ### Implementation for Agent WRITE
 
 - [ ] T085 [P] [US2] 扩展 `src/kindergarten_manager/application/agent_runtime.py` 实现规范 Patch builder、一次性内存 Confirmation、过期/Context 失效和双重验证，不把确认授权给 Provider
-- [ ] T086 [US2] 创建 `0002_agent_action_audit` migration 与不可变模型，只保存 action/tool/target/patch/confirmation/revision/outcome/time；先调用已验收 pre-migration 备份
+- [ ] T086 [US2] 创建 `0003_agent_action_audit` migration 与不可变模型，只保存 action/tool/target/patch/confirmation/revision/outcome/time；先调用已验收 pre-migration 备份
 - [ ] T087 [US2] 在 `src/kindergarten_manager/application/agent_tools.py` 注册仅限教案白名单字段的 WRITE Tool，在一个短事务中重读、校验、保存操作前版本、应用完整 Patch、递增 revision 和写 audit，任一步失败全部回滚
 - [ ] T088 [US2] 扩展 `AgentRuntime.confirm/reject`，使 confirm 创建新的本地 WRITE operation，WRITE 永不自动重试；取消、迟到、未知 commit 只对账不重放
 - [ ] T089 [US2] 扩展 `src/kindergarten_manager/ui/widgets/agent_draft.py` 显示逐字段差异和一次性确认/拒绝，不提供批量长期授权；确认后 Context/Patch 立即失效
@@ -340,7 +340,7 @@ Design confirmed + Issue + dev authorization
   不依赖备份，也不得提前实现任何 WRITE/Confirmation 数据路径。
 - **Slice 3** 依赖 SQLite/Bootstrap/runtime，但远程失败不得成为 US1/US2 数据事务依赖；它是
   Agent 写入 migration 和正式 WRITE 的前置门禁。
-- **Agent WRITE** 依赖 Slice 2B 与 Slice 3；`0002_agent_action_audit` 必须先生成 pre-migration
+- **Agent WRITE** 依赖 Slice 2B 与 Slice 3；`0003_agent_action_audit` 必须先生成 pre-migration
   备份，WRITE 只消费已确认 Patch，不依赖 Provider 网络。
 - **Slice 4** 必须先通过 T091 spike，并复用 Slice 1 的单日 snapshot/render core。
 - **US1 remainder** 排在固定 Agent 主序列和批量 Word 之后，只补历史、归档、查找和周导航。
@@ -349,8 +349,9 @@ Design confirmed + Issue + dev authorization
 ### Task-Level Gates
 
 - 每个切片先写该切片 tests，再执行 `pytest --collect-only`，确认环境干净后取得业务 RED。
-- 数据模型在 T022/T023 建立 `0001_desktop_initial`；唯一计划中的后续首期 revision 是 T086 的
-  `0002_agent_action_audit`，且必须在 Slice 3 后执行。其他切片不得另起冲突基线。
+- 数据模型在 T022/T023 建立 `0001_desktop_initial`；后续首期 revision 固定为 T044 的
+  `0002_desktop_ai` 和 T086 的 `0003_agent_action_audit`，后者必须在 Slice 3 后执行。其他
+  切片不得改写既有 revision 或另起冲突基线。
 - 同一文件上的任务按 ID 串行；只有标记 `[P]` 且文件/行为均独立的任务可以并行。
 - 每个 Checkpoint 都要重跑此前切片回归；后续测试失败不得计入当前切片未完成。
 - T124 之前仍须逐门授权 commit、push、Review 和 `main` 集成；任务勾选本身不授权 Git 操作。
