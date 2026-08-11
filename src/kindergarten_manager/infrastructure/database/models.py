@@ -1,4 +1,4 @@
-"""Slice 1 SQLite 表元数据；Schema 只由独立 Alembic 链创建。"""
+"""桌面 SQLite 表元数据；Schema 只由独立 Alembic 链创建。"""
 
 from __future__ import annotations
 
@@ -200,4 +200,99 @@ calendar_overrides = sa.Table(
     sa.Column("updated_at_utc_ms", sa.Integer, nullable=False),
     sa.CheckConstraint("status IN ('workday', 'non_workday')", name="status"),
     sa.CheckConstraint("note IS NULL OR length(trim(note)) <= 200", name="note"),
+)
+
+ai_configuration = sa.Table(
+    "ai_configuration",
+    metadata,
+    sa.Column("id", sa.Integer, primary_key=True),
+    sa.Column("base_url", sa.Text),
+    sa.Column("model_name", sa.Text),
+    sa.Column("credential_configured", sa.Integer, nullable=False),
+    sa.Column("enabled", sa.Integer, nullable=False),
+    sa.Column("created_at_utc_ms", sa.Integer, nullable=False),
+    sa.Column("updated_at_utc_ms", sa.Integer, nullable=False),
+    sa.CheckConstraint("id = 1", name="singleton"),
+    sa.CheckConstraint(
+        "base_url IS NULL OR length(trim(base_url)) BETWEEN 1 AND 2048",
+        name="base_url",
+    ),
+    sa.CheckConstraint(
+        "model_name IS NULL OR length(trim(model_name)) BETWEEN 1 AND 200",
+        name="model_name",
+    ),
+    sa.CheckConstraint("credential_configured IN (0, 1)", name="credential_configured"),
+    sa.CheckConstraint("enabled IN (0, 1)", name="enabled"),
+)
+
+prompt_overrides = sa.Table(
+    "prompt_overrides",
+    metadata,
+    sa.Column("prompt_code", sa.Text, primary_key=True),
+    sa.Column("content", sa.Text, nullable=False),
+    sa.Column("updated_at_utc_ms", sa.Integer, nullable=False),
+    sa.CheckConstraint(
+        "prompt_code IN ('morning_activity', 'morning_talk', 'indoor_area_game', "
+        "'afternoon_outdoor_game', 'daily_reflection')",
+        name="prompt_code",
+    ),
+    sa.CheckConstraint("length(trim(content)) BETWEEN 1 AND 12000", name="content"),
+)
+
+ai_previews = sa.Table(
+    "ai_previews",
+    metadata,
+    sa.Column("id", sa.Integer, primary_key=True),
+    sa.Column("lesson_plan_id", sa.Integer, nullable=False),
+    sa.Column("operation_id", sa.Text, nullable=False),
+    sa.Column("section_code", sa.Text, nullable=False),
+    sa.Column("result_schema_code", sa.Text, nullable=False),
+    sa.Column("result_json", sa.Text, nullable=False),
+    sa.Column("frozen_input_sha256", sa.Text, nullable=False),
+    sa.Column("target_section_sha256", sa.Text, nullable=False),
+    sa.Column("state", sa.Text, nullable=False),
+    sa.Column("created_at_utc_ms", sa.Integer, nullable=False),
+    sa.Column("decided_at_utc_ms", sa.Integer),
+    sa.ForeignKeyConstraint(
+        ["lesson_plan_id"],
+        ["lesson_plans.id"],
+        name="fk_ai_previews_lesson_plan_id_lesson_plans",
+        ondelete="CASCADE",
+    ),
+    sa.CheckConstraint("length(operation_id) = 36", name="operation_id"),
+    sa.CheckConstraint(
+        "section_code IN ('morning_activity', 'morning_talk', 'indoor_area_game', "
+        "'afternoon_outdoor_game', 'daily_reflection')",
+        name="section_code",
+    ),
+    sa.CheckConstraint("result_schema_code = section_code", name="result_schema_code"),
+    sa.CheckConstraint("json_valid(result_json)", name="result_json"),
+    sa.CheckConstraint(
+        "length(frozen_input_sha256) = 64 AND frozen_input_sha256 NOT GLOB '*[^0-9a-f]*'",
+        name="frozen_input_sha256",
+    ),
+    sa.CheckConstraint(
+        "length(target_section_sha256) = 64 AND target_section_sha256 NOT GLOB '*[^0-9a-f]*'",
+        name="target_section_sha256",
+    ),
+    sa.CheckConstraint(
+        "state IN ('ready', 'adopted', 'rejected', 'invalidated')",
+        name="state",
+    ),
+    sa.CheckConstraint(
+        "(state = 'ready' AND decided_at_utc_ms IS NULL) OR "
+        "(state != 'ready' AND decided_at_utc_ms IS NOT NULL)",
+        name="decision_time",
+    ),
+)
+sa.Index(
+    "uq_ai_previews_operation_section",
+    ai_previews.c.operation_id,
+    ai_previews.c.section_code,
+    unique=True,
+)
+sa.Index(
+    "ix_ai_previews_plan_state",
+    ai_previews.c.lesson_plan_id,
+    ai_previews.c.state,
 )

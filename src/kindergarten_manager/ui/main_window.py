@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import cast
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QApplication, QStackedWidget, QVBoxLayout, QWidget
 
+from kindergarten_manager.ui.pages.ai_settings import AiSettingsPage
 from kindergarten_manager.ui.pages.daily_plan import DailyPlanPage
 from kindergarten_manager.ui.pages.first_run import build_first_run_page
 from kindergarten_manager.ui.pages.settings import SettingsPage
@@ -19,13 +22,20 @@ from kindergarten_manager.ui.theme import (
 
 
 class DesktopMainWindow(QWidget):
-    def __init__(self, services: DesktopServices) -> None:
+    def __init__(
+        self,
+        services: DesktopServices,
+        *,
+        on_close: Callable[[], None] | None = None,
+    ) -> None:
         super().__init__()
         self.setObjectName("desktop_shell")
         self.setWindowTitle("幼儿园管理助手")
         self.resize(1366, 768)
         self.setMinimumSize(1100, 680)
         self._services = services
+        self._on_close = on_close
+        self._close_started = False
         self._theme_preference: ThemePreference = "system"
         self._apply_theme(self._theme_preference)
 
@@ -38,10 +48,13 @@ class DesktopMainWindow(QWidget):
             services,
             on_theme_changed=self._settings_saved,
             on_back=self._back_to_plan,
+            on_open_ai_settings=self._open_ai_settings,
         )
+        self._ai_settings_page = AiSettingsPage(services, on_back=self._back_to_settings)
         self.stack.addWidget(build_first_run_page(self._complete_setup))
         self.stack.addWidget(self._editor)
         self.stack.addWidget(self._settings_page)
+        self.stack.addWidget(self._ai_settings_page)
         layout.addWidget(self.stack)
 
         app = QApplication.instance()
@@ -67,6 +80,14 @@ class DesktopMainWindow(QWidget):
         self._editor.reload()
         self.stack.setCurrentWidget(self._editor)
 
+    def _open_ai_settings(self) -> None:
+        self._ai_settings_page.reload()
+        self.stack.setCurrentWidget(self._ai_settings_page)
+
+    def _back_to_settings(self) -> None:
+        self._settings_page.reload()
+        self.stack.setCurrentWidget(self._settings_page)
+
     def _settings_saved(self, theme: str) -> None:
         self._apply_theme(_validated_theme(theme))
         self._editor.reload()
@@ -83,6 +104,12 @@ class DesktopMainWindow(QWidget):
         )
         theme = resolve_theme(preference, system_is_dark=system_is_dark)
         self.setStyleSheet(desktop_stylesheet(theme))
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        if not self._close_started and self._on_close is not None:
+            self._close_started = True
+            self._on_close()
+        super().closeEvent(event)
 
 
 def _setup_complete(services: DesktopServices) -> bool:

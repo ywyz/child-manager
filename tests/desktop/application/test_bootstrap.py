@@ -6,6 +6,10 @@ from pathlib import Path
 import pytest
 
 from kindergarten_manager.application.bootstrap import BootstrapService, StartupError
+from kindergarten_manager.infrastructure.database.upgrade import (
+    DESKTOP_HEAD_REVISION,
+    MigrationProtectionError,
+)
 from kindergarten_manager.infrastructure.paths import DesktopPaths
 from tests.desktop.helpers import implemented
 
@@ -42,7 +46,7 @@ def test_empty_data_root_starts_at_desktop_revision_and_requires_first_run(data_
     state = implemented(lambda: BootstrapService(_paths(data_root)).start())
 
     assert state.data_root == data_root
-    assert state.schema_revision == "0001_desktop_initial"
+    assert state.schema_revision == DESKTOP_HEAD_REVISION
     assert state.first_run is True
     assert state.setup_complete is False
     assert state.daily_backup == "not_due"
@@ -109,9 +113,10 @@ def test_existing_database_is_checked_before_and_after_upgrade(
         events.append("verify")
         real_verify()
 
-    def upgrade(_database: Path) -> str:
+    def upgrade(_database: Path, *, pre_migration_directory: Path) -> str:
         events.append("upgrade")
-        return "0001_desktop_initial"
+        assert pre_migration_directory == paths.pre_migration_backups
+        return DESKTOP_HEAD_REVISION
 
     monkeypatch.setattr(service, "_verify_database", verify)
     monkeypatch.setattr("kindergarten_manager.application.bootstrap.upgrade_database", upgrade)
@@ -119,3 +124,28 @@ def test_existing_database_is_checked_before_and_after_upgrade(
     implemented(service.start)
 
     assert events == ["verify", "upgrade", "verify"]
+
+
+def test_failed_pre_migration_protection_refuses_writable_startup(
+    data_root: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = _paths(data_root)
+    implemented(lambda: BootstrapService(paths).start())
+
+    def fail_protection(_database: Path, *, pre_migration_directory: Path) -> str:
+        del pre_migration_directory
+        raise MigrationProtectionError(
+            "migration.protective_backup_failed",
+            "迁移前保护副本创建失败",
+        )
+
+    monkeypatch.setattr(
+        "kindergarten_manager.application.bootstrap.upgrade_database",
+        fail_protection,
+    )
+
+    with pytest.raises(StartupError) as captured:
+        BootstrapService(paths).start()
+
+    assert captured.value.error_code == "startup.backup_failed"

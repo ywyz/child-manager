@@ -29,6 +29,7 @@ class SettingsPage(QWidget):
         *,
         on_theme_changed: Callable[[str], None],
         on_back: Callable[[], None],
+        on_open_ai_settings: Callable[[], None],
     ) -> None:
         super().__init__()
         self.setObjectName("settings_page")
@@ -47,6 +48,10 @@ class SettingsPage(QWidget):
         back.setObjectName("back_to_plan")
         back.clicked.connect(on_back)
         heading.addWidget(back)
+        ai_settings = QPushButton("AI 设置（可选）")
+        ai_settings.setObjectName("open_ai_settings")
+        ai_settings.clicked.connect(on_open_ai_settings)
+        heading.addWidget(ai_settings)
         outer.addLayout(heading)
 
         card = QFrame()

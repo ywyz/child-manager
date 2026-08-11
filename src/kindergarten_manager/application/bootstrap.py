@@ -10,7 +10,9 @@ from pathlib import Path
 
 from kindergarten_manager.infrastructure.database.engine import connect_sqlite
 from kindergarten_manager.infrastructure.database.upgrade import (
+    DESKTOP_HEAD_REVISION,
     DESKTOP_INITIAL_REVISION,
+    MigrationProtectionError,
     upgrade_database,
 )
 from kindergarten_manager.infrastructure.paths import DesktopPaths
@@ -52,13 +54,21 @@ class BootstrapService:
         if existed:
             self._verify_database()
 
-        if revision is not None and revision != DESKTOP_INITIAL_REVISION:
+        if revision not in {None, DESKTOP_INITIAL_REVISION, DESKTOP_HEAD_REVISION}:
             raise StartupError("startup.future_schema", "本地数据库版本高于当前应用")
 
         try:
-            revision = upgrade_database(self.paths.database)
+            revision = upgrade_database(
+                self.paths.database,
+                pre_migration_directory=self.paths.pre_migration_backups,
+            )
             setup_complete = self._setup_complete()
             self._verify_database()
+        except MigrationProtectionError as error:
+            raise StartupError(
+                "startup.backup_failed",
+                "迁移前保护副本创建失败，数据库未升级",
+            ) from error
         except sqlite3.DatabaseError as error:
             raise StartupError(
                 "startup.database_corrupt", "本地数据库已损坏，无法安全启动"

@@ -222,6 +222,13 @@ class DailyPlanWorkspace:
             raise WorkspaceError("plan.context_missing", "首次设置尚未完成")
         return self._current_plan.content.model_dump()
 
+    def current_plan_id(self) -> int:
+        if self._current_plan is None:
+            self.load_plan_context()
+        if self._current_plan is None:
+            raise WorkspaceError("plan.context_missing", "首次设置尚未完成")
+        return self._current_plan.id
+
     def save_current_plan(self, content: dict[str, Any]) -> None:
         normalized = PlanContentV1.model_validate(content)
         if self._current_plan is None:

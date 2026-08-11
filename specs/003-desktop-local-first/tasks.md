@@ -3,8 +3,8 @@
 **Input**: `specs/003-desktop-local-first/` 下的 `spec.md`、`plan.md`、`research.md`、
 `data-model.md`、`quickstart.md` 与 `contracts/`
 
-**Docs Baseline**: `fff6e0908fcb591c927205d53cdbacd35037bce3` |
-**Issue**: https://github.com/ywyz/child-manager/issues/14 | **Implementation Branch**: `dev`
+**Docs Baseline**: `d4ac961a04a273a0384e295190296f69538b313b` |
+**Issue**: https://github.com/ywyz/child-manager/issues/19 | **Implementation Branch**: `dev`
 
 **Authorization Record (2026-08-11)**: 维护者已确认 T034 无计时 Windows 二元验收事实。初始
 收口 `b53c1c43c69e3ae3058d74b6163ecfc2bd7d4e95` 的双轴 Review 发现产品显示名偏差后，维护者
@@ -12,6 +12,10 @@
 `7af4d46f1114616eb798e5991805a164026c63df` 为 Review 修复锚点；其后只含证据、状态与 Graphify
 同步的提交作为新固定 Review SHA。双轴 Review 通过后才可合并 `main`；T035–T040 由独立
 Slice 2A Issue 驱动，完成 clean RED 后停在 T040，不得进入 T041 GREEN。
+
+**Authorization Record (2026-08-11, Slice 2A GREEN)**: 维护者要求先把 Issue #19 的固定 docs
+SHA 更新为上述新 SHA，并同步 T044 新增的迁移保护范围；回读确认后授权恢复 T041–T048
+GREEN。本授权不包含 commit、push、Review、`main` 集成或 T049 及以后任务。
 
 **Tests**: 规格与宪章明确要求自动化测试；每个切片先收集测试并得到只来自本切片未实现行为的
 RED，再实施并运行该切片自有门禁。导入、fixture、数据库配置或运行环境错误均不是有效 RED。
@@ -113,14 +117,14 @@ RED，再实施并运行该切片自有门禁。导入、fixture、数据库配�
 
 ### Implementation for Slice 2A
 
-- [ ] T041 [P] [US2] 实现 `src/kindergarten_manager/domain/ai.py` 的结果模型、Schema registry、规范 hash 和过期预览判定，只提取旧纯行为而不复制 Job/tenant 状态
-- [ ] T042 [P] [US2] 实现 `src/kindergarten_manager/infrastructure/credentials.py` 的 keyring 窄边界，确保秘密不进入 DTO repr、SQLite、日志或异常
-- [ ] T043 [US2] 实现 `src/kindergarten_manager/infrastructure/ai/client.py` 与只读默认提示词 `src/kindergarten_manager/infrastructure/ai/prompts/`，满足 T036 URL/重试规则
-- [ ] T044 [US2] 扩展 `src/kindergarten_manager/infrastructure/database/repositories.py` 支持单例 AI 非敏感配置、提示词覆盖和已校验 preview，运行中任务不得落库
-- [ ] T045 [US2] 实现 `src/kindergarten_manager/application/ai_generation.py` 的冻结输入、Qt 后台单任务、逐栏结果、取消、预览采用/拒绝与事务式采用前快照
-- [ ] T046 [US2] 实现 `src/kindergarten_manager/ui/pages/ai_settings.py` 与 `src/kindergarten_manager/ui/widgets/ai_preview.py`，只暴露一个当前模型和可恢复默认提示词
-- [ ] T047 [US2] 在 `src/kindergarten_manager/app.py` 装配凭据、AI client、Coordinator 和退出取消顺序，不引入 Redis、Dramatiq、recovery scan 或独立 Worker
-- [ ] T048 [US2] 运行 T035–T039、Slice 1 回归、Ruff/Pyright，并在 `docs/implementation-evidence/desktop-slice-2a-acceptance.md` 保存完全使用替身的成功/重试/失败/取消/过期矩阵证据
+- [x] T041 [P] [US2] 实现 `src/kindergarten_manager/domain/ai.py` 的结果模型、Schema registry、规范 hash 和过期预览判定，只提取旧纯行为而不复制 Job/tenant 状态
+- [x] T042 [P] [US2] 实现 `src/kindergarten_manager/infrastructure/credentials.py` 的 keyring 窄边界，确保秘密不进入 DTO repr、SQLite、日志或异常
+- [x] T043 [US2] 实现 `src/kindergarten_manager/infrastructure/ai/client.py` 与只读默认提示词 `src/kindergarten_manager/infrastructure/ai/prompts/`，满足 T036 URL/重试规则
+- [x] T044 [US2] 创建 `src/kindergarten_manager/infrastructure/database/migrations/versions/0002_desktop_ai.py`，扩展同目录 `models.py`、`repositories.py` 和 `upgrade.py`，支持单例 AI 非敏感配置、提示词覆盖、已校验 preview 及升级前最小本地 `pre_migration` 保护副本；在 `tests/desktop/database/test_migrations.py` 覆盖空库到 head、`0001 -> 0002`、命名约束/索引、完整性检查，以及保护副本成功和失败即停止，运行中任务与 Key 不得落库
+- [x] T045 [US2] 实现 `src/kindergarten_manager/application/ai_generation.py` 的冻结输入、Qt 后台单任务、逐栏结果、取消、预览采用/拒绝与事务式采用前快照
+- [x] T046 [US2] 实现 `src/kindergarten_manager/ui/pages/ai_settings.py` 与 `src/kindergarten_manager/ui/widgets/ai_preview.py`，只暴露一个当前模型和可恢复默认提示词
+- [x] T047 [US2] 在 `src/kindergarten_manager/app.py` 装配凭据、AI client、Coordinator 和退出取消顺序，不引入 Redis、Dramatiq、recovery scan 或独立 Worker
+- [x] T048 [US2] 运行 T035–T039、迁移专项、Slice 1 回归、Ruff/Pyright，并在 `docs/implementation-evidence/desktop-slice-2a-acceptance.md` 保存完全使用替身的成功/重试/失败/取消/过期矩阵，以及 `0001 -> 0002_desktop_ai` 保护性备份与升级证据
 
 **Checkpoint**: AI 是可拆除的可选增强；原正文只有教师采用有效预览时才改变。
 

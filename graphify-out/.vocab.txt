@@ -72,6 +72,7 @@ answer
 any
 api
 app
+appears
 append
 appends
 application
@@ -136,6 +137,7 @@ autosaves
 available
 back
 backend
+backends
 background
 backoffs
 backup
@@ -144,6 +146,7 @@ base
 baseline
 batch
 batches
+bce
 before
 begin
 between
@@ -206,9 +209,12 @@ carries
 cas
 cases
 catalog
+categories
+cdbacd
 cell
 ceremonies
 ceremony
+cfaed
 challenge
 challenges
 change
@@ -245,6 +251,7 @@ client
 clock
 clone
 clones
+close
 closed
 cloud
 code
@@ -256,6 +263,7 @@ codex
 coding
 coerced
 collect
+collected
 collection
 collections
 collective
@@ -333,7 +341,6 @@ counters
 counting
 counts
 cover
-coverage
 covers
 crash
 crashed
@@ -351,7 +358,6 @@ cryptography
 csrf
 current
 cursor
-cutting
 cycle
 daily
 dark
@@ -363,6 +369,7 @@ dav
 day
 days
 dbapi
+dccc
 deactivate
 deactivates
 deactivating
@@ -394,11 +401,11 @@ deleting
 delivery
 dependencies
 dependency
+depends
 deployment
 derive
 derived
 derives
-description
 descriptor
 desensitization
 design
@@ -457,6 +464,7 @@ during
 each
 earlier
 east
+ecfc
 edge
 edit
 editable
@@ -469,6 +477,7 @@ eight
 element
 eligible
 emergency
+emit
 emits
 emphasis
 empty
@@ -503,6 +512,7 @@ env
 envelope
 environment
 environments
+epoch
 equivalent
 error
 errors
@@ -567,12 +577,14 @@ fallback
 falls
 family
 fast
+fcb
 feature
 feedback
 fences
 fetch
 fetchall
 fetchone
+fff
 fictional
 field
 fields
@@ -584,6 +596,7 @@ filter
 filters
 final
 find
+finding
 fingerprint
 fingerprints
 finish
@@ -612,6 +625,7 @@ forged
 form
 formal
 format
+formatted
 forwards
 found
 foundation
@@ -648,6 +662,7 @@ grants
 graph
 graphify
 greater
+green
 grilling
 group
 groups
@@ -729,6 +744,7 @@ indistinguishable
 indoor
 inert
 info
+informations
 infrastructure
 init
 initial
@@ -743,6 +759,7 @@ instructions
 integration
 integrations
 integrity
+intents
 internal
 interrupted
 interval
@@ -894,6 +911,7 @@ messages
 metadata
 method
 methods
+microsoft
 middleware
 migrate
 migrated
@@ -931,6 +949,7 @@ name
 named
 names
 namespace
+nan
 native
 navigation
 navigator
@@ -988,7 +1007,6 @@ openapi
 opens
 operation
 operations
-opportunities
 optimistic
 optional
 options
@@ -1027,7 +1045,6 @@ paginated
 pagination
 palette
 paragraph
-parallel
 parameter
 parameters
 parent
@@ -1039,6 +1056,7 @@ partially
 partition
 partitioned
 party
+passed
 passkey
 passkeys
 password
@@ -1058,6 +1076,7 @@ permissions
 persist
 persistable
 persisted
+persistence
 persisting
 persists
 phase
@@ -1074,7 +1093,6 @@ plans
 point
 points
 policy
-polish
 poll
 polling
 polls
@@ -1145,6 +1163,7 @@ purely
 purpose
 put
 pydantic
+pyright
 python
 quality
 queries
@@ -1214,6 +1233,7 @@ register
 registered
 registers
 registration
+registry
 regular
 rehash
 rehashes
@@ -1233,8 +1253,9 @@ releases
 reload
 reloaded
 relying
-remainder
+remain
 remains
+remediation
 removal
 removed
 removes
@@ -1301,6 +1322,7 @@ resumes
 retained
 retention
 retirement
+retried
 retries
 retry
 retryable
@@ -1343,6 +1365,7 @@ routers
 routes
 row
 rows
+ruff
 rules
 run
 runnable
@@ -1427,8 +1450,10 @@ share
 shared
 shell
 should
+shows
 shutdown
 side
+signal
 signals
 signature
 signed
@@ -1474,8 +1499,8 @@ sqlite
 ssrf
 stable
 stack
-stage
 stale
+staleness
 standalone
 standard
 start
@@ -1501,7 +1526,6 @@ store
 stored
 story
 str
-strategy
 streaming
 strict
 strictly
@@ -1532,6 +1556,7 @@ surface
 surfaces
 survives
 switch
+symbol
 sync
 system
 table
@@ -1547,6 +1572,7 @@ task
 tasks
 taskstoissues
 tcp
+tdd
 teacher
 teacherplan
 teachers
@@ -1600,7 +1626,6 @@ token
 tokens
 tool
 toolchain
-tools
 top
 total
 totp
@@ -1610,6 +1635,7 @@ tracking
 trae
 transaction
 transactional
+transactionally
 transactions
 transient
 transitions
@@ -1618,6 +1644,7 @@ transport
 traversal
 trigger
 trimmed
+trip
 trips
 trusted
 truth
@@ -1667,6 +1694,7 @@ url
 urls
 use
 user
+userinfo
 username
 users
 uses
@@ -1766,6 +1794,8 @@ zip
 不能改写区域列表
 不要迁移的内容
 不读取或返回跨园业务正文
+不进入
+不需要计时要求
 与写入
 与冻结身份契约的一致性门禁
 与剩余任务
@@ -1800,6 +1830,7 @@ zip
 事实来源与范围忠实
 五分钟有效且只保存摘要的
 五栏完整后显式生成反思
+产品显示名偏差
 人工核验双条件恢复
 仅五个上游栏目
 仅在通行密钥已登记并完成两位预登记人员核验后激活
@@ -1816,6 +1847,7 @@ zip
 仓库外创建本地秘密
 代码取得结果模型
 代码错误暴露
+以及后继
 以后可直接交给上传边界的固定元数据与字节
 以常量时间比较
 以独立提交的
@@ -1840,20 +1872,30 @@ zip
 依赖与信任规则
 依赖规则
 便于恢复与确定性测试
+保持编号稳定
 保留一年
 保留可显示文件名
 保留连接字符串行为
 保留顺序并拒绝同类别重名
+保留首次启动
 信封与数据库外密钥适配器
 信封解密后以新
 信息架构
+修复后通过
+修复提交角色
+修复证据
+修复锚点
 值进行稳定序列化并计算
 停止边界
 健康检查
+允许后续
+先收集结果
 全局角色字典
+全部稳定转换为
 公共契约
 公共契约的
 公共错误
+公开模块
 公开身份
 六栏目
 六栏目结构化正文契约
@@ -1870,14 +1912,13 @@ zip
 其他异常仍按环境
 兼容性
 内部完整包
-再得到业务
 写入阶段
 冻结上下文
 冻结输入
 凭据与备份设计
 凭据存储
+凭据实现
 分区的确定性滑动窗口替身
-分发收敛
 分阶段权限与确认写入
 分页和
 列表与六栏目编辑页
@@ -1905,9 +1946,12 @@ zip
 单项失败不阻断后续任务
 历史与下载
 历史双实现线
+历史口径
 历史快照与恢复
+历史结论
 历史隐私清理
 原因码与恢复顺序
+原始实现
 原子存储与清理
 原样拒绝
 双人核验后激活
@@ -1940,9 +1984,11 @@ zip
 合并身份能力与基于当前班级关系实时计算的设置能力
 同园同班同日唯一教案
 同园隔离的
+同时保持缺失符号为
 同时保留哈希和追溯元数据
 同步到仓库
 同步并原子落位后才暴露文件
+同源阻断
 后台任务
 后台任务权威状态
 后台任务查询
@@ -1974,10 +2020,13 @@ zip
 固定状态位置
 固定窗口实现
 固定结果与输入最小化
+固定范围
 在受控临时目录写完
 在无数据库连接存活时解析工作日
 在线工作日来源
 在线补充且始终软降级的工作日服务
+均未授权且禁止跳入
+基础设置
 备份与恢复
 备份与恢复流程
 备份包
@@ -2004,6 +2053,7 @@ zip
 安装与后期
 完成单一用例响应
 完成后到
+完成首次设置
 完整质量门禁
 实施前
 实施计划
@@ -2011,7 +2061,6 @@ zip
 实现分支
 实现分支授权边界
 实现子
-实现授权与项目骨架
 实现清单
 实际资源与语义输入的
 审查发现
@@ -2043,6 +2092,7 @@ zip
 将同园到期预览条件收敛为
 将当前请求关联字段合并到真实
 将服务端已脱敏的测试运行渲染为可读历史记录
+将未实现模块
 将现有
 尚未实现
 尽力投递已提交任务
@@ -2081,6 +2131,7 @@ zip
 幼儿园
 幼儿园管理助手桌面系统架构
 幼儿园管理助手桌面首期
+幼儿园管理助手桌面首期任务清单
 应如何修复
 应用装配
 建模原则
@@ -2098,8 +2149,7 @@ zip
 当前教案和单日导出的
 待授权创建
 必须使用显式替身
-必须先
-必须先过
+必须停在
 快照与软提示用例
 恢复与会话公共契约
 恢复与会话端点
@@ -2110,6 +2160,8 @@ zip
 恢复扫描
 恢复时先确认的基线
 恢复请求
+成功前不得合并
+或进入
 或预先授权所有写入
 户外有序区域维护
 户外有序可启停
@@ -2117,16 +2169,19 @@ zip
 所有来源查询和写入均以
 所有查询和写入都显式绑定
 所有查询和变更都同时约束
-所有纵向切片共享的最小边界
 所有读写都在
 所需软件
 手工教案闭环
+手工验收证据
 打包与更新
+打开均通过
+打开的五项二元证据
 执行器
 批量导出
 批量预览
 把明确的未实现接口记为业务
 把服务端前五栏代码映射为稳定中文
+把计划中的
 投递唯一的
 拆分参考
 拒绝在非开发环境或非回环地址关闭
@@ -2141,6 +2196,7 @@ zip
 按园所恢复待投递或租约过期的
 按固定
 授权与身份审计
+排除五个预期
 接下来需要生成什么文件
 控制字符或绝对位置
 提供冻结的
@@ -2162,6 +2218,7 @@ zip
 提示词目录
 提示词草稿
 插件或
+操作系统凭据或付费服务
 收敛版
 故障不得回滚或阻断其余子任务
 敏感秘密不得明文进入任何持久层
@@ -2190,6 +2247,7 @@ zip
 数据模型
 数据目录与资源定位
 文件名
+文件后
 文本提取
 文档与基础机器契约
 文档与契约
@@ -2198,8 +2256,13 @@ zip
 新增环节只基于教师已采用并保存的完整当前集体活动
 新机器安装入口
 新机器恢复与验证
+无五分钟限制
 无副作用的本地就绪检查
+无真实网络
+无计时二元验收通过
 无长期业务记忆
+无需计时
+无首次使用计时指标
 日志中的凭证和内部
 日期与外部服务本地优先
 日期无法一键回到今天
@@ -2208,12 +2271,16 @@ zip
 时读取环境配置
 明确不迁移的旧模型
 明确非目标
+是独立
 显式一日活动反思的预保存与
 显式采用与预览有效性双哈希
+显示名断言先失败
 晨间公共变量集
 晨间活动
 晨间谈话
 暗黑模式缺失
+曾要求首次使用五分钟
+替身与隐私边界
 最后管理员
 最小消息进入逐园业务操作前的受控园所解析边界
 最终通行密钥身份
@@ -2224,13 +2291,15 @@ zip
 服务边界
 服务边界与单向依赖
 未知版本保持原始数据只读
+未获授权且禁止进入
+未计时
+未计时只证明功能闭环
 本地优先
 本地优先桌面产品方向重置
 本地入口
 本地安全备份
 本地工作日库
 本地开发环境
-本地恢复与远程加密备份
 本地数据权威
 本地档位
 本地环境与秘密
@@ -2251,12 +2320,10 @@ zip
 构造可由
 架构契约
 架构契约测试
-查找与周导航
 查询记录
 标准五条质量门禁
 栏目级
 校验注册
-桌面体验与
 桌面入口
 桌面常规测试连回环网络也不允许
 桌面应用唯一
@@ -2269,6 +2336,7 @@ zip
 模块与依赖方向
 模块化单体
 模块结构目标
+模块缺失转换为可诊断
 模块边界
 模型与契约一致
 模型与提示词基础
@@ -2305,7 +2373,6 @@ zip
 独立规格
 独立运行单元
 环境记录在文件中
-现有可选
 班级与教师关联
 班级与教师配置
 班级区域
@@ -2338,6 +2405,7 @@ zip
 由两位预登记责任人批准最后管理员恢复
 由同一组语义令牌派生的桌面浅色与深色主题
 由应用层统一开启事务
+由独立
 白名单纯替换渲染器
 的一日活动计划日历
 的公共领域
@@ -2359,7 +2427,6 @@ zip
 确保外网延迟不会扩大事务
 确定性
 确定性替身
-确认写入
 禁止提交与应用事务边界
 禁止重定向且错误脱敏的供应商中立客户端
 禁止静默回退到共享数据库
@@ -2368,11 +2435,14 @@ zip
 种子并绑定园所
 种子的
 秒参数生成
+移除首次使用计时
 稳定中文错误与健康分级
 稳定发布基线
 稳定契约
 稳定游标
 稳定错误码
+符号转换为可诊断
+第一份教案
 等待线程池安全释放的
 签发绑定上下文
 签名和
@@ -2394,9 +2464,10 @@ zip
 绑定摘要
 结构化一日活动计划编辑页
 结构化日志和最终脱敏处理器
-结构化预览与采用
 统一异常转换与健康端点
 统一错误
+编号修正
+编号冲突修正与后续步骤
 编码前审查报告
 编码前审查解决方案
 缺乏设置选项导致学期无法修改
@@ -2411,6 +2482,7 @@ zip
 被否决方案
 规范化区域显示名
 视觉令牌
+计时不是当前通过条件
 计算覆盖路由
 计算逐任务实际输入哈希
 认证挑战
@@ -2434,6 +2506,7 @@ zip
 调用次数保持不变
 账号和主体
 账号邀请
+质量门禁
 越界必须进入结构错误重试
 跨服务使用的公共
 跨机器开发交接
@@ -2463,7 +2536,10 @@ zip
 进程内按模型档案执行并发和每分钟调用上限
 远程备份
 远程对象
+退役候选工作包
+退役候选提案未授权且不阻塞当前
 逐园执行预览过期和正文清理
+逐步增加公开
 递增排序
 递归清除
 递归清除日志中的密钥
@@ -2482,6 +2558,9 @@ zip
 采用事务
 采用预览时
 里程碑
+重启和
+重启读取
+重启读取和当天
 重新加密
 重试与超时策略
 重试分类
@@ -2499,15 +2578,16 @@ zip
 集体活动来源与两阶段
 集体活动编辑空间与
 需要直接比较文件
+需要计时的事实由来
 静态一致性验证
 非同步保证
 非敏感
 非首期完成门禁
 页面与同源
+项新增
 项目上下文
 项目必须项
 预留可恢复任务后逐项投递
-预览与合并
 预览与教案任务历史查询用例
 预览决策与显式重试薄路由
 预览的稳定栏目
@@ -2521,9 +2601,13 @@ zip
 首期同时建设
 首期必要设置
 首期必要设置的
+首次启动
 首次启动与本地目录
-首次启动到当天
+首次启动流程可完成基础设置并创建第一份教案
+驱动并停在
+验收固定角色
 验证信封及
 验证矩阵
 验证责任
 验证进程启动时的
+验证迭代

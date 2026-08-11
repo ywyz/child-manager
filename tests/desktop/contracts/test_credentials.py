@@ -51,6 +51,28 @@ def test_credential_round_trip_and_delete_use_stable_application_key() -> None:
     assert store.read("ai.current") is None
 
 
+def test_realistic_windows_backend_is_pinned_to_local_machine_persistence() -> None:
+    module = _module()
+    create_store = pending_symbol(module, "create_credential_store")
+    backend_type = type(
+        "RealisticWindowsBackend",
+        (),
+        {
+            "name": "Windows.WinVaultKeyring",
+            "persist": "enterprise",
+            "set_password": lambda *_args: None,
+            "get_password": lambda *_args: None,
+            "delete_password": lambda *_args: None,
+        },
+    )
+    backend = backend_type()
+
+    store = create_store(platform="win32", backend=backend)
+
+    assert store.persistence == "local-machine"
+    assert getattr(backend, "persist", None) == "local machine"
+
+
 def test_secret_never_appears_in_store_repr_or_missing_error() -> None:
     module = _module()
     create_store = pending_symbol(module, "create_credential_store")

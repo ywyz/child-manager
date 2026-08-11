@@ -1,0 +1,1 @@
+请根据教师提供的最小上下文生成晨间活动。只返回符合 morning_activity Schema 的 JSON，不得补充幼儿身份信息。

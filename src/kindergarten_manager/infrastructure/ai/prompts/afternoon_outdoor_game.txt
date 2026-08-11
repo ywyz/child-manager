@@ -1,0 +1,1 @@
+请根据教师提供的最小上下文生成下午户外游戏。只返回符合 afternoon_outdoor_game Schema 的 JSON，不得补充幼儿身份信息。
