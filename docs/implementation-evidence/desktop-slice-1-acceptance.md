@@ -8,7 +8,11 @@
 - 实现代码锚点：`cf106e44cb907a4958879a16ee061dccc8c2b1f9`
 - docs 基线：`fff6e0908fcb591c927205d53cdbacd35037bce3`
 - Issue：https://github.com/ywyz/child-manager/issues/14
-- 固定 Review SHA：由包含本证据、docs 同步和 T034 状态更新的后继收口提交确定；实现代码仍固定到上述 `cf106e44...`。
+- 初始收口 Review SHA：`b53c1c43c69e3ae3058d74b6163ecfc2bd7d4e95`（双轴 Review 未通过，
+  发现产品显示名偏差）
+- Review 修复锚点：`7af4d46f1114616eb798e5991805a164026c63df`
+- 新固定 Review SHA：由包含修复证据、状态与 Graphify 同步的后继 docs-only 收口提交确定；
+  `cf106e44...` 继续作为原始 Slice 1 实现锚点。
 
 本次是 Python 3.14 + `uv` 的源码运行验收，不是 `.exe`、MSI、MSIX、standalone 或安装器
 验收；Windows 打包仍属于 T115–T119 的后续范围。
@@ -53,6 +57,7 @@ Windows 源码运行通过不代表已经生成 Windows 独立程序或安装器
 ## T034 结论与停止边界
 
 T034 已具备无计时的 Windows 二元验收事实、精确实现锚点 CI 和本证据文件，可以标记完成。
-Slice 1 仍须以收口提交为固定 Review SHA 完成 Standards/Spec 双轴 Review，Review 通过后才允许
-合并 `main`。T035–T040 必须由独立 Slice 2A Issue 驱动，先取得 clean RED，并停在 T040；不得
-进入 T041 GREEN，也不得跳到 Agent Foundation。
+Slice 1 仍须以新的 docs-only 收口提交为固定 Review SHA，重新完成 Standards/Spec 双轴 Review；
+Review 通过后才允许合并 `main`。T035–T040 必须由独立 Slice 2A Issue 驱动，先取得 clean RED，
+并停在 T040；不得进入 T041 GREEN，也不得跳到 Agent Foundation。修复详情见
+`docs/implementation-evidence/desktop-slice-1-review-remediation.md`。

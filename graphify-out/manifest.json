@@ -2325,9 +2325,9 @@
     "semantic_hash": "ccfad5bc23bcd90d71a8b55e3079bc58"
   },
   "specs/003-desktop-local-first/tasks.md": {
-    "mtime": 1786407443.0637755,
-    "ast_hash": "bcf30576438fe3d7b06c68e872c8781c",
-    "semantic_hash": "bcf30576438fe3d7b06c68e872c8781c"
+    "mtime": 1786414093.0859342,
+    "ast_hash": "459fc01a41c31d567f307267fe4884da",
+    "semantic_hash": "459fc01a41c31d567f307267fe4884da"
   },
   "docs/design/assets/desktop-prototype/desktop-prototype-a-classic.png": {
     "mtime": 1786262011.9045477,
@@ -2385,9 +2385,9 @@
     "semantic_hash": "96ba37c7dfca954eb250fa00b76e773a"
   },
   "tests/desktop/integration/test_composition_root.py": {
-    "mtime": 1786365379.1861389,
-    "ast_hash": "a92b35476145f1bb99960cd03bf89dae",
-    "semantic_hash": "a92b35476145f1bb99960cd03bf89dae"
+    "mtime": 1786413092.4459937,
+    "ast_hash": "8666db8ec694e2e368484e56a2ffef41",
+    "semantic_hash": "8666db8ec694e2e368484e56a2ffef41"
   },
   "tests/desktop/database/test_settings_repository.py": {
     "mtime": 1786270575.2607741,
@@ -2425,9 +2425,9 @@
     "semantic_hash": "529c39a7c821e57f647fd0fc1bba4a86"
   },
   "src/kindergarten_manager/ui/main_window.py": {
-    "mtime": 1786365287.5071442,
-    "ast_hash": "d47cec0039b518d0555b11c3c96387a7",
-    "semantic_hash": "d47cec0039b518d0555b11c3c96387a7"
+    "mtime": 1786413103.444993,
+    "ast_hash": "952043bc1b3139628c9128d70f9dfcf0",
+    "semantic_hash": "952043bc1b3139628c9128d70f9dfcf0"
   },
   "src/kindergarten_manager/ui/pages/daily_plan.py": {
     "mtime": 1786365343.645141,
@@ -2485,9 +2485,9 @@
     "semantic_hash": "ecdf8936802bedac740162c008660732"
   },
   "docs/implementation-evidence/desktop-slice-1-acceptance.md": {
-    "mtime": 1786404206.8299685,
-    "ast_hash": "6ddc19d85e6ef0bd809f1550fc89144d",
-    "semantic_hash": "6ddc19d85e6ef0bd809f1550fc89144d"
+    "mtime": 1786414093.086934,
+    "ast_hash": "13236015e2b7cce89ae340ed32bafcff",
+    "semantic_hash": "13236015e2b7cce89ae340ed32bafcff"
   },
   "graphify-out/memory/query_20260810_140436_\u901a\u8fc7_\u672a\u8ba1\u65f6_\u9700\u8981\u8ba1\u65f6\u7684\u4e8b\u5b9e\u7531\u6765\u662f\u4ec0\u4e48.md": {
     "mtime": 1786370676.6928413,
@@ -2508,5 +2508,10 @@
     "mtime": 1786404183.0209699,
     "ast_hash": "1475d465d75eacbfbed38e8521f947ef",
     "semantic_hash": "1475d465d75eacbfbed38e8521f947ef"
+  },
+  "docs/implementation-evidence/desktop-slice-1-review-remediation.md": {
+    "mtime": 1786414093.086934,
+    "ast_hash": "5e17c4d1b9937ffb1d5821a3e152876d",
+    "semantic_hash": "5e17c4d1b9937ffb1d5821a3e152876d"
   }
 }

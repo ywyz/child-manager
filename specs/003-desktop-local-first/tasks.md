@@ -6,9 +6,11 @@
 **Docs Baseline**: `fff6e0908fcb591c927205d53cdbacd35037bce3` |
 **Issue**: https://github.com/ywyz/child-manager/issues/14 | **Implementation Branch**: `dev`
 
-**Authorization Record (2026-08-11)**: 维护者已确认 T034 无计时 Windows 二元验收事实，并授权
-以只含 docs 同步、验收证据和状态更新的提交作为固定 Review SHA；`cf106e44cb907a4958879a16ee061dccc8c2b1f9`
-继续作为实现代码锚点。Standards/Spec 双轴 Review 通过后才可合并 `main`；T035–T040 由独立
+**Authorization Record (2026-08-11)**: 维护者已确认 T034 无计时 Windows 二元验收事实。初始
+收口 `b53c1c43c69e3ae3058d74b6163ecfc2bd7d4e95` 的双轴 Review 发现产品显示名偏差后，维护者
+确认最小修复：`cf106e44cb907a4958879a16ee061dccc8c2b1f9` 保留为原始实现锚点，
+`7af4d46f1114616eb798e5991805a164026c63df` 为 Review 修复锚点；其后只含证据、状态与 Graphify
+同步的提交作为新固定 Review SHA。双轴 Review 通过后才可合并 `main`；T035–T040 由独立
 Slice 2A Issue 驱动，完成 clean RED 后停在 T040，不得进入 T041 GREEN。
 
 **Tests**: 规格与宪章明确要求自动化测试；每个切片先收集测试并得到只来自本切片未实现行为的
