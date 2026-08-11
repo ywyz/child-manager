@@ -2185,9 +2185,9 @@
     "semantic_hash": "62643905605a8ecce4fc7c62390ed814"
   },
   "tests/desktop/helpers.py": {
-    "mtime": 1786263026.557487,
-    "ast_hash": "6b563d83345d2ed49b7af24289c77128",
-    "semantic_hash": "6b563d83345d2ed49b7af24289c77128"
+    "mtime": 1786416900.0967667,
+    "ast_hash": "2bad878fa721253bb029879cccd640e9",
+    "semantic_hash": "2bad878fa721253bb029879cccd640e9"
   },
   "tests/desktop/integration/__init__.py": {
     "mtime": 1786262971.4314904,
@@ -2325,9 +2325,9 @@
     "semantic_hash": "ccfad5bc23bcd90d71a8b55e3079bc58"
   },
   "specs/003-desktop-local-first/tasks.md": {
-    "mtime": 1786414093.0859342,
-    "ast_hash": "459fc01a41c31d567f307267fe4884da",
-    "semantic_hash": "459fc01a41c31d567f307267fe4884da"
+    "mtime": 1786417039.5477586,
+    "ast_hash": "45b6ac2fcba371120a1a34a4fcada165",
+    "semantic_hash": "45b6ac2fcba371120a1a34a4fcada165"
   },
   "docs/design/assets/desktop-prototype/desktop-prototype-a-classic.png": {
     "mtime": 1786262011.9045477,
@@ -2513,5 +2513,35 @@
     "mtime": 1786414093.086934,
     "ast_hash": "5e17c4d1b9937ffb1d5821a3e152876d",
     "semantic_hash": "5e17c4d1b9937ffb1d5821a3e152876d"
+  },
+  "tests/desktop/application/test_ai_generation.py": {
+    "mtime": 1786416960.1357632,
+    "ast_hash": "28f2af20bd16bc7261fa579c9f398cc1",
+    "semantic_hash": "28f2af20bd16bc7261fa579c9f398cc1"
+  },
+  "tests/desktop/contracts/test_ai_client.py": {
+    "mtime": 1786416960.1347632,
+    "ast_hash": "265d085aee3d362d820665c1de2c25f4",
+    "semantic_hash": "265d085aee3d362d820665c1de2c25f4"
+  },
+  "tests/desktop/contracts/test_credentials.py": {
+    "mtime": 1786416960.1357632,
+    "ast_hash": "14846ea2b73ae04b785515f398c86484",
+    "semantic_hash": "14846ea2b73ae04b785515f398c86484"
+  },
+  "tests/desktop/ui/test_ai_preview_flow.py": {
+    "mtime": 1786416900.0977669,
+    "ast_hash": "d4aae801a2bc6b49c9eeb9a261fb3e07",
+    "semantic_hash": "d4aae801a2bc6b49c9eeb9a261fb3e07"
+  },
+  "tests/desktop/unit/test_ai_domain.py": {
+    "mtime": 1786416900.0967667,
+    "ast_hash": "106c82e396b788e9d23f53b6c8af88d7",
+    "semantic_hash": "106c82e396b788e9d23f53b6c8af88d7"
+  },
+  "docs/implementation-evidence/desktop-slice-2a-red.md": {
+    "mtime": 1786417039.5477586,
+    "ast_hash": "518bdfbe25b99616c7ff88b78a6672dd",
+    "semantic_hash": "518bdfbe25b99616c7ff88b78a6672dd"
   }
 }

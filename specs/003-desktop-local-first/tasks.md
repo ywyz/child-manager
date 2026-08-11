@@ -104,12 +104,12 @@ RED，再实施并运行该切片自有门禁。导入、fixture、数据库配�
 
 ### Tests for Slice 2A（必须先 RED）
 
-- [ ] T035 [P] [US2] 在 `tests/desktop/unit/test_ai_domain.py` 覆盖允许的栏目 Schema、规范 JSON/hash、输入最小化、预览目标栏有效性和结构错误分类
-- [ ] T036 [P] [US2] 在 `tests/desktop/contracts/test_ai_client.py` 覆盖回环 HTTP、非回环 HTTPS、禁止 userinfo/重定向、超时/响应上限、最多两次 retryable 重试且不访问真实网络
-- [ ] T037 [P] [US2] 在 `tests/desktop/contracts/test_credentials.py` 覆盖 Windows backend/local-machine persistence、写后读回、删除和 Null/文件/未知 backend fail closed
-- [ ] T038 [P] [US2] 在 `tests/desktop/application/test_ai_generation.py` 覆盖单一运行任务、四栏部分失败、取消/关闭丢弃、预览拒绝、目标栏过期和采用前不可变快照事务
-- [ ] T039 [P] [US2] 在 `tests/desktop/ui/test_ai_preview_flow.py` 覆盖可选入口、固定状态、重复发起提示、逐栏预览/重试/采用及页面切换后迟到信号丢弃
-- [ ] T040 [US2] 收集并运行 T035–T039 得到干净 RED并记录到 `docs/implementation-evidence/desktop-slice-2a-red.md`，同时重跑 Slice 1 门禁证明 AI 未成为手工保存或单日 Word 的前置条件
+- [x] T035 [P] [US2] 在 `tests/desktop/unit/test_ai_domain.py` 覆盖允许的栏目 Schema、规范 JSON/hash、输入最小化、预览目标栏有效性和结构错误分类
+- [x] T036 [P] [US2] 在 `tests/desktop/contracts/test_ai_client.py` 覆盖回环 HTTP、非回环 HTTPS、禁止 userinfo/重定向、超时/响应上限、最多两次 retryable 重试且不访问真实网络
+- [x] T037 [P] [US2] 在 `tests/desktop/contracts/test_credentials.py` 覆盖 Windows backend/local-machine persistence、写后读回、删除和 Null/文件/未知 backend fail closed
+- [x] T038 [P] [US2] 在 `tests/desktop/application/test_ai_generation.py` 覆盖单一运行任务、四栏部分失败、取消/关闭丢弃、预览拒绝、目标栏过期和采用前不可变快照事务
+- [x] T039 [P] [US2] 在 `tests/desktop/ui/test_ai_preview_flow.py` 覆盖可选入口、固定状态、重复发起提示、逐栏预览/重试/采用及页面切换后迟到信号丢弃
+- [x] T040 [US2] 收集并运行 T035–T039 得到干净 RED并记录到 `docs/implementation-evidence/desktop-slice-2a-red.md`，同时重跑 Slice 1 门禁证明 AI 未成为手工保存或单日 Word 的前置条件
 
 ### Implementation for Slice 2A
 
