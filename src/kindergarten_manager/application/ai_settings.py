@@ -37,8 +37,6 @@ class AiSettingsRepository(Protocol):
 
     def get_prompt_override(self, prompt_code: str) -> str | None: ...
 
-    def delete_prompt_override(self, prompt_code: str) -> None: ...
-
 
 class AiSettingsTransaction(Protocol):
     def save_configuration(
@@ -172,5 +170,6 @@ class AiSettingsService:
 
     def reset_prompt(self, prompt_code: str) -> str:
         default = load_default_prompt(prompt_code)
-        self._repository.delete_prompt_override(prompt_code)
+        with self._repository.settings_transaction(int(self._now_utc_ms())) as transaction:
+            transaction.delete_prompt_override(prompt_code)
         return default

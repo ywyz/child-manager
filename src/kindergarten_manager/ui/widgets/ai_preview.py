@@ -33,7 +33,7 @@ class AiPreviewPanel(QFrame):
         self,
         services: DesktopServices,
         *,
-        on_prepare_generation: Callable[[], bool],
+        on_save_visible_content: Callable[[], bool],
         on_content_changed: Callable[[], None],
     ) -> None:
         super().__init__()
@@ -41,7 +41,7 @@ class AiPreviewPanel(QFrame):
         self.setMinimumWidth(300)
         self.setMaximumWidth(360)
         self._services = services
-        self._on_prepare_generation = on_prepare_generation
+        self._on_save_visible_content = on_save_visible_content
         self._on_content_changed = on_content_changed
         self._enabled = False
         self._operation_id: UUID | None = None
@@ -199,7 +199,7 @@ class AiPreviewPanel(QFrame):
             button.setEnabled(enabled)
 
     def _start_section(self, section_code: str) -> None:
-        if not self._on_prepare_generation():
+        if not self._on_save_visible_content():
             self.status.setText("请先解决当前教案保存失败后再生成")
             return
         try:
@@ -214,7 +214,7 @@ class AiPreviewPanel(QFrame):
         self.refresh()
 
     def _start_batch(self) -> None:
-        if not self._on_prepare_generation():
+        if not self._on_save_visible_content():
             self.status.setText("请先解决当前教案保存失败后再生成")
             return
         try:
@@ -228,6 +228,9 @@ class AiPreviewPanel(QFrame):
     def _adopt(self, section_code: str) -> None:
         preview_id = self._preview_ids.get(section_code)
         if preview_id is None:
+            return
+        if not self._on_save_visible_content():
+            self.status.setText("请先解决当前教案保存失败后再采用")
             return
         try:
             self._services.adopt_ai_preview(preview_id)

@@ -107,9 +107,6 @@ class TransactionalSettingsRepository:
     def get_prompt_override(self, prompt_code: str) -> str | None:
         return self.prompts.get(prompt_code)
 
-    def delete_prompt_override(self, prompt_code: str) -> None:
-        self.prompts.pop(prompt_code, None)
-
     @contextmanager
     def settings_transaction(self, now_utc_ms: int) -> Iterator[AiSettingsTransaction]:
         assert now_utc_ms == 10
@@ -186,3 +183,14 @@ def test_application_service_owns_ai_settings_transaction_scope() -> None:
         "delete:daily_reflection",
         "commit",
     ]
+
+
+def test_application_service_owns_prompt_reset_transaction_scope() -> None:
+    repository = TransactionalSettingsRepository(prompts={"morning_talk": "自定义提示词"})
+    service = AiSettingsService(repository, MemoryCredentialStore(), now_utc_ms=lambda: 10)
+
+    default = service.reset_prompt("morning_talk")
+
+    assert default == load_default_prompt("morning_talk")
+    assert repository.prompts == {}
+    assert repository.events == ["begin", "delete:morning_talk", "commit"]

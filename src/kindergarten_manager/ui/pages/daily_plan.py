@@ -427,7 +427,7 @@ class DailyPlanPage(QWidget):
         work.addWidget(self.section_stack, 1)
         self.ai_preview_panel = AiPreviewPanel(
             services,
-            on_prepare_generation=self.save,
+            on_save_visible_content=self.save,
             on_content_changed=self._load_content,
         )
         work.addWidget(self.ai_preview_panel)

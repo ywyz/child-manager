@@ -88,7 +88,6 @@ def test_submit_freezes_configuration_credential_and_prompt_before_background_wo
         operation_id=UUID(int=1),
         plan_id=1,
         sections=("morning_talk",),
-        teacher_context="",
         frozen_inputs=(FrozenGenerationInput("morning_talk", '{"schema_code":"morning_talk"}'),),
     )
 

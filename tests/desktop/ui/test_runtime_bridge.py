@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from threading import Event
 from uuid import UUID
 
@@ -17,6 +17,11 @@ from kindergarten_manager.ui.runtime import ProgressReporter, RuntimeBridge
 @dataclass(frozen=True, slots=True)
 class FrozenWork:
     label: str
+
+
+@dataclass(frozen=True, slots=True)
+class SensitiveWork:
+    api_key: str = field(repr=False)
 
 
 def test_runtime_emits_progress_success_and_operation_id(qtbot: QtBot) -> None:
@@ -45,7 +50,7 @@ def test_runtime_emits_progress_success_and_operation_id(qtbot: QtBot) -> None:
     assert successes[0].value == "完成"
 
 
-def test_finished_worker_is_retained_until_thread_pool_confirms_return(qtbot: QtBot) -> None:
+def test_finished_worker_releases_sensitive_input_before_pool_cleanup(qtbot: QtBot) -> None:
     bridge = RuntimeBridge(max_workers=1)
     operation_id = UUID("00000000-0000-0000-0000-000000000017")
 
@@ -56,11 +61,12 @@ def test_finished_worker_is_retained_until_thread_pool_confirms_return(qtbot: Qt
     ) -> CommandResult[object]:
         return CommandResult.success(None, message="完成")
 
-    bridge.submit(operation_id, task, FrozenWork("生命周期"))
+    bridge.submit(operation_id, task, SensitiveWork("fixture-api-key"))
     with qtbot.waitSignal(bridge.finished, timeout=2_000):
         pass
 
     assert operation_id in bridge.retained_worker_ids
+    assert bridge._workers[operation_id].frozen_input is None
     assert bridge.shutdown(1_000)
     assert operation_id not in bridge.retained_worker_ids
 

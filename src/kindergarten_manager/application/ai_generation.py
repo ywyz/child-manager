@@ -51,7 +51,6 @@ class GenerationWork:
     operation_id: UUID
     plan_id: int
     sections: tuple[str, ...]
-    teacher_context: str
     frozen_inputs: tuple[FrozenGenerationInput, ...]
 
 
@@ -350,7 +349,6 @@ class AiGenerationCoordinator:
                 operation_id=operation_id,
                 plan_id=plan_id,
                 sections=sections,
-                teacher_context=teacher_context,
                 frozen_inputs=tuple(
                     FrozenGenerationInput(
                         section_code=section,

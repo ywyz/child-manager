@@ -65,7 +65,7 @@ def test_actual_panel_keeps_unconfigured_ai_optional(qtbot: QtBot) -> None:
     services = FakeAiServices(enabled=False)
     panel = AiPreviewPanel(
         cast(DesktopServices, services),
-        on_prepare_generation=lambda: True,
+        on_save_visible_content=lambda: True,
         on_content_changed=lambda: None,
     )
     qtbot.addWidget(panel)
@@ -88,7 +88,7 @@ def test_actual_panel_shows_success_and_failure_independently(qtbot: QtBot) -> N
     )
     panel = AiPreviewPanel(
         cast(DesktopServices, services),
-        on_prepare_generation=lambda: True,
+        on_save_visible_content=lambda: True,
         on_content_changed=lambda: None,
     )
     qtbot.addWidget(panel)
@@ -106,7 +106,7 @@ def test_actual_panel_disables_duplicate_start_while_operation_runs(qtbot: QtBot
     services = FakeAiServices(state=CoordinatorState(UUID(int=9), (), {}, ()))
     panel = AiPreviewPanel(
         cast(DesktopServices, services),
-        on_prepare_generation=lambda: True,
+        on_save_visible_content=lambda: True,
         on_content_changed=lambda: None,
     )
     qtbot.addWidget(panel)
@@ -124,7 +124,7 @@ def test_actual_panel_wires_per_section_preview_adopt_and_retry(qtbot: QtBot) ->
     prepared: list[bool] = []
     panel = AiPreviewPanel(
         cast(DesktopServices, services),
-        on_prepare_generation=lambda: prepared.append(True) or True,
+        on_save_visible_content=lambda: prepared.append(True) or True,
         on_content_changed=lambda: content_refreshes.append(True),
     )
     qtbot.addWidget(panel)
@@ -153,6 +153,7 @@ def test_actual_panel_wires_per_section_preview_adopt_and_retry(qtbot: QtBot) ->
     qtbot.mouseClick(adopt, Qt.MouseButton.LeftButton)
 
     assert services.adopted == [7]
+    assert prepared == [True, True]
     assert content_refreshes == [True]
     services.state = CoordinatorState(
         None,

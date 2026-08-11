@@ -36,6 +36,7 @@ from kindergarten_manager.application.workspace import (
 )
 from kindergarten_manager.domain.content import PlanContentV1
 from kindergarten_manager.ui.pages.first_run import build_first_run_daily_plan_window
+from kindergarten_manager.ui.widgets.ai_preview import AiPreviewPanel
 from tests.desktop.helpers import implemented
 
 
@@ -51,6 +52,7 @@ class FakeDesktopServices:
     ai_starts: list[tuple[str, str]] = field(default_factory=list)
     ai_state: CoordinatorState = field(default_factory=lambda: CoordinatorState(None, (), {}, ()))
     ai_cancelled: list[UUID] = field(default_factory=list)
+    ai_adoptions: list[tuple[int, str]] = field(default_factory=list)
     failure: Exception | None = None
 
     def complete_setup(self, values: dict[str, str]) -> None:
@@ -137,6 +139,8 @@ class FakeDesktopServices:
         return self.start_ai_generation("batch", teacher_context)
 
     def adopt_ai_preview(self, preview_id: int) -> object:
+        topic = str(self.saved_content["morning_talk"]["topic"])
+        self.ai_adoptions.append((preview_id, topic))
         return preview_id
 
     def reject_ai_preview(self, preview_id: int) -> PreviewView:
@@ -295,6 +299,40 @@ def test_ai_generation_saves_visible_edits_and_page_leave_cancels_operation(
     assert services.ai_starts == [("morning_talk", "")]
     qtbot.mouseClick(_child(window, QPushButton, "open_settings"), Qt.MouseButton.LeftButton)
     assert services.ai_cancelled == [UUID(int=1)]
+
+
+def test_ai_adoption_saves_edits_made_while_generation_was_running(
+    qtbot: QtBot,
+    tmp_path: Path,
+) -> None:
+    services = FakeDesktopServices(tmp_path / "当天教案.docx", ai_enabled=True)
+    services.setup = {"teacher_name": "测试教师"}
+    window = _build(services)
+    qtbot.addWidget(window)
+    window.show()
+    topic = _child(window, QLineEdit, "morning_talk_topic")
+    topic.setText("生成前内容")
+    qtbot.mouseClick(
+        _child(window, QPushButton, "generate_morning_talk"),
+        Qt.MouseButton.LeftButton,
+    )
+    topic.setText("生成期间继续编辑的内容")
+    services.ai_state = CoordinatorState(
+        None,
+        ("morning_talk",),
+        {},
+        (PreviewView(7, 1, "morning_talk", {"topic": "AI 内容"}, "0" * 64, "ready"),),
+    )
+    panel = _child(window, AiPreviewPanel, "ai_preview_panel")
+    panel.refresh()
+
+    qtbot.mouseClick(
+        _child(window, QPushButton, "adopt_morning_talk"),
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert services.ai_adoptions == [(7, "生成期间继续编辑的内容")]
+    assert topic.text() == "生成期间继续编辑的内容"
 
 
 def test_light_theme_overrides_dark_system_palette_for_readable_text(

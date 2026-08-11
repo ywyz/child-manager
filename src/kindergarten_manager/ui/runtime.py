@@ -88,6 +88,7 @@ class _Worker(QRunnable):
         try:
             result = self.task(self.frozen_input, self.token, report)
         except Exception as error:
+            self.frozen_input = None
             summary = safe_exception_summary(error)
             logger.disabled = False
             logger.error(
@@ -102,8 +103,10 @@ class _Worker(QRunnable):
             )
             self.signals.crashed.emit(self.operation_id)
         else:
+            self.frozen_input = None
             self.signals.completed.emit(self.operation_id, result)
         finally:
+            self.frozen_input = None
             self.signals.finished.emit(self.operation_id)
 
 
