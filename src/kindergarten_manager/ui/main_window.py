@@ -22,7 +22,7 @@ class DesktopMainWindow(QWidget):
     def __init__(self, services: DesktopServices) -> None:
         super().__init__()
         self.setObjectName("desktop_shell")
-        self.setWindowTitle("幼儿园一日活动计划")
+        self.setWindowTitle("幼儿园管理助手")
         self.resize(1366, 768)
         self.setMinimumSize(1100, 680)
         self._services = services

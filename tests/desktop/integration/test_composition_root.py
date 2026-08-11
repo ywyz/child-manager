@@ -58,6 +58,7 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
         )
     )
     qtbot.addWidget(window)
+    assert window.windowTitle() == "幼儿园管理助手"
 
     stack = window.findChild(QStackedWidget, "main_stack")
     assert paths.database.exists()
