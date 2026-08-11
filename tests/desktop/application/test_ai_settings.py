@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
-from kindergarten_manager.application.ai_settings import AiSettingsService
+from kindergarten_manager.application.ai_settings import (
+    AiSettingsService,
+    AiSettingsTransaction,
+)
 from kindergarten_manager.infrastructure.ai.prompts import load_default_prompt
 from kindergarten_manager.infrastructure.database.repositories import AiRepository
 from kindergarten_manager.infrastructure.database.upgrade import upgrade_database
@@ -87,3 +93,96 @@ def test_enabling_without_supported_credential_backend_fails_before_database_wri
     assert getattr(captured.value, "code", None) == "credential.backend_unsupported"
     assert repository.get_configuration() is None
     assert "fixture-api-key" not in database.read_bytes().decode("utf-8", errors="ignore")
+
+
+@dataclass
+class TransactionalSettingsRepository:
+    events: list[str] = field(default_factory=list)
+    configuration: object | None = None
+    prompts: dict[str, str] = field(default_factory=dict)
+
+    def get_configuration(self) -> object | None:
+        return self.configuration
+
+    def get_prompt_override(self, prompt_code: str) -> str | None:
+        return self.prompts.get(prompt_code)
+
+    def delete_prompt_override(self, prompt_code: str) -> None:
+        self.prompts.pop(prompt_code, None)
+
+    @contextmanager
+    def settings_transaction(self, now_utc_ms: int) -> Iterator[AiSettingsTransaction]:
+        assert now_utc_ms == 10
+        self.events.append("begin")
+        transaction = FakeSettingsTransaction(self)
+        try:
+            yield transaction
+        except Exception:
+            self.events.append("rollback")
+            raise
+        else:
+            self.events.append("commit")
+
+    def _save_configuration(self, **values: object) -> None:
+        self.events.append("configuration")
+        self.configuration = SimpleNamespace(**values)
+
+    def _set_prompt_override(self, prompt_code: str, content: str) -> None:
+        self.events.append(f"set:{prompt_code}")
+        self.prompts[prompt_code] = content
+
+    def _delete_prompt_override(self, prompt_code: str) -> None:
+        self.events.append(f"delete:{prompt_code}")
+        self.prompts.pop(prompt_code, None)
+
+
+@dataclass
+class FakeSettingsTransaction:
+    repository: TransactionalSettingsRepository
+
+    def save_configuration(
+        self,
+        *,
+        base_url: str | None,
+        model_name: str | None,
+        credential_configured: bool,
+        enabled: bool,
+    ) -> None:
+        self.repository._save_configuration(
+            base_url=base_url,
+            model_name=model_name,
+            credential_configured=credential_configured,
+            enabled=enabled,
+        )
+
+    def set_prompt_override(self, prompt_code: str, content: str) -> None:
+        self.repository._set_prompt_override(prompt_code, content)
+
+    def delete_prompt_override(self, prompt_code: str) -> None:
+        self.repository._delete_prompt_override(prompt_code)
+
+
+def test_application_service_owns_ai_settings_transaction_scope() -> None:
+    repository = TransactionalSettingsRepository()
+    service = AiSettingsService(repository, MemoryCredentialStore(), now_utc_ms=lambda: 10)
+
+    service.save(
+        {
+            "enabled": False,
+            "base_url": "https://ai.example.test/v1",
+            "model_name": "fixture-model",
+            "api_key": "",
+            "prompts": _prompts(),
+        }
+    )
+
+    assert repository.events == [
+        "begin",
+        "configuration",
+        "delete:morning_activity",
+        "delete:morning_talk",
+        "delete:indoor_area_game",
+        "delete:afternoon_outdoor_game",
+        "delete:daily_reflection",
+        "commit",
+    ]

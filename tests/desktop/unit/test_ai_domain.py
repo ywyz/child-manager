@@ -96,6 +96,32 @@ def test_validated_ai_result_has_explicit_schema_version() -> None:
     }
 
 
+def test_ai_result_merge_preserves_teacher_owned_section_fields() -> None:
+    module = _module()
+    merge_section_result = pending_symbol(module, "merge_section_result")
+
+    merged = merge_section_result(
+        {
+            "areas": ["建构区"],
+            "focus_guidance": "教师原指导",
+            "objectives": [],
+            "guidance_points": [],
+            "support_strategies": [],
+        },
+        {
+            "schema_version": 1,
+            "focus_guidance": "AI 建议指导",
+            "objectives": ["合作搭建"],
+            "guidance_points": [],
+            "support_strategies": [],
+        },
+    )
+
+    assert merged["areas"] == ["建构区"]
+    assert merged["focus_guidance"] == "AI 建议指导"
+    assert "schema_version" not in merged
+
+
 @pytest.mark.parametrize(
     ("payload", "category"),
     [

@@ -111,6 +111,24 @@ def test_batch_keeps_successful_previews_when_one_section_fails() -> None:
     assert state.failed_sections == {"morning_activity": "ai.invalid_output"}
 
 
+def test_retry_failed_section_preserves_other_successful_previews() -> None:
+    coordinator = _coordinator()
+    operation = coordinator.start_batch(1, "春季观察")
+    coordinator.accept_result(operation.operation_id, "morning_talk", {"topic": "春天"})
+    coordinator.accept_failure(operation.operation_id, "morning_activity", "ai.invalid_output")
+    coordinator.accept_failure(operation.operation_id, "indoor_area_game", "ai.invalid_output")
+    coordinator.accept_failure(
+        operation.operation_id, "afternoon_outdoor_game", "ai.invalid_output"
+    )
+
+    coordinator.start_single(1, "morning_activity", "重试晨间活动")
+
+    state = coordinator.state()
+    assert state.ready_sections == ("morning_talk",)
+    assert "morning_activity" not in state.failed_sections
+    assert set(state.failed_sections) == {"indoor_area_game", "afternoon_outdoor_game"}
+
+
 def test_cancel_and_close_discard_late_results() -> None:
     runtime = ScriptedRuntime()
     coordinator = _coordinator(runtime=runtime)

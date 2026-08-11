@@ -130,6 +130,16 @@ def section_content_from_result(result: Mapping[str, object]) -> dict[str, objec
     return {key: value for key, value in result.items() if key != "schema_version"}
 
 
+def merge_section_result(
+    current_section: Mapping[str, object],
+    result: Mapping[str, object],
+) -> dict[str, object]:
+    """只覆盖 AI Schema 声明的字段，保留区域等教师维护字段。"""
+    merged = dict(current_section)
+    merged.update(section_content_from_result(result))
+    return merged
+
+
 def _validation_category(error_types: set[str]) -> str:
     priorities = (
         ("extra_forbidden", "unknown_field"),

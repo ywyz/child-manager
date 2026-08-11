@@ -7,12 +7,12 @@ from pathlib import Path
 from uuid import UUID
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from kindergarten_manager.application.ai_generation import AiGenerationCoordinator, PreviewView
 from kindergarten_manager.domain.content import PlanContentV1
 from kindergarten_manager.infrastructure.database.repositories import (
     AiRepository,
-    AiRepositoryError,
 )
 from kindergarten_manager.infrastructure.database.upgrade import upgrade_database
 from tests.desktop.helpers import implemented
@@ -161,15 +161,14 @@ def test_ai_settings_aggregate_rolls_back_configuration_and_prompts_together(
     implemented(lambda: upgrade_database(database))
     repository = _repository(database)
 
-    with pytest.raises(AiRepositoryError):
-        repository.save_settings(
+    with pytest.raises(IntegrityError), repository.settings_transaction(10) as transaction:
+        transaction.save_configuration(
             base_url="https://ai.example.test/v1",
             model_name="fixture-model",
             credential_configured=True,
             enabled=True,
-            prompt_overrides={"not_allowed": "越界提示词"},
-            now_utc_ms=10,
         )
+        transaction.set_prompt_override("not_allowed", "越界提示词")
 
     assert repository.get_configuration() is None
     with sqlite3.connect(database) as connection:

@@ -73,6 +73,7 @@ class DesktopMainWindow(QWidget):
         self.stack.setCurrentIndex(1)
 
     def _open_settings(self) -> None:
+        self._editor.leave_page()
         self._settings_page.reload()
         self.stack.setCurrentWidget(self._settings_page)
 

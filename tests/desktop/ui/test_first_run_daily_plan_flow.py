@@ -47,6 +47,10 @@ class FakeDesktopServices:
     exported: list[Path] = field(default_factory=list)
     selected_contexts: list[tuple[int, date]] = field(default_factory=list)
     settings_updates: list[dict[str, str]] = field(default_factory=list)
+    ai_enabled: bool = False
+    ai_starts: list[tuple[str, str]] = field(default_factory=list)
+    ai_state: CoordinatorState = field(default_factory=lambda: CoordinatorState(None, (), {}, ()))
+    ai_cancelled: list[UUID] = field(default_factory=list)
     failure: Exception | None = None
 
     def complete_setup(self, values: dict[str, str]) -> None:
@@ -100,7 +104,13 @@ class FakeDesktopServices:
         self.exported.append(destination)
 
     def load_ai_settings(self) -> AiSettingsView:
-        return AiSettingsView(None, None, False, False, {})
+        return AiSettingsView(
+            "https://ai.example.test/v1" if self.ai_enabled else None,
+            "fixture" if self.ai_enabled else None,
+            self.ai_enabled,
+            self.ai_enabled,
+            {},
+        )
 
     def save_ai_settings(self, values: dict[str, object]) -> AiSettingsView:
         del values
@@ -111,15 +121,17 @@ class FakeDesktopServices:
         return "默认提示词"
 
     def load_ai_generation_state(self) -> CoordinatorState:
-        return CoordinatorState(None, (), {}, ())
+        return self.ai_state
 
     def start_ai_generation(
         self,
         section_code: str,
         teacher_context: str,
     ) -> OperationAccepted:
-        del section_code, teacher_context
-        return OperationAccepted(UUID(int=1))
+        self.ai_starts.append((section_code, teacher_context))
+        accepted = OperationAccepted(UUID(int=len(self.ai_starts)))
+        self.ai_state = CoordinatorState(accepted.operation_id, (), {}, ())
+        return accepted
 
     def start_ai_batch(self, teacher_context: str) -> OperationAccepted:
         return self.start_ai_generation("batch", teacher_context)
@@ -131,7 +143,8 @@ class FakeDesktopServices:
         return PreviewView(preview_id, 1, "morning_talk", {}, "0" * 64, "rejected")
 
     def cancel_ai_generation(self, operation_id: UUID) -> CommandResult[None]:
-        del operation_id
+        self.ai_cancelled.append(operation_id)
+        self.ai_state = CoordinatorState(None, (), {}, ())
         return CommandResult.success(None, message="AI 生成已取消")
 
 
@@ -259,6 +272,29 @@ def test_daily_plan_uses_week_workspace_and_gives_collective_activity_room(
     qtbot.mouseClick(_child(window, QPushButton, "today"), Qt.MouseButton.LeftButton)
     assert services.selected_contexts[-1] == (1, date(2026, 8, 10))
     assert _child(window, QDateEdit, "plan_date").date().toPython() == date(2026, 8, 10)
+
+
+def test_ai_generation_saves_visible_edits_and_page_leave_cancels_operation(
+    qtbot: QtBot,
+    tmp_path: Path,
+) -> None:
+    services = FakeDesktopServices(tmp_path / "当天教案.docx", ai_enabled=True)
+    services.setup = {"teacher_name": "测试教师"}
+    window = _build(services)
+    qtbot.addWidget(window)
+    window.show()
+    topic = _child(window, QLineEdit, "morning_talk_topic")
+    topic.setText("教师尚未手动保存的春天观察")
+
+    qtbot.mouseClick(
+        _child(window, QPushButton, "generate_morning_talk"),
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert services.saved_content["morning_talk"]["topic"] == "教师尚未手动保存的春天观察"
+    assert services.ai_starts == [("morning_talk", "")]
+    qtbot.mouseClick(_child(window, QPushButton, "open_settings"), Qt.MouseButton.LeftButton)
+    assert services.ai_cancelled == [UUID(int=1)]
 
 
 def test_light_theme_overrides_dark_system_palette_for_readable_text(

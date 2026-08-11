@@ -6,7 +6,7 @@ import json
 import sys
 import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 from typing import Any, cast
@@ -83,6 +83,27 @@ class _BatchOutcome:
     outcomes: tuple[_SectionOutcome, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class _FrozenProviderSection:
+    section_code: str
+    prompt: str
+
+
+@dataclass(frozen=True, slots=True)
+class _FrozenProviderConfiguration:
+    base_url: str
+    model_name: str
+    api_key: str = field(repr=False)
+    sections: tuple[_FrozenProviderSection, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class _PreparedGenerationWork:
+    work: GenerationWork
+    provider: _FrozenProviderConfiguration | None
+    preparation_error_code: str | None = None
+
+
 class _AiRuntimeAdapter:
     """把冻结生成请求放入 Qt 线程池，并只在 UI 线程回送不可变结果。"""
 
@@ -111,7 +132,7 @@ class _AiRuntimeAdapter:
         if not isinstance(work, GenerationWork):
             raise TypeError("AI 后台任务输入类型无效")
         self._pending[operation_id] = work.sections
-        self._bridge.submit(operation_id, self._run, work)
+        self._bridge.submit(operation_id, self._run, self._prepare(work))
 
     def cancel(self, operation_id: UUID) -> bool:
         return self._bridge.cancel(operation_id)
@@ -127,11 +148,54 @@ class _AiRuntimeAdapter:
         cancellation: CancellationToken,
         progress: ProgressReporter,
     ) -> CommandResult[object]:
-        if not isinstance(frozen_input, GenerationWork):
+        if not isinstance(frozen_input, _PreparedGenerationWork):
             return CommandResult.failure(
                 "ai.input_invalid",
                 message="AI 生成输入无效",
             )
+        work = frozen_input.work
+        provider = frozen_input.provider
+        if provider is None:
+            return CommandResult.success(
+                _BatchOutcome(
+                    operation_id=work.operation_id,
+                    outcomes=tuple(
+                        _SectionOutcome(
+                            section,
+                            None,
+                            frozen_input.preparation_error_code or "ai.configuration_incomplete",
+                        )
+                        for section in work.sections
+                    ),
+                ),
+                message="AI 未配置",
+            )
+
+        operation_id = work.operation_id
+        outcomes: list[_SectionOutcome] = []
+        total = len(provider.sections)
+        for index, section_input in enumerate(provider.sections, start=1):
+            if cancellation.cancel_requested:
+                return CommandResult.failure(
+                    "operation.cancelled",
+                    message="AI 生成已取消",
+                )
+            progress("generating", index - 1, total, "AI 正在生成，请稍候")
+            outcome = self._generate_section(
+                section_code=section_input.section_code,
+                base_url=provider.base_url,
+                model_name=provider.model_name,
+                api_key=provider.api_key,
+                prompt=section_input.prompt,
+            )
+            outcomes.append(outcome)
+            progress("generating", index, total, "AI 栏目处理完成")
+        return CommandResult.success(
+            _BatchOutcome(operation_id=operation_id, outcomes=tuple(outcomes)),
+            message="AI 生成已完成",
+        )
+
+    def _prepare(self, work: GenerationWork) -> _PreparedGenerationWork:
         configuration = self._repository.get_configuration()
         if (
             configuration is None
@@ -140,56 +204,30 @@ class _AiRuntimeAdapter:
             or not configuration.model_name
             or self._credential_store is None
         ):
-            return CommandResult.success(
-                _BatchOutcome(
-                    operation_id=self._operation_id_for(frozen_input),
-                    outcomes=tuple(
-                        _SectionOutcome(section, None, "ai.configuration_incomplete")
-                        for section in frozen_input.sections
-                    ),
-                ),
-                message="AI 未配置",
-            )
+            return _PreparedGenerationWork(work, None, "ai.configuration_incomplete")
         try:
             api_key = self._credential_store.require("ai.current")
         except CredentialError as error:
-            return CommandResult.success(
-                _BatchOutcome(
-                    operation_id=self._operation_id_for(frozen_input),
-                    outcomes=tuple(
-                        _SectionOutcome(section, None, error.code)
-                        for section in frozen_input.sections
-                    ),
-                ),
-                message="AI 凭据不可用",
-            )
-
-        operation_id = frozen_input.operation_id
-        outcomes: list[_SectionOutcome] = []
-        total = len(frozen_input.frozen_inputs)
-        for index, section_input in enumerate(frozen_input.frozen_inputs, start=1):
-            if cancellation.cancel_requested:
-                return CommandResult.failure(
-                    "operation.cancelled",
-                    message="AI 生成已取消",
-                )
-            progress("generating", index - 1, total, "AI 正在生成，请稍候")
+            return _PreparedGenerationWork(work, None, error.code)
+        sections: list[_FrozenProviderSection] = []
+        for section_input in work.frozen_inputs:
             prompt = self._repository.get_prompt_override(section_input.section_code)
             if prompt is None:
                 prompt = load_default_prompt(section_input.section_code)
-            prompt = f"{prompt}\n\n冻结输入 JSON：{section_input.payload_json}"
-            outcome = self._generate_section(
-                section_code=section_input.section_code,
+            sections.append(
+                _FrozenProviderSection(
+                    section_code=section_input.section_code,
+                    prompt=f"{prompt}\n\n冻结输入 JSON：{section_input.payload_json}",
+                )
+            )
+        return _PreparedGenerationWork(
+            work,
+            _FrozenProviderConfiguration(
                 base_url=configuration.base_url,
                 model_name=configuration.model_name,
                 api_key=api_key,
-                prompt=prompt,
-            )
-            outcomes.append(outcome)
-            progress("generating", index, total, "AI 栏目处理完成")
-        return CommandResult.success(
-            _BatchOutcome(operation_id=operation_id, outcomes=tuple(outcomes)),
-            message="AI 生成已完成",
+                sections=tuple(sections),
+            ),
         )
 
     def _generate_section(
@@ -232,9 +270,6 @@ class _AiRuntimeAdapter:
                 )
             return _SectionOutcome(section_code, None, error.code)
         return _SectionOutcome(section_code, canonical_json(validated), None)
-
-    def _operation_id_for(self, work: GenerationWork) -> UUID:
-        return work.operation_id
 
     def _on_succeeded(self, result: CommandResult[object]) -> None:
         outcome = result.value

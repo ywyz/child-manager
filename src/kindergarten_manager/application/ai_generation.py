@@ -14,8 +14,8 @@ from kindergarten_manager.domain.ai import (
     build_generation_input,
     canonical_json,
     canonical_json_sha256,
+    merge_section_result,
     preview_is_stale,
-    section_content_from_result,
     section_sha256,
     validate_section_output,
 )
@@ -278,7 +278,13 @@ class AiGenerationCoordinator:
             else:
                 validated = validate_section_output(candidate.section_code, candidate.result)
                 updated = dict(candidate.content)
-                updated[candidate.section_code] = section_content_from_result(validated)
+                current_section = candidate.content.get(candidate.section_code)
+                if not isinstance(current_section, Mapping):
+                    raise AiGenerationError("ai.plan_content_invalid", "教案目标栏目无效")
+                updated[candidate.section_code] = merge_section_result(
+                    current_section,
+                    validated,
+                )
                 transaction.save_snapshot()
                 revision = transaction.update_content(updated)
                 transaction.mark_adopted()
@@ -336,8 +342,8 @@ class AiGenerationCoordinator:
             terminal_sections=set(),
         )
         self._current = operation
-        self._ready_by_section.clear()
-        self._failed.clear()
+        for section in sections:
+            self._failed.pop(section, None)
         self.runtime.submit(
             operation_id,
             GenerationWork(

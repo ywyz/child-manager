@@ -427,6 +427,7 @@ class DailyPlanPage(QWidget):
         work.addWidget(self.section_stack, 1)
         self.ai_preview_panel = AiPreviewPanel(
             services,
+            on_prepare_generation=self.save,
             on_content_changed=self._load_content,
         )
         work.addWidget(self.ai_preview_panel)
@@ -450,7 +451,7 @@ class DailyPlanPage(QWidget):
         except Exception as error:
             self.save_status.setText(user_error_message(error, "教案加载失败，请检查设置后重试"))
 
-    def save(self) -> None:
+    def save(self) -> bool:
         for _title, definitions in FIELD_GROUPS:
             for definition in definitions:
                 _write(
@@ -462,9 +463,13 @@ class DailyPlanPage(QWidget):
             self._services.save_current_plan(self._content)
         except Exception as error:
             self.save_status.setText(user_error_message(error, "保存失败，请检查设置后重试"))
-            return
+            return False
         self.save_status.setText("已保存")
         self._refresh_week_strip()
+        return True
+
+    def leave_page(self) -> None:
+        self.ai_preview_panel.leave_page()
 
     def export(self) -> None:
         export_current_day(parent=self, services=self._services, status=self.export_status)

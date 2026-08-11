@@ -396,53 +396,16 @@ class AiRepository:
             )
         return _configuration_record(row)
 
-    def save_settings(
+    @contextmanager
+    def settings_transaction(
         self,
-        *,
-        base_url: str | None,
-        model_name: str | None,
-        credential_configured: bool,
-        enabled: bool,
-        prompt_overrides: Mapping[str, str | None],
         now_utc_ms: int,
-    ) -> AiConfigurationRecord:
-        allowed = {
-            "morning_activity",
-            "morning_talk",
-            "indoor_area_game",
-            "afternoon_outdoor_game",
-            "daily_reflection",
-        }
-        if set(prompt_overrides) != allowed:
-            raise AiRepositoryError("ai.prompt_code_invalid", "提示词集合不完整或包含未知栏目")
+    ) -> Iterator[_SqliteAiSettingsTransaction]:
         with self.session_factory.begin() as session:
-            connection = session.connection()
-            row = _write_ai_configuration(
-                connection,
-                base_url=base_url,
-                model_name=model_name,
-                credential_configured=credential_configured,
-                enabled=enabled,
+            yield _SqliteAiSettingsTransaction(
+                session.connection(),
                 now_utc_ms=now_utc_ms,
             )
-            for prompt_code, content in prompt_overrides.items():
-                if content is None:
-                    connection.exec_driver_sql(
-                        "DELETE FROM prompt_overrides WHERE prompt_code = ?",
-                        (prompt_code,),
-                    )
-                else:
-                    connection.exec_driver_sql(
-                        """
-                        INSERT INTO prompt_overrides(prompt_code, content, updated_at_utc_ms)
-                        VALUES (?, ?, ?)
-                        ON CONFLICT(prompt_code) DO UPDATE SET
-                            content = excluded.content,
-                            updated_at_utc_ms = excluded.updated_at_utc_ms
-                        """,
-                        (prompt_code, content, now_utc_ms),
-                    )
-        return _configuration_record(row)
 
     def get_prompt_override(self, prompt_code: str) -> str | None:
         with self.session_factory() as session:
@@ -576,6 +539,47 @@ class AiRepository:
         if row is None:
             raise AiRepositoryError("ai.preview_not_ready", "AI 预览不存在或已处理")
         return _preview_record(row)
+
+
+class _SqliteAiSettingsTransaction:
+    def __init__(self, connection: Connection, *, now_utc_ms: int) -> None:
+        self._connection = connection
+        self._now_utc_ms = now_utc_ms
+
+    def save_configuration(
+        self,
+        *,
+        base_url: str | None,
+        model_name: str | None,
+        credential_configured: bool,
+        enabled: bool,
+    ) -> None:
+        _write_ai_configuration(
+            self._connection,
+            base_url=base_url,
+            model_name=model_name,
+            credential_configured=credential_configured,
+            enabled=enabled,
+            now_utc_ms=self._now_utc_ms,
+        )
+
+    def set_prompt_override(self, prompt_code: str, content: str) -> None:
+        self._connection.exec_driver_sql(
+            """
+            INSERT INTO prompt_overrides(prompt_code, content, updated_at_utc_ms)
+            VALUES (?, ?, ?)
+            ON CONFLICT(prompt_code) DO UPDATE SET
+                content = excluded.content,
+                updated_at_utc_ms = excluded.updated_at_utc_ms
+            """,
+            (prompt_code, content, self._now_utc_ms),
+        )
+
+    def delete_prompt_override(self, prompt_code: str) -> None:
+        self._connection.exec_driver_sql(
+            "DELETE FROM prompt_overrides WHERE prompt_code = ?",
+            (prompt_code,),
+        )
 
 
 class _SqliteAiAdoptionTransaction:

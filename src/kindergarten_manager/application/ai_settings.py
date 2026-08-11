@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
+from contextlib import AbstractContextManager
 from dataclasses import dataclass
 from typing import Any, Protocol
 
@@ -29,18 +30,27 @@ class AiSettingsError(RuntimeError):
 class AiSettingsRepository(Protocol):
     def get_configuration(self) -> Any: ...
 
-    def save_settings(
+    def settings_transaction(
+        self,
+        now_utc_ms: int,
+    ) -> AbstractContextManager[AiSettingsTransaction]: ...
+
+    def get_prompt_override(self, prompt_code: str) -> str | None: ...
+
+    def delete_prompt_override(self, prompt_code: str) -> None: ...
+
+
+class AiSettingsTransaction(Protocol):
+    def save_configuration(
         self,
         *,
         base_url: str | None,
         model_name: str | None,
         credential_configured: bool,
         enabled: bool,
-        prompt_overrides: Mapping[str, str | None],
-        now_utc_ms: int,
-    ) -> Any: ...
+    ) -> None: ...
 
-    def get_prompt_override(self, prompt_code: str) -> str | None: ...
+    def set_prompt_override(self, prompt_code: str, content: str) -> None: ...
 
     def delete_prompt_override(self, prompt_code: str) -> None: ...
 
@@ -138,21 +148,19 @@ class AiSettingsService:
 
         now_utc_ms = int(self._now_utc_ms())
         try:
-            self._repository.save_settings(
-                base_url=base_url,
-                model_name=model_name,
-                credential_configured=credential_configured,
-                enabled=enabled,
-                prompt_overrides={
-                    code: (
-                        None
-                        if normalized_prompts[code] == load_default_prompt(code)
-                        else normalized_prompts[code]
-                    )
-                    for code in _PROMPT_CODES
-                },
-                now_utc_ms=now_utc_ms,
-            )
+            with self._repository.settings_transaction(now_utc_ms) as transaction:
+                transaction.save_configuration(
+                    base_url=base_url,
+                    model_name=model_name,
+                    credential_configured=credential_configured,
+                    enabled=enabled,
+                )
+                for code in _PROMPT_CODES:
+                    content = normalized_prompts[code]
+                    if content == load_default_prompt(code):
+                        transaction.delete_prompt_override(code)
+                    else:
+                        transaction.set_prompt_override(code, content)
         except Exception:
             if api_key and self._credential_store is not None:
                 if previous_secret is None:
