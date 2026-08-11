@@ -10,6 +10,7 @@ from uuid import UUID
 from kindergarten_manager.application.ai_generation import CoordinatorState, PreviewView
 from kindergarten_manager.application.ai_settings import AiSettingsView
 from kindergarten_manager.application.dto import CommandResult, OperationAccepted
+from kindergarten_manager.application.lesson_plans import LessonPlanEditorState
 from kindergarten_manager.application.workspace import DailyPlanContext, DesktopSettingsContext
 
 
@@ -48,7 +49,7 @@ class DesktopServices(Protocol):
 
     def start_ai_batch(self, teacher_context: str) -> OperationAccepted: ...
 
-    def adopt_ai_preview(self, preview_id: int) -> object: ...
+    def adopt_ai_preview(self, preview_id: int) -> LessonPlanEditorState: ...
 
     def reject_ai_preview(self, preview_id: int) -> PreviewView: ...
 

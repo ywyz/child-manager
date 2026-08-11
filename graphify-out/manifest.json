@@ -2370,9 +2370,9 @@
     "semantic_hash": "8d2f4e1668f50bd62a3f80ba02473f1a"
   },
   "src/kindergarten_manager/app.py": {
-    "mtime": 1786431935.8559754,
-    "ast_hash": "c3dc1921f78744711cd0976b3ec9c8fa",
-    "semantic_hash": "c3dc1921f78744711cd0976b3ec9c8fa"
+    "mtime": 1786435066.6137888,
+    "ast_hash": "0d959db9d9cae0b0402f621a0cf91305",
+    "semantic_hash": "0d959db9d9cae0b0402f621a0cf91305"
   },
   "src/kindergarten_manager/infrastructure/database/engine.py": {
     "mtime": 1786273867.0485778,
@@ -2440,14 +2440,14 @@
     "semantic_hash": "687f937d030056c5957c02a62f17680a"
   },
   "src/kindergarten_manager/ui/ports.py": {
-    "mtime": 1786428670.2979865,
-    "ast_hash": "43c20b3a8363bbaaa6851a27dce6cec5",
-    "semantic_hash": "43c20b3a8363bbaaa6851a27dce6cec5"
+    "mtime": 1786435066.6137888,
+    "ast_hash": "d41f2c1e5127bfff97491d48d7cbab60",
+    "semantic_hash": "d41f2c1e5127bfff97491d48d7cbab60"
   },
   "src/kindergarten_manager/application/workspace.py": {
-    "mtime": 1786422085.3619666,
-    "ast_hash": "f6beeaa0184b7590e88f6c98755df416",
-    "semantic_hash": "f6beeaa0184b7590e88f6c98755df416"
+    "mtime": 1786435066.6127887,
+    "ast_hash": "8d7caf35e7257fcb94e85d7cffbb88e2",
+    "semantic_hash": "8d7caf35e7257fcb94e85d7cffbb88e2"
   },
   "src/kindergarten_manager/ui/errors.py": {
     "mtime": 1786272184.5346782,
@@ -2610,9 +2610,9 @@
     "semantic_hash": "40de2ac0493ad2bbad9e58a6eb625615"
   },
   "docs/implementation-evidence/desktop-slice-2a-acceptance.md": {
-    "mtime": 1786433927.4268565,
-    "ast_hash": "f6d9f12344a9fa57a938bfcc819e2a73",
-    "semantic_hash": "f6d9f12344a9fa57a938bfcc819e2a73"
+    "mtime": 1786435118.0277858,
+    "ast_hash": "3b9e183ddf075387409039c2e7451662",
+    "semantic_hash": "3b9e183ddf075387409039c2e7451662"
   },
   "src/kindergarten_manager/infrastructure/ai/prompts/afternoon_outdoor_game.txt": {
     "mtime": 1786421351.2769608,
@@ -2640,8 +2640,8 @@
     "semantic_hash": "bd0c9fa3ba74aa0e1dece3b90f33fa8c"
   },
   "tests/desktop/application/test_ai_runtime_adapter.py": {
-    "mtime": 1786433805.3088639,
-    "ast_hash": "93d620b0df0d445e27764afaf7a0a998",
-    "semantic_hash": "93d620b0df0d445e27764afaf7a0a998"
+    "mtime": 1786435025.0417912,
+    "ast_hash": "f97d4e5f23954c8add5b3911ce6924fc",
+    "semantic_hash": "f97d4e5f23954c8add5b3911ce6924fc"
   }
 }

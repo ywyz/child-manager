@@ -28,7 +28,7 @@
 | 离页取消迟到 | `test_cancel_and_close_discard_late_results`、`test_ai_generation_saves_visible_edits_and_page_leave_cancels_operation` | 离开教案页停止轮询、请求取消，operation discard 边界拒绝迟到 preview |
 | 明确拒绝 | `test_reject_changes_only_preview_and_stale_target_cannot_be_adopted` | 只改变 preview 状态，正文与版本不变 |
 | preview 过期 | 上述协调器测试与 `test_stale_preview_is_invalidated_without_snapshot_or_content_write` | 目标栏目 hash 变化后标记 invalidated，零正文写入、零快照 |
-| 明确采用 | `test_adoption_snapshots_before_mutating_current_content`、`test_ai_result_merge_preserves_teacher_owned_section_fields` 与 Repository 事务测试 | 同事务先写 `pre_ai_adopt` 快照，再合并结果并保留教师维护的区域字段、更新正文/revision，最后标记 adopted |
+| 明确采用 | `test_adoption_snapshots_before_mutating_current_content`、`test_ai_result_merge_preserves_teacher_owned_section_fields`、`test_facade_syncs_adopted_content_into_workspace_cache_and_revision` 与 Repository 事务测试 | 同事务先写 `pre_ai_adopt` 快照，再合并结果并保留教师维护的区域字段、更新正文/revision，最后标记 adopted；Facade 同步唯一 Workspace 缓存并返回最新 `LessonPlanEditorState`，后续保存使用新 revision |
 | Provider 冻结与释放 | `test_submit_freezes_configuration_credential_and_prompt_before_background_work`、`test_finished_worker_releases_sensitive_input_before_pool_cleanup` | 配置、Key 与提示词在提交后台任务前一次性读取；后台线程只使用不可变且 secret 不进入 repr 的冻结 DTO，并在发出完成信号前释放冻结输入引用 |
 | 真实 UI 接线 | `test_actual_panel_wires_per_section_preview_adopt_and_retry`、`test_ai_adoption_saves_edits_made_while_generation_was_running` 与教案页回归 | 教案页实际渲染逐栏/四栏入口、预览、采用、拒绝、重试和取消控件；生成前与采用前均保存当前可见编辑，目标栏变化由 hash 门禁拒绝覆盖；离页停止轮询并取消运行任务 |
 | 凭据隔离 | `test_credentials.py`、`test_ai_settings.py` | 只接受 keyring 25.7.0 的真实 `Windows WinVaultKeyring`，并固定 `persist = "local machine"`；Key 不进入 DTO repr、SQLite 或错误文本 |
@@ -57,24 +57,24 @@
 
 | 命令 | 结果 |
 |---|---|
-| `uv run pytest --collect-only -q` | 847 项收集成功，无导入、fixture 或环境错误 |
+| `uv run pytest --collect-only -q` | 848 项收集成功，无导入、fixture 或环境错误 |
 | T035–T039 | 38 passed |
-| AI Runtime/设置 + 迁移/Repository/Bootstrap 专项 | 22 passed；与上项合计 60 passed |
-| `uv run pytest -q tests/desktop` | 118 passed；覆盖 Slice 1 与 Slice 2A |
+| AI Runtime/设置 + 迁移/Repository/Bootstrap 专项 | 23 passed；与上项合计 61 passed |
+| `uv run pytest -q tests/desktop` | 119 passed；覆盖 Slice 1 与 Slice 2A |
 | `uv run ruff format --check .` | 通过，389 files already formatted |
 | `uv run ruff check .` | 通过 |
 | `uv run pyright` | 通过，0 errors / 0 warnings |
-| `graphify update .` | 代码增量抽取成功，更新阶段得到 5359 nodes / 15415 edges |
-| `graphify extract` 降级链 | OpenAI 兼容后端成功重抽取 10 个代码文件与 1 个验收文档，未触发 DeepSeek 或 `luna_worker` |
-| Graphify 社区命名 | OpenAI 300 秒无输出后超时；DeepSeek 成功完成最终 297 个社区命名，未调用 `luna_worker` |
+| `graphify update .` | 代码增量抽取成功，更新阶段得到 5325 nodes / 15420 edges |
+| `graphify extract` 降级链 | OpenAI 兼容后端 300 秒无输出后超时；DeepSeek 成功重抽取 4 个代码文件与 1 个验收文档，未调用 `luna_worker` |
+| Graphify 社区命名 | OpenAI 300 秒无输出后超时；DeepSeek 成功完成最终 343 个社区命名，未调用 `luna_worker` |
 | `graph.html` | 图谱超过 5000 节点，Graphify 按可视化上限明确跳过 HTML；未绕过限制 |
-| T048 Graphify 定向查询 | 命中真实采用/冻结输入/Runtime Bridge、Application 设置事务、离页取消及 T048 验收节点；未用退出码替代语义覆盖检查 |
-| `graphify diagnose multigraph --graph graphify-out/graph.json --undirected` | 最终 5333 nodes / 15230 edges；缺失端点、悬空边、自环、精确重复边和折叠边均为 0；另有 1 个既存历史审查文档推断节点 `FR-031` 被标记 unverified，与本次桌面实现节点无关 |
+| T048 Graphify 定向查询 | 命中 `DailyPlanWorkspace`、`LessonPlanEditorState`、Facade、采用协调器与 revision 保存节点；未用退出码替代语义覆盖检查 |
+| `graphify diagnose multigraph --graph graphify-out/graph.json --undirected` | 最终 5424 nodes / 15238 edges；缺失端点、悬空边、自环、精确重复边和折叠边均为 0；另有 1 个既存历史审查文档推断节点 `FR-031` 被标记 unverified，与本次桌面实现节点无关 |
 
 仓库级 `uv run pytest -q` 也已实际执行：550 passed、1 failed、282 errors。失败与错误均来自历史
 Cloud 测试在 fixture/健康检查阶段无法连接本机 PostgreSQL/Redis（PostgreSQL 目标为回环地址
 `127.0.0.1:15432`）；Docker API 在当前环境同样无访问权限，不能启动该历史依赖。这是环境
-门禁，不是本次桌面 RED 或桌面回归失败；桌面范围 118 项独立通过。
+门禁，不是本次桌面 RED 或桌面回归失败；桌面范围 119 项独立通过。
 
 ## 5. 首次固定 GREEN Review 收口
 
@@ -118,6 +118,14 @@ push 门禁。
   `GenerationWork.teacher_context` 重复字段。
 
 第三个候选也不作为可推送结论；上述修复必须形成新的固定 SHA 并重新通过两个 Review 轴。
+
+第四个固定候选 `1239641b8d2d560edccef4a674caac0db2300b5f` 仍未推送。Standards 轴
+通过，但 Spec 轴发现采用事务写入 SQLite 后，Facade 没有把新正文与 revision 同步回
+`DailyPlanWorkspace`，导致 UI 重载旧缓存且后续保存会使用过期 revision。后续候选已使 Facade
+把 Coordinator 的采用结果应用到唯一 Workspace 编辑状态，并返回最新 `LessonPlanEditorState`；
+回归测试同时验证 UI 可读到 AI 正文且下一次保存使用采用后的 revision。
+
+第四个候选也不作为可推送结论；修复后的新固定 SHA 必须重新通过两个 Review 轴。
 
 ## 6. 本地结论与停止边界
 

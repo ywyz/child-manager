@@ -10,6 +10,7 @@ from hashlib import sha256
 from pathlib import Path
 from typing import Any, Protocol
 
+from kindergarten_manager.application.ai_generation import AdoptedContent
 from kindergarten_manager.application.dto import CancellationToken
 from kindergarten_manager.application.exports import (
     DailyPlanExportSnapshot,
@@ -245,6 +246,20 @@ class DailyPlanWorkspace:
             content=normalized,
             content_revision=saved.content_revision,
         )
+
+    def apply_ai_adoption(self, adopted: AdoptedContent) -> LessonPlanEditorState:
+        """将已提交的 AI 采用结果同步回唯一编辑器状态。"""
+
+        if self._current_plan is None:
+            self.load_plan_context()
+        if self._current_plan is None:
+            raise WorkspaceError("plan.context_missing", "首次设置尚未完成")
+        self._current_plan = replace(
+            self._current_plan,
+            content=PlanContentV1.model_validate(adopted.content),
+            content_revision=adopted.content_revision,
+        )
+        return self._current_plan
 
     def suggested_export_filename(self) -> str:
         current_date = self._current_plan.plan_date if self._current_plan else self._today()

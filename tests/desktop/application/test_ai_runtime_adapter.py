@@ -2,13 +2,21 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import date
 from types import SimpleNamespace
 from typing import Any, cast
 from uuid import UUID
 
-from kindergarten_manager.app import _AiRuntimeAdapter
-from kindergarten_manager.application.ai_generation import FrozenGenerationInput, GenerationWork
+from kindergarten_manager.app import _AiRuntimeAdapter, _DesktopServiceFacade
+from kindergarten_manager.application.ai_generation import (
+    AdoptedContent,
+    FrozenGenerationInput,
+    GenerationWork,
+)
 from kindergarten_manager.application.dto import CancellationToken
+from kindergarten_manager.application.lesson_plans import LessonPlanEditorState, SaveResult
+from kindergarten_manager.application.workspace import DailyPlanWorkspace
+from kindergarten_manager.domain.content import PlanContentV1
 from kindergarten_manager.ui.runtime import RuntimeBridge
 
 
@@ -117,3 +125,65 @@ def test_submit_freezes_configuration_credential_and_prompt_before_background_wo
     assert call["model_name"] == "first-model"
     assert call["api_key"] == "first-secret"
     assert str(call["prompt"]).startswith("first-prompt")
+
+
+@dataclass
+class SavingPlans:
+    base_revisions: list[int] = field(default_factory=list)
+
+    def save_version(
+        self,
+        plan_id: int,
+        base_revision: int,
+        content: PlanContentV1,
+        description: str | None = None,
+    ) -> SaveResult:
+        del content, description
+        self.base_revisions.append(base_revision)
+        return SaveResult(plan_id, base_revision + 1, 10)
+
+
+@dataclass
+class AdoptingCoordinator:
+    adopted: AdoptedContent
+
+    def adopt(self, preview_id: int) -> AdoptedContent:
+        assert preview_id == 7
+        return self.adopted
+
+
+def test_facade_syncs_adopted_content_into_workspace_cache_and_revision() -> None:
+    plans = SavingPlans()
+    workspace = DailyPlanWorkspace(
+        settings=cast(Any, object()),
+        plans=cast(Any, plans),
+        repository=cast(Any, object()),
+        renderer=cast(Any, object()),
+        today=lambda: date(2026, 9, 7),
+        setup_complete=True,
+    )
+    workspace._current_plan = LessonPlanEditorState(
+        id=1,
+        class_id=2,
+        semester_id=3,
+        plan_date=date(2026, 9, 7),
+        author_name="测试教师",
+        content_revision=2,
+        content=PlanContentV1(),
+    )
+    adopted_content = PlanContentV1.model_validate(
+        {"morning_talk": {"topic": "AI 春天", "questions": []}}
+    ).model_dump()
+    coordinator = AdoptingCoordinator(AdoptedContent(adopted_content, 3))
+    facade = _DesktopServiceFacade(
+        workspace,
+        cast(Any, object()),
+        cast(Any, coordinator),
+    )
+
+    editor = facade.adopt_ai_preview(7)
+
+    assert isinstance(editor, LessonPlanEditorState)
+    assert workspace.load_current_plan()["morning_talk"]["topic"] == "AI 春天"
+    workspace.save_current_plan(adopted_content)
+    assert plans.base_revisions == [3]

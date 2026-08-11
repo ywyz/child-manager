@@ -27,7 +27,7 @@ from kindergarten_manager.application.dto import (
     CommandResult,
     OperationAccepted,
 )
-from kindergarten_manager.application.lesson_plans import LessonPlanService
+from kindergarten_manager.application.lesson_plans import LessonPlanEditorState, LessonPlanService
 from kindergarten_manager.application.settings import SettingsService
 from kindergarten_manager.application.workspace import (
     DailyPlanContext,
@@ -386,8 +386,9 @@ class _DesktopServiceFacade:
             teacher_context,
         )
 
-    def adopt_ai_preview(self, preview_id: int) -> object:
-        return self._coordinator.adopt(preview_id)
+    def adopt_ai_preview(self, preview_id: int) -> LessonPlanEditorState:
+        adopted = self._coordinator.adopt(preview_id)
+        return self._workspace.apply_ai_adoption(adopted)
 
     def reject_ai_preview(self, preview_id: int) -> PreviewView:
         return self._coordinator.reject(preview_id)

@@ -28,6 +28,7 @@ from pytestqt.qtbot import QtBot
 from kindergarten_manager.application.ai_generation import CoordinatorState, PreviewView
 from kindergarten_manager.application.ai_settings import AiSettingsView
 from kindergarten_manager.application.dto import CommandResult, OperationAccepted
+from kindergarten_manager.application.lesson_plans import LessonPlanEditorState
 from kindergarten_manager.application.settings import SettingsError
 from kindergarten_manager.application.workspace import (
     ClassContext,
@@ -138,10 +139,18 @@ class FakeDesktopServices:
     def start_ai_batch(self, teacher_context: str) -> OperationAccepted:
         return self.start_ai_generation("batch", teacher_context)
 
-    def adopt_ai_preview(self, preview_id: int) -> object:
+    def adopt_ai_preview(self, preview_id: int) -> LessonPlanEditorState:
         topic = str(self.saved_content["morning_talk"]["topic"])
         self.ai_adoptions.append((preview_id, topic))
-        return preview_id
+        return LessonPlanEditorState(
+            id=1,
+            class_id=1,
+            semester_id=1,
+            plan_date=date(2026, 9, 7),
+            author_name=self.setup.get("teacher_name", "测试教师"),
+            content_revision=2,
+            content=PlanContentV1.model_validate(self.saved_content),
+        )
 
     def reject_ai_preview(self, preview_id: int) -> PreviewView:
         return PreviewView(preview_id, 1, "morning_talk", {}, "0" * 64, "rejected")
