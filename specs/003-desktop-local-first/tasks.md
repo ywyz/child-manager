@@ -3,13 +3,13 @@
 **Input**: `specs/003-desktop-local-first/` 下的 `spec.md`、`plan.md`、`research.md`、
 `data-model.md`、`quickstart.md` 与 `contracts/`
 
-**Docs Baseline**: `eaee3592aedeef6a01f8c11d2df2c977489828ef` |
+**Docs Baseline**: `fff6e0908fcb591c927205d53cdbacd35037bce3` |
 **Issue**: https://github.com/ywyz/child-manager/issues/14 | **Implementation Branch**: `dev`
 
-**Authorization Record (2026-08-09)**: 维护者已授权补齐公共 seam tracer、固定基线双轴
-Review、本地 RED 检查点，以及 T019–T033 GREEN；本地全绿和第二次 Review 后可提交、推送并
-等待 CI。T034 Windows 独立人工验收继续作为单独门禁；T035 以后须在 T034 后先进入 Slice 2A，
-PR 与 `main` 集成不在当前授权范围。
+**Authorization Record (2026-08-11)**: 维护者已确认 T034 无计时 Windows 二元验收事实，并授权
+以只含 docs 同步、验收证据和状态更新的提交作为固定 Review SHA；`cf106e44cb907a4958879a16ee061dccc8c2b1f9`
+继续作为实现代码锚点。Standards/Spec 双轴 Review 通过后才可合并 `main`；T035–T040 由独立
+Slice 2A Issue 驱动，完成 clean RED 后停在 T040，不得进入 T041 GREEN。
 
 **Tests**: 规格与宪章明确要求自动化测试；每个切片先收集测试并得到只来自本切片未实现行为的
 RED，再实施并运行该切片自有门禁。导入、fixture、数据库配置或运行环境错误均不是有效 RED。
@@ -67,7 +67,7 @@ RED，再实施并运行该切片自有门禁。导入、fixture、数据库配�
 - [x] T013 [P] [US1] 在 `tests/desktop/application/test_settings_service.py` 覆盖最少首次设置、教师/园所/学期/班级/区域约束、单一当前学期和事务回滚
 - [x] T014 [P] [US1] 在 `tests/desktop/unit/test_content.py` 与 `tests/desktop/unit/test_calendar.py` 覆盖首期结构化字段、教学周、日期/季节文本及非工作日/覆盖外年份只软提示
 - [x] T015 [P] [US1] 在 `tests/desktop/application/test_lesson_plan_service.py` 和 `tests/desktop/database/test_lesson_plan_repository.py` 覆盖同班同日唯一、打开/创建、revision 乐观校验、保存正文和重启读取
-- [x] T016 [P] [US1] 在 `tests/desktop/contracts/test_word_single_export.py` 覆盖冻结 snapshot、旧 Renderer 字段映射、模板表格/字体/字号、段落/换行、同目录临时文件、原子覆盖与模板哈希不变
+- [x] T016 [P] [US1] 在 `tests/desktop/contracts/test_word_single_export.py` 覆盖冻结 snapshot、旧 Renderer 字段映射、模板表格/字体/字号/段落/换行、同目录临时文件、原子覆盖与模板哈希不变
 - [x] T017 [P] [US1] 在 `tests/desktop/ui/test_first_run_daily_plan_flow.py` 覆盖首次设置、创建班级/学期、结构化编辑、保存状态、重启加载和“导出当天 Word”文件对话框闭环
 - [x] T018 [US1] 先运行 `uv run pytest --collect-only` 收集 T011–T017，再运行这些测试并将干净 RED 记录到 `docs/implementation-evidence/desktop-slice-1-red.md`；导入、Qt fixture、模板或 SQLite 环境错误必须先修复
 
@@ -88,7 +88,7 @@ RED，再实施并运行该切片自有门禁。导入、fixture、数据库配�
 - [x] T031 [US1] 实现 `src/kindergarten_manager/ui/pages/daily_plan.py` 的班级/日期上下文、01–05 与反思结构化编辑、显式保存和固定状态区
 - [x] T032 [US1] 实现 `src/kindergarten_manager/ui/pages/single_export.py` 的“导出当天 Word”、原生目标选择、覆盖确认和完成/失败反馈
 - [x] T033 [US1] 实现 `src/kindergarten_manager/__main__.py`、`src/kindergarten_manager/app.py` 与 `src/kindergarten_manager/ui/main_window.py` 的唯一 composition root，把首次设置和主窗口串成可启动闭环
-- [ ] T034 [US1] 运行 T011–T017、`uv run ruff format --check .`、`uv run ruff check .`、`uv run pyright`，并由一名未参与实现、只依赖界面提示的验收参与者在断网 Windows 上从首次启动开始计时；在 `docs/implementation-evidence/desktop-slice-1-acceptance.md` 记录开始/完成时间、5 分钟内完成设置并创建第一份教案，以及重启→当天 Word 打开证据
+- [x] T034 [US1] 运行 T011–T017、`uv run ruff format --check .`、`uv run ruff check .`、`uv run pyright`，并由一名未参与实现、只依赖界面提示的验收参与者在断网 Windows 上完成首次启动、基础设置并创建第一份教案；在 `docs/implementation-evidence/desktop-slice-1-acceptance.md` 记录上述流程通过，以及重启→当天 Word 打开证据
 
 **Checkpoint**: MVP 可单独使用；AI、远程备份、批量 Word、历史/归档和完整视觉收敛均不得计入本切片。
 

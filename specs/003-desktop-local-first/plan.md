@@ -298,7 +298,7 @@ GenericDataLocation/cn.kindergartenmanager.desktop/
 1. **Setup 与 Foundation**：固定授权基线、锁定依赖、建立新命名空间、Qt 后台桥接和架构
    禁入测试。验证：锁定安装、测试收集、Ruff/Pyright 和新命名空间不导入旧 apps。
 2. **Slice 1 / MVP：首次启动到当天 Word**：路径、SQLite/Alembic、首次设置、当前教案编辑、
-   日期软提示和单日原子导出。验证：断网 Windows 在 5 分钟内完成首次设置和第一份教案，
+   日期软提示和单日原子导出。验证：断网 Windows 完成首次设置和第一份教案，
    重启后内容仍在且当天 Word 保持模板哈希与样式；历史、归档、批量 Word 暂不计入。
 3. **Slice 2A / P2 现有可选 AI**：凭据、一个模型、提示词覆盖、Qt 后台单任务、结构校验、
    预览有效性和采用前快照。验证：全替身的成功/重试/失败/取消/过期矩阵。
