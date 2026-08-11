@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Any, cast
 
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -122,12 +121,8 @@ class AiSettingsPage(QWidget):
         outer.addWidget(save)
 
     def reload(self) -> None:
-        loader = getattr(self._services, "load_ai_settings", None)
-        if not callable(loader):
-            self._show_unavailable()
-            return
         try:
-            view = cast(Any, loader())
+            view = self._services.load_ai_settings()
         except Exception as error:
             self.status.setText(user_error_message(error, "AI 设置加载失败，请重试"))
             return
@@ -143,10 +138,6 @@ class AiSettingsPage(QWidget):
         self.status.setText("")
 
     def save(self) -> None:
-        saver = getattr(self._services, "save_ai_settings", None)
-        if not callable(saver):
-            self._show_unavailable()
-            return
         values: dict[str, object] = {
             "enabled": self.enabled.isChecked(),
             "base_url": self.base_url.text(),
@@ -157,7 +148,7 @@ class AiSettingsPage(QWidget):
             },
         }
         try:
-            saver(values)
+            self._services.save_ai_settings(values)
         except Exception as error:
             self.status.setText(user_error_message(error, "AI 设置保存失败，请检查输入"))
             return
@@ -165,12 +156,8 @@ class AiSettingsPage(QWidget):
         self.status.setText("AI 设置已保存；Key 未在页面回显")
 
     def _reset_prompt(self, prompt_code: str) -> None:
-        reset = getattr(self._services, "reset_ai_prompt", None)
-        if not callable(reset):
-            self._show_unavailable()
-            return
         try:
-            default = cast(str, reset(prompt_code))
+            default = self._services.reset_ai_prompt(prompt_code)
         except Exception as error:
             self.status.setText(user_error_message(error, "恢复默认提示词失败"))
             return

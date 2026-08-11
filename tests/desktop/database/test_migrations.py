@@ -271,6 +271,30 @@ def test_failed_pre_migration_copy_stops_before_schema_or_data_changes(tmp_path:
         )
 
 
+def test_checksum_mismatch_removes_protective_copy_and_stops_migration(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    database = tmp_path / "desktop.sqlite3"
+    backups = tmp_path / "pre-migration"
+    _upgrade_to_0001(database)
+    checksums = iter(("before-replace", "after-replace"))
+    monkeypatch.setattr(
+        "kindergarten_manager.infrastructure.database.upgrade._sha256_file",
+        lambda _path: next(checksums),
+    )
+
+    with pytest.raises(MigrationProtectionError) as captured:
+        upgrade_database(database, pre_migration_directory=backups)
+
+    assert captured.value.code == "migration.protective_backup_failed"
+    assert list(backups.iterdir()) == []
+    with sqlite3.connect(database) as connection:
+        assert connection.execute("SELECT version_num FROM alembic_version").fetchone() == (
+            DESKTOP_INITIAL_REVISION,
+        )
+
+
 def _upgrade_to_0001(database: Path) -> None:
     migrations = Path("src/kindergarten_manager/infrastructure/database/migrations")
     config = Config()

@@ -16,15 +16,29 @@ from PySide6.QtWidgets import QWidget
 
 from kindergarten_manager.application.ai_generation import (
     AiGenerationCoordinator,
+    CoordinatorState,
     GenerationWork,
+    PreviewView,
 )
-from kindergarten_manager.application.ai_settings import AiSettingsService
+from kindergarten_manager.application.ai_settings import AiSettingsService, AiSettingsView
 from kindergarten_manager.application.bootstrap import BootstrapService
-from kindergarten_manager.application.dto import CancellationToken, CommandResult
+from kindergarten_manager.application.dto import (
+    CancellationToken,
+    CommandResult,
+    OperationAccepted,
+)
 from kindergarten_manager.application.lesson_plans import LessonPlanService
 from kindergarten_manager.application.settings import SettingsService
-from kindergarten_manager.application.workspace import DailyPlanWorkspace
-from kindergarten_manager.domain.ai import AiOutputValidationError, validate_section_output
+from kindergarten_manager.application.workspace import (
+    DailyPlanContext,
+    DailyPlanWorkspace,
+    DesktopSettingsContext,
+)
+from kindergarten_manager.domain.ai import (
+    AiOutputValidationError,
+    canonical_json,
+    validate_section_output,
+)
 from kindergarten_manager.infrastructure.ai.client import AiClientError, ProviderNeutralAiClient
 from kindergarten_manager.infrastructure.ai.prompts import load_default_prompt
 from kindergarten_manager.infrastructure.credentials import (
@@ -187,35 +201,37 @@ class _AiRuntimeAdapter:
         api_key: str,
         prompt: str,
     ) -> _SectionOutcome:
-        for attempt in range(3):
+        last_validation_category = "wrong_type"
+
+        def validate(raw: dict[str, Any]) -> dict[str, Any]:
+            nonlocal last_validation_category
             try:
-                raw = self._client.generate_structured(
-                    base_url=base_url,
-                    api_key=api_key,
-                    model_name=model_name,
-                    prompt=prompt,
-                )
-                validated = validate_section_output(section_code, raw)
+                return validate_section_output(section_code, raw)
+            except AiOutputValidationError as error:
+                last_validation_category = error.category
+                raise AiClientError(
+                    f"ai.invalid_output.{error.category}",
+                    "AI 返回内容不符合预期结构",
+                    retryable=True,
+                ) from None
+
+        try:
+            validated = self._client.generate_structured(
+                base_url=base_url,
+                api_key=api_key,
+                model_name=model_name,
+                prompt=prompt,
+                validator=validate,
+            )
+        except AiClientError as error:
+            if error.code.startswith("ai.invalid_output."):
                 return _SectionOutcome(
                     section_code,
-                    json.dumps(
-                        validated,
-                        ensure_ascii=False,
-                        separators=(",", ":"),
-                        sort_keys=True,
-                    ),
                     None,
+                    f"ai.invalid_output.{last_validation_category}",
                 )
-            except AiOutputValidationError as error:
-                if attempt == 2:
-                    return _SectionOutcome(
-                        section_code,
-                        None,
-                        f"ai.invalid_output.{error.category}",
-                    )
-            except AiClientError as error:
-                return _SectionOutcome(section_code, None, error.code)
-        return _SectionOutcome(section_code, None, "ai.invalid_output")
+            return _SectionOutcome(section_code, None, error.code)
+        return _SectionOutcome(section_code, canonical_json(validated), None)
 
     def _operation_id_for(self, work: GenerationWork) -> UUID:
         return work.operation_id
@@ -267,29 +283,82 @@ class _DesktopServiceFacade:
     ) -> None:
         self._workspace = workspace
         self._ai_settings = ai_settings
-        self.ai_coordinator = coordinator
+        self._coordinator = coordinator
 
     @property
     def setup_complete(self) -> bool:
         return self._workspace.setup_complete
 
-    def load_ai_settings(self) -> object:
+    def complete_setup(self, values: dict[str, str]) -> None:
+        self._workspace.complete_setup(values)
+
+    def load_plan_context(self) -> DailyPlanContext:
+        return self._workspace.load_plan_context()
+
+    def select_plan_context(self, class_id: int, plan_date: date) -> DailyPlanContext:
+        self._coordinator.clear_view()
+        return self._workspace.select_plan_context(class_id, plan_date)
+
+    def load_current_plan(self) -> dict[str, Any]:
+        return self._workspace.load_current_plan()
+
+    def save_current_plan(self, content: dict[str, Any]) -> None:
+        self._workspace.save_current_plan(content)
+
+    def load_settings(self) -> DesktopSettingsContext:
+        return self._workspace.load_settings()
+
+    def update_settings(self, values: dict[str, str]) -> DesktopSettingsContext:
+        return self._workspace.update_settings(values)
+
+    def suggested_export_filename(self) -> str:
+        return self._workspace.suggested_export_filename()
+
+    def export_current_day(self, destination: Path) -> None:
+        self._workspace.export_current_day(destination)
+
+    def load_ai_settings(self) -> AiSettingsView:
         return self._ai_settings.load()
 
-    def save_ai_settings(self, values: dict[str, object]) -> object:
+    def save_ai_settings(self, values: dict[str, object]) -> AiSettingsView:
         return self._ai_settings.save(values)
 
     def reset_ai_prompt(self, prompt_code: str) -> str:
         return self._ai_settings.reset_prompt(prompt_code)
 
-    def start_ai_batch(self, teacher_context: str) -> object:
-        return self.ai_coordinator.start_batch(
+    def load_ai_generation_state(self) -> CoordinatorState:
+        return self._coordinator.state()
+
+    def start_ai_generation(
+        self,
+        section_code: str,
+        teacher_context: str,
+    ) -> OperationAccepted:
+        if section_code == "daily_reflection":
+            return self._coordinator.start_reflection(
+                self._workspace.current_plan_id(),
+                teacher_context,
+            )
+        return self._coordinator.start_single(
+            self._workspace.current_plan_id(),
+            section_code,
+            teacher_context,
+        )
+
+    def start_ai_batch(self, teacher_context: str) -> OperationAccepted:
+        return self._coordinator.start_batch(
             self._workspace.current_plan_id(),
             teacher_context,
         )
 
-    def __getattr__(self, name: str) -> Any:
-        return getattr(self._workspace, name)
+    def adopt_ai_preview(self, preview_id: int) -> object:
+        return self._coordinator.adopt(preview_id)
+
+    def reject_ai_preview(self, preview_id: int) -> PreviewView:
+        return self._coordinator.reject(preview_id)
+
+    def cancel_ai_generation(self, operation_id: UUID) -> CommandResult[None]:
+        return self._coordinator.cancel(operation_id)
 
 
 def create_desktop_window(

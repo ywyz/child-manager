@@ -4,20 +4,47 @@ import json
 import sqlite3
 from copy import deepcopy
 from pathlib import Path
-from uuid import uuid4
+from uuid import UUID
 
 import pytest
 
-from kindergarten_manager.domain.ai import canonical_json_sha256, section_sha256
+from kindergarten_manager.application.ai_generation import AiGenerationCoordinator, PreviewView
 from kindergarten_manager.domain.content import PlanContentV1
+from kindergarten_manager.infrastructure.database.repositories import (
+    AiRepository,
+    AiRepositoryError,
+)
 from kindergarten_manager.infrastructure.database.upgrade import upgrade_database
-from tests.desktop.helpers import implemented, pending_module, pending_symbol
+from tests.desktop.helpers import implemented
 
 
-def _repository(database: Path):
-    module = pending_module("kindergarten_manager.infrastructure.database.repositories")
-    repository_type = pending_symbol(module, "AiRepository")
-    return repository_type(database)
+def _repository(database: Path) -> AiRepository:
+    return AiRepository(database)
+
+
+class NoopRuntime:
+    def submit(self, operation_id: UUID, work: object) -> None:
+        del operation_id, work
+
+    def cancel(self, operation_id: UUID) -> bool:
+        del operation_id
+        return True
+
+
+def _create_preview_through_application(
+    repository: AiRepository,
+    plan_id: int,
+    result: dict[str, object],
+) -> tuple[AiGenerationCoordinator, PreviewView]:
+    coordinator = AiGenerationCoordinator(
+        runtime=NoopRuntime(),
+        store=repository,
+        clock_utc_ms=lambda: 20,
+    )
+    operation = coordinator.start_single(plan_id, "morning_talk", "春季")
+    preview = coordinator.accept_result(operation.operation_id, "morning_talk", result)
+    assert preview is not None
+    return coordinator, preview
 
 
 def _seed_plan(database: Path) -> tuple[int, dict[str, object]]:
@@ -70,20 +97,16 @@ def test_ai_configuration_and_prompt_override_store_no_secret(tmp_path: Path) ->
 
 def test_preview_adoption_snapshots_and_updates_content_in_one_transaction(tmp_path: Path) -> None:
     database = tmp_path / "desktop.sqlite3"
-    plan_id, content = _seed_plan(database)
+    plan_id, _content = _seed_plan(database)
     repository = _repository(database)
     result = {"topic": "春天", "questions": ["你看到了什么？"]}
-    preview = repository.create_preview(
-        lesson_plan_id=plan_id,
-        operation_id=str(uuid4()),
-        section_code="morning_talk",
-        result=result,
-        frozen_input_sha256=canonical_json_sha256({"context": "春季"}),
-        target_section_sha256=section_sha256(content, "morning_talk"),
-        now_utc_ms=20,
-    )
+    coordinator, preview = _create_preview_through_application(repository, plan_id, result)
 
-    adopted = repository.adopt_preview(preview.id, now_utc_ms=21)
+    stored_preview = repository.get_preview(preview.preview_id)
+    assert stored_preview is not None
+    assert stored_preview.result["schema_version"] == 1
+
+    adopted = coordinator.adopt(preview.preview_id)
 
     assert adopted.content_revision == 2
     assert adopted.content["morning_talk"] == result
@@ -92,22 +115,18 @@ def test_preview_adoption_snapshots_and_updates_content_in_one_transaction(tmp_p
             "SELECT reason, source_revision FROM lesson_plan_versions"
         ).fetchall() == [("pre_ai_adopt", 1)]
         assert connection.execute(
-            "SELECT state, decided_at_utc_ms FROM ai_previews WHERE id = ?", (preview.id,)
-        ).fetchone() == ("adopted", 21)
+            "SELECT state, decided_at_utc_ms FROM ai_previews WHERE id = ?", (preview.preview_id,)
+        ).fetchone() == ("adopted", 20)
 
 
 def test_stale_preview_is_invalidated_without_snapshot_or_content_write(tmp_path: Path) -> None:
     database = tmp_path / "desktop.sqlite3"
     plan_id, content = _seed_plan(database)
     repository = _repository(database)
-    preview = repository.create_preview(
-        lesson_plan_id=plan_id,
-        operation_id=str(uuid4()),
-        section_code="morning_talk",
-        result={"topic": "AI 结果", "questions": ["为什么？"]},
-        frozen_input_sha256=canonical_json_sha256({"context": "春季"}),
-        target_section_sha256=section_sha256(content, "morning_talk"),
-        now_utc_ms=20,
+    coordinator, preview = _create_preview_through_application(
+        repository,
+        plan_id,
+        {"topic": "AI 结果", "questions": ["为什么？"]},
     )
     changed = deepcopy(content)
     changed["morning_talk"] = {"topic": "教师已修改", "questions": []}
@@ -119,7 +138,7 @@ def test_stale_preview_is_invalidated_without_snapshot_or_content_write(tmp_path
         )
 
     with pytest.raises(Exception) as captured:
-        repository.adopt_preview(preview.id, now_utc_ms=22)
+        coordinator.adopt(preview.preview_id)
 
     assert getattr(captured.value, "code", None) == "ai.preview_stale"
     with sqlite3.connect(database) as connection:
@@ -131,5 +150,27 @@ def test_stale_preview_is_invalidated_without_snapshot_or_content_write(tmp_path
         assert stored["morning_talk"]["topic"] == "教师已修改"
         assert connection.execute("SELECT COUNT(*) FROM lesson_plan_versions").fetchone() == (0,)
         assert connection.execute(
-            "SELECT state, decided_at_utc_ms FROM ai_previews WHERE id = ?", (preview.id,)
-        ).fetchone() == ("invalidated", 22)
+            "SELECT state, decided_at_utc_ms FROM ai_previews WHERE id = ?", (preview.preview_id,)
+        ).fetchone() == ("invalidated", 20)
+
+
+def test_ai_settings_aggregate_rolls_back_configuration_and_prompts_together(
+    tmp_path: Path,
+) -> None:
+    database = tmp_path / "desktop.sqlite3"
+    implemented(lambda: upgrade_database(database))
+    repository = _repository(database)
+
+    with pytest.raises(AiRepositoryError):
+        repository.save_settings(
+            base_url="https://ai.example.test/v1",
+            model_name="fixture-model",
+            credential_configured=True,
+            enabled=True,
+            prompt_overrides={"not_allowed": "越界提示词"},
+            now_utc_ms=10,
+        )
+
+    assert repository.get_configuration() is None
+    with sqlite3.connect(database) as connection:
+        assert connection.execute("SELECT COUNT(*) FROM prompt_overrides").fetchone() == (0,)

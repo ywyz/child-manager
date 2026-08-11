@@ -14,6 +14,7 @@ from sqlalchemy.engine import Connection, CursorResult
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
+from kindergarten_manager.application.ai_generation import AdoptionCandidate
 from kindergarten_manager.application.lesson_plans import (
     LessonPlanEditorState,
     LessonPlanError,
@@ -25,7 +26,7 @@ from kindergarten_manager.application.workspace import (
     PlanExportRecord,
     SetupContextRecord,
 )
-from kindergarten_manager.domain.ai import section_sha256, validate_section_output
+from kindergarten_manager.domain.ai import canonical_json, validate_section_output
 from kindergarten_manager.domain.calendar import evaluate_calendar
 from kindergarten_manager.domain.content import PlanContentV1
 from kindergarten_manager.infrastructure.database.engine import create_session_factory
@@ -342,13 +343,6 @@ class AiPreviewRecord:
     status: str
 
 
-@dataclass(frozen=True, slots=True)
-class AiAdoptionRecord:
-    plan_id: int
-    content_revision: int
-    content: dict[str, Any]
-
-
 class AiRepository:
     """持久化非敏感 AI 配置和已校验预览；API Key 从不进入此接口。"""
 
@@ -392,34 +386,62 @@ class AiRepository:
         now_utc_ms: int,
     ) -> AiConfigurationRecord:
         with self.session_factory.begin() as session:
-            row = (
-                session.connection()
-                .exec_driver_sql(
-                    """
-                    INSERT INTO ai_configuration(
-                        id, base_url, model_name, credential_configured, enabled,
-                        created_at_utc_ms, updated_at_utc_ms
-                    ) VALUES (1, ?, ?, ?, ?, ?, ?)
-                    ON CONFLICT(id) DO UPDATE SET
-                        base_url = excluded.base_url,
-                        model_name = excluded.model_name,
-                        credential_configured = excluded.credential_configured,
-                        enabled = excluded.enabled,
-                        updated_at_utc_ms = excluded.updated_at_utc_ms
-                    RETURNING base_url, model_name, credential_configured, enabled
-                    """,
-                    (
-                        base_url,
-                        model_name,
-                        int(credential_configured),
-                        int(enabled),
-                        now_utc_ms,
-                        now_utc_ms,
-                    ),
-                )
-                .mappings()
-                .one()
+            row = _write_ai_configuration(
+                session.connection(),
+                base_url=base_url,
+                model_name=model_name,
+                credential_configured=credential_configured,
+                enabled=enabled,
+                now_utc_ms=now_utc_ms,
             )
+        return _configuration_record(row)
+
+    def save_settings(
+        self,
+        *,
+        base_url: str | None,
+        model_name: str | None,
+        credential_configured: bool,
+        enabled: bool,
+        prompt_overrides: Mapping[str, str | None],
+        now_utc_ms: int,
+    ) -> AiConfigurationRecord:
+        allowed = {
+            "morning_activity",
+            "morning_talk",
+            "indoor_area_game",
+            "afternoon_outdoor_game",
+            "daily_reflection",
+        }
+        if set(prompt_overrides) != allowed:
+            raise AiRepositoryError("ai.prompt_code_invalid", "提示词集合不完整或包含未知栏目")
+        with self.session_factory.begin() as session:
+            connection = session.connection()
+            row = _write_ai_configuration(
+                connection,
+                base_url=base_url,
+                model_name=model_name,
+                credential_configured=credential_configured,
+                enabled=enabled,
+                now_utc_ms=now_utc_ms,
+            )
+            for prompt_code, content in prompt_overrides.items():
+                if content is None:
+                    connection.exec_driver_sql(
+                        "DELETE FROM prompt_overrides WHERE prompt_code = ?",
+                        (prompt_code,),
+                    )
+                else:
+                    connection.exec_driver_sql(
+                        """
+                        INSERT INTO prompt_overrides(prompt_code, content, updated_at_utc_ms)
+                        VALUES (?, ?, ?)
+                        ON CONFLICT(prompt_code) DO UPDATE SET
+                            content = excluded.content,
+                            updated_at_utc_ms = excluded.updated_at_utc_ms
+                        """,
+                        (prompt_code, content, now_utc_ms),
+                    )
         return _configuration_record(row)
 
     def get_prompt_override(self, prompt_code: str) -> str | None:
@@ -466,12 +488,7 @@ class AiRepository:
         now_utc_ms: int,
     ) -> AiPreviewRecord:
         validated = validate_section_output(section_code, result)
-        result_json = json.dumps(
-            validated,
-            ensure_ascii=False,
-            separators=(",", ":"),
-            sort_keys=True,
-        )
+        result_json = canonical_json(validated)
         with self.session_factory.begin() as session:
             row = (
                 session.connection()
@@ -521,97 +538,19 @@ class AiRepository:
     def reject_preview(self, preview_id: int, *, now_utc_ms: int) -> AiPreviewRecord:
         return self._decide_preview(preview_id, "rejected", now_utc_ms)
 
-    def adopt_preview(self, preview_id: int, *, now_utc_ms: int) -> AiAdoptionRecord:
-        stale = False
-        adopted: AiAdoptionRecord | None = None
+    @contextmanager
+    def adoption_transaction(
+        self,
+        preview_id: int,
+        *,
+        now_utc_ms: int,
+    ) -> Iterator[_SqliteAiAdoptionTransaction]:
         with self.session_factory.begin() as session:
-            connection = session.connection()
-            row = (
-                connection.exec_driver_sql(
-                    """
-                    SELECT v.id, v.section_code, v.result_json, v.target_section_sha256,
-                           v.state, p.id AS plan_id, p.author_name, p.content_schema_version,
-                           p.content_json, p.content_revision, p.archived_at_utc_ms
-                    FROM ai_previews AS v
-                    JOIN lesson_plans AS p ON p.id = v.lesson_plan_id
-                    WHERE v.id = ?
-                    """,
-                    (preview_id,),
-                )
-                .mappings()
-                .first()
+            yield _SqliteAiAdoptionTransaction(
+                session.connection(),
+                preview_id=preview_id,
+                now_utc_ms=now_utc_ms,
             )
-            if row is None:
-                raise AiRepositoryError("ai.preview_not_found", "AI 预览不存在")
-            if row["state"] != "ready":
-                raise AiRepositoryError("ai.preview_not_ready", "AI 预览已处理")
-            if row["archived_at_utc_ms"] is not None:
-                raise AiRepositoryError("plan.archived_read_only", "归档教案不可采用 AI 预览")
-
-            content = PlanContentV1.model_validate(json.loads(str(row["content_json"])))
-            content_mapping = content.model_dump(mode="json")
-            if section_sha256(content_mapping, str(row["section_code"])) != str(
-                row["target_section_sha256"]
-            ):
-                connection.exec_driver_sql(
-                    "UPDATE ai_previews SET state = 'invalidated', decided_at_utc_ms = ? "
-                    "WHERE id = ? AND state = 'ready'",
-                    (now_utc_ms, preview_id),
-                )
-                stale = True
-            else:
-                output = validate_section_output(
-                    str(row["section_code"]),
-                    json.loads(str(row["result_json"])),
-                )
-                content_mapping[str(row["section_code"])] = output
-                updated = PlanContentV1.model_validate(content_mapping)
-                connection.exec_driver_sql(
-                    """
-                    INSERT INTO lesson_plan_versions(
-                        lesson_plan_id, reason, description, author_name,
-                        content_schema_version, content_json, source_revision, created_at_utc_ms
-                    ) VALUES (?, 'pre_ai_adopt', NULL, ?, ?, ?, ?, ?)
-                    """,
-                    (
-                        int(row["plan_id"]),
-                        str(row["author_name"]),
-                        int(row["content_schema_version"]),
-                        str(row["content_json"]),
-                        int(row["content_revision"]),
-                        now_utc_ms,
-                    ),
-                )
-                result = connection.exec_driver_sql(
-                    """
-                    UPDATE lesson_plans SET
-                        content_json = ?, content_revision = content_revision + 1,
-                        updated_at_utc_ms = ?
-                    WHERE id = ? AND content_revision = ? AND archived_at_utc_ms IS NULL
-                    """,
-                    (
-                        updated.canonical_json(),
-                        now_utc_ms,
-                        int(row["plan_id"]),
-                        int(row["content_revision"]),
-                    ),
-                )
-                if result.rowcount != 1:
-                    raise AiRepositoryError("ai.preview_stale", "教案已变化，预览不可采用")
-                connection.exec_driver_sql(
-                    "UPDATE ai_previews SET state = 'adopted', decided_at_utc_ms = ? "
-                    "WHERE id = ? AND state = 'ready'",
-                    (now_utc_ms, preview_id),
-                )
-                adopted = AiAdoptionRecord(
-                    plan_id=int(row["plan_id"]),
-                    content_revision=int(row["content_revision"]) + 1,
-                    content=updated.model_dump(mode="json"),
-                )
-        if stale:
-            raise AiRepositoryError("ai.preview_stale", "教案目标栏目已变化，预览不可采用")
-        assert adopted is not None
-        return adopted
 
     def _decide_preview(
         self,
@@ -637,6 +576,112 @@ class AiRepository:
         if row is None:
             raise AiRepositoryError("ai.preview_not_ready", "AI 预览不存在或已处理")
         return _preview_record(row)
+
+
+class _SqliteAiAdoptionTransaction:
+    def __init__(self, connection: Connection, *, preview_id: int, now_utc_ms: int) -> None:
+        self._connection = connection
+        self._preview_id = preview_id
+        self._now_utc_ms = now_utc_ms
+        self._candidate: AdoptionCandidate | None = None
+
+    def load_candidate(self) -> AdoptionCandidate:
+        row = (
+            self._connection.exec_driver_sql(
+                """
+                SELECT v.section_code, v.result_json, v.target_section_sha256,
+                       v.state, p.id AS plan_id, p.author_name, p.content_schema_version,
+                       p.content_json, p.content_revision, p.archived_at_utc_ms
+                FROM ai_previews AS v
+                JOIN lesson_plans AS p ON p.id = v.lesson_plan_id
+                WHERE v.id = ?
+                """,
+                (self._preview_id,),
+            )
+            .mappings()
+            .first()
+        )
+        if row is None:
+            raise AiRepositoryError("ai.preview_not_found", "AI 预览不存在")
+        if row["state"] != "ready":
+            raise AiRepositoryError("ai.preview_not_ready", "AI 预览已处理")
+        result = json.loads(str(row["result_json"]))
+        if not isinstance(result, dict):
+            raise AiRepositoryError("ai.preview_corrupt", "AI 预览数据已损坏")
+        content = PlanContentV1.model_validate(json.loads(str(row["content_json"])))
+        self._candidate = AdoptionCandidate(
+            plan_id=int(row["plan_id"]),
+            section_code=str(row["section_code"]),
+            result=result,
+            target_section_sha256=str(row["target_section_sha256"]),
+            author_name=str(row["author_name"]),
+            content_schema_version=int(row["content_schema_version"]),
+            content=content.model_dump(mode="json"),
+            content_revision=int(row["content_revision"]),
+            archived=row["archived_at_utc_ms"] is not None,
+        )
+        return self._candidate
+
+    def invalidate(self) -> None:
+        self._connection.exec_driver_sql(
+            "UPDATE ai_previews SET state = 'invalidated', decided_at_utc_ms = ? "
+            "WHERE id = ? AND state = 'ready'",
+            (self._now_utc_ms, self._preview_id),
+        )
+
+    def save_snapshot(self) -> None:
+        candidate = self._require_candidate()
+        self._connection.exec_driver_sql(
+            """
+            INSERT INTO lesson_plan_versions(
+                lesson_plan_id, reason, description, author_name,
+                content_schema_version, content_json, source_revision, created_at_utc_ms
+            ) VALUES (?, 'pre_ai_adopt', NULL, ?, ?, ?, ?, ?)
+            """,
+            (
+                candidate.plan_id,
+                candidate.author_name,
+                candidate.content_schema_version,
+                canonical_json(candidate.content),
+                candidate.content_revision,
+                self._now_utc_ms,
+            ),
+        )
+
+    def update_content(self, content: Mapping[str, object]) -> int:
+        candidate = self._require_candidate()
+        updated = PlanContentV1.model_validate(content)
+        result = self._connection.exec_driver_sql(
+            """
+            UPDATE lesson_plans SET
+                content_json = ?, content_revision = content_revision + 1,
+                updated_at_utc_ms = ?
+            WHERE id = ? AND content_revision = ? AND archived_at_utc_ms IS NULL
+            """,
+            (
+                updated.canonical_json(),
+                self._now_utc_ms,
+                candidate.plan_id,
+                candidate.content_revision,
+            ),
+        )
+        if result.rowcount != 1:
+            raise AiRepositoryError("ai.preview_stale", "教案已变化，预览不可采用")
+        return candidate.content_revision + 1
+
+    def mark_adopted(self) -> None:
+        result = self._connection.exec_driver_sql(
+            "UPDATE ai_previews SET state = 'adopted', decided_at_utc_ms = ? "
+            "WHERE id = ? AND state = 'ready'",
+            (self._now_utc_ms, self._preview_id),
+        )
+        if result.rowcount != 1:
+            raise AiRepositoryError("ai.preview_not_ready", "AI 预览已处理")
+
+    def _require_candidate(self) -> AdoptionCandidate:
+        if self._candidate is None:
+            raise RuntimeError("必须先读取采用候选")
+        return self._candidate
 
 
 class WorkspaceRepository:
@@ -745,6 +790,44 @@ def _configuration_record(row: Mapping[Any, object]) -> AiConfigurationRecord:
         model_name=str(row["model_name"]) if row["model_name"] is not None else None,
         credential_configured=bool(row["credential_configured"]),
         enabled=bool(row["enabled"]),
+    )
+
+
+def _write_ai_configuration(
+    connection: Connection,
+    *,
+    base_url: str | None,
+    model_name: str | None,
+    credential_configured: bool,
+    enabled: bool,
+    now_utc_ms: int,
+) -> Mapping[Any, object]:
+    return (
+        connection.exec_driver_sql(
+            """
+            INSERT INTO ai_configuration(
+                id, base_url, model_name, credential_configured, enabled,
+                created_at_utc_ms, updated_at_utc_ms
+            ) VALUES (1, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                base_url = excluded.base_url,
+                model_name = excluded.model_name,
+                credential_configured = excluded.credential_configured,
+                enabled = excluded.enabled,
+                updated_at_utc_ms = excluded.updated_at_utc_ms
+            RETURNING base_url, model_name, credential_configured, enabled
+            """,
+            (
+                base_url,
+                model_name,
+                int(credential_configured),
+                int(enabled),
+                now_utc_ms,
+                now_utc_ms,
+            ),
+        )
+        .mappings()
+        .one()
     )
 
 

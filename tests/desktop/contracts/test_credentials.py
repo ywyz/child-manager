@@ -9,7 +9,7 @@ from tests.desktop.helpers import pending_module, pending_symbol
 
 @dataclass
 class MemoryWindowsBackend:
-    name: str = "Windows.WinVaultKeyring"
+    name: str = "Windows WinVaultKeyring"
     storage_scope: str = "local-machine"
     values: dict[tuple[str, str], str] = field(default_factory=dict)
 
@@ -34,7 +34,7 @@ def test_windows_backend_is_selected_only_for_local_machine_persistence() -> Non
 
     store = create_store(platform="win32", backend=backend)
 
-    assert store.backend_name == "Windows.WinVaultKeyring"
+    assert store.backend_name == "Windows WinVaultKeyring"
     assert store.persistence == "local-machine"
 
 
@@ -58,7 +58,7 @@ def test_realistic_windows_backend_is_pinned_to_local_machine_persistence() -> N
         "RealisticWindowsBackend",
         (),
         {
-            "name": "Windows.WinVaultKeyring",
+            "name": "Windows WinVaultKeyring",
             "persist": "enterprise",
             "set_password": lambda *_args: None,
             "get_password": lambda *_args: None,

@@ -141,3 +141,35 @@ def test_retryable_failure_is_retried_at_most_twice() -> None:
         )
     assert getattr(captured.value, "retryable", None) is True
     assert calls == 3
+
+
+def test_transport_and_structure_errors_share_one_three_call_budget() -> None:
+    module = _module()
+    client_type = pending_symbol(module, "ProviderNeutralAiClient")
+    client_error = pending_symbol(module, "AiClientError")
+    calls = 0
+    validations = 0
+
+    def handler(_request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        return _response({"topic": "春天", "questions": []})
+
+    def validate(payload: dict[str, object]) -> dict[str, object]:
+        nonlocal validations
+        validations += 1
+        if validations < 3:
+            raise client_error("ai.invalid_output", "结构错误", retryable=True)
+        return payload
+
+    client = client_type(transport=httpx.MockTransport(handler), sleeper=lambda _delay: None)
+    result = client.generate_structured(
+        base_url="https://ai.example.test/v1",
+        api_key="fixture-secret",
+        model_name="fixture-model",
+        prompt="fixture prompt",
+        validator=validate,
+    )
+
+    assert result["topic"] == "春天"
+    assert calls == validations == 3

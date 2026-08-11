@@ -4,15 +4,20 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable, Mapping
+from contextlib import AbstractContextManager
 from dataclasses import dataclass
-from typing import Any, Protocol, cast
+from typing import Any, Protocol
 from uuid import UUID, uuid4
 
+from kindergarten_manager.application.dto import CommandResult, OperationAccepted
 from kindergarten_manager.domain.ai import (
     build_generation_input,
+    canonical_json,
     canonical_json_sha256,
     preview_is_stale,
+    section_content_from_result,
     section_sha256,
+    validate_section_output,
 )
 
 _BATCH_SECTIONS = (
@@ -51,18 +56,8 @@ class GenerationWork:
 
 
 @dataclass(frozen=True, slots=True)
-class OperationAccepted:
-    operation_id: UUID
-
-
-@dataclass(frozen=True, slots=True)
-class CommandResult:
-    ok: bool
-
-
-@dataclass(frozen=True, slots=True)
 class PreviewView:
-    preview_id: object
+    preview_id: int
     plan_id: int
     section_code: str
     output: object
@@ -75,6 +70,65 @@ class CoordinatorState:
     running_operation_id: UUID | None
     ready_sections: tuple[str, ...]
     failed_sections: dict[str, str]
+    previews: tuple[PreviewView, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class AdoptionCandidate:
+    plan_id: int
+    section_code: str
+    result: dict[str, Any]
+    target_section_sha256: str
+    author_name: str
+    content_schema_version: int
+    content: dict[str, Any]
+    content_revision: int
+    archived: bool
+
+
+class AdoptionTransaction(Protocol):
+    def load_candidate(self) -> AdoptionCandidate: ...
+
+    def invalidate(self) -> None: ...
+
+    def save_snapshot(self) -> None: ...
+
+    def update_content(self, content: Mapping[str, object]) -> int: ...
+
+    def mark_adopted(self) -> None: ...
+
+
+class StoredPreview(Protocol):
+    @property
+    def id(self) -> int: ...
+
+    @property
+    def result(self) -> dict[str, Any]: ...
+
+
+class AiPreviewStore(Protocol):
+    def content_for_plan(self, plan_id: int) -> Mapping[str, object]: ...
+
+    def create_preview(
+        self,
+        *,
+        lesson_plan_id: int,
+        operation_id: str,
+        section_code: str,
+        result: object,
+        frozen_input_sha256: str,
+        target_section_sha256: str,
+        now_utc_ms: int,
+    ) -> StoredPreview: ...
+
+    def reject_preview(self, preview_id: int, *, now_utc_ms: int) -> object: ...
+
+    def adoption_transaction(
+        self,
+        preview_id: int,
+        *,
+        now_utc_ms: int,
+    ) -> AbstractContextManager[AdoptionTransaction]: ...
 
 
 @dataclass(slots=True)
@@ -92,15 +146,15 @@ class AiGenerationCoordinator:
         self,
         *,
         runtime: GenerationRuntime,
-        store: object,
+        store: AiPreviewStore,
         clock_utc_ms: Callable[[], int] | None = None,
     ) -> None:
         self.runtime = runtime
         self.store = store
         self._clock_utc_ms = clock_utc_ms or (lambda: time.time_ns() // 1_000_000)
         self._current: _Operation | None = None
-        self._previews: dict[object, PreviewView] = {}
-        self._ready_by_section: dict[str, object] = {}
+        self._previews: dict[int, PreviewView] = {}
+        self._ready_by_section: dict[str, int] = {}
         self._failed: dict[str, str] = {}
         self._discarded: set[UUID] = set()
         self._closed = False
@@ -121,11 +175,14 @@ class AiGenerationCoordinator:
 
     def cancel(self, operation_id: UUID) -> CommandResult:
         if self._current is None or self._current.operation_id != operation_id:
-            return CommandResult(ok=False)
+            return CommandResult.failure(
+                "ai.operation_not_found",
+                message="AI 生成任务不存在或已结束",
+            )
         self.runtime.cancel(operation_id)
         self._discarded.add(operation_id)
         self._current = None
-        return CommandResult(ok=True)
+        return CommandResult.success(None, message="AI 生成已取消")
 
     def close(self) -> None:
         self._closed = True
@@ -134,6 +191,14 @@ class AiGenerationCoordinator:
             self.runtime.cancel(operation_id)
             self._discarded.add(operation_id)
             self._current = None
+
+    def clear_view(self) -> None:
+        """切换教案时丢弃当前 UI 会话，持久化预览记录不受影响。"""
+        if self._current is not None:
+            self.cancel(self._current.operation_id)
+        self._previews.clear()
+        self._ready_by_section.clear()
+        self._failed.clear()
 
     def accept_result(
         self,
@@ -145,20 +210,17 @@ class AiGenerationCoordinator:
         if operation is None:
             return None
 
-        preview_id: object = uuid4()
-        create_preview = getattr(self.store, "create_preview", None)
-        if callable(create_preview):
-            stored = cast(Any, create_preview)(
-                lesson_plan_id=operation.plan_id,
-                operation_id=str(operation_id),
-                section_code=section_code,
-                result=output,
-                frozen_input_sha256=operation.frozen_input_hashes[section_code],
-                target_section_sha256=operation.target_hashes[section_code],
-                now_utc_ms=self._clock_utc_ms(),
-            )
-            preview_id = stored.id
-            output = stored.result
+        stored = self.store.create_preview(
+            lesson_plan_id=operation.plan_id,
+            operation_id=str(operation_id),
+            section_code=section_code,
+            result=output,
+            frozen_input_sha256=operation.frozen_input_hashes[section_code],
+            target_section_sha256=operation.target_hashes[section_code],
+            now_utc_ms=self._clock_utc_ms(),
+        )
+        preview_id = stored.id
+        output = stored.result
 
         preview = PreviewView(
             preview_id=preview_id,
@@ -180,11 +242,9 @@ class AiGenerationCoordinator:
         self._failed[section_code] = error_code
         self._mark_terminal(operation, section_code)
 
-    def reject(self, preview_id: object) -> PreviewView:
+    def reject(self, preview_id: int) -> PreviewView:
         preview = self._require_ready_preview(preview_id)
-        reject_preview = getattr(self.store, "reject_preview", None)
-        if callable(reject_preview) and isinstance(preview_id, int):
-            reject_preview(preview_id, now_utc_ms=self._clock_utc_ms())
+        self.store.reject_preview(preview_id, now_utc_ms=self._clock_utc_ms())
         rejected = PreviewView(
             preview_id=preview.preview_id,
             plan_id=preview.plan_id,
@@ -197,26 +257,36 @@ class AiGenerationCoordinator:
         self._ready_by_section.pop(preview.section_code, None)
         return rejected
 
-    def adopt(self, preview_id: object) -> object:
+    def adopt(self, preview_id: int) -> AdoptedContent:
         preview = self._require_ready_preview(preview_id)
-        content = self._content_for_plan(preview.plan_id)
-        if preview_is_stale(
-            preview.target_section_sha256,
-            content,
-            preview.section_code,
-        ):
+        stale = False
+        with self.store.adoption_transaction(
+            preview_id,
+            now_utc_ms=self._clock_utc_ms(),
+        ) as transaction:
+            candidate = transaction.load_candidate()
+            if candidate.archived:
+                raise AiGenerationError("plan.archived_read_only", "归档教案不可采用 AI 预览")
+            if preview_is_stale(
+                candidate.target_section_sha256,
+                candidate.content,
+                candidate.section_code,
+            ):
+                transaction.invalidate()
+                stale = True
+                adopted = None
+            else:
+                validated = validate_section_output(candidate.section_code, candidate.result)
+                updated = dict(candidate.content)
+                updated[candidate.section_code] = section_content_from_result(validated)
+                transaction.save_snapshot()
+                revision = transaction.update_content(updated)
+                transaction.mark_adopted()
+                adopted = AdoptedContent(content=updated, content_revision=revision)
+        if stale:
             self._replace_preview_status(preview_id, "invalidated")
             raise AiGenerationError("ai.preview_stale", "教案目标栏目已变化，预览不可采用")
-
-        adopt_preview = getattr(self.store, "adopt_preview", None)
-        if callable(adopt_preview) and isinstance(preview_id, int):
-            adopted = adopt_preview(preview_id, now_utc_ms=self._clock_utc_ms())
-        else:
-            adopt = getattr(self.store, "transactionally_adopt", None)
-            if not callable(adopt):
-                raise AiGenerationError("ai.store_unsupported", "AI 预览存储不支持采用")
-            content = cast(dict[str, Any], adopt(preview.section_code, preview.output))
-            adopted = _AdoptedContent(content=content)
+        assert adopted is not None
         self._replace_preview_status(preview_id, "adopted")
         self._ready_by_section.pop(preview.section_code, None)
         return adopted
@@ -228,6 +298,9 @@ class AiGenerationCoordinator:
             ),
             ready_sections=tuple(self._ready_by_section),
             failed_sections=dict(self._failed),
+            previews=tuple(
+                self._previews[preview_id] for preview_id in self._ready_by_section.values()
+            ),
         )
 
     def _start(
@@ -275,7 +348,7 @@ class AiGenerationCoordinator:
                 frozen_inputs=tuple(
                     FrozenGenerationInput(
                         section_code=section,
-                        payload_json=_canonical_json(frozen_inputs[section]),
+                        payload_json=canonical_json(frozen_inputs[section]),
                     )
                     for section in sections
                 ),
@@ -284,13 +357,9 @@ class AiGenerationCoordinator:
         return OperationAccepted(operation_id=operation_id)
 
     def _content_for_plan(self, plan_id: int | None) -> Mapping[str, object]:
-        loader = getattr(self.store, "content_for_plan", None)
-        if callable(loader) and plan_id is not None:
-            return cast(Mapping[str, object], loader(plan_id))
-        content = getattr(self.store, "content", None)
-        if not isinstance(content, Mapping):
+        if plan_id is None:
             raise AiGenerationError("ai.plan_content_unavailable", "无法读取当前教案内容")
-        return content
+        return self.store.content_for_plan(plan_id)
 
     def _active_operation(
         self,
@@ -314,7 +383,7 @@ class AiGenerationCoordinator:
         if operation.terminal_sections == set(operation.sections):
             self._current = None
 
-    def _require_ready_preview(self, preview_id: object) -> PreviewView:
+    def _require_ready_preview(self, preview_id: int) -> PreviewView:
         preview = self._previews.get(preview_id)
         if preview is None:
             raise AiGenerationError("ai.preview_not_found", "AI 预览不存在")
@@ -322,7 +391,7 @@ class AiGenerationCoordinator:
             raise AiGenerationError("ai.preview_not_ready", "AI 预览已处理")
         return preview
 
-    def _replace_preview_status(self, preview_id: object, status: str) -> None:
+    def _replace_preview_status(self, preview_id: int, status: str) -> None:
         preview = self._previews[preview_id]
         self._previews[preview_id] = PreviewView(
             preview_id=preview.preview_id,
@@ -335,17 +404,6 @@ class AiGenerationCoordinator:
 
 
 @dataclass(frozen=True, slots=True)
-class _AdoptedContent:
+class AdoptedContent:
     content: dict[str, Any]
-
-
-def _canonical_json(value: object) -> str:
-    import json
-
-    return json.dumps(
-        value,
-        allow_nan=False,
-        ensure_ascii=False,
-        separators=(",", ":"),
-        sort_keys=True,
-    )
+    content_revision: int

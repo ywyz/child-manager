@@ -5,7 +5,11 @@ from __future__ import annotations
 from datetime import date
 from pathlib import Path
 from typing import Any, Protocol
+from uuid import UUID
 
+from kindergarten_manager.application.ai_generation import CoordinatorState, PreviewView
+from kindergarten_manager.application.ai_settings import AiSettingsView
+from kindergarten_manager.application.dto import CommandResult, OperationAccepted
 from kindergarten_manager.application.workspace import DailyPlanContext, DesktopSettingsContext
 
 
@@ -27,3 +31,25 @@ class DesktopServices(Protocol):
     def suggested_export_filename(self) -> str: ...
 
     def export_current_day(self, destination: Path) -> None: ...
+
+    def load_ai_settings(self) -> AiSettingsView: ...
+
+    def save_ai_settings(self, values: dict[str, object]) -> AiSettingsView: ...
+
+    def reset_ai_prompt(self, prompt_code: str) -> str: ...
+
+    def load_ai_generation_state(self) -> CoordinatorState: ...
+
+    def start_ai_generation(
+        self,
+        section_code: str,
+        teacher_context: str,
+    ) -> OperationAccepted: ...
+
+    def start_ai_batch(self, teacher_context: str) -> OperationAccepted: ...
+
+    def adopt_ai_preview(self, preview_id: int) -> object: ...
+
+    def reject_ai_preview(self, preview_id: int) -> PreviewView: ...
+
+    def cancel_ai_generation(self, operation_id: UUID) -> CommandResult[None]: ...

@@ -80,6 +80,22 @@ def test_preview_staleness_depends_only_on_target_section_hash() -> None:
     assert preview_is_stale(expected, target_changed, "morning_talk")
 
 
+def test_validated_ai_result_has_explicit_schema_version() -> None:
+    module = _module()
+    validate_section_output = pending_symbol(module, "validate_section_output")
+
+    result = validate_section_output(
+        "morning_talk",
+        {"topic": "春天", "questions": ["你发现了什么？"]},
+    )
+
+    assert result == {
+        "schema_version": 1,
+        "topic": "春天",
+        "questions": ["你发现了什么？"],
+    }
+
+
 @pytest.mark.parametrize(
     ("payload", "category"),
     [

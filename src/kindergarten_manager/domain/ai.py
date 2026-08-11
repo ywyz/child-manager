@@ -5,13 +5,14 @@ from __future__ import annotations
 import json
 from collections.abc import Mapping
 from hashlib import sha256
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
 
 class _ClosedResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
+    schema_version: Literal[1] = 1
 
 
 class MorningActivityResult(_ClosedResult):
@@ -65,18 +66,21 @@ def schema_for(section_code: str) -> type[BaseModel]:
         raise ValueError(f"不支持的 AI 栏目：{section_code}") from None
 
 
-def canonical_json_sha256(value: object) -> str:
+def canonical_json(value: object) -> str:
     try:
-        serialized = json.dumps(
+        return json.dumps(
             value,
             allow_nan=False,
             ensure_ascii=False,
             separators=(",", ":"),
             sort_keys=True,
-        ).encode("utf-8")
+        )
     except (TypeError, ValueError) as error:
         raise ValueError("值不是规范 JSON") from error
-    return sha256(serialized).hexdigest()
+
+
+def canonical_json_sha256(value: object) -> str:
+    return sha256(canonical_json(value).encode("utf-8")).hexdigest()
 
 
 def build_generation_input(
@@ -119,6 +123,11 @@ def validate_section_output(section_code: str, payload: object) -> dict[str, Any
         error_types = {str(item["type"]) for item in error.errors()}
         category = _validation_category(error_types)
         raise AiOutputValidationError(category) from None
+
+
+def section_content_from_result(result: Mapping[str, object]) -> dict[str, object]:
+    """移除只属于 AI 结果信封的版本字段，再写入教案栏目。"""
+    return {key: value for key, value in result.items() if key != "schema_version"}
 
 
 def _validation_category(error_types: set[str]) -> str:

@@ -4,10 +4,12 @@ import ipaddress
 import json
 import time
 from collections.abc import Callable
-from typing import Any
+from typing import Any, TypeVar
 from urllib.parse import urlsplit
 
 import httpx
+
+_Validated = TypeVar("_Validated")
 
 
 class AiClientError(RuntimeError):
@@ -39,7 +41,8 @@ class ProviderNeutralAiClient:
         api_key: str,
         model_name: str,
         prompt: str,
-    ) -> dict[str, Any]:
+        validator: Callable[[dict[str, Any]], _Validated] | None = None,
+    ) -> dict[str, Any] | _Validated:
         endpoint = _chat_completions_endpoint(base_url)
         last_error: AiClientError | None = None
         with httpx.Client(
@@ -50,13 +53,14 @@ class ProviderNeutralAiClient:
         ) as client:
             for attempt in range(3):
                 try:
-                    return self._request(
+                    result = self._request(
                         client,
                         endpoint=endpoint,
                         api_key=api_key,
                         model_name=model_name,
                         prompt=prompt,
                     )
+                    return validator(result) if validator is not None else result
                 except AiClientError as error:
                     if not error.retryable or attempt == 2:
                         raise

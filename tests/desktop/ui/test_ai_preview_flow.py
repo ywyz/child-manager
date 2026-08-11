@@ -1,7 +1,18 @@
 from __future__ import annotations
 
+from dataclasses import dataclass, field
+from typing import cast
 from uuid import UUID
 
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QPlainTextEdit, QPushButton
+from pytestqt.qtbot import QtBot
+
+from kindergarten_manager.application.ai_generation import CoordinatorState, PreviewView
+from kindergarten_manager.application.ai_settings import AiSettingsView
+from kindergarten_manager.application.dto import CommandResult, OperationAccepted
+from kindergarten_manager.ui.ports import DesktopServices
+from kindergarten_manager.ui.widgets.ai_preview import AiPreviewPanel
 from tests.desktop.helpers import pending_module, pending_symbol
 
 
@@ -74,3 +85,82 @@ def test_page_change_invalidates_epoch_and_discards_late_signal() -> None:
 
     assert flow.page_epoch != epoch
     assert flow.preview_for("morning_talk") is None
+
+
+@dataclass
+class FakeAiServices:
+    state: CoordinatorState = field(default_factory=lambda: CoordinatorState(None, (), {}, ()))
+    starts: list[tuple[str, str]] = field(default_factory=list)
+    adopted: list[object] = field(default_factory=list)
+    rejected: list[object] = field(default_factory=list)
+
+    def load_ai_settings(self) -> AiSettingsView:
+        return AiSettingsView("https://ai.example.test/v1", "fixture", True, True, {})
+
+    def load_ai_generation_state(self) -> CoordinatorState:
+        return self.state
+
+    def start_ai_generation(self, section_code: str, teacher_context: str) -> OperationAccepted:
+        self.starts.append((section_code, teacher_context))
+        operation_id = UUID(int=len(self.starts))
+        self.state = CoordinatorState(operation_id, (), {}, ())
+        return OperationAccepted(operation_id)
+
+    def start_ai_batch(self, teacher_context: str) -> OperationAccepted:
+        return self.start_ai_generation("batch", teacher_context)
+
+    def adopt_ai_preview(self, preview_id: int) -> object:
+        self.adopted.append(preview_id)
+        self.state = CoordinatorState(None, (), {}, ())
+        return object()
+
+    def reject_ai_preview(self, preview_id: int) -> PreviewView:
+        self.rejected.append(preview_id)
+        self.state = CoordinatorState(None, (), {}, ())
+        return PreviewView(preview_id, 1, "morning_talk", {}, "0" * 64, "rejected")
+
+    def cancel_ai_generation(self, operation_id: UUID) -> CommandResult[None]:
+        del operation_id
+        self.state = CoordinatorState(None, (), {}, ())
+        return CommandResult.success(None, message="AI 生成已取消")
+
+
+def test_actual_panel_wires_per_section_preview_adopt_and_retry(qtbot: QtBot) -> None:
+    services = FakeAiServices()
+    content_refreshes: list[bool] = []
+    panel = AiPreviewPanel(
+        cast(DesktopServices, services),
+        on_content_changed=lambda: content_refreshes.append(True),
+    )
+    qtbot.addWidget(panel)
+    panel.show()
+    context = panel.findChild(QPlainTextEdit, "ai_teacher_context")
+    generate = panel.findChild(QPushButton, "generate_morning_talk")
+    assert context is not None and generate is not None
+    context.setPlainText("观察春天")
+
+    qtbot.mouseClick(generate, Qt.MouseButton.LeftButton)
+
+    assert services.starts == [("morning_talk", "观察春天")]
+    services.state = CoordinatorState(
+        None,
+        ("morning_talk",),
+        {},
+        (PreviewView(7, 1, "morning_talk", {"topic": "春天"}, "0" * 64, "ready"),),
+    )
+    panel.refresh()
+    preview = panel.findChild(QPlainTextEdit, "ai_preview_morning_talk")
+    adopt = panel.findChild(QPushButton, "adopt_morning_talk")
+    assert preview is not None and preview.isVisible() and "春天" in preview.toPlainText()
+    assert adopt is not None
+
+    qtbot.mouseClick(adopt, Qt.MouseButton.LeftButton)
+
+    assert services.adopted == [7]
+    assert content_refreshes == [True]
+    services.state = CoordinatorState(None, (), {"morning_talk": "ai.invalid_output"}, ())
+    panel.refresh()
+    retry = panel.findChild(QPushButton, "retry_morning_talk")
+    assert retry is not None and retry.isVisible()
+    qtbot.mouseClick(retry, Qt.MouseButton.LeftButton)
+    assert services.starts[-1] == ("morning_talk", "观察春天")

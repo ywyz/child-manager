@@ -67,7 +67,7 @@ def create_credential_store(
     persistence = declared_scope or "local-machine"
     if (
         actual_platform != "win32"
-        or name != "Windows.WinVaultKeyring"
+        or name != "Windows WinVaultKeyring"
         or persistence != "local-machine"
     ):
         raise CredentialError(

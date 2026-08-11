@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 
 import pytest
 from PySide6.QtCore import QDate, Qt
@@ -24,6 +25,9 @@ from PySide6.QtWidgets import (
 )
 from pytestqt.qtbot import QtBot
 
+from kindergarten_manager.application.ai_generation import CoordinatorState, PreviewView
+from kindergarten_manager.application.ai_settings import AiSettingsView
+from kindergarten_manager.application.dto import CommandResult, OperationAccepted
 from kindergarten_manager.application.settings import SettingsError
 from kindergarten_manager.application.workspace import (
     ClassContext,
@@ -95,6 +99,41 @@ class FakeDesktopServices:
     def export_current_day(self, destination: Path) -> None:
         self.exported.append(destination)
 
+    def load_ai_settings(self) -> AiSettingsView:
+        return AiSettingsView(None, None, False, False, {})
+
+    def save_ai_settings(self, values: dict[str, object]) -> AiSettingsView:
+        del values
+        return self.load_ai_settings()
+
+    def reset_ai_prompt(self, prompt_code: str) -> str:
+        del prompt_code
+        return "默认提示词"
+
+    def load_ai_generation_state(self) -> CoordinatorState:
+        return CoordinatorState(None, (), {}, ())
+
+    def start_ai_generation(
+        self,
+        section_code: str,
+        teacher_context: str,
+    ) -> OperationAccepted:
+        del section_code, teacher_context
+        return OperationAccepted(UUID(int=1))
+
+    def start_ai_batch(self, teacher_context: str) -> OperationAccepted:
+        return self.start_ai_generation("batch", teacher_context)
+
+    def adopt_ai_preview(self, preview_id: int) -> object:
+        return preview_id
+
+    def reject_ai_preview(self, preview_id: int) -> PreviewView:
+        return PreviewView(preview_id, 1, "morning_talk", {}, "0" * 64, "rejected")
+
+    def cancel_ai_generation(self, operation_id: UUID) -> CommandResult[None]:
+        del operation_id
+        return CommandResult.success(None, message="AI 生成已取消")
+
 
 def _child(window: QWidget, widget_type: type[Any], name: str) -> Any:
     child = window.findChild(widget_type, name)
@@ -140,6 +179,8 @@ def test_first_run_collects_minimum_settings_and_opens_structured_editor(
     assert stack.currentIndex() == 1
     assert _child(window, QComboBox, "class_context").currentText() == "向日葵班"
     assert _child(window, QDateEdit, "plan_date").date().toPython() == date(2026, 9, 7)
+    assert _child(window, QWidget, "ai_preview_panel") is not None
+    assert not _child(window, QPushButton, "generate_morning_talk").isEnabled()
     assert "不是工作日" in _child(window, QWidget, "calendar_warnings").property("text")
     for field_name in (
         "morning_physical_cycle",

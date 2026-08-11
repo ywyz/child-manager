@@ -29,25 +29,18 @@ class AiSettingsError(RuntimeError):
 class AiSettingsRepository(Protocol):
     def get_configuration(self) -> Any: ...
 
-    def save_configuration(
+    def save_settings(
         self,
         *,
         base_url: str | None,
         model_name: str | None,
         credential_configured: bool,
         enabled: bool,
+        prompt_overrides: Mapping[str, str | None],
         now_utc_ms: int,
     ) -> Any: ...
 
     def get_prompt_override(self, prompt_code: str) -> str | None: ...
-
-    def set_prompt_override(
-        self,
-        prompt_code: str,
-        content: str,
-        *,
-        now_utc_ms: int,
-    ) -> None: ...
 
     def delete_prompt_override(self, prompt_code: str) -> None: ...
 
@@ -145,24 +138,21 @@ class AiSettingsService:
 
         now_utc_ms = int(self._now_utc_ms())
         try:
-            self._repository.save_configuration(
+            self._repository.save_settings(
                 base_url=base_url,
                 model_name=model_name,
                 credential_configured=credential_configured,
                 enabled=enabled,
+                prompt_overrides={
+                    code: (
+                        None
+                        if normalized_prompts[code] == load_default_prompt(code)
+                        else normalized_prompts[code]
+                    )
+                    for code in _PROMPT_CODES
+                },
                 now_utc_ms=now_utc_ms,
             )
-            for code in _PROMPT_CODES:
-                content = normalized_prompts[code]
-                default = load_default_prompt(code)
-                if content == default:
-                    self._repository.delete_prompt_override(code)
-                else:
-                    self._repository.set_prompt_override(
-                        code,
-                        content,
-                        now_utc_ms=now_utc_ms,
-                    )
         except Exception:
             if api_key and self._credential_store is not None:
                 if previous_secret is None:

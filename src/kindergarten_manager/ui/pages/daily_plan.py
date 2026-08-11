@@ -34,6 +34,7 @@ from kindergarten_manager.application.workspace import DailyPlanContext
 from kindergarten_manager.ui.errors import user_error_message
 from kindergarten_manager.ui.pages.single_export import export_current_day
 from kindergarten_manager.ui.ports import DesktopServices
+from kindergarten_manager.ui.widgets.ai_preview import AiPreviewPanel
 
 EditorKind = Literal["text", "lines", "areas", "process"]
 
@@ -424,6 +425,11 @@ class DailyPlanPage(QWidget):
         navigation_layout.addWidget(navigation_note)
         work.addWidget(navigation)
         work.addWidget(self.section_stack, 1)
+        self.ai_preview_panel = AiPreviewPanel(
+            services,
+            on_content_changed=self._load_content,
+        )
+        work.addWidget(self.ai_preview_panel)
         layout.addLayout(work, 1)
 
         self.export_status = QLabel("")
@@ -440,6 +446,7 @@ class DailyPlanPage(QWidget):
             context = self._services.load_plan_context()
             self._apply_context(context)
             self._load_content()
+            self.ai_preview_panel.context_changed()
         except Exception as error:
             self.save_status.setText(user_error_message(error, "教案加载失败，请检查设置后重试"))
 
