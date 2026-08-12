@@ -1,6 +1,22 @@
 {
-  "generated_at": "2026-08-11T04:01:25.126468+00:00",
+  "generated_at": "2026-08-12T06:04:51.251741+00:00",
   "nodes": {
+    "compose_dev_yaml": {
+      "code_fingerprint": "4a778d793b66f209efb0c01f202052af42d0a285e7fa31d3ea37ac73527ac04d",
+      "label": "compose.dev.yaml",
+      "last": "2026-07-24T11:36:24.917450+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-24T11:36:24.917450+00:00",
+          "outcome": "useful",
+          "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
+        }
+      ],
+      "score": 0.648123968,
+      "source_file": "compose.dev.yaml",
+      "status": "tentative",
+      "uses": 1
+    },
     "concept_ai_prompt_rules": {
       "code_fingerprint": "4ac1b1f2d5f4e4eb4b28a192ffac45c99fd5c8b567d995a91519251e6ece7931",
       "label": "AI 生成与提示词规则",
@@ -18,7 +34,7 @@
           "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
         }
       ],
-      "score": -0.013862206,
+      "score": -0.013518792,
       "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
       "status": "contested",
       "uses": 1,
@@ -40,7 +56,7 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 0.963499175,
+      "score": 0.939630014,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2
@@ -56,7 +72,7 @@
           "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
         }
       ],
-      "score": 0.487684897,
+      "score": 0.475603278,
       "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
       "status": "tentative",
       "uses": 1
@@ -87,7 +103,7 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 2.436076358,
+      "score": 2.375726436,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 4
@@ -108,7 +124,7 @@
           "q": "接下来需要生成什么文件呢"
         }
       ],
-      "score": 0.975741016,
+      "score": 0.951568583,
       "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
       "status": "preferred",
       "uses": 2
@@ -129,7 +145,7 @@
           "q": "请阅读以上内容和现有的AGENTS.MD,还有ywyz/kindergartenManager.git的AGENTS.MD，你认为i还需要再加入点什么？"
         }
       ],
-      "score": 0.963499175,
+      "score": 0.939630014,
       "source_file": "graphify-out/memory/query_20260710_131311_请阅读以上内容和现有的agents_md_还有ywyz_kindergartenmanager_gi.md",
       "status": "preferred",
       "uses": 2
@@ -145,7 +161,7 @@
           "q": "接下来需要生成什么文件呢"
         }
       ],
-      "score": 0.487780813,
+      "score": 0.475696818,
       "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
       "status": "tentative",
       "uses": 1
@@ -166,7 +182,7 @@
           "q": "接下来需要生成什么文件呢"
         }
       ],
-      "score": 0.975741016,
+      "score": 0.951568583,
       "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
       "status": "preferred",
       "uses": 2
@@ -187,7 +203,7 @@
           "q": "接下来需要生成什么文件呢"
         }
       ],
-      "score": 0.975741016,
+      "score": 0.951568583,
       "source_file": "graphify-out/memory/query_20260711_021923_接下来需要生成什么文件呢.md",
       "status": "preferred",
       "uses": 2
@@ -203,7 +219,7 @@
           "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
         }
       ],
-      "score": 0.487684897,
+      "score": 0.475603278,
       "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
       "status": "tentative",
       "uses": 1
@@ -219,8 +235,24 @@
           "q": "请根据现有文档，和旧仓库的文件思考如何撰写 docs/PRD/lesson-management.md"
         }
       ],
-      "score": 0.487684897,
+      "score": 0.475603278,
       "source_file": "graphify-out/memory/query_20260711_020708_请根据现有文档_和旧仓库的文件思考如何撰写_docs_prd_lesson_management_m.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "docs_adr_adr_0013_controlled_agent_runtime": {
+      "code_fingerprint": "9de70a7e4cdcb234db0eeb75c28005254d9868937b495698ad9d6c864f90fa74",
+      "label": "ADR-0013-controlled-agent-runtime.md",
+      "last": "2026-08-11T09:30:43.346504+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-11T09:30:43.346504+00:00",
+          "outcome": "useful",
+          "q": "T050-T053 如何验证最小 AgentContext、revision 失效、敏感信息排除和 READ/DRAFT 零写入？"
+        }
+      ],
+      "score": 0.980393032,
+      "source_file": "docs/ADR/ADR-0013-controlled-agent-runtime.md",
       "status": "tentative",
       "uses": 1
     },
@@ -235,7 +267,7 @@
           "q": "Windows 下主题颜色白底白字、暗黑模式缺失、缺乏设置选项导致学期无法修改、日期无法一键回到今天，应如何修复？"
         }
       ],
-      "score": 0.985458011,
+      "score": 0.961044854,
       "source_file": "docs/design/desktop-ui-design-system.md",
       "status": "tentative",
       "uses": 1
@@ -251,7 +283,7 @@
           "q": "desktop gui prototype semester date teacherplan renderer word export 室内区域游戏 下午户外游戏 日期选择与校验：C 周计划工作台、用户选择学期起止日期、集体活动编辑空间与 Word 单层编号应由哪些节点和契约约束？"
         }
       ],
-      "score": 0.984892286,
+      "score": 0.960493144,
       "source_file": "docs/design/desktop-ui-design-system.md",
       "status": "tentative",
       "uses": 1
@@ -267,7 +299,7 @@
           "q": "请将现在的进度以及系统所需要的软件，skill，环境记录在文件中，同步到仓库，我将会切换另一台ubuntu系统继续开发。"
         }
       ],
-      "score": 0.664588082,
+      "score": 0.648123968,
       "source_file": "docs/development/local-development-environments.md",
       "status": "tentative",
       "uses": 1
@@ -283,7 +315,7 @@
           "q": "T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？"
         }
       ],
-      "score": 0.688766819,
+      "score": 0.671703715,
       "source_file": "docs/ROADMAP.md",
       "status": "tentative",
       "uses": 1
@@ -299,7 +331,7 @@
           "q": "T046–T061 与 T062–T086 的固定实施顺序及依赖是什么？"
         }
       ],
-      "score": 0.688766819,
+      "score": 0.671703715,
       "source_file": "specs/001-daily-activity-plan/plan.md",
       "status": "tentative",
       "uses": 1
@@ -315,8 +347,24 @@
           "q": "desktop gui prototype semester date teacherplan renderer word export 室内区域游戏 下午户外游戏 日期选择与校验：C 周计划工作台、用户选择学期起止日期、集体活动编辑空间与 Word 单层编号应由哪些节点和契约约束？"
         }
       ],
-      "score": 0.984892286,
+      "score": 0.960493144,
       "source_file": "specs/001-daily-activity-plan/spec.md",
+      "status": "tentative",
+      "uses": 1
+    },
+    "specs_003_desktop_local_first_contracts_agent_runtime": {
+      "code_fingerprint": "254d74353de6447cd082b9bb976756b598ef1a2c3dbff629e4ac9bc27e423c4d",
+      "label": "agent-runtime.md",
+      "last": "2026-08-11T09:30:43.346504+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-11T09:30:43.346504+00:00",
+          "outcome": "useful",
+          "q": "T050-T053 如何验证最小 AgentContext、revision 失效、敏感信息排除和 READ/DRAFT 零写入？"
+        }
+      ],
+      "score": 0.980393032,
+      "source_file": "specs/003-desktop-local-first/contracts/agent-runtime.md",
       "status": "tentative",
       "uses": 1
     },
@@ -331,24 +379,8 @@
           "q": "desktop gui prototype semester date teacherplan renderer word export 室内区域游戏 下午户外游戏 日期选择与校验：C 周计划工作台、用户选择学期起止日期、集体活动编辑空间与 Word 单层编号应由哪些节点和契约约束？"
         }
       ],
-      "score": 0.984892286,
+      "score": 0.960493144,
       "source_file": "specs/003-desktop-local-first/contracts/word-export.md",
-      "status": "tentative",
-      "uses": 1
-    },
-    "specs_003_desktop_local_first_spec_success_criteria_mandatory": {
-      "code_fingerprint": "c7d501c1e729fe00106a3ac84a23af5ccf926af0b7cf439c9b26da3b0b28165f",
-      "label": "Success Criteria *(mandatory)*",
-      "last": "2026-08-10T14:04:36.692975+00:00",
-      "provenance": [
-        {
-          "date": "2026-08-10T14:04:36.692975+00:00",
-          "outcome": "useful",
-          "q": "通过，未计时，需要计时的事实由来是什么？"
-        }
-      ],
-      "score": 0.986663102,
-      "source_file": "specs/003-desktop-local-first/spec.md",
       "status": "tentative",
       "uses": 1
     },
@@ -363,13 +395,13 @@
           "q": "Windows 下主题颜色白底白字、暗黑模式缺失、缺乏设置选项导致学期无法修改、日期无法一键回到今天，应如何修复？"
         }
       ],
-      "score": 0.985458011,
+      "score": 0.961044854,
       "source_file": "src/kindergarten_manager/application/settings.py",
       "status": "tentative",
       "uses": 1
     },
     "src_kindergarten_manager_ui_main_window": {
-      "code_fingerprint": "dd75530ab3c8d1e636dc4bc878dc53f7bfaaf06ef783dd058cd26a273b478472",
+      "code_fingerprint": "99290451648e437b1828c51c46fa0ad4180e5ec011a66623c3778180816a32bc",
       "label": "main_window.py",
       "last": "2026-08-10T13:15:14.089868+00:00",
       "provenance": [
@@ -379,13 +411,13 @@
           "q": "通过人工测试，后台 PS C:\\Users\\admin\\code\\child-manager> uv run python -m kindergarten_manager 输出 QFont::setPointSize: Point size <= 0 (-1), must be greater than 0"
         }
       ],
-      "score": 0.985881724,
+      "score": 0.961458071,
       "source_file": "src/kindergarten_manager/ui/main_window.py",
       "status": "tentative",
       "uses": 1
     },
     "src_kindergarten_manager_ui_pages_daily_plan_dailyplanpage": {
-      "code_fingerprint": "c3131f413e737286ca4eda6d4d4c6c40d18b8edf17c2478a6bcdfe1a88aa920e",
+      "code_fingerprint": "2095e3838caca4ac7d03cc2ad3b2d45ff94d18a3c526782515885f4f391b7d9d",
       "label": "DailyPlanPage",
       "last": "2026-08-10T12:48:26.592941+00:00",
       "provenance": [
@@ -395,8 +427,24 @@
           "q": "Windows 下主题颜色白底白字、暗黑模式缺失、缺乏设置选项导致学期无法修改、日期无法一键回到今天，应如何修复？"
         }
       ],
-      "score": 0.985458011,
+      "score": 0.961044854,
       "source_file": "src/kindergarten_manager/ui/pages/daily_plan.py",
+      "status": "tentative",
+      "uses": 1
+    },
+    "src_kindergarten_manager_ui_runtime_runtimebridge": {
+      "code_fingerprint": "cb8dc9286a3a26c150f623641c4028e952744c78f6fde0353fd4784b85b78d96",
+      "label": "RuntimeBridge",
+      "last": "2026-08-11T09:30:43.346504+00:00",
+      "provenance": [
+        {
+          "date": "2026-08-11T09:30:43.346504+00:00",
+          "outcome": "useful",
+          "q": "T050-T053 如何验证最小 AgentContext、revision 失效、敏感信息排除和 READ/DRAFT 零写入？"
+        }
+      ],
+      "score": 0.980393032,
+      "source_file": "src/kindergarten_manager/ui/runtime.py",
       "status": "tentative",
       "uses": 1
     },
@@ -416,7 +464,7 @@
           "q": "Windows 下主题颜色白底白字、暗黑模式缺失、缺乏设置选项导致学期无法修改、日期无法一键回到今天，应如何修复？"
         }
       ],
-      "score": 1.971339735,
+      "score": 1.922502925,
       "source_file": "src/kindergarten_manager/ui/theme.py",
       "status": "preferred",
       "uses": 2
@@ -432,7 +480,7 @@
           "q": "通过人工测试，后台 PS C:\\Users\\admin\\code\\child-manager> uv run python -m kindergarten_manager 输出 QFont::setPointSize: Point size <= 0 (-1), must be greater than 0"
         }
       ],
-      "score": 0.985881724,
+      "score": 0.961458071,
       "source_file": "src/kindergarten_manager/ui/theme.py",
       "status": "tentative",
       "uses": 1

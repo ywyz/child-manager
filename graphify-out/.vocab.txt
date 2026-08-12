@@ -37,8 +37,10 @@ admin
 adopt
 adoptable
 adopted
+adopting
 adoption
 adr
+advance
 adversarial
 aes
 aesgcm
@@ -47,6 +49,7 @@ afternoon
 again
 age
 agent
+agentcontext
 agents
 aggregate
 aggregation
@@ -66,6 +69,7 @@ always
 ambiguous
 analyze
 and
+annotations
 anomaly
 another
 answer
@@ -96,6 +100,7 @@ array
 ascii
 asgi
 asia
+assemble
 assert
 assertion
 assignment
@@ -103,7 +108,6 @@ assignments
 assigns
 associated
 associations
-assumptions
 assurance
 async
 atomic
@@ -152,6 +156,7 @@ begin
 between
 beyond
 bff
+bind
 binding
 bit
 bits
@@ -176,6 +181,7 @@ bridge
 broker
 browser
 bucket
+budget
 buffer
 build
 business
@@ -195,6 +201,7 @@ can
 cancel
 cancellation
 cancelled
+cancels
 candidate
 cannot
 canonical
@@ -204,12 +211,13 @@ capability
 capped
 caps
 capture
+capturing
 card
 carries
 cas
-cases
 catalog
 categories
+category
 cdbacd
 cell
 ceremonies
@@ -223,10 +231,12 @@ changes
 changing
 character
 characters
+chat
 check
 checked
 checklist
 checks
+checksum
 child
 children
 chinese
@@ -238,6 +248,7 @@ clamped
 clarify
 class
 classes
+classic
 classification
 clean
 cleaned
@@ -283,13 +294,14 @@ completed
 completeness
 completes
 completion
-complexity
+completions
 component
 components
 compose
 composite
 composition
 conclusion
+concrete
 concurrency
 concurrent
 conditional
@@ -301,7 +313,6 @@ confirm
 confirmation
 confirmations
 confirmed
-confirms
 conflict
 conflicts
 conftest
@@ -351,7 +362,6 @@ creating
 creation
 credential
 credentials
-criteria
 cross
 crypto
 cryptography
@@ -376,6 +386,7 @@ deactivating
 dead
 deadline
 debounces
+decide
 decided
 decision
 decisions
@@ -385,6 +396,7 @@ declares
 decode
 decrypt
 decryption
+deep
 default
 defaults
 defer
@@ -407,6 +419,7 @@ derive
 derived
 derives
 descriptor
+descriptors
 desensitization
 design
 desktop
@@ -417,9 +430,11 @@ deterministic
 dev
 development
 device
+diagnose
 diagnostic
 diagnostics
 dict
+diff
 digest
 dir
 directories
@@ -433,6 +448,7 @@ dispatch
 dispatched
 dispatcher
 display
+displays
 distinct
 distinguishes
 dns
@@ -465,11 +481,11 @@ each
 earlier
 east
 ecfc
-edge
 edit
 editable
 editing
 editor
+edits
 effect
 effective
 effects
@@ -477,13 +493,13 @@ eight
 element
 eligible
 emergency
-emit
 emits
 emphasis
 empty
 enable
 enabled
 enables
+enabling
 encode
 encrypt
 encrypting
@@ -501,7 +517,7 @@ enrollments
 ensure
 enter
 entire
-entities
+entity
 entropy
 entry
 entrypoint
@@ -512,7 +528,6 @@ env
 envelope
 environment
 environments
-epoch
 equivalent
 error
 errors
@@ -530,6 +545,7 @@ exactly
 exceed
 exceeds
 exception
+exclude
 excludes
 executable
 execute
@@ -563,9 +579,12 @@ extract
 extraction
 extractor
 extracts
+facade
+fact
 factor
 factors
 factory
+facts
 fail
 failed
 failing
@@ -623,7 +642,6 @@ forbid
 foreign
 forged
 form
-formal
 format
 formatted
 forwards
@@ -642,7 +660,6 @@ frontend
 frozen
 full
 function
-functional
 future
 game
 gap
@@ -701,6 +718,7 @@ home
 hop
 hotp
 hour
+html
 http
 httponly
 https
@@ -738,6 +756,7 @@ increment
 incremental
 increments
 independent
+independently
 index
 indexes
 indistinguishable
@@ -754,23 +773,26 @@ input
 inputs
 insecure
 insert
+inside
 install
 instructions
 integration
 integrations
 integrity
-intents
+intent
 internal
 interrupted
 interval
 intervals
+into
 invalid
+invalidate
+invalidated
 invalidates
 invariants
 invitation
 invitations
 invoke
-involves
 inward
 isolated
 isolates
@@ -818,6 +840,7 @@ leaking
 lease
 leases
 least
+leave
 leaves
 leaving
 legacy
@@ -860,8 +883,10 @@ loop
 loopback
 loss
 lowercase
+luna
 machine
 macro
+made
 main
 mainland
 maintain
@@ -874,7 +899,6 @@ managed
 management
 manager
 manages
-mandatory
 manual
 many
 map
@@ -899,7 +923,6 @@ matrix
 max
 maximum
 mcp
-measurable
 member
 members
 membership
@@ -925,6 +948,7 @@ minute
 minutes
 mismatch
 missing
+mock
 model
 models
 module
@@ -938,6 +962,7 @@ most
 move
 moves
 msix
+multigraph
 multipart
 must
 mutable
@@ -1021,14 +1046,15 @@ orphan
 other
 out
 outcome
-outcomes
 outdoor
 output
 outside
 over
 overlap
 overlapping
+override
 overrides
+oversized
 overview
 overwrites
 own
@@ -1044,6 +1070,7 @@ pages
 paginated
 pagination
 palette
+panel
 paragraph
 parameter
 parameters
@@ -1077,6 +1104,7 @@ persist
 persistable
 persisted
 persistence
+persistent
 persisting
 persists
 phase
@@ -1118,6 +1146,7 @@ preexisting
 preference
 preferred
 prepare
+prepared
 prerequisites
 presave
 preserve
@@ -1125,7 +1154,6 @@ preserves
 preview
 previews
 previous
-priority
 privacy
 private
 process
@@ -1144,6 +1172,7 @@ prompts
 proof
 properties
 protection
+protective
 protocol
 prototype
 provider
@@ -1164,6 +1193,7 @@ purpose
 put
 pydantic
 pyright
+pytest
 python
 quality
 queries
@@ -1184,12 +1214,12 @@ reaches
 read
 readable
 reader
-readiness
 reading
 readme
 reads
 ready
 real
+realistic
 reason
 reauthenticate
 reauthentication
@@ -1227,6 +1257,7 @@ reference
 reflection
 refresh
 refreshes
+refusal
 refuse
 refuses
 register
@@ -1253,7 +1284,6 @@ releases
 reload
 reloaded
 relying
-remain
 remains
 remediation
 removal
@@ -1268,6 +1298,7 @@ renders
 renews
 reopen
 repeated
+repeating
 replace
 replaced
 replacement
@@ -1278,6 +1309,7 @@ replays
 repo
 report
 reported
+reporter
 reports
 repositories
 repository
@@ -1288,8 +1320,6 @@ requested
 requests
 require
 required
-requirement
-requirements
 requires
 research
 reservation
@@ -1346,7 +1376,6 @@ revoking
 rewrite
 rfc
 risk
-risks
 roadmap
 role
 roles
@@ -1383,10 +1412,10 @@ satisfies
 save
 saved
 saves
+saving
 scalar
 scan
 scanning
-scenarios
 scheduler
 schema
 schemas
@@ -1398,6 +1427,7 @@ script
 scripted
 scroll
 sdd
+sdk
 seam
 seams
 season
@@ -1414,6 +1444,7 @@ security
 seed
 seeded
 seeds
+seek
 segment
 select
 selected
@@ -1428,7 +1459,6 @@ sensitive
 separate
 separates
 separator
-sequence
 serializes
 serve
 server
@@ -1450,6 +1480,7 @@ share
 shared
 shell
 should
+show
 shows
 shutdown
 side
@@ -1499,6 +1530,7 @@ sqlite
 ssrf
 stable
 stack
+stage
 stale
 staleness
 standalone
@@ -1540,7 +1572,9 @@ stub
 style
 stylesheet
 subject
+submission
 submit
+substitute
 substitution
 succeeded
 succeeds
@@ -1551,6 +1585,7 @@ summary
 supersedes
 supplied
 supply
+supported
 supports
 surface
 surfaces
@@ -1558,6 +1593,7 @@ survives
 switch
 symbol
 sync
+syncs
 system
 table
 tables
@@ -1578,7 +1614,6 @@ teacherplan
 teachers
 teaching
 tech
-technical
 technology
 template
 temporary
@@ -1601,7 +1636,6 @@ theme
 then
 third
 thirty
-this
 thread
 threads
 threat
@@ -1631,11 +1665,9 @@ total
 totp
 touch
 trace
-tracking
 trae
 transaction
 transactional
-transactionally
 transactions
 transient
 transitions
@@ -1654,7 +1686,9 @@ turn
 twenty
 twice
 two
+txt
 type
+typed
 types
 ubu
 ubuntu
@@ -1678,6 +1712,7 @@ unrelated
 unsupported
 until
 untrusted
+unversioned
 unwritable
 update
 updated
@@ -1711,6 +1746,7 @@ value
 values
 variable
 variables
+vault
 verification
 verified
 verify
@@ -1721,10 +1757,12 @@ view
 views
 violations
 virtual
+visible
 wait
 waits
 warning
 warnings
+was
 weak
 weaken
 web
@@ -1732,10 +1770,12 @@ webauthn
 week
 weekday
 when
+while
 whitelists
 whole
 widget
 widgets
+win
 window
 windows
 wins
@@ -1744,6 +1784,7 @@ with
 within
 without
 word
+wording
 work
 workday
 worker
@@ -1759,6 +1800,7 @@ wrong
 xml
 yaml
 year
+yml
 ywyz
 yyyy
 zero
@@ -1791,6 +1833,7 @@ zip
 不把反思纳入确认
 不把秘密放入
 不携带供应商异常正文
+不泄漏供应商原始结果
 不能改写区域列表
 不要迁移的内容
 不读取或返回跨园业务正文
@@ -1799,7 +1842,6 @@ zip
 与写入
 与冻结身份契约的一致性门禁
 与剩余任务
-与受控
 与安装器
 与数据库外
 与无长期业务记忆
@@ -1839,6 +1881,7 @@ zip
 仅支持固定白名单纯替换词法的提示词渲染器
 仅教师主动填写
 仅绑定回环地址的
+从不进入此接口
 从共同基线创建双实现分支
 从四个子任务实时派生
 从恰好四个子任务派生父任务响应
@@ -1851,7 +1894,6 @@ zip
 以后可直接交给上传边界的固定元数据与字节
 以常量时间比较
 以独立提交的
-以现代桌面界面管理多个班级
 以请求正文提交两项备用因素
 任务与预览
 任务受理事务
@@ -1874,6 +1916,7 @@ zip
 便于恢复与确定性测试
 保持编号稳定
 保留一年
+保留区域等教师维护字段
 保留可显示文件名
 保留连接字符串行为
 保留顺序并拒绝同类别重名
@@ -1887,8 +1930,8 @@ zip
 修复锚点
 值进行稳定序列化并计算
 停止边界
-健康检查
 允许后续
+先收集
 先收集结果
 全局角色字典
 全部稳定转换为
@@ -1912,21 +1955,23 @@ zip
 其他异常仍按环境
 兼容性
 内部完整包
+再写入教案栏目
 写入阶段
 冻结上下文
 冻结输入
 凭据与备份设计
+凭据与提示词覆盖的应用服务
 凭据存储
 凭据实现
 分区的确定性滑动窗口替身
 分阶段权限与确认写入
 分页和
+切换教案时丢弃当前
 列表与六栏目编辑页
 创建待登记管理员
 创建时冻结的
 刷新时优先恢复未发布草稿
 前置条件
-前门禁
 副本渲染器
 功能完成前延后生产部署
 功能规格
@@ -1938,6 +1983,7 @@ zip
 区域与工作日设置
 区域名称属于冻结输入
 协调设置
+单任务协调与预览采用边界
 单实现开发协议
 单层编号应由哪些节点和契约约束
 单日与批量导出
@@ -1971,6 +2017,7 @@ zip
 只接收
 只生成合成内容的确定性
 只由独立
+只覆盖
 只读冻结输入与幂等落位
 只读取冻结
 只读取固定模板
@@ -1980,7 +2027,6 @@ zip
 可恢复且不改变业务
 可执行验证与真实证据
 可用性与无障碍
-可选使用
 合并身份能力与基于当前班级关系实时计算的设置能力
 同园同班同日唯一教案
 同园隔离的
@@ -1992,19 +2038,22 @@ zip
 后台任务
 后台任务权威状态
 后台任务查询
-后复核
 后续复审条件
 后返回种子
 向已注册
+向应用层暴露稳定分类
 向量记忆或自动摘要
 启动与验收合同
 启动清单循环措辞
 启用新材料
 周计划工作台
+周计划工作台原型
+周计划工作台暗黑模式原型
 和本机
 和桌面版
 哪些决策需要独立
 唯一实现与集成
+回归与质量门禁
 回滚生命周期
 园所数据隔离
 园所根表
@@ -2026,17 +2075,17 @@ zip
 在线工作日来源
 在线补充且始终软降级的工作日服务
 均未授权且禁止跳入
+基础设施适配器
 基础设置
+声明的字段
 备份与恢复
 备份与恢复流程
 备份包
 备份包与恢复契约
-备份和恢复本地数据
 备份容器
 备用材料
 备用登录
 备用登录安全约束
-备用登录独立规格
 备用绑定流程
 复用原则
 外网解析发生在业务事务关闭之后
@@ -2044,6 +2093,7 @@ zip
 多进程
 失败或重放时返回
 如何撰写
+如何验证最小
 始终清理本次暂存文件
 威胁与验证
 字节二进制密钥文件
@@ -2062,10 +2112,10 @@ zip
 实现分支授权边界
 实现子
 实现清单
+实际教案页中的可选
 实际资源与语义输入的
 审查发现
 审计事件
-审计仓储与服务
 审计契约
 客户端
 客户端的公开接缝
@@ -2090,6 +2140,7 @@ zip
 导出跨
 导出迁移与数据库不变量
 将同园到期预览条件收敛为
+将已提交的
 将当前请求关联字段合并到真实
 将服务端已脱敏的测试运行渲染为可读历史记录
 将未实现模块
@@ -2099,7 +2150,6 @@ zip
 展开凭据
 展示状态
 工作区基线清洁
-工作日服务
 工作日缓存
 工作流
 工程骨架与质量基线
@@ -2122,6 +2172,7 @@ zip
 并保留
 并保留响应原始多值头
 并只保留完成此次绑定的
+并只在
 并只记录计数
 并只返回一次初始化秘密
 并只返回一次登记秘密
@@ -2130,8 +2181,6 @@ zip
 并让归档能力变化立即反映到控件
 幼儿园
 幼儿园管理助手桌面系统架构
-幼儿园管理助手桌面首期
-幼儿园管理助手桌面首期任务清单
 应如何修复
 应用装配
 建模原则
@@ -2141,6 +2190,7 @@ zip
 异步提示词测试的稳定中文状态与无障碍语义
 异步测试
 异步生成与人工采用
+弱密码列表
 弱密码资源说明
 归档与历史版本端点
 当前主机已发现的工具缺口
@@ -2173,12 +2223,12 @@ zip
 所需软件
 手工教案闭环
 手工验收证据
-打包与更新
 打开均通过
 打开的五项二元证据
 执行器
 批量导出
 批量预览
+把冻结生成请求放入
 把明确的未实现接口记为业务
 把服务端前五栏代码映射为稳定中文
 把计划中的
@@ -2188,6 +2238,8 @@ zip
 持久化完整对话
 持久化对象中只保留
 持久化重放保护由
+持久化非敏感
+持久化预览记录不受影响
 按任务与尝试次数生成可复现的有界抖动
 按任务冻结的过程长度校验索引
 按冻结的
@@ -2215,12 +2267,12 @@ zip
 提示词测试
 提示词测试记录
 提示词版本
-提示词目录
 提示词草稿
 插件或
 操作系统凭据或付费服务
 收敛版
 故障不得回滚或阻断其余子任务
+敏感信息排除和
 敏感秘密不得明文进入任何持久层
 敏感秘密自动扫描暴露为
 教师主动填写且不得含身份信息的纯文本教学上下文
@@ -2291,9 +2343,9 @@ zip
 服务边界
 服务边界与单向依赖
 未知版本保持原始数据只读
-未获授权且禁止进入
 未计时
 未计时只证明功能闭环
+未读取图像
 本地优先
 本地优先桌面产品方向重置
 本地入口
@@ -2303,7 +2355,6 @@ zip
 本地数据权威
 本地档位
 本地环境与秘密
-本地目录
 权威任务基础
 权威任务状态
 权威任务状态机
@@ -2333,7 +2384,6 @@ zip
 桌面首期实施后快速验收指南
 桌面首期技术研究与决策
 桌面首期数据模型
-模块与依赖方向
 模块化单体
 模块结构目标
 模块缺失转换为可诊断
@@ -2364,6 +2414,7 @@ zip
 版本与归档
 版本号并发检测
 版本和冻结测试运行
+状态持久化扫描
 状态日期
 状态转换
 状态迁移
@@ -2379,7 +2430,6 @@ zip
 班级教师关联
 生产安全与部署实现复审
 生产部署复审
-生命周期
 生成不包含内部存储
 生成与严格注册
 生成与提示词规则
@@ -2414,6 +2464,7 @@ zip
 的最小消息与执行委派验收
 的来源限流公共
 的确定性
+的结构化
 的身份
 的集中契约装配
 目标与边界
@@ -2430,11 +2481,11 @@ zip
 禁止提交与应用事务边界
 禁止重定向且错误脱敏的供应商中立客户端
 禁止静默回退到共享数据库
-离线完成一日活动计划
 离线恢复码
 种子并绑定园所
 种子的
 秒参数生成
+移除只属于
 移除首次使用计时
 稳定中文错误与健康分级
 稳定发布基线
@@ -2460,10 +2511,14 @@ zip
 系统架构文档要素
 纯手工教案闭环
 线程与任务
+线程回送不可变结果
 线程契约
+线程池
 绑定摘要
 结构化一日活动计划编辑页
 结构化日志和最终脱敏处理器
+结果与预览指纹规则
+结果信封的版本字段
 统一异常转换与健康端点
 统一错误
 编号修正
@@ -2478,6 +2533,7 @@ zip
 节假日
 范围与状态一致
 草稿与执行记录
+行为边界
 表元数据
 被否决方案
 规范化区域显示名
@@ -2539,6 +2595,7 @@ zip
 退役候选工作包
 退役候选提案未授权且不阻塞当前
 逐园执行预览过期和正文清理
+逐栏预览与显式采用面板
 逐步增加公开
 递增排序
 递归清除
@@ -2555,7 +2612,9 @@ zip
 通过人工测试
 通过同源
 避免用已发布正文覆盖编辑态
+配置和已校验预览
 采用事务
+采用结果同步回唯一编辑器状态
 采用预览时
 里程碑
 重启和
@@ -2577,12 +2636,15 @@ zip
 集体活动来源
 集体活动来源与两阶段
 集体活动编辑空间与
+零写入
 需要直接比较文件
 需要计时的事实由来
 静态一致性验证
 非同步保证
 非敏感
 非首期完成门禁
+页批量导出界面原型
+页集体活动编辑器原型
 页面与同源
 项新增
 项目上下文
