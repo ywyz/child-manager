@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import errno
+import hashlib
 import os
 import sqlite3
 from collections import Counter
@@ -30,6 +31,23 @@ def _schema_objects(database: Path) -> dict[str, str]:
                 "SELECT name, sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'"
             )
         }
+
+
+def _migration_source_sha256(path: Path) -> str:
+    source = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(source).hexdigest()
+
+
+def test_migration_source_hash_is_independent_of_platform_line_endings(
+    tmp_path: Path,
+) -> None:
+    migration = tmp_path / "0001_example.py"
+    migration.write_bytes(b"revision = '0001'\r\n")
+
+    assert (
+        _migration_source_sha256(migration)
+        == "a987ebd17e75e71ab4352733fd47de6e236cff317398918cec570fc7df181207"
+    )
 
 
 def test_empty_database_upgrades_idempotently_with_named_integrity_contracts(
@@ -108,9 +126,7 @@ def test_empty_database_upgrades_idempotently_with_named_integrity_contracts(
     assert (migrations / "versions" / "0001_desktop_initial.py").is_file()
     assert (migrations / "versions" / "0002_desktop_ai.py").is_file()
     assert (
-        __import__("hashlib")
-        .sha256((migrations / "versions" / "0001_desktop_initial.py").read_bytes())
-        .hexdigest()
+        _migration_source_sha256(migrations / "versions" / "0001_desktop_initial.py")
         == "a1d55d374ffa6144d2e772f2f2b7cc33a5e76e94c0c5d22b02fc13e41db844e5"
     )
     assert "render_as_batch=True" in (migrations / "env.py").read_text(encoding="utf-8")
