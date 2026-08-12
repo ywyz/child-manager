@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import errno
+import os
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 import pytest
 import sqlalchemy as sa
@@ -233,6 +236,67 @@ def test_0001_to_0002_creates_verified_pre_migration_copy_before_upgrade(
         )
         assert active.execute("SELECT teacher_display_name FROM app_profile").fetchone() == (
             "迁移测试教师",
+        )
+
+
+def test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    database = tmp_path / "desktop.sqlite3"
+    backups = tmp_path / "pre-migration"
+    _upgrade_to_0001(database)
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "INSERT INTO app_profile VALUES (1, ?, ?, ?, NULL, 1, 1)",
+            ("cn.kindergartenmanager.desktop", "Windows 迁移教师", "system"),
+        )
+
+    real_open: Any = Path.open
+    real_fsync = os.fsync
+    open_modes: dict[int, str] = {}
+
+    def recording_open(
+        path: Path,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+    ) -> Any:
+        handle = real_open(path, mode, buffering, encoding, errors, newline)
+        open_modes[handle.fileno()] = mode
+        return handle
+
+    def windows_fsync(file_descriptor: int) -> None:
+        mode = open_modes[file_descriptor]
+        if not any(marker in mode for marker in ("+", "w", "a")):
+            raise OSError(errno.EBADF, "Bad file descriptor")
+        real_fsync(file_descriptor)
+
+    monkeypatch.setattr(Path, "open", recording_open)
+    monkeypatch.setattr(os, "fsync", windows_fsync)
+
+    first_revision = upgrade_database(database, pre_migration_directory=backups)
+    restarted_revision = upgrade_database(database, pre_migration_directory=backups)
+
+    assert first_revision == restarted_revision == DESKTOP_HEAD_REVISION
+    backup_files = list(backups.glob("*.sqlite3"))
+    assert len(backup_files) == 1
+    with sqlite3.connect(backup_files[0]) as backup:
+        assert backup.execute("PRAGMA integrity_check").fetchone() == ("ok",)
+        assert backup.execute("SELECT version_num FROM alembic_version").fetchone() == (
+            DESKTOP_INITIAL_REVISION,
+        )
+        assert backup.execute("SELECT teacher_display_name FROM app_profile").fetchone() == (
+            "Windows 迁移教师",
+        )
+    with sqlite3.connect(database) as active:
+        assert active.execute("SELECT version_num FROM alembic_version").fetchone() == (
+            DESKTOP_HEAD_REVISION,
+        )
+        assert active.execute("SELECT teacher_display_name FROM app_profile").fetchone() == (
+            "Windows 迁移教师",
         )
 
 

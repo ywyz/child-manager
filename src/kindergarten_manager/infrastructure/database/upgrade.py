@@ -88,7 +88,7 @@ def _create_verified_protective_copy(database: Path, directory: Path) -> Path:
             revision = verification.execute("SELECT version_num FROM alembic_version").fetchone()
             if revision != (DESKTOP_INITIAL_REVISION,):
                 raise sqlite3.DatabaseError("protective copy revision check failed")
-        with partial.open("rb") as handle:
+        with partial.open("r+b") as handle:
             os.fsync(handle.fileno())
         expected_sha256 = _sha256_file(partial)
         partial.replace(target)
