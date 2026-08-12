@@ -131,3 +131,23 @@ push 门禁。
 
 T041–T048 行为、迁移保护、替身矩阵、桌面回归、静态门禁与 Graphify 检查均已在本地完成。
 本文件不代替固定提交 Review、远端 CI、Windows 实机或 `main` 集成证据。
+
+## 7. Windows `0001 -> 0002` 迁移保护补充验收
+
+2026-08-12，维护者在 Windows 源码工作树以真实既有 `0001_desktop_initial` 数据库执行升级。
+首次修复 `c2a22a2c9b3e7002b0fdd218239d29935f63cbe1` 已解决只读描述符调用
+`os.fsync()` 的 `[Errno 9] Bad file descriptor`，随后暴露 SQLite 校验连接未关闭造成的
+`WinError 32`。失败期间维护者提供的只读检查确认活动库仍为 `0001_desktop_initial`，且
+`app_profile/semesters/class_groups/lesson_plans` 计数分别为 `1/1/1/15`，正式保护副本为 0；
+两次失败都在 Alembic 升级前停止，没有把失败状态冒充为成功备份。
+
+第二次修复 `7cf57cce3cda948d790121a169bef666a5f0370d` 在重命名前显式关闭 source、destination
+和 verification 三个 SQLite 连接，并以确定性 Windows 共享锁模拟回归固定该行为。对应
+Quality run [31605026083](https://github.com/ywyz/child-manager/actions/runs/31605026083) 为
+`completed/success`，精确 `headSha=7cf57cce3cda948d790121a169bef666a5f0370d`。
+
+维护者随后明确确认最近下发的 Windows 复测清单通过：无需 `PYTHONPATH` 的源码启动、
+`0001 -> 0002_desktop_ai` 升级、`0001` 保护副本完整性与版本检查、既有数据保留、重启后数据
+仍在且不重复创建迁移保护副本。该确认是用户手工二元验收；成功迁移的原始终端输出、Windows
+版本和 Python 版本仍未提供，不在本文件中补造，也不代表 `main` 已集成。后续 Windows 构建
+哈希和自动化输出记录在 Slice 2B Windows 检查表。

@@ -143,3 +143,12 @@ uv run pyright
 - T055 是下一段持续推进的首个实现任务；T055–T060 完成前，21 项 clean RED 按设计保留。
 - 固定提交后的 Standards/Spec Review、CI、commit/push/Issue 更新，以及全部 Windows 手工验收
   仍是独立后续门禁。
+
+## 8. 2026-08-12 后续状态更新
+
+本文件第 1–7 节是进入 T055 前的历史检查点，不再代表当前 `dev` 状态。随后 T055–T060、
+双轴 Review、提交、推送和精确 Quality CI 已完成；Windows 源码启动与真实
+`0001 -> 0002_desktop_ai` 迁移保护也已由维护者在
+`dev@7cf57cce3cda948d790121a169bef666a5f0370d` 上确认通过。其余 Agent READ/DRAFT Windows
+行为仍见 `desktop-slice-2b-windows-checklist.md` 的未勾选项；Issue #20、`main` 和 T061 不因
+本补充验收自动完成或获得授权。

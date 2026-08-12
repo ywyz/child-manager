@@ -2082,7 +2082,7 @@
   "src/kindergarten_manager/infrastructure/database/upgrade.py": {
     "mtime": 1786543362.4127727,
     "ast_hash": "889d85ebd6bca7839e84060e5a2f473e",
-    "semantic_hash": ""
+    "semantic_hash": "889d85ebd6bca7839e84060e5a2f473e"
   },
   "src/kindergarten_manager/infrastructure/exports/__init__.py": {
     "mtime": 1786262971.4314904,
@@ -2180,9 +2180,9 @@
     "semantic_hash": "88bbebcd90cd34c29caa6375e14388c8"
   },
   "tests/desktop/database/test_migrations.py": {
-    "mtime": 1786543344.2547739,
-    "ast_hash": "451504f5f643591ddba376e38a353ce7",
-    "semantic_hash": ""
+    "mtime": 1786546986.7495568,
+    "ast_hash": "92e617360c222bb9fbb4fc50dc54465e",
+    "semantic_hash": "92e617360c222bb9fbb4fc50dc54465e"
   },
   "tests/desktop/helpers.py": {
     "mtime": 1786517278.7809863,
@@ -2325,9 +2325,9 @@
     "semantic_hash": "ccfad5bc23bcd90d71a8b55e3079bc58"
   },
   "specs/003-desktop-local-first/tasks.md": {
-    "mtime": 1786528644.138808,
-    "ast_hash": "646d029948a0e191ea2e0cd842d29c2b",
-    "semantic_hash": "646d029948a0e191ea2e0cd842d29c2b"
+    "mtime": 1786543973.8417363,
+    "ast_hash": "8e3135780bbed2d77ef2753a39ab518f",
+    "semantic_hash": "8e3135780bbed2d77ef2753a39ab518f"
   },
   "docs/design/assets/desktop-prototype/desktop-prototype-a-classic.png": {
     "mtime": 1786262011.9045477,
@@ -2610,9 +2610,9 @@
     "semantic_hash": "40de2ac0493ad2bbad9e58a6eb625615"
   },
   "docs/implementation-evidence/desktop-slice-2a-acceptance.md": {
-    "mtime": 1786435953.8427358,
-    "ast_hash": "bcf75c6c12a30d7fdc15039e76804952",
-    "semantic_hash": "bcf75c6c12a30d7fdc15039e76804952"
+    "mtime": 1786547123.4035485,
+    "ast_hash": "e9614677f6106b60d5d6527ad2e966c3",
+    "semantic_hash": "e9614677f6106b60d5d6527ad2e966c3"
   },
   "src/kindergarten_manager/infrastructure/ai/prompts/afternoon_outdoor_game.txt": {
     "mtime": 1786421351.2769608,
@@ -2705,9 +2705,9 @@
     "semantic_hash": "568b699303b77b83cc6cc8b424542c85"
   },
   "docs/implementation-evidence/desktop-non-windows-blockers.md": {
-    "mtime": 1786520304.152806,
-    "ast_hash": "c4058b9ce0596b2bd3f8f8c295d7d036",
-    "semantic_hash": "c4058b9ce0596b2bd3f8f8c295d7d036"
+    "mtime": 1786543973.8407362,
+    "ast_hash": "3fc1e141a798479c278e998f8cde65f9",
+    "semantic_hash": "3fc1e141a798479c278e998f8cde65f9"
   },
   "src/kindergarten_manager/infrastructure/ai/agent_provider.py": {
     "mtime": 1786525643.969987,
@@ -2715,9 +2715,9 @@
     "semantic_hash": "2593842c3a55d8b5cc5d2fe153e1d062"
   },
   "docs/implementation-evidence/desktop-slice-2b-acceptance.md": {
-    "mtime": 1786541398.5028899,
-    "ast_hash": "097bfa3fc66054978ef3a73577ff134c",
-    "semantic_hash": ""
+    "mtime": 1786547123.4045486,
+    "ast_hash": "ceed7e3a7e7b5674e2754e7404aa4314",
+    "semantic_hash": "ceed7e3a7e7b5674e2754e7404aa4314"
   },
   "src/kindergarten_manager/application/agent_tools.py": {
     "mtime": 1786540190.8769617,
@@ -2730,14 +2730,14 @@
     "semantic_hash": "d5c666b7a4f99f01ba65f00cc547722a"
   },
   "docs/implementation-evidence/desktop-slice-2b-windows-checklist.md": {
-    "mtime": 1786540324.2269537,
-    "ast_hash": "8444eb678c7a164c5b39e8d417d1664b",
-    "semantic_hash": "8444eb678c7a164c5b39e8d417d1664b"
+    "mtime": 1786547123.4055486,
+    "ast_hash": "0f5907c7da9e13665d36e4faf023459b",
+    "semantic_hash": "0f5907c7da9e13665d36e4faf023459b"
   },
   "specs/003-desktop-local-first/proposals/desktop-slice-3-issue-draft.md": {
-    "mtime": 1786541239.2908993,
-    "ast_hash": "95e5467818de6d1a86e5ea4e3562b7f3",
-    "semantic_hash": ""
+    "mtime": 1786543973.8407362,
+    "ast_hash": "0f70931d4fff0347fcc71c08b41ad295",
+    "semantic_hash": "0f70931d4fff0347fcc71c08b41ad295"
   },
   "src/kindergarten_manager/application/agent_context.py": {
     "mtime": 1786540228.1629596,

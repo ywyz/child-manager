@@ -132,6 +132,11 @@ RED，再实施并运行该切片自有门禁。导入、fixture、数据库配�
 
 ## Phase 5: Slice 2B / User Story 2 - Agent Foundation、Context 与 READ/DRAFT Tools（Priority: P2）
 
+**Windows Follow-up Record (2026-08-12)**: 维护者在
+`dev@7cf57cce3cda948d790121a169bef666a5f0370d` 上确认无需 `PYTHONPATH` 的源码启动、真实
+`0001 -> 0002_desktop_ai` 迁移保护、数据保留与重启复测通过。该记录不替代其余 Agent
+READ/DRAFT Windows 检查项，不自动关闭 Issue #20，也不授权 T061、PR 或 `main`。
+
 **Goal**: 在现有 AI Provider 上建立受控单 `AgentRuntime`、最小 `AgentContext`、Provider port
 和类型化 Tool registry；本切片只允许 READ/DRAFT，任何路径都不得正式写入。
 

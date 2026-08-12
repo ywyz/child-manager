@@ -10,7 +10,8 @@
 - 本轮目标和授权包含 T054–T060、回归修复、Review、提交、推送、精确 CI 与 Issue 回填；不实现
   WRITE/Confirmation、子 Agent、并行 Tool、长期记忆或 Agent 状态持久化。
 - 提交和推送只进入 `dev`；不创建 PR、不切换分支、不进入 `main`。
-- Windows 验收全部保留为用户手工门禁；本文只记录 Linux、静态与可复现构建/检查材料。
+- Windows 验收保留为用户手工门禁；2026-08-12 已补充完成源码启动与 `0001 -> 0002` 迁移
+  保护复测，其余 Agent READ/DRAFT 行为仍以独立检查表为准。
 
 ## 2. 进入 T055 前的 clean RED
 
@@ -325,8 +326,10 @@ uv build --out-dir <temporary-directory>
 只创建预期 SQLite。临时目录构建成功产生 `child_manager-0.1.0-py3-none-any.whl` 与 sdist，wheel
 包含五个 Agent 组合/Runtime/registry/Provider/UI 文件；构建物未写入仓库。
 
-Windows 结果仍为**未执行/待用户手工验收**；可复现命令和未勾选检查表见
-`docs/implementation-evidence/desktop-slice-2b-windows-checklist.md`，此处不以 Linux 结果代替。
+Windows 结果为**部分完成**：维护者已确认无需 `PYTHONPATH` 的源码启动、真实既有
+`0001 -> 0002_desktop_ai` 迁移、保护副本、数据保留和重启通过；其余 Agent READ/DRAFT 行为仍
+待按 `docs/implementation-evidence/desktop-slice-2b-windows-checklist.md` 手工执行。此处不以
+Linux 结果替代未执行项目。
 
 最终业务代码增量使用 `graphify update .`，文档语义抽取首选 OpenAI-compatible backend 并成功，
 未触发 DeepSeek/`luna_worker` 降级。T060 验收抽取为 5663 nodes / 15999 edges / 343
@@ -360,3 +363,24 @@ SHA 为 `a14a24dc65e3a535125b356b3d740c0062adf545`；证据提交 SHA 与精确 
 --undirected` 的 missing、dangling、self-loop、duplicate 和 collapsed 均为 0。语义抽取和社区
 命名均由首选 OpenAI-compatible backend 成功完成（33967 input / 25527 output tokens），未触发
 DeepSeek 或 `luna_worker` 降级。
+
+## 10. Windows 启动与迁移修复交付
+
+- 包安装与源码入口修复后，Windows 的 `uv sync --locked` 成功构建并安装本地
+  `child-manager==0.1.0`；无需 `PYTHONPATH` 即进入桌面启动路径。
+- `c2a22a2c9b3e7002b0fdd218239d29935f63cbe1` 将保护副本 `fsync` 改为可写描述符；
+  Quality run [31603619776](https://github.com/ywyz/child-manager/actions/runs/31603619776) 为
+  `completed/success`，但 Windows 实机继续发现未关闭 SQLite 连接阻止原子重命名。
+- `7cf57cce3cda948d790121a169bef666a5f0370d` 显式关闭保护副本的 source、destination 与
+  verification 连接；Quality run
+  [31605026083](https://github.com/ywyz/child-manager/actions/runs/31605026083) 为
+  `completed/success` 且精确匹配该 `headSha`。
+- 修复前 Windows 只读检查证明数据库仍停在 `0001_desktop_initial`，关键表计数为
+  `1/1/1/15`、正式保护副本为 0。维护者在最终修复后明确确认最近下发的源码启动、迁移保护、
+  数据保留和重启复测全部通过。
+- 后续 Windows 默认测试在 179 项中出现 1 项平台兼容失败：Git 将不可变迁移文件检出为 CRLF，
+  原始字节哈希因此不同；将同一 LF 内容转换为 CRLF 可精确复现实机哈希，确认不是迁移内容被
+  改写。`1bd441fde1c585a8aff5c3b20cea6b1aff621d9b` 增加 CRLF 回归并在哈希前只规范化
+  `CRLF -> LF`，本地迁移、Bootstrap、完整桌面、Ruff 与 Pyright 均通过，仍待 Windows 重跑。
+- 本节不把这项启动/迁移通过扩张为 Agent Provider、取消、迟到结果、最小 Context 或零写入
+  等其余 Windows 项目通过，也不授权 PR、`main` 或 T061。

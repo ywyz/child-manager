@@ -1,13 +1,16 @@
-# GitHub Issue 草案：桌面 Slice 3 本地恢复与远程加密备份（T061–T078）
+# GitHub Issue #21 的历史草案：桌面 Slice 3 本地恢复与远程加密备份（T061–T078）
 
-> 本文件只是本地草案，尚未创建 GitHub Issue，也不授权开始 T061。
+> GitHub Issue #21 已创建；本文件保留创建时草案与后续基线校正，仍不授权开始 T061。
 
 ## 固定基线
 
 - 完整 docs SHA：`d4ac961a04a273a0384e295190296f69538b313b`
 - Slice 2B 固定实现 SHA：`a14a24dc65e3a535125b356b3d740c0062adf545`
-- 前置状态：Slice 2B T054–T060 已完成 Linux/静态 GREEN；最终证据提交、远端 Quality CI 与
-  Issue #20 回填仍须在创建 Slice 3 Issue 前精确固定
+- 当前远端 `dev` SHA：`7cf57cce3cda948d790121a169bef666a5f0370d`
+- 当前 Quality CI：[31605026083](https://github.com/ywyz/child-manager/actions/runs/31605026083)，
+  `completed/success`，精确匹配上述 SHA
+- 前置状态：Slice 2B T054–T060、双轴 Review、最终证据、远端 CI 与 Issue #20 交付回填已完成；
+  Windows 源码启动和 `0001 -> 0002` 迁移保护已通过，其余 Agent Windows 手工项仍未全部完成
 - 实施分支：`dev`
 
 事实来源固定为上述 docs SHA：
