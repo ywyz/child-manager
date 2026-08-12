@@ -7,7 +7,7 @@
 - Slice 2A 固定 GREEN / 本 Slice 实现基线：
   `8d285f03616033e757ee1f31e298da6d58a3501b`
 - 实施分支和工作树：`dev`、`/home/admin/code/child-manager-dev-desktop`。
-- 本轮完成 T054–T060、回归修复、Review、提交、推送、精确 CI 与 Issue 回填；不实现
+- 本轮目标和授权包含 T054–T060、回归修复、Review、提交、推送、精确 CI 与 Issue 回填；不实现
   WRITE/Confirmation、子 Agent、并行 Tool、长期记忆或 Agent 状态持久化。
 - 提交和推送只进入 `dev`；不创建 PR、不切换分支、不进入 `main`。
 - Windows 验收全部保留为用户手工门禁；本文只记录 Linux、静态与可复现构建/检查材料。
