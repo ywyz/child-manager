@@ -156,8 +156,10 @@ class TeacherplanRenderer:
                     continue
                 text = "\n" + str(step.get("heading", ""))
                 lines = step.get("lines")
-                if isinstance(lines, list):
-                    text += "".join(f"\n{index}.{line}" for index, line in enumerate(lines, 1))
+                text += "".join(
+                    f"\n{index}.{line}"
+                    for index, line in enumerate(self._normalized_list_items(lines), 1)
+                )
                 segments.append((text, step.get("is_ai_added") is True))
         self._set_cell(cell, segments=segments)
 
@@ -173,16 +175,21 @@ class TeacherplanRenderer:
             )
         )
 
-    @staticmethod
-    def _numbered(value: object) -> str:
+    @classmethod
+    def _numbered(cls, value: object) -> str:
+        return "\n".join(
+            f"{index}.{item}" for index, item in enumerate(cls._normalized_list_items(value), 1)
+        )
+
+    @classmethod
+    def _normalized_list_items(cls, value: object) -> list[str]:
         if not isinstance(value, list):
-            return ""
-        items = [
+            return []
+        return [
             normalized
             for item in value
-            if (normalized := TeacherplanRenderer._LIST_PREFIX.sub("", str(item)).strip())
+            if (normalized := cls._LIST_PREFIX.sub("", str(item)).strip())
         ]
-        return "\n".join(f"{index}.{item}" for index, item in enumerate(items, 1))
 
     @staticmethod
     def _mapping(value: object) -> Mapping[str, object]:

@@ -4,7 +4,7 @@ import logging
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from uuid import UUID
 
 import pytest
@@ -37,6 +37,7 @@ from kindergarten_manager.application.workspace import (
 )
 from kindergarten_manager.domain.content import PlanContentV1
 from kindergarten_manager.ui.pages.first_run import build_first_run_daily_plan_window
+from kindergarten_manager.ui.ports import DesktopServices
 from kindergarten_manager.ui.widgets.ai_preview import AiPreviewPanel
 from tests.desktop.helpers import implemented
 
@@ -168,7 +169,9 @@ def _child(window: QWidget, widget_type: type[Any], name: str) -> Any:
 
 
 def _build(services: FakeDesktopServices) -> QWidget:
-    return implemented(lambda: build_first_run_daily_plan_window(services=services))
+    return implemented(
+        lambda: build_first_run_daily_plan_window(services=cast(DesktopServices, services))
+    )
 
 
 def test_first_run_collects_minimum_settings_and_opens_structured_editor(

@@ -1,10 +1,10 @@
 # 桌面默认门禁与旧 Cloud 退役候选工作包
 
-> 状态：候选提案，未进入 `003-desktop-local-first/tasks.md` 的正式任务编号。
+> 状态：2026-08-12 经维护者明确授权实施默认门禁收敛；不进入
+> `003-desktop-local-first/tasks.md` 的正式任务编号，也不改变 T055 起始边界。
 >
-> 本文不授权实现，不改变 Issue #14 的 T001–T034，也不阻塞 T034 Windows 验收或
-> T035–T040 Slice 2A clean RED。若维护者决定实施，必须先确认执行时点，再以新的完整 docs
-> SHA 和独立 Issue 固定范围、非目标、验收与验证方式。
+> 本次只收敛当前桌面默认 Pytest/Pyright/Quality CI、正式依赖与证据；旧 Cloud 源码和测试
+> 文件保留为历史材料，不再进入默认门禁。Windows 验收继续由维护者手动执行。
 
 ## 背景
 
@@ -25,6 +25,10 @@
 | CDR-06 | 评估把 Quality workflow 收敛为桌面默认门禁；如保留 legacy workflow，只能手工触发、非 required，并固定历史提交。 |
 | CDR-07 | 记录收集/通过数量、依赖树、默认 CI 服务、零长期 skip 和 legacy 退出条件。 |
 | CDR-08 | 在固定实现提交上独立执行 Standards/Spec Review，确认没有丢失适用行为，也没有迁入 Web/API/Worker/PostgreSQL 语义。 |
+
+实施与验证证据见
+`docs/implementation-evidence/desktop-non-windows-blockers.md`。CDR-08 仍属于后续固定提交
+Review gate；本地未提交工作树不将它伪报为已完成。
 
 ## 决策边界
 

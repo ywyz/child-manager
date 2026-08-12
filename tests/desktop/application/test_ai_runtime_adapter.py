@@ -28,6 +28,7 @@ class SignalStub:
 @dataclass
 class CapturingBridge:
     succeeded: SignalStub = field(default_factory=SignalStub)
+    failed: SignalStub = field(default_factory=SignalStub)
     finished: SignalStub = field(default_factory=SignalStub)
     submitted: tuple[object, object] | None = None
 
@@ -179,6 +180,8 @@ def test_facade_syncs_adopted_content_into_workspace_cache_and_revision() -> Non
         workspace,
         cast(Any, object()),
         cast(Any, coordinator),
+        cast(Any, object()),
+        cast(Any, CapturingBridge()),
     )
 
     editor = facade.adopt_ai_preview(7)

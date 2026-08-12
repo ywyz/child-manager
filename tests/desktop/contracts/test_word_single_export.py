@@ -247,6 +247,46 @@ def test_area_game_lists_render_one_numbering_layer_without_numbered_labels(
         )
 
 
+@pytest.mark.parametrize(
+    "process_lines",
+    [
+        ["师：请看看图片里有什么。", "幼：我看到了花。"],
+        ["1.师：请看看图片里有什么。", "2、幼：我看到了花。"],
+    ],
+)
+def test_group_process_renders_one_numbering_layer(
+    teacherplan_template_path: Path,
+    process_lines: list[str],
+) -> None:
+    payload = PlanContentV1.empty().model_dump()
+    payload["group_activity"] = {
+        "theme": "寻找春天",
+        "objectives": [],
+        "preparation": [],
+        "focus": "表达观察结果。",
+        "difficulty": "连续描述变化。",
+        "process": [
+            {
+                "heading": "一、观察图片",
+                "lines": process_lines,
+                "is_ai_added": False,
+            }
+        ],
+    }
+    renderer = TeacherplanRenderer(teacherplan_template_path, expected_sha256=TEMPLATE_SHA256)
+
+    rendered = renderer.render_day(_snapshot(PlanContentV1.model_validate(payload)))
+    process = Document(BytesIO(rendered)).tables[0].cell(11, 1)
+
+    assert process.text.rstrip("\n") == (
+        "活动过程：\n一、观察图片\n1.师：请看看图片里有什么。\n2.幼：我看到了花。"
+    )
+    assert all(
+        paragraph._p.pPr is None or paragraph._p.pPr.numPr is None
+        for paragraph in process.paragraphs
+    )
+
+
 class BytesRenderer:
     def __init__(self, payload: bytes | None = None, failure: Exception | None = None) -> None:
         if payload is None:
