@@ -3,6 +3,7 @@ from __future__ import annotations
 import errno
 import os
 import sqlite3
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -254,7 +255,33 @@ def test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor(
 
     real_open: Any = Path.open
     real_fsync = os.fsync
+    real_connect: Any = sqlite3.connect
+    real_replace = Path.replace
     open_modes: dict[int, str] = {}
+    locked_paths: Counter[Path] = Counter()
+
+    class WindowsLockingConnection(sqlite3.Connection):
+        locked_path: Path | None = None
+
+        def close(self) -> None:
+            if self.locked_path is not None:
+                locked_paths[self.locked_path] -= 1
+                if locked_paths[self.locked_path] == 0:
+                    del locked_paths[self.locked_path]
+                self.locked_path = None
+            super().close()
+
+    def windows_connect(database_path: str | bytes | Path, *args: Any, **kwargs: Any):
+        kwargs["factory"] = WindowsLockingConnection
+        connection = real_connect(database_path, *args, **kwargs)
+        raw_path = os.fsdecode(database_path)
+        if raw_path.startswith("file:"):
+            raw_path = raw_path.removeprefix("file:").split("?", maxsplit=1)[0]
+        resolved_path = Path(raw_path).resolve()
+        if resolved_path.suffix == ".partial":
+            connection.locked_path = resolved_path
+            locked_paths[resolved_path] += 1
+        return connection
 
     def recording_open(
         path: Path,
@@ -274,8 +301,15 @@ def test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor(
             raise OSError(errno.EBADF, "Bad file descriptor")
         real_fsync(file_descriptor)
 
+    def windows_replace(path: Path, target: Path) -> Path:
+        if path.resolve() in locked_paths:
+            raise PermissionError(32, "另一个程序正在使用此文件", path, target)
+        return real_replace(path, target)
+
     monkeypatch.setattr(Path, "open", recording_open)
+    monkeypatch.setattr(Path, "replace", windows_replace)
     monkeypatch.setattr(os, "fsync", windows_fsync)
+    monkeypatch.setattr(sqlite3, "connect", windows_connect)
 
     first_revision = upgrade_database(database, pre_migration_directory=backups)
     restarted_revision = upgrade_database(database, pre_migration_directory=backups)

@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import sqlite3
 import uuid
-from contextlib import suppress
+from contextlib import closing, suppress
 from hashlib import sha256
 from pathlib import Path
 
@@ -76,11 +76,13 @@ def _create_verified_protective_copy(database: Path, directory: Path) -> Path:
     try:
         directory.mkdir(parents=True, exist_ok=True)
         with (
-            sqlite3.connect(f"file:{database.resolve()}?mode=ro", uri=True) as source,
-            sqlite3.connect(partial) as destination,
+            closing(sqlite3.connect(f"file:{database.resolve()}?mode=ro", uri=True)) as source,
+            closing(sqlite3.connect(partial)) as destination,
         ):
             source.backup(destination)
-        with sqlite3.connect(f"file:{partial.resolve()}?mode=ro", uri=True) as verification:
+        with closing(
+            sqlite3.connect(f"file:{partial.resolve()}?mode=ro", uri=True)
+        ) as verification:
             if verification.execute("PRAGMA integrity_check").fetchone() != ("ok",):
                 raise sqlite3.DatabaseError("protective copy integrity check failed")
             if verification.execute("PRAGMA foreign_key_check").fetchall():

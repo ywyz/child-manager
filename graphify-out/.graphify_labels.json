@@ -172,6 +172,7 @@
   "170": "test_local_development_profiles.py",
   "171": "agent_persistence_probe.py",
   "172": "test_architecture_boundaries.py",
+  "173": "resolve_client_ip",
   "174": "test_workday_service.py",
   "175": "FastAPI API (apps/api)",
   "176": "桌面 Slice 1 手工 MVP RED 证据",

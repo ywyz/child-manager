@@ -2080,8 +2080,8 @@
     "semantic_hash": "8c1b833e380c7f7b397a59de9837f23f"
   },
   "src/kindergarten_manager/infrastructure/database/upgrade.py": {
-    "mtime": 1786542334.407834,
-    "ast_hash": "58299c67aa62e5d2ad6246dd9f0a9a00",
+    "mtime": 1786543362.4127727,
+    "ast_hash": "889d85ebd6bca7839e84060e5a2f473e",
     "semantic_hash": ""
   },
   "src/kindergarten_manager/infrastructure/exports/__init__.py": {
@@ -2180,8 +2180,8 @@
     "semantic_hash": "88bbebcd90cd34c29caa6375e14388c8"
   },
   "tests/desktop/database/test_migrations.py": {
-    "mtime": 1786542383.691831,
-    "ast_hash": "358f0908f07ba17659f77305f54af60b",
+    "mtime": 1786543344.2547739,
+    "ast_hash": "451504f5f643591ddba376e38a353ce7",
     "semantic_hash": ""
   },
   "tests/desktop/helpers.py": {

@@ -8974,8 +8974,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "client_ip.py"
     },
     {
@@ -8985,8 +8985,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip_parse_trusted_bff_peers",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "parse_trusted_bff_peers()"
     },
     {
@@ -8996,8 +8996,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip_resolve_client_ip",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "resolve_client_ip()"
     },
     {
@@ -9007,8 +9007,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "collection",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "collection"
     },
     {
@@ -9018,8 +9018,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "packages_backend_identity_client_ip_rationale_8",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "\u53ea\u63a5\u53d7\u663e\u5f0f\u914d\u7f6e\u7684\u56de\u73af bff socket peer\u3002"
     },
     {
@@ -14529,8 +14529,8 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "packages_backend_jobs_ai_runner_aijobretry",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 10,
+      "community_name": "AI Job Execution",
       "norm_label": "aijobretry"
     },
     {
@@ -14540,8 +14540,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "packages_backend_jobs_ai_runner_py_runtimeerror",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 10,
+      "community_name": "AI Job Execution",
       "norm_label": "runtimeerror"
     },
     {
@@ -14551,8 +14551,8 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "packages_backend_jobs_ai_runner_aijobretry_init",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 20,
+      "community_name": "AI Execution Context",
       "norm_label": ".__init__()"
     },
     {
@@ -14771,8 +14771,8 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "packages_backend_jobs_ai_runner_rationale_146",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 10,
+      "community_name": "AI Job Execution",
       "norm_label": "\u901a\u77e5\u6d88\u606f\u4ee3\u7406\u6309\u6743\u5a01\u4efb\u52a1\u7ed9\u51fa\u7684\u9000\u907f\u65f6\u95f4\u91cd\u6295\u3002"
     },
     {
@@ -21393,8 +21393,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_common",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "common.py"
     },
     {
@@ -21448,8 +21448,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "packages_contracts_common_errorresponse",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "errorresponse"
     },
     {
@@ -21459,8 +21459,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "packages_contracts_common_pagination",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "pagination"
     },
     {
@@ -21481,8 +21481,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "packages_contracts_common_normalize_scalar",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "_normalize_scalar()"
     },
     {
@@ -21503,8 +21503,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_contracts_common_rationale_1",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "\u8de8\u670d\u52a1\u4f7f\u7528\u7684\u516c\u5171 schema \u4e0e\u89c4\u8303\u5316\u51fd\u6570\u3002"
     },
     {
@@ -23794,8 +23794,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_py_uuid",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": "uuid"
     },
     {
@@ -23805,8 +23805,8 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_airuntimeadapter_cancel",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".cancel()"
     },
     {
@@ -23882,8 +23882,8 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_airuntimeadapter_on_finished",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": "._on_finished()"
     },
     {
@@ -23893,8 +23893,8 @@
       "source_location": "L339",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": "_desktopservicefacade"
     },
     {
@@ -23926,8 +23926,8 @@
       "source_location": "L361",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_complete_setup",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".complete_setup()"
     },
     {
@@ -23937,8 +23937,8 @@
       "source_location": "L364",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_load_plan_context",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".load_plan_context()"
     },
     {
@@ -23948,8 +23948,8 @@
       "source_location": "L367",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_select_plan_context",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".select_plan_context()"
     },
     {
@@ -23959,8 +23959,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_py_date",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": "date"
     },
     {
@@ -23970,8 +23970,8 @@
       "source_location": "L374",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_load_current_plan",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".load_current_plan()"
     },
     {
@@ -23981,8 +23981,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_py_any",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": "any"
     },
     {
@@ -23992,8 +23992,8 @@
       "source_location": "L377",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_save_current_plan",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".save_current_plan()"
     },
     {
@@ -24025,8 +24025,8 @@
       "source_location": "L386",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_suggested_export_filename",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".suggested_export_filename()"
     },
     {
@@ -24036,8 +24036,8 @@
       "source_location": "L389",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_export_current_day",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 62,
+      "community_name": "Bootstrap Service",
       "norm_label": ".export_current_day()"
     },
     {
@@ -24047,8 +24047,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_py_path",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 62,
+      "community_name": "Bootstrap Service",
       "norm_label": "path"
     },
     {
@@ -24080,8 +24080,8 @@
       "source_location": "L398",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_reset_ai_prompt",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".reset_ai_prompt()"
     },
     {
@@ -24091,8 +24091,8 @@
       "source_location": "L401",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_load_ai_generation_state",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".load_ai_generation_state()"
     },
     {
@@ -24102,8 +24102,8 @@
       "source_location": "L404",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_start_ai_generation",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".start_ai_generation()"
     },
     {
@@ -24113,8 +24113,8 @@
       "source_location": "L420",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_start_ai_batch",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".start_ai_batch()"
     },
     {
@@ -24124,8 +24124,8 @@
       "source_location": "L426",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_adopt_ai_preview",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".adopt_ai_preview()"
     },
     {
@@ -24146,8 +24146,8 @@
       "source_location": "L433",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_cancel_ai_generation",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".cancel_ai_generation()"
     },
     {
@@ -24157,8 +24157,8 @@
       "source_location": "L436",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_load_agent_state",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".load_agent_state()"
     },
     {
@@ -24168,8 +24168,8 @@
       "source_location": "L439",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_load_agent_context_request",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".load_agent_context_request()"
     },
     {
@@ -24190,8 +24190,8 @@
       "source_location": "L463",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_cancel_agent_turn",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".cancel_agent_turn()"
     },
     {
@@ -24201,8 +24201,8 @@
       "source_location": "L468",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_reject_agent_patch",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": ".reject_agent_patch()"
     },
     {
@@ -24234,8 +24234,8 @@
       "source_location": "L487",
       "_origin": "ast",
       "id": "src_kindergarten_manager_app_desktopservicefacade_on_agent_finished",
-      "community": 38,
-      "community_name": "AI Settings View",
+      "community": 13,
+      "community_name": "AI Integration Services",
       "norm_label": "._on_agent_finished()"
     },
     {
@@ -25169,8 +25169,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "agent_tools.py"
     },
     {
@@ -25180,8 +25180,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_toolregistryerror",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "toolregistryerror"
     },
     {
@@ -25191,8 +25191,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_py_runtimeerror",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "runtimeerror"
     },
     {
@@ -25202,8 +25202,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_toolregistryerror_init",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": ".__init__()"
     },
     {
@@ -25246,8 +25246,8 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_registeredtool",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "registeredtool"
     },
     {
@@ -25257,8 +25257,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_toolregistry",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "toolregistry"
     },
     {
@@ -25268,8 +25268,8 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_toolregistry_init",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": ".__init__()"
     },
     {
@@ -25279,8 +25279,8 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_toolregistry_descriptors",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": ".descriptors()"
     },
     {
@@ -25290,8 +25290,8 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_toolregistry_require",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": ".require()"
     },
     {
@@ -25301,8 +25301,8 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_toolregistry_execute",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": ".execute()"
     },
     {
@@ -25312,8 +25312,8 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_build_read_draft_registry",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "build_read_draft_registry()"
     },
     {
@@ -25323,8 +25323,8 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_descriptor",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "_descriptor()"
     },
     {
@@ -25334,8 +25334,8 @@
       "source_location": "L173",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_schema_for",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "_schema_for()"
     },
     {
@@ -25345,8 +25345,8 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_output_schema_for",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "_output_schema_for()"
     },
     {
@@ -25356,8 +25356,8 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_closed_schema",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "_closed_schema()"
     },
     {
@@ -25367,8 +25367,8 @@
       "source_location": "L253",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_schema_matches",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "schema_matches()"
     },
     {
@@ -25378,8 +25378,8 @@
       "source_location": "L316",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_draft_arguments_match",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "_draft_arguments_match()"
     },
     {
@@ -25389,8 +25389,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_kindergarten_manager_application_agent_tools_rationale_1",
-      "community": 13,
-      "community_name": "AI Integration Services",
+      "community": 98,
+      "community_name": "AI Job Retry Tests",
       "norm_label": "slice 2b \u56fa\u5b9a read/draft tool registry\u3002"
     },
     {
@@ -29995,7 +29995,7 @@
       "label": "_sha256_file()",
       "file_type": "code",
       "source_file": "src/kindergarten_manager/infrastructure/database/upgrade.py",
-      "source_location": "L109",
+      "source_location": "L111",
       "_origin": "ast",
       "id": "src_kindergarten_manager_infrastructure_database_upgrade_sha256_file",
       "community": 101,
@@ -37280,8 +37280,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "test_common_contracts.py"
     },
     {
@@ -37291,8 +37291,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_test_error_response_has_stable_shape_and_empty_field_errors",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "test_error_response_has_stable_shape_and_empty_field_errors()"
     },
     {
@@ -37302,8 +37302,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_test_pagination_rejects_values_outside_contract",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "test_pagination_rejects_values_outside_contract()"
     },
     {
@@ -37313,8 +37313,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_test_unavailable_error_codes_are_stable",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "test_unavailable_error_codes_are_stable()"
     },
     {
@@ -37324,8 +37324,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_contract_test_common_contracts_rationale_1",
-      "community": 139,
-      "community_name": "test_plan_ai_contracts.py",
+      "community": 66,
+      "community_name": "FastAPI App Setup",
       "norm_label": "\u7edf\u4e00\u9519\u8bef\u3001\u5206\u9875\u548c request id \u5951\u7ea6\u3002"
     },
     {
@@ -41501,7 +41501,7 @@
       "label": "_schema_objects()",
       "file_type": "code",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L24",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "tests_desktop_database_test_migrations_schema_objects",
       "community": 101,
@@ -41523,7 +41523,7 @@
       "label": "test_empty_database_upgrades_idempotently_with_named_integrity_contracts()",
       "file_type": "code",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L34",
+      "source_location": "L35",
       "_origin": "ast",
       "id": "tests_desktop_database_test_migrations_test_empty_database_upgrades_idempotently_with_named_integrity_contracts",
       "community": 101,
@@ -41534,7 +41534,7 @@
       "label": "test_version_rows_are_immutable_at_database_boundary()",
       "file_type": "code",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L122",
+      "source_location": "L123",
       "_origin": "ast",
       "id": "tests_desktop_database_test_migrations_test_version_rows_are_immutable_at_database_boundary",
       "community": 101,
@@ -41545,7 +41545,7 @@
       "label": "test_sqlalchemy_metadata_exposes_named_constraints_and_indexes()",
       "file_type": "code",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L173",
+      "source_location": "L174",
       "_origin": "ast",
       "id": "tests_desktop_database_test_migrations_test_sqlalchemy_metadata_exposes_named_constraints_and_indexes",
       "community": 101,
@@ -41556,7 +41556,7 @@
       "label": "test_0001_to_0002_creates_verified_pre_migration_copy_before_upgrade()",
       "file_type": "code",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L201",
+      "source_location": "L202",
       "_origin": "ast",
       "id": "tests_desktop_database_test_migrations_test_0001_to_0002_creates_verified_pre_migration_copy_before_upgrade",
       "community": 101,
@@ -41567,7 +41567,7 @@
       "label": "test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor()",
       "file_type": "code",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L242",
+      "source_location": "L243",
       "_origin": "ast",
       "id": "tests_desktop_database_test_migrations_test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor",
       "community": 101,
@@ -41589,7 +41589,7 @@
       "label": "test_failed_pre_migration_copy_stops_before_schema_or_data_changes()",
       "file_type": "code",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L303",
+      "source_location": "L337",
       "_origin": "ast",
       "id": "tests_desktop_database_test_migrations_test_failed_pre_migration_copy_stops_before_schema_or_data_changes",
       "community": 101,
@@ -41600,7 +41600,7 @@
       "label": "test_checksum_mismatch_removes_protective_copy_and_stops_migration()",
       "file_type": "code",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L338",
+      "source_location": "L372",
       "_origin": "ast",
       "id": "tests_desktop_database_test_migrations_test_checksum_mismatch_removes_protective_copy_and_stops_migration",
       "community": 101,
@@ -41611,7 +41611,7 @@
       "label": "_upgrade_to_0001()",
       "file_type": "code",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L362",
+      "source_location": "L396",
       "_origin": "ast",
       "id": "tests_desktop_database_test_migrations_upgrade_to_0001",
       "community": 101,
@@ -46751,8 +46751,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "test_client_ip.py"
     },
     {
@@ -46762,8 +46762,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_configured_loopback_bff_peer_can_supply_internal_client_ip",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "test_configured_loopback_bff_peer_can_supply_internal_client_ip()"
     },
     {
@@ -46773,8 +46773,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_untrusted_peer_cannot_supply_internal_client_ip",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "test_untrusted_peer_cannot_supply_internal_client_ip()"
     },
     {
@@ -46784,8 +46784,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_non_loopback_peer_cannot_be_configured_as_trusted_bff",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "test_non_loopback_peer_cannot_be_configured_as_trusted_bff()"
     },
     {
@@ -46795,8 +46795,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "tests_unit_identity_test_client_ip_test_trusted_bff_peers_are_empty_until_explicitly_configured",
-      "community": 66,
-      "community_name": "FastAPI App Setup",
+      "community": 173,
+      "community_name": "resolve_client_ip",
       "norm_label": "test_trusted_bff_peers_are_empty_until_explicitly_configured()"
     },
     {
@@ -50458,8 +50458,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "test_ai_job_actors.py"
     },
     {
@@ -50469,8 +50469,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_fakescoperesolver",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "fakescoperesolver"
     },
     {
@@ -50480,8 +50480,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_fakescoperesolver_kindergarten_id_for_ai_job",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": ".kindergarten_id_for_ai_job()"
     },
     {
@@ -50491,8 +50491,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_py_uuid",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "uuid"
     },
     {
@@ -50502,8 +50502,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_fakerunner",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "fakerunner"
     },
     {
@@ -50513,8 +50513,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_fakerunner_execute",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": ".execute()"
     },
     {
@@ -50524,8 +50524,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_partiallyfailingrecoverystore",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "partiallyfailingrecoverystore"
     },
     {
@@ -50535,8 +50535,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_partiallyfailingrecoverystore_reserve_recoverable_jobs",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": ".reserve_recoverable_jobs()"
     },
     {
@@ -50546,8 +50546,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_py_datetime",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "datetime"
     },
     {
@@ -50557,8 +50557,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_ai_actor",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "_ai_actor()"
     },
     {
@@ -50568,8 +50568,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_test_ai_actor_resolves_tenant_from_job_id_and_delegates_to_shared_runner",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "test_ai_actor_resolves_tenant_from_job_id_and_delegates_to_shared_runner()"
     },
     {
@@ -50579,8 +50579,8 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_test_ai_actor_ignores_unknown_or_non_executable_job_id",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "test_ai_actor_ignores_unknown_or_non_executable_job_id()"
     },
     {
@@ -50590,8 +50590,8 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_test_ai_actor_maps_authoritative_retry_delay_to_dramatiq_retry",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "test_ai_actor_maps_authoritative_retry_delay_to_dramatiq_retry()"
     },
     {
@@ -50601,8 +50601,8 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_test_ai_recovery_isolates_tenant_and_dispatch_failures",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "test_ai_recovery_isolates_tenant_and_dispatch_failures()"
     },
     {
@@ -50612,8 +50612,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_py_logcapturefixture",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "logcapturefixture"
     },
     {
@@ -50623,8 +50623,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_py_monkeypatch",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "monkeypatch"
     },
     {
@@ -50634,8 +50634,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_worker_test_ai_job_actors_rationale_1",
-      "community": 98,
-      "community_name": "AI Job Retry Tests",
+      "community": 91,
+      "community_name": "Job Dispatching",
       "norm_label": "t104 ai dramatiq actor \u7684\u6700\u5c0f\u6d88\u606f\u4e0e\u6267\u884c\u59d4\u6d3e\u9a8c\u6536\u3002"
     },
     {
@@ -51316,8 +51316,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_worker_test_foundation",
-      "community": 10,
-      "community_name": "AI Job Execution",
+      "community": 74,
+      "community_name": "Word Export Tests",
       "norm_label": "test_foundation.py"
     },
     {
@@ -51327,8 +51327,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_worker_test_foundation_test_job_message_only_contains_job_id",
-      "community": 10,
-      "community_name": "AI Job Execution",
+      "community": 74,
+      "community_name": "Word Export Tests",
       "norm_label": "test_job_message_only_contains_job_id()"
     },
     {
@@ -51338,8 +51338,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_worker_test_foundation_test_test_broker_registers_minimal_actor_without_redis",
-      "community": 10,
-      "community_name": "AI Job Execution",
+      "community": 74,
+      "community_name": "Word Export Tests",
       "norm_label": "test_test_broker_registers_minimal_actor_without_redis()"
     },
     {
@@ -51360,8 +51360,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "tests_worker_test_foundation_test_worker_uses_profile_redis_url_by_default",
-      "community": 10,
-      "community_name": "AI Job Execution",
+      "community": 74,
+      "community_name": "Word Export Tests",
       "norm_label": "test_worker_uses_profile_redis_url_by_default()"
     },
     {
@@ -51371,8 +51371,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "tests_worker_test_foundation_test_worker_rejects_missing_profile_redis_url",
-      "community": 10,
-      "community_name": "AI Job Execution",
+      "community": 74,
+      "community_name": "Word Export Tests",
       "norm_label": "test_worker_rejects_missing_profile_redis_url()"
     },
     {
@@ -51382,8 +51382,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "tests_worker_test_foundation_test_worker_rejects_non_positive_thread_count",
-      "community": 10,
-      "community_name": "AI Job Execution",
+      "community": 74,
+      "community_name": "Word Export Tests",
       "norm_label": "test_worker_rejects_non_positive_thread_count()"
     },
     {
@@ -177463,7 +177463,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -179143,7 +179143,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/kindergarten_manager/infrastructure/database/upgrade.py",
-      "source_location": "L109",
+      "source_location": "L111",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_kindergarten_manager_infrastructure_database_upgrade",
@@ -179202,7 +179202,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L15",
+      "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -179226,7 +179226,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/kindergarten_manager/infrastructure/database/upgrade.py",
-      "source_location": "L103",
+      "source_location": "L105",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_kindergarten_manager_infrastructure_database_upgrade_create_verified_protective_copy",
@@ -179273,7 +179273,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L351",
+      "source_location": "L385",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_checksum_mismatch_removes_protective_copy_and_stops_migration",
@@ -179285,7 +179285,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L314",
+      "source_location": "L348",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_failed_pre_migration_copy_stops_before_schema_or_data_changes",
@@ -179405,7 +179405,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L213",
+      "source_location": "L214",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_0001_to_0002_creates_verified_pre_migration_copy_before_upgrade",
@@ -179417,7 +179417,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L280",
+      "source_location": "L314",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor",
@@ -179429,7 +179429,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L352",
+      "source_location": "L386",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_checksum_mismatch_removes_protective_copy_and_stops_migration",
@@ -179441,7 +179441,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L39",
+      "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_empty_database_upgrades_idempotently_with_named_integrity_contracts",
@@ -179453,7 +179453,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L316",
+      "source_location": "L350",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_failed_pre_migration_copy_stops_before_schema_or_data_changes",
@@ -179465,7 +179465,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L124",
+      "source_location": "L125",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_version_rows_are_immutable_at_database_boundary",
@@ -179512,7 +179512,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "src/kindergarten_manager/infrastructure/database/upgrade.py",
-      "source_location": "L109",
+      "source_location": "L111",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_kindergarten_manager_infrastructure_database_upgrade_sha256_file",
@@ -179524,7 +179524,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/kindergarten_manager/infrastructure/database/upgrade.py",
-      "source_location": "L93",
+      "source_location": "L95",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_kindergarten_manager_infrastructure_database_upgrade_create_verified_protective_copy",
@@ -215429,7 +215429,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L11",
+      "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215440,7 +215440,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215451,7 +215451,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L201",
+      "source_location": "L202",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215462,7 +215462,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L242",
+      "source_location": "L243",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215473,7 +215473,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L338",
+      "source_location": "L372",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215484,7 +215484,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L34",
+      "source_location": "L35",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215495,7 +215495,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L303",
+      "source_location": "L337",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215506,7 +215506,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L173",
+      "source_location": "L174",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215517,7 +215517,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L122",
+      "source_location": "L123",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215528,7 +215528,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L362",
+      "source_location": "L396",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215540,7 +215540,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215552,7 +215552,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations",
@@ -215564,7 +215564,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_schema_objects",
@@ -215576,7 +215576,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_empty_database_upgrades_idempotently_with_named_integrity_contracts",
@@ -215588,7 +215588,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L201",
+      "source_location": "L202",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_0001_to_0002_creates_verified_pre_migration_copy_before_upgrade",
@@ -215600,7 +215600,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L242",
+      "source_location": "L243",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor",
@@ -215612,7 +215612,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L338",
+      "source_location": "L372",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_checksum_mismatch_removes_protective_copy_and_stops_migration",
@@ -215624,7 +215624,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L34",
+      "source_location": "L35",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_empty_database_upgrades_idempotently_with_named_integrity_contracts",
@@ -215636,7 +215636,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L303",
+      "source_location": "L337",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_failed_pre_migration_copy_stops_before_schema_or_data_changes",
@@ -215648,7 +215648,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L122",
+      "source_location": "L123",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_version_rows_are_immutable_at_database_boundary",
@@ -215660,7 +215660,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L362",
+      "source_location": "L396",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_upgrade_to_0001",
@@ -215672,7 +215672,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L39",
+      "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_empty_database_upgrades_idempotently_with_named_integrity_contracts",
@@ -215684,7 +215684,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L124",
+      "source_location": "L125",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_version_rows_are_immutable_at_database_boundary",
@@ -215696,7 +215696,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L206",
+      "source_location": "L207",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_0001_to_0002_creates_verified_pre_migration_copy_before_upgrade",
@@ -215708,7 +215708,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L213",
+      "source_location": "L214",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_0001_to_0002_creates_verified_pre_migration_copy_before_upgrade",
@@ -215720,7 +215720,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L242",
+      "source_location": "L243",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor",
@@ -215732,7 +215732,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L248",
+      "source_location": "L249",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor",
@@ -215744,7 +215744,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L338",
+      "source_location": "L372",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_checksum_mismatch_removes_protective_copy_and_stops_migration",
@@ -215756,7 +215756,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L307",
+      "source_location": "L341",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_failed_pre_migration_copy_stops_before_schema_or_data_changes",
@@ -215768,7 +215768,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L315",
+      "source_location": "L349",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_failed_pre_migration_copy_stops_before_schema_or_data_changes",
@@ -215780,7 +215780,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/desktop/database/test_migrations.py",
-      "source_location": "L344",
+      "source_location": "L378",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_desktop_database_test_migrations_test_checksum_mismatch_removes_protective_copy_and_stops_migration",
@@ -256359,5 +256359,5 @@
       "source_file": "specs/002-password-totp-backup-login/tasks.md"
     }
   ],
-  "built_at_commit": "02f3f8f739fb4e7eadbc535eb1956dc857052363"
+  "built_at_commit": "c2a22a2c9b3e7002b0fdd218239d29935f63cbe1"
 }
