@@ -7,6 +7,7 @@ from typing import Any
 
 REDACTED = "<redacted>"
 _SENSITIVE_PARTS = (
+    "agent_context",
     "api_key",
     "authorization",
     "content",

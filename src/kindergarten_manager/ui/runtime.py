@@ -5,6 +5,8 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import fields, is_dataclass
+from datetime import date, datetime
+from enum import Enum
 from pathlib import Path
 from uuid import UUID
 
@@ -41,11 +43,14 @@ def _reject_thread_bound(value: object) -> None:
         raise TypeError("后台输入不能使用可变映射")
     if isinstance(value, list | set | bytearray):
         raise TypeError("后台输入必须是不可变值")
-    if isinstance(value, Sequence) and not isinstance(value, str | bytes):
+    if isinstance(value, Sequence | frozenset) and not isinstance(value, str | bytes):
         for item in value:
             _reject_thread_bound(item)
         return
-    if isinstance(value, Path | str | bytes | int | float | bool | UUID | type(None)):
+    if isinstance(
+        value,
+        Path | str | bytes | int | float | bool | UUID | date | datetime | Enum | type(None),
+    ):
         return
     raise TypeError("后台输入必须是冻结 DTO 或不可变基础值")
 

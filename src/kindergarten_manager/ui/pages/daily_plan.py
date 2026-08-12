@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date, timedelta
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 from PySide6.QtCore import QDate, Qt
 from PySide6.QtWidgets import (
@@ -34,6 +34,7 @@ from kindergarten_manager.application.workspace import DailyPlanContext
 from kindergarten_manager.ui.errors import user_error_message
 from kindergarten_manager.ui.pages.single_export import export_current_day
 from kindergarten_manager.ui.ports import DesktopServices
+from kindergarten_manager.ui.widgets.agent_draft import AgentDraftPanel
 from kindergarten_manager.ui.widgets.ai_preview import AiPreviewPanel
 
 EditorKind = Literal["text", "lines", "areas", "process"]
@@ -431,6 +432,14 @@ class DailyPlanPage(QWidget):
             on_content_changed=self._load_content,
         )
         work.addWidget(self.ai_preview_panel)
+        self.agent_draft_panel: AgentDraftPanel | None = None
+        context_request = getattr(services, "load_agent_context_request", None)
+        if callable(context_request):
+            self.agent_draft_panel = AgentDraftPanel(
+                services,
+                context_request=cast(Callable[[], object], context_request),
+            )
+            work.addWidget(self.agent_draft_panel)
         layout.addLayout(work, 1)
 
         self.export_status = QLabel("")
@@ -470,6 +479,8 @@ class DailyPlanPage(QWidget):
 
     def leave_page(self) -> None:
         self.ai_preview_panel.leave_page()
+        if self.agent_draft_panel is not None:
+            self.agent_draft_panel.leave_page()
 
     def export(self) -> None:
         export_current_day(parent=self, services=self._services, status=self.export_status)

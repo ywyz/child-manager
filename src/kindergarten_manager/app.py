@@ -7,13 +7,35 @@ import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import UTC, date, datetime, timedelta
+from hashlib import sha256
 from pathlib import Path
 from typing import Any, cast
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from PySide6.QtWidgets import QWidget
 
+from kindergarten_manager.application.agent_context import (
+    minimize_current_plan_result,
+    project_plan_content_for_intent,
+)
+from kindergarten_manager.application.agent_runtime import (
+    ActiveScope,
+    AgentContext,
+    AgentRuntime,
+    AgentTurnOutcome,
+    ContextFact,
+    EntityRevision,
+    Permission,
+    ProviderToolCall,
+    ProviderTurnRequest,
+    ProviderTurnResult,
+    ToolResult,
+)
+from kindergarten_manager.application.agent_tools import (
+    REGISTERED_PLAN_FIELD_PATHS,
+    build_read_draft_registry,
+)
 from kindergarten_manager.application.ai_generation import (
     AiGenerationCoordinator,
     CoordinatorState,
@@ -39,6 +61,7 @@ from kindergarten_manager.domain.ai import (
     canonical_json,
     validate_section_output,
 )
+from kindergarten_manager.infrastructure.ai.agent_provider import OpenAICompatibleAgentProvider
 from kindergarten_manager.infrastructure.ai.client import AiClientError, ProviderNeutralAiClient
 from kindergarten_manager.infrastructure.ai.prompts import load_default_prompt
 from kindergarten_manager.infrastructure.credentials import (
@@ -66,8 +89,12 @@ def _now_utc_ms() -> int:
     return time.time_ns() // 1_000_000
 
 
-def _shutdown(runtime: _AiRuntimeAdapter) -> None:
-    runtime.shutdown()
+def _shutdown(
+    ai_runtime: _AiRuntimeAdapter, agent_runtime: AgentRuntime, bridge: RuntimeBridge
+) -> None:
+    agent_runtime._invalidate()
+    bridge.shutdown(5_000)
+    ai_runtime.shutdown()
 
 
 @dataclass(frozen=True, slots=True)
@@ -315,10 +342,17 @@ class _DesktopServiceFacade:
         workspace: DailyPlanWorkspace,
         ai_settings: AiSettingsService,
         coordinator: AiGenerationCoordinator,
+        agent_runtime: AgentRuntime,
+        agent_bridge: RuntimeBridge,
     ) -> None:
         self._workspace = workspace
         self._ai_settings = ai_settings
         self._coordinator = coordinator
+        self._agent_runtime = agent_runtime
+        self._agent_state = _AgentUiState(None, "idle", "Agent 已就绪")
+        agent_bridge.succeeded.connect(self._on_agent_succeeded)
+        agent_bridge.failed.connect(self._on_agent_failed)
+        agent_bridge.finished.connect(self._on_agent_finished)
 
     @property
     def setup_complete(self) -> bool:
@@ -332,6 +366,9 @@ class _DesktopServiceFacade:
 
     def select_plan_context(self, class_id: int, plan_date: date) -> DailyPlanContext:
         self._coordinator.clear_view()
+        self._agent_runtime._invalidate()
+        if self._agent_state.running_operation_id is not None:
+            self._agent_runtime.cancel(self._agent_state.running_operation_id)
         return self._workspace.select_plan_context(class_id, plan_date)
 
     def load_current_plan(self) -> dict[str, Any]:
@@ -396,6 +433,96 @@ class _DesktopServiceFacade:
     def cancel_ai_generation(self, operation_id: UUID) -> CommandResult[None]:
         return self._coordinator.cancel(operation_id)
 
+    def load_agent_state(self) -> _AgentUiState:
+        return self._agent_state
+
+    def load_agent_context_request(self) -> ActiveScope:
+        plan = self._workspace.current_plan_state()
+        return ActiveScope(
+            class_id=plan.class_id,
+            semester_id=plan.semester_id,
+            lesson_plan_id=plan.id,
+            plan_date=plan.plan_date,
+        )
+
+    def start_agent_turn(self, intent: str, context_request: object) -> OperationAccepted:
+        if not isinstance(context_request, ActiveScope):
+            raise TypeError("Agent Context 请求无效")
+        if "直接修改" in intent or "总是允许" in intent:
+            from kindergarten_manager.application.agent_runtime import AgentRuntimeError
+
+            raise AgentRuntimeError("agent.tool_not_allowed", "当前阶段仅支持读取和草拟")
+        accepted = self._agent_runtime.start_turn(intent, context_request)
+        self._agent_state = _AgentUiState(
+            accepted.operation_id,
+            "running",
+            "Agent 正在处理，请稍候",
+        )
+        return accepted
+
+    def cancel_agent_turn(self, operation_id: UUID) -> ToolResult[None]:
+        result = self._agent_runtime.cancel(operation_id)
+        self._agent_state = _AgentUiState(None, "cancelled", result.message)
+        return result
+
+    def reject_agent_patch(self, patch_id: UUID) -> ToolResult[None]:
+        result = self._agent_runtime.reject(patch_id)
+        self._agent_state = _AgentUiState(None, "idle", result.message)
+        return result
+
+    def _on_agent_succeeded(self, result: CommandResult[object]) -> None:
+        outcome = result.value
+        if not isinstance(outcome, AgentTurnOutcome):
+            return
+        self._agent_state = _AgentUiState(
+            None,
+            "draft_ready" if outcome.patches else "succeeded",
+            result.message,
+            outcome.patches,
+        )
+
+    def _on_agent_failed(self, result: CommandResult[object]) -> None:
+        self._agent_state = _AgentUiState(None, "failed", result.message)
+
+    def _on_agent_finished(self, operation_id: UUID) -> None:
+        if self._agent_state.running_operation_id == operation_id:
+            self._agent_state = _AgentUiState(None, "idle", "Agent 已就绪")
+
+
+@dataclass(frozen=True, slots=True)
+class _AgentUiState:
+    running_operation_id: UUID | None
+    status: str
+    message: str
+    patches: tuple[object, ...] = ()
+
+
+class _ConfiguredAgentProvider:
+    def __init__(
+        self,
+        repository: AiRepository,
+        credential_store: CredentialStore | None,
+    ) -> None:
+        self._repository = repository
+        self._credential_store = credential_store
+
+    def complete(self, request: ProviderTurnRequest) -> ProviderTurnResult:
+        configuration = self._repository.get_configuration()
+        if (
+            configuration is None
+            or not configuration.enabled
+            or not configuration.base_url
+            or not configuration.model_name
+            or self._credential_store is None
+        ):
+            raise RuntimeError("Agent Provider 尚未配置")
+        api_key = self._credential_store.require("ai.current")
+        return OpenAICompatibleAgentProvider(
+            base_url=configuration.base_url,
+            api_key=api_key,
+            model_name=configuration.model_name,
+        ).complete(request)
+
 
 def create_desktop_window(
     *,
@@ -445,8 +572,153 @@ def create_desktop_window(
         clock_utc_ms=_now_utc_ms,
     )
     runtime.bind(coordinator)
-    services = _DesktopServiceFacade(workspace, ai_settings, coordinator)
+    agent_bridge = RuntimeBridge(max_workers=1)
+
+    def context_loader(scope: ActiveScope, intent: str) -> AgentContext:
+        plan = workspace.current_plan_state()
+        if scope.lesson_plan_id != plan.id or scope.class_id != plan.class_id:
+            raise ValueError("Agent Context 已失效")
+        now = datetime.now(UTC)
+        return AgentContext(
+            context_id=uuid4(),
+            session_id=uuid4(),
+            turn_id=uuid4(),
+            created_at_utc=now,
+            expires_at_utc=now + timedelta(minutes=5),
+            locale="zh-CN",
+            active_scope=scope,
+            entity_revisions=(EntityRevision("lesson_plan", plan.id, plan.content_revision),),
+            facts=tuple(
+                ContextFact(
+                    source_tool="lesson_plan.read_context",
+                    entity_type="lesson_plan",
+                    entity_id=plan.id,
+                    field_path=field_path,
+                    value=value,
+                )
+                for field_path, value in project_plan_content_for_intent(plan.content, intent)
+            ),
+            allowed_permissions=frozenset({Permission.READ, Permission.DRAFT}),
+        )
+
+    def _result(
+        call: ProviderToolCall,
+        context: AgentContext,
+        value: object,
+    ) -> ToolResult[object]:
+        return ToolResult(
+            call_id=call.call_id,
+            tool_name=call.tool_name,
+            permission=call.permission,
+            status="ok",
+            value=value,
+            error_code=None,
+            message="工具执行完成",
+            retryable=False,
+            observed_revisions=context.entity_revisions,
+            redactions=(),
+        )
+
+    def read_current(call: ProviderToolCall, context: AgentContext) -> ToolResult[object]:
+        plan_id = context.active_scope.lesson_plan_id
+        if plan_id is None or call.arguments.get("plan_id") != plan_id:
+            raise ValueError("READ Tool 不得越过当前教案范围")
+        record = workspace.read_agent_current(plan_id)
+        return _result(call, context, minimize_current_plan_result(record, context))
+
+    def read_context(call: ProviderToolCall, context: AgentContext) -> ToolResult[object]:
+        plan_id = context.active_scope.lesson_plan_id
+        if plan_id is None or call.arguments.get("plan_id") != plan_id:
+            raise ValueError("READ Tool 不得越过当前教案范围")
+        return _result(call, context, workspace.read_agent_context(plan_id))
+
+    def read_calendar(call: ProviderToolCall, context: AgentContext) -> ToolResult[object]:
+        plan_date = context.active_scope.plan_date
+        semester_id = context.active_scope.semester_id
+        if (
+            plan_date is None
+            or semester_id is None
+            or call.arguments.get("plan_date") != plan_date.isoformat()
+        ):
+            raise ValueError("READ Tool 不得越过当前日期范围")
+        return _result(call, context, workspace.read_agent_calendar(semester_id, plan_date))
+
+    def read_class_areas(call: ProviderToolCall, context: AgentContext) -> ToolResult[object]:
+        class_id = context.active_scope.class_id
+        if class_id is None or call.arguments.get("class_id") != class_id:
+            raise ValueError("READ Tool 不得越过当前班级范围")
+        return _result(call, context, workspace.read_agent_class_areas(class_id))
+
+    def draft_patch(call: ProviderToolCall, context: AgentContext) -> ToolResult[object]:
+        field_path = str(call.arguments.get("field_path", ""))
+        if field_path not in REGISTERED_PLAN_FIELD_PATHS:
+            raise ValueError("DRAFT Tool 字段未注册")
+        after_value = call.arguments.get("after_value")
+        content_fact = next(
+            (fact.value for fact in context.facts if fact.field_path == field_path),
+            None,
+        )
+        if content_fact is None:
+            raise ValueError("DRAFT Tool 字段不在当前意图 Context 中")
+        before: object = json.loads(str(content_fact))
+        return _result(
+            call,
+            context,
+            {
+                "schema_version": 1,
+                "target": {
+                    "entity_type": "lesson_plan",
+                    "entity_id": context.active_scope.lesson_plan_id,
+                },
+                "base_revisions": tuple(
+                    {
+                        "entity_type": revision.entity_type,
+                        "entity_id": revision.entity_id,
+                        "revision": revision.revision,
+                    }
+                    for revision in context.entity_revisions
+                ),
+                "operations": (
+                    {
+                        "field_path": field_path,
+                        "before_sha256": sha256(canonical_json(before).encode()).hexdigest(),
+                        "before_display": str(before)[:2_000],
+                        "after_value": after_value,
+                        "after_display": str(after_value)[:2_000],
+                    },
+                ),
+                "warnings": ("这只是草案，不会修改教案",),
+            },
+        )
+
+    registry = build_read_draft_registry(
+        {
+            "lesson_plan.read_current": read_current,
+            "lesson_plan.read_context": read_context,
+            "calendar.read_evaluation": read_calendar,
+            "settings.read_class_areas": read_class_areas,
+            "lesson_plan.draft_section_patch": draft_patch,
+            "lesson_plan.draft_reflection_patch": draft_patch,
+        }
+    )
+    agent_runtime = AgentRuntime(
+        provider=_ConfiguredAgentProvider(ai_repository, credential_store),
+        registry=registry,
+        context_loader=context_loader,
+        runtime_bridge=agent_bridge,
+        monotonic_seconds=time.monotonic,
+        max_tool_calls=6,
+        max_response_chars=8_000,
+        max_turn_seconds=120.0,
+    )
+    services = _DesktopServiceFacade(
+        workspace,
+        ai_settings,
+        coordinator,
+        agent_runtime,
+        agent_bridge,
+    )
     return DesktopMainWindow(
         cast(DesktopServices, services),
-        on_close=lambda: _shutdown(runtime),
+        on_close=lambda: _shutdown(runtime, agent_runtime, agent_bridge),
     )

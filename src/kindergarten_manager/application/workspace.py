@@ -86,6 +86,14 @@ class WorkspaceRepositoryPort(Protocol):
 
     def load_export_record(self, plan_id: int) -> PlanExportRecord | None: ...
 
+    def load_tool_plan(self, plan_id: int) -> dict[str, object] | None: ...
+
+    def load_tool_context(self, plan_id: int) -> dict[str, object] | None: ...
+
+    def load_tool_semester(self, semester_id: int) -> tuple[date, date] | None: ...
+
+    def load_tool_class_areas(self, class_id: int) -> tuple[dict[str, object], ...]: ...
+
 
 class DailyPlanWorkspace:
     """协调设置、当前教案和单日导出的 Application Layer 用例。"""
@@ -229,6 +237,41 @@ class DailyPlanWorkspace:
         if self._current_plan is None:
             raise WorkspaceError("plan.context_missing", "首次设置尚未完成")
         return self._current_plan.id
+
+    def current_plan_state(self) -> LessonPlanEditorState:
+        if self._current_plan is None:
+            self.load_plan_context()
+        if self._current_plan is None:
+            raise WorkspaceError("plan.context_missing", "首次设置尚未完成")
+        return self._current_plan
+
+    def read_agent_current(self, plan_id: int) -> dict[str, object]:
+        record = self._repository.load_tool_plan(plan_id)
+        if record is None:
+            raise WorkspaceError("plan.not_found", "当前教案不存在")
+        return record
+
+    def read_agent_context(self, plan_id: int) -> dict[str, object]:
+        record = self._repository.load_tool_context(plan_id)
+        if record is None:
+            raise WorkspaceError("plan.not_found", "当前教案上下文不存在")
+        return record
+
+    def read_agent_calendar(self, semester_id: int, plan_date: date) -> dict[str, object]:
+        semester = self._repository.load_tool_semester(semester_id)
+        if semester is None:
+            raise WorkspaceError("settings.semester_not_found", "当前学期不存在")
+        from kindergarten_manager.domain.calendar import evaluate_calendar
+
+        evaluation = evaluate_calendar(
+            plan_date,
+            semester_start=semester[0],
+            semester_end=semester[1],
+        )
+        return {"plan_date": plan_date.isoformat(), "warnings": evaluation.warnings}
+
+    def read_agent_class_areas(self, class_id: int) -> dict[str, object]:
+        return {"areas": self._repository.load_tool_class_areas(class_id)}
 
     def save_current_plan(self, content: dict[str, Any]) -> None:
         normalized = PlanContentV1.model_validate(content)

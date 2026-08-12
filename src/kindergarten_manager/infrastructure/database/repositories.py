@@ -746,6 +746,92 @@ class WorkspaceRepository:
             )
         return str(row[0]) if row is not None else ""
 
+    def load_tool_plan(self, plan_id: int) -> dict[str, object] | None:
+        with self.session_factory() as session:
+            row = (
+                session.connection()
+                .exec_driver_sql(
+                    "SELECT id, class_id, semester_id, plan_date, content_revision, content_json "
+                    "FROM lesson_plans WHERE id = ?",
+                    (plan_id,),
+                )
+                .mappings()
+                .first()
+            )
+        if row is None:
+            return None
+        return {
+            "plan_id": int(row["id"]),
+            "class_id": int(row["class_id"]),
+            "semester_id": int(row["semester_id"]),
+            "plan_date": str(row["plan_date"]),
+            "content_revision": int(row["content_revision"]),
+            "content": json.loads(str(row["content_json"])),
+        }
+
+    def load_tool_context(self, plan_id: int) -> dict[str, object] | None:
+        with self.session_factory() as session:
+            row = (
+                session.connection()
+                .exec_driver_sql(
+                    """
+                SELECT p.id, p.plan_date, p.content_revision,
+                       c.id AS class_id, c.name AS class_name, c.age_group,
+                       s.id AS semester_id, s.name AS semester_name,
+                       s.start_date, s.end_date
+                FROM lesson_plans AS p
+                JOIN class_groups AS c ON c.id = p.class_id
+                JOIN semesters AS s ON s.id = p.semester_id
+                WHERE p.id = ?
+                """,
+                    (plan_id,),
+                )
+                .mappings()
+                .first()
+            )
+        if row is None:
+            return None
+        return {
+            "plan_id": int(row["id"]),
+            "plan_date": str(row["plan_date"]),
+            "content_revision": int(row["content_revision"]),
+            "class_id": int(row["class_id"]),
+            "class_name": str(row["class_name"]),
+            "age_group": str(row["age_group"]),
+            "semester_id": int(row["semester_id"]),
+            "semester_name": str(row["semester_name"]),
+            "start_date": str(row["start_date"]),
+            "end_date": str(row["end_date"]),
+        }
+
+    def load_tool_semester(self, semester_id: int) -> tuple[date, date] | None:
+        with self.session_factory() as session:
+            row = (
+                session.connection()
+                .exec_driver_sql(
+                    "SELECT start_date, end_date FROM semesters WHERE id = ?",
+                    (semester_id,),
+                )
+                .first()
+            )
+        if row is None:
+            return None
+        return date.fromisoformat(str(row[0])), date.fromisoformat(str(row[1]))
+
+    def load_tool_class_areas(self, class_id: int) -> tuple[dict[str, object], ...]:
+        with self.session_factory() as session:
+            rows = (
+                session.connection()
+                .exec_driver_sql(
+                    "SELECT area_type, name FROM class_areas "
+                    "WHERE class_id = ? ORDER BY area_type, sort_order, id",
+                    (class_id,),
+                )
+                .mappings()
+                .all()
+            )
+        return tuple(dict(row) for row in rows)
+
     def load_export_record(self, plan_id: int) -> PlanExportRecord | None:
         with self.session_factory() as session:
             row = (

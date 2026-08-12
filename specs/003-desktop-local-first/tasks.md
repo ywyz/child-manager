@@ -141,21 +141,21 @@ audit、备份和日志中没有 Agent 状态或秘密。
 
 ### Tests for Slice 2B（必须先 RED）
 
-- [ ] T049 [P] [US2] 在 `tests/desktop/contracts/test_agent_runtime_contract.py` 覆盖 `Permission`、关闭 Tool Schema、`ToolResult`、Provider port、未知/WRITE Tool 和伪造 Permission 拒绝，以及具体 SDK 类型不穿过 Application Interface
-- [ ] T050 [P] [US2] 在 `tests/desktop/unit/test_agent_context.py` 覆盖最小字段白名单、实体 revision、过期/切换失效、Key/绝对路径/无关班级/完整历史排除和 repr/log 脱敏
-- [ ] T051 [P] [US2] 在 `tests/desktop/application/test_agent_read_draft.py` 用 Scripted Provider 覆盖单 Agent、READ/DRAFT Tool loop、稳定 `PlanPatch`、调用/响应/时限上限、Provider 拒绝/结构错误和全程零写入
-- [ ] T052 [P] [US2] 在 `tests/desktop/ui/test_agent_draft_flow.py` 覆盖固定状态区、字段级 draft 展示、重复 turn 拒绝、取消、页面切换/关闭迟到结果丢弃和“直接修改/总是允许”无 WRITE 路径
-- [ ] T053 [US2] 先收集 T049–T052，再运行得到只来自 Agent Foundation 未实现行为的干净 RED并记录到 `docs/implementation-evidence/desktop-slice-2b-red.md`；同时扫描 SQLite/备份/log 确认没有 conversation/thread/message/vector/Context/Patch 持久化
+- [x] T049 [P] [US2] 在 `tests/desktop/contracts/test_agent_runtime_contract.py` 覆盖 `Permission`、关闭 Tool Schema、`ToolResult`、Provider port、未知/WRITE Tool 和伪造 Permission 拒绝，以及具体 SDK 类型不穿过 Application Interface
+- [x] T050 [P] [US2] 在 `tests/desktop/unit/test_agent_context.py` 覆盖最小字段白名单、实体 revision、过期/切换失效、Key/绝对路径/无关班级/完整历史排除和 repr/log 脱敏
+- [x] T051 [P] [US2] 在 `tests/desktop/application/test_agent_read_draft.py` 用 Scripted Provider 覆盖单 Agent、READ/DRAFT Tool loop、稳定 `PlanPatch`、调用/响应/时限上限、Provider 拒绝/结构错误和全程零写入
+- [x] T052 [P] [US2] 在 `tests/desktop/ui/test_agent_draft_flow.py` 覆盖固定状态区、字段级 draft 展示、重复 turn 拒绝、取消、页面切换/关闭迟到结果丢弃和“直接修改/总是允许”无 WRITE 路径
+- [x] T053 [US2] 先收集 T049–T052，再运行得到只来自 Agent Foundation 未实现行为的干净 RED并记录到 `docs/implementation-evidence/desktop-slice-2b-red.md`；同时扫描 SQLite/备份/log 确认没有 conversation/thread/message/vector/Context/Patch 持久化
 
 ### Implementation for Slice 2B
 
-- [ ] T054 [P] [US2] 实现 `src/kindergarten_manager/application/agent_runtime.py` 中冻结 `AgentContext`、`Permission`、`ToolDescriptor`、`ToolResult`、`PlanPatch` 与最小 Runtime Interface，不包含 WRITE/Confirmation 执行方法
-- [ ] T055 [P] [US2] 定义窄 `AgentProviderPort` 并在 `src/kindergarten_manager/infrastructure/ai/agent_provider.py` 实现 OpenAI-compatible Adapter，在测试 fixture 实现 Scripted Adapter；Provider 只返回文本/Tool call 而不执行 Tool
-- [ ] T056 [US2] 实现 `src/kindergarten_manager/application/agent_tools.py` 的关闭 registry，以及 `lesson_plan.read_current/read_context`、`calendar.read_evaluation`、`settings.read_class_areas` 和两个纯 DRAFT Tool；不注册任意 WRITE、文件、URL、SQL 或代码 Tool
-- [ ] T057 [US2] 实现 `AgentRuntime` 的单 turn 串行 loop、Context 裁剪、Schema/Permission 校验、上限、取消和结果脱敏；Provider 等待期间无数据库事务，每次 READ Tool 自建并关闭 Session
-- [ ] T058 [US2] 实现 `src/kindergarten_manager/ui/widgets/agent_draft.py` 的意图提交、Context 范围、字段级 PlanPatch 展示、拒绝/丢弃和非阻断状态；不显示确认或写入控件
-- [ ] T059 [US2] 在 `src/kindergarten_manager/app.py` 装配唯一 Runtime、Provider Adapter 和 READ/DRAFT registry，退出时先失效 Context/Patch 再取消 operation；禁止子 Agent、并行 Tool 和 Provider 托管 thread
-- [ ] T060 [US2] 运行 T049–T052、Slice 1/2A 回归、Ruff/Pyright，并在 `docs/implementation-evidence/desktop-slice-2b-acceptance.md` 记录 Tool-only 越权矩阵、零写入扫描、单 Agent/取消和重启后无长期业务记忆证据
+- [x] T054 [P] [US2] 实现 `src/kindergarten_manager/application/agent_runtime.py` 中冻结 `AgentContext`、`Permission`、`ToolDescriptor`、`ToolResult`、`PlanPatch` 与最小 Runtime Interface，不包含 WRITE/Confirmation 执行方法
+- [x] T055 [P] [US2] 定义窄 `AgentProviderPort` 并在 `src/kindergarten_manager/infrastructure/ai/agent_provider.py` 实现 OpenAI-compatible Adapter，在测试 fixture 实现 Scripted Adapter；Provider 只返回文本/Tool call 而不执行 Tool
+- [x] T056 [US2] 实现 `src/kindergarten_manager/application/agent_tools.py` 的关闭 registry，以及 `lesson_plan.read_current/read_context`、`calendar.read_evaluation`、`settings.read_class_areas` 和两个纯 DRAFT Tool；不注册任意 WRITE、文件、URL、SQL 或代码 Tool
+- [x] T057 [US2] 实现 `AgentRuntime` 的单 turn 串行 loop、Context 裁剪、Schema/Permission 校验、上限、取消和结果脱敏；Provider 等待期间无数据库事务，每次 READ Tool 自建并关闭 Session
+- [x] T058 [US2] 实现 `src/kindergarten_manager/ui/widgets/agent_draft.py` 的意图提交、Context 范围、字段级 PlanPatch 展示、拒绝/丢弃和非阻断状态；不显示确认或写入控件
+- [x] T059 [US2] 在 `src/kindergarten_manager/app.py` 装配唯一 Runtime、Provider Adapter 和 READ/DRAFT registry，退出时先失效 Context/Patch 再取消 operation；禁止子 Agent、并行 Tool 和 Provider 托管 thread
+- [x] T060 [US2] 运行 T049–T052、Slice 1/2A 回归、Ruff/Pyright，并在 `docs/implementation-evidence/desktop-slice-2b-acceptance.md` 记录 Tool-only 越权矩阵、零写入扫描、单 Agent/取消和重启后无长期业务记忆证据
 
 **Checkpoint**: Agent 只能读取和草拟；没有正式写入、Confirmation、持久化会话、长期业务记忆、
 多 Agent 或 Level 3 Workflow。
