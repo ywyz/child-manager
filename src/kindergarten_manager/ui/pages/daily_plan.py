@@ -37,7 +37,7 @@ from kindergarten_manager.ui.ports import DesktopServices
 from kindergarten_manager.ui.widgets.agent_draft import AgentDraftPanel
 from kindergarten_manager.ui.widgets.ai_preview import AiPreviewPanel
 
-EditorKind = Literal["text", "lines", "areas", "process"]
+EditorKind = Literal["text", "source", "lines", "areas", "process"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -144,6 +144,12 @@ FIELD_GROUPS: tuple[tuple[str, tuple[FieldDefinition, ...]], ...] = (
     (
         "05 集体活动",
         (
+            FieldDefinition(
+                "group_activity_source_text",
+                "集体活动原稿（粘贴完整教案）",
+                ("group_activity", "source_text"),
+                "source",
+            ),
             FieldDefinition("group_activity_theme", "活动主题", ("group_activity", "theme")),
             FieldDefinition(
                 "group_activity_objectives",
@@ -201,6 +207,7 @@ SECTION_ROWS: dict[str, tuple[tuple[str, ...], ...]] = {
         ("afternoon_support_strategies",),
     ),
     "05 集体活动": (
+        ("group_activity_source_text",),
         ("group_activity_theme", "group_activity_preparation"),
         ("group_activity_objectives",),
         ("group_activity_focus", "group_activity_difficulty"),
@@ -628,9 +635,9 @@ class DailyPlanPage(QWidget):
     def _build_editor(definition: FieldDefinition) -> QWidget:
         if definition.kind == "text":
             editor: QWidget = QLineEdit()
-        elif definition.kind in {"lines", "areas"}:
+        elif definition.kind in {"source", "lines", "areas"}:
             plain = QPlainTextEdit()
-            minimum_height = 90
+            minimum_height = 180 if definition.kind == "source" else 90
             if definition.object_name in {
                 "morning_talk_questions",
                 "indoor_support_strategies",
@@ -650,9 +657,13 @@ class DailyPlanPage(QWidget):
     def _set_editor(editor: QWidget, kind: EditorKind, value: object) -> None:
         if kind == "text" and isinstance(editor, QLineEdit):
             editor.setText(str(value or ""))
-        elif kind in {"lines", "areas"} and isinstance(editor, QPlainTextEdit):
+        elif kind in {"source", "lines", "areas"} and isinstance(editor, QPlainTextEdit):
             editor.setPlainText(
-                "\n".join(str(item) for item in value) if isinstance(value, list) else ""
+                str(value or "")
+                if kind == "source"
+                else "\n".join(str(item) for item in value)
+                if isinstance(value, list)
+                else ""
             )
         elif kind == "process" and isinstance(editor, ProcessEditor):
             editor.set_value(value)
@@ -661,8 +672,10 @@ class DailyPlanPage(QWidget):
     def _editor_value(editor: QWidget, kind: EditorKind) -> object:
         if kind == "text" and isinstance(editor, QLineEdit):
             return editor.text().strip()
-        if kind in {"lines", "areas"} and isinstance(editor, QPlainTextEdit):
-            return _lines(editor.toPlainText())
+        if kind in {"source", "lines", "areas"} and isinstance(editor, QPlainTextEdit):
+            return (
+                editor.toPlainText().strip() if kind == "source" else _lines(editor.toPlainText())
+            )
         if kind == "process" and isinstance(editor, ProcessEditor):
             return editor.value()
         return ""

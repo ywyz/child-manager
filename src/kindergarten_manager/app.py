@@ -709,7 +709,7 @@ def create_desktop_window(
         monotonic_seconds=time.monotonic,
         max_tool_calls=6,
         max_response_chars=8_000,
-        max_turn_seconds=120.0,
+        max_turn_seconds=300.0,
     )
     services = _DesktopServiceFacade(
         workspace,

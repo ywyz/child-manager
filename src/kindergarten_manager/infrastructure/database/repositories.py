@@ -329,6 +329,10 @@ class AiConfigurationRecord:
     model_name: str | None
     credential_configured: bool
     enabled: bool
+    vision_base_url: str | None
+    vision_model_name: str | None
+    vision_credential_configured: bool
+    vision_enabled: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -354,7 +358,9 @@ class AiRepository:
             row = (
                 session.connection()
                 .exec_driver_sql(
-                    "SELECT base_url, model_name, credential_configured, enabled "
+                    "SELECT base_url, model_name, credential_configured, enabled, "
+                    "vision_base_url, vision_model_name, "
+                    "vision_credential_configured, vision_enabled "
                     "FROM ai_configuration WHERE id = 1"
                 )
                 .mappings()
@@ -563,6 +569,33 @@ class _SqliteAiSettingsTransaction:
             now_utc_ms=self._now_utc_ms,
         )
 
+    def save_vision_configuration(
+        self,
+        *,
+        base_url: str | None,
+        model_name: str | None,
+        credential_configured: bool,
+        enabled: bool,
+    ) -> None:
+        self._connection.exec_driver_sql(
+            """
+            UPDATE ai_configuration SET
+                vision_base_url = ?,
+                vision_model_name = ?,
+                vision_credential_configured = ?,
+                vision_enabled = ?,
+                updated_at_utc_ms = ?
+            WHERE id = 1
+            """,
+            (
+                base_url,
+                model_name,
+                int(credential_configured),
+                int(enabled),
+                self._now_utc_ms,
+            ),
+        )
+
     def set_prompt_override(self, prompt_code: str, content: str) -> None:
         self._connection.exec_driver_sql(
             """
@@ -700,10 +733,11 @@ class WorkspaceRepository:
             setup = (
                 connection.exec_driver_sql(
                     """
-                SELECT p.teacher_display_name, p.theme,
+                SELECT p.teacher_display_name, p.theme, k.name AS kindergarten_name,
                        s.id AS semester_id, s.name AS semester_name,
                        s.start_date, s.end_date
                 FROM app_profile AS p
+                CROSS JOIN kindergarten_settings AS k
                 CROSS JOIN semesters AS s
                 WHERE s.is_current = 1
                 LIMIT 1
@@ -715,9 +749,19 @@ class WorkspaceRepository:
             classes = (
                 connection.exec_driver_sql(
                     """
-                SELECT id, name FROM class_groups
+                SELECT id, name, age_group FROM class_groups
                 WHERE is_active = 1
                 ORDER BY sort_order, id
+                """
+                )
+                .mappings()
+                .all()
+            )
+            areas = (
+                connection.exec_driver_sql(
+                    """
+                SELECT class_id, area_type, name FROM class_areas
+                ORDER BY class_id, area_type, sort_order, id
                 """
                 )
                 .mappings()
@@ -733,8 +777,25 @@ class WorkspaceRepository:
             semester_start_date=date.fromisoformat(str(setup["start_date"])),
             semester_end_date=date.fromisoformat(str(setup["end_date"])),
             classes=tuple(
-                ClassContext(id=int(row["id"]), name=str(row["name"])) for row in classes
+                ClassContext(
+                    id=int(row["id"]),
+                    name=str(row["name"]),
+                    age_group=str(row["age_group"]),
+                    indoor_areas=tuple(
+                        str(area["name"])
+                        for area in areas
+                        if int(area["class_id"]) == int(row["id"]) and area["area_type"] == "indoor"
+                    ),
+                    outdoor_areas=tuple(
+                        str(area["name"])
+                        for area in areas
+                        if int(area["class_id"]) == int(row["id"])
+                        and area["area_type"] == "outdoor"
+                    ),
+                )
+                for row in classes
             ),
+            kindergarten_name=str(setup["kindergarten_name"]),
         )
 
     def get_author_name(self) -> str:
@@ -880,6 +941,14 @@ def _configuration_record(row: Mapping[Any, object]) -> AiConfigurationRecord:
         model_name=str(row["model_name"]) if row["model_name"] is not None else None,
         credential_configured=bool(row["credential_configured"]),
         enabled=bool(row["enabled"]),
+        vision_base_url=(
+            str(row["vision_base_url"]) if row["vision_base_url"] is not None else None
+        ),
+        vision_model_name=(
+            str(row["vision_model_name"]) if row["vision_model_name"] is not None else None
+        ),
+        vision_credential_configured=bool(row["vision_credential_configured"]),
+        vision_enabled=bool(row["vision_enabled"]),
     )
 
 
@@ -905,7 +974,9 @@ def _write_ai_configuration(
                 credential_configured = excluded.credential_configured,
                 enabled = excluded.enabled,
                 updated_at_utc_ms = excluded.updated_at_utc_ms
-            RETURNING base_url, model_name, credential_configured, enabled
+            RETURNING base_url, model_name, credential_configured, enabled,
+                      vision_base_url, vision_model_name,
+                      vision_credential_configured, vision_enabled
             """,
             (
                 base_url,

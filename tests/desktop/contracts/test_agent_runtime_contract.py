@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import inspect
+import json
 from dataclasses import FrozenInstanceError
+from datetime import UTC, date, datetime, timedelta
 from types import ModuleType
 from typing import Any, get_type_hints
 from uuid import UUID
 
+import httpx
 import pytest
 
 from tests.desktop.helpers import pending_module, pending_symbol
@@ -187,6 +190,89 @@ def test_provider_adapter_cannot_receive_or_execute_tools() -> None:
     implementation = inspect.getsource(adapter).casefold()
     for forbidden in ("registry", "executor", ".execute(", "toolresult"):
         assert forbidden not in implementation
+
+
+def test_provider_adapter_uses_valid_tool_continuation_messages_and_practical_timeout() -> None:
+    runtime = _runtime_module()
+    adapter_module = pending_module("kindergarten_manager.infrastructure.ai.agent_provider")
+    adapter_type = _pending_symbol(adapter_module, "OpenAICompatibleAgentProvider")
+    context_type = _pending_symbol(runtime, "AgentContext")
+    scope_type = _pending_symbol(runtime, "ActiveScope")
+    revision_type = _pending_symbol(runtime, "EntityRevision")
+    request_type = _pending_symbol(runtime, "ProviderTurnRequest")
+    captured: list[dict[str, object]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        captured.append(json.loads(request.content))
+        return httpx.Response(
+            200,
+            json={
+                "id": "fixture-response",
+                "choices": [{"finish_reason": "stop", "message": {"content": "完成"}}],
+            },
+        )
+
+    created = datetime(2026, 9, 7, tzinfo=UTC)
+    context = context_type(
+        context_id=UUID(int=1),
+        session_id=UUID(int=2),
+        turn_id=UUID(int=3),
+        created_at_utc=created,
+        expires_at_utc=created + timedelta(minutes=10),
+        locale="zh-CN",
+        active_scope=scope_type(1, 2, 3, date(2026, 9, 7)),
+        entity_revisions=(revision_type("lesson_plan", 3, 4),),
+        facts=(),
+        allowed_permissions=frozenset(),
+    )
+    adapter = adapter_type(
+        base_url="https://ai.example.test/v1",
+        api_key="fixture-secret",
+        model_name="fixture-model",
+        transport=httpx.MockTransport(handler),
+    )
+    request = request_type(
+        operation_id=UUID(int=4),
+        system_policy="只允许 READ/DRAFT",
+        context=context,
+        messages=(
+            {"role": "user", "content": "读取后形成草案"},
+            {
+                "role": "assistant",
+                "content": None,
+                "tool_calls": (
+                    {
+                        "call_id": str(UUID(int=5)),
+                        "tool_name": "lesson_plan.read_current",
+                        "arguments": {},
+                    },
+                ),
+            },
+            {
+                "role": "tool",
+                "results": (
+                    {
+                        "call_id": str(UUID(int=5)),
+                        "tool_name": "lesson_plan.read_current",
+                        "status": "ok",
+                        "value": {"topic": "春天"},
+                    },
+                ),
+            },
+        ),
+        tools=(_descriptor(runtime),),
+        response_limit=2_000,
+    )
+
+    adapter.complete(request)
+
+    assert adapter.timeout.read == 180
+    messages = captured[0]["messages"]
+    assert isinstance(messages, list)
+    assert messages[1]["role"] == "user"
+    assert messages[2]["role"] == "assistant"
+    assert messages[3]["role"] == "tool"
+    assert messages[3]["tool_call_id"] == str(UUID(int=5))
 
 
 @pytest.mark.parametrize(

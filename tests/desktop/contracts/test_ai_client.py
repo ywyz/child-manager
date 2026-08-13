@@ -110,7 +110,7 @@ def test_client_enforces_fixed_timeout_and_response_limit() -> None:
         max_response_bytes=64,
     )
     assert client.timeout.connect == 10
-    assert client.timeout.read == 120
+    assert client.timeout.read == 300
     with pytest.raises(Exception) as captured:
         client.generate_structured(
             base_url="https://ai.example.test/v1",

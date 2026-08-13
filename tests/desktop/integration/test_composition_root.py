@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
     QDateEdit,
     QFileDialog,
     QLineEdit,
+    QPlainTextEdit,
     QPushButton,
     QStackedWidget,
     QWidget,
@@ -85,10 +86,19 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
     _child(window, QLineEdit, "semester_settings_name").setText("2026—2027 学年")
     _child(window, QDateEdit, "semester_settings_start_date").setDate(QDate(2026, 8, 20))
     _child(window, QDateEdit, "semester_settings_end_date").setDate(QDate(2027, 7, 15))
+    _child(window, QLineEdit, "kindergarten_settings_name").setText("星河实验幼儿园")
+    _child(window, QLineEdit, "teacher_settings_name").setText("测试教师二")
+    _child(window, QLineEdit, "class_settings_name").setText("向日葵实验班")
+    age_group = _child(window, QComboBox, "class_settings_age_group")
+    age_group.setCurrentIndex(age_group.findData("large"))
+    _child(window, QPlainTextEdit, "class_settings_indoor_areas").setPlainText("建构区\n美工区")
+    _child(window, QPlainTextEdit, "class_settings_outdoor_areas").setPlainText("沙池\n操场")
     qtbot.mouseClick(_child(window, QPushButton, "save_settings"), Qt.MouseButton.LeftButton)
     qtbot.mouseClick(_child(window, QPushButton, "back_to_plan"), Qt.MouseButton.LeftButton)
     theme = _child(window, QLineEdit, "group_activity_theme")
+    source = _child(window, QPlainTextEdit, "group_activity_source_text")
     assert isinstance(theme, QLineEdit)
+    source.setPlainText("活动名称：寻找秋天\n活动过程：观察落叶。")
     theme.setText("寻找秋天")
     qtbot.mouseClick(
         _child(window, QPushButton, "save_plan"),
@@ -115,18 +125,26 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
     reopened_theme = _child(reopened, QLineEdit, "group_activity_theme")
     assert isinstance(reopened_theme, QLineEdit)
     assert reopened_theme.text() == "寻找秋天"
+    assert (
+        _child(reopened, QPlainTextEdit, "group_activity_source_text").toPlainText()
+        == "活动名称：寻找秋天\n活动过程：观察落叶。"
+    )
     qtbot.mouseClick(_child(reopened, QPushButton, "open_settings"), Qt.MouseButton.LeftButton)
     reopened_preference = _child(reopened, QComboBox, "theme_preference")
     assert reopened_preference.currentData() == "dark"
     assert _child(reopened, QLineEdit, "semester_settings_name").text() == "2026—2027 学年"
     assert _child(reopened, QDateEdit, "semester_settings_start_date").date() == QDate(2026, 8, 20)
     assert _child(reopened, QDateEdit, "semester_settings_end_date").date() == QDate(2027, 7, 15)
+    assert _child(reopened, QLineEdit, "kindergarten_settings_name").text() == "星河实验幼儿园"
+    assert _child(reopened, QLineEdit, "teacher_settings_name").text() == "测试教师二"
+    assert _child(reopened, QLineEdit, "class_settings_name").text() == "向日葵实验班"
+    assert _child(reopened, QComboBox, "class_settings_age_group").currentData() == "large"
     qtbot.mouseClick(_child(reopened, QPushButton, "back_to_plan"), Qt.MouseButton.LeftButton)
 
     destination = tmp_path / "当天教案.docx"
 
     def choose_destination(*args: object, **_kwargs: object) -> tuple[str, str]:
-        assert "一日活动计划-向日葵班-2026-09-07.docx" in str(args[2])
+        assert "一日活动计划-向日葵实验班-2026-09-07.docx" in str(args[2])
         return str(destination), "Word 文档 (*.docx)"
 
     monkeypatch.setattr(
@@ -140,5 +158,5 @@ def test_composition_root_persists_first_daily_plan_across_restart_and_exports_w
     )
     assert destination.is_file()
     exported = Document(str(destination))
-    assert exported.paragraphs[0].text == "星河幼儿园一日活动计划（2026.8-2027.7）"
+    assert exported.paragraphs[0].text == "星河实验幼儿园一日活动计划（2026.8-2027.7）"
     assert exported.tables[0].cell(6, 1).text == "活动主题：《寻找秋天》"

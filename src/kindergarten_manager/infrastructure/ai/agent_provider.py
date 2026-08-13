@@ -43,14 +43,14 @@ class OpenAICompatibleAgentProvider:
         self._model_name = model_name
         self._transport = transport
         self._max_response_bytes = max_response_bytes
-        self.timeout = httpx.Timeout(connect=10, read=120, write=120, pool=10)
+        self.timeout = httpx.Timeout(connect=10, read=180, write=180, pool=10)
 
     def complete(self, request: ProviderTurnRequest) -> ProviderTurnResult:
         payload = {
             "model": self._model_name,
             "messages": [
                 {"role": "system", "content": request.system_policy},
-                *[_plain_json(message) for message in request.messages],
+                *_provider_messages(request.messages),
             ],
             "tools": [_tool_schema(descriptor) for descriptor in request.tools],
             "tool_choice": "auto",
@@ -210,3 +210,62 @@ def _plain_json(value: object) -> Any:
     if isinstance(value, Permission):
         return value.value
     return value
+
+
+def _provider_messages(
+    messages: tuple[Mapping[str, object], ...],
+) -> list[dict[str, object]]:
+    serialized: list[dict[str, object]] = []
+    for message in messages:
+        role = message.get("role")
+        raw_tool_calls = message.get("tool_calls")
+        if role == "assistant" and isinstance(raw_tool_calls, tuple):
+            tool_calls = []
+            for call in raw_tool_calls:
+                if not isinstance(call, Mapping):
+                    raise AgentProviderError("agent.provider_invalid_request", "Agent 消息格式无效")
+                tool_calls.append(
+                    {
+                        "id": str(call.get("call_id", "")),
+                        "type": "function",
+                        "function": {
+                            "name": str(call.get("tool_name", "")),
+                            "arguments": json.dumps(
+                                _plain_json(call.get("arguments", {})),
+                                ensure_ascii=False,
+                                separators=(",", ":"),
+                            ),
+                        },
+                    }
+                )
+            serialized.append(
+                {
+                    "role": "assistant",
+                    "content": message.get("content"),
+                    "tool_calls": tool_calls,
+                }
+            )
+            continue
+        raw_results = message.get("results")
+        if role == "tool" and isinstance(raw_results, tuple):
+            for result in raw_results:
+                if not isinstance(result, Mapping):
+                    raise AgentProviderError("agent.provider_invalid_request", "Agent 消息格式无效")
+                serialized.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": str(result.get("call_id", "")),
+                        "name": str(result.get("tool_name", "")),
+                        "content": json.dumps(
+                            {
+                                "status": result.get("status"),
+                                "value": _plain_json(result.get("value")),
+                            },
+                            ensure_ascii=False,
+                            separators=(",", ":"),
+                        ),
+                    }
+                )
+            continue
+        serialized.append({str(key): _plain_json(value) for key, value in message.items()})
+    return serialized

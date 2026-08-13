@@ -13,7 +13,9 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QPlainTextEdit,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
@@ -77,6 +79,43 @@ class SettingsPage(QWidget):
             self.theme.addItem(text, value)
         form.addRow("外观主题", self.theme)
 
+        basic_title = QLabel("幼儿园与当前班级")
+        basic_title.setProperty("role", "sectionTitle")
+        card_layout.addLayout(form)
+        card_layout.addSpacing(8)
+        card_layout.addWidget(basic_title)
+        form = QFormLayout()
+        form.setHorizontalSpacing(18)
+        form.setVerticalSpacing(12)
+        self.kindergarten_name = QLineEdit()
+        self.kindergarten_name.setObjectName("kindergarten_settings_name")
+        form.addRow("幼儿园名称", self.kindergarten_name)
+        self.teacher_name = QLineEdit()
+        self.teacher_name.setObjectName("teacher_settings_name")
+        form.addRow("教师姓名", self.teacher_name)
+        self.class_name = QLineEdit()
+        self.class_name.setObjectName("class_settings_name")
+        form.addRow("当前班级", self.class_name)
+        self.age_group = QComboBox()
+        self.age_group.setObjectName("class_settings_age_group")
+        for text, value in (
+            ("托班", "nursery"),
+            ("小班", "small"),
+            ("中班", "middle"),
+            ("大班", "large"),
+            ("混龄班", "mixed"),
+        ):
+            self.age_group.addItem(text, value)
+        form.addRow("年龄段", self.age_group)
+        self.indoor_areas = QPlainTextEdit()
+        self.indoor_areas.setObjectName("class_settings_indoor_areas")
+        self.indoor_areas.setMinimumHeight(90)
+        form.addRow("室内区域（逐行）", self.indoor_areas)
+        self.outdoor_areas = QPlainTextEdit()
+        self.outdoor_areas.setObjectName("class_settings_outdoor_areas")
+        self.outdoor_areas.setMinimumHeight(90)
+        form.addRow("户外区域（逐行）", self.outdoor_areas)
+
         semester_title = QLabel("当前学期")
         semester_title.setProperty("role", "sectionTitle")
         card_layout.addLayout(form)
@@ -105,12 +144,16 @@ class SettingsPage(QWidget):
         save.clicked.connect(self.save)
         card_layout.addWidget(save)
 
-        row = QHBoxLayout()
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        host = QWidget()
+        row = QHBoxLayout(host)
         row.addStretch()
         row.addWidget(card, 1)
         row.addStretch()
-        outer.addLayout(row)
-        outer.addStretch()
+        scroll.setWidget(host)
+        outer.addWidget(scroll, 1)
 
     def reload(self) -> None:
         try:
@@ -119,6 +162,12 @@ class SettingsPage(QWidget):
             self.status.setText(user_error_message(error, "设置加载失败，请重试"))
             return
         self.theme.setCurrentIndex(max(self.theme.findData(context.theme), 0))
+        self.kindergarten_name.setText(context.kindergarten_name)
+        self.teacher_name.setText(context.teacher_name)
+        self.class_name.setText(context.class_name)
+        self.age_group.setCurrentIndex(max(self.age_group.findData(context.age_group), 0))
+        self.indoor_areas.setPlainText("\n".join(context.indoor_areas))
+        self.outdoor_areas.setPlainText("\n".join(context.outdoor_areas))
         self.semester_name.setText(context.semester_name)
         self.semester_start.setDate(
             QDate(
@@ -139,6 +188,12 @@ class SettingsPage(QWidget):
     def save(self) -> None:
         values = {
             "theme": str(self.theme.currentData()),
+            "kindergarten_name": self.kindergarten_name.text(),
+            "teacher_name": self.teacher_name.text(),
+            "class_name": self.class_name.text(),
+            "age_group": str(self.age_group.currentData()),
+            "indoor_areas": self.indoor_areas.toPlainText(),
+            "outdoor_areas": self.outdoor_areas.toPlainText(),
             "semester_name": self.semester_name.text(),
             "semester_start_date": self.semester_start.date().toString("yyyy-MM-dd"),
             "semester_end_date": self.semester_end.date().toString("yyyy-MM-dd"),

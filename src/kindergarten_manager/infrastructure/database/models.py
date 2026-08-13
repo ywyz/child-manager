@@ -210,6 +210,10 @@ ai_configuration = sa.Table(
     sa.Column("model_name", sa.Text),
     sa.Column("credential_configured", sa.Integer, nullable=False),
     sa.Column("enabled", sa.Integer, nullable=False),
+    sa.Column("vision_base_url", sa.Text),
+    sa.Column("vision_model_name", sa.Text),
+    sa.Column("vision_credential_configured", sa.Integer, nullable=False, server_default="0"),
+    sa.Column("vision_enabled", sa.Integer, nullable=False, server_default="0"),
     sa.Column("created_at_utc_ms", sa.Integer, nullable=False),
     sa.Column("updated_at_utc_ms", sa.Integer, nullable=False),
     sa.CheckConstraint("id = 1", name="singleton"),
@@ -223,6 +227,19 @@ ai_configuration = sa.Table(
     ),
     sa.CheckConstraint("credential_configured IN (0, 1)", name="credential_configured"),
     sa.CheckConstraint("enabled IN (0, 1)", name="enabled"),
+    sa.CheckConstraint(
+        "vision_base_url IS NULL OR length(trim(vision_base_url)) BETWEEN 1 AND 2048",
+        name="vision_base_url",
+    ),
+    sa.CheckConstraint(
+        "vision_model_name IS NULL OR length(trim(vision_model_name)) BETWEEN 1 AND 200",
+        name="vision_model_name",
+    ),
+    sa.CheckConstraint(
+        "vision_credential_configured IN (0, 1)",
+        name="vision_credential_configured",
+    ),
+    sa.CheckConstraint("vision_enabled IN (0, 1)", name="vision_enabled"),
 )
 
 prompt_overrides = sa.Table(

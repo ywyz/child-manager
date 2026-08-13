@@ -23,7 +23,15 @@ class PlanContentV1:
         ),
         "morning_talk": frozenset({"topic", "questions"}),
         "group_activity": frozenset(
-            {"theme", "objectives", "preparation", "focus", "difficulty", "process"}
+            {
+                "source_text",
+                "theme",
+                "objectives",
+                "preparation",
+                "focus",
+                "difficulty",
+                "process",
+            }
         ),
         "indoor_area_game": frozenset(
             {
@@ -105,6 +113,8 @@ class PlanContentV1:
                 raise ValueError("班级区域不能为空")
             if len(folded) != len(set(folded)):
                 raise ValueError("班级区域不能重复")
+        if not isinstance(normalized["group_activity"]["source_text"], str):
+            raise ValueError("集体活动原稿必须是文本")
         return normalized
 
     @staticmethod
@@ -121,6 +131,7 @@ class PlanContentV1:
             },
             "morning_talk": {"topic": "", "questions": []},
             "group_activity": {
+                "source_text": "",
                 "theme": "",
                 "objectives": [],
                 "preparation": [],

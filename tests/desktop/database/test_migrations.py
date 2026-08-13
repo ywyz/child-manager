@@ -125,6 +125,7 @@ def test_empty_database_upgrades_idempotently_with_named_integrity_contracts(
     assert (migrations / "env.py").is_file()
     assert (migrations / "versions" / "0001_desktop_initial.py").is_file()
     assert (migrations / "versions" / "0002_desktop_ai.py").is_file()
+    assert (migrations / "versions" / "0003_desktop_ai_profiles.py").is_file()
     assert (
         _migration_source_sha256(migrations / "versions" / "0001_desktop_initial.py")
         == "a1d55d374ffa6144d2e772f2f2b7cc33a5e76e94c0c5d22b02fc13e41db844e5"
@@ -134,6 +135,31 @@ def test_empty_database_upgrades_idempotently_with_named_integrity_contracts(
         ".create_all(" not in source.read_text(encoding="utf-8")
         for source in Path("src/kindergarten_manager").rglob("*.py")
     )
+
+
+def test_existing_ai_database_adds_an_isolated_vision_profile(tmp_path: Path) -> None:
+    database = tmp_path / "desktop.sqlite3"
+    migrations = Path("src/kindergarten_manager/infrastructure/database/migrations")
+    config = Config()
+    config.set_main_option("script_location", str(migrations))
+    config.set_main_option("sqlalchemy.url", f"sqlite+pysqlite:///{database}")
+    command.upgrade(config, "0002_desktop_ai")
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "INSERT INTO ai_configuration VALUES (1, ?, ?, 1, 1, 1, 1)",
+            ("https://text.example.test/v1", "text-model"),
+        )
+
+    assert upgrade_database(database, pre_migration_directory=tmp_path / "backups") == (
+        DESKTOP_HEAD_REVISION
+    )
+
+    with sqlite3.connect(database) as connection:
+        row = connection.execute(
+            "SELECT base_url, model_name, vision_base_url, vision_model_name, "
+            "vision_credential_configured, vision_enabled FROM ai_configuration WHERE id = 1"
+        ).fetchone()
+    assert row == ("https://text.example.test/v1", "text-model", None, None, 0, 0)
 
 
 def test_version_rows_are_immutable_at_database_boundary(tmp_path: Path) -> None:

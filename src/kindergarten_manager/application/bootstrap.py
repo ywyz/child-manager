@@ -10,6 +10,7 @@ from pathlib import Path
 
 from kindergarten_manager.infrastructure.database.engine import connect_sqlite
 from kindergarten_manager.infrastructure.database.upgrade import (
+    DESKTOP_AI_REVISION,
     DESKTOP_HEAD_REVISION,
     DESKTOP_INITIAL_REVISION,
     MigrationProtectionError,
@@ -54,7 +55,12 @@ class BootstrapService:
         if existed:
             self._verify_database()
 
-        if revision not in {None, DESKTOP_INITIAL_REVISION, DESKTOP_HEAD_REVISION}:
+        if revision not in {
+            None,
+            DESKTOP_INITIAL_REVISION,
+            DESKTOP_AI_REVISION,
+            DESKTOP_HEAD_REVISION,
+        }:
             raise StartupError("startup.future_schema", "本地数据库版本高于当前应用")
 
         try:

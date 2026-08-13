@@ -1,4 +1,4 @@
-"""单一当前模型与可恢复默认提示词设置页。"""
+"""文本与视觉模型预配置及可恢复默认提示词设置页。"""
 
 from __future__ import annotations
 
@@ -51,7 +51,7 @@ class AiSettingsPage(QWidget):
         outer.addLayout(heading)
 
         note = QLabel(
-            "只配置一个当前 OpenAI 兼容模型。API Key 仅写入 Windows 凭据存储，"
+            "文本与视觉模型均使用 OpenAI 兼容接口。API Key 仅写入 Windows 凭据存储，"
             "不进入 SQLite、日志或页面回显；未配置 AI 不影响手工编辑与导出。"
         )
         note.setWordWrap(True)
@@ -82,6 +82,30 @@ class AiSettingsPage(QWidget):
         self.api_key.setPlaceholderText("留空表示保留现有凭据")
         model_form.addRow("API Key", self.api_key)
         content.addWidget(model_card)
+
+        vision_card = QFrame()
+        vision_card.setObjectName("settings_card")
+        vision_form = QFormLayout(vision_card)
+        vision_note = QLabel("下一期视觉任务预配置；本期不上传照片，也不发起视觉请求。")
+        vision_note.setWordWrap(True)
+        vision_note.setProperty("role", "muted")
+        vision_form.addRow(vision_note)
+        self.vision_enabled = QCheckBox("启用视觉模型")
+        self.vision_enabled.setObjectName("vision_ai_enabled")
+        vision_form.addRow("状态", self.vision_enabled)
+        self.vision_base_url = QLineEdit()
+        self.vision_base_url.setObjectName("vision_ai_base_url")
+        self.vision_base_url.setPlaceholderText("https://provider.example/v1 或回环 HTTP 地址")
+        vision_form.addRow("视觉 API 地址", self.vision_base_url)
+        self.vision_model_name = QLineEdit()
+        self.vision_model_name.setObjectName("vision_ai_model_name")
+        vision_form.addRow("视觉模型名", self.vision_model_name)
+        self.vision_api_key = QLineEdit()
+        self.vision_api_key.setObjectName("vision_ai_api_key")
+        self.vision_api_key.setEchoMode(QLineEdit.EchoMode.Password)
+        self.vision_api_key.setPlaceholderText("留空表示保留现有凭据")
+        vision_form.addRow("视觉 API Key", self.vision_api_key)
+        content.addWidget(vision_card)
 
         prompt_title = QLabel("提示词覆盖")
         prompt_title.setProperty("role", "sectionTitle")
@@ -133,6 +157,13 @@ class AiSettingsPage(QWidget):
         self.api_key.setPlaceholderText(
             "已安全保存；留空表示保留" if view.credential_configured else "输入 API Key"
         )
+        self.vision_enabled.setChecked(bool(view.vision_enabled))
+        self.vision_base_url.setText(view.vision_base_url or "")
+        self.vision_model_name.setText(view.vision_model_name or "")
+        self.vision_api_key.clear()
+        self.vision_api_key.setPlaceholderText(
+            "已安全保存；留空表示保留" if view.vision_credential_configured else "输入视觉 API Key"
+        )
         for code, editor in self._prompt_editors.items():
             editor.setPlainText(view.prompts[code])
         self.status.setText("")
@@ -143,6 +174,10 @@ class AiSettingsPage(QWidget):
             "base_url": self.base_url.text(),
             "model_name": self.model_name.text(),
             "api_key": self.api_key.text(),
+            "vision_enabled": self.vision_enabled.isChecked(),
+            "vision_base_url": self.vision_base_url.text(),
+            "vision_model_name": self.vision_model_name.text(),
+            "vision_api_key": self.vision_api_key.text(),
             "prompts": {
                 code: editor.toPlainText() for code, editor in self._prompt_editors.items()
             },

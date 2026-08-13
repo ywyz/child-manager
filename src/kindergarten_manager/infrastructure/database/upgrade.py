@@ -16,7 +16,8 @@ from sqlalchemy import text
 from kindergarten_manager.infrastructure.database.engine import create_sqlite_engine
 
 DESKTOP_INITIAL_REVISION = "0001_desktop_initial"
-DESKTOP_HEAD_REVISION = "0002_desktop_ai"
+DESKTOP_AI_REVISION = "0002_desktop_ai"
+DESKTOP_HEAD_REVISION = "0003_desktop_ai_profiles"
 
 
 class MigrationProtectionError(RuntimeError):
@@ -33,15 +34,25 @@ def upgrade_database(
     path = Path(database_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     current_revision = _read_current_revision(path)
-    if current_revision not in {None, DESKTOP_INITIAL_REVISION, DESKTOP_HEAD_REVISION}:
+    known_revisions = {
+        None,
+        DESKTOP_INITIAL_REVISION,
+        DESKTOP_AI_REVISION,
+        DESKTOP_HEAD_REVISION,
+    }
+    if current_revision not in known_revisions:
         raise RuntimeError("桌面数据库版本高于当前应用")
-    if current_revision == DESKTOP_INITIAL_REVISION:
+    if current_revision in {DESKTOP_INITIAL_REVISION, DESKTOP_AI_REVISION}:
         if pre_migration_directory is None:
             raise MigrationProtectionError(
                 "migration.protective_backup_failed",
                 "迁移前保护副本目录未配置",
             )
-        _create_verified_protective_copy(path, Path(pre_migration_directory))
+        _create_verified_protective_copy(
+            path,
+            Path(pre_migration_directory),
+            expected_revision=current_revision,
+        )
 
     migrations = Path(__file__).with_name("migrations")
     config = Config()
@@ -69,7 +80,12 @@ def _read_current_revision(path: Path) -> str | None:
         return str(row[0]) if row is not None else None
 
 
-def _create_verified_protective_copy(database: Path, directory: Path) -> Path:
+def _create_verified_protective_copy(
+    database: Path,
+    directory: Path,
+    *,
+    expected_revision: str = DESKTOP_INITIAL_REVISION,
+) -> Path:
     suffix = uuid.uuid4().hex
     target = directory / f"pre-migration-{suffix}.sqlite3"
     partial = directory / f".pre-migration-{suffix}.partial"
@@ -88,7 +104,7 @@ def _create_verified_protective_copy(database: Path, directory: Path) -> Path:
             if verification.execute("PRAGMA foreign_key_check").fetchall():
                 raise sqlite3.DatabaseError("protective copy foreign key check failed")
             revision = verification.execute("SELECT version_num FROM alembic_version").fetchone()
-            if revision != (DESKTOP_INITIAL_REVISION,):
+            if revision != (expected_revision,):
                 raise sqlite3.DatabaseError("protective copy revision check failed")
         with partial.open("r+b") as handle:
             os.fsync(handle.fileno())

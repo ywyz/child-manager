@@ -640,7 +640,7 @@ class AgentRuntime:
                 return _failure("agent.turn_timeout", "Agent 操作超时")
             request = ProviderTurnRequest(
                 operation_id=frozen_input.operation_id,
-                system_policy="agent.slice2b.read-draft.v1",
+                system_policy=_READ_DRAFT_SYSTEM_POLICY,
                 context=context,
                 messages=messages,
                 tools=descriptors,
@@ -704,7 +704,11 @@ class AgentRuntime:
                         patches.append(_patch_from_result(result, context))
                     except KeyError, TypeError, ValueError:
                         return _failure("agent.tool_result_invalid", "Agent 草案结果无效")
-            messages = (*messages, _tool_results_message(results))
+            messages = (
+                *messages,
+                _assistant_tool_calls_message(response),
+                _tool_results_message(results),
+            )
 
     def _elapsed(self, started: float) -> bool:
         return self._monotonic_seconds() - started > self._max_turn_seconds
@@ -717,6 +721,13 @@ class AgentRuntime:
 
 def _failure(error_code: str, message: str) -> CommandResult[object]:
     return CommandResult.failure(error_code, message=message)
+
+
+_READ_DRAFT_SYSTEM_POLICY = """你是一名幼儿园一日活动计划助理。
+你只能读取当前上下文并形成草案，绝不能直接写入、保存、归档或导出数据。
+需要事实时先调用 READ 工具；需要提出修改时只调用 DRAFT 工具。
+不得臆造未由上下文或工具返回的信息，不得请求幼儿身份信息。
+完成后用简体中文简要说明草案；所有草案都必须等待教师明确确认。"""
 
 
 def _require_call(
@@ -761,6 +772,27 @@ def _tool_results_message(results: list[ToolResult[object]]) -> Mapping[str, obj
                     }
                 )
                 for result in results
+            ),
+        }
+    )
+
+
+def _assistant_tool_calls_message(
+    response: ProviderTurnResult,
+) -> Mapping[str, object]:
+    return MappingProxyType(
+        {
+            "role": "assistant",
+            "content": response.assistant_content,
+            "tool_calls": tuple(
+                MappingProxyType(
+                    {
+                        "call_id": str(call.call_id),
+                        "tool_name": call.tool_name,
+                        "arguments": call.arguments,
+                    }
+                )
+                for call in response.tool_calls
             ),
         }
     )

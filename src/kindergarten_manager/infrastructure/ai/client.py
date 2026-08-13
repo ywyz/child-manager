@@ -29,7 +29,7 @@ class ProviderNeutralAiClient:
     ) -> None:
         if max_response_bytes <= 0:
             raise ValueError("AI 响应上限必须大于零")
-        self.timeout = httpx.Timeout(connect=10, read=120, write=120, pool=10)
+        self.timeout = httpx.Timeout(connect=10, read=300, write=300, pool=10)
         self._transport = transport
         self._sleeper = sleeper
         self._max_response_bytes = max_response_bytes

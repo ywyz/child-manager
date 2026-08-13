@@ -384,3 +384,15 @@ DeepSeek 或 `luna_worker` 降级。
   `CRLF -> LF`，本地迁移、Bootstrap、完整桌面、Ruff 与 Pyright 均通过，仍待 Windows 重跑。
 - 本节不把这项启动/迁移通过扩张为 Agent Provider、取消、迟到结果、最小 Context 或零写入
   等其余 Windows 项目通过，也不授权 PR、`main` 或 T061。
+
+## 11. Issue #22 Windows 行为修复与 Ubuntu 优先验证
+
+2026-08-13，维护者在 Windows Agent 手工行为测试中报告设置字段、内置提示词、集体活动原稿和
+AI/Agent 稳定性问题，并明确将后续验证顺序调整为 Ubuntu 功能测试优先、Windows 手工测试随后。
+维护者同时确认下一期需要视觉模型，因此本轮只提前提供独立视觉模型配置与凭据槽，不实现照片、
+上传、对象存储或视觉请求。
+
+本轮回归先稳定复现并覆盖：完整设置持久化、集体活动原稿持久化、成熟提示词约束、文本/视觉密钥
+隔离、`0002 -> 0003_desktop_ai_profiles` 数据保留、AI 超时预算，以及 OpenAI-compatible
+assistant tool-call/tool-result 续接消息。Ubuntu 本地完整门禁与远端精确 CI 结果记录到 Issue #22；
+Windows 结果只能由后续实机测试回填，不由本节预判。

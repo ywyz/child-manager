@@ -60,15 +60,37 @@ def test_ai_settings_put_secret_only_in_credential_store(tmp_path: Path) -> None
             "base_url": "https://ai.example.test/v1",
             "model_name": "fixture-model",
             "api_key": "fixture-api-key",
+            "vision_enabled": True,
+            "vision_base_url": "https://vision.example.test/v1",
+            "vision_model_name": "fixture-vision-model",
+            "vision_api_key": "fixture-vision-api-key",
             "prompts": _prompts(),
         }
     )
 
-    assert credentials.values == {"ai.current": "fixture-api-key"}
+    assert credentials.values == {
+        "ai.current": "fixture-api-key",
+        "ai.vision": "fixture-vision-api-key",
+    }
     assert view.enabled is True
     assert view.credential_configured is True
+    assert view.vision_enabled is True
+    assert view.vision_credential_configured is True
     assert "fixture-api-key" not in repr(view)
     assert "fixture-api-key" not in database.read_bytes().decode("utf-8", errors="ignore")
+    assert "fixture-vision-api-key" not in database.read_bytes().decode("utf-8", errors="ignore")
+
+
+def test_builtin_prompts_keep_mature_teaching_constraints_and_closed_json_schema() -> None:
+    prompts = _prompts()
+
+    assert all("schema_version" in content for content in prompts.values())
+    assert all("Markdown" in content for content in prompts.values())
+    assert '"physical_cycle"' in prompts["morning_activity"]
+    assert '"questions"' in prompts["morning_talk"]
+    assert '"support_strategies"' in prompts["indoor_area_game"]
+    assert "从可用户外区域中选择" in prompts["afternoon_outdoor_game"]
+    assert '"highlights"' in prompts["daily_reflection"]
 
 
 def test_enabling_without_supported_credential_backend_fails_before_database_write(
@@ -151,6 +173,16 @@ class FakeSettingsTransaction:
             credential_configured=credential_configured,
             enabled=enabled,
         )
+
+    def save_vision_configuration(
+        self,
+        *,
+        base_url: str | None,
+        model_name: str | None,
+        credential_configured: bool,
+        enabled: bool,
+    ) -> None:
+        self.repository.events.append("vision_configuration")
 
     def set_prompt_override(self, prompt_code: str, content: str) -> None:
         self.repository._set_prompt_override(prompt_code, content)

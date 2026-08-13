@@ -29,10 +29,17 @@ class WorkspaceError(RuntimeError):
         self.error_code = error_code
 
 
+def _setting_lines(value: str) -> tuple[str, ...]:
+    return tuple(line.strip() for line in value.splitlines() if line.strip())
+
+
 @dataclass(frozen=True, slots=True)
 class ClassContext:
     id: int
     name: str
+    age_group: str = "middle"
+    indoor_areas: tuple[str, ...] = ()
+    outdoor_areas: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,6 +51,7 @@ class SetupContextRecord:
     semester_start_date: date
     semester_end_date: date
     classes: tuple[ClassContext, ...]
+    kindergarten_name: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -62,6 +70,13 @@ class DesktopSettingsContext:
     semester_name: str
     semester_start_date: date
     semester_end_date: date
+    teacher_name: str = ""
+    kindergarten_name: str = ""
+    class_id: int = 0
+    class_name: str = ""
+    age_group: str = "middle"
+    indoor_areas: tuple[str, ...] = ()
+    outdoor_areas: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -164,11 +179,22 @@ class DailyPlanWorkspace:
 
     def load_settings(self) -> DesktopSettingsContext:
         setup = self._required_setup_context()
+        selected_class_id = (
+            self._current_plan.class_id if self._current_plan is not None else setup.classes[0].id
+        )
+        selected_class = next(item for item in setup.classes if item.id == selected_class_id)
         return DesktopSettingsContext(
             theme=setup.theme,
             semester_name=setup.semester_name,
             semester_start_date=setup.semester_start_date,
             semester_end_date=setup.semester_end_date,
+            teacher_name=setup.teacher_name,
+            kindergarten_name=setup.kindergarten_name,
+            class_id=selected_class.id,
+            class_name=selected_class.name,
+            age_group=selected_class.age_group,
+            indoor_areas=selected_class.indoor_areas,
+            outdoor_areas=selected_class.outdoor_areas,
         )
 
     def update_settings(self, values: dict[str, str]) -> DesktopSettingsContext:
@@ -191,12 +217,33 @@ class DailyPlanWorkspace:
             end_date=semester_end,
             is_current=True,
         )
-        profile = self._settings.save_profile(setup.teacher_name, theme)
+        profile = self._settings.save_profile(values.get("teacher_name", ""), theme)
+        kindergarten = self._settings.save_kindergarten(values.get("kindergarten_name", ""))
+        class_id = (
+            self._current_plan.class_id if self._current_plan is not None else setup.classes[0].id
+        )
+        class_view = self._settings.create_or_update_class(
+            class_id=class_id,
+            name=values.get("class_name", ""),
+            age_group=values.get("age_group", ""),
+        )
+        class_view = self._settings.set_class_areas(
+            class_view.id,
+            indoor=_setting_lines(values.get("indoor_areas", "")),
+            outdoor=_setting_lines(values.get("outdoor_areas", "")),
+        )
         return DesktopSettingsContext(
             theme=profile.theme,
             semester_name=semester.name,
             semester_start_date=semester.start_date,
             semester_end_date=semester.end_date,
+            teacher_name=profile.teacher_display_name,
+            kindergarten_name=kindergarten.name,
+            class_id=class_view.id,
+            class_name=class_view.name,
+            age_group=class_view.age_group,
+            indoor_areas=class_view.indoor_areas,
+            outdoor_areas=class_view.outdoor_areas,
         )
 
     def select_plan_context(self, class_id: int, plan_date: date) -> DailyPlanContext:

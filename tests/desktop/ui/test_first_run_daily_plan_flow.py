@@ -437,6 +437,12 @@ def test_settings_page_changes_theme_and_current_semester_without_restarting(
 
     assert services.settings_updates[-1] == {
         "theme": "dark",
+        "kindergarten_name": "",
+        "teacher_name": "",
+        "class_name": "",
+        "age_group": "middle",
+        "indoor_areas": "",
+        "outdoor_areas": "",
         "semester_name": "2027 春季学期",
         "semester_start_date": "2027-02-15",
         "semester_end_date": "2027-07-15",
