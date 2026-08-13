@@ -17,7 +17,8 @@ from kindergarten_manager.infrastructure.database.engine import create_sqlite_en
 
 DESKTOP_INITIAL_REVISION = "0001_desktop_initial"
 DESKTOP_AI_REVISION = "0002_desktop_ai"
-DESKTOP_HEAD_REVISION = "0003_desktop_ai_profiles"
+DESKTOP_AI_PROFILES_REVISION = "0003_desktop_ai_profiles"
+DESKTOP_HEAD_REVISION = "0004_desktop_group_activity_ai"
 
 
 class MigrationProtectionError(RuntimeError):
@@ -38,11 +39,16 @@ def upgrade_database(
         None,
         DESKTOP_INITIAL_REVISION,
         DESKTOP_AI_REVISION,
+        DESKTOP_AI_PROFILES_REVISION,
         DESKTOP_HEAD_REVISION,
     }
     if current_revision not in known_revisions:
         raise RuntimeError("桌面数据库版本高于当前应用")
-    if current_revision in {DESKTOP_INITIAL_REVISION, DESKTOP_AI_REVISION}:
+    if current_revision in {
+        DESKTOP_INITIAL_REVISION,
+        DESKTOP_AI_REVISION,
+        DESKTOP_AI_PROFILES_REVISION,
+    }:
         if pre_migration_directory is None:
             raise MigrationProtectionError(
                 "migration.protective_backup_failed",

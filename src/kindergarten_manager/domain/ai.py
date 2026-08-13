@@ -42,6 +42,22 @@ class DailyReflectionResult(_ClosedResult):
     adjustments: str
 
 
+class GroupActivityProcessStep(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    heading: str
+    lines: list[str]
+    is_ai_added: Literal[False] = False
+
+
+class GroupActivitySplitResult(_ClosedResult):
+    theme: str
+    objectives: list[str]
+    preparation: list[str]
+    focus: str
+    difficulty: str
+    process: list[GroupActivityProcessStep]
+
+
 class AiOutputValidationError(ValueError):
     """向应用层暴露稳定分类，不泄漏供应商原始结果。"""
 
@@ -56,6 +72,7 @@ _SCHEMAS: Mapping[str, type[BaseModel]] = {
     "indoor_area_game": AreaGameResult,
     "afternoon_outdoor_game": AreaGameResult,
     "daily_reflection": DailyReflectionResult,
+    "group_activity": GroupActivitySplitResult,
 }
 
 
@@ -88,16 +105,34 @@ def build_generation_input(
     section_code: str,
     content: Mapping[str, object],
     teacher_context: str,
+    generation_context: Mapping[str, object] | None = None,
 ) -> dict[str, object]:
     schema_for(section_code)
     target = content.get(section_code)
     if not isinstance(target, Mapping):
         raise ValueError("目标栏目不是结构化对象")
-    return {
+    result: dict[str, object] = {
         "schema_code": section_code,
         "target": dict(target),
         "teacher_context": teacher_context,
     }
+    context = generation_context or {}
+    age_group = context.get("age_group")
+    if isinstance(age_group, str):
+        result["age_group"] = age_group
+    if section_code == "indoor_area_game":
+        result["available_areas"] = list(_string_values(context.get("indoor_areas")))
+    elif section_code == "afternoon_outdoor_game":
+        result["available_areas"] = list(_string_values(context.get("outdoor_areas")))
+    elif section_code == "morning_activity":
+        result["available_outdoor_areas"] = list(_string_values(context.get("outdoor_areas")))
+    return result
+
+
+def _string_values(value: object) -> tuple[str, ...]:
+    if not isinstance(value, tuple | list):
+        return ()
+    return tuple(str(item) for item in value if isinstance(item, str))
 
 
 def section_sha256(content: Mapping[str, object], section_code: str) -> str:

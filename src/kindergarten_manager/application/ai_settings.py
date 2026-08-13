@@ -18,6 +18,7 @@ _PROMPT_CODES = (
     "indoor_area_game",
     "afternoon_outdoor_game",
     "daily_reflection",
+    "group_activity",
 )
 
 

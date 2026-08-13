@@ -4,6 +4,7 @@ import json
 import sqlite3
 from copy import deepcopy
 from pathlib import Path
+from typing import Any, cast
 from uuid import UUID
 
 import pytest
@@ -95,6 +96,32 @@ def test_ai_configuration_and_prompt_override_store_no_secret(tmp_path: Path) ->
     assert "fixture-api-key" not in database.read_bytes().decode("utf-8", errors="ignore")
 
 
+def test_generation_context_reads_saved_areas_for_the_current_plan_class(tmp_path: Path) -> None:
+    database = tmp_path / "desktop.sqlite3"
+    plan_id, _content = _seed_plan(database)
+    with sqlite3.connect(database) as connection:
+        class_id = connection.execute(
+            "SELECT class_id FROM lesson_plans WHERE id = ?", (plan_id,)
+        ).fetchone()[0]
+        connection.executemany(
+            "INSERT INTO class_areas(class_id, area_type, name, sort_order, "
+            "created_at_utc_ms, updated_at_utc_ms) VALUES (?, ?, ?, ?, 1, 1)",
+            (
+                (class_id, "indoor", "建构区", 0),
+                (class_id, "indoor", "美工区", 1),
+                (class_id, "outdoor", "沙池", 0),
+            ),
+        )
+
+    context = _repository(database).generation_context_for_plan(plan_id)
+
+    assert context == {
+        "age_group": "middle",
+        "indoor_areas": ["建构区", "美工区"],
+        "outdoor_areas": ["沙池"],
+    }
+
+
 def test_preview_adoption_snapshots_and_updates_content_in_one_transaction(tmp_path: Path) -> None:
     database = tmp_path / "desktop.sqlite3"
     plan_id, _content = _seed_plan(database)
@@ -117,6 +144,49 @@ def test_preview_adoption_snapshots_and_updates_content_in_one_transaction(tmp_p
         assert connection.execute(
             "SELECT state, decided_at_utc_ms FROM ai_previews WHERE id = ?", (preview.preview_id,)
         ).fetchone() == ("adopted", 20)
+
+
+def test_group_activity_split_adoption_preserves_teacher_source_text(tmp_path: Path) -> None:
+    database = tmp_path / "desktop.sqlite3"
+    plan_id, content = _seed_plan(database)
+    group_activity = cast(dict[str, Any], content["group_activity"])
+    group_activity["source_text"] = "活动名称：寻找秋天\n活动过程：观察落叶。"
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "UPDATE lesson_plans SET content_json = ? WHERE id = ?",
+            (PlanContentV1.model_validate(content).canonical_json(), plan_id),
+        )
+    repository = _repository(database)
+    coordinator = AiGenerationCoordinator(
+        runtime=NoopRuntime(),
+        store=repository,
+        clock_utc_ms=lambda: 20,
+    )
+    operation = coordinator.start_single(plan_id, "group_activity", "拆分原稿")
+    preview = coordinator.accept_result(
+        operation.operation_id,
+        "group_activity",
+        {
+            "theme": "寻找秋天",
+            "objectives": ["观察落叶"],
+            "preparation": ["落叶"],
+            "focus": "比较差异",
+            "difficulty": "完整表达",
+            "process": [
+                {
+                    "heading": "一、观察",
+                    "lines": ["观察落叶。"],
+                    "is_ai_added": False,
+                }
+            ],
+        },
+    )
+    assert preview is not None
+
+    adopted = coordinator.adopt(preview.preview_id)
+
+    assert adopted.content["group_activity"]["source_text"].startswith("活动名称")
+    assert adopted.content["group_activity"]["theme"] == "寻找秋天"
 
 
 def test_stale_preview_is_invalidated_without_snapshot_or_content_write(tmp_path: Path) -> None:

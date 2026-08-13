@@ -10,6 +10,7 @@ from pathlib import Path
 
 from kindergarten_manager.infrastructure.database.engine import connect_sqlite
 from kindergarten_manager.infrastructure.database.upgrade import (
+    DESKTOP_AI_PROFILES_REVISION,
     DESKTOP_AI_REVISION,
     DESKTOP_HEAD_REVISION,
     DESKTOP_INITIAL_REVISION,
@@ -59,6 +60,7 @@ class BootstrapService:
             None,
             DESKTOP_INITIAL_REVISION,
             DESKTOP_AI_REVISION,
+            DESKTOP_AI_PROFILES_REVISION,
             DESKTOP_HEAD_REVISION,
         }:
             raise StartupError("startup.future_schema", "本地数据库版本高于当前应用")

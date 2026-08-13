@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMessageBox,
+    QPlainTextEdit,
     QPushButton,
     QStackedWidget,
     QTableWidget,
@@ -288,6 +289,25 @@ def test_daily_plan_uses_week_workspace_and_gives_collective_activity_room(
     qtbot.mouseClick(_child(window, QPushButton, "today"), Qt.MouseButton.LeftButton)
     assert services.selected_contexts[-1] == (1, date(2026, 8, 10))
     assert _child(window, QDateEdit, "plan_date").date().toPython() == date(2026, 8, 10)
+
+
+def test_group_activity_source_has_explicit_ai_split_action(
+    qtbot: QtBot,
+    tmp_path: Path,
+) -> None:
+    services = FakeDesktopServices(tmp_path / "当天教案.docx", ai_enabled=True)
+    services.setup = {"teacher_name": "测试教师"}
+    window = _build(services)
+    qtbot.addWidget(window)
+    window.show()
+
+    source = _child(window, QPlainTextEdit, "group_activity_source_text")
+    split = _child(window, QPushButton, "split_group_activity_source")
+    source.setPlainText("活动名称：寻找秋天\n活动目标：观察落叶。\n活动过程：比较叶片。")
+    qtbot.mouseClick(split, Qt.MouseButton.LeftButton)
+
+    assert services.ai_starts[-1][0] == "group_activity"
+    assert services.saved_content["group_activity"]["source_text"].startswith("活动名称")
 
 
 def test_ai_generation_saves_visible_edits_and_page_leave_cancels_operation(

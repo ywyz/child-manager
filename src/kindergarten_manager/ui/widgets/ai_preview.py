@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import json
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from uuid import UUID
 
 from PySide6.QtCore import QTimer
@@ -22,8 +21,46 @@ _SECTION_LABELS = (
     ("morning_talk", "晨间谈话"),
     ("indoor_area_game", "室内区域游戏"),
     ("afternoon_outdoor_game", "下午户外游戏"),
+    ("group_activity", "集体活动原稿拆分"),
     ("daily_reflection", "一日活动反思"),
 )
+
+_FIELD_LABELS: dict[str, tuple[tuple[str, str], ...]] = {
+    "morning_activity": (
+        ("physical_cycle", "体能大循环"),
+        ("group_game", "集体体育游戏"),
+        ("free_game", "自主体育游戏"),
+        ("focus_guidance", "重点指导"),
+        ("objectives", "活动目标"),
+        ("guidance_points", "指导要点"),
+    ),
+    "morning_talk": (("topic", "谈话话题"), ("questions", "问题设计")),
+    "indoor_area_game": (
+        ("focus_guidance", "重点指导"),
+        ("objectives", "活动目标"),
+        ("guidance_points", "指导要点"),
+        ("support_strategies", "支持策略"),
+    ),
+    "afternoon_outdoor_game": (
+        ("focus_guidance", "重点指导"),
+        ("objectives", "活动目标"),
+        ("guidance_points", "指导要点"),
+        ("support_strategies", "支持策略"),
+    ),
+    "group_activity": (
+        ("theme", "活动主题"),
+        ("objectives", "活动目标"),
+        ("preparation", "活动准备"),
+        ("focus", "活动重点"),
+        ("difficulty", "活动难点"),
+        ("process", "活动过程"),
+    ),
+    "daily_reflection": (
+        ("highlights", "活动亮点"),
+        ("issues", "存在问题"),
+        ("adjustments", "调整策略"),
+    ),
+}
 
 
 class AiPreviewPanel(QFrame):
@@ -90,6 +127,8 @@ class AiPreviewPanel(QFrame):
             generate.clicked.connect(
                 lambda _checked=False, code=section_code: self._start_section(code)
             )
+            if section_code == "group_activity":
+                generate.hide()
             row.addWidget(generate)
             card_layout.addLayout(row)
             result = QPlainTextEdit()
@@ -160,9 +199,7 @@ class AiPreviewPanel(QFrame):
             result = self._results[section_code]
             if preview is not None:
                 self._preview_ids[section_code] = preview.preview_id
-                result.setPlainText(
-                    json.dumps(preview.output, ensure_ascii=False, indent=2, sort_keys=True)
-                )
+                result.setPlainText(_format_preview(section_code, preview.output))
                 result.show()
                 self._adopt_buttons[section_code].show()
                 self._reject_buttons[section_code].show()
@@ -257,3 +294,35 @@ class AiPreviewPanel(QFrame):
         result = self._services.cancel_ai_generation(self._operation_id)
         self.status.setText(result.message)
         self.refresh()
+
+
+def _format_preview(section_code: str, output: object) -> str:
+    if not isinstance(output, Mapping):
+        return str(output)
+    blocks: list[str] = []
+    for field_name, label in _FIELD_LABELS.get(section_code, ()):
+        value = output.get(field_name)
+        if isinstance(value, list):
+            if field_name == "process":
+                lines = _format_process(value)
+            else:
+                lines = [f"{index}. {item}" for index, item in enumerate(value, start=1)]
+            blocks.append(f"{label}：\n" + "\n".join(lines))
+        else:
+            rendered_value = value or ""
+            blocks.append(f"{label}：{rendered_value!s}")
+    return "\n\n".join(blocks)
+
+
+def _format_process(value: list[object]) -> list[str]:
+    lines: list[str] = []
+    for item in value:
+        if not isinstance(item, Mapping):
+            continue
+        heading = str(item.get("heading", "")).strip()
+        if heading:
+            lines.append(heading)
+        step_lines = item.get("lines")
+        if isinstance(step_lines, list):
+            lines.extend(f"  {line}" for line in step_lines)
+    return lines

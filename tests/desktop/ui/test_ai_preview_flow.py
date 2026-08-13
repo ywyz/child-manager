@@ -102,6 +102,50 @@ def test_actual_panel_shows_success_and_failure_independently(qtbot: QtBot) -> N
     assert retry is not None and retry.isVisible()
 
 
+def test_preview_uses_teacher_facing_labels_instead_of_raw_json(qtbot: QtBot) -> None:
+    services = FakeAiServices(
+        state=CoordinatorState(
+            None,
+            ("morning_activity",),
+            {},
+            (
+                PreviewView(
+                    7,
+                    1,
+                    "morning_activity",
+                    {
+                        "schema_version": 1,
+                        "physical_cycle": "跨跳体能大循环",
+                        "group_game": "小兔搬家",
+                        "free_game": "跳圈",
+                        "focus_guidance": "指导双脚并拢落地",
+                        "objectives": ["发展跳跃能力", "提高身体协调性"],
+                        "guidance_points": ["检查场地", "分层摆放器材"],
+                    },
+                    "0" * 64,
+                    "ready",
+                ),
+            ),
+        )
+    )
+    panel = AiPreviewPanel(
+        cast(DesktopServices, services),
+        on_save_visible_content=lambda: True,
+        on_content_changed=lambda: None,
+    )
+    qtbot.addWidget(panel)
+    panel.show()
+
+    preview = panel.findChild(QPlainTextEdit, "ai_preview_morning_activity")
+    assert preview is not None
+    rendered = preview.toPlainText()
+    assert "体能大循环：跨跳体能大循环" in rendered
+    assert "集体体育游戏：小兔搬家" in rendered
+    assert "1. 发展跳跃能力" in rendered
+    assert "schema_version" not in rendered
+    assert not rendered.lstrip().startswith("{")
+
+
 def test_actual_panel_disables_duplicate_start_while_operation_runs(qtbot: QtBot) -> None:
     services = FakeAiServices(state=CoordinatorState(UUID(int=9), (), {}, ()))
     panel = AiPreviewPanel(

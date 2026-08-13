@@ -588,7 +588,27 @@ class DailyPlanPage(QWidget):
         editor = self._build_editor(definition)
         self._fields[definition.object_name] = editor
         card_layout.addWidget(editor, 1)
+        if definition.object_name == "group_activity_source_text":
+            split = QPushButton("AI 拆分原稿")
+            split.setObjectName("split_group_activity_source")
+            split.setProperty("kind", "primary")
+            split.clicked.connect(self._split_group_activity_source)
+            card_layout.addWidget(split)
         return card
+
+    def _split_group_activity_source(self) -> None:
+        source = self._fields.get("group_activity_source_text")
+        if not isinstance(source, QPlainTextEdit) or not source.toPlainText().strip():
+            self.save_status.setText("请先粘贴集体活动完整原稿")
+            return
+        if not self.save():
+            return
+        try:
+            self._services.start_ai_generation("group_activity", "拆分并补全集体活动原稿")
+        except Exception as error:
+            self.save_status.setText(user_error_message(error, "集体活动原稿拆分启动失败"))
+            return
+        self.save_status.setText("AI 正在拆分集体活动原稿，请稍候")
 
     def _select_section(self, selected: int) -> None:
         self.section_stack.setCurrentIndex(selected)

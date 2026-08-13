@@ -382,6 +382,41 @@ class AiRepository:
             raise AiRepositoryError("plan.not_found", "教案不存在")
         return PlanContentV1.model_validate(json.loads(str(row[0]))).model_dump(mode="json")
 
+    def generation_context_for_plan(self, plan_id: int) -> dict[str, object]:
+        with self.session_factory() as session:
+            connection = session.connection()
+            row = (
+                connection.exec_driver_sql(
+                    """
+                    SELECT c.id, c.age_group
+                    FROM lesson_plans AS p
+                    JOIN class_groups AS c ON c.id = p.class_id
+                    WHERE p.id = ?
+                    """,
+                    (plan_id,),
+                )
+                .mappings()
+                .first()
+            )
+            if row is None:
+                raise AiRepositoryError("plan.not_found", "教案不存在")
+            areas = (
+                connection.exec_driver_sql(
+                    "SELECT area_type, name FROM class_areas "
+                    "WHERE class_id = ? ORDER BY area_type, sort_order, id",
+                    (int(row["id"]),),
+                )
+                .mappings()
+                .all()
+            )
+        return {
+            "age_group": str(row["age_group"]),
+            "indoor_areas": [str(area["name"]) for area in areas if area["area_type"] == "indoor"],
+            "outdoor_areas": [
+                str(area["name"]) for area in areas if area["area_type"] == "outdoor"
+            ],
+        }
+
     def save_configuration(
         self,
         *,

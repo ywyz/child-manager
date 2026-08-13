@@ -396,3 +396,14 @@ AI/Agent 稳定性问题，并明确将后续验证顺序调整为 Ubuntu 功能
 隔离、`0002 -> 0003_desktop_ai_profiles` 数据保留、AI 超时预算，以及 OpenAI-compatible
 assistant tool-call/tool-result 续接消息。Ubuntu 本地完整门禁与远端精确 CI 结果记录到 Issue #22；
 Windows 结果只能由后续实机测试回填，不由本节预判。
+
+2026-08-13 的后续 Windows 复测又暴露了四个可稳定定位的行为问题：Agent Provider
+没有把当前教案、班级和日期标识传给模型，模型猜测 Tool 参数后被关闭 Schema 正确拒绝；
+AI 预览直接显示 JSON；集体活动原稿没有显式拆分入口；游戏生成没有使用班级已保存的
+室内/户外区域，且晨间活动的业务语义没有限定为户外体育活动（体能大循环）。
+
+本轮按 RED -> GREEN 补充：Provider 安全作用域提示且不放宽 Tool Schema；教师可读标签化
+预览；集体活动原稿的“AI 拆分原稿”按钮、关闭结构结果、预览和显式采用；生成前冻结
+当前班级年龄段及室内/户外区域；晨间活动固定为体能大循环、集体体育游戏和自主体育游戏。
+新增 `0004_desktop_group_activity_ai`，将集体活动提示词和预览纳入持久化约束；未实施的
+Agent audit revision 顺延为 `0005_agent_action_audit`。本地 Ubuntu 验证不替代后续 Windows 复验。

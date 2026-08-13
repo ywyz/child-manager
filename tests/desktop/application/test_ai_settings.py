@@ -40,6 +40,7 @@ def _prompts() -> dict[str, str]:
             "indoor_area_game",
             "afternoon_outdoor_game",
             "daily_reflection",
+            "group_activity",
         )
     }
 
@@ -87,10 +88,14 @@ def test_builtin_prompts_keep_mature_teaching_constraints_and_closed_json_schema
     assert all("schema_version" in content for content in prompts.values())
     assert all("Markdown" in content for content in prompts.values())
     assert '"physical_cycle"' in prompts["morning_activity"]
+    assert "户外体育活动" in prompts["morning_activity"]
+    assert "集体体育游戏" in prompts["morning_activity"]
+    assert "自主体育游戏" in prompts["morning_activity"]
     assert '"questions"' in prompts["morning_talk"]
     assert '"support_strategies"' in prompts["indoor_area_game"]
     assert "从可用户外区域中选择" in prompts["afternoon_outdoor_game"]
     assert '"highlights"' in prompts["daily_reflection"]
+    assert '"process"' in prompts["group_activity"]
 
 
 def test_enabling_without_supported_credential_backend_fails_before_database_write(
@@ -213,6 +218,7 @@ def test_application_service_owns_ai_settings_transaction_scope() -> None:
         "delete:indoor_area_game",
         "delete:afternoon_outdoor_game",
         "delete:daily_reflection",
+        "delete:group_activity",
         "commit",
     ]
 

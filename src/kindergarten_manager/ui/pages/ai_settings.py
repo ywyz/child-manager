@@ -27,6 +27,7 @@ _PROMPTS = (
     ("indoor_area_game", "室内区域游戏"),
     ("afternoon_outdoor_game", "下午户外游戏"),
     ("daily_reflection", "一日活动反思"),
+    ("group_activity", "集体活动原稿拆分"),
 )
 
 

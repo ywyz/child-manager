@@ -12,7 +12,7 @@ def _module():
     return pending_module("kindergarten_manager.domain.ai")
 
 
-def test_ai_schema_registry_allows_only_slice_2a_sections() -> None:
+def test_ai_schema_registry_includes_group_activity_split_without_batching_it() -> None:
     module = _module()
     schema_for = pending_symbol(module, "schema_for")
 
@@ -22,10 +22,38 @@ def test_ai_schema_registry_allows_only_slice_2a_sections() -> None:
         "indoor_area_game",
         "afternoon_outdoor_game",
         "daily_reflection",
+        "group_activity",
     }
     assert {code for code in allowed if schema_for(code) is not None} == allowed
     with pytest.raises(ValueError, match="不支持"):
-        schema_for("group_activity")
+        schema_for("unknown_section")
+
+
+def test_group_activity_split_is_closed_and_preserves_source_outside_ai_result() -> None:
+    module = _module()
+    validate_section_output = pending_symbol(module, "validate_section_output")
+
+    result = validate_section_output(
+        "group_activity",
+        {
+            "theme": "寻找秋天",
+            "objectives": ["观察落叶特征"],
+            "preparation": ["落叶若干"],
+            "focus": "比较叶片差异",
+            "difficulty": "完整表达发现",
+            "process": [
+                {
+                    "heading": "一、观察落叶",
+                    "lines": ["教师出示落叶。", "幼儿自由观察。"],
+                    "is_ai_added": False,
+                }
+            ],
+        },
+    )
+
+    assert result["schema_version"] == 1
+    assert result["process"][0]["is_ai_added"] is False
+    assert "source_text" not in result
 
 
 def test_canonical_json_hash_is_key_order_independent_and_rejects_nan() -> None:

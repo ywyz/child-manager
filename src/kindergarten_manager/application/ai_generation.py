@@ -108,6 +108,8 @@ class StoredPreview(Protocol):
 class AiPreviewStore(Protocol):
     def content_for_plan(self, plan_id: int) -> Mapping[str, object]: ...
 
+    def generation_context_for_plan(self, plan_id: int) -> Mapping[str, object]: ...
+
     def create_preview(
         self,
         *,
@@ -320,11 +322,13 @@ class AiGenerationCoordinator:
             raise AiGenerationError("ai.operation_in_progress", "已有 AI 生成正在进行")
 
         content = self._content_for_plan(plan_id)
+        generation_context = self.store.generation_context_for_plan(plan_id)
         frozen_inputs = {
             section: build_generation_input(
                 section_code=section,
                 content=content,
                 teacher_context=teacher_context,
+                generation_context=generation_context,
             )
             for section in sections
         }

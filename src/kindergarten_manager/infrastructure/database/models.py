@@ -250,7 +250,7 @@ prompt_overrides = sa.Table(
     sa.Column("updated_at_utc_ms", sa.Integer, nullable=False),
     sa.CheckConstraint(
         "prompt_code IN ('morning_activity', 'morning_talk', 'indoor_area_game', "
-        "'afternoon_outdoor_game', 'daily_reflection')",
+        "'afternoon_outdoor_game', 'daily_reflection', 'group_activity')",
         name="prompt_code",
     ),
     sa.CheckConstraint("length(trim(content)) BETWEEN 1 AND 12000", name="content"),
@@ -279,7 +279,7 @@ ai_previews = sa.Table(
     sa.CheckConstraint("length(operation_id) = 36", name="operation_id"),
     sa.CheckConstraint(
         "section_code IN ('morning_activity', 'morning_talk', 'indoor_area_game', "
-        "'afternoon_outdoor_game', 'daily_reflection')",
+        "'afternoon_outdoor_game', 'daily_reflection', 'group_activity')",
         name="section_code",
     ),
     sa.CheckConstraint("result_schema_code = section_code", name="result_schema_code"),

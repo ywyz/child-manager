@@ -213,7 +213,7 @@ audit、备份和日志中没有 Agent 状态或秘密。
 ### Tests for Agent WRITE（必须先 RED）
 
 - [ ] T079 [P] [US2] 在 `tests/desktop/contracts/test_agent_patch_confirmation.py` 覆盖规范 `PlanPatch`、关闭字段路径、稳定 hash、字段级 before/after，以及 Confirmation 绑定 patch/target/revision/session/turn/expiry/nonce
-- [ ] T080 [P] [US2] 在 `tests/desktop/database/test_agent_action_audit_migration.py` 覆盖 `0001` -> `0004_agent_action_audit`、命名 FK/unique/check、UPDATE/DELETE 拒绝、无正文列和迁移前备份失败即停止
+- [ ] T080 [P] [US2] 在 `tests/desktop/database/test_agent_action_audit_migration.py` 覆盖 `0001` -> `0005_agent_action_audit`、命名 FK/unique/check、UPDATE/DELETE 拒绝、无正文列和迁移前备份失败即停止
 - [ ] T081 [P] [US2] 在 `tests/desktop/application/test_agent_confirmed_write.py` 覆盖未确认/伪造/错 hash/错目标/错 turn/过期/复用/stale 零写入、有效确认精确字段提交和未知 commit action ID 对账不重放
 - [ ] T082 [P] [US2] 在 `tests/desktop/contracts/test_agent_write_privacy.py` 覆盖 audit/SQLite/备份/log/repr 不含 Prompt、Provider 原文、Context、Tool 输入输出、before/after 正文、Key、口令或绝对路径
 - [ ] T083 [P] [US2] 在 `tests/desktop/ui/test_agent_confirmation_flow.py` 覆盖完整差异/警告/快照影响展示、明确确认、拒绝、修改后重新生成、stale 后重新确认和无“总是允许”
@@ -222,7 +222,7 @@ audit、备份和日志中没有 Agent 状态或秘密。
 ### Implementation for Agent WRITE
 
 - [ ] T085 [P] [US2] 扩展 `src/kindergarten_manager/application/agent_runtime.py` 实现规范 Patch builder、一次性内存 Confirmation、过期/Context 失效和双重验证，不把确认授权给 Provider
-- [ ] T086 [US2] 创建 `0004_agent_action_audit` migration 与不可变模型，只保存 action/tool/target/patch/confirmation/revision/outcome/time；先调用已验收 pre-migration 备份
+- [ ] T086 [US2] 创建 `0005_agent_action_audit` migration 与不可变模型，只保存 action/tool/target/patch/confirmation/revision/outcome/time；先调用已验收 pre-migration 备份
 - [ ] T087 [US2] 在 `src/kindergarten_manager/application/agent_tools.py` 注册仅限教案白名单字段的 WRITE Tool，在一个短事务中重读、校验、保存操作前版本、应用完整 Patch、递增 revision 和写 audit，任一步失败全部回滚
 - [ ] T088 [US2] 扩展 `AgentRuntime.confirm/reject`，使 confirm 创建新的本地 WRITE operation，WRITE 永不自动重试；取消、迟到、未知 commit 只对账不重放
 - [ ] T089 [US2] 扩展 `src/kindergarten_manager/ui/widgets/agent_draft.py` 显示逐字段差异和一次性确认/拒绝，不提供批量长期授权；确认后 Context/Patch 立即失效
@@ -357,7 +357,7 @@ Design confirmed + Issue + dev authorization
   不依赖备份，也不得提前实现任何 WRITE/Confirmation 数据路径。
 - **Slice 3** 依赖 SQLite/Bootstrap/runtime，但远程失败不得成为 US1/US2 数据事务依赖；它是
   Agent 写入 migration 和正式 WRITE 的前置门禁。
-- **Agent WRITE** 依赖 Slice 2B 与 Slice 3；`0004_agent_action_audit` 必须先生成 pre-migration
+- **Agent WRITE** 依赖 Slice 2B 与 Slice 3；`0005_agent_action_audit` 必须先生成 pre-migration
   备份，WRITE 只消费已确认 Patch，不依赖 Provider 网络。
 - **Slice 4** 必须先通过 T091 spike，并复用 Slice 1 的单日 snapshot/render core。
 - **US1 remainder** 排在固定 Agent 主序列和批量 Word 之后，只补历史、归档、查找和周导航。
@@ -367,8 +367,9 @@ Design confirmed + Issue + dev authorization
 
 - 每个切片先写该切片 tests，再执行 `pytest --collect-only`，确认环境干净后取得业务 RED。
 - 数据模型在 T022/T023 建立 `0001_desktop_initial`；唯一计划中的后续首期 revision 是 T086 的
-  `0004_agent_action_audit`，且必须在 Slice 3 后执行。`0003_desktop_ai_profiles` 已由 Issue #22
-  用于文本/视觉模型独立预配置；其他切片不得另起冲突基线。
+  `0005_agent_action_audit`，且必须在 Slice 3 后执行。`0003_desktop_ai_profiles` 已由 Issue #22
+  用于文本/视觉模型独立预配置，`0004_desktop_group_activity_ai` 用于集体活动拆分提示词与预览；
+  其他切片不得另起冲突基线。
 - 同一文件上的任务按 ID 串行；只有标记 `[P]` 且文件/行为均独立的任务可以并行。
 - 每个 Checkpoint 都要重跑此前切片回归；后续测试失败不得计入当前切片未完成。
 - T124 之前仍须逐门授权 commit、push、Review 和 `main` 集成；任务勾选本身不授权 Git 操作。

@@ -49,7 +49,7 @@ class OpenAICompatibleAgentProvider:
         payload = {
             "model": self._model_name,
             "messages": [
-                {"role": "system", "content": request.system_policy},
+                {"role": "system", "content": _system_content(request)},
                 *_provider_messages(request.messages),
             ],
             "tools": [_tool_schema(descriptor) for descriptor in request.tools],
@@ -141,6 +141,24 @@ def _read_bounded(response: httpx.Response, limit: int) -> bytes:
             )
         chunks.append(chunk)
     return b"".join(chunks)
+
+
+def _system_content(request: ProviderTurnRequest) -> str:
+    scope = request.context.active_scope
+    safe_scope = {
+        "class_id": scope.class_id,
+        "semester_id": scope.semester_id,
+        "plan_id": scope.lesson_plan_id,
+        "plan_date": scope.plan_date.isoformat() if scope.plan_date is not None else None,
+        "locale": request.context.locale,
+    }
+    return (
+        f"{request.system_policy}\n\n"
+        "当前作用域（调用 READ Tool 时必须逐字使用这些标识，不得猜测或增加参数）：\n"
+        f"{json.dumps(safe_scope, ensure_ascii=False, separators=(',', ':'))}\n"
+        "形成草案前必须先读取事实。每次 DRAFT Tool 只提交一个已注册 field_path；"
+        "文本字段使用字符串，列表字段使用字符串数组，活动过程使用对象数组。"
+    )
 
 
 def _parse_tool_call(

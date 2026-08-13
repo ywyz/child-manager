@@ -269,6 +269,9 @@ def test_provider_adapter_uses_valid_tool_continuation_messages_and_practical_ti
     assert adapter.timeout.read == 180
     messages = captured[0]["messages"]
     assert isinstance(messages, list)
+    assert '"plan_id":3' in messages[0]["content"]
+    assert '"class_id":1' in messages[0]["content"]
+    assert '"plan_date":"2026-09-07"' in messages[0]["content"]
     assert messages[1]["role"] == "user"
     assert messages[2]["role"] == "assistant"
     assert messages[3]["role"] == "tool"

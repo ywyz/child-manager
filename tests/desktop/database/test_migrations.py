@@ -15,6 +15,7 @@ from alembic.config import Config
 
 from kindergarten_manager.infrastructure.database.models import metadata
 from kindergarten_manager.infrastructure.database.upgrade import (
+    DESKTOP_AI_PROFILES_REVISION,
     DESKTOP_HEAD_REVISION,
     DESKTOP_INITIAL_REVISION,
     MigrationProtectionError,
@@ -126,6 +127,7 @@ def test_empty_database_upgrades_idempotently_with_named_integrity_contracts(
     assert (migrations / "versions" / "0001_desktop_initial.py").is_file()
     assert (migrations / "versions" / "0002_desktop_ai.py").is_file()
     assert (migrations / "versions" / "0003_desktop_ai_profiles.py").is_file()
+    assert (migrations / "versions" / "0004_desktop_group_activity_ai.py").is_file()
     assert (
         _migration_source_sha256(migrations / "versions" / "0001_desktop_initial.py")
         == "a1d55d374ffa6144d2e772f2f2b7cc33a5e76e94c0c5d22b02fc13e41db844e5"
@@ -280,6 +282,40 @@ def test_0001_to_0002_creates_verified_pre_migration_copy_before_upgrade(
         assert active.execute("SELECT teacher_display_name FROM app_profile").fetchone() == (
             "迁移测试教师",
         )
+
+
+def test_0003_to_0004_protects_database_and_allows_group_activity_ai(tmp_path: Path) -> None:
+    database = tmp_path / "desktop.sqlite3"
+    backups = tmp_path / "pre-migration"
+    migrations = Path("src/kindergarten_manager/infrastructure/database/migrations")
+    config = Config()
+    config.set_main_option("script_location", str(migrations))
+    config.set_main_option("sqlalchemy.url", f"sqlite+pysqlite:///{database}")
+    command.upgrade(config, DESKTOP_AI_PROFILES_REVISION)
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "INSERT INTO prompt_overrides(prompt_code, content, updated_at_utc_ms) "
+            "VALUES ('morning_talk', '保留提示词', 1)"
+        )
+
+    revision = upgrade_database(database, pre_migration_directory=backups)
+
+    assert revision == DESKTOP_HEAD_REVISION
+    backup_files = list(backups.glob("*.sqlite3"))
+    assert len(backup_files) == 1
+    with sqlite3.connect(backup_files[0]) as backup:
+        assert backup.execute("SELECT version_num FROM alembic_version").fetchone() == (
+            DESKTOP_AI_PROFILES_REVISION,
+        )
+        assert backup.execute("PRAGMA integrity_check").fetchone() == ("ok",)
+    with sqlite3.connect(database) as active:
+        active.execute(
+            "INSERT INTO prompt_overrides(prompt_code, content, updated_at_utc_ms) "
+            "VALUES ('group_activity', '集体活动拆分', 2)"
+        )
+        assert active.execute(
+            "SELECT content FROM prompt_overrides ORDER BY prompt_code"
+        ).fetchall() == [("集体活动拆分",), ("保留提示词",)]
 
 
 def test_0001_to_0002_fsyncs_protective_copy_with_windows_writable_descriptor(

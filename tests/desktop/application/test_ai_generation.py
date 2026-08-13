@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Iterator
 from contextlib import contextmanager
 from copy import deepcopy
@@ -9,6 +10,7 @@ from uuid import UUID
 
 import pytest
 
+from kindergarten_manager.application.ai_generation import GenerationWork
 from kindergarten_manager.domain.content import PlanContentV1
 from tests.desktop.helpers import pending_module, pending_symbol
 
@@ -35,6 +37,14 @@ class PreviewStore:
     def content_for_plan(self, plan_id: int) -> dict[str, object]:
         del plan_id
         return deepcopy(self.content)
+
+    def generation_context_for_plan(self, plan_id: int) -> dict[str, object]:
+        del plan_id
+        return {
+            "age_group": "large",
+            "indoor_areas": ["建构区", "美工区"],
+            "outdoor_areas": ["沙池", "操场"],
+        }
 
     def create_preview(self, **values: object) -> object:
         preview_id = len(self.previews) + 1
@@ -96,6 +106,21 @@ def test_only_one_generation_operation_can_run() -> None:
     with pytest.raises(Exception) as captured:
         coordinator.start_batch(1, "春季观察")
     assert getattr(captured.value, "code", None) == "ai.operation_in_progress"
+
+
+def test_generation_uses_saved_class_areas_as_section_specific_context() -> None:
+    runtime = ScriptedRuntime()
+    coordinator = _coordinator(runtime=runtime)
+
+    coordinator.start_batch(1, "围绕春天设计")
+
+    work = runtime.submitted[0][1]
+    assert isinstance(work, GenerationWork)
+    frozen = {item.section_code: json.loads(item.payload_json) for item in work.frozen_inputs}
+    assert frozen["indoor_area_game"]["available_areas"] == ["建构区", "美工区"]
+    assert frozen["afternoon_outdoor_game"]["available_areas"] == ["沙池", "操场"]
+    assert frozen["morning_activity"]["available_outdoor_areas"] == ["沙池", "操场"]
+    assert frozen["morning_talk"].get("available_areas") is None
 
 
 def test_batch_keeps_successful_previews_when_one_section_fails() -> None:
