@@ -26,7 +26,11 @@ from PySide6.QtWidgets import (
 )
 from pytestqt.qtbot import QtBot
 
-from kindergarten_manager.application.ai_generation import CoordinatorState, PreviewView
+from kindergarten_manager.application.ai_generation import (
+    AiGenerationError,
+    CoordinatorState,
+    PreviewView,
+)
 from kindergarten_manager.application.ai_settings import AiSettingsView
 from kindergarten_manager.application.dto import CommandResult, OperationAccepted
 from kindergarten_manager.application.lesson_plans import LessonPlanEditorState
@@ -56,6 +60,7 @@ class FakeDesktopServices:
     ai_state: CoordinatorState = field(default_factory=lambda: CoordinatorState(None, (), {}, ()))
     ai_cancelled: list[UUID] = field(default_factory=list)
     ai_adoptions: list[tuple[int, str]] = field(default_factory=list)
+    ai_start_failure: Exception | None = None
     failure: Exception | None = None
 
     def complete_setup(self, values: dict[str, str]) -> None:
@@ -133,6 +138,8 @@ class FakeDesktopServices:
         section_code: str,
         teacher_context: str,
     ) -> OperationAccepted:
+        if self.ai_start_failure is not None:
+            raise self.ai_start_failure
         self.ai_starts.append((section_code, teacher_context))
         accepted = OperationAccepted(UUID(int=len(self.ai_starts)))
         self.ai_state = CoordinatorState(accepted.operation_id, (), {}, ())
@@ -308,6 +315,36 @@ def test_group_activity_source_has_explicit_ai_split_action(
 
     assert services.ai_starts[-1][0] == "group_activity"
     assert services.saved_content["group_activity"]["source_text"].startswith("活动名称")
+
+
+def test_group_activity_split_reports_the_specific_start_failure(
+    qtbot: QtBot,
+    tmp_path: Path,
+) -> None:
+    services = FakeDesktopServices(
+        tmp_path / "当天教案.docx",
+        setup={"teacher_name": "测试教师"},
+        ai_enabled=True,
+        ai_start_failure=AiGenerationError(
+            "ai.operation_in_progress",
+            "已有 AI 生成正在进行",
+        ),
+    )
+    window = _build(services)
+    qtbot.addWidget(window)
+    window.show()
+    _child(window, QPlainTextEdit, "group_activity_source_text").setPlainText(
+        "活动名称：寻找秋天\n活动过程：比较叶片。"
+    )
+
+    qtbot.mouseClick(
+        _child(window, QPushButton, "split_group_activity_source"),
+        Qt.MouseButton.LeftButton,
+    )
+
+    assert _child(window, QLabel, "save_status").text() == (
+        "集体活动原稿拆分启动失败：已有 AI 生成正在进行（ai.operation_in_progress）"
+    )
 
 
 def test_ai_generation_saves_visible_edits_and_page_leave_cancels_operation(
