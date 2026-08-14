@@ -2385,9 +2385,9 @@
     "semantic_hash": "96ba37c7dfca954eb250fa00b76e773a"
   },
   "tests/desktop/integration/test_composition_root.py": {
-    "mtime": 1786708396.7874503,
-    "ast_hash": "7dd6acade89a25a86939a86637ee2351",
-    "semantic_hash": "7dd6acade89a25a86939a86637ee2351"
+    "mtime": 1786709769.4950097,
+    "ast_hash": "64e3865e1e812b52a953991737cf29af",
+    "semantic_hash": ""
   },
   "tests/desktop/database/test_settings_repository.py": {
     "mtime": 1786270575.2607741,
@@ -2525,9 +2525,9 @@
     "semantic_hash": "a51251a4193e550ee11bce3d411124b7"
   },
   "tests/desktop/contracts/test_credentials.py": {
-    "mtime": 1786708417.2234511,
-    "ast_hash": "fc29df0257f647b80a18593feb7250c8",
-    "semantic_hash": "fc29df0257f647b80a18593feb7250c8"
+    "mtime": 1786709790.6040103,
+    "ast_hash": "9bccb98561f619525f554acc1884917e",
+    "semantic_hash": ""
   },
   "tests/desktop/ui/test_ai_preview_flow.py": {
     "mtime": 1786606840.2609994,
@@ -2575,9 +2575,9 @@
     "semantic_hash": "c6f00286d473f2dec999fc561cf202f1"
   },
   "src/kindergarten_manager/infrastructure/credentials.py": {
-    "mtime": 1786708396.7874503,
-    "ast_hash": "847d4ddf346dcbab3a6b477351f0c298",
-    "semantic_hash": "847d4ddf346dcbab3a6b477351f0c298"
+    "mtime": 1786709835.164012,
+    "ast_hash": "263588d2f407e6c82ab1d7083bb8e41d",
+    "semantic_hash": ""
   },
   "src/kindergarten_manager/infrastructure/database/migrations/versions/0002_desktop_ai.py": {
     "mtime": 1786422339.0729516,
@@ -2770,8 +2770,8 @@
     "semantic_hash": "6ab1c5de034897c4f13d246c2ed8df9d"
   },
   "docs/implementation-evidence/desktop-ubuntu-secret-service-acceptance.md": {
-    "mtime": 1786708540.3464553,
-    "ast_hash": "7a64ee1ed322e8008bbf2d72dc3fedc2",
-    "semantic_hash": "7a64ee1ed322e8008bbf2d72dc3fedc2"
+    "mtime": 1786709885.4800136,
+    "ast_hash": "29701cc126cea34a9fe84adbc83b0d7d",
+    "semantic_hash": ""
   }
 }
