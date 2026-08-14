@@ -52,7 +52,7 @@ class AiSettingsPage(QWidget):
         outer.addLayout(heading)
 
         note = QLabel(
-            "文本与视觉模型均使用 OpenAI 兼容接口。API Key 仅写入 Windows 凭据存储，"
+            "文本与视觉模型均使用 OpenAI 兼容接口。API Key 仅写入操作系统凭据存储，"
             "不进入 SQLite、日志或页面回显；未配置 AI 不影响手工编辑与导出。"
         )
         note.setWordWrap(True)

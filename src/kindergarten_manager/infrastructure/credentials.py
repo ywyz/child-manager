@@ -36,10 +36,16 @@ class CredentialStore:
         )
 
     def write(self, account: str, secret: str) -> None:
-        self._backend.set_password(_SERVICE_NAME, account, secret)
+        try:
+            self._backend.set_password(_SERVICE_NAME, account, secret)
+        except Exception:
+            raise CredentialError("credential.access_failed", "操作系统凭据访问失败") from None
 
     def read(self, account: str) -> str | None:
-        return self._backend.get_password(_SERVICE_NAME, account)
+        try:
+            return self._backend.get_password(_SERVICE_NAME, account)
+        except Exception:
+            raise CredentialError("credential.access_failed", "操作系统凭据访问失败") from None
 
     def require(self, account: str) -> str:
         secret = self.read(account)
@@ -48,7 +54,10 @@ class CredentialStore:
         return secret
 
     def delete(self, account: str) -> None:
-        self._backend.delete_password(_SERVICE_NAME, account)
+        try:
+            self._backend.delete_password(_SERVICE_NAME, account)
+        except Exception:
+            raise CredentialError("credential.access_failed", "操作系统凭据访问失败") from None
 
 
 def create_credential_store(
@@ -63,18 +72,29 @@ def create_credential_store(
         backend = keyring.get_keyring()
 
     name = getattr(backend, "name", "")
+    backend_type = type(backend)
+    is_secret_service = (
+        backend_type.__module__ == "keyring.backends.SecretService"
+        and backend_type.__qualname__ == "Keyring"
+        and name == "SecretService Keyring"
+    )
     declared_scope = getattr(backend, "storage_scope", None)
-    persistence = declared_scope or "local-machine"
-    if (
-        actual_platform != "win32"
-        or name != "Windows WinVaultKeyring"
-        or persistence != "local-machine"
-    ):
+    is_windows_vault = actual_platform == "win32" and name == "Windows WinVaultKeyring"
+    if actual_platform == "linux" and is_secret_service:
+        persistence = "local-user"
+    elif is_windows_vault:
+        persistence = declared_scope or "local-machine"
+    else:
         raise CredentialError(
             "credential.backend_unsupported",
-            "当前凭据后端不满足 Windows 本机持久化要求",
+            "当前操作系统凭据后端不受支持",
         )
-    if declared_scope is None:
+    if is_windows_vault and persistence != "local-machine":
+        raise CredentialError(
+            "credential.backend_unsupported",
+            "当前操作系统凭据后端不受支持",
+        )
+    if is_windows_vault and declared_scope is None:
         try:
             cast(Any, backend).persist = "local machine"
         except (AttributeError, TypeError) as error:
@@ -86,4 +106,5 @@ def create_credential_store(
     return CredentialStore(
         _backend=cast(CredentialBackend, backend),
         backend_name=name,
+        persistence=persistence,
     )

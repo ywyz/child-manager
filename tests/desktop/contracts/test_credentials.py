@@ -23,6 +23,26 @@ class MemoryWindowsBackend:
         self.values.pop((service, account), None)
 
 
+@dataclass
+class MemorySecretServiceBackend:
+    name: str = "SecretService Keyring"
+    values: dict[tuple[str, str], str] = field(default_factory=dict)
+
+    def set_password(self, service: str, account: str, secret: str) -> None:
+        self.values[(service, account)] = secret
+
+    def get_password(self, service: str, account: str) -> str | None:
+        return self.values.get((service, account))
+
+    def delete_password(self, service: str, account: str) -> None:
+        self.values.pop((service, account), None)
+
+
+MemorySecretServiceBackend.__module__ = "keyring.backends.SecretService"
+MemorySecretServiceBackend.__name__ = "Keyring"
+MemorySecretServiceBackend.__qualname__ = "Keyring"
+
+
 def _module():
     return pending_module("kindergarten_manager.infrastructure.credentials")
 
@@ -49,6 +69,70 @@ def test_credential_round_trip_and_delete_use_stable_application_key() -> None:
     assert list(backend.values) == [("cn.kindergartenmanager.desktop", "ai.current")]
     store.delete("ai.current")
     assert store.read("ai.current") is None
+
+
+def test_linux_secret_service_uses_current_user_persistence_and_stable_key() -> None:
+    module = _module()
+    create_store = pending_symbol(module, "create_credential_store")
+    backend = MemorySecretServiceBackend()
+
+    store = create_store(platform="linux", backend=backend)
+
+    assert store.backend_name == "SecretService Keyring"
+    assert store.persistence == "local-user"
+    store.write("ai.current", "fixture-api-key")
+    assert store.read("ai.current") == "fixture-api-key"
+    assert list(backend.values) == [("cn.kindergartenmanager.desktop", "ai.current")]
+    store.delete("ai.current")
+    assert store.read("ai.current") is None
+
+
+def test_linux_rejects_backend_that_only_spoofs_secret_service_display_name() -> None:
+    module = _module()
+    create_store = pending_symbol(module, "create_credential_store")
+
+    class DisplayNameOnlyBackend(MemorySecretServiceBackend):
+        pass
+
+    with pytest.raises(Exception) as captured:
+        create_store(platform="linux", backend=DisplayNameOnlyBackend())
+
+    assert getattr(captured.value, "code", None) == "credential.backend_unsupported"
+
+
+@pytest.mark.parametrize("operation", ["write", "read", "delete"])
+def test_secret_service_access_errors_are_stable_and_sanitized(operation: str) -> None:
+    module = _module()
+    create_store = pending_symbol(module, "create_credential_store")
+    secret = "fixture-api-key"
+
+    class FailingSecretServiceBackend(MemorySecretServiceBackend):
+        def set_password(self, service: str, account: str, secret: str) -> None:
+            raise RuntimeError(f"backend leaked {secret}")
+
+        def get_password(self, service: str, account: str) -> str | None:
+            raise RuntimeError("backend leaked collection path")
+
+        def delete_password(self, service: str, account: str) -> None:
+            raise RuntimeError("backend leaked D-Bus address")
+
+    FailingSecretServiceBackend.__module__ = "keyring.backends.SecretService"
+    FailingSecretServiceBackend.__name__ = "Keyring"
+    FailingSecretServiceBackend.__qualname__ = "Keyring"
+    store = create_store(platform="linux", backend=FailingSecretServiceBackend())
+
+    with pytest.raises(Exception) as captured:
+        if operation == "write":
+            store.write("ai.current", secret)
+        elif operation == "read":
+            store.read("ai.current")
+        else:
+            store.delete("ai.current")
+
+    assert getattr(captured.value, "code", None) == "credential.access_failed"
+    assert secret not in str(captured.value)
+    assert "collection" not in str(captured.value)
+    assert "D-Bus" not in str(captured.value)
 
 
 def test_realistic_windows_backend_is_pinned_to_local_machine_persistence() -> None:

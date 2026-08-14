@@ -218,14 +218,14 @@ class AiSettingsService:
             if self._credential_store is None:
                 raise AiSettingsError(
                     "credential.backend_unsupported",
-                    "当前环境没有可用的 Windows 本机凭据存储",
+                    "当前环境没有可用的操作系统凭据存储",
                 )
             self._credential_store.write(_TEXT_CREDENTIAL_ACCOUNT, api_key)
         if vision_api_key:
             if self._credential_store is None:
                 raise AiSettingsError(
                     "credential.backend_unsupported",
-                    "当前环境没有可用的 Windows 本机凭据存储",
+                    "当前环境没有可用的操作系统凭据存储",
                 )
             self._credential_store.write(_VISION_CREDENTIAL_ACCOUNT, vision_api_key)
 

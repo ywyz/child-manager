@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -552,12 +551,10 @@ def create_desktop_window(
         setup_complete=startup.setup_complete,
     )
     ai_repository = AiRepository(session_factory)
-    credential_store: CredentialStore | None = None
-    if sys.platform == "win32":
-        try:
-            credential_store = create_credential_store()
-        except CredentialError:
-            credential_store = None
+    try:
+        credential_store: CredentialStore | None = create_credential_store()
+    except CredentialError:
+        credential_store = None
     ai_settings = AiSettingsService(
         ai_repository,
         credential_store,

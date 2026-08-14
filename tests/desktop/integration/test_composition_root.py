@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -8,6 +9,7 @@ import pytest
 from docx import Document
 from PySide6.QtCore import QDate, Qt
 from PySide6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QDateEdit,
     QFileDialog,
@@ -20,7 +22,8 @@ from PySide6.QtWidgets import (
 from pytestqt.qtbot import QtBot
 
 from kindergarten_manager.app import create_desktop_window
-from kindergarten_manager.infrastructure.paths import DesktopPaths
+from kindergarten_manager.infrastructure.credentials import CredentialStore
+from kindergarten_manager.infrastructure.paths import DesktopPaths, resolve_desktop_paths
 from tests.desktop.helpers import implemented
 
 
@@ -28,6 +31,68 @@ def _child(window: QWidget, widget_type: type[Any], name: str) -> Any:
     child = window.findChild(widget_type, name)
     assert child is not None, name
     return child
+
+
+@dataclass
+class MemoryCredentialBackend:
+    name: str = "SecretService Keyring"
+    values: dict[tuple[str, str], str] = field(default_factory=dict)
+
+    def set_password(self, service: str, account: str, secret: str) -> None:
+        self.values[(service, account)] = secret
+
+    def get_password(self, service: str, account: str) -> str | None:
+        return self.values.get((service, account))
+
+    def delete_password(self, service: str, account: str) -> None:
+        self.values.pop((service, account), None)
+
+
+def test_linux_composition_root_injects_secret_service_into_ai_settings(
+    qtbot: QtBot,
+    tmp_path: Path,
+    teacherplan_template_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = resolve_desktop_paths(generic_data_location=tmp_path / "GenericDataLocation")
+    backend = MemoryCredentialBackend()
+    store = CredentialStore(backend, backend.name, persistence="local-user")
+    factory_calls: list[None] = []
+
+    def create_store() -> CredentialStore:
+        factory_calls.append(None)
+        return store
+
+    monkeypatch.setattr("kindergarten_manager.app.create_credential_store", create_store)
+    window = create_desktop_window(
+        paths=paths,
+        template_path=teacherplan_template_path,
+        today=lambda: date(2026, 9, 7),
+    )
+    qtbot.addWidget(window)
+
+    for object_name, value in {
+        "teacher_name": "测试教师",
+        "kindergarten_name": "星河幼儿园",
+        "semester_name": "2026 秋季学期",
+        "class_name": "向日葵班",
+    }.items():
+        _child(window, QLineEdit, object_name).setText(value)
+    _child(window, QDateEdit, "semester_start_date").setDate(QDate(2026, 9, 1))
+    _child(window, QDateEdit, "semester_end_date").setDate(QDate(2027, 1, 31))
+    qtbot.mouseClick(_child(window, QPushButton, "complete_setup"), Qt.MouseButton.LeftButton)
+    qtbot.mouseClick(_child(window, QPushButton, "open_settings"), Qt.MouseButton.LeftButton)
+    qtbot.mouseClick(_child(window, QPushButton, "open_ai_settings"), Qt.MouseButton.LeftButton)
+
+    _child(window, QCheckBox, "ai_enabled").setChecked(True)
+    _child(window, QLineEdit, "ai_base_url").setText("https://provider.example/v1")
+    _child(window, QLineEdit, "ai_model_name").setText("fixture-model")
+    _child(window, QLineEdit, "ai_api_key").setText("fixture-api-key")
+    qtbot.mouseClick(_child(window, QPushButton, "save_ai_settings"), Qt.MouseButton.LeftButton)
+
+    assert factory_calls == [None]
+    assert backend.values == {("cn.kindergartenmanager.desktop", "ai.current"): "fixture-api-key"}
+    assert _child(window, QLineEdit, "ai_api_key").text() == ""
 
 
 def test_composition_root_persists_first_daily_plan_across_restart_and_exports_word(

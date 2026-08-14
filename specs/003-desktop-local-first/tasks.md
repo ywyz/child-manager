@@ -17,6 +17,11 @@ Slice 2A Issue 驱动，完成 clean RED 后停在 T040，不得进入 T041 GREE
 SHA 更新为上述新 SHA，并同步 T044 新增的迁移保护范围；回读确认后授权恢复 T041–T048
 GREEN。本授权不包含 commit、push、Review、`main` 集成或 T049 及以后任务。
 
+**Ubuntu Secret Service Authorization Record (2026-08-14)**: 维护者确认公共测试缝并授权
+T060A–T060D；固定 `docs@2b2e311833541d31909b38588b9814f4c743e9f9`，实施 Issue 为
+[#26](https://github.com/ywyz/child-manager/issues/26)。本授权不解锁 Slice 3、Agent WRITE、
+Linux 安装包或 `main` 集成。
+
 **Tests**: 规格与宪章明确要求自动化测试；每个切片先收集测试并得到只来自本切片未实现行为的
 RED，再实施并运行该切片自有门禁。导入、fixture、数据库配置或运行环境错误均不是有效 RED。
 
@@ -176,15 +181,15 @@ OpenAI-compatible AI/Agent 链路。
 Service；桌面组合根在 Linux 装配该 store。真实 GNOME 用户会话使用专用虚构凭据完成写入、
 跨进程读回、删除且残留为 0；真实模型请求由维护者在 UI 中使用自己的 Key 验收。
 
-- [ ] T060A [US2] 在 `tests/desktop/contracts/test_credentials.py` 增加 Linux Secret Service
+- [x] T060A [US2] 在 `tests/desktop/contracts/test_credentials.py` 增加 Linux Secret Service
   接受、稳定服务/账号键、`local-user`、访问错误脱敏，以及 Null/文件/未知/伪造显示名 backend
   fail-closed 的稳定 RED
-- [ ] T060B [US2] 通过 `create_desktop_window()` 公共入口覆盖 Linux 组合根把受支持 store 注入
+- [x] T060B [US2] 通过 `create_desktop_window()` 公共入口覆盖 Linux 组合根把受支持 store 注入
   AI 设置、生成和 Agent，不测试 Secret Service 内部调用次数
-- [ ] T060C [US2] 在 `src/kindergarten_manager/infrastructure/credentials.py` 与
+- [x] T060C [US2] 在 `src/kindergarten_manager/infrastructure/credentials.py` 与
   `src/kindergarten_manager/app.py` 最小实现 Linux Secret Service 支持，不增加环境变量、文件或
   SQLite fallback，不改变 Windows local-machine 行为
-- [ ] T060D [US2] 运行凭据/AI/Agent/UI 专项、完整 Ruff/Pyright/Pytest；在 Ubuntu GNOME 用户
+- [x] T060D [US2] 运行凭据/AI/Agent/UI 专项、完整 Ruff/Pyright/Pytest；在 Ubuntu GNOME 用户
   会话完成专用虚构凭据写入、跨进程读回、删除与零残留烟雾，并明确保留 Windows 专属验收项
 
 **Checkpoint**: Ubuntu 可安全测试真实 AI/Agent；Windows 仍是首发与安装/Word/DPI 验收平台。
