@@ -37,23 +37,31 @@ def _child(window: QWidget, widget_type: type[Any], name: str) -> Any:
 class MemoryCredentialBackend:
     name: str = "SecretService Keyring"
     values: dict[tuple[str, str], str] = field(default_factory=dict)
+    reads: list[tuple[str, str]] = field(default_factory=list)
 
     def set_password(self, service: str, account: str, secret: str) -> None:
         self.values[(service, account)] = secret
 
     def get_password(self, service: str, account: str) -> str | None:
+        self.reads.append((service, account))
         return self.values.get((service, account))
 
     def delete_password(self, service: str, account: str) -> None:
         self.values.pop((service, account), None)
 
 
-def test_linux_composition_root_injects_secret_service_into_ai_settings(
+def test_linux_composition_root_injects_secret_service_into_ai_and_agent_flows(
     qtbot: QtBot,
     tmp_path: Path,
     teacherplan_template_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    from kindergarten_manager.application.agent_runtime import ProviderTurnResult
+    from kindergarten_manager.infrastructure.ai.agent_provider import (
+        OpenAICompatibleAgentProvider,
+    )
+    from kindergarten_manager.infrastructure.ai.client import ProviderNeutralAiClient
+
     paths = resolve_desktop_paths(generic_data_location=tmp_path / "GenericDataLocation")
     backend = MemoryCredentialBackend()
     store = CredentialStore(backend, backend.name, persistence="local-user")
@@ -63,7 +71,28 @@ def test_linux_composition_root_injects_secret_service_into_ai_settings(
         factory_calls.append(None)
         return store
 
+    ai_keys: list[str] = []
+    agent_calls: list[None] = []
+
+    def generate_structured(
+        self: ProviderNeutralAiClient,
+        *,
+        api_key: str,
+        validator: Any,
+        **_kwargs: object,
+    ) -> object:
+        del self
+        ai_keys.append(api_key)
+        return validator({"schema_version": 1, "topic": "春天", "questions": []})
+
+    def complete(self: OpenAICompatibleAgentProvider, _request: object) -> ProviderTurnResult:
+        del self
+        agent_calls.append(None)
+        return ProviderTurnResult("只读草案内容", (), "completed")
+
     monkeypatch.setattr("kindergarten_manager.app.create_credential_store", create_store)
+    monkeypatch.setattr(ProviderNeutralAiClient, "generate_structured", generate_structured)
+    monkeypatch.setattr(OpenAICompatibleAgentProvider, "complete", complete)
     window = create_desktop_window(
         paths=paths,
         template_path=teacherplan_template_path,
@@ -93,6 +122,21 @@ def test_linux_composition_root_injects_secret_service_into_ai_settings(
     assert factory_calls == [None]
     assert backend.values == {("cn.kindergartenmanager.desktop", "ai.current"): "fixture-api-key"}
     assert _child(window, QLineEdit, "ai_api_key").text() == ""
+
+    qtbot.mouseClick(_child(window, QPushButton, "back_to_settings"), Qt.MouseButton.LeftButton)
+    qtbot.mouseClick(_child(window, QPushButton, "back_to_plan"), Qt.MouseButton.LeftButton)
+    qtbot.mouseClick(
+        _child(window, QPushButton, "generate_morning_talk"),
+        Qt.MouseButton.LeftButton,
+    )
+    qtbot.waitUntil(lambda: ai_keys == ["fixture-api-key"], timeout=2_000)
+
+    _child(window, QPlainTextEdit, "agent_intent").setPlainText("草拟晨间谈话")
+    qtbot.mouseClick(_child(window, QPushButton, "start_agent_turn"), Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(lambda: agent_calls == [None], timeout=2_000)
+
+    stable_key = ("cn.kindergartenmanager.desktop", "ai.current")
+    assert backend.reads.count(stable_key) >= 3
 
 
 def test_composition_root_persists_first_daily_plan_across_restart_and_exports_word(

@@ -4,8 +4,13 @@ import sys
 from dataclasses import dataclass
 from typing import Any, Protocol, cast
 
+from keyring.backends.SecretService import Keyring as _SecretServiceBackend
+from keyring.backends.Windows import WinVaultKeyring as _WindowsBackend
+
 _SERVICE_NAME = "cn.kindergartenmanager.desktop"
 _DEFAULT_BACKEND = object()
+_SECRET_SERVICE_BACKEND_TYPE = _SecretServiceBackend
+_WINDOWS_BACKEND_TYPE = _WindowsBackend
 
 
 class CredentialError(RuntimeError):
@@ -38,6 +43,10 @@ class CredentialStore:
     def write(self, account: str, secret: str) -> None:
         try:
             self._backend.set_password(_SERVICE_NAME, account, secret)
+            if self._backend.get_password(_SERVICE_NAME, account) != secret:
+                raise CredentialError("credential.access_failed", "操作系统凭据访问失败")
+        except CredentialError:
+            raise
         except Exception:
             raise CredentialError("credential.access_failed", "操作系统凭据访问失败") from None
 
@@ -67,19 +76,21 @@ def create_credential_store(
 ) -> CredentialStore:
     actual_platform = sys.platform if platform is None else platform
     if backend is _DEFAULT_BACKEND:
-        import keyring
+        try:
+            import keyring
 
-        backend = keyring.get_keyring()
+            backend = keyring.get_keyring()
+        except Exception:
+            raise CredentialError("credential.access_failed", "操作系统凭据访问失败") from None
 
-    name = getattr(backend, "name", "")
-    backend_type = type(backend)
-    is_secret_service = (
-        backend_type.__module__ == "keyring.backends.SecretService"
-        and backend_type.__qualname__ == "Keyring"
-        and name == "SecretService Keyring"
-    )
-    declared_scope = getattr(backend, "storage_scope", None)
-    is_windows_vault = actual_platform == "win32" and name == "Windows WinVaultKeyring"
+    try:
+        name = getattr(backend, "name", "")
+        backend_type = type(backend)
+        is_secret_service = backend_type is _SECRET_SERVICE_BACKEND_TYPE
+        declared_scope = getattr(backend, "storage_scope", None)
+    except Exception:
+        raise CredentialError("credential.access_failed", "操作系统凭据访问失败") from None
+    is_windows_vault = actual_platform == "win32" and backend_type is _WINDOWS_BACKEND_TYPE
     if actual_platform == "linux" and is_secret_service:
         persistence = "local-user"
     elif is_windows_vault:
@@ -97,11 +108,11 @@ def create_credential_store(
     if is_windows_vault and declared_scope is None:
         try:
             cast(Any, backend).persist = "local machine"
-        except (AttributeError, TypeError) as error:
+        except AttributeError, TypeError:
             raise CredentialError(
                 "credential.backend_unsupported",
                 "Windows 凭据后端无法固定为本机持久化",
-            ) from error
+            ) from None
 
     return CredentialStore(
         _backend=cast(CredentialBackend, backend),

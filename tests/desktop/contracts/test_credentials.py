@@ -47,6 +47,15 @@ def _module():
     return pending_module("kindergarten_manager.infrastructure.credentials")
 
 
+@pytest.fixture(autouse=True)
+def _canonical_backend_types(monkeypatch: pytest.MonkeyPatch) -> None:
+    module = _module()
+    monkeypatch.setattr(module, "_WINDOWS_BACKEND_TYPE", MemoryWindowsBackend, raising=False)
+    monkeypatch.setattr(
+        module, "_SECRET_SERVICE_BACKEND_TYPE", MemorySecretServiceBackend, raising=False
+    )
+
+
 def test_windows_backend_is_selected_only_for_local_machine_persistence() -> None:
     module = _module()
     create_store = pending_symbol(module, "create_credential_store")
@@ -100,8 +109,65 @@ def test_linux_rejects_backend_that_only_spoofs_secret_service_display_name() ->
     assert getattr(captured.value, "code", None) == "credential.backend_unsupported"
 
 
+def test_windows_rejects_backend_that_only_spoofs_win_vault_display_name() -> None:
+    module = _module()
+    create_store = pending_symbol(module, "create_credential_store")
+
+    class DisplayNameOnlyBackend(MemoryWindowsBackend):
+        pass
+
+    with pytest.raises(Exception) as captured:
+        create_store(platform="win32", backend=DisplayNameOnlyBackend())
+
+    assert getattr(captured.value, "code", None) == "credential.backend_unsupported"
+
+
+def test_backend_discovery_errors_are_stable_and_sanitized(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _module()
+    create_store = pending_symbol(module, "create_credential_store")
+
+    def fail_discovery() -> object:
+        raise RuntimeError("backend leaked D-Bus address and collection path")
+
+    monkeypatch.setattr("keyring.get_keyring", fail_discovery)
+    with pytest.raises(Exception) as captured:
+        create_store(platform="linux")
+
+    assert getattr(captured.value, "code", None) == "credential.access_failed"
+    assert "D-Bus" not in str(captured.value)
+    assert "collection" not in str(captured.value)
+
+
+def test_write_fails_when_backend_does_not_read_back_the_same_secret(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _module()
+    create_store = pending_symbol(module, "create_credential_store")
+
+    class SilentWriteBackend(MemorySecretServiceBackend):
+        def set_password(self, service: str, account: str, secret: str) -> None:
+            self.values[(service, account)] = "different-value"
+
+    SilentWriteBackend.__module__ = "keyring.backends.SecretService"
+    SilentWriteBackend.__name__ = "Keyring"
+    SilentWriteBackend.__qualname__ = "Keyring"
+    monkeypatch.setattr(module, "_SECRET_SERVICE_BACKEND_TYPE", SilentWriteBackend)
+    store = create_store(platform="linux", backend=SilentWriteBackend())
+
+    with pytest.raises(Exception) as captured:
+        store.write("ai.current", "fixture-api-key")
+
+    assert getattr(captured.value, "code", None) == "credential.access_failed"
+    assert "fixture-api-key" not in str(captured.value)
+
+
 @pytest.mark.parametrize("operation", ["write", "read", "delete"])
-def test_secret_service_access_errors_are_stable_and_sanitized(operation: str) -> None:
+def test_secret_service_access_errors_are_stable_and_sanitized(
+    operation: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     module = _module()
     create_store = pending_symbol(module, "create_credential_store")
     secret = "fixture-api-key"
@@ -119,6 +185,7 @@ def test_secret_service_access_errors_are_stable_and_sanitized(operation: str) -
     FailingSecretServiceBackend.__module__ = "keyring.backends.SecretService"
     FailingSecretServiceBackend.__name__ = "Keyring"
     FailingSecretServiceBackend.__qualname__ = "Keyring"
+    monkeypatch.setattr(module, "_SECRET_SERVICE_BACKEND_TYPE", FailingSecretServiceBackend)
     store = create_store(platform="linux", backend=FailingSecretServiceBackend())
 
     with pytest.raises(Exception) as captured:
@@ -135,7 +202,9 @@ def test_secret_service_access_errors_are_stable_and_sanitized(operation: str) -
     assert "D-Bus" not in str(captured.value)
 
 
-def test_realistic_windows_backend_is_pinned_to_local_machine_persistence() -> None:
+def test_realistic_windows_backend_is_pinned_to_local_machine_persistence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     module = _module()
     create_store = pending_symbol(module, "create_credential_store")
     backend_type = type(
@@ -149,6 +218,7 @@ def test_realistic_windows_backend_is_pinned_to_local_machine_persistence() -> N
             "delete_password": lambda *_args: None,
         },
     )
+    monkeypatch.setattr(module, "_WINDOWS_BACKEND_TYPE", backend_type)
     backend = backend_type()
 
     store = create_store(platform="win32", backend=backend)

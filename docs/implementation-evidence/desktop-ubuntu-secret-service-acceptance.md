@@ -17,12 +17,18 @@ Service 接受、`local-user`、稳定服务/账号键、访问错误脱敏和�
 五个失败分别来自 Linux backend 尚未受支持、三种访问错误尚未脱敏转换，以及 Linux 组合根
 尚未创建凭据存储；没有导入、Qt、SQLite 或环境错误。
 
+首次固定 SHA 双轴审查后又补充了后端身份、发现异常、写后读回和完整组合根链路用例。修复前
+三个定向用例稳定失败：Windows 显示名伪造未拒绝、backend 发现异常未转换、写入异常值未被
+读回校验发现。
+
 ## GREEN
 
-- `tests/desktop/contracts/test_credentials.py`：`13 passed`
-- 凭据与桌面组合根纵向用例：`14 passed`
+- `tests/desktop/contracts/test_credentials.py`：`16 passed`
+- 凭据与桌面组合根纵向用例：`18 passed`
 - 凭据、AI、Agent、UI 与组合根专项：`61 passed`
-- 完整测试：`206 passed`
+- `create_desktop_window()` 纵向用例已从设置保存继续覆盖栏目生成与 Agent，并验证两条路径均
+  从同一凭据存储读取稳定账号键。
+- 完整测试：`209 passed`
 - Ruff format/check：通过
 - Pyright：`0 errors, 0 warnings, 0 informations`
 - `uv sync --locked`、`uv lock --check`：通过
@@ -30,7 +36,7 @@ Service 接受、`local-user`、稳定服务/账号键、访问错误脱敏和�
 
 ## 真实 Secret Service 烟雾
 
-使用稳定应用服务名和专用虚构账号 `smoke.t060d.20260814`，未读取或覆盖真实 AI Key：
+使用稳定应用服务名和专用虚构账号 `smoke.t060d.review.20260814`，未读取或覆盖真实 AI Key：
 
 1. 当前真实 backend 为 `SecretService Keyring`，persistence 为 `local-user`。
 2. 第一进程写入虚构值并读回成功。
