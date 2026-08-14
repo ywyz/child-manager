@@ -63,7 +63,7 @@ from kindergarten_manager.domain.ai import (
 )
 from kindergarten_manager.infrastructure.ai.agent_provider import OpenAICompatibleAgentProvider
 from kindergarten_manager.infrastructure.ai.client import AiClientError, ProviderNeutralAiClient
-from kindergarten_manager.infrastructure.ai.prompts import load_default_prompt
+from kindergarten_manager.infrastructure.ai.prompts import resolve_prompt
 from kindergarten_manager.infrastructure.credentials import (
     CredentialError,
     CredentialStore,
@@ -238,9 +238,10 @@ class _AiRuntimeAdapter:
             return _PreparedGenerationWork(work, None, error.code)
         sections: list[_FrozenProviderSection] = []
         for section_input in work.frozen_inputs:
-            prompt = self._repository.get_prompt_override(section_input.section_code)
-            if prompt is None:
-                prompt = load_default_prompt(section_input.section_code)
+            prompt = resolve_prompt(
+                section_input.section_code,
+                self._repository.get_prompt_override(section_input.section_code),
+            )
             sections.append(
                 _FrozenProviderSection(
                     section_code=section_input.section_code,

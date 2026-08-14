@@ -98,6 +98,47 @@ def test_builtin_prompts_keep_mature_teaching_constraints_and_closed_json_schema
     assert '"process"' in prompts["group_activity"]
 
 
+@pytest.mark.parametrize(
+    "legacy_prompt",
+    [
+        (
+            "请根据教师提供的最小上下文生成晨间活动。"
+            "只返回符合 morning_activity Schema 的 JSON，不得补充幼儿身份信息。"
+        ),
+        """你是一名熟悉幼儿年龄特点和幼儿园一日活动组织的教师。请根据教师提供的日期、年龄段、主题和已有内容，设计可直接执行的晨间活动。
+
+要求：
+1. 体能大循环、集体游戏和自主游戏要相互衔接，运动强度由低到高再平稳过渡。
+2. 目标和指导要点必须具体、可观察、适合该年龄段，避免空泛表述。
+3. 不得补充幼儿姓名、教师账号等身份信息，不得虚构输入中没有的设施。
+4. 只输出一个合法 JSON 对象，不要输出 Markdown、代码围栏、解释或额外字段。
+
+严格使用以下结构，schema_version 固定为 1：
+{"schema_version":1,"physical_cycle":"体能大循环安排","group_game":"集体游戏","free_game":"自主游戏","focus_guidance":"重点指导","objectives":["目标1","目标2"],"guidance_points":["指导要点1","指导要点2"]}""",
+    ],
+)
+def test_published_legacy_morning_prompt_upgrades_to_current_default(
+    legacy_prompt: str,
+) -> None:
+    repository = TransactionalSettingsRepository(prompts={"morning_activity": legacy_prompt})
+    service = AiSettingsService(repository, MemoryCredentialStore(), now_utc_ms=lambda: 10)
+
+    prompt = service.load().prompts["morning_activity"]
+
+    assert prompt == load_default_prompt("morning_activity")
+    assert "户外体育活动" in prompt
+    assert "集体体育游戏" in prompt
+    assert "自主体育游戏" in prompt
+
+
+def test_custom_morning_prompt_is_not_replaced_by_builtin_upgrade() -> None:
+    custom = "本园自定义晨间体育提示词：只使用操场和沙池。"
+    repository = TransactionalSettingsRepository(prompts={"morning_activity": custom})
+    service = AiSettingsService(repository, MemoryCredentialStore(), now_utc_ms=lambda: 10)
+
+    assert service.load().prompts["morning_activity"] == custom
+
+
 def test_enabling_without_supported_credential_backend_fails_before_database_write(
     tmp_path: Path,
 ) -> None:

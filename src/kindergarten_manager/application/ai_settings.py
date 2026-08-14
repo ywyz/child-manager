@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from kindergarten_manager.infrastructure.ai.client import validate_base_url
-from kindergarten_manager.infrastructure.ai.prompts import load_default_prompt
+from kindergarten_manager.infrastructure.ai.prompts import load_default_prompt, resolve_prompt
 
 _TEXT_CREDENTIAL_ACCOUNT = "ai.current"
 _VISION_CREDENTIAL_ACCOUNT = "ai.vision"
@@ -119,7 +119,7 @@ class AiSettingsService:
                 configuration is not None and configuration.enabled and credential_configured
             ),
             prompts={
-                code: self._repository.get_prompt_override(code) or load_default_prompt(code)
+                code: resolve_prompt(code, self._repository.get_prompt_override(code))
                 for code in _PROMPT_CODES
             },
             vision_base_url=(
