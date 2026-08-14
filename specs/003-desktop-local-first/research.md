@@ -188,9 +188,10 @@ AAD 同时认证，错误 key/nonce/AAD 或篡改会触发标签校验失败。�
 [cryptography AESGCM](https://cryptography.io/en/latest/hazmat/primitives/aead/#cryptography.hazmat.primitives.ciphers.aead.AESGCM)
 
 AI Key、WebDAV 密码/令牌、S3 Secret/Session Token 和可自动备份使用的恢复口令通过 keyring
-25 系列访问 Windows Credential Locker。启动时检查实际 backend 必须为 Windows backend，
-并固定 local-machine persistence；若不可用则关闭对应外部能力并要求交互输入，绝不回退到
-明文文件、环境变量或 SQLite。
+25 系列访问操作系统凭据存储。Windows 只接受 Credential Locker 的 Windows backend，并固定
+`local-machine` persistence；Linux 只接受 `keyring.backends.SecretService.Keyring`，使用当前
+用户登录 keyring 并记录为 `local-user` persistence。若受支持后端不可用或锁定，则关闭对应
+外部能力，绝不回退到明文文件、环境变量或 SQLite。
 [keyring documentation](https://keyring.readthedocs.io/en/latest/)
 
 **Alternatives considered**:
@@ -198,7 +199,8 @@ AI Key、WebDAV 密码/令牌、S3 Secret/Session Token 和可自动备份使用
 - 自创流密码/口令哈希协议：不可接受。
 - 只用 ZIP 密码：算法与认证保证不足。
 - 把恢复口令加密后存数据库：加密密钥仍需另处保存，且备份会携带密文凭据。
-- DPAPI 直接调用：Windows 绑定更强；keyring 提供窄跨平台边界并能在 Linux 用测试替身。
+- DPAPI 直接调用：Windows 绑定更强，但无法支持 Ubuntu 的真实 AI 测试；keyring 提供窄
+  跨平台边界并保持 Application Layer 与平台 SDK 隔离。
 
 ## 10. WebDAV 与 S3
 

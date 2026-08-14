@@ -197,6 +197,21 @@ Level 3 Workflow、多 Agent、定时/后台自主运行和无人值守 WRITE �
 
 Linux offscreen 截图或 Widget 构造通过不能替代本节。
 
+## 12A. Ubuntu Secret Service 与真实 AI
+
+在 Ubuntu 24.04 GNOME 的已登录图形用户会话中：
+
+1. 确认 `gnome-keyring-daemon` 的 `secrets` 组件和用户 D-Bus 会话正在运行。
+2. 启动源码版桌面应用，在 AI 设置页保存真实 OpenAI-compatible Endpoint、模型名和 API Key；
+   Key 只能进入当前用户 Secret Service 登录 keyring。
+3. 重启应用，分别执行单栏生成、集体活动拆分和 Agent READ/DRAFT；原正文仍只在明确采用后改变。
+4. 删除 AI 配置后确认对应凭据项同步删除；SQLite、备份和日志扫描不得出现 Key。
+5. Secret Service 不可用或锁定时确认外部 AI/Agent fail closed，手工编辑、保存和 Word 结构
+   导出仍可使用，不得出现环境变量、明文文件或 SQLite fallback。
+
+此流程是 Ubuntu 源码运行与真实 AI 验收，不代表 Linux 安装包、Windows Credential Locker、
+Windows DPI/文件锁/原生对话框或 Microsoft Word 验收完成。
+
 ## 13. Windows standalone 与安装器
 
 计划中的确定性构建入口应等价于：

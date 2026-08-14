@@ -93,12 +93,13 @@ plaintext_length: integer
 
 ## 5. 凭据存储
 
-通过 keyring 的 Windows backend 保存：AI API Key、WebDAV secret、S3 Secret/Session Token
-和用户选择缓存的恢复口令。
+通过 keyring 的受支持操作系统 backend 保存：AI API Key、WebDAV secret、S3 Secret/Session
+Token 和用户选择缓存的恢复口令。
 
 - 稳定 service name 以应用 ID 开头，每类 secret 使用固定非 PII account key。
-- 启动时验证 backend 必须是 Windows `WinVaultKeyring`，并强制 local-machine persistence；
-  Null、明文文件或未知第三方 backend 必须 fail closed。
+- Windows 必须是 `WinVaultKeyring` 并强制 `local-machine` persistence；Linux 必须是
+  `keyring.backends.SecretService.Keyring` 并使用当前用户登录 keyring，记录为 `local-user`；
+  Null、明文文件、未知或仅伪造显示名的 backend 必须 fail closed。
 - 写入后立即读回等值验证；删除配置同时删除 credential。
 - credential 丢失只禁用对应外部能力，本地编辑/Word/本地备份仍可用。
 - 恢复口令是用户持有的跨设备秘密；凭据库只是自动备份所需缓存，不是唯一副本。

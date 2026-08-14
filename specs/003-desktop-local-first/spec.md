@@ -142,7 +142,8 @@ AI 和备份状态。
 - 本地人工标记的上课/不上课状态优先于内置日历，并能撤销回到内置判断。
 - AI 超时、返回结构错误、教师切换栏目或正文变化时，不得采用过期预览覆盖正文。
 - 忘记远程备份恢复口令时，应用必须明确说明备份无法解密且不泄漏密文细节。
-- Windows 凭据项丢失时，本地手工流程仍可使用，并允许教师重新配置外部服务。
+- Windows Credential Locker 或 Linux Secret Service 凭据项丢失时，本地手工流程仍可使用，
+  并允许教师重新配置外部服务。
 - 卸载、升级或安装新版本不得默认删除用户数据库和备份。
 - 批量导出范围跨越学期时不得开始生成；范围内没有已有教案时必须禁止导出。
 - 批量导出遇到周末、节假日或尚无教案的日期时必须跳过，并在导出前说明日期和原因。
@@ -210,6 +211,9 @@ AI 和备份状态。
   Provider 等待、教师确认和 UI 主线程期间不得保持写事务或跨线程传递 Widget/Session。
 - **FR-041**: 首期不得持久化 conversation/thread/message、embedding、向量索引、教师画像、
   自动摘要或 Provider 托管状态作为长期业务记忆；新 turn 必须经 READ Tool 重建权威事实。
+- **FR-042**: Windows 必须只接受 Credential Locker 的受支持 backend；Linux 必须只接受
+  `keyring.backends.SecretService.Keyring`。两者不可用或访问失败时必须 fail closed，且不得把
+  API Key 回退到环境变量、普通文件、SQLite、备份、日志、异常或测试快照。
 
 ### Frozen Future Constraints *(not part of first-release acceptance)*
 
@@ -260,12 +264,16 @@ AI 和备份状态。
   stale Patch 100% 零写入；有效确认只改变展示字段，快照、revision 与最小审计同事务成功。
 - **SC-012**: 扫描 SQLite、备份、日志和重启状态时，Agent 对话、Context、ToolResult、Patch、
   Confirmation、embedding 和 Provider 托管 thread 残留均为 0；只允许业务结果和最小写入审计。
+- **SC-013**: 在 Ubuntu GNOME 用户会话中，专用虚构凭据可以通过 Secret Service 写入、跨进程
+  读回并删除；桌面重启后可直接执行真实 AI/Agent 请求，测试结束后专用凭据残留为 0。
 
 ## Assumptions
 
-- 首期正式支持 Windows，Linux 仅用于开发，macOS 发布验收延后。
+- Windows 11 x64 是首发平台；Ubuntu GNOME 支持源码运行和真实 AI/Agent 测试，但不声明
+  Linux 安装包；macOS 发布验收延后。
 - 一台电脑同一时间只有一位教师使用，不存在共享文件夹并发打开数据库的受支持场景。
-- 教师具备可写的 Windows 用户数据目录，并负责保管远程备份恢复口令。
+- 教师具备可写的操作系统用户数据目录；Ubuntu 测试用户具备已解锁的 Secret Service 登录
+  keyring，并负责保管远程备份恢复口令。
 - 中国法定节假日与调休数据随应用版本更新，超出覆盖范围不会联网猜测。
 - WebDAV/S3 服务由用户自行提供；应用不承诺第三方服务可用性。
 - 旧 `kindergartenManager` 和现有 B/S PostgreSQL 数据均不迁移。

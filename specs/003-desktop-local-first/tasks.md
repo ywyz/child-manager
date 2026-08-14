@@ -167,6 +167,30 @@ audit、备份和日志中没有 Agent 状态或秘密。
 
 ---
 
+## Phase 5A: Ubuntu Secret Service 真实 AI 测试能力（Priority: P2）
+
+**Goal**: 不降低秘密边界，使 Ubuntu GNOME 源码运行能安全保存 API Key，并使用现有真实
+OpenAI-compatible AI/Agent 链路。
+
+**Independent Test**: 通过公共 `create_credential_store()` 契约验证 Linux 只接受 Secret
+Service；桌面组合根在 Linux 装配该 store。真实 GNOME 用户会话使用专用虚构凭据完成写入、
+跨进程读回、删除且残留为 0；真实模型请求由维护者在 UI 中使用自己的 Key 验收。
+
+- [ ] T060A [US2] 在 `tests/desktop/contracts/test_credentials.py` 增加 Linux Secret Service
+  接受、稳定服务/账号键、`local-user`、访问错误脱敏，以及 Null/文件/未知/伪造显示名 backend
+  fail-closed 的稳定 RED
+- [ ] T060B [US2] 通过 `create_desktop_window()` 公共入口覆盖 Linux 组合根把受支持 store 注入
+  AI 设置、生成和 Agent，不测试 Secret Service 内部调用次数
+- [ ] T060C [US2] 在 `src/kindergarten_manager/infrastructure/credentials.py` 与
+  `src/kindergarten_manager/app.py` 最小实现 Linux Secret Service 支持，不增加环境变量、文件或
+  SQLite fallback，不改变 Windows local-machine 行为
+- [ ] T060D [US2] 运行凭据/AI/Agent/UI 专项、完整 Ruff/Pyright/Pytest；在 Ubuntu GNOME 用户
+  会话完成专用虚构凭据写入、跨进程读回、删除与零残留烟雾，并明确保留 Windows 专属验收项
+
+**Checkpoint**: Ubuntu 可安全测试真实 AI/Agent；Windows 仍是首发与安装/Word/DPI 验收平台。
+
+---
+
 ## Phase 6: Slice 3 / User Story 3 - 本地恢复与远程加密备份（Priority: P3）
 
 **Goal**: 建立一致性本地备份、`KMBACKUP1` 加密信封、显式版本恢复以及 WebDAV/S3 单向远程备份；绝不形成同步系统。
@@ -324,8 +348,10 @@ audit、备份和日志中没有 Agent 状态或秘密。
 | FR-039 Provider port | T049、T051、T055、T057、T060 | OpenAI-compatible/Scripted Adapter 与 SDK 隔离 |
 | FR-040 线程/事务 | T052、T057、T059、T081、T087、T088、T090 | 冻结 DTO、每 Tool Session、确认期间零事务 |
 | FR-041 无长期业务记忆 | T050、T051、T053、T059、T060、T082、T090、T121 | DB/备份/log/重启扫描零残留 |
+| FR-042 跨平台安全凭据 | T060A–T060D、T121、T122 | Secret Service/Locker 允许矩阵、访问错误脱敏、无明文回退 |
 | SC-011 Agent 权限与确认矩阵 | T060、T090 | 所有负向用例零写入，有效 Patch 精确提交 |
 | SC-012 Agent 状态零持久化 | T053、T060、T082、T090、T121 | 仅业务结果和最小不可变审计留存 |
+| SC-013 Ubuntu 真实 AI | T060B–T060D | GNOME Secret Service 跨进程读回/删除、真实 UI 请求与零残留 |
 
 FC-003 的 Level 3 Workflow 是明确非目标，不计入首期任务覆盖率；T005、T049、T056、T059、
 T111、T121 和 T124 共同阻止其入口、调度器、动态 Tool 或发布载荷空壳。
