@@ -32,6 +32,7 @@
 | [ADR-0011](ADR-0011-password-totp-backup-login.md) | 增加密码与 TOTP 双因素备用登录，保留 WebAuthn 高风险边界 | 已被 ADR-0012 取代 |
 | [ADR-0012](ADR-0012-local-first-desktop-product-reset.md) | 重置为本地优先、单教师、多班级的模块化桌面产品 | 已接受 |
 | [ADR-0013](ADR-0013-controlled-agent-runtime.md) | 采用 Application Layer、Tool-only、逐次确认写入且无长期业务记忆的受控单 Agent Runtime | 已接受 |
+| [ADR-0014](ADR-0014-cross-platform-desktop-credential-storage.md) | Windows 使用 Credential Locker，Linux 使用 Secret Service，保持凭据 fail closed | 已接受 |
 
 ## 与旧仓库 ADR 的关系
 

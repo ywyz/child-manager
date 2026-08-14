@@ -43,6 +43,13 @@
 应用通过稳定服务名和账号键访问操作系统凭据存储。SQLite 只保存非敏感 Endpoint、模型名、
 Region、Bucket、路径前缀和“凭据是否已配置”状态。删除配置时必须同时删除对应凭据项。
 
+Windows 只接受 Credential Locker 的 Windows backend，并固定 `local-machine` persistence；
+Linux 只接受 `keyring.backends.SecretService.Keyring`，使用当前用户的 Secret Service 登录
+keyring，记录为 `local-user` persistence。Null、明文文件、未知或只伪造显示名的 backend 均
+fail closed，且不得回退到环境变量、普通文件或 SQLite。Linux Secret Service 不可用或锁定时，
+只关闭依赖凭据的外部能力，不阻断手工教案流程。详见
+[ADR-0014](../ADR/ADR-0014-cross-platform-desktop-credential-storage.md)。
+
 ## 5. 备份包
 
 本地备份包至少包含：

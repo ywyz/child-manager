@@ -30,11 +30,12 @@ PostgreSQL 与队列装配，避免把旧模块数量当作复用目标。
 python-docx `1.2.*`、chinesecalendar `1.11.*`、httpx `0.28.*`、cryptography `49.*`、
 keyring `25.*`；S3 适配器使用 boto3 的锁定稳定版本\
 **Storage**: CPython 随附 `sqlite3` + 单一 SQLite 文件；`foreign_keys=ON`、rollback journal、
-`synchronous=FULL`、`busy_timeout=5000`；秘密只进入 Windows Credential Locker\
+`synchronous=FULL`、`busy_timeout=5000`；秘密只进入 Windows Credential Locker 或 Linux
+Secret Service\
 **Testing**: Pytest、Pyright、Ruff；临时 SQLite 文件、AI/WebDAV/S3/凭据替身、DOCX 结构与
 样式回归；Linux offscreen 桌面烟雾 + Windows 真实安装和高 DPI 验收\
-**Target Platform**: Windows 11 x64 首发；Linux 仅用于开发/无界面验证；不声明 Windows 10
-或 macOS 首期发布支持\
+**Target Platform**: Windows 11 x64 首发；Ubuntu GNOME 支持源码运行、Secret Service 与真实
+AI/Agent 测试，但不声明 Linux 安装包；不声明 Windows 10 或 macOS 首期发布支持\
 **Project Type**: 单进程桌面应用\
 **Performance Goals**: 1366x768、125%/150% DPI 下编辑保持响应；停止输入 5 秒内显示保存
 结果；普通打开/保存不被远程服务阻塞；批量导出与备份持续报告进度并可取消\
@@ -253,9 +254,9 @@ GenericDataLocation/cn.kindergartenmanager.desktop/
 - 可携带/远程备份采用 `KMBACKUP1` 容器：规范化清单 + SQLite 快照组成 ZIP 载荷，使用
   scrypt（`N=2^17,r=8,p=1`、16 字节随机盐）派生 256 位密钥，再以 AES-256-GCM 和 96 位
   随机 nonce 整体认证加密。版本、应用标识、备份 ID 与 Schema 版本绑定为 AAD。
-- AI Key、WebDAV/S3 凭据和可自动运行的恢复口令通过 keyring 的 Windows backend 进入
-  Credential Locker，并显式使用 local-machine persistence；Null、文件或未知 backend
-  fail closed。SQLite 和备份只保存“已配置”状态与非敏感 Endpoint/对象键。
+- AI Key、WebDAV/S3 凭据和可自动运行的恢复口令通过 keyring 进入 Windows Credential
+  Locker（`local-machine`）或 Linux Secret Service（`local-user`）；Null、文件、未知或仅
+  伪造显示名的 backend fail closed。SQLite 和备份只保存“已配置”状态与非敏感 Endpoint/对象键。
 - WebDAV/S3 只上传加密完成的不可变对象。失败只更新备份结果；不加入同步、增量上传、最新
   版本自动选择、冲突合并或远端直接打开 SQLite。
 - 恢复先下载/解密到 staging，验证格式、AAD、哈希、SQLite 完整性和可迁移性，再创建当前库

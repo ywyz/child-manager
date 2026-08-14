@@ -60,9 +60,9 @@
     "semantic_hash": "1dec425ad99f2145de0b9cbe20a8ddce"
   },
   "docs/ADR/README.md": {
-    "mtime": 1786257771.1128004,
-    "ast_hash": "fb6cc2a33cdf9f753a0767c76a679860",
-    "semantic_hash": "fb6cc2a33cdf9f753a0767c76a679860"
+    "mtime": 1786707075.5114048,
+    "ast_hash": "e9637907bc19986aa31da909b42f5df9",
+    "semantic_hash": "e9637907bc19986aa31da909b42f5df9"
   },
   "docs/PRD/lesson-management.md": {
     "mtime": 1785070669.550815,
@@ -125,7 +125,7 @@
     "semantic_hash": "e14f8f495d74efcb1c5af2010327223c"
   },
   ".specify/feature.json": {
-    "mtime": 1786419847.9429913,
+    "mtime": 1786707219.4694097,
     "ast_hash": "170a63fea9c2601de3f069ac4b47e462",
     "semantic_hash": "170a63fea9c2601de3f069ac4b47e462"
   },
@@ -460,14 +460,14 @@
     "semantic_hash": "36bd2b41af9ea506ee8caa3fdbfc95d2"
   },
   "docs/design/desktop-data-backup-security.md": {
-    "mtime": 1786257771.1228004,
-    "ast_hash": "c809107bf4321b99fcc88321dda978a9",
-    "semantic_hash": "c809107bf4321b99fcc88321dda978a9"
+    "mtime": 1786707075.512405,
+    "ast_hash": "d0f782fdfc22f77db01204a7b5683113",
+    "semantic_hash": "d0f782fdfc22f77db01204a7b5683113"
   },
   "docs/design/desktop-system-architecture.md": {
-    "mtime": 1786257771.1258004,
-    "ast_hash": "5d78b041a4032fcb4a3a566c09ed81b3",
-    "semantic_hash": "5d78b041a4032fcb4a3a566c09ed81b3"
+    "mtime": 1786707075.512405,
+    "ast_hash": "edddf7cff26bcfe4dc4130a002a085d1",
+    "semantic_hash": "edddf7cff26bcfe4dc4130a002a085d1"
   },
   "docs/design/desktop-ui-design-system.md": {
     "mtime": 1786257771.1288004,
@@ -490,9 +490,9 @@
     "semantic_hash": "75806bc23f52fb5978b6de9323d5694c"
   },
   "specs/003-desktop-local-first/contracts/backup-package-v1.md": {
-    "mtime": 1786257771.1408005,
-    "ast_hash": "5304ba06199bcff4d1981d0abbeb5f03",
-    "semantic_hash": "5304ba06199bcff4d1981d0abbeb5f03"
+    "mtime": 1786707170.851408,
+    "ast_hash": "ed09e77a7297e2c0bdba6bd0270c8029",
+    "semantic_hash": "ed09e77a7297e2c0bdba6bd0270c8029"
   },
   "specs/003-desktop-local-first/contracts/word-export.md": {
     "mtime": 1786257771.1438003,
@@ -505,29 +505,29 @@
     "semantic_hash": "cff8a37aa3ca6eb13c257ad862ac11fc"
   },
   "specs/003-desktop-local-first/plan.md": {
-    "mtime": 1786419883.6429892,
-    "ast_hash": "576773abc13047aebc718cc8032c8474",
-    "semantic_hash": "576773abc13047aebc718cc8032c8474"
+    "mtime": 1786707107.0924058,
+    "ast_hash": "100c1f0d0fff635016a24969538500f6",
+    "semantic_hash": "100c1f0d0fff635016a24969538500f6"
   },
   "specs/003-desktop-local-first/quickstart.md": {
-    "mtime": 1786419776.0939956,
-    "ast_hash": "1a16adb878453e86a638682f0e8a87c8",
-    "semantic_hash": "1a16adb878453e86a638682f0e8a87c8"
+    "mtime": 1786707158.3184078,
+    "ast_hash": "daa74eba9a4e77b4a3a0f7ab9d964513",
+    "semantic_hash": "daa74eba9a4e77b4a3a0f7ab9d964513"
   },
   "specs/003-desktop-local-first/research.md": {
-    "mtime": 1786257771.1558003,
-    "ast_hash": "7cdefa4ce8a9027101f4a7abb6e96068",
-    "semantic_hash": "7cdefa4ce8a9027101f4a7abb6e96068"
+    "mtime": 1786707107.0914059,
+    "ast_hash": "0e7da758288206878963b22345683204",
+    "semantic_hash": "0e7da758288206878963b22345683204"
   },
   "specs/003-desktop-local-first/spec.md": {
-    "mtime": 1786371155.2568128,
-    "ast_hash": "ccfad5bc23bcd90d71a8b55e3079bc58",
-    "semantic_hash": "ccfad5bc23bcd90d71a8b55e3079bc58"
+    "mtime": 1786707092.2374053,
+    "ast_hash": "75915c4b5faa85aa3f65cedbd92f833d",
+    "semantic_hash": "75915c4b5faa85aa3f65cedbd92f833d"
   },
   "specs/003-desktop-local-first/tasks.md": {
-    "mtime": 1786419805.6059937,
-    "ast_hash": "30da1e9582d8f0ea648ce9705341cc23",
-    "semantic_hash": "30da1e9582d8f0ea648ce9705341cc23"
+    "mtime": 1786707149.1054072,
+    "ast_hash": "68fdad7a1b0e2edfa704a7e0fa63c4ba",
+    "semantic_hash": "68fdad7a1b0e2edfa704a7e0fa63c4ba"
   },
   "docs/design/assets/desktop-prototype/desktop-prototype-a-classic.png": {
     "mtime": 1786257771.1648004,
@@ -583,5 +583,10 @@
     "mtime": 1786372838.527979,
     "ast_hash": "1475d465d75eacbfbed38e8521f947ef",
     "semantic_hash": "1475d465d75eacbfbed38e8521f947ef"
+  },
+  "docs/ADR/ADR-0014-cross-platform-desktop-credential-storage.md": {
+    "mtime": 1786707075.5114048,
+    "ast_hash": "6ab1c5de034897c4f13d246c2ed8df9d",
+    "semantic_hash": "6ab1c5de034897c4f13d246c2ed8df9d"
   }
 }

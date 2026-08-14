@@ -148,9 +148,10 @@ src/kindergarten_manager/
 
 ## 7. 验证责任
 
-- Linux：领域、SQLite、备份、AI 替身、Word 与无界面测试。
+- Linux：领域、SQLite、备份、AI 替身、Word 与无界面测试；GNOME/Secret Service 会话还须
+  覆盖真实凭据和 OpenAI-compatible AI/Agent 源码运行验收。
 - Linux offscreen：Widget 构造、布局最小尺寸和截图烟雾验证。
-- Windows：125%/150% DPI、1366x768、文件对话框、凭据存储、安装/升级、Word 打开和
+- Windows：125%/150% DPI、1366x768、文件对话框、Credential Locker、安装/升级、Word 打开和
   SmartScreen/Store 分发人工验收。
 - macOS：首期只保持可移植代码，不声明发布支持。
 - Agent：Scripted Provider 覆盖 Tool-only、Context 裁剪、READ/DRAFT 零写入、单 Agent/取消、
