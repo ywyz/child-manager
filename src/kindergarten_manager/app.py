@@ -479,7 +479,8 @@ class _DesktopServiceFacade:
             None,
             "draft_ready" if outcome.patches else "succeeded",
             result.message,
-            outcome.patches,
+            patches=outcome.patches,
+            assistant_content=outcome.assistant_content,
         )
 
     def _on_agent_failed(self, result: CommandResult[object]) -> None:
@@ -496,6 +497,7 @@ class _AgentUiState:
     status: str
     message: str
     patches: tuple[object, ...] = ()
+    assistant_content: str | None = None
 
 
 class _ConfiguredAgentProvider:

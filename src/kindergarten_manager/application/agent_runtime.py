@@ -663,9 +663,12 @@ class AgentRuntime:
             if len(response.assistant_content or "") > self._max_response_chars:
                 return _failure("agent.response_too_large", "Agent Provider 响应超过允许上限")
             if not response.tool_calls:
+                assistant_content = (response.assistant_content or "").strip() or None
+                if not patches and assistant_content is None:
+                    return _failure("agent.empty_draft", "Agent 未返回可展示的草案")
                 outcome = AgentTurnOutcome(
                     status="succeeded",
-                    assistant_content=response.assistant_content,
+                    assistant_content=assistant_content,
                     patches=tuple(patches),
                 )
                 with self._lock:

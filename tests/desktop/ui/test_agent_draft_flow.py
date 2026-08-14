@@ -34,6 +34,7 @@ class FakeAgentState:
     status: str
     message: str
     patches: tuple[FakePatch, ...] = ()
+    assistant_content: str | None = None
 
 
 class AgentUiError(RuntimeError):
@@ -148,6 +149,26 @@ def test_panel_displays_each_draft_operation_as_a_read_only_field_diff(
     ]
     assert not bool(table.editTriggers())
     assert panel.findChild(QPushButton, "discard_agent_patch") is not None
+
+
+def test_panel_displays_text_draft_when_provider_returns_no_field_patch(
+    qtbot: QtBot,
+) -> None:
+    services = FakeAgentServices(
+        state=FakeAgentState(
+            None,
+            "succeeded",
+            "Agent 草案已生成",
+            assistant_content="建议将晨间谈话主题调整为春天里的种子。",
+        )
+    )
+
+    panel = _panel(qtbot, services)
+    text_draft = panel.findChild(QPlainTextEdit, "agent_draft_text")
+
+    assert text_draft is not None and text_draft.isVisible()
+    assert text_draft.isReadOnly()
+    assert text_draft.toPlainText() == "建议将晨间谈话主题调整为春天里的种子。"
 
 
 def test_running_panel_refreshes_when_the_background_result_becomes_ready(

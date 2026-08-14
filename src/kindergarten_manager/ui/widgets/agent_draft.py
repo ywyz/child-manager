@@ -75,6 +75,12 @@ class AgentDraftPanel(QFrame):
         actions.addWidget(self.cancel_button)
         layout.addLayout(actions)
 
+        self.text_draft = QPlainTextEdit()
+        self.text_draft.setObjectName("agent_draft_text")
+        self.text_draft.setReadOnly(True)
+        self.text_draft.setVisible(False)
+        layout.addWidget(self.text_draft)
+
         self.fields = QTableWidget(0, 3)
         self.fields.setObjectName("agent_draft_fields")
         self.fields.setHorizontalHeaderLabels(("字段", "修改前", "草案"))
@@ -106,6 +112,10 @@ class AgentDraftPanel(QFrame):
         else:
             self._refresh_timer.stop()
         self._clear_draft()
+        assistant_content = getattr(state, "assistant_content", None)
+        if isinstance(assistant_content, str) and assistant_content.strip():
+            self.text_draft.setPlainText(assistant_content)
+            self.text_draft.setVisible(True)
         patches = tuple(state.patches)
         if not patches:
             return
@@ -173,5 +183,7 @@ class AgentDraftPanel(QFrame):
 
     def _clear_draft(self) -> None:
         self._patch_id = None
+        self.text_draft.clear()
+        self.text_draft.setVisible(False)
         self.fields.setRowCount(0)
         self.discard_button.setEnabled(False)

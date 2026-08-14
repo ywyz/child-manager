@@ -378,6 +378,25 @@ def test_response_limit_rejects_oversized_provider_content_without_writes(
     assert state == _business_state()
 
 
+@pytest.mark.parametrize("content", [None, "", "   "])
+def test_empty_provider_result_is_not_reported_as_a_generated_draft(
+    qtbot: QtBot,
+    content: str | None,
+) -> None:
+    module = _runtime_module()
+    state = _business_state()
+    registry = ReadDraftRegistry(module, state)
+    provider = ScriptedProvider([_provider_result(module, content=content)])
+    harness = _runtime(module, provider, registry)
+
+    _accepted, emitted = harness.start_and_wait(qtbot, "请求草案", _scope(module))
+
+    assert len(emitted) == 1 and not emitted[0].ok
+    assert emitted[0].error_code == "agent.empty_draft"
+    assert emitted[0].message == "Agent 未返回可展示的草案"
+    assert state == _business_state()
+
+
 def test_total_time_limit_stops_the_turn_without_writes(qtbot: QtBot) -> None:
     module = _runtime_module()
     state = _business_state()
